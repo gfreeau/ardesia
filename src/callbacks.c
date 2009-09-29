@@ -55,12 +55,13 @@ int     recording = 0;
 char*   color="FF0000";
 char    pickedcolor[7];
 int     tickness=15;
-
+int     visible = 1;
 
 int ffmpegpid;
 int annotateclientpid = -1;
 char* arrow = "0";
 int pencil = TRUE;
+
 
 GtkColorSelectionDialog* colorDialog = NULL;
 
@@ -246,6 +247,18 @@ on_toolsVisible_activate               (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
   callAnnotate("--visibility", NULL, NULL, NULL );
+  if (visible)
+  {
+    visible=0;
+    /* set tooltip to unhide */
+    gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Unhide");
+  }
+ else
+ {
+   visible=1;
+   /* set tooltip to hide */
+   gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Hide");
+ }
 }
 
 
