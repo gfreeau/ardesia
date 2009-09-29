@@ -9,11 +9,11 @@
     <property name="events">GDK_BUTTON_PRESS_MASK</property>
     <property name="type">popup</property>
     <property name="title" translatable="yes">Ardesia</property>
+    <property name="startup_id">Ardesia</property>
     <property name="resizable">False</property>
     <property name="decorated">False</property>
     <property name="deletable">False</property>
     <property name="gravity">south</property>
-    <property name="startup_id">Ardesia</property>
     <signal name="delete_event" handler="on_winMain_delete_event"/>
     <child>
       <object class="GtkVBox" id="toolboxMain">
@@ -191,21 +191,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkRadioToolButton" id="buttonWhite">
-                <property name="width_request">38</property>
-                <property name="height_request">38</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">White</property>
-                <property name="label_widget">white</property>
-                <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_colorWhite_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkRadioToolButton" id="buttonPicker">
                 <property name="width_request">38</property>
                 <property name="height_request">38</property>
@@ -247,6 +232,20 @@
               </object>
               <packing>
                 <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="buttonClear">
+                <property name="width_request">38</property>
+                <property name="height_request">38</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Clear</property>
+                <property name="stock_id">gtk-clear</property>
+                <signal name="clicked" handler="on_buttonClear_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>

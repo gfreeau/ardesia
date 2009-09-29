@@ -691,11 +691,10 @@ on_colorYellow_activate                (GtkToolButton   *toolbutton,
 
 
 void
-on_colorWhite_activate                 (GtkToolButton   *toolbutton,
+on_buttonClear_activate                (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
-
-  color = "FFFFFF";
-  paint();
+  
+   callAnnotate("--clear", NULL, NULL, NULL);   
 
 }
