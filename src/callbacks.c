@@ -52,8 +52,8 @@
 
 int     recording = 0;
 
-char*   color="FF0000";
 char    pickedcolor[7];
+char*   color="FF0000";
 int     tickness=15;
 int     visible = 1;
 
@@ -63,7 +63,7 @@ char* arrow = "0";
 int pencil = TRUE;
 
 
-GtkColorSelectionDialog* colorDialog = NULL;
+GtkWidget* colorDialog = NULL;
 
 
 /* 
@@ -570,30 +570,12 @@ on_colorGreen_activate                 (GtkToolButton   *toolbutton,
 }
 
 
-void
-on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
-					 gpointer         user_data)
+void 
+get_selected_color		 (GtkColorSelection   *colorsel)
+
 {
-  if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
-    {
-      /* open color widget */
-      colorDialog = GTK_COLOR_SELECTION_DIALOG(gtk_builder_get_object(gtkBuilder,"colorselectiondialog"));
-  
-      if (annotateclientpid != -1)
-	{
-	  kill(annotateclientpid,9);
-	}  
-      gtk_dialog_run((GtkDialog *) colorDialog);
-    }
 
-}
-
-
-void
-on_colorsel_color_selection_color_changed(GtkColorSelection   *colorsel,
-                                          gpointer         user_data)
-{
-  GdkColor          *color= g_malloc (sizeof (GdkColor));
+  GdkColor *color= g_malloc (sizeof (GdkColor));
   gtk_color_selection_get_current_color   (colorsel, color);
   gtk_color_selection_set_previous_color(colorsel, color);
   /* set color */
@@ -613,27 +595,45 @@ on_colorsel_color_selection_color_changed(GtkColorSelection   *colorsel,
 
 
 void
-on_colorsel_ok_button_activate          (GtkButton   *okbutton,
+on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
 					 gpointer         user_data)
 {
-  /* close dialog */
-  gtk_widget_hide((GtkWidget*) colorDialog);
-  color=pickedcolor;
-  paint();
+
+  GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON(toolbutton);
+  if (gtk_toggle_tool_button_get_active(button))
+  {
+    /* open color widget */
+    colorDialog = gtk_color_selection_dialog_new ("Changing color");
   
+    if (annotateclientpid != -1)
+    {
+      kill(annotateclientpid,9);
+    }  
+    gint result = gtk_dialog_run((GtkDialog *) colorDialog);
+    GtkColorSelection *colorsel;
+
+    /* Wait for user to select OK or Cancel */
+    switch (result)
+    {
+      case GTK_RESPONSE_OK:
+           colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
+           get_selected_color(colorsel);
+           color = pickedcolor; 
+	   gtk_widget_destroy(colorDialog);
+           paint(); 
+           break;
+      
+      default:
+           /* If dialog did not return OK then it was canceled */
+	   //gtk_toggle_tool_button_set_active(button, FALSE); 
+           gtk_widget_destroy(colorDialog);
+           paint(); 
+           break;
+    }
+
+  }
+
 }
-
-
-void
-on_colorsel_cancel_button_activate          (GtkButton   *okbutton,
-					     gpointer         user_data)
-{
-  /* close dialog */
-  gtk_widget_hide((GtkWidget*) colorDialog);
-  paint();
-  
-}
-
 
 void
 on_colorLightBlue_activate             (GtkToolButton   *toolbutton,
