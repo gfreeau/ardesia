@@ -164,7 +164,7 @@ void print_help()
   printf("--gravity,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
   printf("\t\t\t\tnorth\n");
   printf("\t\t\t\tsouth\n");
-  printf("--help,\t-h\t\t\tShows the help screen\n");
+  printf("--help,   \t-h\t\tShows the help screen\n");
   printf("\n");
 }
 
