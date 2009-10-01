@@ -38,7 +38,14 @@
 
 #include <X11/Xutil.h>
 
+int NORTH=1;
+int SOUTH=2;
+/* space from border in pixel */
+int SPACE_FROM_BORDER = 30;
+
 int annotatepid;
+
+
 
 /* Get the screen resolution asking to the Xorg server throught the xlib libraries */
 int 
@@ -53,28 +60,39 @@ getScreenResolution(Display *display, int *width, int *height)
 
 /* 
  * Calculate the position where move the main window 
- * the bottom centered position upon the window manager bar
+ * the centered position upon the window manager bar
  */
 void 
-calculateBottomCenteredPosition(GtkWidget *mainWindow, int dwidth, int dheight, int *x, int *y, int *wwidth, int *wheight)
+calculateCenteredPosition(GtkWidget *mainWindow, int dwidth, int dheight, int *x, int *y, int *wwidth, int *wheight, int position)
 {
   GtkRequisition requisition;
   gtk_widget_size_request(mainWindow, &requisition);
   *wwidth  = requisition.width;
   *wheight = requisition.height;
-  int spaceFromBottom = 30;
   *x = (dwidth - *wwidth)/2;
-  *y = dheight - spaceFromBottom - *wheight;  
+  if (position==NORTH)
+    {
+      *y = SPACE_FROM_BORDER; 
+    }
+  else if (position==SOUTH)
+    {
+      /* south */
+      *y = dheight - SPACE_FROM_BORDER - *wheight;
+    }  
+  else
+   {
+     /* invalid position */
+   }
 }
 
 
 /* 
- * Move the main windowin the bottom centered position
+ * Move the main window in a centered position
  * Here can be beatiful have a configuration file
  * where put the user can decide the position of the window
  */
 int 
-move(GtkWidget *mainWindow, int *x, int *y, int *wwidth, int *wheight)
+move(GtkWidget *mainWindow, int *x, int *y, int *wwidth, int *wheight, int position)
 
 {
   Display *display = XOpenDisplay (0);  
@@ -84,7 +102,7 @@ move(GtkWidget *mainWindow, int *x, int *y, int *wwidth, int *wheight)
       printf ("Fatal error while getting screen resolution\n");
       return -1;
     }
-  calculateBottomCenteredPosition(mainWindow,dwidth,dheight, x, y, wwidth, wheight);
+  calculateCenteredPosition(mainWindow,dwidth,dheight, x, y, wwidth, wheight, position);
   gtk_window_move(GTK_WINDOW(mainWindow),*x,*y);  
   return 0; 
 }
@@ -124,7 +142,8 @@ startAnnotate(int x, int y, int width, int height)
       sprintf(heighta,"%d",height);
       
       execl(annotatebin,annotate,"--rectangle", xa, ya, widtha, heighta, NULL);
-
+ 
+      /* This is used to find memory leak with valgrind */
       /*
 	execl("/usr/bin/valgrind", "valgrind" , "--leak-check=full", "--show-reachable=yes", "--log-file=valgrind.log",
 	annotatebin,"--rectangle", xa, ya, widtha, heighta, NULL);
@@ -138,7 +157,16 @@ startAnnotate(int x, int y, int width, int height)
     }
   return pid;
 }
-
+void print_help()
+{
+  printf("Usage: ardesia [options]\n\n");
+  printf("options:\n");
+  printf("--gravity,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
+  printf("\t\t\t\tnorth\n");
+  printf("\t\t\t\tsouth\n");
+  printf("--help,\t-h\t\t\tShows the help screen\n");
+  printf("\n");
+}
 
 /* 
  * The main entry of the program;
@@ -164,6 +192,50 @@ main (int argc, char *argv[])
 {
   GtkWidget *mainWindow;
 
+
+  int position = SOUTH;
+  if (argc>1)
+  {
+    char* arg = argv[1];
+    if ((strcmp (arg, "--gravity") == 0) 
+     || (strcmp (arg, "-g") == 0))
+    {
+    }
+    else if ((strcmp (arg, "--help") == 0) 
+     || (strcmp (arg, "-h") == 0))
+    {
+      print_help();
+      exit(0); 
+    } 
+    else
+    {
+      print_help();
+      exit(1); 
+    }
+    if (argc>2)
+    {
+      arg = argv[2];
+      if (strcmp (arg, "north") == 0)
+      {
+        position = NORTH;
+      }
+      else if (strcmp (arg, "south") == 0)
+      {
+        position = SOUTH;
+      }
+      else
+      {
+        print_help();
+        exit(1);
+      }
+   }
+   else
+   {
+      printf("Required missing argument\n");
+      print_help();
+      exit(1);  
+   }
+  } 
   gtk_set_locale ();
   gtk_init (&argc, &argv);
 
@@ -177,7 +249,7 @@ main (int argc, char *argv[])
   mainWindow = create_mainWindow ();
  
   /* move the window iin the desired position */
-  move(mainWindow,&x,&y,&width,&height);
+  move(mainWindow,&x,&y,&width,&height,position);
    
   /** Launch annotate */
   annotatepid = startAnnotate(x,y,width,height);
