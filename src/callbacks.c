@@ -63,7 +63,7 @@ char* arrow = "0";
 int pencil = TRUE;
 
 
-GtkWidget* colorDialog = NULL;
+GdkColor*  gdkcolor= NULL;
 
 
 /* 
@@ -574,12 +574,9 @@ void
 get_selected_color		 (GtkColorSelection   *colorsel)
 
 {
-
-  GdkColor *color= g_malloc (sizeof (GdkColor));
-  gtk_color_selection_get_current_color   (colorsel, color);
-  gtk_color_selection_set_previous_color(colorsel, color);
+  gtk_color_selection_get_current_color   (colorsel, gdkcolor);
   /* set color */
-  gchar* col = gdk_color_to_string(color);
+  gchar* col = gdk_color_to_string(gdkcolor);
   /* e.g. color #20200000ffff */ 
   pickedcolor[0]=col[1];
   pickedcolor[1]=col[2];
@@ -589,8 +586,6 @@ get_selected_color		 (GtkColorSelection   *colorsel)
   pickedcolor[5]=col[10];
   pickedcolor[6]=0;
   /* e.g. pickedcolor 2000ff */ 
-  g_free(color);
-
 }
 
 
@@ -600,17 +595,27 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
 {
 
   GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON(toolbutton);
+  GtkColorSelection *colorsel;
   if (gtk_toggle_tool_button_get_active(button))
   {
     /* open color widget */
-    colorDialog = gtk_color_selection_dialog_new ("Changing color");
-  
+    GtkWidget* colorDialog = gtk_color_selection_dialog_new ("Changing color");
+    if (gdkcolor==NULL)
+    {
+       gdkcolor = g_malloc (sizeof (GdkColor));
+    }
+    else
+    {
+       colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
+       gtk_color_selection_set_current_color(colorsel, gdkcolor);
+       gtk_color_selection_set_previous_color(colorsel, gdkcolor);
+    } 
+
     if (annotateclientpid != -1)
     {
       kill(annotateclientpid,9);
     }  
     gint result = gtk_dialog_run((GtkDialog *) colorDialog);
-    GtkColorSelection *colorsel;
 
     /* Wait for user to select OK or Cancel */
     switch (result)
