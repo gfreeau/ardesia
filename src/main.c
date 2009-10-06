@@ -82,9 +82,9 @@ calculateCenteredPosition(GtkWidget *mainWindow, int dwidth, int dheight, int *x
       *y = dheight - SPACE_FROM_BORDER - *wheight;
     }  
   else
-   {
-     /* invalid position */
-   }
+    {
+      /* invalid position */
+    }
 }
 
 
@@ -194,52 +194,65 @@ main (int argc, char *argv[])
 {
   GtkWidget *mainWindow;
 
-
   int position = SOUTH;
+  char* arg = NULL;
+  gboolean loadbackground = FALSE;
   if (argc>1)
-  {
-    char* arg = argv[1];
-    if ((strcmp (arg, "--gravity") == 0) 
-     || (strcmp (arg, "-g") == 0))
     {
-    }
-    else if ((strcmp (arg, "--help") == 0) 
-     || (strcmp (arg, "-h") == 0))
-    {
-      print_help();
-      exit(0); 
-    } 
-    else
-    {
-      print_help();
-      exit(1); 
-    }
-    if (argc>2)
-    {
-      arg = argv[2];
-      if (strcmp (arg, "north") == 0)
-      {
-        position = NORTH;
-      }
-      else if (strcmp (arg, "south") == 0)
-      {
-        position = SOUTH;
-      }
+      arg = argv[1];
+      if ((strcmp (arg, "--gravity") == 0) 
+	  || (strcmp (arg, "-g") == 0))
+	{
+	  if (argc>2)
+	    {
+	      arg = argv[2];
+	      if (strcmp (arg, "north") == 0)
+		{
+		  position = NORTH;
+		}
+	      else if (strcmp (arg, "south") == 0)
+		{
+		  position = SOUTH;
+		}
+	      else
+		{
+		  print_help();
+		  exit(1);
+		}
+	      if (argc>3)
+		{
+                  arg=argv[3];
+                 loadbackground = TRUE;
+		}
+	    }
+	  else
+	    {
+	      printf("Required missing argument\n");
+	      print_help();
+	      exit(1);  
+	    }
+	}
+      else if ((strcmp (arg, "--help") == 0) 
+	       || (strcmp (arg, "-h") == 0))
+	{
+	  print_help();
+	  exit(0); 
+	} 
       else
-      {
-        print_help();
-        exit(1);
-      }
-   }
-   else
-   {
-      printf("Required missing argument\n");
-      print_help();
-      exit(1);  
-   }
-  } 
+	{
+	  //char* location = PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps/notebook_paper.png";
+          loadbackground = TRUE;
+	}
+
+    } 
+
   gtk_set_locale ();
   gtk_init (&argc, &argv);
+  
+  if (loadbackground)
+  {
+    load_background_window(arg); 
+  }
 
   int x, y, width, height;
 
@@ -252,8 +265,6 @@ main (int argc, char *argv[])
  
   /* move the window iin the desired position */
   move(mainWindow,&x,&y,&width,&height,position);
-  //char* location = PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps/notebook_paper.png";
-  //load_background_window(location); 
   /** Launch annotate */
   annotatepid = startAnnotate(x,y,width,height);
   

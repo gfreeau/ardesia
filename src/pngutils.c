@@ -141,18 +141,24 @@ void
 load_background_window (const char *name)
 {
    
-  if (background_window!=NULL)
+  if (background_window==NULL)
     {
-      close_background_window();
+       close_background_window();
     }
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
-  
   GdkPixbuf *pixbuf = NULL;
 
+  background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
   load_png(name,&pixbuf);
 
-  
+  gtk_widget_push_colormap(gdk_rgb_get_colormap());
+  gtk_widget_push_visual(gdk_rgb_get_visual());
+  GtkWidget* darea = gtk_drawing_area_new();
+  gtk_widget_pop_visual();
+  gtk_widget_pop_colormap();
+  gtk_container_add(GTK_CONTAINER(background_window), darea);
   gtk_widget_set_size_request(darea, gdk_pixbuf_get_width(pixbuf),gdk_pixbuf_get_height(pixbuf));
   gtk_widget_show_all(background_window);
 
