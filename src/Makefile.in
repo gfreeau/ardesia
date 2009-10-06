@@ -45,8 +45,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_ardesia_OBJECTS = main.$(OBJEXT) interface.$(OBJEXT) \
-	callbacks.$(OBJEXT)
+am_ardesia_OBJECTS = pngutils.$(OBJEXT) main.$(OBJEXT) \
+	interface.$(OBJEXT) callbacks.$(OBJEXT)
 ardesia_OBJECTS = $(am_ardesia_OBJECTS)
 am__DEPENDENCIES_1 =
 ardesia_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -177,6 +177,7 @@ INCLUDES = \
 	@PACKAGE_CFLAGS@
 
 ardesia_SOURCES = \
+        pngutils.c pngutils.h\
 	main.c \
 	interface.c interface.h \
 	callbacks.c
@@ -266,6 +267,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/callbacks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pngutils.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

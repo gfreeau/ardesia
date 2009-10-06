@@ -36,6 +36,7 @@
 #include "stdlib.h"
 #include "string.h"
 #include "unistd.h"
+#include "pngutils.h"
 
 #include <X11/Xutil.h>
 
@@ -251,9 +252,8 @@ main (int argc, char *argv[])
  
   /* move the window iin the desired position */
   move(mainWindow,&x,&y,&width,&height,position);
-   
   //char* location = PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps/notebook_paper.png";
-  //load_background(location); 
+  //load_background_window(location); 
   /** Launch annotate */
   annotatepid = startAnnotate(x,y,width,height);
   

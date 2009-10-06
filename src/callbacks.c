@@ -44,9 +44,8 @@
 #include <X11/Xatom.h>
 #include <gconf/gconf-client.h>
 
-#include <png.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <math.h>
+#include <pngutils.h>
 
 
 
@@ -62,10 +61,8 @@ int annotateclientpid = -1;
 char* arrow = "0";
 int pencil = TRUE;
 
-
+/* Used to record the history of the last color selected */
 GdkColor*  gdkcolor= NULL;
-GdkWindow* background_window;
-
 
 
 /* 
@@ -117,7 +114,7 @@ quit()
       kill(annotateclientpid,9);
     }
   kill(annotatepid,9);
-   
+  close_background_window();
   /* Disalloc */
   g_object_unref ( G_OBJECT(gtkBuilder) ); 
 
@@ -194,7 +191,7 @@ on_toolsArrow_activate               (GtkToolButton   *toolbutton,
 {
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
-       /* if single arrow is active release it */
+      /* if single arrow is active release it */
       GtkToggleToolButton* doubleArrowToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonDoubleArrow"));
       if (gtk_toggle_tool_button_get_active(doubleArrowToolButton))
         {
@@ -207,18 +204,18 @@ on_toolsArrow_activate               (GtkToolButton   *toolbutton,
       arrow="0";
     }
   if (pencil)
-   {
-     paint();
-   }
-   else
-   {
-     erase();
-   }
+    {
+      paint();
+    }
+  else
+    {
+      erase();
+    }
 }
 
 void
 on_toolsDoubleArrow_activate               (GtkToolButton   *toolbutton,
-				      gpointer         user_data)
+					    gpointer         user_data)
 {
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
@@ -235,13 +232,13 @@ on_toolsDoubleArrow_activate               (GtkToolButton   *toolbutton,
       arrow="0";
     }
   if (pencil)
-   {
-     paint();
-   }
-   else
-   {
-     erase();
-   }
+    {
+      paint();
+    }
+  else
+    {
+      erase();
+    }
 }
 
 void
@@ -250,17 +247,17 @@ on_toolsVisible_activate               (GtkToolButton   *toolbutton,
 {
   callAnnotate("--visibility", NULL, NULL, NULL );
   if (visible)
-  {
-    visible=0;
-    /* set tooltip to unhide */
-    gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Unhide");
-  }
- else
- {
-   visible=1;
-   /* set tooltip to hide */
-   gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Hide");
- }
+    {
+      visible=0;
+      /* set tooltip to unhide */
+      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Unhide");
+    }
+  else
+    {
+      visible=1;
+      /* set tooltip to hide */
+      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Hide");
+    }
 }
 
 
@@ -311,173 +308,6 @@ get_desktop_dir (void)
   g_object_unref (gconf_client);
 
   return desktop_dir;
-}
-
-
-gboolean
-save_png (GdkPixbuf *pixbuf,
-	  const char *filename)
-{
-  FILE *handle;
-  int width, height, depth, rowstride;
-  gboolean has_alpha;
-  guchar *pixels;
-  png_structp png_ptr;
-  png_infop info_ptr;
-  png_text text[2];
-  int i;
-
-  handle = fopen (filename, "w");
-  if (!handle) {
-    return FALSE;
-  }
-
-  png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-  if (png_ptr == NULL) {
-    return FALSE;
-  }
-
-  info_ptr = png_create_info_struct (png_ptr);
-  if (info_ptr == NULL) {
-    png_destroy_write_struct (&png_ptr, (png_infop *) NULL);
-    return FALSE;
-  }
-
-  if (setjmp (png_ptr->jmpbuf)) {
-    /* Error handler */
-    png_destroy_write_struct (&png_ptr, &info_ptr);
-    return FALSE;
-  }
-
-  png_init_io (png_ptr, handle);
-  
-  width = gdk_pixbuf_get_width (pixbuf);
-  height = gdk_pixbuf_get_height (pixbuf);
-  depth = gdk_pixbuf_get_bits_per_sample (pixbuf);
-  pixels = gdk_pixbuf_get_pixels (pixbuf);
-  rowstride = gdk_pixbuf_get_rowstride (pixbuf);
-  has_alpha = gdk_pixbuf_get_has_alpha (pixbuf);
-
-  if (has_alpha) {
-    png_set_IHDR (png_ptr, info_ptr, width, height,
-		  depth, PNG_COLOR_TYPE_RGB_ALPHA,
-		  PNG_INTERLACE_NONE,
-		  PNG_COMPRESSION_TYPE_DEFAULT,
-		  PNG_FILTER_TYPE_DEFAULT);
-  } else {
-    png_set_IHDR (png_ptr, info_ptr, width, height,
-		  depth, PNG_COLOR_TYPE_RGB,
-		  PNG_INTERLACE_NONE,
-		  PNG_COMPRESSION_TYPE_DEFAULT,
-		  PNG_FILTER_TYPE_DEFAULT);
-  }
-
-  /* Some text to go with the image */
-  text[0].key = "Title";
-  text[0].text = (char *)filename;
-  text[0].compression = PNG_TEXT_COMPRESSION_NONE;
-  text[1].key = "Software";
-  text[1].text = "Ardesia";
-  text[1].compression = PNG_TEXT_COMPRESSION_NONE;
-  png_set_text (png_ptr, info_ptr, text, 2);
-
-  png_write_info (png_ptr, info_ptr);
-  for (i = 0; i < height; i++) {
-    png_bytep row_ptr = pixels;
-
-    png_write_row (png_ptr, row_ptr);
-    pixels += rowstride;
-  }
-
-  png_write_end (png_ptr, info_ptr);
-  png_destroy_write_struct (&png_ptr, &info_ptr);
-
-  fflush (handle);
-  fclose (handle);
-
-  return TRUE;
-}
-
-
-gboolean
-load_png (const char *name, GdkPixbuf **pixmap)
-{
-  *pixmap = gdk_pixbuf_new_from_file (name, NULL);
-
-  if (*pixmap)
-    {
-     GdkPixbuf *scaled;
-     gint h = gdk_screen_height ();
-     gint w = gdk_screen_width ();
-     scaled = gdk_pixbuf_scale_simple(*pixmap, w, h, GDK_INTERP_BILINEAR);
-     g_object_unref (G_OBJECT (*pixmap));
-     *pixmap = scaled;
-     return TRUE;
-    }
-
-  fprintf (stderr, "couldn't load %s\n", name);
-
-  *pixmap = NULL;
-  return FALSE;
-}
-
-void init_background_window()
-{
-                GdkWindow       *root_window;
-                GdkWindowAttr   wattr;
-  
-                gint rh = gdk_screen_height ();
-                gint rw = gdk_screen_width ();
-                gint attributes_mask;
-                root_window = GDK_ROOT_PARENT();
-  
-                wattr.title = "Background window";
-                wattr.x = 0 ;
-                wattr.y = 0;
-                wattr.width = rw;
-                wattr.height = rh;
-                wattr.wclass = GDK_INPUT_OUTPUT;
-                wattr.window_type = GDK_WINDOW_CHILD;
-                wattr.event_mask = (GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-                attributes_mask = GDK_WA_X | GDK_WA_Y;
-
-                background_window = gdk_window_new(root_window , &wattr , attributes_mask);
-
-}
-
-void load_background(const char *name)
-{
-   
-if (background_window==NULL)
-        {
-                init_background_window();
-        }
-GdkPixbuf *pixbuf = NULL;
-
-load_png(name,&pixbuf);
-gint h = gdk_screen_height ();
-gint w = gdk_screen_width ();
-gdk_draw_pixbuf (background_window, NULL, pixbuf, 0, 0, 0, 0, w, h,
-				 GDK_RGB_DITHER_NORMAL, 0, 0);
-
-gdk_window_show(background_window);
-gdk_window_raise(background_window);
-
-
-}
-
-void makeScreenshot(char* filename)
-{
-
-  gint height = gdk_screen_height ();
-  gint width = gdk_screen_width ();
-
-  GdkWindow* root = gdk_get_default_root_window ();
-  GdkPixbuf* buf = gdk_pixbuf_get_from_drawable (NULL, root, NULL,
-						 0, 0, 0, 0, width, height);
-  save_png (buf, filename);
-  g_object_unref (G_OBJECT (buf));
-
 }
 
 
@@ -666,46 +496,46 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
   GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON(toolbutton);
   GtkColorSelection *colorsel;
   if (gtk_toggle_tool_button_get_active(button))
-  {
-    /* open color widget */
-    GtkWidget* colorDialog = gtk_color_selection_dialog_new ("Changing color");
-    if (gdkcolor==NULL)
     {
-       gdkcolor = g_malloc (sizeof (GdkColor));
-    }
-    else
-    {
-       colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
-       gtk_color_selection_set_current_color(colorsel, gdkcolor);
-       gtk_color_selection_set_previous_color(colorsel, gdkcolor);
-    } 
+      /* open color widget */
+      GtkWidget* colorDialog = gtk_color_selection_dialog_new ("Changing color");
+      if (gdkcolor==NULL)
+	{
+	  gdkcolor = g_malloc (sizeof (GdkColor));
+	}
+      else
+	{
+	  colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
+	  gtk_color_selection_set_current_color(colorsel, gdkcolor);
+	  gtk_color_selection_set_previous_color(colorsel, gdkcolor);
+	} 
 
-    if (annotateclientpid != -1)
-    {
-      kill(annotateclientpid,9);
-    }  
-    gint result = gtk_dialog_run((GtkDialog *) colorDialog);
+      if (annotateclientpid != -1)
+	{
+	  kill(annotateclientpid,9);
+	}  
+      gint result = gtk_dialog_run((GtkDialog *) colorDialog);
 
-    /* Wait for user to select OK or Cancel */
-    switch (result)
-    {
-      case GTK_RESPONSE_OK:
-           colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
-           get_selected_color(colorsel);
-           color = pickedcolor; 
-	   gtk_widget_destroy(colorDialog);
-           paint(); 
-           break;
+      /* Wait for user to select OK or Cancel */
+      switch (result)
+	{
+	case GTK_RESPONSE_OK:
+	  colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
+	  get_selected_color(colorsel);
+	  color = pickedcolor; 
+	  gtk_widget_destroy(colorDialog);
+	  paint(); 
+	  break;
       
-      default:
-           /* If dialog did not return OK then it was canceled */
-	   //gtk_toggle_tool_button_set_active(button, FALSE); 
-           gtk_widget_destroy(colorDialog);
-           paint(); 
-           break;
-    }
+	default:
+	  /* If dialog did not return OK then it was canceled */
+	  //gtk_toggle_tool_button_set_active(button, FALSE); 
+	  gtk_widget_destroy(colorDialog);
+	  paint(); 
+	  break;
+	}
 
-  }
+    }
 
 }
 
@@ -769,6 +599,6 @@ on_buttonClear_activate                (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
   
-   callAnnotate("--clear", NULL, NULL, NULL);   
+  callAnnotate("--clear", NULL, NULL, NULL);   
 
 }
