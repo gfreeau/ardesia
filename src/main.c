@@ -252,11 +252,12 @@ main (int argc, char *argv[])
   /* move the window iin the desired position */
   move(mainWindow,&x,&y,&width,&height,position);
    
+  //char* location = PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps/notebook_paper.png";
+  //load_background(location); 
   /** Launch annotate */
   annotatepid = startAnnotate(x,y,width,height);
   
   gtk_widget_show (mainWindow);
-  
   gtk_main ();
   gtk_widget_destroy(mainWindow); 
 

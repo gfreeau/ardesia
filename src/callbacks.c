@@ -64,6 +64,8 @@ int pencil = TRUE;
 
 
 GdkColor*  gdkcolor= NULL;
+GdkWindow* background_window;
+
 
 
 /* 
@@ -396,6 +398,73 @@ save_png (GdkPixbuf *pixbuf,
   return TRUE;
 }
 
+
+gboolean
+load_png (const char *name, GdkPixbuf **pixmap)
+{
+  *pixmap = gdk_pixbuf_new_from_file (name, NULL);
+
+  if (*pixmap)
+    {
+     GdkPixbuf *scaled;
+     gint h = gdk_screen_height ();
+     gint w = gdk_screen_width ();
+     scaled = gdk_pixbuf_scale_simple(*pixmap, w, h, GDK_INTERP_BILINEAR);
+     g_object_unref (G_OBJECT (*pixmap));
+     *pixmap = scaled;
+     return TRUE;
+    }
+
+  fprintf (stderr, "couldn't load %s\n", name);
+
+  *pixmap = NULL;
+  return FALSE;
+}
+
+void init_background_window()
+{
+                GdkWindow       *root_window;
+                GdkWindowAttr   wattr;
+  
+                gint rh = gdk_screen_height ();
+                gint rw = gdk_screen_width ();
+                gint attributes_mask;
+                root_window = GDK_ROOT_PARENT();
+  
+                wattr.title = "Background window";
+                wattr.x = 0 ;
+                wattr.y = 0;
+                wattr.width = rw;
+                wattr.height = rh;
+                wattr.wclass = GDK_INPUT_OUTPUT;
+                wattr.window_type = GDK_WINDOW_CHILD;
+                wattr.event_mask = (GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+                attributes_mask = GDK_WA_X | GDK_WA_Y;
+
+                background_window = gdk_window_new(root_window , &wattr , attributes_mask);
+
+}
+
+void load_background(const char *name)
+{
+   
+if (background_window==NULL)
+        {
+                init_background_window();
+        }
+GdkPixbuf *pixbuf = NULL;
+
+load_png(name,&pixbuf);
+gint h = gdk_screen_height ();
+gint w = gdk_screen_width ();
+gdk_draw_pixbuf (background_window, NULL, pixbuf, 0, 0, 0, 0, w, h,
+				 GDK_RGB_DITHER_NORMAL, 0, 0);
+
+gdk_window_show(background_window);
+gdk_window_raise(background_window);
+
+
+}
 
 void makeScreenshot(char* filename)
 {
