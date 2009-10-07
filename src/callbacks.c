@@ -48,6 +48,10 @@
 #include <math.h>
 #include <pngutils.h>
 
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <errno.h>
+
 
 /* annotation is visible */
 gboolean     visible = TRUE;
@@ -231,7 +235,7 @@ get_desktop_dir (void)
 
 
 /* Get the current date and format in a printable format */
-char* getDate()
+char* get_date()
 {
   struct tm* t;
   time_t now;
@@ -286,7 +290,23 @@ get_selected_color		 (char* pickedcolor, GtkColorSelection   *colorsel)
   tmpcolor[6]=0;
  
   strncpy(&pickedcolor[0],tmpcolor,7);
-   /* e.g. pickedcolor 2000ff */ 
+  /* e.g. pickedcolor 2000ff */ 
+}
+
+/* Return if a file exists */
+gboolean file_exists(char* filename)
+{
+  struct stat statbuf;
+  if(stat(filename, &statbuf) < 0) {
+    if(errno == ENOENT) {
+      return FALSE;
+    } else {
+      fprintf(stderr, "could not stat %s\n", filename);
+      perror("");
+      exit(0);
+    }
+  }
+  return TRUE;
 }
 
 
@@ -403,14 +423,56 @@ void
 on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
-  char * date = getDate();
-  const gchar* desktopDir = get_desktop_dir();	
+  char * date = get_date();
+  const gchar* desktop_dir = get_desktop_dir();	
   char* filename =  malloc(256*sizeof(char));
-  sprintf(filename,"%s/ardesia_%s.png", desktopDir, date);
-  makeScreenshot(filename);
+  extern GtkWidget *mainWindow;
+
+  sprintf(filename,"ardesia_%s", date);
+  GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save image as png", GTK_WINDOW(mainWindow), GTK_FILE_CHOOSER_ACTION_SAVE,
+						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
+						    NULL);
+  
+  gtk_window_set_title (GTK_WINDOW (chooser), "Select a file");
+  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), desktop_dir);
+  gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
+  
+  if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
+    {
+
+      filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
+      desktop_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
+
+      filename = (gchar *) realloc(filename,  (strlen(filename) + 4 + 1) * sizeof(gchar)); 
+      (void) strcat((gchar *)filename, ".png");
+               
+ 
+      gtk_widget_destroy (chooser);
+      if (file_exists(filename) == TRUE)
+        {
+	  GtkWidget *msg_dialog; 
+                   
+	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(toolbutton), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
+
+                 
+	  if (gtk_dialog_run(GTK_DIALOG(msg_dialog)) == GTK_RESPONSE_NO)
+            { 
+	      gtk_widget_destroy(msg_dialog);
+	      g_free(filename);
+	      return; 
+	    } 
+           else 
+            {
+              gtk_widget_destroy(msg_dialog);
+            }
+      }
+      makeScreenshot(filename);
+      paint();
+    } 
+
   free(date);
   free(filename);
-  paint();
 }
 
 
@@ -439,10 +501,10 @@ on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
       sprintf(screen_dimension,"%dx%d", screen_width, screen_height);
 
       char* filename =  malloc(128*sizeof(char));
-      char* date = getDate();
-      const gchar* desktopDir = get_desktop_dir();	
-
-      sprintf(filename,"%s/ardesia_%s.mpeg", desktopDir, date);
+      char* date = get_date();
+      const gchar* desktop_dir = get_desktop_dir();	
+      
+      sprintf(filename,"%s/ardesia_%s.mpeg", desktop_dir, date);
       free(date);
       char* argv[11];
       argv[0] = "ffmpeg";

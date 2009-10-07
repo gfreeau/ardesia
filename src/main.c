@@ -46,6 +46,7 @@ int SOUTH=2;
 int SPACE_FROM_BORDER = 30;
 
 int annotatepid;
+GtkWidget *mainWindow;
 
 
 
@@ -192,7 +193,6 @@ int
 main (int argc, char *argv[])
 
 {
-  GtkWidget *mainWindow;
 
   int position = SOUTH;
   char* arg = NULL;
