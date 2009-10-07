@@ -285,7 +285,6 @@
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Hide</property>
                 <property name="use_underline">True</property>
-                <property name="label_widget">view</property>
                 <property name="stock_id">gtk-find</property>
                 <signal name="toggled" handler="on_toolsVisible_activate"/>
               </object>
@@ -301,7 +300,6 @@
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Save</property>
                 <property name="use_underline">True</property>
-                <property name="label_widget">photo</property>
                 <property name="stock_id">gtk-floppy</property>
                 <signal name="clicked" handler="on_toolsScreenShot_activate"/>
               </object>
@@ -350,10 +348,6 @@
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="pencil">
-    <property name="visible">True</property>
-    <property name="pixbuf">pixmaps/pencil.png</property>
-  </object>
   <object class="GtkImage" id="eraser">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/eraser.png</property>
@@ -393,14 +387,6 @@
   <object class="GtkImage" id="white">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/white.png</property>
-  </object>
-  <object class="GtkImage" id="view">
-    <property name="visible">True</property>
-    <property name="pixbuf">pixmaps/search.png</property>
-  </object>
-  <object class="GtkImage" id="photo">
-    <property name="visible">True</property>
-    <property name="pixbuf">pixmaps/photo.png</property>
   </object>
   <object class="GtkImage" id="record">
     <property name="visible">True</property>
