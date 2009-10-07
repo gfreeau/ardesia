@@ -251,7 +251,7 @@ main (int argc, char *argv[])
   
   if (loadbackground)
   {
-    load_background_window(arg); 
+    change_background(arg); 
   }
 
   int x, y, width, height;

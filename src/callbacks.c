@@ -133,7 +133,7 @@ quit()
       kill(annotateclientpid,9);
     }
   kill(annotatepid,9);
-  close_background_window();
+  remove_background();
   /* Disalloc */
   g_object_unref ( G_OBJECT(gtkBuilder) ); 
 

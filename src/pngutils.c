@@ -138,12 +138,12 @@ load_png (const char *name, GdkPixbuf **pixmap)
 }
 
 void 
-load_background_window (const char *name)
+change_background (const char *name)
 {
    
   if (background_window==NULL)
     {
-       close_background_window();
+       remove_background();
     }
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
@@ -196,7 +196,7 @@ void makeScreenshot(char* filename)
 
 }
 
-void close_background_window()
+void remove_background()
 {
   if (background_window!=NULL)
   { 
