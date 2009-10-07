@@ -196,7 +196,7 @@
                 <property name="height_request">35</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Pick</property>
-                <property name="stock_id">gtk-color-picker</property>
+                <property name="stock_id">gtk-select-color</property>
                 <property name="group">buttonRed</property>
                 <signal name="clicked" handler="on_buttonPicker_activate"/>
               </object>
@@ -286,6 +286,7 @@
                 <property name="tooltip_text" translatable="yes">Hide</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">view</property>
+                <property name="stock_id">gtk-find</property>
                 <signal name="toggled" handler="on_toolsVisible_activate"/>
               </object>
               <packing>
@@ -298,9 +299,10 @@
                 <property name="width_request">35</property>
                 <property name="height_request">35</property>
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Screenshot</property>
+                <property name="tooltip_text" translatable="yes">Save</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">photo</property>
+                <property name="stock_id">gtk-floppy</property>
                 <signal name="clicked" handler="on_toolsScreenShot_activate"/>
               </object>
               <packing>
