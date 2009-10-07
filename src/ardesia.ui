@@ -3,7 +3,7 @@
   <requires lib="gtk+" version="2.14"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">715</property>
+    <property name="width_request">680</property>
     <property name="visible">True</property>
     <property name="app_paintable">True</property>
     <property name="events">GDK_BUTTON_PRESS_MASK</property>
@@ -30,7 +30,7 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkHScale" id="thickScale">
-                    <property name="width_request">110</property>
+                    <property name="width_request">75</property>
                     <property name="height_request">35</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
