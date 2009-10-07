@@ -426,10 +426,9 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
   char * date = get_date();
   const gchar* desktop_dir = get_desktop_dir();	
   char* filename =  malloc(256*sizeof(char));
-  extern GtkWidget *mainWindow;
 
   sprintf(filename,"ardesia_%s", date);
-  GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save image as png", GTK_WINDOW(mainWindow), GTK_FILE_CHOOSER_ACTION_SAVE,
+  GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save image as png", NULL, GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
@@ -462,15 +461,19 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
 	      g_free(filename);
 	      return; 
 	    } 
-           else 
+	  else 
             {
               gtk_widget_destroy(msg_dialog);
             }
-      }
+	}
       makeScreenshot(filename);
-      paint();
+    }
+  else
+    {
+      gtk_widget_destroy (chooser);
     } 
 
+  paint();
   free(date);
   free(filename);
 }
@@ -499,39 +502,84 @@ on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
       gint screen_height = gdk_screen_height ();
       gint screen_width = gdk_screen_width ();
       sprintf(screen_dimension,"%dx%d", screen_width, screen_height);
-
-      char* filename =  malloc(128*sizeof(char));
-      char* date = get_date();
+   
+      char * date = get_date();
       const gchar* desktop_dir = get_desktop_dir();	
-      
-      sprintf(filename,"%s/ardesia_%s.mpeg", desktop_dir, date);
-      free(date);
-      char* argv[11];
-      argv[0] = "ffmpeg";
-      argv[1] = "-f";
-      argv[2] = "x11grab";
-      argv[3] = "-r";
-      argv[4] = "25";
-      argv[5] = "-s";
-      argv[6] = screen_dimension;
-      argv[7] = "-i";
-      argv[8] = ":0.0";
-      argv[9] = filename;
-      argv[10] = (char*) NULL ;
-      ffmpegpid = startFFmpeg(argv);
-      free(screen_dimension);
-      free(filename);
-      /* put icon to stop */
-      char* location = PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps/stop.png" ;
-      GtkWidget * label_widget = gtk_image_new_from_file (location);
-      gtk_tool_button_set_label_widget (toolbutton, label_widget);
-      /* set stop tooltip */ 
-      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Stop");
-      /* show */ 
-      gtk_widget_show(label_widget);
+      char* filename =  malloc(256*sizeof(char));
+
+      sprintf(filename,"ardesia_%s", date);
+      GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save video as mpeg", NULL , GTK_FILE_CHOOSER_ACTION_SAVE,
+							GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+							GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
+							NULL);
   
+      gtk_window_set_title (GTK_WINDOW (chooser), "Select a file");
+      gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), desktop_dir);
+      gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
+  
+      if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
+	{
+
+	  filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
+	  desktop_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
+
+	  filename = (gchar *) realloc(filename,  (strlen(filename) + 5 + 1) * sizeof(gchar)); 
+	  (void) strcat((gchar *)filename, ".mpeg");
+               
+ 
+	  gtk_widget_destroy (chooser);
+	  if (file_exists(filename) == TRUE)
+	    {
+	      GtkWidget *msg_dialog; 
+                   
+	      msg_dialog = gtk_message_dialog_new (GTK_WINDOW(toolbutton), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
+
+                 
+	      if (gtk_dialog_run(GTK_DIALOG(msg_dialog)) == GTK_RESPONSE_NO)
+		{ 
+		  gtk_widget_destroy(msg_dialog);
+		  g_free(filename);
+		  return; 
+		} 
+	      else 
+		{
+		  gtk_widget_destroy(msg_dialog);
+		}
+	    }
+	  char* argv[11];
+	  argv[0] = "ffmpeg";
+	  argv[1] = "-f";
+	  argv[2] = "x11grab";
+	  argv[3] = "-r";
+	  argv[4] = "25";
+	  argv[5] = "-s";
+	  argv[6] = screen_dimension;
+	  argv[7] = "-i";
+	  argv[8] = ":0.0";
+	  argv[9] = filename;
+	  argv[10] = (char*) NULL ;
+	  ffmpegpid = startFFmpeg(argv);
+	  free(screen_dimension);
+	  /* put icon to stop */
+	  char* location = PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps/stop.png" ;
+	  GtkWidget * label_widget = gtk_image_new_from_file (location);
+	  gtk_tool_button_set_label_widget (toolbutton, label_widget);
+	  /* set stop tooltip */ 
+	  gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Stop");
+	  /* show */ 
+	  gtk_widget_show(label_widget);
+
+	}
+      else
+        {
+	  gtk_widget_destroy (chooser);
+        } 
+
+      paint();
+      free(date);
+      free(filename);
+ 
     }
-  paint();
 }
 
 

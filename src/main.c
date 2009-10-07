@@ -46,7 +46,6 @@ int SOUTH=2;
 int SPACE_FROM_BORDER = 30;
 
 int annotatepid;
-GtkWidget *mainWindow;
 
 
 
@@ -261,7 +260,7 @@ main (int argc, char *argv[])
    * (except popup menus), just so that you see something after building
    * the project. Delete any components that you don't want shown initially.
    */
-  mainWindow = create_mainWindow ();
+  GtkWidget *mainWindow = create_mainWindow ();
  
   /* move the window iin the desired position */
   move(mainWindow,&x,&y,&width,&height,position);
