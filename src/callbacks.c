@@ -37,6 +37,7 @@
 
 #include "stdlib.h"
 #include "unistd.h"
+#include <string.h> 
 
 #include "stdio.h"
 #include "time.h"
@@ -48,18 +49,26 @@
 #include <pngutils.h>
 
 
+/* annotation is visible */
+gboolean     visible = TRUE;
 
-int     recording = 0;
+/* pencil is selected */
+gboolean     pencil = TRUE;
 
-char    pickedcolor[7];
-char*   color="FF0000";
-int     tickness=15;
-int     visible = 1;
+/* selected color */
+char*        color="FF0000";
 
-int ffmpegpid;
+/* selected line width */
+int          tickness=15;
+
+/* pid of the ffmpeg process for the recording */
+int ffmpegpid = -1;
+
+/* pid of the current running instance of the annotate client */
 int annotateclientpid = -1;
+
+/* arrow=0 mean disabled, arrow=1 mean arrow, arrow=2 mean double arrow */
 char* arrow = "0";
-int pencil = TRUE;
 
 /* Used to record the history of the last color selected */
 GdkColor*  gdkcolor= NULL;
@@ -98,14 +107,24 @@ callAnnotate(char *arg1, char* arg2, char* arg3, char* arrow)
   return pid;
 }
 
+/* Return if the recording is active */
+gboolean is_recording()
+{
+  if (ffmpegpid==-1)
+    {
+      return FALSE;
+    }
+  return TRUE;
+}
 
+/* Called when close the program */
 gboolean 
 quit()
 
 {
   extern int annotatepid;
   gboolean ret=FALSE;
-  if(recording)
+  if(is_recording())
     {
       kill(ffmpegpid,9);
     }       
@@ -121,6 +140,157 @@ quit()
   gtk_main_quit();; 
   exit(ret);
 }
+
+/* Start to paint calling annotate */
+void
+paint()
+
+{
+
+  pencil=TRUE;
+  char* ticknessa = (char*) malloc(16*sizeof(char));
+  sprintf(ticknessa,"%d",tickness);
+
+  callAnnotate("--toggle", color, ticknessa, arrow);   
+ 
+  free(ticknessa);
+
+}
+
+
+/* Start to erase calling annotate */
+void
+erase()
+
+{
+
+  pencil=FALSE;
+  char* ticknessa = (char*) malloc(16*sizeof(char));
+  sprintf(ticknessa,"%d",tickness);
+
+  callAnnotate("--eraser", ticknessa, NULL, NULL); 
+  
+  free(ticknessa);
+   
+}
+
+/* 
+ * Create a annotate client process the annotate
+ * that talk with the server process 
+ */
+int
+startFFmpeg(char *argv[])
+
+{
+  pid_t pid;
+
+  pid = fork();
+
+  if (pid < 0)
+    {
+      return -1;
+    }
+  if (pid == 0)
+    {
+      execvp(argv[0], argv);
+    }
+  return pid;
+}
+
+/*
+ * Get the desktop folder;
+ * Now this function use gconf to found the folder,
+ * this means that this rutine works properly only
+ * with the gnome desktop environment
+ * We can investigate how-to generalize this 
+ */
+const gchar *
+get_desktop_dir (void)
+{
+  GConfClient *gconf_client = NULL;
+  gboolean desktop_is_home_dir = FALSE;
+  const gchar* desktop_dir = NULL;
+
+  gconf_client = gconf_client_get_default ();
+  desktop_is_home_dir = gconf_client_get_bool (gconf_client,
+                                               "/apps/nautilus/preferences/desktop_is_home_dir",
+                                               NULL);
+  if (desktop_is_home_dir)
+    {
+      desktop_dir = g_get_home_dir ();
+    }
+  else
+    {
+      desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
+    }
+
+  g_object_unref (gconf_client);
+
+  return desktop_dir;
+}
+
+
+/* Get the current date and format in a printable format */
+char* getDate()
+{
+  struct tm* t;
+  time_t now;
+  time( &now );
+  t = localtime( &now );
+
+  char* date = malloc(64*sizeof(char));
+  sprintf(date, "%d-%d-%d_%d:%d:%d", t->tm_mday,t->tm_mon+1,t->tm_year+1900,t->tm_hour,t->tm_min,t->tm_sec);
+  return date;
+}
+
+
+/* 
+ * This function is called when the thick property is changed;
+ * start paint with pen or eraser depending on the selected tool
+ */
+void thick()
+
+{
+
+  if (pencil)
+    {
+      paint();
+    }
+  else
+    {
+      erase();
+    }
+
+}
+
+
+/*
+ * Get the current selected color and store it in the esadecimal format
+ * in the pickedcolor variable
+ */
+void 
+get_selected_color		 (char* pickedcolor, GtkColorSelection   *colorsel)
+
+{
+  gtk_color_selection_get_current_color   (colorsel, gdkcolor);
+  /* set color */
+  gchar* col = gdk_color_to_string(gdkcolor);
+  /* e.g. color #20200000ffff */ 
+  char tmpcolor[7]; 
+  tmpcolor[0]=col[1];
+  tmpcolor[1]=col[2];
+  tmpcolor[2]=col[5];
+  tmpcolor[3]=col[6];
+  tmpcolor[4]=col[9];
+  tmpcolor[5]=col[10];
+  tmpcolor[6]=0;
+ 
+  strncpy(&pickedcolor[0],tmpcolor,7);
+   /* e.g. pickedcolor 2000ff */ 
+}
+
+
+/* Start event handler section */
 
 
 gboolean
@@ -142,38 +312,6 @@ on_winMain_delete_event                (GtkWidget       *widget,
 
   return quit();
 
-}
-
-
-void
-paint()
-
-{
-
-  pencil=TRUE;
-  char* ticknessa = (char*) malloc(16*sizeof(char));
-  sprintf(ticknessa,"%d",tickness);
-
-  callAnnotate("--toggle", color, ticknessa, arrow);   
- 
-  free(ticknessa);
-
-}
-
-
-void
-erase()
-
-{
-
-  pencil=FALSE;
-  char* ticknessa = (char*) malloc(16*sizeof(char));
-  sprintf(ticknessa,"%d",tickness);
-
-  callAnnotate("--eraser", ticknessa, NULL, NULL); 
-  
-  free(ticknessa);
-   
 }
 
 
@@ -248,79 +386,16 @@ on_toolsVisible_activate               (GtkToolButton   *toolbutton,
   callAnnotate("--visibility", NULL, NULL, NULL );
   if (visible)
     {
-      visible=0;
+      visible=FALSE;
       /* set tooltip to unhide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Unhide");
     }
   else
     {
-      visible=1;
+      visible=TRUE;
       /* set tooltip to hide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Hide");
     }
-}
-
-
-/* 
- * Create a annotate client process the annotate
- * that talk with the server process 
- */
-int
-startFFmpeg(char *argv[])
-
-{
-  pid_t pid;
-
-  pid = fork();
-
-  if (pid < 0)
-    {
-      return -1;
-    }
-  if (pid == 0)
-    {
-      execvp(argv[0], argv);
-    }
-  return pid;
-}
-
-
-const gchar *
-get_desktop_dir (void)
-{
-  GConfClient *gconf_client = NULL;
-  gboolean desktop_is_home_dir = FALSE;
-  const gchar* desktop_dir = NULL;
-
-  gconf_client = gconf_client_get_default ();
-  desktop_is_home_dir = gconf_client_get_bool (gconf_client,
-                                               "/apps/nautilus/preferences/desktop_is_home_dir",
-                                               NULL);
-  if (desktop_is_home_dir)
-    {
-      desktop_dir = g_get_home_dir ();
-    }
-  else
-    {
-      desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
-    }
-
-  g_object_unref (gconf_client);
-
-  return desktop_dir;
-}
-
-
-char* getDate()
-{
-  struct tm* t;
-  time_t now;
-  time( &now );
-  t = localtime( &now );
-
-  char* date = malloc(64*sizeof(char));
-  sprintf(date, "%d-%d-%d_%d:%d:%d", t->tm_mday,t->tm_mon+1,t->tm_year+1900,t->tm_hour,t->tm_min,t->tm_sec);
-  return date;
 }
 
 
@@ -343,10 +418,10 @@ void
 on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
-  if(recording)
+  if(is_recording())
     {
       kill(ffmpegpid,9);
-      recording=0;
+      ffmpegpid=-1;
       /* put icon to record */
       char* location = PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps/record.png" ;
       GtkWidget * label_widget = gtk_image_new_from_file (location);
@@ -382,7 +457,6 @@ on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
       argv[9] = filename;
       argv[10] = (char*) NULL ;
       ffmpegpid = startFFmpeg(argv);
-      recording=1;
       free(screen_dimension);
       free(filename);
       /* put icon to stop */
@@ -396,22 +470,6 @@ on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
   
     }
   paint();
-}
-
-
-void thick()
-
-{
-
-  if (pencil)
-    {
-      paint();
-    }
-  else
-    {
-      erase();
-    }
-
 }
 
 
@@ -469,25 +527,6 @@ on_colorGreen_activate                 (GtkToolButton   *toolbutton,
 }
 
 
-void 
-get_selected_color		 (GtkColorSelection   *colorsel)
-
-{
-  gtk_color_selection_get_current_color   (colorsel, gdkcolor);
-  /* set color */
-  gchar* col = gdk_color_to_string(gdkcolor);
-  /* e.g. color #20200000ffff */ 
-  pickedcolor[0]=col[1];
-  pickedcolor[1]=col[2];
-  pickedcolor[2]=col[5];
-  pickedcolor[3]=col[6];
-  pickedcolor[4]=col[9];
-  pickedcolor[5]=col[10];
-  pickedcolor[6]=0;
-  /* e.g. pickedcolor 2000ff */ 
-}
-
-
 void
 on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
 					 gpointer         user_data)
@@ -521,8 +560,9 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
 	{
 	case GTK_RESPONSE_OK:
 	  colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
-	  get_selected_color(colorsel);
-	  color = pickedcolor; 
+          char*   pickedcolor= malloc(7*sizeof(char));;
+	  get_selected_color(pickedcolor,colorsel);
+          color = pickedcolor; 
 	  gtk_widget_destroy(colorDialog);
 	  paint(); 
 	  break;

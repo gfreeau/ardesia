@@ -147,10 +147,8 @@ load_background_window (const char *name)
     }
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
+  
   GdkPixbuf *pixbuf = NULL;
-
-  background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
   load_png(name,&pixbuf);
 
   gtk_widget_push_colormap(gdk_rgb_get_colormap());
