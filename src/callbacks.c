@@ -294,18 +294,24 @@ get_selected_color		 (char* pickedcolor, GtkColorSelection   *colorsel)
 }
 
 /* Return if a file exists */
-gboolean file_exists(char* filename)
+gboolean file_exists(char* filename, char* desktop_dir)
 {
+  char* afterslash = strrchr(filename, '/');
+  if (afterslash==0)
+  {
+    /* relative path */
+    filename = strcat(filename,desktop_dir);
+  }
   struct stat statbuf;
   if(stat(filename, &statbuf) < 0) {
     if(errno == ENOENT) {
       return FALSE;
     } else {
-      fprintf(stderr, "could not stat %s\n", filename);
       perror("");
       exit(0);
     }
   }
+ printf("filename %s exists \n", filename);
   return TRUE;
 }
 
@@ -442,19 +448,20 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
 
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
       desktop_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
-
-      filename = (gchar *) realloc(filename,  (strlen(filename) + 4 + 1) * sizeof(gchar)); 
-      (void) strcat((gchar *)filename, ".png");
-               
+      
+      char* extension = strrchr(filename, '.');
+      if ((extension==0) || (strcmp(extension, ".png") != 0))
+        {
+          filename = (gchar *) realloc(filename,  (strlen(filename) + 4 + 1) * sizeof(gchar)); 
+          (void) strcat((gchar *)filename, ".png");
+        }           
  
       gtk_widget_destroy (chooser);
-      if (file_exists(filename) == TRUE)
+      if (file_exists(filename, desktop_dir))
         {
 	  GtkWidget *msg_dialog; 
-                   
-	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(toolbutton), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
-
-                 
+          msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
+ 
 	  if (gtk_dialog_run(GTK_DIALOG(msg_dialog)) == GTK_RESPONSE_NO)
             { 
 	      gtk_widget_destroy(msg_dialog);
@@ -519,16 +526,19 @@ on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
 	  filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
 	  desktop_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
 
-	  filename = (gchar *) realloc(filename,  (strlen(filename) + 5 + 1) * sizeof(gchar)); 
-	  (void) strcat((gchar *)filename, ".mpeg");
-               
+          char* extension = strrchr(filename, '.');
+          if ((extension==0) || (strcmp(extension, ".mpeg") != 0))
+            {
+              filename = (gchar *) realloc(filename,  (strlen(filename) + 5 + 1) * sizeof(gchar));
+              (void) strcat((gchar *)filename, ".mpeg");
+            }
  
 	  gtk_widget_destroy (chooser);
-	  if (file_exists(filename) == TRUE)
+	  if (file_exists(filename, desktop_dir) == TRUE)
 	    {
 	      GtkWidget *msg_dialog; 
                    
-	      msg_dialog = gtk_message_dialog_new (GTK_WINDOW(toolbutton), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
+	      msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
 
                  
 	      if (gtk_dialog_run(GTK_DIALOG(msg_dialog)) == GTK_RESPONSE_NO)
