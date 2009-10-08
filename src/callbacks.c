@@ -298,10 +298,10 @@ gboolean file_exists(char* filename, char* desktop_dir)
 {
   char* afterslash = strrchr(filename, '/');
   if (afterslash==0)
-  {
-    /* relative path */
-    filename = strcat(filename,desktop_dir);
-  }
+    {
+      /* relative path */
+      filename = strcat(filename,desktop_dir);
+    }
   struct stat statbuf;
   if(stat(filename, &statbuf) < 0) {
     if(errno == ENOENT) {
@@ -311,7 +311,7 @@ gboolean file_exists(char* filename, char* desktop_dir)
       exit(0);
     }
   }
- printf("filename %s exists \n", filename);
+  printf("filename %s exists \n", filename);
   return TRUE;
 }
 
@@ -438,7 +438,8 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
-  
+  gtk_window_stick((GtkWindow*) chooser);
+ 
   gtk_window_set_title (GTK_WINDOW (chooser), "Select a file");
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), desktop_dir);
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
@@ -457,10 +458,11 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
         }           
  
       gtk_widget_destroy (chooser);
-      if (file_exists(filename, desktop_dir))
+      if (file_exists(filename,(char *) desktop_dir))
         {
 	  GtkWidget *msg_dialog; 
           msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
+          gtk_window_stick((GtkWindow*)msg_dialog);
  
 	  if (gtk_dialog_run(GTK_DIALOG(msg_dialog)) == GTK_RESPONSE_NO)
             { 
@@ -515,6 +517,7 @@ on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
 							GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 							GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 							NULL);
+      gtk_window_stick((GtkWindow*)chooser);
   
       gtk_window_set_title (GTK_WINDOW (chooser), "Select a file");
       gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), desktop_dir);
@@ -534,12 +537,13 @@ on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
             }
  
 	  gtk_widget_destroy (chooser);
-	  if (file_exists(filename, desktop_dir) == TRUE)
+	  if (file_exists(filename, (char *) desktop_dir) == TRUE)
 	    {
 	      GtkWidget *msg_dialog; 
                    
 	      msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
 
+              gtk_window_stick((GtkWindow*)msg_dialog);
                  
 	      if (gtk_dialog_run(GTK_DIALOG(msg_dialog)) == GTK_RESPONSE_NO)
 		{ 
@@ -649,6 +653,11 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
     {
       /* open color widget */
       GtkWidget* colorDialog = gtk_color_selection_dialog_new ("Changing color");
+
+      gtk_window_set_keep_above(GTK_WINDOW(parent),TRUE);
+      gtk_window_stick((GtkWindow*)colorDialog);
+
+
       if (gdkcolor==NULL)
 	{
 	  gdkcolor = g_malloc (sizeof (GdkColor));
@@ -747,7 +756,7 @@ on_colorYellow_activate                (GtkToolButton   *toolbutton,
 
 void
 on_colorWhite_activate                (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+				       gpointer         user_data)
 {
 
   color = "FFFFFF";
