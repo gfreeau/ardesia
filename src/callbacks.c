@@ -487,14 +487,10 @@ on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
     {
       kill(ffmpegpid,9);
       ffmpegpid=-1;
-      /* put icon to record */
-      char* location = PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps/record.png" ;
-      GtkWidget * label_widget = gtk_image_new_from_file (location);
-      gtk_tool_button_set_label_widget (toolbutton, label_widget);
       /* set stop tooltip */ 
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Record");
-      /* show */ 
-      gtk_widget_show(label_widget);
+      /* put icon to record */
+      gtk_tool_button_set_stock_id (toolbutton, "gtk-media-record");
     }
   else
     {       
@@ -560,15 +556,10 @@ on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
 	  argv[10] = (char*) NULL ;
 	  ffmpegpid = startFFmpeg(argv);
 	  free(screen_dimension);
-	  /* put icon to stop */
-	  char* location = PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps/stop.png" ;
-	  GtkWidget * label_widget = gtk_image_new_from_file (location);
-	  gtk_tool_button_set_label_widget (toolbutton, label_widget);
 	  /* set stop tooltip */ 
 	  gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Stop");
-	  /* show */ 
-	  gtk_widget_show(label_widget);
-
+	  /* put icon to stop */
+	  gtk_tool_button_set_stock_id (toolbutton, "gtk-media-stop");
 	}
       else
         {
@@ -743,6 +734,16 @@ on_colorYellow_activate                (GtkToolButton   *toolbutton,
 
 }
 
+
+void
+on_colorWhite_activate                (GtkToolButton   *toolbutton,
+                                        gpointer         user_data)
+{
+
+  color = "FFFFFF";
+  paint();
+
+}
 
 void
 on_buttonClear_activate                (GtkToolButton   *toolbutton,

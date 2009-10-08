@@ -3,7 +3,7 @@
   <requires lib="gtk+" version="2.14"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">625</property>
+    <property name="width_request">630</property>
     <property name="visible">True</property>
     <property name="app_paintable">True</property>
     <property name="events">GDK_BUTTON_PRESS_MASK</property>
@@ -73,22 +73,6 @@
                 <property name="label_widget">black</property>
                 <property name="group">buttonRed</property>
                 <signal name="clicked" handler="on_colorBlack_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkRadioToolButton" id="buttonBlue">
-                <property name="width_request">32</property>
-                <property name="height_request">32</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Blue</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">blue</property>
-                <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_colorBlue_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -184,6 +168,22 @@
                 <property name="label_widget">magenta</property>
                 <property name="group">buttonRed</property>
                 <signal name="clicked" handler="on_colorMagenta_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRadioToolButton" id="buttonWhite">
+                <property name="width_request">32</property>
+                <property name="height_request">32</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">White</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">white</property>
+                <property name="group">buttonRed</property>
+                <signal name="clicked" handler="on_colorWhite_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -315,7 +315,7 @@
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Record</property>
                 <property name="use_underline">True</property>
-                <property name="label_widget">record</property>
+                <property name="stock_id">gtk-media-record</property>
                 <signal name="toggled" handler="on_toolsRecorder_activate"/>
               </object>
               <packing>
@@ -330,7 +330,7 @@
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Quit</property>
                 <property name="use_underline">True</property>
-                <property name="label_widget">quit</property>
+                <property name="stock_id">gtk-quit</property>
                 <signal name="clicked" handler="on_quit"/>
               </object>
               <packing>
@@ -355,10 +355,6 @@
   <object class="GtkImage" id="black">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/black.png</property>
-  </object>
-  <object class="GtkImage" id="blue">
-    <property name="visible">True</property>
-    <property name="pixbuf">pixmaps/blue.png</property>
   </object>
   <object class="GtkImage" id="red">
     <property name="visible">True</property>
@@ -387,14 +383,6 @@
   <object class="GtkImage" id="white">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/white.png</property>
-  </object>
-  <object class="GtkImage" id="record">
-    <property name="visible">True</property>
-    <property name="pixbuf">pixmaps/record.png</property>
-  </object>
-  <object class="GtkImage" id="quit">
-    <property name="visible">True</property>
-    <property name="pixbuf">pixmaps/quit.png</property>
   </object>
   <object class="GtkImage" id="arrow">
     <property name="visible">True</property>
