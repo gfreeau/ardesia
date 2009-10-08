@@ -239,7 +239,7 @@ main (int argc, char *argv[])
 	} 
       else
 	{
-	  //char* location = PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps/notebook_paper.png";
+	  //char* location = PACKAGE_DATA_DIR "/" PACKAGE "/backgrounds/notebook_paper.png";
           loadbackground = TRUE;
 	}
 
