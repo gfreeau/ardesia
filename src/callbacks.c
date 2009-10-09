@@ -268,6 +268,13 @@ void thick()
 }
 
 
+/* Hide/Unhide the annotation depending on the status of the screen */
+void hide_unhide()
+{
+  callAnnotate("--visibility", NULL, NULL, NULL );
+}
+
+
 /*
  * Get the current selected color and store it in the esadecimal format
  * in the pickedcolor variable
@@ -405,11 +412,12 @@ on_toolsDoubleArrow_activate               (GtkToolButton   *toolbutton,
     }
 }
 
+
 void
 on_toolsVisible_activate               (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
-  callAnnotate("--visibility", NULL, NULL, NULL );
+  hide_unhide();
   if (visible)
     {
       visible=FALSE;
@@ -434,10 +442,12 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
   char* filename =  malloc(256*sizeof(char));
 
   sprintf(filename,"ardesia_%s", date);
+  hide_unhide();
   GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save image as png", NULL, GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
+  
   gtk_window_stick((GtkWindow*) chooser);
  
   gtk_window_set_title (GTK_WINDOW (chooser), "Select a file");
@@ -513,6 +523,7 @@ on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
       char* filename =  malloc(256*sizeof(char));
 
       sprintf(filename,"ardesia_%s", date);
+      hide_unhide();
       GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save video as mpeg", NULL , GTK_FILE_CHOOSER_ACTION_SAVE,
 							GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 							GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
@@ -579,7 +590,7 @@ on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
         {
 	  gtk_widget_destroy (chooser);
         } 
-
+      
       paint();
       free(date);
       free(filename);
@@ -672,6 +683,7 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
 	{
 	  kill(annotateclientpid,9);
 	}  
+      hide_unhide();
       gint result = gtk_dialog_run((GtkDialog *) colorDialog);
 
       /* Wait for user to select OK or Cancel */
@@ -682,18 +694,15 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
           char*   pickedcolor= malloc(7*sizeof(char));;
 	  get_selected_color(pickedcolor,colorsel);
           color = pickedcolor; 
-	  gtk_widget_destroy(colorDialog);
-	  paint(); 
 	  break;
       
 	default:
 	  /* If dialog did not return OK then it was canceled */
 	  //gtk_toggle_tool_button_set_active(button, FALSE); 
-	  gtk_widget_destroy(colorDialog);
-	  paint(); 
 	  break;
 	}
-
+     gtk_widget_destroy(colorDialog);
+     paint(); 
     }
 
 }

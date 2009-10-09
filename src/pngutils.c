@@ -182,6 +182,38 @@ change_background (const char *name)
 
 }
 
+static void
+setup_background_color (char *bg_color)
+{
+  GdkColormap *colormap;
+  GdkColor color;
+  if (bg_color == NULL ||
+      bg_color[0] == '\0' ||
+      ! gdk_color_parse (bg_color, &color))
+    {
+      gdk_color_parse ("#007777", &color);
+    }
+  g_free (bg_color);
+  colormap = gdk_drawable_get_colormap
+	  (gdk_get_default_root_window ());
+  /* paranoia */
+  if (colormap != NULL)
+    {
+      gboolean success;
+
+
+      gdk_error_trap_push ();
+      gdk_colormap_alloc_colors (colormap, &color, 1,
+				 FALSE, TRUE, &success);
+      gdk_window_set_background (gdk_get_default_root_window (), &color);
+      gdk_window_clear (gdk_get_default_root_window ());
+      gdk_flush ();
+      gdk_error_trap_pop ();
+    }
+}
+
+
+
 void makeScreenshot(char* filename)
 {
 
