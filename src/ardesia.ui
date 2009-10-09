@@ -13,7 +13,6 @@
     <property name="resizable">False</property>
     <property name="decorated">False</property>
     <property name="deletable">False</property>
-    <property name="gravity">south</property>
     <signal name="delete_event" handler="on_winMain_delete_event"/>
     <child>
       <object class="GtkVBox" id="toolboxMain">
