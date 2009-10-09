@@ -654,7 +654,6 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
       /* open color widget */
       GtkWidget* colorDialog = gtk_color_selection_dialog_new ("Changing color");
 
-      gtk_window_set_keep_above(GTK_WINDOW(parent),TRUE);
       gtk_window_stick((GtkWindow*)colorDialog);
 
 
