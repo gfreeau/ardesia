@@ -221,7 +221,7 @@ main (int argc, char *argv[])
 	      if (argc>3)
 		{
                   arg=argv[3];
-                 loadbackground = TRUE;
+		  loadbackground = TRUE;
 		}
 	    }
 	  else
@@ -249,9 +249,9 @@ main (int argc, char *argv[])
   gtk_init (&argc, &argv);
   
   if (loadbackground)
-  {
-    change_background(arg); 
-  }
+    {
+      change_background_image(arg); 
+    }
 
   int x, y, width, height;
 

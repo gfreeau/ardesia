@@ -30,7 +30,9 @@ gboolean load_png (const char *name, GdkPixbuf **pixmap);
 
 void makeScreenshot(char* filename);
 
-void change_background(const char *filename);
+void change_background_image(const char *filename);
+
+void change_background_color(char *rgb);
 
 void remove_background();
 

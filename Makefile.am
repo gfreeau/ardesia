@@ -14,8 +14,17 @@ install-data-local:
 	      $(INSTALL_DATA) $$pixmap $(DESTDIR)$(pkgdatadir)/pixmaps; \
 	    fi \
 	  done \
-	fi 
+	fi
+	if test -d $(srcdir)/backgrounds; then \
+          $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/backgrounds; \
+          for background in $(srcdir)/backgrounds/*; do \
+            if test -f $$background; then \
+              $(INSTALL_DATA) $$background $(DESTDIR)$(pkgdatadir)/backgrounds; \
+            fi \
+          done \
+        fi  
 	cp -p src/ardesia.ui $(DESTDIR)$(pkgdatadir); 
+	cp -p src/preferenceDialog.ui $(DESTDIR)$(pkgdatadir); 
 
 dist-hook:
 	if test -d pixmaps; then \
@@ -26,4 +35,13 @@ dist-hook:
 	    fi \
 	  done \
 	fi 
+	if test -d backgrounds; then \
+          mkdir $(distdir)/backgrounds; \
+          for background in backgrounds/*; do \
+            if test -f $$background; then \
+              cp -p $$background $(distdir)/backgrounds; \
+            fi \
+          done \
+        fi 
 	cp -p src/ardesia.ui $(DESTDIR)$(pkgdatadir); 
+	cp -p src/preferenceDialog.ui $(DESTDIR)$(pkgdatadir); 

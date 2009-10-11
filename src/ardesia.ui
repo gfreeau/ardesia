@@ -3,16 +3,16 @@
   <requires lib="gtk+" version="2.14"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">630</property>
+    <property name="width_request">660</property>
     <property name="visible">True</property>
     <property name="app_paintable">True</property>
     <property name="events">GDK_BUTTON_PRESS_MASK</property>
     <property name="type">popup</property>
     <property name="title" translatable="yes">Ardesia</property>
-    <property name="startup_id">Ardesia</property>
     <property name="resizable">False</property>
     <property name="decorated">False</property>
     <property name="deletable">False</property>
+    <property name="startup_id">Ardesia</property>
     <signal name="delete_event" handler="on_winMain_delete_event"/>
     <child>
       <object class="GtkVBox" id="toolboxMain">
@@ -248,6 +248,36 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToggleToolButton" id="buttonView">
+                <property name="width_request">32</property>
+                <property name="height_request">32</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Hide</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-find</property>
+                <signal name="toggled" handler="on_toolsVisible_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToggleToolButton" id="buttonPreferences">
+                <property name="width_request">32</property>
+                <property name="height_request">32</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Preferences</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-preferences</property>
+                <signal name="toggled" handler="on_toolsPreferences_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToggleToolButton" id="buttonArrow">
                 <property name="width_request">32</property>
                 <property name="height_request">32</property>
@@ -271,21 +301,6 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">doublearrow</property>
                 <signal name="toggled" handler="on_toolsDoubleArrow_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleToolButton" id="buttonView">
-                <property name="width_request">32</property>
-                <property name="height_request">32</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Hide</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-find</property>
-                <signal name="toggled" handler="on_toolsVisible_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>

@@ -45,6 +45,14 @@
 #include "interface.h"
 
 
+/* Set the defult width of the pen line */ 
+void setInitialWidth(int val)
+{
+  GtkWidget* widthWidget = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thickScale"));
+  GtkHScale* hScale = (GtkHScale *) widthWidget;
+  gtk_range_set_value(&hScale->scale.range, val);
+}
+
 /* Create the main window */
 GtkWidget*
 create_mainWindow (void)
@@ -60,11 +68,9 @@ create_mainWindow (void)
   
   /* Fill the window by the gtk builder xml */
   mainWindow = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
- 
-  GtkWidget* widthWidget = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thickScale"));
 
-  GtkHScale* hScale = (GtkHScale *) widthWidget;
-  gtk_range_set_value(&hScale->scale.range, 15);
+  /* Set the width to 15 in the thick scale */ 
+  setInitialWidth(15);
   
   /* Connect all signals by reflection */
   gtk_builder_connect_signals ( gtkBuilder, NULL );

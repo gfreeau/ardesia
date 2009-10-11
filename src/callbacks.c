@@ -77,6 +77,8 @@ char* arrow = "0";
 /* Used to record the history of the last color selected */
 GdkColor*  gdkcolor= NULL;
 
+/* Preference dialog */
+GtkBuilder *dialogGtkBuilder;
 
 /* 
  * Create a annotate client process the annotate
@@ -275,29 +277,14 @@ void hide_unhide()
 }
 
 
-/*
- * Get the current selected color and store it in the esadecimal format
- * in the pickedcolor variable
- */
-void 
-get_selected_color		 (char* pickedcolor, GtkColorSelection   *colorsel)
-
+/* Take aGdkColor and return the RGB tring */
+char *
+gdkcolor_to_rgb(GdkColor* gdkcolor)
 {
-  gtk_color_selection_get_current_color   (colorsel, gdkcolor);
-  /* set color */
-  gchar* col = gdk_color_to_string(gdkcolor);
-  /* e.g. color #20200000ffff */ 
-  char tmpcolor[7]; 
-  tmpcolor[0]=col[1];
-  tmpcolor[1]=col[2];
-  tmpcolor[2]=col[5];
-  tmpcolor[3]=col[6];
-  tmpcolor[4]=col[9];
-  tmpcolor[5]=col[10];
-  tmpcolor[6]=0;
- 
-  strncpy(&pickedcolor[0],tmpcolor,7);
-  /* e.g. pickedcolor 2000ff */ 
+  char*   ret= malloc(7*sizeof(char));;
+  /* col is in RRGGBB formati #20200000ffff this transform in the  RGB format e.g. 2000ff */ 
+  sprintf(ret,"%02x%02x%02x", gdkcolor->red/257, gdkcolor->green/257, gdkcolor->blue/257);
+  return ret;
 }
 
 /* Return if a file exists */
@@ -443,7 +430,7 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
 
   sprintf(filename,"ardesia_%s", date);
   hide_unhide();
-  GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save image as png", NULL, GTK_FILE_CHOOSER_ACTION_SAVE,
+  GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save image as image", NULL, GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
@@ -652,6 +639,85 @@ on_colorGreen_activate                 (GtkToolButton   *toolbutton,
 
 }
 
+void
+on_toolsPreferences_activate	        (GtkToolButton   *toolbutton,
+					 gpointer         user_data)
+{
+  GtkWidget *preferenceDialog;
+
+  /* Initialize the main window */
+  dialogGtkBuilder= gtk_builder_new();
+
+  /* Load the gtk builder file created with glade */
+  gtk_builder_add_from_file(dialogGtkBuilder,PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "preferenceDialog.ui",NULL);
+ 
+  /* Fill the window by the gtk builder xml */
+  preferenceDialog = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"preferences"));
+  gtk_window_stick((GtkWindow*)preferenceDialog);
+  
+  GtkFileChooser* chooser = GTK_FILE_CHOOSER(gtk_builder_get_object(dialogGtkBuilder,"imageChooserButton"));
+  gchar* default_dir= PACKAGE_DATA_DIR "/" PACKAGE "/backgrounds";
+
+  gtk_file_chooser_set_current_folder(chooser, default_dir);
+  
+  GtkFileFilter *filter = gtk_file_filter_new ();
+  gtk_file_filter_set_name (filter, "PNG and JPEG");
+  gtk_file_filter_add_mime_type (filter, "image/jpeg");
+  gtk_file_filter_add_mime_type (filter, "image/png");
+  gtk_file_chooser_add_filter (chooser, filter);
+  
+  GtkWidget* color_button = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"backgroundColorButton"));
+  gtk_color_button_set_use_alpha      (GTK_COLOR_BUTTON(color_button), TRUE);
+
+  /* Connect all signals by reflection */
+  gtk_builder_connect_signals ( dialogGtkBuilder, NULL );
+
+  hide_unhide();
+  gtk_dialog_run(GTK_DIALOG(preferenceDialog));
+
+}
+
+void
+on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
+{
+  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
+  if (gtk_toggle_button_get_active(colorToolButton))
+    {
+      GtkColorButton* backgroundColorButton = GTK_COLOR_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"backgroundColorButton"));
+      GdkColor* gdkcolor = g_malloc (sizeof (GdkColor)); 
+      gtk_color_button_get_color(backgroundColorButton,gdkcolor);
+      char * color = gdkcolor_to_rgb(gdkcolor);
+      change_background_color(color);
+    }
+  else 
+    {
+      GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"file"));
+      if (gtk_toggle_button_get_active(imageToolButton))
+	{
+	  /* file */
+	  GtkFileChooserButton* imageChooserButton = GTK_FILE_CHOOSER_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"imageChooserButton"));
+	  gchar * file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(imageChooserButton)); 
+	  change_background_image(file);
+	}
+      else
+	{
+	  /* none */
+	  remove_background();  
+	} 
+    }        
+  GtkWidget *preferenceDialog = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"preferences"));
+  gtk_widget_destroy(preferenceDialog);
+  paint(); 
+
+}
+
+void
+on_preferenceCancelButton_clicked(GtkButton *buton, gpointer user_date)
+{
+  GtkWidget *preferenceDialog = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"preferences"));
+  gtk_widget_destroy(preferenceDialog);
+  paint();  
+}
 
 void
 on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
@@ -668,16 +734,19 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
       gtk_window_stick((GtkWindow*)colorDialog);
 
 
+      colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
       if (gdkcolor==NULL)
 	{
 	  gdkcolor = g_malloc (sizeof (GdkColor));
 	}
       else
 	{
-	  colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
 	  gtk_color_selection_set_current_color(colorsel, gdkcolor);
 	  gtk_color_selection_set_previous_color(colorsel, gdkcolor);
 	} 
+      gtk_color_selection_set_has_palette(colorsel, TRUE);
+      gtk_color_selection_set_has_opacity_control (colorsel, TRUE);
+
 
       if (annotateclientpid != -1)
 	{
@@ -691,9 +760,9 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
 	{
 	case GTK_RESPONSE_OK:
 	  colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
-          char*   pickedcolor= malloc(7*sizeof(char));;
-	  get_selected_color(pickedcolor,colorsel);
-          color = pickedcolor; 
+          gtk_color_selection_set_has_palette(colorsel, TRUE);
+          gtk_color_selection_get_current_color   (colorsel, gdkcolor);
+          color = gdkcolor_to_rgb(gdkcolor);
 	  break;
       
 	default:
@@ -701,8 +770,8 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
 	  //gtk_toggle_tool_button_set_active(button, FALSE); 
 	  break;
 	}
-     gtk_widget_destroy(colorDialog);
-     paint(); 
+      gtk_widget_destroy(colorDialog);
+      paint(); 
     }
 
 }

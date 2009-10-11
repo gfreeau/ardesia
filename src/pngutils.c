@@ -22,12 +22,13 @@
  *
  */
  
-/* This is the file whith the code to handle the png */
+/* This is the file whith the code to handle images */
 
 #include <png.h>
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <pngutils.h>
+#include <stdlib.h> 
 
 GtkWidget* background_window = NULL;
 
@@ -123,9 +124,9 @@ load_png (const char *name, GdkPixbuf **pixmap)
   if (*pixmap)
     {
       GdkPixbuf *scaled;
-      gint h = gdk_screen_height ();
-      gint w = gdk_screen_width ();
-      scaled = gdk_pixbuf_scale_simple(*pixmap, w, h, GDK_INTERP_BILINEAR);
+      gint height = gdk_screen_height ();
+      gint weight = gdk_screen_width ();
+      scaled = gdk_pixbuf_scale_simple(*pixmap, weight, height, GDK_INTERP_BILINEAR);
       g_object_unref (G_OBJECT (*pixmap));
       *pixmap = scaled;
       return TRUE;
@@ -138,12 +139,12 @@ load_png (const char *name, GdkPixbuf **pixmap)
 }
 
 void 
-change_background (const char *name)
+change_background_image (const char *name)
 {
    
-  if (background_window==NULL)
+  if (background_window!=NULL)
     {
-       remove_background();
+      remove_background();
     }
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
@@ -151,8 +152,18 @@ change_background (const char *name)
   GdkPixbuf *pixbuf = NULL;
   load_png(name,&pixbuf);
 
-  gtk_widget_push_colormap(gdk_rgb_get_colormap());
-  gtk_widget_push_visual(gdk_rgb_get_visual());
+  GdkDisplay *display = gdk_display_get_default ();
+  GdkScreen *screen = gdk_display_get_default_screen (display); 
+  GdkColormap *colormap;
+  colormap = gdk_screen_get_rgba_colormap(screen);
+  if (colormap == NULL)
+    {
+      /* alpha channel is not supported then I try to use plain rgb */
+      colormap = gdk_screen_get_rgb_colormap (screen);
+    }
+
+  gtk_widget_push_colormap(colormap);
+  gtk_widget_push_visual(gdk_rgba_get_visual());
   GtkWidget* darea = gtk_drawing_area_new();
   gtk_widget_pop_visual();
   gtk_widget_pop_colormap();
@@ -182,34 +193,59 @@ change_background (const char *name)
 
 }
 
-static void
-setup_background_color (char *bg_color)
+void
+change_background_color (char *bg_color)
 {
+  if (background_window!=NULL)
+    {
+      remove_background();
+    }
+  background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
+
+  gint height = gdk_screen_height ();
+  gint width = gdk_screen_width ();
+  
   GdkColormap *colormap;
+  GdkDisplay *display = gdk_display_get_default ();
+  GdkScreen *screen = gdk_display_get_default_screen (display); 
+  
+  char* rgbcolor= malloc(strlen(bg_color)+2);
+  strncpy(&rgbcolor[1],bg_color,8);
+  rgbcolor[0]='#';
+
   GdkColor color;
-  if (bg_color == NULL ||
-      bg_color[0] == '\0' ||
-      ! gdk_color_parse (bg_color, &color))
-    {
-      gdk_color_parse ("#007777", &color);
-    }
+  gdk_color_parse (rgbcolor, &color);
+  g_free(rgbcolor);
   g_free (bg_color);
-  colormap = gdk_drawable_get_colormap
-	  (gdk_get_default_root_window ());
-  /* paranoia */
-  if (colormap != NULL)
+  colormap = gdk_screen_get_rgba_colormap (screen);
+  if (colormap == NULL)
     {
-      gboolean success;
-
-
-      gdk_error_trap_push ();
-      gdk_colormap_alloc_colors (colormap, &color, 1,
-				 FALSE, TRUE, &success);
-      gdk_window_set_background (gdk_get_default_root_window (), &color);
-      gdk_window_clear (gdk_get_default_root_window ());
-      gdk_flush ();
-      gdk_error_trap_pop ();
+      /* alpha channel is not supported then I try to use plain rgb */
+      colormap = gdk_screen_get_rgb_colormap (screen);
     }
+  gtk_widget_push_colormap(colormap);
+  gtk_widget_push_visual(gdk_rgba_get_visual());
+  GtkWidget* darea = gtk_drawing_area_new();
+  gtk_widget_pop_visual();
+  gtk_widget_pop_colormap();
+  gtk_container_add(GTK_CONTAINER(background_window), darea);
+  gtk_widget_set_size_request(darea, width,height);
+  gtk_widget_show_all(background_window);
+
+  gtk_widget_realize(darea);
+  g_assert(darea->window);
+  GdkPixmap *pixmap = gdk_pixmap_new(darea->window, width, height, -1);
+  g_assert(pixmap);
+  GdkGC *paint_gc = gdk_gc_new (pixmap);
+  gdk_gc_set_rgb_fg_color (paint_gc, &color);
+
+  gdk_draw_rectangle (pixmap, paint_gc , TRUE,
+		      0, 0, width, height);
+
+  gdk_window_set_back_pixmap(darea->window, pixmap, FALSE);
+  g_object_unref(pixmap);
+
 }
 
 
@@ -231,8 +267,8 @@ void makeScreenshot(char* filename)
 void remove_background()
 {
   if (background_window!=NULL)
-  { 
-    gtk_widget_destroy(background_window);
-  }
+    { 
+      gtk_widget_destroy(background_window);
+    }
 }
 
