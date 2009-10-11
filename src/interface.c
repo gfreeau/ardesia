@@ -48,17 +48,18 @@
 /* Set the defult width of the pen line */ 
 void setInitialWidth(int val)
 {
+
   GtkWidget* widthWidget = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thickScale"));
   GtkHScale* hScale = (GtkHScale *) widthWidget;
   gtk_range_set_value(&hScale->scale.range, val);
+
 }
 
 /* Create the main window */
-GtkWidget*
-create_mainWindow (void)
-
+GtkWidget* create_mainWindow (void)
 {
-  GtkWidget *mainWindow;
+
+  GtkWidget *mainWindow = NULL;
 
   /* Initialize the main window */
   gtkBuilder= gtk_builder_new();
@@ -77,4 +78,5 @@ create_mainWindow (void)
   
    
   return mainWindow;
+
 }

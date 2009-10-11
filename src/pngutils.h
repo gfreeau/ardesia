@@ -22,17 +22,25 @@
  *
  */
 
+
+/* Background window */
 extern GtkWidget* background_window;
 
+/* Save pixbuf in png file */
 gboolean save_png (GdkPixbuf *pixbuf, const char *filename);
 
+/* Load png file contents in pixbuf */
 gboolean load_png (const char *name, GdkPixbuf **pixmap);
 
+/* Make screenshot */
 void makeScreenshot(char* filename);
 
+/* Change the background image */
 void change_background_image(const char *filename);
 
+/* Change the background color */
 void change_background_color(char *rgb);
 
+/* Remove the background */
 void remove_background();
 

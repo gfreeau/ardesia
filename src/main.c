@@ -22,6 +22,7 @@
  *
  */
 
+
 /*
  * Initial main.c.
  */
@@ -50,13 +51,14 @@ int annotatepid;
 
 
 /* Get the screen resolution asking to the Xorg server throught the xlib libraries */
-int 
-getScreenResolution(Display *display, int *width, int *height)
+int getScreenResolution(Display *display, int *width, int *height)
 {
+
   Screen *screen = XDefaultScreenOfDisplay(display);
   *width  = XWidthOfScreen (screen);
   *height = XHeightOfScreen(screen);
   return 0;
+
 }
 
 
@@ -64,9 +66,9 @@ getScreenResolution(Display *display, int *width, int *height)
  * Calculate the position where move the main window 
  * the centered position upon the window manager bar
  */
-void 
-calculateCenteredPosition(GtkWidget *mainWindow, int dwidth, int dheight, int *x, int *y, int *wwidth, int *wheight, int position)
+void calculateCenteredPosition(GtkWidget *mainWindow, int dwidth, int dheight, int *x, int *y, int *wwidth, int *wheight, int position)
 {
+
   GtkRequisition requisition;
   gtk_widget_size_request(mainWindow, &requisition);
   *wwidth  = requisition.width;
@@ -84,7 +86,10 @@ calculateCenteredPosition(GtkWidget *mainWindow, int dwidth, int dheight, int *x
   else
     {
       /* invalid position */
+      perror ("Valid poisition are NORTH or SOUTH\n");
+      exit(0);
     }
+
 }
 
 
@@ -97,16 +102,18 @@ int
 move(GtkWidget *mainWindow, int *x, int *y, int *wwidth, int *wheight, int position)
 
 {
+
   Display *display = XOpenDisplay (0);  
   int dwidth, dheight;
   if (getScreenResolution(display, &dwidth, &dheight)<0) 
     {
-      printf ("Fatal error while getting screen resolution\n");
+      perror ("Fatal error while getting screen resolution\n");
       return -1;
     }
   calculateCenteredPosition(mainWindow,dwidth,dheight, x, y, wwidth, wheight, position);
   gtk_window_move(GTK_WINDOW(mainWindow),*x,*y);  
   return 0; 
+
 }
 
 
@@ -114,13 +121,12 @@ move(GtkWidget *mainWindow, int *x, int *y, int *wwidth, int *wheight, int posit
  * Start the annotate process that
  * is the core part of ardesia; 
  * this will satisfy the desire of the user
- * listening the rpc messages 
+ * listening the ipc messages 
  * sended by the ardesia interface
  */
-int
-startAnnotate(int x, int y, int width, int height)
-
+int startAnnotate(int x, int y, int width, int height)
 {
+
   pid_t pid;
 
   pid = fork();
@@ -145,7 +151,8 @@ startAnnotate(int x, int y, int width, int height)
       
       execl(annotatebin,annotate,"--rectangle", xa, ya, widtha, heighta, NULL);
  
-      /* This is used to find memory leak with valgrind */
+      /* Uncomment this if do you want find memory leak with valgrind */
+      
       /*
 	execl("/usr/bin/valgrind", "valgrind" , "--leak-check=full", "--show-reachable=yes", "--log-file=valgrind.log",
 	annotatebin,"--rectangle", xa, ya, widtha, heighta, NULL);
@@ -159,8 +166,11 @@ startAnnotate(int x, int y, int width, int height)
     }
   return pid;
 }
+
+
 void print_help()
 {
+
   printf("Usage: ardesia [options]\n\n");
   printf("options:\n");
   printf("--gravity,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
@@ -168,6 +178,7 @@ void print_help()
   printf("\t\t\t\tsouth\n");
   printf("--help,   \t-h\t\tShows the help screen\n");
   printf("\n");
+
 }
 
 /* 
@@ -188,9 +199,7 @@ void print_help()
  * tains the world 
  * the slavery
  */
-int
-main (int argc, char *argv[])
-
+int main (int argc, char *argv[])
 {
 
   int position = SOUTH;
@@ -228,14 +237,14 @@ main (int argc, char *argv[])
 	    {
 	      printf("Required missing argument\n");
 	      print_help();
-	      exit(1);  
+	      exit(0);  
 	    }
 	}
       else if ((strcmp (arg, "--help") == 0) 
 	       || (strcmp (arg, "-h") == 0))
 	{
 	  print_help();
-	  exit(0); 
+	  exit(1); 
 	} 
       else
 	{
@@ -272,4 +281,5 @@ main (int argc, char *argv[])
   gtk_widget_destroy(mainWindow); 
 
   return 0;
+
 }

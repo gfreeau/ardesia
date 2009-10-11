@@ -22,6 +22,9 @@
  *
  */
 
-
+/*GtkBuilder object of the ardesia interface */
 GtkBuilder* gtkBuilder;
+
+/* Create the main window */
 GtkWidget* create_mainWindow (void);
+

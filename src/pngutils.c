@@ -32,10 +32,11 @@
 
 GtkWidget* background_window = NULL;
 
-gboolean
-save_png (GdkPixbuf *pixbuf,
-	  const char *filename)
+
+/* Save the contents of the pixfuf in the file with name filename */
+gboolean save_png (GdkPixbuf *pixbuf, const char *filename)
 {
+
   FILE *handle;
   int width, height, depth, rowstride;
   gboolean has_alpha;
@@ -74,6 +75,7 @@ save_png (GdkPixbuf *pixbuf,
   depth = gdk_pixbuf_get_bits_per_sample (pixbuf);
   pixels = gdk_pixbuf_get_pixels (pixbuf);
   rowstride = gdk_pixbuf_get_rowstride (pixbuf);
+  /* Has the alpha layer? */
   has_alpha = gdk_pixbuf_get_has_alpha (pixbuf);
 
   if (has_alpha) {
@@ -90,7 +92,7 @@ save_png (GdkPixbuf *pixbuf,
 		  PNG_FILTER_TYPE_DEFAULT);
   }
 
-  /* Some text to go with the image */
+  /* Some text to go with the image such as an header */
   text[0].key = "Title";
   text[0].text = (char *)filename;
   text[0].compression = PNG_TEXT_COMPRESSION_NONE;
@@ -114,12 +116,15 @@ save_png (GdkPixbuf *pixbuf,
   fclose (handle);
 
   return TRUE;
+
 }
 
+
+/* Load the contents of the file image with name "filename" into the pixbuf */
 gboolean
-load_png (const char *name, GdkPixbuf **pixmap)
+load_png (const char *filename, GdkPixbuf **pixmap)
 {
-  *pixmap = gdk_pixbuf_new_from_file (name, NULL);
+  *pixmap = gdk_pixbuf_new_from_file (filename, NULL);
 
   if (*pixmap)
     {
@@ -131,21 +136,27 @@ load_png (const char *name, GdkPixbuf **pixmap)
       *pixmap = scaled;
       return TRUE;
     }
-
-  fprintf (stderr, "couldn't load %s\n", name);
+  else
+    {
+       fprintf (stderr, "couldn't load %s\n", filename);
+       exit(0);
+    }
 
   *pixmap = NULL;
   return FALSE;
 }
 
-void 
-change_background_image (const char *name)
+
+/* Change the background image of ardesia  */
+void change_background_image (const char *name)
 {
    
   if (background_window!=NULL)
     {
+      /* remove old background */
       remove_background();
     }
+
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
   
@@ -193,13 +204,16 @@ change_background_image (const char *name)
 
 }
 
-void
-change_background_color (char *bg_color)
+
+/* Change the background color of ardesia  */
+void change_background_color (char *bg_color)
 {
+
   if (background_window!=NULL)
     {
       remove_background();
     }
+
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
 
@@ -249,7 +263,7 @@ change_background_color (char *bg_color)
 }
 
 
-
+/* Make the screenshot */
 void makeScreenshot(char* filename)
 {
 
@@ -259,15 +273,19 @@ void makeScreenshot(char* filename)
   GdkWindow* root = gdk_get_default_root_window ();
   GdkPixbuf* buf = gdk_pixbuf_get_from_drawable (NULL, root, NULL,
 						 0, 0, 0, 0, width, height);
+  /* store the pixbuf grabbed on file */
   save_png (buf, filename);
   g_object_unref (G_OBJECT (buf));
 
 }
 
+
+/* Remove the background */
 void remove_background()
 {
   if (background_window!=NULL)
     { 
+      /* destroy the background window */
       gtk_widget_destroy(background_window);
     }
 }
