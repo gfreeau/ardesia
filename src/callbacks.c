@@ -692,7 +692,14 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
 	  /* file */
 	  GtkFileChooserButton* imageChooserButton = GTK_FILE_CHOOSER_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"imageChooserButton"));
 	  gchar * file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(imageChooserButton)); 
-	  change_background_image(file);
+	  if (file!=NULL)
+            {
+              change_background_image(file);
+            }
+          else
+            {
+	      remove_background();  
+            }
 	}
       else
 	{
