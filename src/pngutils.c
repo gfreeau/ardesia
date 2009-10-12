@@ -215,15 +215,14 @@ void change_background_color (char *bg_color)
     }
 
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_fullscreen(GTK_WINDOW(background_window));
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
 
-  gint height = gdk_screen_height ();
-  gint width = gdk_screen_width ();
-  
+
   GdkColormap *colormap;
   GdkDisplay *display = gdk_display_get_default ();
-  GdkScreen *screen = gdk_display_get_default_screen (display); 
-  
+  GdkScreen *screen = gdk_display_get_default_screen (display);
+
   char* rgbcolor= malloc(strlen(bg_color)+2);
   strncpy(&rgbcolor[1],bg_color,8);
   rgbcolor[0]='#';
@@ -240,25 +239,10 @@ void change_background_color (char *bg_color)
     }
   gtk_widget_push_colormap(colormap);
   gtk_widget_push_visual(gdk_rgba_get_visual());
-  GtkWidget* darea = gtk_drawing_area_new();
-  gtk_widget_pop_visual();
-  gtk_widget_pop_colormap();
-  gtk_container_add(GTK_CONTAINER(background_window), darea);
-  gtk_widget_set_size_request(darea, width,height);
+
+  gdk_color_parse(rgbcolor, &color);
+  gtk_widget_modify_bg(background_window, GTK_STATE_NORMAL, &color);
   gtk_widget_show_all(background_window);
-
-  gtk_widget_realize(darea);
-  g_assert(darea->window);
-  GdkPixmap *pixmap = gdk_pixmap_new(darea->window, width, height, -1);
-  g_assert(pixmap);
-  GdkGC *paint_gc = gdk_gc_new (pixmap);
-  gdk_gc_set_rgb_fg_color (paint_gc, &color);
-
-  gdk_draw_rectangle (pixmap, paint_gc , TRUE,
-		      0, 0, width, height);
-
-  gdk_window_set_back_pixmap(darea->window, pixmap, FALSE);
-  g_object_unref(pixmap);
 
 }
 
@@ -285,7 +269,7 @@ void remove_background()
 {
   if (background_window!=NULL)
     { 
-      /* destroy the background window */
+      /* destroy brutally the background window */
       gtk_widget_destroy(background_window);
     }
 }
