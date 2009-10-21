@@ -60,10 +60,10 @@ gboolean     visible = TRUE;
 gboolean     pencil = TRUE;
 
 /* selected color in RGB format without the unusefull # prefix */
-char*        color="FF0000";
+gchar*        color="FF0000";
 
 /* old picked color in RGB format without the unusefull # prefix */
-char*        picked_color=NULL;
+gchar*        picked_color=NULL;
 
 /* selected line width */
 int          tickness=15;
@@ -82,6 +82,9 @@ GtkBuilder *dialogGtkBuilder;
 
 /* 0 no background, 1 background color, 2 png background, */
 int background = 0;
+
+/* Default folder where store images and videos */
+gchar* workspace_dir = NULL;
 
 /* 
  * Create a annotate client process the annotate
@@ -146,10 +149,6 @@ gboolean  quit()
   kill(annotatepid,9);
   remove_background();
   /* Disalloc */
-  if (picked_color!=NULL)
-    {
-      free(picked_color);
-    }
   g_object_unref ( G_OBJECT(gtkBuilder) ); 
 
   gtk_main_quit();; 
@@ -332,16 +331,13 @@ gboolean file_exists(char* filename, char* desktop_dir)
 void start_save_video_dialog(GtkToolButton   *toolbutton)
 {
 
-  char* screen_dimension=malloc(16*sizeof(char));
-  gint screen_height = gdk_screen_height ();
-  gint screen_width = gdk_screen_width ();
-  sprintf(screen_dimension,"%dx%d", screen_width, screen_height);
    
   char * date = get_date();
-  const gchar* desktop_dir = get_desktop_dir();	
-  char* filename =  malloc(256*sizeof(char));
+  if (workspace_dir==NULL)
+    {
+      workspace_dir = (char *) get_desktop_dir();
+    }	
 
-  sprintf(filename,"ardesia_%s", date);
   /* I hide the annotation to not disturb the user */
   hide_unhide();
   GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save video as mpeg", NULL , GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -351,14 +347,20 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
   gtk_window_stick((GtkWindow*)chooser);
   
   gtk_window_set_title (GTK_WINDOW (chooser), "Select a file");
-  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), desktop_dir);
+  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), workspace_dir);
+  gchar* filename =  malloc(256*sizeof(char));
+  sprintf(filename,"ardesia_%s", date);
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
+      char* screen_dimension=malloc(16*sizeof(char));
+      gint screen_height = gdk_screen_height ();
+      gint screen_width = gdk_screen_width ();
+      sprintf(screen_dimension,"%dx%d", screen_width, screen_height);
 
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      desktop_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
+      workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
 
       char* extension = strrchr(filename, '.');
       if ((extension==0) || (strcmp(extension, ".mpeg") != 0))
@@ -368,7 +370,7 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
 	}
       free(extension);
  
-      if (file_exists(filename, (char *) desktop_dir) == TRUE)
+      if (file_exists(filename, (char *) workspace_dir) == TRUE)
 	{
 	  GtkWidget *msg_dialog; 
                    
@@ -400,7 +402,7 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
       argv[9] = filename;
       argv[10] = (char*) NULL ;
       ffmpegpid = startFFmpeg(argv);
-      free(screen_dimension);
+      g_free(screen_dimension);
       /* set stop tooltip */ 
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Stop");
       /* put icon to stop */
@@ -411,8 +413,8 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
         gtk_widget_destroy (chooser);
       } 
       
-  free(date);
-  free(filename);
+  g_free(filename);
+  g_free(date);
  
 } 
 
@@ -539,10 +541,11 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
 {
 
   char * date = get_date();
-  const gchar* desktop_dir = get_desktop_dir();	
-  char* filename =  malloc(256*sizeof(char));
+  if (workspace_dir==NULL)
+    {
+      workspace_dir = (char *) get_desktop_dir();
+    }	
 
-  sprintf(filename,"ardesia_%s", date);
   /* I hide the annotation to not disturb the user */
   hide_unhide();
   GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save image as image", NULL, GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -553,14 +556,17 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
   gtk_window_stick((GtkWindow*) chooser);
  
   gtk_window_set_title (GTK_WINDOW (chooser), "Select a file");
-  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), desktop_dir);
+  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), workspace_dir);
+  
+  gchar* filename =  malloc(256*sizeof(char));
+  sprintf(filename,"ardesia_%s", date);
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
 
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      desktop_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
+      workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
       
       char* extension = strrchr(filename, '.');
       if ((extension==0) || (strcmp(extension, ".png") != 0))
@@ -570,7 +576,7 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
         }           
       free(extension);
 
-      if (file_exists(filename,(char *) desktop_dir))
+      if (file_exists(filename,(char *) workspace_dir))
         {
 	  GtkWidget *msg_dialog; 
           msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
@@ -595,7 +601,7 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
     }
   paint();
   free(date);
-  free(filename);
+  g_free(filename);
 
 }
 
@@ -707,7 +713,7 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
       char* background_color = gdkcolor_to_rgb(gdkcolor);
       change_background_color(background_color);
       g_free(gdkcolor);
-      free(background_color);
+      g_free(background_color);
       background = 1;  
     }
   else 

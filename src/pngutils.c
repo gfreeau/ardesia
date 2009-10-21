@@ -34,7 +34,7 @@ GtkWidget* background_window = NULL;
 
 
 /* Save the contents of the pixfuf in the file with name filename */
-gboolean save_png (GdkPixbuf *pixbuf, const char *filename)
+gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
 {
 
   FILE *handle;
@@ -239,7 +239,6 @@ void change_background_color (char *bg_color)
   gtk_widget_show_all(background_window);
   free(rgbcolor);
   g_free (bg_color);
-  g_free(&color);
 }
 
 
