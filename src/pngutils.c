@@ -75,22 +75,12 @@ gboolean save_png (GdkPixbuf *pixbuf, const char *filename)
   depth = gdk_pixbuf_get_bits_per_sample (pixbuf);
   pixels = gdk_pixbuf_get_pixels (pixbuf);
   rowstride = gdk_pixbuf_get_rowstride (pixbuf);
-  /* Has the alpha layer? */
-  has_alpha = gdk_pixbuf_get_has_alpha (pixbuf);
 
-  if (has_alpha) {
-    png_set_IHDR (png_ptr, info_ptr, width, height,
+  png_set_IHDR (png_ptr, info_ptr, width, height,
 		  depth, PNG_COLOR_TYPE_RGB_ALPHA,
 		  PNG_INTERLACE_NONE,
 		  PNG_COMPRESSION_TYPE_DEFAULT,
 		  PNG_FILTER_TYPE_DEFAULT);
-  } else {
-    png_set_IHDR (png_ptr, info_ptr, width, height,
-		  depth, PNG_COLOR_TYPE_RGB,
-		  PNG_INTERLACE_NONE,
-		  PNG_COMPRESSION_TYPE_DEFAULT,
-		  PNG_FILTER_TYPE_DEFAULT);
-  }
 
   /* Some text to go with the image such as an header */
   text[0].key = "Title";
@@ -151,11 +141,8 @@ load_png (const char *filename, GdkPixbuf **pixmap)
 void change_background_image (const char *name)
 {
    
-  if (background_window!=NULL)
-    {
-      /* remove old background */
-      remove_background();
-    }
+  /* remove old background */
+  remove_background();
 
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
@@ -176,7 +163,7 @@ void change_background_image (const char *name)
   colormap = gdk_screen_get_rgba_colormap(screen);
   if (colormap == NULL)
     {
-      /* alpha channel is not supported then I try to use plain rgb */
+      /* alpha channel is not supported then I try to use the plain rgb */
       colormap = gdk_screen_get_rgb_colormap (screen);
     }
 
@@ -210,26 +197,17 @@ void change_background_image (const char *name)
 /* Change the background color of ardesia  */
 void change_background_color (char *bg_color)
 {
-
-  if (background_window!=NULL)
-    {
-      remove_background();
-    }
+  remove_background();
 
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_fullscreen(GTK_WINDOW(background_window));
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
-
-
 
   char* rgbcolor= malloc(strlen(bg_color)+2);
   strncpy(&rgbcolor[1],bg_color,8);
   rgbcolor[0]='#';
 
   GdkColor color;
-  gdk_color_parse (rgbcolor, &color);
-  g_free(rgbcolor);
-  g_free (bg_color);
   
   GdkColormap *colormap;
   GdkDisplay *display = gdk_display_get_default ();
@@ -247,6 +225,8 @@ void change_background_color (char *bg_color)
   gdk_color_parse(rgbcolor, &color);
   gtk_widget_modify_bg(background_window, GTK_STATE_NORMAL, &color);
   gtk_widget_show_all(background_window);
+  g_free(rgbcolor);
+  g_free (bg_color);
 
 }
 

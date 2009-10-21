@@ -80,6 +80,9 @@ GdkColor*  gdkcolor= NULL;
 /* Preference dialog */
 GtkBuilder *dialogGtkBuilder;
 
+/* 0 no background, 1 background color, 2 png background, */
+int background = 0;
+
 /* 
  * Create a annotate client process the annotate
  * that talk with the server process 
@@ -359,8 +362,7 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
 	  filename = (gchar *) realloc(filename,  (strlen(filename) + 5 + 1) * sizeof(gchar));
 	  (void) strcat((gchar *)filename, ".mpeg");
 	}
- 
-      gtk_widget_destroy (chooser);
+      
       if (file_exists(filename, (char *) desktop_dir) == TRUE)
 	{
 	  GtkWidget *msg_dialog; 
@@ -369,16 +371,16 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
 
 	  gtk_window_stick((GtkWindow*)msg_dialog);
                  
-	  if (gtk_dialog_run(GTK_DIALOG(msg_dialog)) == GTK_RESPONSE_NO)
-	    { 
+          gint result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
+          if (msg_dialog!=NULL)
+            {
 	      gtk_widget_destroy(msg_dialog);
+            }
+	  if ( result  == GTK_RESPONSE_NO)
+	    { 
 	      g_free(filename);
 	      return; 
 	    } 
-	  else 
-	    {
-	      gtk_widget_destroy(msg_dialog);
-	    }
 	}
       char* argv[11];
       argv[0] = "ffmpeg";
@@ -399,10 +401,10 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
       /* put icon to stop */
       gtk_tool_button_set_stock_id (toolbutton, "gtk-media-stop");
     }
-  else
-    {
-      gtk_widget_destroy (chooser);
-    } 
+    if (chooser!=NULL)
+      { 
+        gtk_widget_destroy (chooser);
+      } 
       
   free(date);
   free(filename);
@@ -561,24 +563,23 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
           filename = (gchar *) realloc(filename,  (strlen(filename) + 4 + 1) * sizeof(gchar)); 
           (void) strcat((gchar *)filename, ".png");
         }           
- 
-      gtk_widget_destroy (chooser);
+
       if (file_exists(filename,(char *) desktop_dir))
         {
 	  GtkWidget *msg_dialog; 
           msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
           gtk_window_stick((GtkWindow*)msg_dialog);
  
-	  if (gtk_dialog_run(GTK_DIALOG(msg_dialog)) == GTK_RESPONSE_NO)
+          int result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
+          if (msg_dialog!=NULL)
             { 
 	      gtk_widget_destroy(msg_dialog);
+            }
+	  if ( result == GTK_RESPONSE_NO)
+            { 
 	      g_free(filename);
 	      return; 
 	    } 
-	  else 
-            {
-              gtk_widget_destroy(msg_dialog);
-            }
 	}
       makeScreenshot(filename);
     }
@@ -656,17 +657,33 @@ on_toolsPreferences_activate	        (GtkToolButton   *toolbutton,
   gtk_file_filter_add_mime_type (filter, "image/jpeg");
   gtk_file_filter_add_mime_type (filter, "image/png");
   gtk_file_chooser_add_filter (chooser, filter);
-  
+ 
+  /* Adding alpha */
   GtkWidget* color_button = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"backgroundColorButton"));
   gtk_color_button_set_use_alpha      (GTK_COLOR_BUTTON(color_button), TRUE);
-
+ 
   /* Connect all signals by reflection */
   gtk_builder_connect_signals ( dialogGtkBuilder, NULL );
 
   /* I hide the annotation to not disturb the user */
   hide_unhide();
+  
+  GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"file"));
+  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
+  if (background==1)
+  {
+     gtk_toggle_button_set_active(colorToolButton,TRUE);
+  }
+  else if (background==2)
+  {
+     gtk_toggle_button_set_active(imageToolButton,TRUE);
+  }
+
   gtk_dialog_run(GTK_DIALOG(preferenceDialog));
-  gtk_widget_destroy(preferenceDialog);
+  if (preferenceDialog!=NULL)
+    {
+      gtk_widget_destroy(preferenceDialog);
+    }
   paint(); 
 
 }
@@ -675,43 +692,73 @@ on_toolsPreferences_activate	        (GtkToolButton   *toolbutton,
 void
 on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
 {
-  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
+ GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
   if (gtk_toggle_button_get_active(colorToolButton))
     {
+      /* background color */
       GtkColorButton* backgroundColorButton = GTK_COLOR_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"backgroundColorButton"));
       GdkColor* gdkcolor = g_malloc (sizeof (GdkColor)); 
       gtk_color_button_get_color(backgroundColorButton,gdkcolor);
-      char * color = gdkcolor_to_rgb(gdkcolor);
+      char* color = gdkcolor_to_rgb(gdkcolor);
       change_background_color(color);
+      background = 1;  
     }
   else 
     {
       GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"file"));
       if (gtk_toggle_button_get_active(imageToolButton))
 	{
-	  /* file */
+	  /* background png from file */
 	  GtkFileChooserButton* imageChooserButton = GTK_FILE_CHOOSER_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"imageChooserButton"));
-	  gchar * file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(imageChooserButton)); 
+	  gchar* file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(imageChooserButton)); 
 	  if (file!=NULL)
             {
               change_background_image(file);
+              background = 2;  
             }
           else
             {
-	      remove_background();  
+              /* no background */
+	      remove_background();
+              background = 0;  
             }
 	}
       else
 	{
 	  /* none */
 	  remove_background();  
+          background = 0;  
 	} 
     }        
   GtkWidget *preferenceDialog = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"preferences"));
-  gtk_widget_destroy(preferenceDialog);
-  paint(); 
+  if (preferenceDialog!=NULL)
+    {
+      gtk_widget_destroy(preferenceDialog);
+    }
+  paint();
 
 }
+
+
+void
+on_imageChooserButton_file_set (GtkButton *buton, gpointer user_date)
+{
+
+ GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"file"));
+ gtk_toggle_button_set_active(imageToolButton,TRUE);
+
+}
+
+
+void
+on_backgroundColorButton_color_set (GtkButton *buton, gpointer user_date)
+{
+
+ GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
+ gtk_toggle_button_set_active(colorToolButton,TRUE);
+
+}
+
 
 
 void
@@ -719,7 +766,10 @@ on_preferenceCancelButton_clicked(GtkButton *buton, gpointer user_date)
 {
 
   GtkWidget *preferenceDialog = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"preferences"));
-  gtk_widget_destroy(preferenceDialog);
+  if (preferenceDialog!=NULL)
+    {
+      gtk_widget_destroy(preferenceDialog);
+    }
   paint();  
 
 }
@@ -787,7 +837,10 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
 	  //gtk_toggle_tool_button_set_active(button, FALSE); 
 	  break;
 	}
-      gtk_widget_destroy(colorDialog);
+      if (colorDialog!=NULL)
+      {
+        gtk_widget_destroy(colorDialog);
+      }
       paint(); 
     }
 

@@ -248,7 +248,6 @@ int main (int argc, char *argv[])
 	} 
       else
 	{
-	  //char* location = PACKAGE_DATA_DIR "/" PACKAGE "/backgrounds/notebook_paper.png";
           loadbackground = TRUE;
 	}
 
@@ -271,12 +270,14 @@ int main (int argc, char *argv[])
    */
   GtkWidget *mainWindow = create_mainWindow ();
  
-  /* move the window iin the desired position */
+  /* move the window in the desired position */
   move(mainWindow,&x,&y,&width,&height,position);
+
   /** Launch annotate */
   annotatepid = startAnnotate(x,y,width,height);
-  
+ 
   gtk_widget_show (mainWindow);
+
   gtk_main ();
   gtk_widget_destroy(mainWindow); 
 
