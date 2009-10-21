@@ -39,7 +39,6 @@ gboolean save_png (GdkPixbuf *pixbuf, const char *filename)
 
   FILE *handle;
   int width, height, depth, rowstride;
-  gboolean has_alpha;
   guchar *pixels;
   png_structp png_ptr;
   png_infop info_ptr;
@@ -76,11 +75,24 @@ gboolean save_png (GdkPixbuf *pixbuf, const char *filename)
   pixels = gdk_pixbuf_get_pixels (pixbuf);
   rowstride = gdk_pixbuf_get_rowstride (pixbuf);
 
-  png_set_IHDR (png_ptr, info_ptr, width, height,
-		  depth, PNG_COLOR_TYPE_RGB_ALPHA,
+  gboolean  has_alpha = gdk_pixbuf_get_has_alpha (pixbuf);
+ 
+  if (has_alpha) 
+  {
+    png_set_IHDR (png_ptr, info_ptr, width, height,
+ 		  depth, PNG_COLOR_TYPE_RGB_ALPHA,
+ 		  PNG_INTERLACE_NONE,
+ 		  PNG_COMPRESSION_TYPE_DEFAULT,
+ 		  PNG_FILTER_TYPE_DEFAULT);
+  } 
+  else 
+   {
+     png_set_IHDR (png_ptr, info_ptr, width, height,
+		  depth, PNG_COLOR_TYPE_RGB,
 		  PNG_INTERLACE_NONE,
 		  PNG_COMPRESSION_TYPE_DEFAULT,
 		  PNG_FILTER_TYPE_DEFAULT);
+   }
 
   /* Some text to go with the image such as an header */
   text[0].key = "Title";
@@ -225,9 +237,9 @@ void change_background_color (char *bg_color)
   gdk_color_parse(rgbcolor, &color);
   gtk_widget_modify_bg(background_window, GTK_STATE_NORMAL, &color);
   gtk_widget_show_all(background_window);
-  g_free(rgbcolor);
+  free(rgbcolor);
   g_free (bg_color);
-
+  g_free(&color);
 }
 
 

@@ -62,6 +62,9 @@ gboolean     pencil = TRUE;
 /* selected color in RGB format without the unusefull # prefix */
 char*        color="FF0000";
 
+/* old picked color in RGB format without the unusefull # prefix */
+char*        picked_color=NULL;
+
 /* selected line width */
 int          tickness=15;
 
@@ -73,9 +76,6 @@ int annotateclientpid = -1;
 
 /* arrow=0 mean no arrow, arrow=1 mean normal arrow, arrow=2 mean double arrow */
 char* arrow = "0";
-
-/* Used to record the history of the last color selected with the color chooser */
-GdkColor*  gdkcolor= NULL;
 
 /* Preference dialog */
 GtkBuilder *dialogGtkBuilder;
@@ -146,6 +146,10 @@ gboolean  quit()
   kill(annotatepid,9);
   remove_background();
   /* Disalloc */
+  if (picked_color!=NULL)
+    {
+      free(picked_color);
+    }
   g_object_unref ( G_OBJECT(gtkBuilder) ); 
 
   gtk_main_quit();; 
@@ -362,7 +366,8 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
 	  filename = (gchar *) realloc(filename,  (strlen(filename) + 5 + 1) * sizeof(gchar));
 	  (void) strcat((gchar *)filename, ".mpeg");
 	}
-      
+      free(extension);
+ 
       if (file_exists(filename, (char *) desktop_dir) == TRUE)
 	{
 	  GtkWidget *msg_dialog; 
@@ -563,6 +568,7 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
           filename = (gchar *) realloc(filename,  (strlen(filename) + 4 + 1) * sizeof(gchar)); 
           (void) strcat((gchar *)filename, ".png");
         }           
+      free(extension);
 
       if (file_exists(filename,(char *) desktop_dir))
         {
@@ -583,11 +589,10 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
 	}
       makeScreenshot(filename);
     }
-  else
+  if (chooser!=NULL)
     {
       gtk_widget_destroy (chooser);
-    } 
-
+    }
   paint();
   free(date);
   free(filename);
@@ -699,8 +704,10 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
       GtkColorButton* backgroundColorButton = GTK_COLOR_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"backgroundColorButton"));
       GdkColor* gdkcolor = g_malloc (sizeof (GdkColor)); 
       gtk_color_button_get_color(backgroundColorButton,gdkcolor);
-      char* color = gdkcolor_to_rgb(gdkcolor);
-      change_background_color(color);
+      char* background_color = gdkcolor_to_rgb(gdkcolor);
+      change_background_color(background_color);
+      g_free(gdkcolor);
+      free(background_color);
       background = 1;  
     }
   else 
@@ -714,6 +721,7 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
 	  if (file!=NULL)
             {
               change_background_image(file);
+              g_free(file);
               background = 2;  
             }
           else
@@ -801,15 +809,25 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
 
 
       colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
-      if (gdkcolor==NULL)
-	{
-	  gdkcolor = g_malloc (sizeof (GdkColor));
-	}
+    
+      /* color initially selected */ 
+      GdkColor* gdkcolor = g_malloc (sizeof (GdkColor));
+      gchar    *ccolor;
+      ccolor=malloc(strlen(color)+2);
+      if (picked_color!=NULL)
+        {
+           strncpy(&ccolor[1],picked_color,strlen(color)+1);
+        }
       else
-	{
-	  gtk_color_selection_set_current_color(colorsel, gdkcolor);
-	  gtk_color_selection_set_previous_color(colorsel, gdkcolor);
-	} 
+        {
+           strncpy(&ccolor[1],color,strlen(color)+1); 
+        }
+      ccolor[0]='#'; 
+      gdk_color_parse (ccolor, gdkcolor);
+      g_free(ccolor);
+
+      gtk_color_selection_set_current_color(colorsel, gdkcolor);
+      gtk_color_selection_set_previous_color(colorsel, gdkcolor);
       gtk_color_selection_set_has_palette(colorsel, TRUE);
       gtk_color_selection_set_has_opacity_control (colorsel, TRUE);
 
@@ -830,6 +848,12 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
           gtk_color_selection_set_has_palette(colorsel, TRUE);
           gtk_color_selection_get_current_color   (colorsel, gdkcolor);
           color = gdkcolor_to_rgb(gdkcolor);
+          if (picked_color==NULL)
+            {
+	       picked_color = malloc(strlen(color));
+            }
+          strncpy(&picked_color[0],color,strlen(color));
+          g_free(gdkcolor);
 	  break;
       
 	default:
