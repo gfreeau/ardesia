@@ -243,7 +243,7 @@ void change_background_color (char *bg_color)
 
 
 /* Make the screenshot */
-void makeScreenshot(char* filename)
+void make_screenshot(char* filename)
 {
 
   gint height = gdk_screen_height ();

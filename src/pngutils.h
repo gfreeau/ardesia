@@ -33,7 +33,7 @@ gboolean save_png (GdkPixbuf *pixbuf, const char *filename);
 gboolean load_png (const char *name, GdkPixbuf **pixmap);
 
 /* Make screenshot */
-void makeScreenshot(char* filename);
+void make_screenshot(char* filename);
 
 /* Change the background image */
 void change_background_image(const char *filename);

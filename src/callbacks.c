@@ -561,7 +561,8 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
   gchar* filename =  malloc(256*sizeof(char));
   sprintf(filename,"ardesia_%s", date);
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
-  
+  gboolean screenshot = FALSE;
+ 
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
 
@@ -593,13 +594,17 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
 	      return; 
 	    } 
 	}
-      makeScreenshot(filename);
+      screenshot = TRUE;
     }
   if (chooser!=NULL)
     {
       gtk_widget_destroy (chooser);
     }
   paint();
+  if (screenshot)
+    {
+      make_screenshot(filename);
+    }
   free(date);
   g_free(filename);
 
