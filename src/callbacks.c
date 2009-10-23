@@ -86,6 +86,9 @@ int background = 0;
 /* Default folder where store images and videos */
 gchar* workspace_dir = NULL;
 
+/* preview of background file */
+GtkWidget *preview;
+
 /* 
  * Create a annotate client process the annotate
  * that talk with the server process 
@@ -647,6 +650,30 @@ on_thickScale_value_changed		(GtkHScale   *hScale,
 
 
 void
+on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer data)
+{
+  char *filename;
+  GdkPixbuf *pixbuf;
+  gboolean have_preview;
+
+  filename = gtk_file_chooser_get_preview_filename (file_chooser);
+  
+  if (filename!=NULL)
+    {
+      pixbuf = gdk_pixbuf_new_from_file_at_size (filename, 128, 128, NULL);
+      have_preview = (pixbuf != NULL);
+      g_free (filename);
+
+      gtk_image_set_from_pixbuf (GTK_IMAGE (preview), pixbuf);
+      if (pixbuf)
+        gdk_pixbuf_unref (pixbuf);
+
+      gtk_file_chooser_set_preview_widget_active (file_chooser, have_preview);
+    }
+}
+
+
+void
 on_toolsPreferences_activate	        (GtkToolButton   *toolbutton,
 					 gpointer         user_data)
 {
@@ -674,7 +701,10 @@ on_toolsPreferences_activate	        (GtkToolButton   *toolbutton,
   gtk_file_filter_add_mime_type (filter, "image/png");
   gtk_file_chooser_add_filter (chooser, filter);
  
-  /* Adding alpha */
+  preview = gtk_image_new ();
+  gtk_file_chooser_set_preview_widget (chooser, preview);
+
+ 
   GtkWidget* color_button = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"backgroundColorButton"));
   gtk_color_button_set_use_alpha      (GTK_COLOR_BUTTON(color_button), TRUE);
  
