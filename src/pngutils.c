@@ -178,12 +178,9 @@ void change_background_image (const char *name)
       /* alpha channel is not supported then I try to use the plain rgb */
       colormap = gdk_screen_get_rgb_colormap (screen);
     }
+  gtk_widget_set_default_colormap(colormap);
 
-  gtk_widget_push_colormap(colormap);
-  gtk_widget_push_visual(gdk_rgba_get_visual());
   GtkWidget* darea = gtk_drawing_area_new();
-  gtk_widget_pop_visual();
-  gtk_widget_pop_colormap();
   gtk_container_add(GTK_CONTAINER(background_window), darea);
   gtk_widget_set_size_request(darea, gdk_pixbuf_get_width(pixbuf),gdk_pixbuf_get_height(pixbuf));
   gtk_widget_realize(darea);
@@ -196,10 +193,18 @@ void change_background_image (const char *name)
 				darea->style->fg_gc[GTK_STATE_NORMAL],
 				0, 0, 0, 0, -1, -1,
 				GDK_RGB_DITHER_NORMAL, 0, 0);
+
  
-  gdk_window_set_back_pixmap(darea->window, pixmap, FALSE);
+  gdk_window_set_back_pixmap(darea->window, pixmap, FALSE);  
   
   gtk_widget_show_all(background_window);
+  cairo_t * cr=gdk_cairo_create(darea->window);
+  cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
+  gdk_cairo_set_source_pixbuf(cr, pixbuf, 0.0, 0.0);
+  cairo_fill(cr);
+  cairo_paint(cr);
+  cairo_destroy(cr);  
+
     
   gdk_pixbuf_unref(pixbuf);
 
