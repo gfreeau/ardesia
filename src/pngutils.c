@@ -33,6 +33,14 @@
 GtkWidget* background_window = NULL;
 
 
+typedef struct
+{
+  gchar*     rgb;
+  gchar*     a;
+} BackgroundColorData;
+
+
+
 /* Save the contents of the pixfuf in the file with name filename */
 gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
 {
@@ -149,101 +157,110 @@ load_png (const char *filename, GdkPixbuf **pixmap)
 }
 
 
-/* Change the background image of ardesia  */
-void change_background_image (const char *name)
+static gboolean on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-   
-  /* remove old background */
-  remove_background();
-
-  background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
-  gtk_widget_set_app_paintable(background_window, TRUE);
-  gtk_widget_set_double_buffered(background_window, FALSE);
-
-  
-  GdkPixbuf *pixbuf = NULL;
-  load_png(name,&pixbuf);
-  if (pixbuf==NULL)
-  {
-      g_printerr("pixbuf is null !\n");
-  }
-
-  GdkDisplay *display = gdk_display_get_default ();
-  GdkScreen *screen = gdk_display_get_default_screen (display); 
-  GdkColormap *colormap;
-  colormap = gdk_screen_get_rgba_colormap(screen);
-  if (colormap == NULL)
-    {
-      /* alpha channel is not supported then I try to use the plain rgb */
-      colormap = gdk_screen_get_rgb_colormap (screen);
-    }
-  gtk_widget_set_default_colormap(colormap);
-
-  GtkWidget* darea = gtk_drawing_area_new();
-  gtk_container_add(GTK_CONTAINER(background_window), darea);
-  gtk_widget_set_size_request(darea, gdk_pixbuf_get_width(pixbuf),gdk_pixbuf_get_height(pixbuf));
-  gtk_widget_realize(darea);
-  g_assert(darea->window);
-      
-  GdkPixmap *pixmap = gdk_pixmap_new(darea->window, gdk_pixbuf_get_width(pixbuf),
-				     gdk_pixbuf_get_height(pixbuf), -1);
-  g_assert(pixmap);
-  gdk_pixbuf_render_to_drawable(pixbuf, pixmap,
-				darea->style->fg_gc[GTK_STATE_NORMAL],
-				0, 0, 0, 0, -1, -1,
-				GDK_RGB_DITHER_NORMAL, 0, 0);
-
  
-  gdk_window_set_back_pixmap(darea->window, pixmap, FALSE);  
-  
-  gtk_widget_show_all(background_window);
-  cairo_t * cr=gdk_cairo_create(darea->window);
-  cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
+  GdkPixbuf *pixbuf = (GdkPixbuf *) data; 
+  cairo_t *cr=gdk_cairo_create(widget->window);
+  cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
   gdk_cairo_set_source_pixbuf(cr, pixbuf, 0.0, 0.0);
+
   cairo_fill(cr);
   cairo_paint(cr);
-  cairo_destroy(cr);  
-
-    
-  gdk_pixbuf_unref(pixbuf);
-
+  cairo_destroy(cr);    
+  
+  return TRUE;
 }
 
 
-/* Change the background color of ardesia  */
-void change_background_color (char *bg_color)
+/* Change the background image of ardesia  */
+void change_background_image (const char *name)
 {
   remove_background();
+  GdkPixbuf *pixbuf = NULL; 
+  load_png(name,&pixbuf);   
 
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_fullscreen(GTK_WINDOW(background_window));
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
+  gtk_widget_set_app_paintable(background_window, TRUE);
+  gtk_window_set_opacity(GTK_WINDOW(background_window), 1); 
+  gtk_widget_set_double_buffered(background_window, FALSE);
+ 
+  g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_file_expose_event), pixbuf);
 
-  char* rgbcolor= malloc(strlen(bg_color)+2);
-  strncpy(&rgbcolor[1],bg_color,8);
-  rgbcolor[0]='#';
-
-  GdkColor color;
-  
-  GdkColormap *colormap;
   GdkDisplay *display = gdk_display_get_default ();
   GdkScreen *screen = gdk_display_get_default_screen (display);
-  colormap = gdk_screen_get_rgba_colormap (screen);
+  
+  GdkColormap *colormap = gdk_screen_get_rgba_colormap (screen);
   if (colormap == NULL)
     {
       /* alpha channel is not supported then I try to use plain rgb */
       colormap = gdk_screen_get_rgb_colormap (screen);
     }
- 
-  gtk_widget_push_colormap(colormap);
-  gtk_widget_push_visual(gdk_rgba_get_visual());
+  gtk_widget_set_default_colormap(colormap);
 
-  gdk_color_parse(rgbcolor, &color);
-  gtk_widget_modify_bg(background_window, GTK_STATE_NORMAL, &color);
   gtk_widget_show_all(background_window);
-  free(rgbcolor);
-  g_free (bg_color);
+ 
+}
+
+
+/* Set the cairo surface color to the RGBA string */
+void cairo_set_source_color_from_string(cairo_t *cr, char* color, char* alpha)
+{
+  int r,g,b,a;
+  sscanf (color, "%02X%02X%02X", &r, &g, &b);
+  sscanf (alpha, "%02X", &a);
+  cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
+}
+
+
+static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+  BackgroundColorData* bg_data = (BackgroundColorData*) data;
+  int width, height;
+  gtk_window_get_size (GTK_WINDOW(widget),
+			     &width, &height);
+  cairo_t *cr=gdk_cairo_create(widget->window);
+  cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_color_from_string(cr, bg_data->rgb, bg_data->a);
+  cairo_paint(cr);
+  cairo_destroy(cr);    
+  
+  return TRUE;
+}
+
+/* Change the background color of ardesia  */
+void change_background_color (char* rgb, char *a)
+
+{
+  remove_background();
+  
+  BackgroundColorData *data = g_malloc (sizeof (BackgroundColorData));
+  data->rgb = rgb; 
+  data->a = a; 
+
+  background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_fullscreen(GTK_WINDOW(background_window));
+  gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
+  gtk_widget_set_app_paintable(background_window, TRUE);
+  gtk_window_set_opacity(GTK_WINDOW(background_window), 1); 
+  
+  g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_color_expose_event), data);
+
+  GdkDisplay *display = gdk_display_get_default ();
+  GdkScreen *screen = gdk_display_get_default_screen (display);
+  
+  GdkColormap *colormap = gdk_screen_get_rgba_colormap (screen);
+  if (colormap == NULL)
+    {
+      /* alpha channel is not supported then I try to use plain rgb */
+      colormap = gdk_screen_get_rgb_colormap (screen);
+    }
+  gtk_widget_set_default_colormap(colormap);
+
+  gtk_widget_show_all(background_window);
+
 }
 
 
@@ -271,6 +288,6 @@ void remove_background()
     { 
       /* destroy brutally the background window */
       gtk_widget_destroy(background_window);
-    }
 }
 
+    }

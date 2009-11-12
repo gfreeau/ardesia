@@ -59,35 +59,37 @@ gboolean     visible = TRUE;
 /* pencil is selected */
 gboolean     pencil = TRUE;
 
-/* selected color in RGB format without the unusefull # prefix */
-gchar*        color="FF0000";
+/* selected color in RGBA format */
+gchar*       color = NULL;
 
-/* old picked color in RGB format without the unusefull # prefix */
-gchar*        picked_color=NULL;
+/* old picked color in RGBA format */
+gchar*       picked_color = NULL;
 
 /* selected line width */
-int          tickness=15;
+int          tickness = 15;
+
+gboolean     highlighter = FALSE;
 
 /* pid of the ffmpeg process for the recording */
-int ffmpegpid = -1;
+int          ffmpegpid = -1;
 
 /* pid of the current running instance of the annotate client */
-int annotateclientpid = -1;
+int 	     annotateclientpid = -1;
 
 /* arrow=0 mean no arrow, arrow=1 mean normal arrow, arrow=2 mean double arrow */
-char* arrow = "0";
+char*        arrow = "0";
 
 /* Preference dialog */
-GtkBuilder *dialogGtkBuilder;
+GtkBuilder*  dialogGtkBuilder;
 
 /* 0 no background, 1 background color, 2 png background, */
-int background = 0;
+int 	     background = 0;
 
 /* Default folder where store images and videos */
-gchar* workspace_dir = NULL;
+gchar*       workspace_dir = NULL;
 
 /* preview of background file */
-GtkWidget *preview;
+GtkWidget*   preview;
 
 /* 
  * Create a annotate client process the annotate
@@ -159,6 +161,24 @@ gboolean  quit()
 
 }
 
+
+/* Add alpha channel to build the RGBA string */
+void add_alpha(char *color)
+{
+  if (highlighter)
+    {
+      color[6]='8';  
+      color[7]='8';  
+    }
+  else
+    {
+      color[6]='F';  
+      color[7]='F';  
+    }
+   color[8]=0;  
+}
+
+
 /* Start to paint calling annotate */
 void paint()
 {
@@ -166,7 +186,14 @@ void paint()
   pencil=TRUE;
   char* ticknessa = (char*) malloc(16*sizeof(char));
   sprintf(ticknessa,"%d",tickness);
-
+  if (color==NULL)
+    {
+      color = malloc(9);
+      strcpy(color,"FF0000");
+    }
+  
+  add_alpha(color);
+  
   callAnnotate("--toggle", color, ticknessa, arrow);   
  
   free(ticknessa);
@@ -290,7 +317,7 @@ void hide_unhide()
 }
 
 
-/* Take aGdkColor and return the RGB tring */
+/* Take a GdkColor and return the RGB string */
 char *
 gdkcolor_to_rgb(GdkColor* gdkcolor)
 {
@@ -370,8 +397,8 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
 	{
 	  filename = (gchar *) realloc(filename,  (strlen(filename) + 5 + 1) * sizeof(gchar));
 	  (void) strcat((gchar *)filename, ".mpeg");
+          free(extension);
 	}
-      free(extension);
  
       if (file_exists(filename, (char *) workspace_dir) == TRUE)
 	{
@@ -456,6 +483,27 @@ on_toolsEraser_activate                (GtkToolButton   *toolbutton,
 
 }
 
+void
+on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
+				      gpointer         user_data)
+{
+  if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
+    {
+       highlighter = TRUE;
+    }
+  else
+    {
+       highlighter = FALSE;
+    }
+  if (pencil)
+    {
+      paint();
+    }
+  else
+    {
+      erase();
+    }
+}
 
 void
 on_toolsArrow_activate               (GtkToolButton   *toolbutton,
@@ -555,6 +603,7 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
+  
   /* with this apperar in all the workspaces */  
   gtk_window_stick((GtkWindow*) chooser);
  
@@ -577,8 +626,8 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
         {
           filename = (gchar *) realloc(filename,  (strlen(filename) + 4 + 1) * sizeof(gchar)); 
           (void) strcat((gchar *)filename, ".png");
+          free(extension);
         }           
-      free(extension);
 
       if (file_exists(filename,(char *) workspace_dir))
         {
@@ -587,7 +636,7 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
           gtk_window_stick((GtkWindow*)msg_dialog);
  
           int result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
-          if (msg_dialog!=NULL)
+          if (msg_dialog != NULL)
             { 
 	      gtk_widget_destroy(msg_dialog);
             }
@@ -599,18 +648,18 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
 	}
       screenshot = TRUE;
     }
-  if (chooser!=NULL)
+  if (chooser != NULL)
     {
       gtk_widget_destroy (chooser);
     }
-  paint();
   if (screenshot)
     {
+      sleep(2);
       make_screenshot(filename);
     }
   free(date);
   g_free(filename);
-
+  paint();
 }
 
 
@@ -745,10 +794,11 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
       GtkColorButton* backgroundColorButton = GTK_COLOR_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"backgroundColorButton"));
       GdkColor* gdkcolor = g_malloc (sizeof (GdkColor)); 
       gtk_color_button_get_color(backgroundColorButton,gdkcolor);
-      char* background_color = gdkcolor_to_rgb(gdkcolor);
-      change_background_color(background_color);
+      char* rgb = gdkcolor_to_rgb(gdkcolor);
+      char* a = malloc(3);
+      sprintf(a,"%02x", gtk_color_button_get_alpha (backgroundColorButton)/257);
+      change_background_color(rgb,a);
       g_free(gdkcolor);
-      //g_free(background_color);
       background = 1;  
     }
   else 
@@ -870,8 +920,6 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
       gtk_color_selection_set_current_color(colorsel, gdkcolor);
       gtk_color_selection_set_previous_color(colorsel, gdkcolor);
       gtk_color_selection_set_has_palette(colorsel, TRUE);
-      gtk_color_selection_set_has_opacity_control (colorsel, TRUE);
-
 
       if (annotateclientpid != -1)
 	{
@@ -911,6 +959,7 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
 
 }
 
+
 /* Start color handlers */
 
 void
@@ -918,7 +967,8 @@ on_colorBlack_activate                 (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
 
-  color="000000";
+  color = malloc(9);
+  strcpy(color,"000000");
   paint();
 
 }
@@ -929,7 +979,8 @@ on_colorBlue_activate                  (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
 
-  color = "3333CC";
+  color = malloc(9);
+  strcpy(color,"3333CC");
   paint();
 
 }
@@ -939,8 +990,8 @@ void
 on_colorRed_activate                   (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
-
-  color = "FF0000";
+  color = malloc(9);
+  strcpy(color,"FF0000");
   paint();
 
 }
@@ -951,7 +1002,8 @@ on_colorGreen_activate                 (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
 
-  color = "008000";
+  color = malloc(9);
+  strcpy(color,"008000");
   paint();
 
 }
@@ -962,7 +1014,8 @@ on_colorLightBlue_activate             (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
 
-  color = "00C0FF";
+  color = malloc(9);
+  strcpy(color,"00C0FF");
   paint();
 
 }
@@ -973,7 +1026,8 @@ on_colorLightGreen_activate            (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
 
-  color = "00FF00";
+  color = malloc(9);
+  strcpy(color,"00FF00");
   paint();
 
 }
@@ -984,7 +1038,8 @@ on_colorMagenta_activate               (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
  
-  color = "FF00FF";
+  color = malloc(9);
+  strcpy(color,"FF00FF");
   paint();
 
 }
@@ -995,7 +1050,8 @@ on_colorOrange_activate                (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
 
-  color = "FF8000";
+  color = malloc(9);
+  strcpy(color,"FF8000");
   paint();
 
 }
@@ -1006,7 +1062,8 @@ on_colorYellow_activate                (GtkToolButton   *toolbutton,
                                         gpointer         user_data)
 {
 
-  color = "FFFF00";
+  color = malloc(9);
+  strcpy(color,"FFFF00");
   paint();
 
 }
@@ -1017,7 +1074,8 @@ on_colorWhite_activate                (GtkToolButton   *toolbutton,
 				       gpointer         user_data)
 {
 
-  color = "FFFFFF";
+  color = malloc(9);
+  strcpy(color,"FFFFFF");
   paint();
 
 }

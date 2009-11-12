@@ -39,7 +39,7 @@ void make_screenshot(char* filename);
 void change_background_image(const char *filename);
 
 /* Change the background color */
-void change_background_color(char *rgb);
+void change_background_color(char *rgb, char* a);
 
 /* Remove the background */
 void remove_background();
