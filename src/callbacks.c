@@ -419,18 +419,19 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
 	      return; 
 	    } 
 	}
-      char* argv[11];
+      char* argv[12];
       argv[0] = "ffmpeg";
       argv[1] = "-f";
       argv[2] = "x11grab";
       argv[3] = "-r";
-      argv[4] = "25";
+      argv[4] = "50";
       argv[5] = "-s";
       argv[6] = screen_dimension;
       argv[7] = "-i";
       argv[8] = ":0.0";
-      argv[9] = filename;
-      argv[10] = (char*) NULL ;
+      argv[9] = "-sameq";
+      argv[10] = filename;
+      argv[11] = (char*) NULL ;
       ffmpegpid = startFFmpeg(argv);
       g_free(screen_dimension);
       /* set stop tooltip */ 
