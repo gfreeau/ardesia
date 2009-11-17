@@ -13,7 +13,7 @@
     <property name="urgency_hint">True</property>
     <property name="decorated">False</property>
     <property name="deletable">False</property>
-    <property name="opacity">0.5</property>
+    <property name="opacity">0.7</property>
     <property name="startup_id">Ardesia</property>
     <signal name="delete_event" handler="on_winMain_delete_event"/>
     <child>
@@ -22,7 +22,7 @@
         <property name="homogeneous">True</property>
         <child>
           <object class="GtkToolbar" id="toolbarPen">
-            <property name="height_request">32</property>
+            <property name="height_request">34</property>
             <property name="visible">True</property>
             <property name="toolbar_style">icons</property>
             <property name="icon_size">1</property>
@@ -32,7 +32,7 @@
                 <child>
                   <object class="GtkHScale" id="thickScale">
                     <property name="width_request">75</property>
-                    <property name="height_request">32</property>
+                    <property name="height_request">34</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="tooltip_text" translatable="yes">Width</property>
@@ -41,6 +41,7 @@
                     <property name="lower_stepper_sensitivity">off</property>
                     <property name="upper_stepper_sensitivity">off</property>
                     <property name="restrict_to_fill_level">False</property>
+                    <property name="fill_level">0</property>
                     <property name="digits">0</property>
                     <property name="value_pos">bottom</property>
                     <signal name="value_changed" handler="on_thickScale_value_changed"/>
@@ -67,7 +68,7 @@
             <child>
               <object class="GtkRadioToolButton" id="buttonBlack">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Black</property>
                 <property name="use_underline">True</property>
@@ -83,7 +84,7 @@
             <child>
               <object class="GtkRadioToolButton" id="buttonLightBlue">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Blue</property>
                 <property name="use_underline">True</property>
@@ -99,7 +100,7 @@
             <child>
               <object class="GtkRadioToolButton" id="buttonLightGreen">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Green</property>
                 <property name="use_underline">True</property>
@@ -115,7 +116,7 @@
             <child>
               <object class="GtkRadioToolButton" id="buttonYellow">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Yellow</property>
                 <property name="use_underline">True</property>
@@ -131,7 +132,7 @@
             <child>
               <object class="GtkRadioToolButton" id="buttonOrange">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Orange</property>
                 <property name="use_underline">True</property>
@@ -147,7 +148,7 @@
             <child>
               <object class="GtkRadioToolButton" id="buttonRed">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Red</property>
                 <property name="use_underline">True</property>
@@ -162,7 +163,7 @@
             <child>
               <object class="GtkRadioToolButton" id="buttonMagenta">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Magenta</property>
                 <property name="use_underline">True</property>
@@ -178,7 +179,7 @@
             <child>
               <object class="GtkRadioToolButton" id="buttonWhite">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">White</property>
                 <property name="use_underline">True</property>
@@ -194,7 +195,7 @@
             <child>
               <object class="GtkRadioToolButton" id="buttonPicker">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Pick</property>
                 <property name="stock_id">gtk-select-color</property>
@@ -209,7 +210,7 @@
             <child>
               <object class="GtkRadioToolButton" id="buttonEraser">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Eraser</property>
                 <property name="use_underline">True</property>
@@ -238,7 +239,7 @@
             <child>
               <object class="GtkToolButton" id="buttonClear">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Clear</property>
                 <property name="stock_id">gtk-clear</property>
@@ -252,7 +253,7 @@
             <child>
               <object class="GtkToggleToolButton" id="buttonView">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Hide</property>
                 <property name="use_underline">True</property>
@@ -267,7 +268,7 @@
             <child>
               <object class="GtkToggleToolButton" id="buttonHighlighter">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Highlighter</property>
                 <property name="use_underline">True</property>
@@ -282,7 +283,7 @@
             <child>
               <object class="GtkToggleToolButton" id="buttonArrow">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Arrow</property>
                 <property name="use_underline">True</property>
@@ -297,7 +298,7 @@
             <child>
               <object class="GtkToggleToolButton" id="buttonDoubleArrow">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Bidirectional Arrow</property>
                 <property name="use_underline">True</property>
@@ -312,7 +313,7 @@
             <child>
               <object class="GtkToggleToolButton" id="buttonPreferences">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Preferences</property>
                 <property name="use_underline">True</property>
@@ -327,7 +328,7 @@
             <child>
               <object class="GtkToolButton" id="buttonScreenShoot">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Save</property>
                 <property name="use_underline">True</property>
@@ -342,7 +343,7 @@
             <child>
               <object class="GtkToggleToolButton" id="buttonRecorder">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Record</property>
                 <property name="use_underline">True</property>
@@ -357,7 +358,7 @@
             <child>
               <object class="GtkToolButton" id="buttonQuit">
                 <property name="width_request">32</property>
-                <property name="height_request">32</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Quit</property>
                 <property name="use_underline">True</property>

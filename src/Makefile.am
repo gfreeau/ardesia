@@ -12,6 +12,7 @@ bin_PROGRAMS = ardesia
 
 ardesia_SOURCES = \
         pngutils.c pngutils.h\
+        annotate.c annotate.h\
 	main.c \
 	interface.c interface.h \
 	callbacks.c

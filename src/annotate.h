@@ -22,9 +22,44 @@
  *
  */
 
-/* GtkBuilder object of the ardesia interface */
-GtkBuilder* gtkBuilder;
 
-/* Create the main window */
-GtkWidget* create_mainWindow (void);
+/* initialize the annotation */
+int annotate_init (int x, int y, int width, int height);
+
+/* load annotation window */
+void load_annotation_window(GtkWindow *win);
+
+/* hide the  window with the annotations */
+void annotate_hide_window ();
+
+/* show the window with the annotations */
+void annotate_show_window ();
+
+/* quit the annotation */
+void annotate_quit();
+
+/* set the pen color */
+void annotate_set_color(gchar* color);
+
+/* set line width */
+void annotate_set_width(guint width);
+
+/* set arrow type */
+void annotate_set_arrow(int arrow);
+
+/* start to paint */
+void annotate_toggle_grab ();
+
+/* start to erase */
+void annotate_eraser_grab ();
+
+/* release pointer grab */
+void annotate_release_grab ();
+
+/* acquire pointer grab */
+void annotate_acquire_grab ();
+
+/* clear the annotations windows */
+void annotate_clear_screen ();
+
 

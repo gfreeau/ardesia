@@ -40,11 +40,9 @@ typedef struct
 } BackgroundColorData;
 
 
-
 /* Save the contents of the pixfuf in the file with name filename */
 gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
 {
-
   FILE *handle;
   int width, height, depth, rowstride;
   guchar *pixels;
@@ -54,26 +52,30 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
   int i;
 
   handle = fopen (filename, "w");
-  if (!handle) {
-    return FALSE;
-  }
+  if (!handle) 
+    {
+      return FALSE;
+    }
 
   png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-  if (png_ptr == NULL) {
-    return FALSE;
-  }
+  if (png_ptr == NULL)
+    {
+      return FALSE;
+    }
 
   info_ptr = png_create_info_struct (png_ptr);
-  if (info_ptr == NULL) {
-    png_destroy_write_struct (&png_ptr, (png_infop *) NULL);
-    return FALSE;
-  }
+  if (info_ptr == NULL) 
+    {
+      png_destroy_write_struct (&png_ptr, (png_infop *) NULL);
+      return FALSE;
+    }
 
-  if (setjmp (png_ptr->jmpbuf)) {
-    /* Error handler */
-    png_destroy_write_struct (&png_ptr, &info_ptr);
-    return FALSE;
-  }
+  if (setjmp (png_ptr->jmpbuf))
+    {
+      /* Error handler */
+      png_destroy_write_struct (&png_ptr, &info_ptr);
+      return FALSE;
+    }
 
   png_init_io (png_ptr, handle);
   
@@ -86,21 +88,21 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
   gboolean  has_alpha = gdk_pixbuf_get_has_alpha (pixbuf);
  
   if (has_alpha) 
-  {
-    png_set_IHDR (png_ptr, info_ptr, width, height,
- 		  depth, PNG_COLOR_TYPE_RGB_ALPHA,
- 		  PNG_INTERLACE_NONE,
- 		  PNG_COMPRESSION_TYPE_DEFAULT,
- 		  PNG_FILTER_TYPE_DEFAULT);
-  } 
+    {
+      png_set_IHDR (png_ptr, info_ptr, width, height,
+ 	            depth, PNG_COLOR_TYPE_RGB_ALPHA,
+ 		    PNG_INTERLACE_NONE,
+ 		    PNG_COMPRESSION_TYPE_DEFAULT,
+ 		    PNG_FILTER_TYPE_DEFAULT);
+    } 
   else 
-   {
-     png_set_IHDR (png_ptr, info_ptr, width, height,
-		  depth, PNG_COLOR_TYPE_RGB,
-		  PNG_INTERLACE_NONE,
-		  PNG_COMPRESSION_TYPE_DEFAULT,
-		  PNG_FILTER_TYPE_DEFAULT);
-   }
+    {
+      png_set_IHDR (png_ptr, info_ptr, width, height,
+	            depth, PNG_COLOR_TYPE_RGB,
+		    PNG_INTERLACE_NONE,
+		    PNG_COMPRESSION_TYPE_DEFAULT,
+		    PNG_FILTER_TYPE_DEFAULT);
+    }
 
   /* Some text to go with the image such as an header */
   text[0].key = "Title";
@@ -112,12 +114,12 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
   png_set_text (png_ptr, info_ptr, text, 2);
 
   png_write_info (png_ptr, info_ptr);
-  for (i = 0; i < height; i++) {
-    png_bytep row_ptr = pixels;
-
-    png_write_row (png_ptr, row_ptr);
-    pixels += rowstride;
-  }
+  for (i = 0; i < height; i++)
+    {
+      png_bytep row_ptr = pixels;
+      png_write_row (png_ptr, row_ptr);
+      pixels += rowstride;
+    }
 
   png_write_end (png_ptr, info_ptr);
   png_destroy_write_struct (&png_ptr, &info_ptr);
@@ -126,7 +128,6 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
   fclose (handle);
 
   return TRUE;
-
 }
 
 
@@ -159,7 +160,6 @@ load_png (const char *filename, GdkPixbuf **pixmap)
 
 static gboolean on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
- 
   GdkPixbuf *pixbuf = (GdkPixbuf *) data; 
   cairo_t *cr=gdk_cairo_create(widget->window);
   cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
@@ -201,17 +201,6 @@ void change_background_image (const char *name)
   gtk_widget_set_default_colormap(colormap);
 
   gtk_widget_show_all(background_window);
- 
-}
-
-
-/* Set the cairo surface color to the RGBA string */
-void cairo_set_source_color_from_string(cairo_t *cr, char* color, char* alpha)
-{
-  int r,g,b,a;
-  sscanf (color, "%02X%02X%02X", &r, &g, &b);
-  sscanf (alpha, "%02X", &a);
-  cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
 }
 
 
@@ -223,16 +212,20 @@ static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *
 			     &width, &height);
   cairo_t *cr=gdk_cairo_create(widget->window);
   cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_color_from_string(cr, bg_data->rgb, bg_data->a);
+
+  int r,g,b,a;
+  sscanf (bg_data->rgb, "%02X%02X%02X", &r, &g, &b);
+  sscanf (bg_data->a, "%02X", &a);
+  cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
+
   cairo_paint(cr);
   cairo_destroy(cr);    
-  
   return TRUE;
 }
 
+
 /* Change the background color of ardesia  */
 void change_background_color (char* rgb, char *a)
-
 {
   remove_background();
   
@@ -260,24 +253,6 @@ void change_background_color (char* rgb, char *a)
   gtk_widget_set_default_colormap(colormap);
 
   gtk_widget_show_all(background_window);
-
-}
-
-
-/* Make the screenshot */
-void make_screenshot(char* filename)
-{
-
-  gint height = gdk_screen_height ();
-  gint width = gdk_screen_width ();
-
-  GdkWindow* root = gdk_get_default_root_window ();
-  GdkPixbuf* buf = gdk_pixbuf_get_from_drawable (NULL, root, NULL,
-						 0, 0, 0, 0, width, height);
-  /* store the pixbuf grabbed on file */
-  save_png (buf, filename);
-  g_object_unref (G_OBJECT (buf));
-
 }
 
 
@@ -288,6 +263,5 @@ void remove_background()
     { 
       /* destroy brutally the background window */
       gtk_widget_destroy(background_window);
-}
-
     }
+}

@@ -33,6 +33,7 @@
 
 #include <gtk/gtk.h>
 
+#include "annotate.h"
 #include "interface.h"
 #include "stdlib.h"
 #include "string.h"
@@ -43,10 +44,9 @@
 
 int NORTH=1;
 int SOUTH=2;
+
 /* space from border in pixel */
 int SPACE_FROM_BORDER = 30;
-
-int annotatepid;
 
 
 
@@ -68,7 +68,6 @@ int getScreenResolution(Display *display, int *width, int *height)
  */
 void calculateCenteredPosition(GtkWidget *mainWindow, int dwidth, int dheight, int *x, int *y, int *wwidth, int *wheight, int position)
 {
-
   GtkRequisition requisition;
   gtk_widget_size_request(mainWindow, &requisition);
   *wwidth  = requisition.width;
@@ -89,7 +88,6 @@ void calculateCenteredPosition(GtkWidget *mainWindow, int dwidth, int dheight, i
       perror ("Valid poisition are NORTH or SOUTH\n");
       exit(0);
     }
-
 }
 
 
@@ -98,11 +96,8 @@ void calculateCenteredPosition(GtkWidget *mainWindow, int dwidth, int dheight, i
  * Here can be beatiful have a configuration file
  * where put the user can decide the position of the window
  */
-int 
-move(GtkWidget *mainWindow, int *x, int *y, int *wwidth, int *wheight, int position)
-
+int move(GtkWidget *mainWindow, int *x, int *y, int *wwidth, int *wheight, int position)
 {
-
   Display *display = XOpenDisplay (0);  
   int dwidth, dheight;
   if (getScreenResolution(display, &dwidth, &dheight)<0) 
@@ -113,61 +108,9 @@ move(GtkWidget *mainWindow, int *x, int *y, int *wwidth, int *wheight, int posit
   calculateCenteredPosition(mainWindow,dwidth,dheight, x, y, wwidth, wheight, position);
   gtk_window_move(GTK_WINDOW(mainWindow),*x,*y);  
   return 0; 
-
 }
 
-
-/* 
- * Start the annotate process that
- * is the core part of ardesia; 
- * this will satisfy the desire of the user
- * listening the ipc messages 
- * sended by the ardesia interface
- */
-int startAnnotate(int x, int y, int width, int height)
-{
-
-  pid_t pid;
-
-  pid = fork();
-
-  if (pid < 0)
-    {
-      return -1;
-    }
-  if (pid == 0)
-    {
-      char* annotate="annotate";
-      char* annotatebin = (char*) malloc(160*sizeof(char));
-      sprintf(annotatebin,"%s/../bin/%s", PACKAGE_DATA_DIR, annotate);
-      char* xa = (char*) malloc(16*sizeof(char));
-      sprintf(xa,"%d",x);
-      char* ya = (char*) malloc(16*sizeof(char));
-      sprintf(ya,"%d",y);
-      char* widtha = (char*) malloc(16*sizeof(char));
-      sprintf(widtha,"%d",width);
-      char* heighta = (char*) malloc(16*sizeof(char));
-      sprintf(heighta,"%d",height);
-      
-      execl(annotatebin,annotate,"--rectangle", xa, ya, widtha, heighta, NULL);
- 
-      /* Uncomment this if do you want find memory leak with valgrind */
-      
-      /*
-	execl("/usr/bin/valgrind", "valgrind" , "--leak-check=full", "--show-reachable=yes", "--log-file=valgrind.log",
-	annotatebin,"--rectangle", xa, ya, widtha, heighta, NULL);
-      */
-      
-      free(annotatebin);
-      free(xa);
-      free(ya);
-      free(widtha);
-      free(heighta);
-    }
-  return pid;
-}
-
-
+/* print command line help */
 void print_help()
 {
 
@@ -189,14 +132,13 @@ void print_help()
  * are only patchers 
  * bad merchants
  * hopeless 
- * and without any horizon
+ * and without any horizon;
  * avoid to 
  * stay closed to 
- * this type of people
+ * this kind of people
  * if you are not immune from 
- * this type of
- * enemy that 
- * tains the world 
+ * the enemy that 
+ * tains the world: 
  * the slavery
  */
 int main (int argc, char *argv[])
@@ -271,10 +213,13 @@ int main (int argc, char *argv[])
   GtkWidget *mainWindow = create_mainWindow ();
  
   /* move the window in the desired position */
-  move(mainWindow,&x,&y,&width,&height,position);
+  if (move(mainWindow,&x,&y,&width,&height,position) < 0)
+    {
+      exit(0);
+    }
 
-  /** Launch annotate */
-  annotatepid = startAnnotate(x,y,width,height);
+  /** Init annotate */
+  annotate_init(x, y, width, height);
  
   gtk_widget_show (mainWindow);
 

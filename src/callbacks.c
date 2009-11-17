@@ -34,6 +34,7 @@
 #include <gtk/gtk.h>
 
 #include "interface.h"
+#include "annotate.h"
 
 #include "stdlib.h"
 #include "unistd.h"
@@ -53,6 +54,8 @@
 #include <errno.h>
 
 
+#define COLORSIZE 9
+
 /* annotation is visible */
 gboolean     visible = TRUE;
 
@@ -70,14 +73,11 @@ int          tickness = 15;
 
 gboolean     highlighter = FALSE;
 
-/* pid of the ffmpeg process for the recording */
-int          ffmpegpid = -1;
-
-/* pid of the current running instance of the annotate client */
-int 	     annotateclientpid = -1;
+/* pid of the recording process */
+int          recorderpid = -1;
 
 /* arrow=0 mean no arrow, arrow=1 mean normal arrow, arrow=2 mean double arrow */
-char*        arrow = "0";
+int        arrow = 0;
 
 /* Preference dialog */
 GtkBuilder*  dialogGtkBuilder;
@@ -91,72 +91,39 @@ gchar*       workspace_dir = NULL;
 /* preview of background file */
 GtkWidget*   preview;
 
-/* 
- * Create a annotate client process the annotate
- * that talk with the server process 
- */
-int 
-callAnnotate(char *arg1, char* arg2, char* arg3, char* arrow)
-{
-
-  if (annotateclientpid != -1)
-    {
-      kill(annotateclientpid,9);
-    }
-  pid_t pid;
-
-  pid = fork();
-
-  if (pid < 0)
-    {
-      return -1;
-    }
-  if (pid == 0)
-    {
-      char* annotate="annotate";
-      char* annotatebin = (char*) malloc(160*sizeof(char));
-      sprintf(annotatebin,"%s/../bin/%s", PACKAGE_DATA_DIR, annotate);
-      execl(annotatebin, annotate, arg1, arg2, arg3, arrow, NULL);
-      free(annotatebin);
-      _exit(127);
-    }
-  annotateclientpid = pid;
-  return pid;
-
-}
 
 /* Return if the recording is active */
 gboolean is_recording()
 {
-
-  if (ffmpegpid==-1)
+  if (recorderpid == -1)
     {
       return FALSE;
     }
   return TRUE;
+}
 
+/* Quit to record */
+void quit_recorder()
+{
+  if(is_recording())
+    {
+      kill(recorderpid,SIGTERM);
+      recorderpid=-1;
+    }  
 }
 
 /* Called when close the program */
 gboolean  quit()
 {
 
-  extern int annotatepid;
   gboolean ret=FALSE;
-  if(is_recording())
-    {
-      kill(ffmpegpid,9);
-    }       
-  if (annotateclientpid != -1)
-    {
-      kill(annotateclientpid,9);
-    }
-  kill(annotatepid,9);
+  quit_recorder();
+  annotate_quit();
   remove_background();
   /* Disalloc */
   g_object_unref ( G_OBJECT(gtkBuilder) ); 
 
-  gtk_main_quit();; 
+  gtk_main_quit();
   exit(ret);
 
 }
@@ -179,24 +146,26 @@ void add_alpha(char *color)
 }
 
 
-/* Start to paint calling annotate */
-void paint()
+/* Start to annotate calling annotate */
+void annotate()
 {
 
   pencil=TRUE;
-  char* ticknessa = (char*) malloc(16*sizeof(char));
-  sprintf(ticknessa,"%d",tickness);
   if (color==NULL)
     {
-      color = malloc(9);
+      color = malloc(COLORSIZE);
       strcpy(color,"FF0000");
     }
   
   add_alpha(color);
   
-  callAnnotate("--toggle", color, ticknessa, arrow);   
- 
-  free(ticknessa);
+  annotate_set_color(color);
+
+  annotate_set_width(tickness);
+
+  annotate_set_arrow(arrow);
+
+  annotate_toggle_grab();
 
 }
 
@@ -206,12 +175,9 @@ void erase()
 {
 
   pencil=FALSE;
-  char* ticknessa = (char*) malloc(16*sizeof(char));
-  sprintf(ticknessa,"%d",tickness);
 
-  callAnnotate("--eraser", ticknessa, NULL, NULL); 
-  
-  free(ticknessa);
+  annotate_set_width(tickness);
+  annotate_eraser_grab ();
    
 }
 
@@ -219,9 +185,14 @@ void erase()
  * Create a annotate client process the annotate
  * that talk with the server process 
  */
-int startFFmpeg(char *argv[])
+int start_recorder(char* filename)
 {
-
+  char* argv[5];
+  argv[0] = "recordmydesktop";
+  argv[1] = "--on-the-fly-encoding";
+  argv[2] = "-o";
+  argv[3] = filename;
+  argv[4] = (char*) NULL ;
   pid_t pid;
 
   pid = fork();
@@ -235,7 +206,6 @@ int startFFmpeg(char *argv[])
       execvp(argv[0], argv);
     }
   return pid;
-
 }
 
 /*
@@ -291,14 +261,14 @@ char* get_date()
 
 /* 
  * This function is called when the thick property is changed;
- * start paint with pen or eraser depending on the selected tool
+ * start annotate with pen or eraser depending on the selected tool
  */
 void thick()
 {
 
   if (pencil)
     {
-      paint();
+      annotate();
     }
   else
     {
@@ -308,18 +278,8 @@ void thick()
 }
 
 
-/* Hide/Unhide the annotation depending on the status of the screen */
-void hide_unhide()
-{
-
-  callAnnotate("--visibility", NULL, NULL, NULL );
-
-}
-
-
 /* Take a GdkColor and return the RGB string */
-char *
-gdkcolor_to_rgb(GdkColor* gdkcolor)
+char * gdkcolor_to_rgb(GdkColor* gdkcolor)
 {
 
   char*   ret= malloc(7*sizeof(char));;
@@ -369,8 +329,11 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
     }	
 
   /* I hide the annotation to not disturb the user */
-  hide_unhide();
-  GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save video as mpeg", NULL , GTK_FILE_CHOOSER_ACTION_SAVE,
+  annotate_hide_window();
+  
+  GtkWindow *parent = NULL;
+  load_annotation_window(parent);
+  GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save video as ogv", parent, GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
@@ -382,21 +345,18 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
   sprintf(filename,"ardesia_%s", date);
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   
+  
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
-      char* screen_dimension=malloc(16*sizeof(char));
-      gint screen_height = gdk_screen_height ();
-      gint screen_width = gdk_screen_width ();
-      sprintf(screen_dimension,"%dx%d", screen_width, screen_height);
 
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
       workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
-
+      char* supported_extension = ".ogv";
       char* extension = strrchr(filename, '.');
-      if ((extension==0) || (strcmp(extension, ".mpeg") != 0))
+      if ((extension==0) || (strcmp(extension, supported_extension) != 0))
 	{
-	  filename = (gchar *) realloc(filename,  (strlen(filename) + 5 + 1) * sizeof(gchar));
-	  (void) strcat((gchar *)filename, ".mpeg");
+	  filename = (gchar *) realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar));
+	  (void) strcat((gchar *)filename, supported_extension);
           free(extension);
 	}
  
@@ -404,12 +364,12 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
 	{
 	  GtkWidget *msg_dialog; 
                    
-	  msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
+	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
 
 	  gtk_window_stick((GtkWindow*)msg_dialog);
                  
           gint result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
-          if (msg_dialog!=NULL)
+          if (msg_dialog != NULL)
             {
 	      gtk_widget_destroy(msg_dialog);
             }
@@ -419,27 +379,15 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
 	      return; 
 	    } 
 	}
-      char* argv[12];
-      argv[0] = "ffmpeg";
-      argv[1] = "-f";
-      argv[2] = "x11grab";
-      argv[3] = "-r";
-      argv[4] = "50";
-      argv[5] = "-s";
-      argv[6] = screen_dimension;
-      argv[7] = "-i";
-      argv[8] = ":0.0";
-      argv[9] = "-sameq";
-      argv[10] = filename;
-      argv[11] = (char*) NULL ;
-      ffmpegpid = startFFmpeg(argv);
-      g_free(screen_dimension);
+      /* Make visible the annotation */
+      annotate_show_window();
+      recorderpid = start_recorder(filename);
       /* set stop tooltip */ 
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Stop");
       /* put icon to stop */
       gtk_tool_button_set_stock_id (toolbutton, "gtk-media-stop");
     }
-    if (chooser!=NULL)
+    if (chooser != NULL)
       { 
         gtk_widget_destroy (chooser);
       } 
@@ -453,10 +401,9 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
 /* Start event handler section */
 
 
-gboolean
-on_quit                                (GtkWidget       *widget,
-                                        GdkEvent        *event,
-                                        gpointer         user_data)
+gboolean on_quit                          (GtkWidget       *widget,
+                                           GdkEvent        *event,
+                                           gpointer         user_data)
 {
 
   return quit();
@@ -464,25 +411,20 @@ on_quit                                (GtkWidget       *widget,
 }
 
 
-gboolean
-on_winMain_delete_event                (GtkWidget       *widget,
-                                        GdkEvent        *event,
-                                        gpointer         user_data)
+gboolean on_winMain_delete_event          (GtkWidget       *widget,
+                                           GdkEvent        *event,
+                                           gpointer         user_data)
 {
-
   return quit();
-
 }
 
 
-void
-on_toolsEraser_activate                (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_toolsEraser_activate              (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
 {
-
   erase();
-
 }
+
 
 void
 on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
@@ -498,7 +440,7 @@ on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
     }
   if (pencil)
     {
-      paint();
+      annotate();
     }
   else
     {
@@ -506,9 +448,9 @@ on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
     }
 }
 
-void
-on_toolsArrow_activate               (GtkToolButton   *toolbutton,
-				      gpointer         user_data)
+
+void on_toolsArrow_activate               (GtkToolButton   *toolbutton,
+				           gpointer         user_data)
 {
 
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
@@ -519,15 +461,15 @@ on_toolsArrow_activate               (GtkToolButton   *toolbutton,
         {
 	  gtk_toggle_tool_button_set_active(doubleArrowToolButton, FALSE); 
         }
-      arrow="1";
+      arrow=1;
     }
   else
     {
-      arrow="0";
+      arrow=0;
     }
   if (pencil)
     {
-      paint();
+      annotate();
     }
   else
     {
@@ -536,9 +478,9 @@ on_toolsArrow_activate               (GtkToolButton   *toolbutton,
 
 }
 
-void
-on_toolsDoubleArrow_activate               (GtkToolButton   *toolbutton,
-					    gpointer         user_data)
+
+void on_toolsDoubleArrow_activate         (GtkToolButton   *toolbutton,
+					   gpointer         user_data)
 {
 
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
@@ -549,15 +491,15 @@ on_toolsDoubleArrow_activate               (GtkToolButton   *toolbutton,
         {
 	  gtk_toggle_tool_button_set_active(arrowToolButton, FALSE); 
         }
-      arrow="2";
+      arrow=2;
     }
   else
     {
-      arrow="0";
+      arrow=0;
     }
   if (pencil)
     {
-      paint();
+      annotate();
     }
   else
     {
@@ -567,19 +509,19 @@ on_toolsDoubleArrow_activate               (GtkToolButton   *toolbutton,
 }
 
 
-void
-on_toolsVisible_activate               (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_toolsVisible_activate             (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
 {
-  hide_unhide();
   if (visible)
     {
+      annotate_hide_window();
       visible=FALSE;
       /* set tooltip to unhide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Unhide");
     }
   else
     {
+      annotate_show_window();
       visible=TRUE;
       /* set tooltip to hide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Hide");
@@ -587,9 +529,8 @@ on_toolsVisible_activate               (GtkToolButton   *toolbutton,
 }
 
 
-void
-on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_toolsScreenShot_activate	  (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
 {
 
   char * date = get_date();
@@ -598,9 +539,19 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
       workspace_dir = (char *) get_desktop_dir();
     }	
 
+  gint height = gdk_screen_height ();
+  gint width = gdk_screen_width ();
+
+  GdkWindow* root = gdk_get_default_root_window ();
+  GdkPixbuf* buf = gdk_pixbuf_get_from_drawable (NULL, root, NULL,
+                                                 0, 0, 0, 0, width, height);
+
   /* I hide the annotation to not disturb the user */
-  hide_unhide();
-  GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save image as image", NULL, GTK_FILE_CHOOSER_ACTION_SAVE,
+  annotate_hide_window();
+  
+  GtkWindow *parent = NULL;
+  load_annotation_window(parent);
+  GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save image as image", parent, GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
@@ -621,21 +572,21 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
 
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
       workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
-      
+      char* supported_extension = ".png";
       char* extension = strrchr(filename, '.');
-      if ((extension==0) || (strcmp(extension, ".png") != 0))
+      if ((extension==0) || (strcmp(extension, supported_extension) != 0))
         {
-          filename = (gchar *) realloc(filename,  (strlen(filename) + 4 + 1) * sizeof(gchar)); 
-          (void) strcat((gchar *)filename, ".png");
+          filename = (gchar *) realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar)); 
+          (void) strcat((gchar *)filename, supported_extension);
           free(extension);
         }           
 
       if (file_exists(filename,(char *) workspace_dir))
         {
 	  GtkWidget *msg_dialog; 
-          msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
+	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
           gtk_window_stick((GtkWindow*)msg_dialog);
- 
+
           int result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
           if (msg_dialog != NULL)
             { 
@@ -655,24 +606,25 @@ on_toolsScreenShot_activate	       (GtkToolButton   *toolbutton,
     }
   if (screenshot)
     {
-      sleep(2);
-      make_screenshot(filename);
+      /* Make visible the annotation */
+      annotate_show_window();
+      /* store the pixbuf grabbed on file */
+      save_png (buf, filename);
     }
   free(date);
   g_free(filename);
-  paint();
+  g_object_unref (G_OBJECT (buf));
+  annotate();
 }
 
 
-void
-on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
 {
-
+  
   if(is_recording())
     {
-      kill(ffmpegpid,9);
-      ffmpegpid=-1;
+      quit_recorder();
       /* set stop tooltip */ 
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Record");
       /* put icon to record */
@@ -683,14 +635,13 @@ on_toolsRecorder_activate              (GtkToolButton   *toolbutton,
       /* the recording is not active */ 
       start_save_video_dialog(toolbutton);
     }
-  paint();
+  annotate();
 
 }
 
 
-void
-on_thickScale_value_changed		(GtkHScale   *hScale,
-					 gpointer         user_data)
+void on_thickScale_value_changed          (GtkHScale   *hScale,
+					   gpointer         user_data)
 {
 
   tickness=gtk_range_get_value(&hScale->scale.range);
@@ -699,8 +650,7 @@ on_thickScale_value_changed		(GtkHScale   *hScale,
 }
 
 
-void
-on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer data)
+void on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer data)
 {
   char *filename;
   GdkPixbuf *pixbuf;
@@ -723,11 +673,9 @@ on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer dat
 }
 
 
-void
-on_toolsPreferences_activate	        (GtkToolButton   *toolbutton,
-					 gpointer         user_data)
+void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
+					   gpointer         user_data)
 {
-
   GtkWidget *preferenceDialog;
 
   /* Initialize the main window */
@@ -761,8 +709,8 @@ on_toolsPreferences_activate	        (GtkToolButton   *toolbutton,
   /* Connect all signals by reflection */
   gtk_builder_connect_signals ( dialogGtkBuilder, NULL );
 
-  /* I hide the annotation to not disturb the user */
-  hide_unhide();
+  /* I hide the annotation; no disturb the user */
+  annotate_hide_window();
   
   GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"file"));
   GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
@@ -780,13 +728,11 @@ on_toolsPreferences_activate	        (GtkToolButton   *toolbutton,
     {
       gtk_widget_destroy(preferenceDialog);
     }
-  paint(); 
-
+  annotate(); 
 }
 
 
-void
-on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
+void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
 {
  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
   if (gtk_toggle_button_get_active(colorToolButton))
@@ -835,13 +781,12 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
     {
       gtk_widget_destroy(preferenceDialog);
     }
-  paint();
+  annotate();
 
 }
 
 
-void
-on_imageChooserButton_file_set (GtkButton *buton, gpointer user_date)
+void on_imageChooserButton_file_set (GtkButton *buton, gpointer user_date)
 {
 
  GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"file"));
@@ -850,8 +795,7 @@ on_imageChooserButton_file_set (GtkButton *buton, gpointer user_date)
 }
 
 
-void
-on_backgroundColorButton_color_set (GtkButton *buton, gpointer user_date)
+void on_backgroundColorButton_color_set (GtkButton *buton, gpointer user_date)
 {
 
  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
@@ -861,33 +805,29 @@ on_backgroundColorButton_color_set (GtkButton *buton, gpointer user_date)
 
 
 
-void
-on_preferenceCancelButton_clicked(GtkButton *buton, gpointer user_date)
+void on_preferenceCancelButton_clicked    (GtkButton *buton,
+                                           gpointer user_date)
 {
-
   GtkWidget *preferenceDialog = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"preferences"));
   if (preferenceDialog!=NULL)
     {
       gtk_widget_destroy(preferenceDialog);
     }
-  paint();  
-
+  annotate();  
 }
 
 
-void
-on_buttonClear_activate                (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_buttonClear_activate              (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
 {
-  
-  callAnnotate("--clear", NULL, NULL, NULL);   
+
+  annotate_clear_screen (); 
 
 }
 
 
-void
-on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
-					 gpointer         user_data)
+void on_buttonPicker_activate	          (GtkToolButton   *toolbutton,
+					   gpointer         user_data)
 {
 
   GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON(toolbutton);
@@ -896,9 +836,11 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
     {
       /* open color widget */
       GtkWidget* colorDialog = gtk_color_selection_dialog_new ("Changing color");
-
+      
+      GtkWindow *parent = NULL;
+      load_annotation_window(parent);
+      gtk_window_set_transient_for(GTK_WINDOW(colorDialog), parent);
       gtk_window_stick((GtkWindow*)colorDialog);
-
 
       colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
     
@@ -922,12 +864,8 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
       gtk_color_selection_set_previous_color(colorsel, gdkcolor);
       gtk_color_selection_set_has_palette(colorsel, TRUE);
 
-      if (annotateclientpid != -1)
-	{
-	  kill(annotateclientpid,9);
-	}  
       /* I hide the annotation to not disturb the user */
-      hide_unhide();
+      annotate_hide_window();
       gint result = gtk_dialog_run((GtkDialog *) colorDialog);
 
       /* Wait for user to select OK or Cancel */
@@ -945,17 +883,14 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
           strncpy(&picked_color[0],color,strlen(color));
           g_free(gdkcolor);
 	  break;
-      
 	default:
-	  /* If dialog did not return OK then it was canceled */
-	  //gtk_toggle_tool_button_set_active(button, FALSE); 
 	  break;
 	}
       if (colorDialog!=NULL)
       {
         gtk_widget_destroy(colorDialog);
       }
-      paint(); 
+      annotate(); 
     }
 
 }
@@ -963,122 +898,93 @@ on_buttonPicker_activate	        (GtkToolButton   *toolbutton,
 
 /* Start color handlers */
 
-void
-on_colorBlack_activate                 (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_colorBlack_activate               (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
 {
-
-  color = malloc(9);
+  color = malloc(COLORSIZE);
   strcpy(color,"000000");
-  paint();
-
+  annotate();
 }
 
 
-void
-on_colorBlue_activate                  (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_colorBlue_activate                (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
 {
-
-  color = malloc(9);
+  color = malloc(COLORSIZE);
   strcpy(color,"3333CC");
-  paint();
-
+  annotate();
 }
 
 
-void
-on_colorRed_activate                   (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_colorRed_activate                 (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
 {
-  color = malloc(9);
+  color = malloc(COLORSIZE);
   strcpy(color,"FF0000");
-  paint();
-
+  annotate();
 }
 
 
-void
-on_colorGreen_activate                 (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_colorGreen_activate               (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
 {
-
-  color = malloc(9);
+  color = malloc(COLORSIZE);
   strcpy(color,"008000");
-  paint();
-
+  annotate();
 }
 
 
-void
-on_colorLightBlue_activate             (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_colorLightBlue_activate           (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
 {
-
-  color = malloc(9);
+  color = malloc(COLORSIZE);
   strcpy(color,"00C0FF");
-  paint();
-
+  annotate();
 }
 
 
-void
-on_colorLightGreen_activate            (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_colorLightGreen_activate            (GtkToolButton   *toolbutton,
+                                             gpointer         user_data)
 {
-
-  color = malloc(9);
+  color = malloc(COLORSIZE);
   strcpy(color,"00FF00");
-  paint();
-
+  annotate();
 }
 
 
-void
-on_colorMagenta_activate               (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_colorMagenta_activate               (GtkToolButton   *toolbutton,
+                                             gpointer         user_data)
 {
- 
-  color = malloc(9);
+  color = malloc(COLORSIZE);
   strcpy(color,"FF00FF");
-  paint();
-
+  annotate();
 }
 
 
-void
-on_colorOrange_activate                (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_colorOrange_activate                (GtkToolButton   *toolbutton,
+                                             gpointer         user_data)
 {
-
-  color = malloc(9);
+  color = malloc(COLORSIZE);
   strcpy(color,"FF8000");
-  paint();
-
+  annotate();
 }
 
 
-void
-on_colorYellow_activate                (GtkToolButton   *toolbutton,
-                                        gpointer         user_data)
+void on_colorYellow_activate                (GtkToolButton   *toolbutton,
+                                             gpointer         user_data)
 {
-
-  color = malloc(9);
+  color = malloc(COLORSIZE);
   strcpy(color,"FFFF00");
-  paint();
-
+  annotate();
 }
 
 
-void
-on_colorWhite_activate                (GtkToolButton   *toolbutton,
-				       gpointer         user_data)
+void on_colorWhite_activate                (GtkToolButton   *toolbutton,
+	       			            gpointer         user_data)
 {
-
-  color = malloc(9);
+  color = malloc(COLORSIZE);
   strcpy(color,"FFFFFF");
-  paint();
-
+  annotate();
 }
 
 
