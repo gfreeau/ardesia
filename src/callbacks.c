@@ -328,11 +328,11 @@ void start_save_video_dialog(GtkToolButton   *toolbutton)
       workspace_dir = (char *) get_desktop_dir();
     }	
 
-  /* I hide the annotation to not disturb the user */
-  annotate_hide_window();
+   /* Release grab */
+   annotate_release_grab ();
+
   
-  GtkWindow *parent = NULL;
-  load_annotation_window(parent);
+  GtkWindow *parent = get_annotation_window();
   GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save video as ogv", parent, GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
@@ -546,11 +546,11 @@ void on_toolsScreenShot_activate	  (GtkToolButton   *toolbutton,
   GdkPixbuf* buf = gdk_pixbuf_get_from_drawable (NULL, root, NULL,
                                                  0, 0, 0, 0, width, height);
 
-  /* I hide the annotation to not disturb the user */
-  annotate_hide_window();
+  /* Release grab */
+  annotate_release_grab ();
+
   
-  GtkWindow *parent = NULL;
-  load_annotation_window(parent);
+  GtkWindow *parent = get_annotation_window();
   GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save image as image", parent, GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
@@ -686,6 +686,8 @@ void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
  
   /* Fill the window by the gtk builder xml */
   preferenceDialog = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"preferences"));
+  GtkWindow *parent = get_annotation_window();
+  gtk_window_set_transient_for(GTK_WINDOW(preferenceDialog), parent);
   gtk_window_stick((GtkWindow*)preferenceDialog);
   
   GtkFileChooser* chooser = GTK_FILE_CHOOSER(gtk_builder_get_object(dialogGtkBuilder,"imageChooserButton"));
@@ -709,9 +711,9 @@ void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
   /* Connect all signals by reflection */
   gtk_builder_connect_signals ( dialogGtkBuilder, NULL );
 
-  /* I hide the annotation; no disturb the user */
-  annotate_hide_window();
-  
+  /* Release grab */
+  annotate_release_grab ();
+
   GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"file"));
   GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
   if (background==1)
@@ -837,8 +839,7 @@ void on_buttonPicker_activate	          (GtkToolButton   *toolbutton,
       /* open color widget */
       GtkWidget* colorDialog = gtk_color_selection_dialog_new ("Changing color");
       
-      GtkWindow *parent = NULL;
-      load_annotation_window(parent);
+      GtkWindow *parent = get_annotation_window();
       gtk_window_set_transient_for(GTK_WINDOW(colorDialog), parent);
       gtk_window_stick((GtkWindow*)colorDialog);
 
@@ -864,8 +865,9 @@ void on_buttonPicker_activate	          (GtkToolButton   *toolbutton,
       gtk_color_selection_set_previous_color(colorsel, gdkcolor);
       gtk_color_selection_set_has_palette(colorsel, TRUE);
 
-      /* I hide the annotation to not disturb the user */
-      annotate_hide_window();
+      /* Release grab */
+      annotate_release_grab ();
+
       gint result = gtk_dialog_run((GtkDialog *) colorDialog);
 
       /* Wait for user to select OK or Cancel */

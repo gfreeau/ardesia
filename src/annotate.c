@@ -135,9 +135,9 @@ AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
 }
 
 
-void load_annotation_window(GtkWindow *win)
+GtkWindow* get_annotation_window()
 {
-   win = GTK_WINDOW(data->win);
+   return GTK_WINDOW(data->win);
 }
 
 
@@ -280,10 +280,6 @@ void annotate_release_grab ()
       /* this probably means the device table is outdated, 
 	 e.g. this device doesn't exist anymore */
       g_printerr("Error ungrabbing mouse device while ungrabbing all, ignoring.\n");
-    }
-  if (!(data->painted))
-    {
-      annotate_hide_window (data);
     }
   
   if(data->debug)

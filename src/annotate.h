@@ -27,7 +27,7 @@
 int annotate_init (int x, int y, int width, int height);
 
 /* load annotation window */
-void load_annotation_window(GtkWindow *win);
+GtkWindow* get_annotation_window();
 
 /* hide the  window with the annotations */
 void annotate_hide_window ();
