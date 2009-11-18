@@ -34,19 +34,19 @@
 #include <gtk/gtk.h>
 
 #include "interface.h"
+#include "recorder.h"
 #include "annotate.h"
 
 #include "stdlib.h"
 #include "unistd.h"
+#include "stdio.h"
 #include <string.h> 
 
-#include "stdio.h"
-#include "time.h"
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
-#include <gconf/gconf-client.h>
 
 #include <math.h>
+#include <utils.h>
 #include <pngutils.h>
 
 #include <fcntl.h>
@@ -73,9 +73,6 @@ int          tickness = 15;
 
 gboolean     highlighter = FALSE;
 
-/* pid of the recording process */
-int          recorderpid = -1;
-
 /* arrow=0 mean no arrow, arrow=1 mean normal arrow, arrow=2 mean double arrow */
 int        arrow = 0;
 
@@ -91,26 +88,6 @@ gchar*       workspace_dir = NULL;
 /* preview of background file */
 GtkWidget*   preview;
 
-
-/* Return if the recording is active */
-gboolean is_recording()
-{
-  if (recorderpid == -1)
-    {
-      return FALSE;
-    }
-  return TRUE;
-}
-
-/* Quit to record */
-void quit_recorder()
-{
-  if(is_recording())
-    {
-      kill(recorderpid,SIGTERM);
-      recorderpid=-1;
-    }  
-}
 
 /* Called when close the program */
 gboolean  quit()
@@ -181,83 +158,6 @@ void erase()
    
 }
 
-/* 
- * Create a annotate client process the annotate
- * that talk with the server process 
- */
-int start_recorder(char* filename)
-{
-  char* argv[5];
-  argv[0] = "recordmydesktop";
-  argv[1] = "--on-the-fly-encoding";
-  argv[2] = "-o";
-  argv[3] = filename;
-  argv[4] = (char*) NULL ;
-  pid_t pid;
-
-  pid = fork();
-
-  if (pid < 0)
-    {
-      return -1;
-    }
-  if (pid == 0)
-    {
-      execvp(argv[0], argv);
-    }
-  return pid;
-}
-
-/*
- * Get the desktop folder;
- * Now this function use gconf to found the folder,
- * this means that this rutine works properly only
- * with the gnome desktop environment
- * We can investigate how-to do this
- * in a desktop environment independant way
- */
-const gchar * get_desktop_dir (void)
-{
-
-  GConfClient *gconf_client = NULL;
-  gboolean desktop_is_home_dir = FALSE;
-  const gchar* desktop_dir = NULL;
-
-  gconf_client = gconf_client_get_default ();
-  desktop_is_home_dir = gconf_client_get_bool (gconf_client,
-                                               "/apps/nautilus/preferences/desktop_is_home_dir",
-                                               NULL);
-  if (desktop_is_home_dir)
-    {
-      desktop_dir = g_get_home_dir ();
-    }
-  else
-    {
-      desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
-    }
-
-  g_object_unref (gconf_client);
-
-  return desktop_dir;
-
-}
-
-
-/* Get the current date and format in a printable format */
-char* get_date()
-{
-
-  struct tm* t;
-  time_t now;
-  time( &now );
-  t = localtime( &now );
-
-  char* date = malloc(64*sizeof(char));
-  sprintf(date, "%d-%d-%d_%d:%d:%d", t->tm_mday,t->tm_mon+1,t->tm_year+1900,t->tm_hour,t->tm_min,t->tm_sec);
-  return date;
-
-}
-
 
 /* 
  * This function is called when the thick property is changed;
@@ -288,114 +188,6 @@ char * gdkcolor_to_rgb(GdkColor* gdkcolor)
   return ret;
 
 }
-
-/* Return if a file exists */
-gboolean file_exists(char* filename, char* desktop_dir)
-{
-
-  char* afterslash = strrchr(filename, '/');
-  if (afterslash==0)
-    {
-      /* relative path */
-      filename = strcat(filename,desktop_dir);
-    }
-  struct stat statbuf;
-  if(stat(filename, &statbuf) < 0) {
-    if(errno == ENOENT) {
-      return FALSE;
-    } else {
-      perror("");
-      exit(0);
-    }
-  }
-  printf("filename %s exists \n", filename);
-  return TRUE;
-
-}
-
-/*
- * Start the dialog that ask to the user where save the video
- * containing the screencast
- * This function take as input the recor toolbutton in ardesia bar
- */
-void start_save_video_dialog(GtkToolButton   *toolbutton)
-{
-
-   
-  char * date = get_date();
-  if (workspace_dir==NULL)
-    {
-      workspace_dir = (char *) get_desktop_dir();
-    }	
-
-   /* Release grab */
-   annotate_release_grab ();
-
-  
-  GtkWindow *parent = get_annotation_window();
-  GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save video as ogv", parent, GTK_FILE_CHOOSER_ACTION_SAVE,
-						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
-						    NULL);
-  gtk_window_stick((GtkWindow*)chooser);
-  
-  gtk_window_set_title (GTK_WINDOW (chooser), "Select a file");
-  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), workspace_dir);
-  gchar* filename =  malloc(256*sizeof(char));
-  sprintf(filename,"ardesia_%s", date);
-  gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
-  
-  
-  if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
-    {
-
-      filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
-      char* supported_extension = ".ogv";
-      char* extension = strrchr(filename, '.');
-      if ((extension==0) || (strcmp(extension, supported_extension) != 0))
-	{
-	  filename = (gchar *) realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar));
-	  (void) strcat((gchar *)filename, supported_extension);
-          free(extension);
-	}
- 
-      if (file_exists(filename, (char *) workspace_dir) == TRUE)
-	{
-	  GtkWidget *msg_dialog; 
-                   
-	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
-
-	  gtk_window_stick((GtkWindow*)msg_dialog);
-                 
-          gint result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
-          if (msg_dialog != NULL)
-            {
-	      gtk_widget_destroy(msg_dialog);
-            }
-	  if ( result  == GTK_RESPONSE_NO)
-	    { 
-	      g_free(filename);
-	      return; 
-	    } 
-	}
-      /* Make visible the annotation */
-      annotate_show_window();
-      recorderpid = start_recorder(filename);
-      /* set stop tooltip */ 
-      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Stop");
-      /* put icon to stop */
-      gtk_tool_button_set_stock_id (toolbutton, "gtk-media-stop");
-    }
-    if (chooser != NULL)
-      { 
-        gtk_widget_destroy (chooser);
-      } 
-      
-  g_free(filename);
-  g_free(date);
- 
-} 
 
 
 /* Start event handler section */
@@ -633,7 +425,14 @@ void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
   else
     {      
       /* the recording is not active */ 
-      start_save_video_dialog(toolbutton);
+      gboolean status = start_save_video_dialog(toolbutton, workspace_dir);
+      if (status)
+        {
+          /* set stop tooltip */ 
+          gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Stop");
+          /* put icon to stop */
+          gtk_tool_button_set_stock_id (toolbutton, "gtk-media-stop");
+        }
     }
   annotate();
 

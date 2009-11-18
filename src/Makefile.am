@@ -15,6 +15,8 @@ ardesia_SOURCES = \
         annotate.c annotate.h\
 	main.c \
 	interface.c interface.h \
+        utils.c utils.h\
+        recorder.c recorder.h\
 	callbacks.c
 
 ardesia_LDADD = @PACKAGE_LIBS@ $(INTLLIBS)
