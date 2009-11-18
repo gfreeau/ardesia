@@ -36,6 +36,7 @@
 #include "interface.h"
 #include "recorder.h"
 #include "saver.h"
+#include "color_selector.h"
 #include "annotate.h"
 
 #include "stdlib.h"
@@ -65,9 +66,6 @@ gboolean     pencil = TRUE;
 
 /* selected color in RGBA format */
 gchar*       color = NULL;
-
-/* old picked color in RGBA format */
-gchar*       picked_color = NULL;
 
 /* selected line width */
 int          tickness = 15;
@@ -547,70 +545,7 @@ void on_buttonClear_activate              (GtkToolButton   *toolbutton,
 void on_buttonPicker_activate	          (GtkToolButton   *toolbutton,
 					   gpointer         user_data)
 {
-
-  GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON(toolbutton);
-  GtkColorSelection *colorsel;
-  if (gtk_toggle_tool_button_get_active(button))
-    {
-      /* open color widget */
-      GtkWidget* colorDialog = gtk_color_selection_dialog_new ("Changing color");
-      
-      GtkWindow *parent = get_annotation_window();
-      gtk_window_set_transient_for(GTK_WINDOW(colorDialog), parent);
-      gtk_window_stick((GtkWindow*)colorDialog);
-
-      colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
-    
-      /* color initially selected */ 
-      GdkColor* gdkcolor = g_malloc (sizeof (GdkColor));
-      gchar    *ccolor;
-      ccolor=malloc(strlen(color)+2);
-      if (picked_color!=NULL)
-        {
-           strncpy(&ccolor[1],picked_color,strlen(color)+1);
-        }
-      else
-        {
-           strncpy(&ccolor[1],color,strlen(color)+1); 
-        }
-      ccolor[0]='#'; 
-      gdk_color_parse (ccolor, gdkcolor);
-      g_free(ccolor);
-
-      gtk_color_selection_set_current_color(colorsel, gdkcolor);
-      gtk_color_selection_set_previous_color(colorsel, gdkcolor);
-      gtk_color_selection_set_has_palette(colorsel, TRUE);
-
-      /* Release grab */
-      annotate_release_grab ();
-
-      gint result = gtk_dialog_run((GtkDialog *) colorDialog);
-
-      /* Wait for user to select OK or Cancel */
-      switch (result)
-	{
-	case GTK_RESPONSE_OK:
-	  colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
-          gtk_color_selection_set_has_palette(colorsel, TRUE);
-          gtk_color_selection_get_current_color   (colorsel, gdkcolor);
-          color = gdkcolor_to_rgb(gdkcolor);
-          if (picked_color==NULL)
-            {
-	       picked_color = malloc(strlen(color));
-            }
-          strncpy(&picked_color[0],color,strlen(color));
-          g_free(gdkcolor);
-	  break;
-	default:
-	  break;
-	}
-      if (colorDialog!=NULL)
-      {
-        gtk_widget_destroy(colorDialog);
-      }
-      annotate(); 
-    }
-
+  start_color_selector_dialog(toolbutton, workspace_dir, color);
 }
 
 

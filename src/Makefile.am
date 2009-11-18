@@ -17,6 +17,7 @@ ardesia_SOURCES = \
 	interface.c interface.h \
         utils.c utils.h\
         saver.c saver.h\
+        color_selector.c color_selector.h\
         recorder.c recorder.h\
 	callbacks.c
 

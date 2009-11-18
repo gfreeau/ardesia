@@ -47,7 +47,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_ardesia_OBJECTS = pngutils.$(OBJEXT) annotate.$(OBJEXT) \
 	main.$(OBJEXT) interface.$(OBJEXT) utils.$(OBJEXT) \
-	saver.$(OBJEXT) recorder.$(OBJEXT) callbacks.$(OBJEXT)
+	saver.$(OBJEXT) color_selector.$(OBJEXT) recorder.$(OBJEXT) \
+	callbacks.$(OBJEXT)
 ardesia_OBJECTS = $(am_ardesia_OBJECTS)
 am__DEPENDENCIES_1 =
 ardesia_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -184,6 +185,7 @@ ardesia_SOURCES = \
 	interface.c interface.h \
         utils.c utils.h\
         saver.c saver.h\
+        color_selector.c color_selector.h\
         recorder.c recorder.h\
 	callbacks.c
 
@@ -271,6 +273,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/annotate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/callbacks.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/color_selector.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pngutils.Po@am__quote@
