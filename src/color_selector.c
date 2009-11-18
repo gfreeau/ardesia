@@ -37,8 +37,9 @@ gchar*       picked_color = NULL;
 /*
  * Start the dialog that ask to the user where save the image
  * containing the screenshot
+ * it return the selected color
  */
-void start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar* workspace_dir, gchar* color)
+gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar* workspace_dir, gchar* oldcolor)
 {
   GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON(toolbutton);
   GtkColorSelection *colorsel;
@@ -56,14 +57,14 @@ void start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
       /* color initially selected */ 
       GdkColor* gdkcolor = g_malloc (sizeof (GdkColor));
       gchar    *ccolor;
-      ccolor=malloc(strlen(color)+2);
+      ccolor=malloc(strlen(oldcolor)+2);
       if (picked_color!=NULL)
         {
-           strncpy(&ccolor[1],picked_color,strlen(color)+1);
+           strncpy(&ccolor[1],picked_color,strlen(oldcolor)+1);
         }
       else
         {
-           strncpy(&ccolor[1],color,strlen(color)+1); 
+           strncpy(&ccolor[1],oldcolor,strlen(oldcolor)+1); 
         }
       ccolor[0]='#'; 
       gdk_color_parse (ccolor, gdkcolor);
@@ -82,12 +83,12 @@ void start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
 	  colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
           gtk_color_selection_set_has_palette(colorsel, TRUE);
           gtk_color_selection_get_current_color   (colorsel, gdkcolor);
-          color = gdkcolor_to_rgb(gdkcolor);
+          oldcolor = gdkcolor_to_rgb(gdkcolor);
           if (picked_color==NULL)
             {
-	       picked_color = malloc(strlen(color));
+	       picked_color = malloc(strlen(oldcolor));
             }
-          strncpy(&picked_color[0],color,strlen(color));
+          strncpy(picked_color, oldcolor, strlen(oldcolor));
           g_free(gdkcolor);
 	  break;
 	default:
@@ -98,4 +99,5 @@ void start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
         gtk_widget_destroy(colorDialog);
       }
     }
+   return oldcolor;
 }

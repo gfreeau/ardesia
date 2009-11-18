@@ -355,12 +355,12 @@ void on_buttonClear_activate              (GtkToolButton   *toolbutton,
 }
 
 
-void on_buttonPicker_activate	          (GtkToolButton   *toolbutton,
+void on_buttonColor_activate	          (GtkToolButton   *toolbutton,
 					   gpointer         user_data)
 {
   /* Release grab */
   annotate_release_grab ();
-  start_color_selector_dialog(toolbutton, get_annotation_window(), workspace_dir, color);
+  color = start_color_selector_dialog(toolbutton, get_annotation_window(), workspace_dir, color);
   annotate(); 
 }
 
