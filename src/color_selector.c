@@ -27,7 +27,6 @@
 #include "unistd.h"
 #include "stdio.h"
 #include <string.h> 
-#include "annotate.h"
 #include "pngutils.h"
 #include "utils.h"
 
@@ -39,19 +38,16 @@ gchar*       picked_color = NULL;
  * Start the dialog that ask to the user where save the image
  * containing the screenshot
  */
-void start_color_selector_dialog(GtkToolButton   *toolbutton, gchar* workspace_dir, gchar* color)
+void start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar* workspace_dir, gchar* color)
 {
   GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON(toolbutton);
   GtkColorSelection *colorsel;
   if (gtk_toggle_tool_button_get_active(button))
     {
-      /* Release grab */
-      annotate_release_grab ();
 
       /* open color widget */
       GtkWidget* colorDialog = gtk_color_selection_dialog_new ("Changing color");
       
-      GtkWindow *parent = get_annotation_window();
       gtk_window_set_transient_for(GTK_WINDOW(colorDialog), parent);
       gtk_window_stick((GtkWindow*)colorDialog);
 
@@ -101,6 +97,5 @@ void start_color_selector_dialog(GtkToolButton   *toolbutton, gchar* workspace_d
       {
         gtk_widget_destroy(colorDialog);
       }
-      annotate(); 
     }
 }

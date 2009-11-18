@@ -28,7 +28,6 @@
 #include "unistd.h"
 #include "stdio.h"
 #include <string.h> 
-#include "annotate.h"
 #include "pngutils.h"
 #include "utils.h"
 
@@ -37,7 +36,7 @@
  * Start the dialog that ask to the user where save the image
  * containing the screenshot
  */
-void start_save_image_dialog(GtkToolButton   *toolbutton, char* workspace_dir)
+void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char* workspace_dir)
 {
   char * date = get_date();
   if (workspace_dir==NULL)
@@ -52,11 +51,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, char* workspace_dir)
   GdkPixbuf* buf = gdk_pixbuf_get_from_drawable (NULL, root, NULL,
                                                  0, 0, 0, 0, width, height);
 
-  /* Release grab */
-  annotate_release_grab ();
-
   
-  GtkWindow *parent = get_annotation_window();
   GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save image as image", parent, GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
@@ -112,13 +107,10 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, char* workspace_dir)
     }
   if (screenshot)
     {
-      /* Make visible the annotation */
-      annotate_show_window();
       /* store the pixbuf grabbed on file */
       save_png (buf, filename);
     }
   free(date);
   g_free(filename);
   g_object_unref (G_OBJECT (buf));
-  annotate();
 }

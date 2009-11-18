@@ -113,7 +113,6 @@ int move(GtkWidget *mainWindow, int *x, int *y, int *wwidth, int *wheight, int p
 /* print command line help */
 void print_help()
 {
-
   printf("Usage: ardesia [options]\n\n");
   printf("options:\n");
   printf("--gravity,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
@@ -121,7 +120,6 @@ void print_help()
   printf("\t\t\t\tsouth\n");
   printf("--help,   \t-h\t\tShows the help screen\n");
   printf("\n");
-
 }
 
 /* 
@@ -143,7 +141,6 @@ void print_help()
  */
 int main (int argc, char *argv[])
 {
-
   int position = SOUTH;
   char* arg = NULL;
   gboolean loadbackground = FALSE;
@@ -227,5 +224,4 @@ int main (int argc, char *argv[])
   gtk_widget_destroy(mainWindow); 
 
   return 0;
-
 }

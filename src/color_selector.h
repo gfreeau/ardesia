@@ -26,4 +26,4 @@
  * Start the dialog that ask to the user where save the image
  * containing the screenshot
  */
-void start_color_selector_dialog(GtkToolButton   *toolbutton, gchar* workspace_dir, gchar* color);
+void start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar* workspace_dir, gchar* color);

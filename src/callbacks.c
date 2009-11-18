@@ -37,6 +37,8 @@
 #include "recorder.h"
 #include "saver.h"
 #include "color_selector.h"
+#include "preference_dialog.h"
+
 #include "annotate.h"
 
 #include "stdlib.h"
@@ -75,23 +77,15 @@ gboolean     highlighter = FALSE;
 /* arrow=0 mean no arrow, arrow=1 mean normal arrow, arrow=2 mean double arrow */
 int        arrow = 0;
 
-/* Preference dialog */
-GtkBuilder*  dialogGtkBuilder;
-
-/* 0 no background, 1 background color, 2 png background, */
-int 	     background = 0;
-
 /* Default folder where store images and videos */
 gchar*       workspace_dir = NULL;
 
-/* preview of background file */
-GtkWidget*   preview;
+
 
 
 /* Called when close the program */
 gboolean  quit()
 {
-
   gboolean ret=FALSE;
   quit_recorder();
   annotate_quit();
@@ -101,7 +95,6 @@ gboolean  quit()
 
   gtk_main_quit();
   exit(ret);
-
 }
 
 
@@ -125,7 +118,6 @@ void add_alpha(char *color)
 /* Start to annotate calling annotate */
 void annotate()
 {
-
   pencil=TRUE;
   if (color==NULL)
     {
@@ -142,19 +134,16 @@ void annotate()
   annotate_set_arrow(arrow);
 
   annotate_toggle_grab();
-
 }
 
 
 /* Start to erase calling annotate */
 void erase()
 {
-
   pencil=FALSE;
 
   annotate_set_width(tickness);
-  annotate_eraser_grab ();
-   
+  annotate_eraser_grab ();  
 }
 
 
@@ -164,7 +153,6 @@ void erase()
  */
 void thick()
 {
-
   if (pencil)
     {
       annotate();
@@ -173,19 +161,6 @@ void thick()
     {
       erase();
     }
-
-}
-
-
-/* Take a GdkColor and return the RGB string */
-char * gdkcolor_to_rgb(GdkColor* gdkcolor)
-{
-
-  char*   ret= malloc(7*sizeof(char));;
-  /* transform in the  RGB format e.g. FF0000 */ 
-  sprintf(ret,"%02x%02x%02x", gdkcolor->red/257, gdkcolor->green/257, gdkcolor->blue/257);
-  return ret;
-
 }
 
 
@@ -196,9 +171,7 @@ gboolean on_quit                          (GtkWidget       *widget,
                                            GdkEvent        *event,
                                            gpointer         user_data)
 {
-
   return quit();
-
 }
 
 
@@ -243,7 +216,6 @@ on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
 void on_toolsArrow_activate               (GtkToolButton   *toolbutton,
 				           gpointer         user_data)
 {
-
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
       /* if single arrow is active release it */
@@ -266,7 +238,6 @@ void on_toolsArrow_activate               (GtkToolButton   *toolbutton,
     {
       erase();
     }
-
 }
 
 
@@ -323,7 +294,7 @@ void on_toolsVisible_activate             (GtkToolButton   *toolbutton,
 void on_toolsScreenShot_activate	  (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
-  start_save_image_dialog(toolbutton, workspace_dir);
+  start_save_image_dialog(toolbutton, get_annotation_window(), workspace_dir);
 }
 
 
@@ -340,8 +311,10 @@ void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
     }
   else
     {      
+      /* Release grab */
+      annotate_release_grab ();
       /* the recording is not active */ 
-      gboolean status = start_save_video_dialog(toolbutton, workspace_dir);
+      gboolean status = start_save_video_dialog(toolbutton, get_annotation_window(), workspace_dir);
       if (status)
         {
           /* set stop tooltip */ 
@@ -357,195 +330,38 @@ void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
 void on_thickScale_value_changed          (GtkHScale   *hScale,
 					   gpointer         user_data)
 {
-
   tickness=gtk_range_get_value(&hScale->scale.range);
   thick();
-
-}
-
-
-void on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer data)
-{
-  char *filename;
-  GdkPixbuf *pixbuf;
-  gboolean have_preview;
-
-  filename = gtk_file_chooser_get_preview_filename (file_chooser);
-  
-  if (filename!=NULL)
-    {
-      pixbuf = gdk_pixbuf_new_from_file_at_size (filename, 128, 128, NULL);
-      have_preview = (pixbuf != NULL);
-      g_free (filename);
-
-      gtk_image_set_from_pixbuf (GTK_IMAGE (preview), pixbuf);
-      if (pixbuf)
-        gdk_pixbuf_unref (pixbuf);
-
-      gtk_file_chooser_set_preview_widget_active (file_chooser, have_preview);
-    }
 }
 
 
 void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
 					   gpointer         user_data)
 {
-  GtkWidget *preferenceDialog;
-
-  /* Initialize the main window */
-  dialogGtkBuilder= gtk_builder_new();
-
-  /* Load the gtk builder file created with glade */
-  gtk_builder_add_from_file(dialogGtkBuilder,PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "preferenceDialog.ui",NULL);
- 
-  /* Fill the window by the gtk builder xml */
-  preferenceDialog = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"preferences"));
-  GtkWindow *parent = get_annotation_window();
-  gtk_window_set_transient_for(GTK_WINDOW(preferenceDialog), parent);
-  gtk_window_stick((GtkWindow*)preferenceDialog);
-  
-  GtkFileChooser* chooser = GTK_FILE_CHOOSER(gtk_builder_get_object(dialogGtkBuilder,"imageChooserButton"));
-  gchar* default_dir= PACKAGE_DATA_DIR "/" PACKAGE "/backgrounds";
-
-  gtk_file_chooser_set_current_folder(chooser, default_dir);
-  
-  GtkFileFilter *filter = gtk_file_filter_new ();
-  gtk_file_filter_set_name (filter, "PNG and JPEG");
-  gtk_file_filter_add_mime_type (filter, "image/jpeg");
-  gtk_file_filter_add_mime_type (filter, "image/png");
-  gtk_file_chooser_add_filter (chooser, filter);
- 
-  preview = gtk_image_new ();
-  gtk_file_chooser_set_preview_widget (chooser, preview);
-
- 
-  GtkWidget* color_button = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"backgroundColorButton"));
-  gtk_color_button_set_use_alpha      (GTK_COLOR_BUTTON(color_button), TRUE);
- 
-  /* Connect all signals by reflection */
-  gtk_builder_connect_signals ( dialogGtkBuilder, NULL );
-
   /* Release grab */
   annotate_release_grab ();
-
-  GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"file"));
-  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
-  if (background==1)
-  {
-     gtk_toggle_button_set_active(colorToolButton,TRUE);
-  }
-  else if (background==2)
-  {
-     gtk_toggle_button_set_active(imageToolButton,TRUE);
-  }
-
-  gtk_dialog_run(GTK_DIALOG(preferenceDialog));
-  if (preferenceDialog!=NULL)
-    {
-      gtk_widget_destroy(preferenceDialog);
-    }
+  start_preference_dialog(toolbutton, get_annotation_window(), 
+                          PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S);
+  /* This is a workaround to reput the annotation window over the background window */
+  annotate_hide_window ();
   annotate(); 
-}
-
-
-void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
-{
- GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
-  if (gtk_toggle_button_get_active(colorToolButton))
-    {
-      /* background color */
-      GtkColorButton* backgroundColorButton = GTK_COLOR_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"backgroundColorButton"));
-      GdkColor* gdkcolor = g_malloc (sizeof (GdkColor)); 
-      gtk_color_button_get_color(backgroundColorButton,gdkcolor);
-      char* rgb = gdkcolor_to_rgb(gdkcolor);
-      char* a = malloc(3);
-      sprintf(a,"%02x", gtk_color_button_get_alpha (backgroundColorButton)/257);
-      change_background_color(rgb,a);
-      g_free(gdkcolor);
-      background = 1;  
-    }
-  else 
-    {
-      GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"file"));
-      if (gtk_toggle_button_get_active(imageToolButton))
-	{
-	  /* background png from file */
-	  GtkFileChooserButton* imageChooserButton = GTK_FILE_CHOOSER_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"imageChooserButton"));
-	  gchar* file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(imageChooserButton)); 
-	  if (file!=NULL)
-            {
-              change_background_image(file);
-              g_free(file);
-              background = 2;  
-            }
-          else
-            {
-              /* no background */
-	      remove_background();
-              background = 0;  
-            }
-	}
-      else
-	{
-	  /* none */
-	  remove_background();  
-          background = 0;  
-	} 
-    }        
-  GtkWidget *preferenceDialog = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"preferences"));
-  if (preferenceDialog!=NULL)
-    {
-      gtk_widget_destroy(preferenceDialog);
-    }
-  annotate();
-
-}
-
-
-void on_imageChooserButton_file_set (GtkButton *buton, gpointer user_date)
-{
-
- GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"file"));
- gtk_toggle_button_set_active(imageToolButton,TRUE);
-
-}
-
-
-void on_backgroundColorButton_color_set (GtkButton *buton, gpointer user_date)
-{
-
- GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
- gtk_toggle_button_set_active(colorToolButton,TRUE);
-
-}
-
-
-
-void on_preferenceCancelButton_clicked    (GtkButton *buton,
-                                           gpointer user_date)
-{
-  GtkWidget *preferenceDialog = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"preferences"));
-  if (preferenceDialog!=NULL)
-    {
-      gtk_widget_destroy(preferenceDialog);
-    }
-  annotate();  
 }
 
 
 void on_buttonClear_activate              (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
-
   annotate_clear_screen (); 
-
 }
 
 
 void on_buttonPicker_activate	          (GtkToolButton   *toolbutton,
 					   gpointer         user_data)
 {
-  start_color_selector_dialog(toolbutton, workspace_dir, color);
+  /* Release grab */
+  annotate_release_grab ();
+  start_color_selector_dialog(toolbutton, get_annotation_window(), workspace_dir, color);
+  annotate(); 
 }
 
 

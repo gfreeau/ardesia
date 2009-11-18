@@ -28,7 +28,6 @@
 #include "unistd.h"
 #include "stdio.h"
 #include <string.h> 
-#include "annotate.h"
 #include "utils.h"
 
 /* pid of the recording process */
@@ -87,7 +86,7 @@ void quit_recorder()
  * This function take as input the recor toolbutton in ardesia bar
  * return true is the recorder is started
  */
-gboolean start_save_video_dialog(GtkToolButton   *toolbutton, char* workspace_dir)
+gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char *workspace_dir)
 {
   gboolean status = FALSE;
    
@@ -97,11 +96,6 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, char* workspace_di
       workspace_dir = (char *) get_desktop_dir();
     }	
 
-   /* Release grab */
-   annotate_release_grab ();
-
-  
-  GtkWindow *parent = get_annotation_window();
   GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save video as ogv", parent, GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
@@ -148,8 +142,6 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, char* workspace_di
 	      return status; 
 	    } 
 	}
-      /* Make visible the annotation */
-      annotate_show_window();
       recorderpid = start_recorder(filename);
       status = TRUE;
     }

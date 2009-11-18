@@ -1,10 +1,9 @@
 /* 
- * Ardesia -- a program for painting on the screen
- * with this program you can play, draw, learn and teach
- * This program has been written such as a freedom sonet
- * We believe in the freedom and in the freedom of education
- *
+ * Annotate -- a program for painting on the screen 
  * Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>
+ *
+ * Some parts of this file are been copied from gromit
+ * Copyright (C) 2000 Simon Budig <Simon.Budig@unix-ag.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,24 +21,8 @@
  *
  */
 
-
-/* Take a GdkColor and return the RGB string */
-char * gdkcolor_to_rgb(GdkColor* gdkcolor);
-
-/* Get the current date and format in a printable format */
-char* get_date();
-
-
-/* Return if a file exists */
-gboolean file_exists(char* filename, char* desktop_dir);
-
-
 /*
- * Get the desktop folder;
- * Now this function use gconf to found the folder,
- * this means that this rutine works properly only
- * with the gnome desktop environment
- * We can investigate how-to do this
- * in a desktop environment independant way
+ * Start the dialog that ask to the user
+ * the background setting
  */
-const gchar * get_desktop_dir (void);
+void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char * installation_location);

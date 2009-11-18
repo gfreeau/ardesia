@@ -30,6 +30,16 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <gdk/gdk.h>
+
+/* Take a GdkColor and return the RGB string */
+char * gdkcolor_to_rgb(GdkColor* gdkcolor)
+{
+  char*   ret= malloc(7*sizeof(char));;
+  /* transform in the  RGB format e.g. FF0000 */ 
+  sprintf(ret,"%02x%02x%02x", gdkcolor->red/257, gdkcolor->green/257, gdkcolor->blue/257);
+  return ret;
+}
 
 /* Get the current date and format in a printable format */
 char* get_date()

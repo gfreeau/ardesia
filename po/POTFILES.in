@@ -1,6 +1,13 @@
 # List of source files containing translatable strings.
 
 src/main.c
+src/annotate.c
+src/color_selector.c
+src/saver.c
+src/pngutils.c
+src/recorder.c
+src/utils.c
 src/interface.c
 src/callbacks.c
+src/preference_dialog.c
 src/support.c
