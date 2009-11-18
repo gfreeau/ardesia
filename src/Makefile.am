@@ -16,6 +16,7 @@ ardesia_SOURCES = \
 	main.c \
 	interface.c interface.h \
         utils.c utils.h\
+        saver.c saver.h\
         recorder.c recorder.h\
 	callbacks.c
 

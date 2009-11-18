@@ -35,6 +35,7 @@
 
 #include "interface.h"
 #include "recorder.h"
+#include "saver.h"
 #include "annotate.h"
 
 #include "stdlib.h"
@@ -324,96 +325,13 @@ void on_toolsVisible_activate             (GtkToolButton   *toolbutton,
 void on_toolsScreenShot_activate	  (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
-
-  char * date = get_date();
-  if (workspace_dir==NULL)
-    {
-      workspace_dir = (char *) get_desktop_dir();
-    }	
-
-  gint height = gdk_screen_height ();
-  gint width = gdk_screen_width ();
-
-  GdkWindow* root = gdk_get_default_root_window ();
-  GdkPixbuf* buf = gdk_pixbuf_get_from_drawable (NULL, root, NULL,
-                                                 0, 0, 0, 0, width, height);
-
-  /* Release grab */
-  annotate_release_grab ();
-
-  
-  GtkWindow *parent = get_annotation_window();
-  GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save image as image", parent, GTK_FILE_CHOOSER_ACTION_SAVE,
-						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
-						    NULL);
-  
-  /* with this apperar in all the workspaces */  
-  gtk_window_stick((GtkWindow*) chooser);
- 
-  gtk_window_set_title (GTK_WINDOW (chooser), "Select a file");
-  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), workspace_dir);
-  
-  gchar* filename =  malloc(256*sizeof(char));
-  sprintf(filename,"ardesia_%s", date);
-  gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
-  gboolean screenshot = FALSE;
- 
-  if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
-    {
-
-      filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
-      char* supported_extension = ".png";
-      char* extension = strrchr(filename, '.');
-      if ((extension==0) || (strcmp(extension, supported_extension) != 0))
-        {
-          filename = (gchar *) realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar)); 
-          (void) strcat((gchar *)filename, supported_extension);
-          free(extension);
-        }           
-
-      if (file_exists(filename,(char *) workspace_dir))
-        {
-	  GtkWidget *msg_dialog; 
-	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
-          gtk_window_stick((GtkWindow*)msg_dialog);
-
-          int result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
-          if (msg_dialog != NULL)
-            { 
-	      gtk_widget_destroy(msg_dialog);
-            }
-	  if ( result == GTK_RESPONSE_NO)
-            { 
-	      g_free(filename);
-	      return; 
-	    } 
-	}
-      screenshot = TRUE;
-    }
-  if (chooser != NULL)
-    {
-      gtk_widget_destroy (chooser);
-    }
-  if (screenshot)
-    {
-      /* Make visible the annotation */
-      annotate_show_window();
-      /* store the pixbuf grabbed on file */
-      save_png (buf, filename);
-    }
-  free(date);
-  g_free(filename);
-  g_object_unref (G_OBJECT (buf));
-  annotate();
+  start_save_image_dialog(toolbutton, workspace_dir);
 }
 
 
 void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
-{
-  
+{ 
   if(is_recording())
     {
       quit_recorder();
@@ -435,7 +353,6 @@ void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
         }
     }
   annotate();
-
 }
 
 

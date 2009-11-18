@@ -99,3 +99,5 @@ const gchar * get_desktop_dir (void)
 
   return desktop_dir;
 }
+
+
