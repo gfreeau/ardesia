@@ -172,12 +172,10 @@ void annotate_paint_context_free (AnnotatePaintContext *context)
 void annotate_coord_list_prepend (gint x, gint y, gint width)
 {
   AnnotateStrokeCoordinate *point;
-
   point = g_malloc (sizeof (AnnotateStrokeCoordinate));
   point->x = x;
   point->y = y;
   point->width = width;
-
   data->coordlist = g_list_prepend (data->coordlist, point);
 }
 
@@ -1122,16 +1120,14 @@ int annotate_init (int x, int y, int width, int height)
   gtk_init (0, NULL);
   data = g_malloc (sizeof (AnnotateData));
   
+  data->debug = DEBUG;
   /* Untoggle zone is setted on ardesia zone */
   data->untogglexpos = x;
   data->untoggleypos = y;
   data->untogglewidth = width;
   data->untoggleheight = height;
-
-  data->debug = DEBUG;
-  
+ 
   setup_app ();
-
   gtk_main ();
 
   return 0;

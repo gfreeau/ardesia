@@ -39,10 +39,10 @@ gchar*       picked_color = NULL;
  * containing the screenshot
  * it return the selected color
  */
-gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar* workspace_dir, gchar* oldcolor)
+gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar* workspace_dir, gchar* color)
 {
   GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON(toolbutton);
-  GtkColorSelection *colorsel;
+ 
   if (gtk_toggle_tool_button_get_active(button))
     {
 
@@ -52,19 +52,18 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
       gtk_window_set_transient_for(GTK_WINDOW(colorDialog), parent);
       gtk_window_stick((GtkWindow*)colorDialog);
 
-      colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
+      GtkColorSelection *colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
     
       /* color initially selected */ 
       GdkColor* gdkcolor = g_malloc (sizeof (GdkColor));
-      gchar    *ccolor;
-      ccolor=malloc(strlen(oldcolor)+2);
-      if (picked_color!=NULL)
+      gchar    *ccolor = malloc(strlen(color)+2);
+      if (picked_color != NULL)
         {
-           strncpy(&ccolor[1],picked_color,strlen(oldcolor)+1);
+           strncpy(&ccolor[1],picked_color,strlen(picked_color)+1);
         }
       else
         {
-           strncpy(&ccolor[1],oldcolor,strlen(oldcolor)+1); 
+           strncpy(&ccolor[1],color,strlen(color)+1); 
         }
       ccolor[0]='#'; 
       gdk_color_parse (ccolor, gdkcolor);
@@ -83,12 +82,12 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
 	  colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
           gtk_color_selection_set_has_palette(colorsel, TRUE);
           gtk_color_selection_get_current_color   (colorsel, gdkcolor);
-          oldcolor = gdkcolor_to_rgb(gdkcolor);
+          color = gdkcolor_to_rgb(gdkcolor);
           if (picked_color==NULL)
             {
-	       picked_color = malloc(strlen(oldcolor));
+	       picked_color = malloc(strlen(color));
             }
-          strncpy(picked_color, oldcolor, strlen(oldcolor));
+          strncpy(picked_color, color, strlen(color));
           g_free(gdkcolor);
 	  break;
 	default:
@@ -99,5 +98,5 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
         gtk_widget_destroy(colorDialog);
       }
     }
-   return oldcolor;
+   return color;
 }
