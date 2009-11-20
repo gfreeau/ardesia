@@ -2,9 +2,6 @@
  * Annotate -- a program for painting on the screen 
  * Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>
  *
- * Some parts of this file are been copied from gromit
- * Copyright (C) 2000 Simon Budig <Simon.Budig@unix-ag.org>
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -40,6 +37,7 @@ int 	     background = 0;
 /* preview of background file */
 GtkWidget*   preview;
 
+/* Update the preview image */
 void on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer data)
 {
   char *filename;
@@ -62,7 +60,7 @@ void on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointe
     }
 }
 
-
+/* Shot when the ok button in preference dialog is pushed */
 void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
 {
  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
@@ -115,6 +113,7 @@ void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
 }
 
 
+/* Shot when the selected folder change in the file browser */
 void on_imageChooserButton_file_set (GtkButton *buton, gpointer user_date)
 {
  GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"file"));
@@ -122,6 +121,7 @@ void on_imageChooserButton_file_set (GtkButton *buton, gpointer user_date)
 }
 
 
+/* Shot when is pushed the background color button */
 void on_backgroundColorButton_color_set (GtkButton *buton, gpointer user_date)
 {
  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
@@ -129,6 +129,7 @@ void on_backgroundColorButton_color_set (GtkButton *buton, gpointer user_date)
 }
 
 
+/* Shot when is pushed the cancel button */
 void on_preferenceCancelButton_clicked    (GtkButton *buton,
                                            gpointer user_date)
 {

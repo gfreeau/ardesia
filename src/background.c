@@ -78,13 +78,13 @@ static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *
 /* Create the background window */
 void create_background_window()
 {
-    background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_fullscreen(GTK_WINDOW(background_window));
-    gtk_window_stick(GTK_WINDOW(background_window));  
-    gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
-    gtk_widget_set_app_paintable(background_window, TRUE);
-    gtk_window_set_opacity(GTK_WINDOW(background_window), 1); 
-    gtk_widget_set_double_buffered(background_window, FALSE);
+  background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_fullscreen(GTK_WINDOW(background_window));
+  gtk_window_stick(GTK_WINDOW(background_window));  
+  gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
+  gtk_widget_set_app_paintable(background_window, TRUE);
+  gtk_window_set_opacity(GTK_WINDOW(background_window), 1); 
+  gtk_widget_set_double_buffered(background_window, FALSE);
 }
 
 

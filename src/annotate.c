@@ -141,7 +141,7 @@ GtkWindow* get_annotation_window()
 }
 
 
-/* print paint context informations */
+/* Print paint context informations */
 void annotate_paint_context_print (gchar *name, AnnotatePaintContext *context)
 {
   g_printerr ("Tool name: \"%-20s\": ", name);
@@ -161,14 +161,14 @@ void annotate_paint_context_print (gchar *name, AnnotatePaintContext *context)
 }
 
 
-/* free the memory allocated by paint context */
+/* Free the memory allocated by paint context */
 void annotate_paint_context_free (AnnotatePaintContext *context)
 {
   g_free (context);
 }
 
 
-/* add to the list of the painted point the poin (x,y) with the width width */
+/* Add to the list of the painted point the poin (x,y) with the width width */
 void annotate_coord_list_prepend (gint x, gint y, gint width)
 {
   AnnotateStrokeCoordinate *point;
@@ -180,7 +180,7 @@ void annotate_coord_list_prepend (gint x, gint y, gint width)
 }
 
 
-/* free the list of the painted point */
+/* Free the list of the painted point */
 void
 annotate_coord_list_free ()
 {
@@ -250,21 +250,21 @@ gboolean annotate_coord_list_get_arrow_param (AnnotateData* data,
 }
 
 
-/* hide the  window with the annotations */
+/* Hide the  window with the annotations */
 void annotate_hide_window ()
 {
   gtk_widget_hide (data->win);
 }
 
 
-/* show the window with the annotations */
+/* Show the window with the annotations */
 void annotate_show_window ()
 {
   gtk_widget_show (data->win);
 }
 
 
-/* release the mouse pointer */
+/* Release the mouse pointer */
 void annotate_release_grab ()
 {           
   gdk_error_trap_push ();
@@ -288,7 +288,7 @@ void annotate_release_grab ()
 
 
 
-/* select the default eraser tool */
+/* Select the default eraser tool */
 void annotate_select_eraser()
 {
   AnnotatePaintContext *eraser = data->default_eraser;
@@ -296,14 +296,14 @@ void annotate_select_eraser()
 }
 
 
-/* configure the eraser */
+/* Configure the eraser */
 void annotate_configure_eraser(int width)
 {
   data->cur_context->width = (width * 10);	
 }
 
 
-/* select the default pen tool */
+/* Select the default pen tool */
 void annotate_select_pen()
 {
   AnnotatePaintContext *pen = data->default_pen;
@@ -311,7 +311,7 @@ void annotate_select_pen()
 }
 
 
-/* set the cursor patching the xpm with the selected color */
+/* Set the cursor patching the xpm with the selected color */
 void set_pen_cursor(char *color)
 {
   GdkPixbuf *cursor_src;
@@ -329,7 +329,7 @@ void set_pen_cursor(char *color)
 }
 
 
-/* set the eraser cursor */
+/* Set the eraser cursor */
 void set_eraser_cursor()
 {
   GdkPixbuf *cursor_src;
@@ -342,7 +342,7 @@ void set_eraser_cursor()
 }
 
 
-/* grab the cursor */
+/* Grab the cursor */
 void annotate_acquire_grab ()
 {
 
@@ -440,21 +440,21 @@ void waitOutBar()
 }
 
 
-/* set color */
+/* Set color */
 void annotate_set_color(gchar* color)
 {
    data->cur_context->fg_color = color;
 }
 
 
-/* set width */
+/* Set width */
 void annotate_set_width(guint width)
 {
    data->cur_context->width = width;
 }
 
 
-/* set arrow type */
+/* Set arrow type */
 void annotate_set_arrow(int arrow)
 {
  data->arrow = arrow;
@@ -470,7 +470,7 @@ void annotate_set_arrow(int arrow)
 }
 
 
-/* start to paint */
+/* Start to paint */
 void annotate_toggle_grab ()
 { 
   annotate_select_pen(data);
@@ -479,7 +479,7 @@ void annotate_toggle_grab ()
 }
 
 
-/* start to erase */
+/* Start to erase */
 void annotate_eraser_grab ()
 {
   /* Get the with message */
@@ -491,7 +491,7 @@ void annotate_eraser_grab ()
 }
 
 
-/* repaint the window */
+/* Repaint the window */
 gint repaint (gpointer user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
@@ -505,7 +505,7 @@ gint repaint (gpointer user_data)
 }
 
 
-/* clear the screen */
+/* Clear the screen */
 void clear_screen()
 {
   data->cr=gdk_cairo_create(data->pixmap);
@@ -517,7 +517,7 @@ void clear_screen()
 }
 
 
-/* clear the annotations windows */
+/* Clear the annotations windows */
 void annotate_clear_screen ()
 {
   clear_screen();
@@ -525,7 +525,7 @@ void annotate_clear_screen ()
 }
 
 
-/* select eraser, pen or other tool for tablet */
+/* Select eraser, pen or other tool for tablet */
 void annotate_select_tool (GdkDevice *device, guint state)
 {
   guint buttons = 0, modifier = 0, len = 0;
@@ -593,14 +593,14 @@ void annotate_select_tool (GdkDevice *device, guint state)
 
 
 
-/* set the cairo surface color to transparent */
+/* Set the cairo surface color to transparent */
 void  cairo_set_transparent_color(cairo_t * cr)
 {
   cairo_set_source_rgba (cr, 0.0, 0.0,0.0, 0.0);
 }
 
 
-/* set the cairo surface color to the RGBA string */
+/* Set the cairo surface color to the RGBA string */
 void cairo_set_source_color_from_string( cairo_t * cr, char* color)
 {
   int r,g,b,a;
@@ -609,7 +609,7 @@ void cairo_set_source_color_from_string( cairo_t * cr, char* color)
 }
 
 
-/* color selector if is the erase context than transparent else alloc the right color */ 
+/* Color selector; if eraser than select the transparent color else alloc the right color */ 
 void select_color(AnnotateData *data)
 {
   if (!(data->cur_context->type == ANNOTATE_ERASER))
@@ -623,7 +623,7 @@ void select_color(AnnotateData *data)
 }
 
 
-/* draw line from (x1,y1) to (x2,y2) */
+/* Draw line from (x1,y1) to (x2,y2) */
 void annotate_draw_line_int (gint x1, gint y1,
 			     gint x2, gint y2)
 {
@@ -636,7 +636,7 @@ void annotate_draw_line_int (gint x1, gint y1,
 
 
 /* 
- * draw a line; 
+ * Draw a line; 
  * the algorithm is done to deny the overlapping 
  * of the line with the bar 
  */
@@ -699,7 +699,7 @@ void annotate_draw_line (gint x1, gint y1,
 }
 
 
-/* draw an arrow using some polygons */
+/* Draw an arrow using some polygons */
 void annotate_draw_arrow (gint x1, gint y1,
 		          gint width, gfloat direction)
 {
@@ -740,7 +740,7 @@ void annotate_draw_arrow (gint x1, gint y1,
 }
 
 
-/* draw a back arrow using some polygons */
+/* Draw a back arrow using some polygons */
 void annotate_draw_back_arrow (gint x1, gint y1,
 			       gint width, gfloat direction)
 {
@@ -763,10 +763,10 @@ void annotate_draw_back_arrow (gint x1, gint y1,
 
 
 /*
- * event-Handlers to perform the drawing
+ * Event-Handlers to perform the drawing
  */
 
-/* device touch */
+/* Device touch */
 gboolean proximity_in (GtkWidget *win,
                        GdkEventProximity *ev, 
                        gpointer user_data)
@@ -786,7 +786,7 @@ gboolean proximity_in (GtkWidget *win,
 }
 
 
-/* device lease */
+/* Device lease */
 gboolean proximity_out (GtkWidget *win, 
                         GdkEventProximity *ev,
                         gpointer user_data)
@@ -806,7 +806,7 @@ gboolean proximity_out (GtkWidget *win,
 }
 
 
-/* this is called when the button is pushed */
+/* This is called when the button is pushed */
 gboolean paint (GtkWidget *win,
                 GdkEventButton *ev, 
                 gpointer user_data)
@@ -845,7 +845,7 @@ gboolean paint (GtkWidget *win,
 }
 
 
-/* this shot when the ponter is moving */
+/* This shots when the ponter is moving */
 gboolean paintto (GtkWidget *win, 
                   GdkEventMotion *ev, 
                   gpointer user_data)
@@ -896,7 +896,7 @@ gboolean paintto (GtkWidget *win,
 }
 
 
-/* this shot when the button is realeased */
+/* This shots when the button is realeased */
 gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
@@ -943,7 +943,7 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
  * Functions for handling various (GTK+)-Events
  */
 
-/* configure event */
+/* Configure event */
 gboolean event_configure (GtkWidget *widget,
                           GdkEventExpose *event,
                           gpointer user_data)
@@ -958,7 +958,7 @@ gboolean event_configure (GtkWidget *widget,
 }
 
 
-/* expose event */
+/* Expose event */
 gboolean event_expose (GtkWidget *widget, 
                        GdkEventExpose *event, 
                        gpointer user_data)
@@ -976,7 +976,7 @@ gboolean event_expose (GtkWidget *widget,
 }
 
 
-/* do the gtk main loop */
+/* Do the gtk main loop */
 void annotate_main_do_event (GdkEventAny *event, 
                              AnnotateData  *data)
 {
@@ -985,10 +985,10 @@ void annotate_main_do_event (GdkEventAny *event,
 
 
 /*
- * functions for setting up (parts of) the application
+ * Functions for setting up (parts of) the application
  */
 
-/* setup input device */
+/* Setup input device */
 void setup_input_devices ()
 {
   GList     *tmp_list;
@@ -1017,7 +1017,7 @@ void setup_input_devices ()
     }
 }
 
-/* setup the application */
+/* Setup the application */
 void setup_app ()
 { 
   /* default color is opaque red */ 
@@ -1100,7 +1100,7 @@ void setup_app ()
 }
 
 
-/* quit the annotation */
+/* Quit the annotation */
 void annotate_quit()
 {
   annotate_release_grab(); /* ungrab all */
@@ -1114,7 +1114,7 @@ void annotate_quit()
 }
 
 
-/* init the annotation */
+/* Init the annotation */
 int annotate_init (int x, int y, int width, int height)
 {
   gtk_init (0, NULL);

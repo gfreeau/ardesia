@@ -110,7 +110,7 @@ int move(GtkWidget *ardesiaBarWindow, int *x, int *y, int *wwidth, int *wheight,
   return 0; 
 }
 
-/* print command line help */
+/* Print command line help */
 void print_help()
 {
   printf("Usage: ardesia [options]\n\n");
