@@ -180,7 +180,6 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
  
   preview = gtk_image_new ();
   gtk_file_chooser_set_preview_widget (chooser, preview);
-
  
   GtkWidget* color_button = GTK_WIDGET(gtk_builder_get_object(dialogGtkBuilder,"backgroundColorButton"));
   gtk_color_button_set_use_alpha      (GTK_COLOR_BUTTON(color_button), TRUE);

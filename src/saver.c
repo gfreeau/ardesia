@@ -32,6 +32,7 @@
 #include "utils.h"
 
 
+
 /*
  * Start the dialog that ask to the user where save the image
  * containing the screenshot
@@ -60,6 +61,12 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
   /* with this apperar in all the workspaces */  
   gtk_window_stick((GtkWindow*) chooser);
  
+  /* preview of saving */
+  GtkWidget*   preview = gtk_image_new ();
+  GdkPixbuf*   previewPixbuf = gdk_pixbuf_scale_simple(buf, 128, 128, GDK_INTERP_BILINEAR);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (preview), previewPixbuf);
+  gtk_file_chooser_set_preview_widget (chooser, preview);
+  
   gtk_window_set_title (GTK_WINDOW (chooser), "Select a file");
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), workspace_dir);
   
