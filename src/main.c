@@ -66,10 +66,10 @@ int getScreenResolution(Display *display, int *width, int *height)
  * Calculate the position where move the main window 
  * the centered position upon the window manager bar
  */
-void calculateCenteredPosition(GtkWidget *mainWindow, int dwidth, int dheight, int *x, int *y, int *wwidth, int *wheight, int position)
+void calculateCenteredPosition(GtkWidget *ardesiaBarWindow, int dwidth, int dheight, int *x, int *y, int *wwidth, int *wheight, int position)
 {
   GtkRequisition requisition;
-  gtk_widget_size_request(mainWindow, &requisition);
+  gtk_widget_size_request(ardesiaBarWindow, &requisition);
   *wwidth  = requisition.width;
   *wheight = requisition.height;
   *x = (dwidth - *wwidth)/2;
@@ -96,7 +96,7 @@ void calculateCenteredPosition(GtkWidget *mainWindow, int dwidth, int dheight, i
  * Here can be beatiful have a configuration file
  * where put the user can decide the position of the window
  */
-int move(GtkWidget *mainWindow, int *x, int *y, int *wwidth, int *wheight, int position)
+int move(GtkWidget *ardesiaBarWindow, int *x, int *y, int *wwidth, int *wheight, int position)
 {
   Display *display = XOpenDisplay (0);  
   int dwidth, dheight;
@@ -105,8 +105,8 @@ int move(GtkWidget *mainWindow, int *x, int *y, int *wwidth, int *wheight, int p
       perror ("Fatal error while getting screen resolution\n");
       return -1;
     }
-  calculateCenteredPosition(mainWindow,dwidth,dheight, x, y, wwidth, wheight, position);
-  gtk_window_move(GTK_WINDOW(mainWindow),*x,*y);  
+  calculateCenteredPosition(ardesiaBarWindow,dwidth,dheight, x, y, wwidth, wheight, position);
+  gtk_window_move(GTK_WINDOW(ardesiaBarWindow),*x,*y);  
   return 0; 
 }
 
@@ -207,21 +207,21 @@ int main (int argc, char *argv[])
    * (except popup menus), just so that you see something after building
    * the project. Delete any components that you don't want shown initially.
    */
-  GtkWidget *mainWindow = create_mainWindow ();
+  GtkWidget *ardesiaBarWindow = create_mainWindow ();
  
   /* move the window in the desired position */
-  if (move(mainWindow,&x,&y,&width,&height,position) < 0)
+  if (move(ardesiaBarWindow,&x,&y,&width,&height,position) < 0)
     {
       exit(0);
     }
 
   /** Init annotate */
   annotate_init(x, y, width, height);
- 
-  gtk_widget_show (mainWindow);
+  gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), get_annotation_window() );
+  gtk_widget_show (ardesiaBarWindow);
 
   gtk_main ();
-  gtk_widget_destroy(mainWindow); 
+  gtk_widget_destroy(ardesiaBarWindow); 
 
   return 0;
 }
