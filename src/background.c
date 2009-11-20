@@ -27,7 +27,7 @@
 #include <png.h>
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
-#include <pngutils.h>
+#include <background.h>
 #include <stdlib.h> 
 
 GtkWidget* background_window = NULL;
@@ -38,124 +38,6 @@ typedef struct
   gchar*     rgb;
   gchar*     a;
 } BackgroundColorData;
-
-
-/* Save the contents of the pixfuf in the file with name filename */
-gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
-{
-  FILE *handle;
-  int width, height, depth, rowstride;
-  guchar *pixels;
-  png_structp png_ptr;
-  png_infop info_ptr;
-  png_text text[2];
-  int i;
-
-  handle = fopen (filename, "w");
-  if (!handle) 
-    {
-      return FALSE;
-    }
-
-  png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-  if (png_ptr == NULL)
-    {
-      return FALSE;
-    }
-
-  info_ptr = png_create_info_struct (png_ptr);
-  if (info_ptr == NULL) 
-    {
-      png_destroy_write_struct (&png_ptr, (png_infop *) NULL);
-      return FALSE;
-    }
-
-  if (setjmp (png_ptr->jmpbuf))
-    {
-      /* Error handler */
-      png_destroy_write_struct (&png_ptr, &info_ptr);
-      return FALSE;
-    }
-
-  png_init_io (png_ptr, handle);
-  
-  width = gdk_pixbuf_get_width (pixbuf);
-  height = gdk_pixbuf_get_height (pixbuf);
-  depth = gdk_pixbuf_get_bits_per_sample (pixbuf);
-  pixels = gdk_pixbuf_get_pixels (pixbuf);
-  rowstride = gdk_pixbuf_get_rowstride (pixbuf);
-
-  gboolean  has_alpha = gdk_pixbuf_get_has_alpha (pixbuf);
- 
-  if (has_alpha) 
-    {
-      png_set_IHDR (png_ptr, info_ptr, width, height,
- 	            depth, PNG_COLOR_TYPE_RGB_ALPHA,
- 		    PNG_INTERLACE_NONE,
- 		    PNG_COMPRESSION_TYPE_DEFAULT,
- 		    PNG_FILTER_TYPE_DEFAULT);
-    } 
-  else 
-    {
-      png_set_IHDR (png_ptr, info_ptr, width, height,
-	            depth, PNG_COLOR_TYPE_RGB,
-		    PNG_INTERLACE_NONE,
-		    PNG_COMPRESSION_TYPE_DEFAULT,
-		    PNG_FILTER_TYPE_DEFAULT);
-    }
-
-  /* Some text to go with the image such as an header */
-  text[0].key = "Title";
-  text[0].text = (char *)filename;
-  text[0].compression = PNG_TEXT_COMPRESSION_NONE;
-  text[1].key = "Software";
-  text[1].text = "Ardesia";
-  text[1].compression = PNG_TEXT_COMPRESSION_NONE;
-  png_set_text (png_ptr, info_ptr, text, 2);
-
-  png_write_info (png_ptr, info_ptr);
-  for (i = 0; i < height; i++)
-    {
-      png_bytep row_ptr = pixels;
-      png_write_row (png_ptr, row_ptr);
-      pixels += rowstride;
-    }
-
-  png_write_end (png_ptr, info_ptr);
-  png_destroy_write_struct (&png_ptr, &info_ptr);
-
-  fflush (handle);
-  fclose (handle);
-
-  return TRUE;
-}
-
-
-/* Load the contents of the file image with name "filename" into the pixbuf */
-gboolean
-load_png (const char *filename, GdkPixbuf **pixmap)
-{
-  *pixmap = gdk_pixbuf_new_from_file (filename, NULL);
-
-  if (*pixmap)
-    {
-      GdkPixbuf *scaled;
-      gint height = gdk_screen_height ();
-      gint weight = gdk_screen_width ();
-      scaled = gdk_pixbuf_scale_simple(*pixmap, weight, height, GDK_INTERP_BILINEAR);
-      g_object_unref (G_OBJECT (*pixmap));
-      *pixmap = scaled;
-      return TRUE;
-    }
-  else
-    {
-       fprintf (stderr, "couldn't load %s\n", filename);
-       exit(0);
-    }
-
-  *pixmap = NULL;
-  return FALSE;
-}
 
 
 static gboolean on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)

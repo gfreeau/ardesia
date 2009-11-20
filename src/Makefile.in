@@ -45,7 +45,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_ardesia_OBJECTS = pngutils.$(OBJEXT) annotate.$(OBJEXT) \
+am_ardesia_OBJECTS = background.$(OBJEXT) annotate.$(OBJEXT) \
 	main.$(OBJEXT) interface.$(OBJEXT) utils.$(OBJEXT) \
 	saver.$(OBJEXT) color_selector.$(OBJEXT) \
 	preference_dialog.$(OBJEXT) recorder.$(OBJEXT) \
@@ -180,7 +180,7 @@ INCLUDES = \
 	@PACKAGE_CFLAGS@
 
 ardesia_SOURCES = \
-        pngutils.c pngutils.h\
+        background.c background.h\
         annotate.c annotate.h\
 	main.c \
 	interface.c interface.h \
@@ -274,11 +274,11 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/annotate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/background.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/callbacks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/color_selector.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pngutils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/preference_dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/recorder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/saver.Po@am__quote@

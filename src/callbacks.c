@@ -51,7 +51,7 @@
 
 #include <math.h>
 #include <utils.h>
-#include <pngutils.h>
+#include <background.h>
 
 #include <fcntl.h>
 #include <sys/stat.h>

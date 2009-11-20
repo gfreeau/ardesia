@@ -27,7 +27,7 @@
 #include "unistd.h"
 #include "stdio.h"
 #include <string.h> 
-#include "pngutils.h"
+#include "background.h"
 #include "utils.h"
 
 

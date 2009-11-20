@@ -38,7 +38,7 @@
 #include "stdlib.h"
 #include "string.h"
 #include "unistd.h"
-#include "pngutils.h"
+#include "background.h"
 
 #include <X11/Xutil.h>
 
