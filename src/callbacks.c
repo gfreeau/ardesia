@@ -244,7 +244,6 @@ void on_toolsArrow_activate               (GtkToolButton   *toolbutton,
 void on_toolsDoubleArrow_activate         (GtkToolButton   *toolbutton,
 					   gpointer         user_data)
 {
-
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
       /* if single arrow is active release it */
@@ -267,7 +266,6 @@ void on_toolsDoubleArrow_activate         (GtkToolButton   *toolbutton,
     {
       erase();
     }
-
 }
 
 

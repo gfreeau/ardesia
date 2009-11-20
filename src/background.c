@@ -75,10 +75,9 @@ static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *
   return TRUE;
 }
 
-
+/* Create the background window */
 void create_background_window()
 {
-  
     background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_fullscreen(GTK_WINDOW(background_window));
     gtk_window_stick(GTK_WINDOW(background_window));  
@@ -104,11 +103,6 @@ void change_background_image (const char *name)
   GdkScreen *screen = gdk_display_get_default_screen (display);
   
   GdkColormap *colormap = gdk_screen_get_rgba_colormap (screen);
-  if (colormap == NULL)
-    {
-      /* alpha channel is not supported then I try to use plain rgb */
-      colormap = gdk_screen_get_rgb_colormap (screen);
-    }
   gtk_widget_set_default_colormap(colormap);
 
   gtk_widget_show_all(background_window);
