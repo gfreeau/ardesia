@@ -6,11 +6,9 @@
     <property name="width_request">695</property>
     <property name="visible">True</property>
     <property name="app_paintable">True</property>
-    <property name="events">GDK_BUTTON_PRESS_MASK</property>
     <property name="type">popup</property>
     <property name="title" translatable="yes">Ardesia</property>
     <property name="resizable">False</property>
-    <property name="urgency_hint">True</property>
     <property name="decorated">False</property>
     <property name="deletable">False</property>
     <property name="opacity">0.7</property>

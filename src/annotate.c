@@ -1049,14 +1049,7 @@ void setup_app ()
 
   gtk_container_add (GTK_CONTAINER (data->win), data->area);
 
-  /* SHAPE PIXMAP */
-  GdkBitmap   *shape = gdk_pixmap_new (NULL, data->width, data->height, 1);  
-
-  gtk_widget_input_shape_combine_mask(data->win, shape, 0, 0);
-
   gtk_window_fullscreen(GTK_WINDOW(data->win));
-  
-  gtk_widget_show_all (data->area); 
  
   g_signal_connect (data->area,"configure_event",
                     G_CALLBACK (event_configure), data);
@@ -1073,9 +1066,6 @@ void setup_app ()
 		    G_CALLBACK (proximity_in), data);
   g_signal_connect (data->win, "proximity_out_event",
 		    G_CALLBACK (proximity_out), data);
-
-
-  gtk_widget_realize (data->win);
 
   data->arrow = 0; 
   data->painted = FALSE;
@@ -1094,9 +1084,13 @@ void setup_app ()
   data->state = 0;
 
   setup_input_devices (data);
+ 
+  gtk_widget_show_all(data->win);
+  
+  /* SHAPE PIXMAP */
+  GdkBitmap   *shape = gdk_pixmap_new (NULL, data->width, data->height, 1);  
 
-  gdk_event_handler_set ((GdkEventFunc) annotate_main_do_event, data, NULL);
-  annotate_acquire_grab (data);
+  gtk_widget_input_shape_combine_mask(data->win, shape, 0, 0); 
 }
 
 
@@ -1117,7 +1111,6 @@ void annotate_quit()
 /* Init the annotation */
 int annotate_init (int x, int y, int width, int height)
 {
-  gtk_init (0, NULL);
   data = g_malloc (sizeof (AnnotateData));
   
   data->debug = DEBUG;
@@ -1128,7 +1121,6 @@ int annotate_init (int x, int y, int width, int height)
   data->untoggleheight = height;
  
   setup_app ();
-  gtk_main ();
 
   return 0;
 }
