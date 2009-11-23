@@ -35,6 +35,9 @@ void annotate_hide_window ();
 /* show the window with the annotations */
 void annotate_show_window ();
 
+/* get cairo context */
+cairo_t* get_annotation_cairo_context();
+
 /* quit the annotation */
 void annotate_quit();
 

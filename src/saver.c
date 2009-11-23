@@ -123,33 +123,6 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
 }
 
 
-/* Load the contents of the file image with name "filename" into the pixbuf */
-gboolean
-load_png (const char *filename, GdkPixbuf **pixmap)
-{
-  *pixmap = gdk_pixbuf_new_from_file (filename, NULL);
-
-  if (*pixmap)
-    {
-      GdkPixbuf *scaled;
-      gint height = gdk_screen_height ();
-      gint weight = gdk_screen_width ();
-      scaled = gdk_pixbuf_scale_simple(*pixmap, weight, height, GDK_INTERP_BILINEAR);
-      g_object_unref (G_OBJECT (*pixmap));
-      *pixmap = scaled;
-      return TRUE;
-    }
-  else
-    {
-       fprintf (stderr, "couldn't load %s\n", filename);
-       exit(0);
-    }
-
-  *pixmap = NULL;
-  return FALSE;
-}
-
-
 /*
  * Start the dialog that ask to the user where save the image
  * containing the screenshot

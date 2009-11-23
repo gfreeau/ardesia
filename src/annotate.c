@@ -140,6 +140,11 @@ GtkWindow* get_annotation_window()
    return GTK_WINDOW(data->win);
 }
 
+cairo_t* get_annotation_cairo_context()
+{
+  return data->cr;
+}
+
 
 /* Print paint context informations */
 void annotate_paint_context_print (gchar *name, AnnotatePaintContext *context)
@@ -492,9 +497,8 @@ void annotate_eraser_grab ()
 
 
 /* Repaint the window */
-gint repaint (gpointer user_data)
+gint repaint ()
 {
-  AnnotateData *data = (AnnotateData *) user_data;
   gdk_draw_drawable (data->area->window,
                      data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
                      data->pixmap,
@@ -513,7 +517,7 @@ void clear_screen()
   cairo_set_source_rgba(data->cr,0,0,0,0);
   cairo_paint(data->cr);
   cairo_destroy(data->cr);
-  repaint(data);
+  repaint();
 }
 
 
@@ -891,7 +895,7 @@ gboolean paintto (GtkWidget *win,
     
   data->lastx = ev->x;
   data->lasty = ev->y;
-  repaint(data);
+  repaint();
   return TRUE;
 }
 
@@ -932,7 +936,7 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
     }
 
   cairo_stroke(data->cr);
-  repaint(data);
+  repaint();
   annotate_coord_list_free (data);
  
   return TRUE;

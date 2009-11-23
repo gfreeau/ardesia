@@ -94,14 +94,14 @@ void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
           else
             {
               /* no background */
-	      remove_background();
+	      clear_background();
               background = 0;  
             }
 	}
       else
 	{
 	  /* none */
-	  remove_background();  
+	  clear_background();  
           background = 0;  
 	} 
     }        

@@ -89,7 +89,6 @@ gboolean  quit()
   gboolean ret=FALSE;
   quit_recorder();
   annotate_quit();
-  remove_background();
   /* Disalloc */
   g_object_unref ( G_OBJECT(gtkBuilder) ); 
 
@@ -340,8 +339,6 @@ void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
   annotate_release_grab ();
   start_preference_dialog(toolbutton, get_annotation_window(), 
                           PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S);
-  /* This is a workaround to reput the annotation window over the background window */
-  annotate_hide_window ();
   annotate(); 
 }
 
