@@ -36,8 +36,7 @@ cairo_t* back_cr = NULL;
 
 
 /* Load the contents of the file image with name "filename" into the pixbuf */
-gboolean
-load_png (const char *filename, GdkPixbuf **pixmap)
+gboolean load_png (const char *filename, GdkPixbuf **pixmap)
 {
   *pixmap = gdk_pixbuf_new_from_file (filename, NULL);
 
