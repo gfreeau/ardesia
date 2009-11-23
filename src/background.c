@@ -65,12 +65,14 @@ void create_new_background()
 {
   gint width = -1;
   gint height = -1;
-  GtkWindow* annotation_window = get_annotation_window();
+  GtkWindow* annotation_window = NULL;
+  annotation_window = get_annotation_window();
   gtk_window_get_size ( annotation_window , &width, &height);
   cairo_surface_t *background_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
   cr = get_annotation_cairo_context();
   
   cairo_set_source_surface (cr, background_surface, 0, 0);
+ 
   back_cr = cairo_create(background_surface);
 }
 
@@ -107,7 +109,6 @@ void change_background_image (const char *name)
 
   cairo_fill(back_cr);
   cairo_paint(back_cr);
-
   cairo_paint(cr);
 }
 

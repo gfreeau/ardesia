@@ -516,7 +516,6 @@ void clear_screen()
   cairo_set_operator(data->cr,CAIRO_OPERATOR_SOURCE);
   cairo_set_source_rgba(data->cr,0,0,0,0);
   cairo_paint(data->cr);
-  cairo_destroy(data->cr);
   repaint();
 }
 
@@ -1097,6 +1096,8 @@ void setup_app ()
   GdkBitmap   *shape = gdk_pixmap_new (NULL, data->width, data->height, 1);  
 
   gtk_widget_input_shape_combine_mask(data->win, shape, 0, 0); 
+
+  annotate_toggle_grab();
 }
 
 

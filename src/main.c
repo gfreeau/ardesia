@@ -53,26 +53,20 @@ int SPACE_FROM_BORDER = 30;
 /* Get the screen resolution asking to the Xorg server throught the xlib libraries */
 int getScreenResolution(Display *display, int *width, int *height)
 {
-
   Screen *screen = XDefaultScreenOfDisplay(display);
   *width  = XWidthOfScreen (screen);
   *height = XHeightOfScreen(screen);
   return 0;
-
 }
 
 
 /* 
- * Calculate the position where move the main window 
+ * Calculate the position where calculate_initial_position the main window 
  * the centered position upon the window manager bar
  */
-void calculateCenteredPosition(GtkWidget *ardesiaBarWindow, int dwidth, int dheight, int *x, int *y, int *wwidth, int *wheight, int position)
+void calculate_centered_position(GtkWidget *ardesiaBarWindow, int dwidth, int dheight, int *x, int *y, int wwidth, int wheight, int position)
 {
-  GtkRequisition requisition;
-  gtk_widget_size_request(ardesiaBarWindow, &requisition);
-  *wwidth  = requisition.width;
-  *wheight = requisition.height;
-  *x = (dwidth - *wwidth)/2;
+  *x = (dwidth - wwidth)/2;
   if (position==NORTH)
     {
       *y = SPACE_FROM_BORDER; 
@@ -80,7 +74,7 @@ void calculateCenteredPosition(GtkWidget *ardesiaBarWindow, int dwidth, int dhei
   else if (position==SOUTH)
     {
       /* south */
-      *y = dheight - SPACE_FROM_BORDER - *wheight;
+      *y = dheight - SPACE_FROM_BORDER - wheight;
     }  
   else
     {
@@ -92,11 +86,11 @@ void calculateCenteredPosition(GtkWidget *ardesiaBarWindow, int dwidth, int dhei
 
 
 /* 
- * Move the main window in a centered position
+ * Calculate initial position
  * Here can be beatiful have a configuration file
  * where put the user can decide the position of the window
  */
-int move(GtkWidget *ardesiaBarWindow, int *x, int *y, int *wwidth, int *wheight, int position)
+int calculate_initial_position(GtkWidget *ardesiaBarWindow, int *x, int *y, int wwidth, int wheight, int position)
 {
   Display *display = XOpenDisplay (0);  
   int dwidth, dheight;
@@ -105,8 +99,7 @@ int move(GtkWidget *ardesiaBarWindow, int *x, int *y, int *wwidth, int *wheight,
       perror ("Fatal error while getting screen resolution\n");
       return -1;
     }
-  calculateCenteredPosition(ardesiaBarWindow,dwidth,dheight, x, y, wwidth, wheight, position);
-  gtk_window_move(GTK_WINDOW(ardesiaBarWindow),*x,*y);  
+  calculate_centered_position(ardesiaBarWindow,dwidth,dheight, x, y, wwidth, wheight, position);
   return 0; 
 }
 
@@ -193,32 +186,38 @@ int main (int argc, char *argv[])
     } 
 
   gtk_set_locale ();
-  gtk_init (&argc, &argv);
+  gtk_init (&argc, NULL);
   
-  if (loadbackground)
-    {
-      change_background_image(arg); 
-    }
-
-  int x, y, width, height;
-
   /*
    * The following code create one of each component
    * (except popup menus), just so that you see something after building
    * the project. Delete any components that you don't want shown initially.
    */
   GtkWidget *ardesiaBarWindow = create_mainWindow ();
- 
-  /* move the window in the desired position */
-  if (move(ardesiaBarWindow,&x,&y,&width,&height,position) < 0)
+  int width = -1;
+  int height = -1;
+  gtk_window_get_size (GTK_WINDOW(ardesiaBarWindow) , &width, &height);
+
+  int x, y;
+
+  /* calculate_initial_position the window in the desired position */
+  if (calculate_initial_position(ardesiaBarWindow,&x,&y,width,height,position) < 0)
     {
       exit(0);
     }
-
+  gtk_window_move(GTK_WINDOW(ardesiaBarWindow),x,y);  
+  
   /** Init annotate */
   annotate_init(x, y, width, height);
+
+  if (loadbackground)
+  {
+     change_background_image(arg); 
+  }
+  
   gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), get_annotation_window() );
   gtk_widget_show (ardesiaBarWindow);
+
 
   gtk_main ();
   gtk_widget_destroy(ardesiaBarWindow); 
