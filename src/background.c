@@ -61,7 +61,7 @@ load_png (const char *filename, GdkPixbuf **pixmap)
   return FALSE;
 }
 
-
+/* Create new background */
 void create_new_background()
 {
   gint width = -1;
@@ -70,6 +70,7 @@ void create_new_background()
   gtk_window_get_size ( annotation_window , &width, &height);
   cairo_surface_t *background_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
   cr = get_annotation_cairo_context();
+  
   cairo_set_source_surface (cr, background_surface, 0, 0);
   back_cr = cairo_create(background_surface);
 }
