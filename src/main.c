@@ -216,8 +216,12 @@ int main (int argc, char *argv[])
   }
   
   gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), get_annotation_window() );
-  gtk_widget_show (ardesiaBarWindow);
 
+  /* This is a workaround; without hide the ardesiabar the window is not show correctly */  
+  gtk_widget_hide (ardesiaBarWindow);
+
+  gtk_widget_show (ardesiaBarWindow);
+   
 
   gtk_main ();
   gtk_widget_destroy(ardesiaBarWindow); 
