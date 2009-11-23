@@ -952,7 +952,7 @@ gboolean event_configure (GtkWidget *widget,
 
   data->pixmap = gdk_pixmap_new (data->area->window, data->width,
                                  data->height, -1);
-  clear_screen(user_data);
+  clear_screen();
 
   return TRUE;
 }
@@ -1050,7 +1050,7 @@ void setup_app ()
   gtk_container_add (GTK_CONTAINER (data->win), data->area);
 
   gtk_window_fullscreen(GTK_WINDOW(data->win));
- 
+  
   g_signal_connect (data->area,"configure_event",
                     G_CALLBACK (event_configure), data);
 
@@ -1087,6 +1087,8 @@ void setup_app ()
  
   gtk_widget_show_all(data->win);
   
+  clear_screen();
+  
   /* SHAPE PIXMAP */
   GdkBitmap   *shape = gdk_pixmap_new (NULL, data->width, data->height, 1);  
 
@@ -1104,7 +1106,6 @@ void annotate_quit()
        gdk_cursor_unref (data->cursor);
     }
   g_free (data);
-  gtk_main_quit();
 }
 
 
