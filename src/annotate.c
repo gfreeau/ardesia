@@ -47,9 +47,7 @@
 				GDK_PROXIMITY_OUT_MASK |	\
 				GDK_POINTER_MOTION_MASK |	\
 				GDK_BUTTON_PRESS_MASK |		\
-				GDK_BUTTON_RELEASE_MASK )
-
-#define ANNOTATE_PAINT_AREA_EVENTS  ( ANNOTATE_MOUSE_EVENTS | GDK_EXPOSURE_MASK )
+				GDK_BUTTON_RELEASE_MASK)
 
 /* set the DEBUG to 1 to read the debug messages */
 #define DEBUG 0
@@ -1021,6 +1019,7 @@ void setup_input_devices ()
     }
 }
 
+
 /* Setup the application */
 void setup_app ()
 { 
@@ -1054,10 +1053,9 @@ void setup_app ()
   gtk_container_add (GTK_CONTAINER (data->win), data->area);
 
   gtk_window_fullscreen(GTK_WINDOW(data->win));
-  
+ 
   g_signal_connect (data->area,"configure_event",
                     G_CALLBACK (event_configure), data);
-
   g_signal_connect (data->area, "expose_event",
 		    G_CALLBACK (event_expose), data);
   g_signal_connect (data->win, "button_press_event", 
