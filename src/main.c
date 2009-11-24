@@ -180,14 +180,17 @@ int main (int argc, char *argv[])
 	} 
       else
 	{
-          loadbackground = TRUE;
+          if (!(strncmp (arg, "--",2) == 0))
+          {
+             loadbackground = TRUE;   
+          }
 	}
 
     } 
 
   gtk_set_locale ();
-
-  gtk_init (0, NULL);
+  
+  gtk_init (&argc, &argv);
   
   /*
    * The following code create one of each component
