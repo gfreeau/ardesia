@@ -66,6 +66,9 @@ gboolean     visible = TRUE;
 /* pencil is selected */
 gboolean     pencil = TRUE;
 
+/* grab when leave */
+gboolean     grab = FALSE;
+
 /* selected color in RGBA format */
 gchar*       color = NULL;
 
@@ -117,7 +120,6 @@ void add_alpha(char *color)
 /* Start to annotate calling annotate */
 void annotate()
 {
-  pencil=TRUE;
   if (color==NULL)
     {
       color = malloc(COLORSIZE);
@@ -139,38 +141,40 @@ void annotate()
 /* Start to erase calling annotate */
 void erase()
 {
-  pencil=FALSE;
-
-  annotate_set_width(tickness);
-  annotate_eraser_grab ();  
-}
-
-
-/* 
- * This function is called when the thick property is changed;
- * start annotate with pen or eraser depending on the selected tool
- */
-void thick()
-{
-  if (pencil)
-    {
-      annotate();
-    }
-  else
-    {
-      erase();
-    }
+  annotate_set_width(tickness); 
+  annotate_eraser_grab();
 }
 
 
 /* Start event handler section */
 
 
+/* Called when push the quit button */
 gboolean on_quit                          (GtkWidget       *widget,
                                            GdkEvent        *event,
                                            gpointer         user_data)
 {
   return quit();
+}
+
+
+/* Called when leave the window */
+gboolean on_winMain_leave_notify_event   (GtkWidget       *widget,
+                                           GdkEvent        *event,
+                                           gpointer         user_data)
+{
+  if (grab)
+  {
+    if (pencil)
+      {
+        annotate();
+      }
+    else
+      {
+        erase();
+      }
+  }
+  return TRUE;
 }
 
 
@@ -185,7 +189,8 @@ gboolean on_winMain_delete_event          (GtkWidget       *widget,
 void on_toolsEraser_activate              (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
-  erase();
+  grab = TRUE;
+  pencil = FALSE;
 }
 
 
@@ -193,6 +198,7 @@ void
 on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
 				      gpointer         user_data)
 {
+  grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
        highlighter = TRUE;
@@ -201,20 +207,13 @@ on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
     {
        highlighter = FALSE;
     }
-  if (pencil)
-    {
-      annotate();
-    }
-  else
-    {
-      erase();
-    }
 }
 
 
 void on_toolsArrow_activate               (GtkToolButton   *toolbutton,
 				           gpointer         user_data)
 {
+  grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
       /* if single arrow is active release it */
@@ -229,20 +228,13 @@ void on_toolsArrow_activate               (GtkToolButton   *toolbutton,
     {
       arrow=0;
     }
-  if (pencil)
-    {
-      annotate();
-    }
-  else
-    {
-      erase();
-    }
 }
 
 
 void on_toolsDoubleArrow_activate         (GtkToolButton   *toolbutton,
 					   gpointer         user_data)
 {
+  grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
       /* if single arrow is active release it */
@@ -257,20 +249,13 @@ void on_toolsDoubleArrow_activate         (GtkToolButton   *toolbutton,
     {
       arrow=0;
     }
-  if (pencil)
-    {
-      annotate();
-    }
-  else
-    {
-      erase();
-    }
 }
 
 
 void on_toolsVisible_activate             (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
+  grab = TRUE;
   if (visible)
     {
       annotate_hide_window();
@@ -291,13 +276,16 @@ void on_toolsVisible_activate             (GtkToolButton   *toolbutton,
 void on_toolsScreenShot_activate	  (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
+  grab = FALSE;
   start_save_image_dialog(toolbutton, get_annotation_window(), workspace_dir);
+  annotate();
 }
 
 
 void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 { 
+  grab = FALSE;
   if(is_recording())
     {
       quit_recorder();
@@ -327,25 +315,25 @@ void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
 void on_thickScale_value_changed          (GtkHScale   *hScale,
 					   gpointer         user_data)
 {
+  grab = TRUE;
   tickness=gtk_range_get_value(&hScale->scale.range);
-  thick();
 }
 
 
 void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
 					   gpointer         user_data)
 {
-  /* Release grab */
-  annotate_release_grab ();
+  grab = FALSE;
   start_preference_dialog(toolbutton, get_annotation_window(), 
                           PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S);
-  annotate(); 
+  annotate();
 }
 
 
 void on_buttonClear_activate              (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
+  grab = TRUE;
   annotate_clear_screen (); 
 }
 
@@ -353,10 +341,10 @@ void on_buttonClear_activate              (GtkToolButton   *toolbutton,
 void on_buttonColor_activate	          (GtkToolButton   *toolbutton,
 					   gpointer         user_data)
 {
-  /* Release grab */
-  annotate_release_grab ();
+  grab = FALSE;
+  pencil = TRUE;
   color = start_color_selector_dialog(toolbutton, get_annotation_window(), workspace_dir, color);
-  annotate(); 
+  annotate();
 }
 
 
@@ -365,90 +353,100 @@ void on_buttonColor_activate	          (GtkToolButton   *toolbutton,
 void on_colorBlack_activate               (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
+  grab = TRUE;
+  pencil = TRUE;
   color = malloc(COLORSIZE);
   strcpy(color,"000000");
-  annotate();
 }
 
 
 void on_colorBlue_activate                (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
+  grab = TRUE;
+  pencil = TRUE;
   color = malloc(COLORSIZE);
   strcpy(color,"3333CC");
-  annotate();
 }
 
 
 void on_colorRed_activate                 (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
+  grab = TRUE;
+  pencil = TRUE;
   color = malloc(COLORSIZE);
   strcpy(color,"FF0000");
-  annotate();
 }
 
 
 void on_colorGreen_activate               (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
+  grab = TRUE;
+  pencil = TRUE;
   color = malloc(COLORSIZE);
   strcpy(color,"008000");
-  annotate();
 }
 
 
 void on_colorLightBlue_activate           (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
+  grab = TRUE;
+  pencil = TRUE;
   color = malloc(COLORSIZE);
   strcpy(color,"00C0FF");
-  annotate();
 }
 
 
 void on_colorLightGreen_activate            (GtkToolButton   *toolbutton,
                                              gpointer         user_data)
 {
+  grab = TRUE;
+  pencil = TRUE;
   color = malloc(COLORSIZE);
   strcpy(color,"00FF00");
-  annotate();
 }
 
 
 void on_colorMagenta_activate               (GtkToolButton   *toolbutton,
                                              gpointer         user_data)
 {
+  grab = TRUE;
+  pencil = TRUE;
   color = malloc(COLORSIZE);
   strcpy(color,"FF00FF");
-  annotate();
 }
 
 
 void on_colorOrange_activate                (GtkToolButton   *toolbutton,
                                              gpointer         user_data)
 {
+  grab = TRUE;
+  pencil = TRUE;
   color = malloc(COLORSIZE);
   strcpy(color,"FF8000");
-  annotate();
 }
 
 
 void on_colorYellow_activate                (GtkToolButton   *toolbutton,
                                              gpointer         user_data)
 {
+  grab = TRUE;
+  pencil = TRUE;
   color = malloc(COLORSIZE);
   strcpy(color,"FFFF00");
-  annotate();
 }
 
 
 void on_colorWhite_activate                (GtkToolButton   *toolbutton,
 	       			            gpointer         user_data)
 {
+  grab = TRUE;
+  pencil = TRUE;
   color = malloc(COLORSIZE);
   strcpy(color,"FFFFFF");
-  annotate();
 }
 
 

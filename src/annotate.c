@@ -429,22 +429,6 @@ gboolean in_unlock_area(int x, int y)
 }
 
 
-/* Wait here until the cursor is outside the bar */
-void waitOutBar()
-{
-  int x;
-  int y;
-  while(1)
-    {
-      gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);  
-      if (!(in_unlock_area(x, y)))
-        {
-	  break;
-        }
-    }
-}
-
-
 /* Set color */
 void annotate_set_color(gchar* color)
 {
@@ -479,8 +463,6 @@ void annotate_set_arrow(int arrow)
 void annotate_toggle_grab ()
 { 
   annotate_select_pen(data);
-  /* wait that the cursor is out of the bar */
-  waitOutBar(data);
   annotate_acquire_grab (data);
 }
 
@@ -491,8 +473,6 @@ void annotate_eraser_grab ()
   /* Get the with message */
   annotate_select_eraser(data);
   annotate_configure_eraser(data->cur_context->width);
-  /* wait that the cursor is out of the bar */
-  waitOutBar(data);
   annotate_acquire_grab (data);
 }
 
