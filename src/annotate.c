@@ -90,6 +90,7 @@ typedef struct
   GdkDisplay  *display;
   GdkPixmap   *pixmap;
 
+  GdkBitmap   *shape;
  
   AnnotatePaintContext *default_pen;
   AnnotatePaintContext *default_eraser;
@@ -278,7 +279,11 @@ void annotate_release_grab ()
 	 e.g. this device doesn't exist anymore */
       g_printerr("Error ungrabbing mouse device while ungrabbing all, ignoring.\n");
     }
+
   
+  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0); 
+  
+
   if(data->debug)
     {
       g_printerr ("DEBUG: Ungrabbed pointer.\n");
@@ -351,7 +356,9 @@ void annotate_acquire_grab ()
 
   GdkGrabStatus result;
   gdk_error_trap_push(); 
-  
+
+  gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);   
+
   result = gdk_pointer_grab (data->area->window, FALSE,
 			     ANNOTATE_MOUSE_EVENTS, 0,
 			     NULL,
@@ -392,6 +399,7 @@ void annotate_acquire_grab ()
     {
       set_pen_cursor(data->cur_context->fg_color);
     } 
+  
 }
 
 
@@ -503,13 +511,20 @@ gint repaint ()
 }
 
 
+/* Clear cairo context */
+void clear_cairo_context(cairo_t* cr)
+{
+  cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_rgba(cr,0,0,0,0);
+  cairo_paint(cr);
+}
+
+
 /* Clear the screen */
 void clear_screen()
 {
   data->cr=gdk_cairo_create(data->pixmap);
-  cairo_set_operator(data->cr,CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgba(data->cr,0,0,0,0);
-  cairo_paint(data->cr);
+  clear_cairo_context(data->cr);
   repaint();
 }
 
@@ -1078,9 +1093,10 @@ void setup_app ()
   clear_screen();
   
   /* SHAPE PIXMAP */
-  GdkBitmap   *shape = gdk_pixmap_new (NULL, data->width, data->height, 1);  
+  data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
+  cairo_t* shape_cr = gdk_cairo_create(data->shape);
+  clear_cairo_context(shape_cr);
 
-  gtk_widget_input_shape_combine_mask(data->win, shape, 0, 0); 
 }
 
 
