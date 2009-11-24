@@ -324,9 +324,8 @@ void set_pen_cursor(char *color)
   paint_cursor_xpm[2]= line;
   /* now the xpm cursor has been coloured */
   cursor_src = gdk_pixbuf_new_from_xpm_data (paint_cursor_xpm);
-  int width = gdk_pixbuf_get_width (cursor_src);
   int height = gdk_pixbuf_get_height (cursor_src);
-  GdkCursor* cursor = gdk_cursor_new_from_pixbuf (data->display, cursor_src, width/2, height/2);
+  GdkCursor* cursor = gdk_cursor_new_from_pixbuf (data->display, cursor_src, 1, height-1);
   gdk_window_set_cursor (data->win->window, cursor);
   gdk_flush ();
   g_object_unref (cursor_src);
