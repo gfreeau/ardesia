@@ -84,7 +84,6 @@ typedef struct
   int untogglewidth;
   int untoggleheight;
   cairo_t * cr;
-  GdkCursor* cursor;
   GtkWidget   *win;
   GtkWidget   *area;
 
@@ -326,9 +325,11 @@ void set_pen_cursor(char *color)
   cursor_src = gdk_pixbuf_new_from_xpm_data (paint_cursor_xpm);
   int width = gdk_pixbuf_get_width (cursor_src);
   int height = gdk_pixbuf_get_height (cursor_src);
-  data->cursor = gdk_cursor_new_from_pixbuf (data->display, cursor_src, width/2, height/2);
-  gdk_window_set_cursor (data->win->window, data->cursor);
+  GdkCursor* cursor = gdk_cursor_new_from_pixbuf (data->display, cursor_src, width/2, height/2);
+  gdk_window_set_cursor (data->win->window, cursor);
+  gdk_flush ();
   g_object_unref (cursor_src);
+  gdk_cursor_destroy (cursor);
 }
 
 
@@ -339,9 +340,11 @@ void set_eraser_cursor()
   cursor_src = gdk_pixbuf_new_from_xpm_data(erase_cursor_xpm);
   int width = gdk_pixbuf_get_width (cursor_src);
   int height = gdk_pixbuf_get_height (cursor_src);
-  data->cursor = gdk_cursor_new_from_pixbuf (data->display, cursor_src, width/2, height/2);
-  gdk_window_set_cursor (data->win->window, data->cursor);
+  GdkCursor* cursor = gdk_cursor_new_from_pixbuf (data->display, cursor_src, width/2, height/2);
+  gdk_window_set_cursor (data->win->window, cursor);
+  gdk_flush ();
   g_object_unref (cursor_src);
+  gdk_cursor_destroy (cursor);
 }
 
 
@@ -1074,7 +1077,6 @@ void setup_app ()
 
   data->coordlist = NULL;
   data->cr = NULL;
-  data->cursor = NULL;
 
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN,
 						  color, 15, 0);
@@ -1104,10 +1106,6 @@ void annotate_quit()
 {
   annotate_release_grab(); /* ungrab all */
   cairo_destroy(data->cr);
-  if (data->cursor != NULL)
-    {
-       gdk_cursor_unref (data->cursor);
-    }
   g_free (data);
 }
 

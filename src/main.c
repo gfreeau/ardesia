@@ -222,7 +222,6 @@ int main (int argc, char *argv[])
 
   gtk_widget_show (ardesiaBarWindow);
    
-
   gtk_main ();
   gtk_widget_destroy(ardesiaBarWindow); 
 
