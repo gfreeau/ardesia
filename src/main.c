@@ -187,17 +187,7 @@ int main (int argc, char *argv[])
 
   gtk_set_locale ();
 
-/* Secure glib */
-    if( ! g_thread_supported() )
-        g_thread_init( NULL );
- 
-    /* Secure gtk */
-    gdk_threads_init();
-
-   /* Obtain gtk's global lock */
-   gdk_threads_enter();
-
-  gtk_init (&argc, NULL);
+  gtk_init (0, NULL);
   
   /*
    * The following code create one of each component

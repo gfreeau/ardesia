@@ -310,7 +310,7 @@ void annotate_select_pen()
 
 
 /* Set the cursor patching the xpm with the selected color */
-GdkCursor* set_pen_cursor(char *color)
+void set_pen_cursor(char *color)
 {
   GdkPixbuf *cursor_src;
   char *line = malloc(12);
