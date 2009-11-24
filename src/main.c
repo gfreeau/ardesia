@@ -186,6 +186,17 @@ int main (int argc, char *argv[])
     } 
 
   gtk_set_locale ();
+
+/* Secure glib */
+    if( ! g_thread_supported() )
+        g_thread_init( NULL );
+ 
+    /* Secure gtk */
+    gdk_threads_init();
+
+   /* Obtain gtk's global lock */
+   gdk_threads_enter();
+
   gtk_init (&argc, NULL);
   
   /*
@@ -223,6 +234,10 @@ int main (int argc, char *argv[])
   gtk_widget_show (ardesiaBarWindow);
    
   gtk_main ();
+  
+  /* Release gtk's global lock */
+  gdk_threads_leave();  
+
   gtk_widget_destroy(ardesiaBarWindow); 
 
   return 0;

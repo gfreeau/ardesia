@@ -83,7 +83,7 @@ typedef struct
   int untoggleypos;
   int untogglewidth;
   int untoggleheight;
-  cairo_t * cr;
+  cairo_t     *cr;
   GtkWidget   *win;
   GtkWidget   *area;
 
@@ -102,8 +102,8 @@ typedef struct
   GdkDevice   *device;
   guint        state;
 
-  guint        maxwidth;
   guint        width;
+  guint        maxwidth;
   guint        height;
   gboolean     painted;
   guint        arrow;
@@ -120,23 +120,23 @@ AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
                                                    guint arrowsize)
 {
   AnnotatePaintContext *context;
-
   context = g_malloc (sizeof (AnnotatePaintContext));
-
   context->type = type;
   context->width = width;
   context->arrowsize = arrowsize;
   context->fg_color = fg_color;
-
   return context;
 }
 
 
+/* Get the annotation window */
 GtkWindow* get_annotation_window()
 {
    return GTK_WINDOW(data->win);
 }
 
+
+/* Get the cairo context that contains the annotation */
 cairo_t* get_annotation_cairo_context()
 {
   return data->cr;
@@ -183,12 +183,9 @@ void annotate_coord_list_prepend (gint x, gint y, gint width)
 
 
 /* Free the list of the painted point */
-void
-annotate_coord_list_free ()
+void annotate_coord_list_free ()
 {
-  GList *ptr;
-
-  ptr = data->coordlist;
+  GList *ptr = data->coordlist;
 
   while (ptr)
     {
@@ -289,7 +286,6 @@ void annotate_release_grab ()
 }
 
 
-
 /* Select the default eraser tool */
 void annotate_select_eraser()
 {
@@ -330,6 +326,7 @@ void set_pen_cursor(char *color)
   gdk_flush ();
   g_object_unref (cursor_src);
   gdk_cursor_destroy (cursor);
+  gdk_threads_leave ();
 }
 
 
@@ -351,7 +348,6 @@ void set_eraser_cursor()
 /* Grab the cursor */
 void annotate_acquire_grab ()
 {
-
   annotate_show_window ();
 
   GdkGrabStatus result;
@@ -397,7 +393,6 @@ void annotate_acquire_grab ()
     {
       set_pen_cursor(data->cur_context->fg_color);
     } 
-
 }
 
 
@@ -407,7 +402,6 @@ void annotate_acquire_grab ()
  */
 gboolean in_unlock_area(int x, int y)
 {
-
   int untogglexpos = data->untogglexpos;
   int untoggleypos = data->untoggleypos;
   int untogglewidth = data->untogglewidth;
@@ -426,7 +420,6 @@ gboolean in_unlock_area(int x, int y)
       return 1;
     }
   return 0;
-
 }
 
 
@@ -463,16 +456,16 @@ void annotate_set_width(guint width)
 /* Set arrow type */
 void annotate_set_arrow(int arrow)
 {
- data->arrow = arrow;
- if (arrow>0)
-   { 
-     /* set the arrowsize with a function depending on line width */
-     data->cur_context->arrowsize =  log(data->cur_context->width+7);
-   }
- else
-   {
-    data->cur_context->arrowsize =  0;
-   }
+  data->arrow = arrow;
+  if (arrow>0)
+    { 
+      /* set the arrowsize with a function depending on line width */
+      data->cur_context->arrowsize =  log(data->cur_context->width+7);
+    }
+  else
+    {
+      data->cur_context->arrowsize =  0;
+    }
 }
 
 
@@ -595,7 +588,6 @@ void annotate_select_tool (GdkDevice *device, guint state)
   data->state = state;
   data->device = device;
 }
-
 
 
 /* Set the cairo surface color to transparent */
@@ -776,7 +768,6 @@ gboolean proximity_in (GtkWidget *win,
                        GdkEventProximity *ev, 
                        gpointer user_data)
 {
-  AnnotateData *data = (AnnotateData *) user_data;
   gint x, y;
   GdkModifierType state;
 
@@ -796,7 +787,6 @@ gboolean proximity_out (GtkWidget *win,
                         GdkEventProximity *ev,
                         gpointer user_data)
 {
-  AnnotateData *data = (AnnotateData *) user_data;
   
   data->cur_context = data->default_pen;
 
@@ -816,7 +806,6 @@ gboolean paint (GtkWidget *win,
                 GdkEventButton *ev, 
                 gpointer user_data)
 {
-  AnnotateData *data = (AnnotateData *) user_data;
 
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
@@ -855,7 +844,6 @@ gboolean paintto (GtkWidget *win,
                   GdkEventMotion *ev, 
                   gpointer user_data)
 {
-  AnnotateData *data = (AnnotateData *) user_data;
 
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
@@ -904,7 +892,6 @@ gboolean paintto (GtkWidget *win,
 /* This shots when the button is realeased */
 gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 {
-  AnnotateData *data = (AnnotateData *) user_data;
  
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
@@ -953,7 +940,6 @@ gboolean event_configure (GtkWidget *widget,
                           GdkEventExpose *event,
                           gpointer user_data)
 {
-  AnnotateData *data = (AnnotateData *) user_data;
 
   data->pixmap = gdk_pixmap_new (data->area->window, data->width,
                                  data->height, -1);
@@ -968,7 +954,6 @@ gboolean event_expose (GtkWidget *widget,
                        GdkEventExpose *event, 
                        gpointer user_data)
 {
-  AnnotateData *data = (AnnotateData *) user_data;
 
   gdk_draw_drawable (data->area->window,
                      data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
@@ -1058,19 +1043,19 @@ void setup_app ()
   gtk_window_fullscreen(GTK_WINDOW(data->win));
  
   g_signal_connect (data->area,"configure_event",
-                    G_CALLBACK (event_configure), data);
+                    G_CALLBACK (event_configure), NULL);
   g_signal_connect (data->area, "expose_event",
-		    G_CALLBACK (event_expose), data);
+		    G_CALLBACK (event_expose), NULL);
   g_signal_connect (data->win, "button_press_event", 
-		    G_CALLBACK(paint), data);
+		    G_CALLBACK(paint), NULL);
   g_signal_connect (data->win, "motion_notify_event",
-		    G_CALLBACK (paintto), data);
+		    G_CALLBACK (paintto), NULL);
   g_signal_connect (data->win, "button_release_event",
-		    G_CALLBACK (paintend), data);
+		    G_CALLBACK (paintend), NULL);
   g_signal_connect (data->win, "proximity_in_event",
-		    G_CALLBACK (proximity_in), data);
+		    G_CALLBACK (proximity_in), NULL);
   g_signal_connect (data->win, "proximity_out_event",
-		    G_CALLBACK (proximity_out), data);
+		    G_CALLBACK (proximity_out), NULL);
 
   data->arrow = 0; 
   data->painted = FALSE;
@@ -1097,7 +1082,6 @@ void setup_app ()
   GdkBitmap   *shape = gdk_pixmap_new (NULL, data->width, data->height, 1);  
 
   gtk_widget_input_shape_combine_mask(data->win, shape, 0, 0); 
-
 }
 
 

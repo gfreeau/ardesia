@@ -23,46 +23,46 @@
  */
 
 
-/* initialize the annotation */
+/* Initialize the annotation window */
 int annotate_init (int x, int y, int width, int height);
 
-/* load annotation window */
+/* Get the annotation window */
 GtkWindow* get_annotation_window();
 
-/* hide the  window with the annotations */
+/* Hide the  window with the annotations */
 void annotate_hide_window ();
 
-/* show the window with the annotations */
+/* Show the window with the annotations */
 void annotate_show_window ();
 
-/* get cairo context */
+/* Get cairo context that contains the annotations */
 cairo_t* get_annotation_cairo_context();
 
-/* quit the annotation */
+/* Quit the annotation */
 void annotate_quit();
 
-/* set the pen color */
+/* Set the pen color */
 void annotate_set_color(gchar* color);
 
-/* set line width */
+/* Set line width */
 void annotate_set_width(guint width);
 
-/* set arrow type */
+/* Set arrow type */
 void annotate_set_arrow(int arrow);
 
-/* start to paint */
+/* Start to paint */
 void annotate_toggle_grab ();
 
-/* start to erase */
+/* Start to erase */
 void annotate_eraser_grab ();
 
-/* release pointer grab */
+/* Release pointer grab */
 void annotate_release_grab ();
 
-/* acquire pointer grab */
+/* Acquire pointer grab */
 void annotate_acquire_grab ();
 
-/* clear the annotations windows */
+/* Clear the annotations windows */
 void annotate_clear_screen ();
 
 
