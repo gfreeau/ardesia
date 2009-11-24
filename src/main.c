@@ -227,7 +227,7 @@ int main (int argc, char *argv[])
   }
   
   gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), get_annotation_window() );
-
+  
   /* This is a workaround; without hide the ardesiabar the window is not show correctly */  
   gtk_widget_hide (ardesiaBarWindow);
 
@@ -235,8 +235,6 @@ int main (int argc, char *argv[])
    
   gtk_main ();
   
-  /* Release gtk's global lock */
-  gdk_threads_leave();  
 
   gtk_widget_destroy(ardesiaBarWindow); 
 
