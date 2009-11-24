@@ -479,6 +479,7 @@ void annotate_set_arrow(int arrow)
 void annotate_toggle_grab ()
 { 
   annotate_select_pen(data);
+  /* wait that the cursor is out of the bar */
   waitOutBar(data);
   annotate_acquire_grab (data);
 }
@@ -1097,7 +1098,6 @@ void setup_app ()
 
   gtk_widget_input_shape_combine_mask(data->win, shape, 0, 0); 
 
-  annotate_toggle_grab();
 }
 
 
