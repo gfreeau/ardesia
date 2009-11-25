@@ -166,13 +166,22 @@ gboolean on_winMain_leave_notify_event   (GtkWidget       *widget,
   if (grab)
   {
     if (pencil)
-      {
+      { 
         annotate();
       }
     else
       {
         erase();
       }
+  }
+  else
+  {
+    /* 
+     * This is a workaround to ungrab 
+     * annotate if it is looping in 
+     * the  wait_out_bar()
+     */
+    annotate_release_grab();
   }
   return TRUE;
 }
@@ -326,7 +335,11 @@ void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
   grab = FALSE;
   start_preference_dialog(toolbutton, get_annotation_window(), 
                           PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S);
+
+  /* This is a workaround to reput the annotation window over the background window */
+  annotate_hide_window ();
   annotate();
+
 }
 
 
