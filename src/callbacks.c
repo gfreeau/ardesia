@@ -256,10 +256,10 @@ void on_toolsDoubleArrow_activate         (GtkToolButton   *toolbutton,
 void on_toolsVisible_activate             (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
-  grab = TRUE;
   if (visible)
     {
       annotate_hide_window();
+      grab = FALSE;
       visible=FALSE;
       /* set tooltip to unhide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Unhide");
@@ -268,6 +268,7 @@ void on_toolsVisible_activate             (GtkToolButton   *toolbutton,
     {
       annotate_show_window();
       visible=TRUE;
+      grab = TRUE;
       /* set tooltip to hide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Hide");
     }
