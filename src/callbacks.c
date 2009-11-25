@@ -183,6 +183,7 @@ gboolean on_winMain_leave_notify_event   (GtkWidget       *widget,
      */
     annotate_release_grab();
   }
+  grab=FALSE;
   return TRUE;
 }
 
