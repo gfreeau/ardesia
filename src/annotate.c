@@ -348,9 +348,34 @@ void set_eraser_cursor()
 }
 
 
+/* Wait here until the cursor is outside the bar */
+void wait_out_bar()
+{
+  int x;
+  int y;
+  while(1)
+    {
+      gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
+      if (!(in_unlock_area(x, y)))
+        {
+          break;
+        }
+    }
+}
+
+
 /* Grab the cursor */
 void annotate_acquire_grab ()
 {
+  /* 
+   * wait that the cursor is out of the bar
+   * this is a workaround because
+   * the leave_notify_event
+   * of callback.c must shot
+   * only if the pointer is outside the bar
+   */
+  wait_out_bar();
+
   annotate_show_window ();
 
   GdkGrabStatus result;
