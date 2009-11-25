@@ -348,6 +348,33 @@ void set_eraser_cursor()
 }
 
 
+/*
+ * This is function return if the point (x,y) in inside the ardesia panel area
+ * or in a zone where we must unlock the pointer
+ */
+gboolean in_unlock_area(int x, int y)
+{
+  int untogglexpos = data->untogglexpos;
+  int untoggleypos = data->untoggleypos;
+  int untogglewidth = data->untogglewidth;
+  int untoggleheight = data->untoggleheight;
+  /* rectangle that contains the panel */
+  if ((y>=untoggleypos)&&(y<untoggleypos+untoggleheight))
+    {
+      if ((x>=untogglexpos)&&(x<untogglexpos+untogglewidth))
+	{
+	  return 1;
+	}
+    }
+  /* top left corner */
+  if ((x<5)&&(y<5))
+    {
+      return 1;
+    }
+  return 0;
+}
+
+
 /* Wait here until the cursor is outside the bar */
 void wait_out_bar()
 {
@@ -424,33 +451,6 @@ void annotate_acquire_grab ()
       set_pen_cursor(data->cur_context->fg_color);
     } 
   
-}
-
-
-/*
- * This is function return if the point (x,y) in inside the ardesia panel area
- * or in a zone where we must unlock the pointer
- */
-gboolean in_unlock_area(int x, int y)
-{
-  int untogglexpos = data->untogglexpos;
-  int untoggleypos = data->untoggleypos;
-  int untogglewidth = data->untogglewidth;
-  int untoggleheight = data->untoggleheight;
-  /* rectangle that contains the panel */
-  if ((y>=untoggleypos)&&(y<untoggleypos+untoggleheight))
-    {
-      if ((x>=untogglexpos)&&(x<untogglexpos+untogglewidth))
-	{
-	  return 1;
-	}
-    }
-  /* top left corner */
-  if ((x<5)&&(y<5))
-    {
-      return 1;
-    }
-  return 0;
 }
 
 
