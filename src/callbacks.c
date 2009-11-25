@@ -174,10 +174,6 @@ gboolean on_winMain_leave_notify_event   (GtkWidget       *widget,
         erase();
       }
   }
-  else
-  {
-    annotate_release_grab();
-  }
   grab=FALSE;
   return TRUE;
 }
@@ -331,11 +327,7 @@ void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
   grab = FALSE;
   start_preference_dialog(toolbutton, get_annotation_window(), 
                           PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S);
-
-  /* This is a workaround to reput the annotation window over the background window */
-  annotate_hide_window ();
   annotate();
-
 }
 
 
