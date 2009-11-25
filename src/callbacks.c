@@ -176,11 +176,6 @@ gboolean on_winMain_leave_notify_event   (GtkWidget       *widget,
   }
   else
   {
-    /* 
-     * This is a workaround to ungrab 
-     * annotate if it is looping in 
-     * the  wait_out_bar()
-     */
     annotate_release_grab();
   }
   grab=FALSE;
