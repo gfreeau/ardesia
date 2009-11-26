@@ -1010,14 +1010,6 @@ void setup_app ()
   data->display = gdk_display_get_default ();
   GdkScreen   *screen = gdk_display_get_default_screen (data->display);
 
-  gboolean composite = gdk_screen_is_composited (screen);
-  if (!composite)
-    {
-      /* composited must be enabled */
-      g_printerr ("Annotate works with transparency only with composite enabled \n"); 
-      exit(0);
-    }
-
   data->width = gdk_screen_get_width (screen);
   data->height = gdk_screen_get_height (screen);
 

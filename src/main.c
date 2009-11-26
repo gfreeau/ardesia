@@ -115,6 +115,28 @@ void print_help()
   printf("\n");
 }
 
+void check_composite()
+{
+  GdkDisplay *display = gdk_display_get_default ();
+  GdkScreen   *screen = gdk_display_get_default_screen (display);
+  gboolean composite = gdk_screen_is_composited (screen);
+  if (!composite)
+    {
+      /* composited must be enabled */
+      GtkWidget *msg_dialog; 
+      msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
+                                           GTK_BUTTONS_OK, "Ardesia needs a composite manager such as Compiz or xcompmgr");
+      gtk_window_stick((GtkWindow*)msg_dialog);
+                 
+      gint result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
+      if (msg_dialog != NULL)
+        {
+	  gtk_widget_destroy(msg_dialog);
+        }
+      exit(0);
+    }
+ }
+
 /* 
  * The main entry of the program;
  * not all the koders 
@@ -191,7 +213,8 @@ int main (int argc, char *argv[])
   gtk_set_locale ();
   
   gtk_init (&argc, &argv);
-  
+  check_composite();
+   
   /*
    * The following code create one of each component
    * (except popup menus), just so that you see something after building
