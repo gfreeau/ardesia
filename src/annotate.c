@@ -250,17 +250,49 @@ gboolean annotate_coord_list_get_arrow_param (AnnotateData* data,
 }
 
 
-/* Hide the  window with the annotations */
-void annotate_hide_window ()
+/* Clear cairo context */
+void clear_cairo_context(cairo_t* cr)
 {
-  gtk_widget_hide (data->win);
+  cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_rgba(cr,0,0,0,0);
+  cairo_paint(cr);
+}
+
+
+/* Hide the  window with the annotations */
+void annotate_hide_annotation ()
+{
+  GdkPixmap *transparent_pixmap = gdk_pixmap_new (data->area->window, data->width,
+                                 data->height, -1);
+  cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
+  clear_cairo_context(transparent_cr);
+
+  gdk_draw_drawable (data->area->window,
+                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+                     transparent_pixmap,
+                     0, 0,
+                     0, 0,
+                     data->width, data->height);
+}
+
+
+/* Repaint the window */
+gint repaint ()
+{
+  gdk_draw_drawable (data->area->window,
+                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+                     data->pixmap,
+                     0, 0,
+                     0, 0,
+                     data->width, data->height);
+  return 1;
 }
 
 
 /* Show the window with the annotations */
 void annotate_show_window ()
 {
-  gtk_widget_show (data->win);
+  repaint();
 }
 
 
@@ -474,28 +506,6 @@ void annotate_eraser_grab ()
   annotate_select_eraser(data);
   annotate_configure_eraser(data->cur_context->width);
   annotate_acquire_grab (data);
-}
-
-
-/* Repaint the window */
-gint repaint ()
-{
-  gdk_draw_drawable (data->area->window,
-                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                     data->pixmap,
-                     0, 0,
-                     0, 0,
-                     data->width, data->height);
-  return 1;
-}
-
-
-/* Clear cairo context */
-void clear_cairo_context(cairo_t* cr)
-{
-  cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgba(cr,0,0,0,0);
-  cairo_paint(cr);
 }
 
 
