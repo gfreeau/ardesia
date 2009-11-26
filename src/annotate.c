@@ -259,7 +259,7 @@ void clear_cairo_context(cairo_t* cr)
 }
 
 
-/* Hide the  window with the annotations */
+/* Hide the annotations */
 void annotate_hide_annotation ()
 {
   GdkPixmap *transparent_pixmap = gdk_pixmap_new (data->area->window, data->width,
@@ -289,8 +289,8 @@ gint repaint ()
 }
 
 
-/* Show the window with the annotations */
-void annotate_show_window ()
+/* Show the annotations */
+void annotate_show_annotation ()
 {
   repaint();
 }
@@ -410,8 +410,6 @@ gboolean in_unlock_area(int x, int y)
 /* Grab the cursor */
 void annotate_acquire_grab ()
 {
-  annotate_show_window ();
-
   GdkGrabStatus result;
   gdk_error_trap_push(); 
 

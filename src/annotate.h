@@ -29,11 +29,11 @@ int annotate_init (int x, int y, int width, int height);
 /* Get the annotation window */
 GtkWindow* get_annotation_window();
 
-/* Hide the  window with the annotations */
+/* Hide the annotations */
 void annotate_hide_annotation ();
 
-/* Show the window with the annotations */
-void annotate_show_window ();
+/* Show the annotations */
+void annotate_show_annotation ();
 
 /* Get cairo context that contains the annotations */
 cairo_t* get_annotation_cairo_context();
