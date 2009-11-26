@@ -267,8 +267,6 @@ void on_toolsVisible_activate             (GtkToolButton   *toolbutton,
   else
     {
       annotate_show_annotation();
-      GtkWidget* ardesia_bar = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
-      
       visible=TRUE;
       grab = TRUE;
       /* set tooltip to hide */

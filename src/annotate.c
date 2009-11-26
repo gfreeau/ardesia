@@ -410,6 +410,10 @@ gboolean in_unlock_area(int x, int y)
 /* Grab the cursor */
 void annotate_acquire_grab ()
 {
+  /* This is a workaround to reput the annotation window over the background window */
+  gtk_widget_hide (data->win);
+  gtk_widget_show (data->win);
+
   GdkGrabStatus result;
   gdk_error_trap_push(); 
 
