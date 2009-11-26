@@ -79,7 +79,7 @@ void calculate_centered_position(GtkWidget *ardesiaBarWindow, int dwidth, int dh
   else
     {
       /* invalid position */
-      perror ("Valid poisition are NORTH or SOUTH\n");
+      perror ("Valid position are NORTH or SOUTH\n");
       exit(0);
     }
 }
@@ -125,10 +125,10 @@ void check_composite()
       /* composited must be enabled */
       GtkWidget *msg_dialog; 
       msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
-                                           GTK_BUTTONS_OK, "Ardesia needs a composite manager such as Compiz or xcompmgr");
+                                           GTK_BUTTONS_OK, "In order to run Ardesia you need to enable the Compiz composite manager");
       gtk_window_stick((GtkWindow*)msg_dialog);
                  
-      gint result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
+      gtk_dialog_run(GTK_DIALOG(msg_dialog));
       if (msg_dialog != NULL)
         {
 	  gtk_widget_destroy(msg_dialog);

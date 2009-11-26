@@ -55,7 +55,10 @@ int start_recorder(char* filename)
     }
   if (pid == 0)
     {
-      execvp(argv[0], argv);
+      if (execvp(argv[0], argv) < 0)
+        {
+          return -1;
+        }
     }
   return pid;
 }
@@ -79,6 +82,23 @@ void quit_recorder()
       recorderpid=-1;
     }  
 }
+
+
+/* Missing program dialog */
+void missing_program_dialog()
+{
+  GtkWidget *msg_dialog;
+  msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
+                                       GTK_BUTTONS_OK, "To run Ardesia you need to install a composite manager such as Compiz or xcompmgr");
+  gtk_window_stick((GtkWindow*)msg_dialog);
+
+  gtk_dialog_run(GTK_DIALOG(msg_dialog));
+  if (msg_dialog != NULL)
+   {
+     gtk_widget_destroy(msg_dialog);
+   }
+}
+
 
 /*
  * Start the dialog that ask to the user where save the video
@@ -143,7 +163,15 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
 	    } 
 	}
       recorderpid = start_recorder(filename);
-      status = TRUE;
+      if (recorderpid > 0)
+        {
+          status = TRUE;
+        }
+      else
+       {
+         status = FALSE;
+         missing_program_dialog(); 
+       }
     }
     if (chooser != NULL)
       { 

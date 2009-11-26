@@ -89,7 +89,7 @@ gchar*       workspace_dir = NULL;
 /* Called when close the program */
 gboolean  quit()
 {
-  gboolean ret=FALSE;
+  gboolean ret = FALSE;
   quit_recorder();
   annotate_quit();
   /* Disalloc */
@@ -267,6 +267,12 @@ void on_toolsVisible_activate             (GtkToolButton   *toolbutton,
   else
     {
       annotate_show_window();
+      GtkWidget* ardesia_bar = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
+      
+      /* This is a workaround to force the ardesia bar to stay over the annotate window */      
+      gtk_widget_hide(ardesia_bar); 
+      gtk_widget_show(ardesia_bar); 
+
       visible=TRUE;
       grab = TRUE;
       /* set tooltip to hide */
