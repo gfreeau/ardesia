@@ -833,12 +833,14 @@ gboolean paint (GtkWidget *win,
                  ev->device->name, ev->button, ev->x, ev->y);
     }
  
-  if (state & GDK_BUTTON1_MASK)
-    { 
-      data->lastx = ev->x;
-      data->lasty = ev->y;
-      annotate_coord_list_prepend (ev->x, ev->y, data->maxwidth);
-    }
+  cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2*M_PI);
+  cairo_set_operator(data->cr,CAIRO_OPERATOR_SOURCE);
+  cairo_fill (data->cr);
+  cairo_stroke(data->cr);
+  data->lastx = ev->x;
+  data->lasty = ev->y;
+  annotate_coord_list_prepend (ev->x, ev->y, data->maxwidth);
+  data->painted = TRUE;
 
   return TRUE;
 }
@@ -865,9 +867,8 @@ gboolean paintto (GtkWidget *win,
     {
       pressure=0.5;
     }
-
-  if (pressure<=0)
-    { 
+  else
+    {
       /* the button is not pressed */
       data->lastx = ev->x;
       data->lasty = ev->y;
