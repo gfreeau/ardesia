@@ -334,7 +334,7 @@ void annotate_select_eraser()
 /* Configure the eraser */
 void annotate_configure_eraser(int width)
 {
-  data->cur_context->width = (width * 10);	
+  data->cur_context->width = (width * 4);	
 }
 
 
