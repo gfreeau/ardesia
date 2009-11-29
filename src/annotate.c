@@ -1073,13 +1073,12 @@ void setup_app ()
  
   gtk_widget_show_all(data->win);
   
-  clear_screen();
-  
   /* SHAPE PIXMAP */
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
   cairo_t* shape_cr = gdk_cairo_create(data->shape);
   clear_cairo_context(shape_cr);
 
+  gtk_widget_hide (data->win);
 }
 
 
