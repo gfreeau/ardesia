@@ -825,7 +825,6 @@ gboolean paint (GtkWidget *win,
   cairo_set_line_width(data->cr,data->cur_context->width);
 
   select_color(data);  
-  GdkModifierType state = (GdkModifierType) ev->state;  
   
   if(data->debug)
     {
