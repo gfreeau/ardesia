@@ -40,8 +40,8 @@ gboolean load_png (const char *filename, GdkPixbuf **pixmap)
     {
       GdkPixbuf *scaled;
       gint height = gdk_screen_height ();
-      gint weight = gdk_screen_width ();
-      scaled = gdk_pixbuf_scale_simple(*pixmap, weight, height, GDK_INTERP_BILINEAR);
+      gint width = gdk_screen_width ();
+      scaled = gdk_pixbuf_scale_simple(*pixmap, width, height, GDK_INTERP_BILINEAR);
       g_object_unref (G_OBJECT (*pixmap));
       *pixmap = scaled;
       return TRUE;

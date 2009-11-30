@@ -334,7 +334,7 @@ void annotate_select_eraser()
 /* Configure the eraser */
 void annotate_configure_eraser(int width)
 {
-  data->cur_context->width = (width * 4);	
+  data->cur_context->width = (width * 2.5);	
 }
 
 
@@ -368,14 +368,23 @@ void set_pen_cursor(char *color)
 /* Set the eraser cursor */
 void set_eraser_cursor()
 {
-  GdkPixbuf *cursor_src;
-  cursor_src = gdk_pixbuf_new_from_xpm_data(erase_cursor_xpm);
-  int width = gdk_pixbuf_get_width (cursor_src);
-  int height = gdk_pixbuf_get_height (cursor_src);
-  GdkCursor* cursor = gdk_cursor_new_from_pixbuf (data->display, cursor_src, width/2, height/2);
+  gint size = data->cur_context->width;
+  GdkPixmap *pixmap = gdk_pixmap_new (NULL, size, size, 1);
+  
+  cairo_t *eraser_cr = gdk_cairo_create(pixmap);
+  clear_cairo_context(eraser_cr);
+  cairo_set_operator(eraser_cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_rgba(eraser_cr,0,0,0,1);
+  
+  cairo_arc(eraser_cr, size/2, size/2, size/2, 0, 2 * M_PI);
+  cairo_stroke(eraser_cr);
+  
+  GdkColor white =  {0,0xFFFF,0xFFFF,0xFFFF}; 
+  GdkColor black =  { 0, 0xFFFF, 0x0000, 0x0000 }; 
+  GdkCursor* cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, &black, &white, size/2, size/2);
   gdk_window_set_cursor (data->win->window, cursor);
   gdk_flush ();
-  g_object_unref (cursor_src);
+  g_object_unref (pixmap);
   gdk_cursor_destroy (cursor);
 }
 
