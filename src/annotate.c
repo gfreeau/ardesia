@@ -370,18 +370,19 @@ void set_eraser_cursor()
 {
   gint size = data->cur_context->width;
   GdkPixmap *pixmap = gdk_pixmap_new (NULL, size, size, 1);
-  
+  int circle_width = 2; 
   cairo_t *eraser_cr = gdk_cairo_create(pixmap);
   clear_cairo_context(eraser_cr);
   cairo_set_operator(eraser_cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_line_width(eraser_cr, circle_width);
   cairo_set_source_rgba(eraser_cr,0,0,0,1);
   
-  cairo_arc(eraser_cr, size/2, size/2, size/2, 0, 2 * M_PI);
+  cairo_arc(eraser_cr, size/2, size/2, (size/2)-circle_width, 0, 2 * M_PI);
   cairo_stroke(eraser_cr);
   
-  GdkColor white =  {0,0xFFFF,0xFFFF,0xFFFF}; 
-  GdkColor black =  { 0, 0xFFFF, 0x0000, 0x0000 }; 
-  GdkCursor* cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, &black, &white, size/2, size/2);
+  GdkColor background_color =  {0, 0xFFFF, 0xFFFF, 0xFFFF}; 
+  GdkColor foreground_color =  {0, 0xFFFF, 0x0000, 0x0000 }; 
+  GdkCursor* cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, &foreground_color, &background_color, size/2, size/2);
   gdk_window_set_cursor (data->win->window, cursor);
   gdk_flush ();
   g_object_unref (pixmap);
