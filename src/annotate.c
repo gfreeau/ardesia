@@ -397,7 +397,6 @@ void set_eraser_cursor()
   gdk_cursor_destroy (cursor);
 }
 
-
 /*
  * This is function return if the point (x,y) in inside the ardesia panel area
  * or in a zone where we must unlock the pointer
@@ -995,7 +994,7 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       event->keyval == GDK_KP_Enter)
     {
        x = 0;
-       y +=  extents.y_advance;
+       y +=  extents.width;
        gdk_display_warp_pointer (data->display, screen, x, y);  
        return FALSE;
     }  
