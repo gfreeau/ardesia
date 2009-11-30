@@ -22,10 +22,11 @@
  */
 
 #include <glib.h>
-#include <gdk/gdk.h>
 #include <gdk/gdkinput.h>
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
+
 
 #include <errno.h>
 #include <fcntl.h>
@@ -43,11 +44,17 @@
 #include "paint_cursor.xpm"
 #include "erase_cursor.xpm"
 
-#define ANNOTATE_MOUSE_EVENTS ( GDK_PROXIMITY_IN_MASK |		\
-				GDK_PROXIMITY_OUT_MASK |	\
-				GDK_POINTER_MOTION_MASK |	\
-				GDK_BUTTON_PRESS_MASK |		\
-				GDK_BUTTON_RELEASE_MASK)
+#define ANNOTATE_MOUSE_EVENTS    ( GDK_PROXIMITY_IN_MASK |      \
+				   GDK_PROXIMITY_OUT_MASK |	\
+				   GDK_POINTER_MOTION_MASK |	\
+				   GDK_BUTTON_PRESS_MASK |      \
+				   GDK_BUTTON_RELEASE_MASK      \
+                                 )
+
+#define ANNOTATE_KEYBOARD_EVENTS ( GDK_KEY_PRESS_MASK           \
+                                 )
+
+
 
 /* set the DEBUG to 1 to read the debug messages */
 #define DEBUG 0
@@ -302,6 +309,7 @@ void annotate_release_grab ()
   gdk_error_trap_push ();
 
   gdk_display_pointer_ungrab (data->display, GDK_CURRENT_TIME);
+  gdk_display_keyboard_ungrab (data->display, GDK_CURRENT_TIME);
   /* inherit cursor from root window */
   gdk_window_set_cursor (data->win->window, NULL);
   gdk_flush ();
@@ -434,6 +442,9 @@ void annotate_acquire_grab ()
 			     NULL,
 			     GDK_CURRENT_TIME); 
 
+  result = gdk_keyboard_grab (data->area->window,
+			      ANNOTATE_KEYBOARD_EVENTS,
+			      GDK_CURRENT_TIME); 
   gdk_flush ();
   if (gdk_error_trap_pop ())
     {
@@ -470,6 +481,9 @@ void annotate_acquire_grab ()
       set_pen_cursor(data->cur_context->fg_color);
     } 
   
+  data->cr= gdk_cairo_create(data->pixmap);
+  cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
+  cairo_set_line_width(data->cr,data->cur_context->width);
 }
 
 
@@ -830,10 +844,6 @@ gboolean paint (GtkWidget *win,
       return FALSE;
     }
 
-  data->cr= gdk_cairo_create(data->pixmap);
-  cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
-  cairo_set_line_width(data->cr,data->cur_context->width);
-
   select_color(data);  
   
   if(data->debug)
@@ -963,6 +973,44 @@ gboolean event_configure (GtkWidget *widget,
   return TRUE;
 }
 
+/* press keyboard event */
+gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
+{
+  /* move cairo to the mouse position */
+  int x;
+  int y;
+  gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);  
+  cairo_move_to(data->cr, x, y);
+
+  GdkScreen   *screen = gdk_display_get_default_screen (data->display);
+  cairo_select_font_face (data->cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+  cairo_set_font_size (data->cr, data->cur_context->width*5);
+  cairo_text_extents_t extents;
+  char *utf8 = malloc(2) ;
+  utf8[0] = event->keyval;
+  utf8[1] = 0; 
+  cairo_text_extents (data->cr, utf8, &extents);
+  if (event->keyval == GDK_Return ||
+      event->keyval == GDK_ISO_Enter || 	
+      event->keyval == GDK_KP_Enter)
+    {
+       x = 0;
+       y +=  extents.y_advance;
+       gdk_display_warp_pointer (data->display, screen, x, y);  
+       return FALSE;
+    }  
+ 
+
+
+  cairo_show_text (data->cr, utf8); 
+  cairo_stroke(data->cr);
+  /* move cursor to the x step */
+  x +=  extents.x_advance;
+  gdk_display_warp_pointer (data->display, screen, x, y);  
+  repaint();
+
+  return TRUE;
+}
 
 /* Expose event */
 gboolean event_expose (GtkWidget *widget, 
@@ -1063,6 +1111,9 @@ void setup_app ()
 		    G_CALLBACK (proximity_in), NULL);
   g_signal_connect (data->win, "proximity_out_event",
 		    G_CALLBACK (proximity_out), NULL);
+
+  g_signal_connect (data->win, "key_press_event",
+		    G_CALLBACK (key_press), NULL);
 
   data->arrow = 0; 
   data->painted = FALSE;
