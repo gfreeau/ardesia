@@ -59,6 +59,8 @@
 /* set the DEBUG to 1 to read the debug messages */
 #define DEBUG 0
 
+cairo_text_extents_t extents;
+
 typedef enum
   {
     ANNOTATE_PEN,
@@ -424,6 +426,36 @@ gboolean in_unlock_area(int x, int y)
 }
 
 
+/* Set the cairo surface color to the RGBA string */
+void cairo_set_source_color_from_string( cairo_t * cr, char* color)
+{
+  int r,g,b,a;
+  sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+  cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
+}
+
+
+/* Set the cairo surface color to transparent */
+void  cairo_set_transparent_color(cairo_t * cr)
+{
+  cairo_set_source_rgba (cr, 0.0, 0.0,0.0, 0.0);
+}
+
+
+/* Color selector; if eraser than select the transparent color else alloc the right color */ 
+void select_color()
+{
+  if (!(data->cur_context->type == ANNOTATE_ERASER))
+     {
+       cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
+     }
+  else
+    {
+       cairo_set_transparent_color(data->cr);
+    }
+}
+
+
 /* Grab the cursor */
 void annotate_acquire_grab ()
 {
@@ -483,6 +515,7 @@ void annotate_acquire_grab ()
   data->cr= gdk_cairo_create(data->pixmap);
   cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
   cairo_set_line_width(data->cr,data->cur_context->width);
+  select_color();  
 }
 
 
@@ -615,36 +648,6 @@ void annotate_select_tool (GdkDevice *device, guint state)
 
   data->state = state;
   data->device = device;
-}
-
-
-/* Set the cairo surface color to transparent */
-void  cairo_set_transparent_color(cairo_t * cr)
-{
-  cairo_set_source_rgba (cr, 0.0, 0.0,0.0, 0.0);
-}
-
-
-/* Set the cairo surface color to the RGBA string */
-void cairo_set_source_color_from_string( cairo_t * cr, char* color)
-{
-  int r,g,b,a;
-  sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-  cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
-}
-
-
-/* Color selector; if eraser than select the transparent color else alloc the right color */ 
-void select_color(AnnotateData *data)
-{
-  if (!(data->cur_context->type == ANNOTATE_ERASER))
-     {
-       cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
-     }
-  else
-    {
-       cairo_set_transparent_color(data->cr);
-    }
 }
 
 
@@ -842,9 +845,7 @@ gboolean paint (GtkWidget *win,
       annotate_release_grab ();
       return FALSE;
     }
-
-  select_color(data);  
-  
+ 
   if(data->debug)
     {
       g_printerr("DEBUG: Device '%s': Button %i Down at (x,y)=(%.2f : %.2f)\n",
@@ -984,23 +985,33 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   GdkScreen   *screen = gdk_display_get_default_screen (data->display);
   cairo_select_font_face (data->cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
   cairo_set_font_size (data->cr, data->cur_context->width*5);
-  cairo_text_extents_t extents;
   char *utf8 = malloc(2) ;
   utf8[0] = event->keyval;
   utf8[1] = 0; 
-  cairo_text_extents (data->cr, utf8, &extents);
   if (event->keyval == GDK_Return ||
       event->keyval == GDK_ISO_Enter || 	
       event->keyval == GDK_KP_Enter)
     {
        x = 0;
-       y +=  extents.width;
+       y +=  extents.height;
        gdk_display_warp_pointer (data->display, screen, x, y);  
        return FALSE;
     }  
- 
-
-
+  if (event->keyval == GDK_BackSpace)
+    {
+       // restore
+       cairo_set_operator (data->cr, CAIRO_OPERATOR_CLEAR);
+       cairo_rectangle(data->cr, x - extents.x_advance, y - extents.height, extents.x_advance, data->cur_context->width*5);
+       cairo_fill(data->cr);
+       repaint();
+       cairo_set_operator (data->cr, CAIRO_OPERATOR_SOURCE);
+       x -=  extents.x_advance;
+       gdk_display_warp_pointer (data->display, screen, x, y); 
+       cairo_stroke(data->cr);
+       return FALSE;
+    }
+  // save
+  cairo_text_extents (data->cr, utf8, &extents);
   cairo_show_text (data->cr, utf8); 
   cairo_stroke(data->cr);
   /* move cursor to the x step */
