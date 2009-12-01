@@ -1034,7 +1034,14 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   cairo_set_font_size (data->cr, data->cur_context->width*5);
   char *utf8 = malloc(2) ;
   utf8[0] = event->keyval;
-  utf8[1] = 0; 
+  utf8[1] = 0;
+  if (x + extents.x_advance >= data->width)
+    {
+      x = 0;
+      y +=  extents.height;
+      gdk_display_warp_pointer (data->display, screen, x, y);  
+      return FALSE;
+    } 
   if (event->keyval == GDK_Return ||
       event->keyval == GDK_ISO_Enter || 	
       event->keyval == GDK_KP_Enter)
@@ -1044,7 +1051,7 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
        gdk_display_warp_pointer (data->display, screen, x, y);  
        return FALSE;
     }  
-  if (event->keyval == GDK_BackSpace)
+  else if (event->keyval == GDK_BackSpace)
     {
        x -=  extents.x_advance;
        gdk_display_warp_pointer (data->display, screen, x, y); 
@@ -1052,6 +1059,30 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
        annotate_undo();
        return FALSE;
     }
+  else if (event->keyval == GDK_Left)
+   {
+       x -=  extents.x_advance;
+       gdk_display_warp_pointer (data->display, screen, x, y); 
+       return FALSE;
+   }
+  else if ((event->keyval == GDK_Right) ||  (event->keyval == GDK_KP_Space))
+   {
+       x +=  extents.x_advance;
+       gdk_display_warp_pointer (data->display, screen, x, y); 
+       return FALSE;
+   }
+  else if (event->keyval == GDK_Up)
+   {
+       y -=  extents.height;
+       gdk_display_warp_pointer (data->display, screen, x, y); 
+       return FALSE;
+   }
+  else if (event->keyval == GDK_Down)
+   {
+       y +=  extents.height;
+       gdk_display_warp_pointer (data->display, screen, x, y); 
+       return FALSE;
+   }
   cairo_text_extents (data->cr, utf8, &extents);
   cairo_show_text (data->cr, utf8); 
   cairo_stroke(data->cr);
