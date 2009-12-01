@@ -313,6 +313,8 @@ void annotate_pixmap_free(AnnotateSave* annotate_save)
   data->savelist=g_list_remove(data->savelist, annotate_save);
 }
 
+
+/* Make a save point */
 void annotate_save()
 {
   /* PIXMAP FOR UNDO */
@@ -336,6 +338,7 @@ void annotate_save()
 }
 
 
+/* Undo to the last save point */
 void annotate_undo()
 {
   AnnotateSave* annotate_save = annotate_pixmap_get_head();

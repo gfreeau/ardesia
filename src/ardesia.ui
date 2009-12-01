@@ -3,7 +3,7 @@
   <requires lib="gtk+" version="2.14"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">695</property>
+    <property name="width_request">725</property>
     <property name="can_focus">True</property>
     <property name="has_focus">True</property>
     <property name="is_focus">True</property>
@@ -236,6 +236,20 @@
               </object>
               <packing>
                 <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="buttonUndo">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Undo</property>
+                <property name="stock_id">gtk-undo</property>
+                <signal name="clicked" handler="on_buttonUndo_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>

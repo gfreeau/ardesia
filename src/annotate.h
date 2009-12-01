@@ -38,6 +38,9 @@ void annotate_show_annotation ();
 /* Get cairo context that contains the annotations */
 cairo_t* get_annotation_cairo_context();
 
+/* Undo to the last save point */
+void annotate_undo();
+
 /* Quit the annotation */
 void annotate_quit();
 

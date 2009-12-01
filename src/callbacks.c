@@ -332,6 +332,14 @@ void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
 }
 
 
+void on_buttonUndo_activate              (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
+{
+  grab = TRUE;
+  annotate_undo();
+}
+
+
 void on_buttonClear_activate              (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
