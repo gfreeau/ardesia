@@ -57,7 +57,7 @@
 
 
 /* set the DEBUG to 1 to read the debug messages */
-#define DEBUG 0
+#define DEBUG 1
 
 cairo_text_extents_t extents;
 
@@ -97,9 +97,9 @@ typedef struct
   GtkWidget   *area;
 
   GdkDisplay  *display;
-  GdkPixmap   *pixmap;
 
   GdkBitmap   *shape;
+  GList       *pixmaplist;
  
   AnnotatePaintContext *default_pen;
   AnnotatePaintContext *default_eraser;
@@ -208,6 +208,22 @@ void annotate_coord_list_free ()
   data->coordlist = NULL;
 }
 
+/* Free the list of the painted point */
+void annotate_pixmap_list_free ()
+{
+  GList *ptr = data->pixmaplist;
+
+  while (ptr)
+    {
+      g_free (ptr->data);
+      ptr = ptr->next;
+    }
+
+  g_list_free (data->pixmaplist);
+
+  data->pixmaplist = NULL;
+}
+
 
 gboolean annotate_coord_list_get_arrow_param (AnnotateData* data,
 				     	      gint        search_radius,
@@ -268,40 +284,73 @@ void clear_cairo_context(cairo_t* cr)
 }
 
 
+void annotate_pixmap_push(GdkBitmap *saved_pixmap)
+{
+  data->pixmaplist = g_list_prepend (data->pixmaplist, saved_pixmap);
+}
+
+
+GdkBitmap *annotate_pixmap_get_head()
+{
+  GList *ptr = data->pixmaplist;
+  if (ptr)
+    {
+      return g_list_first(ptr)->data;
+    }
+  return NULL;
+}
+
+void annotate_pixmap_free(GdkBitmap* saved_pixmap)
+{
+  data->pixmaplist=g_list_remove(data->pixmaplist, saved_pixmap);
+}
+
+void annotate_save()
+{
+  /* PIXMAP FOR UNDO */
+  GdkBitmap* saved_pixmap = gdk_pixmap_new (data->area->window, data->width,
+                                 data->height, -1);
+  
+  gdk_draw_drawable (saved_pixmap,
+                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+                     data->area->window,
+                     0, 0,
+                     0, 0,
+                     data->width, data->height);
+  annotate_pixmap_push(saved_pixmap);
+}
+
+
+void annotate_undo()
+{
+  GdkBitmap* saved_pixmap = annotate_pixmap_get_head();
+  if (saved_pixmap)
+    {
+      gdk_draw_drawable (data->area->window,
+                         data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+                         saved_pixmap,
+                         0, 0,
+                         0, 0,
+                         data->width, data->height);
+      annotate_pixmap_free(saved_pixmap);
+    }
+}
+
+
 /* Hide the annotations */
 void annotate_hide_annotation ()
 {
-  GdkPixmap *transparent_pixmap = gdk_pixmap_new (data->area->window, data->width,
-                                 data->height, -1);
-  cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
-  clear_cairo_context(transparent_cr);
-
-  gdk_draw_drawable (data->area->window,
-                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                     transparent_pixmap,
-                     0, 0,
-                     0, 0,
-                     data->width, data->height);
+  annotate_save();
+  data->cr = gdk_cairo_create(data->area->window);
+  clear_cairo_context(data->cr);
+  cairo_paint(data->cr);
 }
-
-
-/* Repaint the window */
-gint repaint ()
-{
-  gdk_draw_drawable (data->area->window,
-                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                     data->pixmap,
-                     0, 0,
-                     0, 0,
-                     data->width, data->height);
-  return 1;
-}
-
 
 /* Show the annotations */
 void annotate_show_annotation ()
 {
-  repaint();
+  annotate_undo();
+  annotate_save();
 }
 
 
@@ -459,9 +508,6 @@ void select_color()
 /* Grab the cursor */
 void annotate_acquire_grab ()
 {
-  /* This is a workaround to reput the annotation window over the background window */
-  gtk_widget_hide (data->win);
-  gtk_widget_show (data->win);
 
   GdkGrabStatus result;
   gdk_error_trap_push(); 
@@ -512,7 +558,7 @@ void annotate_acquire_grab ()
       set_pen_cursor(data->cur_context->fg_color);
     } 
   
-  data->cr= gdk_cairo_create(data->pixmap);
+  data->cr = gdk_cairo_create(data->area->window);
   cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
   cairo_set_line_width(data->cr,data->cur_context->width);
   select_color();  
@@ -570,9 +616,8 @@ void annotate_eraser_grab ()
 /* Clear the screen */
 void clear_screen()
 {
-  data->cr=gdk_cairo_create(data->pixmap);
+  data->cr = gdk_cairo_create(data->area->window);
   clear_cairo_context(data->cr);
-  repaint();
 }
 
 
@@ -655,9 +700,9 @@ void annotate_select_tool (GdkDevice *device, guint state)
 void annotate_draw_line_int (gint x1, gint y1,
 			     gint x2, gint y2)
 {
-  cairo_move_to(data->cr,x1,y1);
-  cairo_line_to(data->cr,x2,y2);
-  cairo_set_operator(data->cr,CAIRO_OPERATOR_SOURCE);
+  cairo_move_to(data->cr, x1, y1);
+  cairo_line_to(data->cr, x2, y2);
+  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
   cairo_stroke(data->cr);
   data->painted = TRUE;
 }
@@ -755,13 +800,13 @@ void annotate_draw_arrow (gint x1, gint y1,
   arrowhead [3].x = x1 - 2 * widthcos - widthsin ;
   arrowhead [3].y = y1 +  widthcos - 2 * widthsin ;
 
-  cairo_line_to(data->cr,arrowhead[0].x,arrowhead[0].y);
-  cairo_line_to(data->cr,arrowhead[1].x,arrowhead[1].y);
-  cairo_line_to(data->cr,arrowhead[2].x,arrowhead[2].y);
-  cairo_line_to(data->cr,arrowhead[3].x,arrowhead[3].y);
+  cairo_line_to(data->cr, arrowhead[0].x, arrowhead[0].y);
+  cairo_line_to(data->cr, arrowhead[1].x, arrowhead[1].y);
+  cairo_line_to(data->cr, arrowhead[2].x, arrowhead[2].y);
+  cairo_line_to(data->cr, arrowhead[3].x, arrowhead[3].y);
   cairo_close_path(data->cr);
   cairo_fill_preserve(data->cr);
-  cairo_set_operator(data->cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
   cairo_stroke(data->cr);
  
   data->painted = TRUE;
@@ -838,6 +883,7 @@ gboolean paint (GtkWidget *win,
                 gpointer user_data)
 {
 
+  annotate_save();
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
     {
@@ -852,10 +898,6 @@ gboolean paint (GtkWidget *win,
                  ev->device->name, ev->button, ev->x, ev->y);
     }
  
-  cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2*M_PI);
-  cairo_set_operator(data->cr,CAIRO_OPERATOR_SOURCE);
-  cairo_fill (data->cr);
-  cairo_stroke(data->cr);
   data->lastx = ev->x;
   data->lasty = ev->y;
   annotate_coord_list_prepend (ev->x, ev->y, data->maxwidth);
@@ -909,7 +951,6 @@ gboolean paintto (GtkWidget *win,
     
   data->lastx = ev->x;
   data->lasty = ev->y;
-  repaint();
   return TRUE;
 }
 
@@ -929,6 +970,11 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   gint width = data->cur_context->arrowsize * data->cur_context->width / 2;
   gfloat direction = 0;
 
+  cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2*M_PI);
+  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
+  cairo_fill (data->cr);
+  cairo_stroke(data->cr);
+  
   if ((ev->x != data->lastx) ||
       (ev->y != data->lasty))
     {
@@ -949,7 +995,6 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
     }
 
   cairo_stroke(data->cr);
-  repaint();
   annotate_coord_list_free (data);
  
   return TRUE;
@@ -966,16 +1011,18 @@ gboolean event_configure (GtkWidget *widget,
                           gpointer user_data)
 {
 
-  data->pixmap = gdk_pixmap_new (data->area->window, data->width,
-                                 data->height, -1);
   clear_screen();
-
   return TRUE;
 }
 
 /* press keyboard event */
 gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
 {
+   if (event->keyval != GDK_BackSpace)
+    {
+      // save
+      annotate_save();
+    }
   /* move cairo to the mouse position */
   int x;
   int y;
@@ -999,25 +1046,18 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     }  
   if (event->keyval == GDK_BackSpace)
     {
-       // restore
-       cairo_set_operator (data->cr, CAIRO_OPERATOR_CLEAR);
-       cairo_rectangle(data->cr, x - extents.x_advance, y - extents.height, extents.x_advance, data->cur_context->width*5);
-       cairo_fill(data->cr);
-       repaint();
-       cairo_set_operator (data->cr, CAIRO_OPERATOR_SOURCE);
        x -=  extents.x_advance;
        gdk_display_warp_pointer (data->display, screen, x, y); 
-       cairo_stroke(data->cr);
+       // restore
+       annotate_undo();
        return FALSE;
     }
-  // save
   cairo_text_extents (data->cr, utf8, &extents);
   cairo_show_text (data->cr, utf8); 
   cairo_stroke(data->cr);
   /* move cursor to the x step */
   x +=  extents.x_advance;
   gdk_display_warp_pointer (data->display, screen, x, y);  
-  repaint();
 
   return TRUE;
 }
@@ -1027,14 +1067,7 @@ gboolean event_expose (GtkWidget *widget,
                        GdkEventExpose *event, 
                        gpointer user_data)
 {
-
-  gdk_draw_drawable (data->area->window,
-                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                     data->pixmap,
-                     event->area.x, event->area.y,
-                     event->area.x, event->area.y,
-                     event->area.width, event->area.height);
-
+  clear_screen();
   return TRUE;
 }
 
@@ -1129,7 +1162,7 @@ void setup_app ()
   data->painted = FALSE;
 
   data->coordlist = NULL;
-  data->cr = NULL;
+  data->pixmaplist = NULL;
 
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN,
 						  color, 15, 0);
@@ -1141,15 +1174,14 @@ void setup_app ()
   data->state = 0;
 
   setup_input_devices (data);
- 
-  gtk_widget_show_all(data->win);
   
+  gtk_widget_show_all(data->win);
+    
   /* SHAPE PIXMAP */
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
   cairo_t* shape_cr = gdk_cairo_create(data->shape);
   clear_cairo_context(shape_cr);
 
-  gtk_widget_hide (data->win);
 }
 
 
