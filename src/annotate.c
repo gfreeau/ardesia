@@ -43,7 +43,6 @@
 #include <string.h>
 
 #include "paint_cursor.xpm"
-#include "erase_cursor.xpm"
 
 #define ANNOTATE_MOUSE_EVENTS    ( GDK_PROXIMITY_IN_MASK |      \
 				   GDK_PROXIMITY_OUT_MASK |	\
