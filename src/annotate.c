@@ -88,6 +88,14 @@ typedef struct
 
 typedef struct
 {
+  gint xcursor;
+  gint ycursor;
+  GdkBitmap *bitmap;
+} AnnotateSave;
+
+
+typedef struct
+{
   int untogglexpos;
   int untoggleypos;
   int untogglewidth;
@@ -99,7 +107,7 @@ typedef struct
   GdkDisplay  *display;
 
   GdkBitmap   *shape;
-  GList       *pixmaplist;
+  GList       *savelist;
  
   AnnotatePaintContext *default_pen;
   AnnotatePaintContext *default_eraser;
@@ -211,7 +219,7 @@ void annotate_coord_list_free ()
 /* Free the list of the painted point */
 void annotate_pixmap_list_free ()
 {
-  GList *ptr = data->pixmaplist;
+  GList *ptr = data->savelist;
 
   while (ptr)
     {
@@ -219,9 +227,9 @@ void annotate_pixmap_list_free ()
       ptr = ptr->next;
     }
 
-  g_list_free (data->pixmaplist);
+  g_list_free (data->savelist);
 
-  data->pixmaplist = NULL;
+  data->savelist = NULL;
 }
 
 
@@ -284,15 +292,15 @@ void clear_cairo_context(cairo_t* cr)
 }
 
 
-void annotate_pixmap_push(GdkBitmap *saved_pixmap)
+void annotate_pixmap_push(AnnotateSave* annotate_save)
 {
-  data->pixmaplist = g_list_prepend (data->pixmaplist, saved_pixmap);
+  data->savelist = g_list_prepend (data->savelist, annotate_save);
 }
 
 
-GdkBitmap *annotate_pixmap_get_head()
+AnnotateSave* annotate_pixmap_get_head()
 {
-  GList *ptr = data->pixmaplist;
+  GList *ptr = data->savelist;
   if (ptr)
     {
       return g_list_first(ptr)->data;
@@ -300,39 +308,49 @@ GdkBitmap *annotate_pixmap_get_head()
   return NULL;
 }
 
-void annotate_pixmap_free(GdkBitmap* saved_pixmap)
+void annotate_pixmap_free(AnnotateSave* annotate_save)
 {
-  data->pixmaplist=g_list_remove(data->pixmaplist, saved_pixmap);
+  data->savelist=g_list_remove(data->savelist, annotate_save);
 }
 
 void annotate_save()
 {
   /* PIXMAP FOR UNDO */
+  AnnotateSave* annotate_save = malloc(sizeof(AnnotateSave));
   GdkBitmap* saved_pixmap = gdk_pixmap_new (data->area->window, data->width,
                                  data->height, -1);
-  
   gdk_draw_drawable (saved_pixmap,
                      data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
                      data->area->window,
                      0, 0,
                      0, 0,
                      data->width, data->height);
-  annotate_pixmap_push(saved_pixmap);
+  int x;
+  int y;
+  gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
+  annotate_save->bitmap=saved_pixmap;  
+  annotate_save->xcursor=x;  
+  annotate_save->ycursor=y;  
+ 
+  annotate_pixmap_push(annotate_save);
 }
 
 
 void annotate_undo()
 {
-  GdkBitmap* saved_pixmap = annotate_pixmap_get_head();
-  if (saved_pixmap)
+  AnnotateSave* annotate_save = annotate_pixmap_get_head();
+  if (annotate_save)
     {
+      GdkBitmap* saved_pixmap = annotate_save->bitmap;
       gdk_draw_drawable (data->area->window,
                          data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
                          saved_pixmap,
                          0, 0,
                          0, 0,
                          data->width, data->height);
-      annotate_pixmap_free(saved_pixmap);
+      GdkScreen   *screen = gdk_display_get_default_screen (data->display);
+      gdk_display_warp_pointer (data->display, screen, annotate_save->xcursor, annotate_save->ycursor); 
+      annotate_pixmap_free(annotate_save);
     }
 }
 
@@ -1053,8 +1071,6 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     }  
   else if (event->keyval == GDK_BackSpace)
     {
-       x -=  extents.x_advance;
-       gdk_display_warp_pointer (data->display, screen, x, y); 
        // restore
        annotate_undo();
        return FALSE;
@@ -1193,7 +1209,7 @@ void setup_app ()
   data->painted = FALSE;
 
   data->coordlist = NULL;
-  data->pixmaplist = NULL;
+  data->savelist = NULL;
 
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN,
 						  color, 15, 0);
