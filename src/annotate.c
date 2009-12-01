@@ -216,8 +216,9 @@ void annotate_coord_list_free ()
   data->coordlist = NULL;
 }
 
+
 /* Free the list of the painted point */
-void annotate_pixmap_list_free ()
+void annotate_save_list_free ()
 {
   GList *ptr = data->savelist;
 
@@ -233,6 +234,7 @@ void annotate_pixmap_list_free ()
 }
 
 
+/* Calculate parameters for the arrow */
 gboolean annotate_coord_list_get_arrow_param (AnnotateData* data,
 				     	      gint        search_radius,
 				              gint       *ret_width,
@@ -292,12 +294,14 @@ void clear_cairo_context(cairo_t* cr)
 }
 
 
-void annotate_pixmap_push(AnnotateSave* annotate_save)
+/* Insert a new save point */
+void annotate_save_push(AnnotateSave* annotate_save)
 {
   data->savelist = g_list_prepend (data->savelist, annotate_save);
 }
 
 
+/* Get the head savepoint */
 AnnotateSave* annotate_pixmap_get_head()
 {
   GList *ptr = data->savelist;
@@ -308,10 +312,12 @@ AnnotateSave* annotate_pixmap_get_head()
   return NULL;
 }
 
-void annotate_pixmap_free(AnnotateSave* annotate_save)
+
+void annotate_save_free(AnnotateSave* annotate_save)
 {
-  data->savelist=g_list_remove(data->savelist, annotate_save);
+  data->savelist = g_list_remove(data->savelist, annotate_save);
 }
+
 
 
 /* Make a save point */
@@ -334,7 +340,7 @@ void annotate_save()
   annotate_save->xcursor=x;  
   annotate_save->ycursor=y;  
  
-  annotate_pixmap_push(annotate_save);
+  annotate_save_push(annotate_save);
 }
 
 
@@ -351,10 +357,28 @@ void annotate_undo()
                          0, 0,
                          0, 0,
                          data->width, data->height);
+      annotate_save_free(annotate_save);
+    }
+}
+
+
+/* Undo and put the cursor in the old position */
+void annotate_undo_and_restore_pointer()
+{
+  AnnotateSave* annotate_save = annotate_pixmap_get_head();
+  if (annotate_save)
+    {
+      GdkBitmap* saved_pixmap = annotate_save->bitmap;
+      gdk_draw_drawable (data->area->window,
+                         data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+                         saved_pixmap,
+                         0, 0,
+                         0, 0,
+                         data->width, data->height);
       GdkScreen   *screen = gdk_display_get_default_screen (data->display);
       gdk_display_warp_pointer (data->display, screen, annotate_save->xcursor, annotate_save->ycursor); 
-      annotate_pixmap_free(annotate_save);
-    }
+      annotate_save_free(annotate_save);
+    } 
 }
 
 
@@ -366,6 +390,7 @@ void annotate_hide_annotation ()
   clear_cairo_context(data->cr);
   cairo_paint(data->cr);
 }
+
 
 /* Show the annotations */
 void annotate_show_annotation ()
@@ -1071,8 +1096,8 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     }  
   else if (event->keyval == GDK_BackSpace)
     {
-       // restore
-       annotate_undo();
+       // undo
+       annotate_undo_and_restore_pointer();
        return FALSE;
     }
   else if (event->keyval == GDK_Left)
