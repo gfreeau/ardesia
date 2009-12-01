@@ -34,6 +34,7 @@
 #include <unistd.h>
 #include <math.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include <sys/types.h>
 #include <sys/ipc.h>
@@ -1039,23 +1040,20 @@ gboolean event_configure (GtkWidget *widget,
 /* press keyboard event */
 gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
 {
+
    if (event->keyval != GDK_BackSpace)
     {
       // save
       annotate_save();
     }
+
   /* move cairo to the mouse position */
   int x;
   int y;
   gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);  
   cairo_move_to(data->cr, x, y);
-
   GdkScreen   *screen = gdk_display_get_default_screen (data->display);
-  cairo_select_font_face (data->cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-  cairo_set_font_size (data->cr, data->cur_context->width*5);
-  char *utf8 = malloc(2) ;
-  utf8[0] = event->keyval;
-  utf8[1] = 0;
+
   if (x + extents.x_advance >= data->width)
     {
       x = 0;
@@ -1102,12 +1100,23 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
        gdk_display_warp_pointer (data->display, screen, x, y); 
        return FALSE;
    }
-  cairo_text_extents (data->cr, utf8, &extents);
-  cairo_show_text (data->cr, utf8); 
-  cairo_stroke(data->cr);
-  /* move cursor to the x step */
-  x +=  extents.x_advance;
-  gdk_display_warp_pointer (data->display, screen, x, y);  
+  else if (isprint(event->keyval))
+    {
+      cairo_select_font_face (data->cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+      cairo_set_font_size (data->cr, data->cur_context->width*5);
+      char *utf8 = malloc(2) ;
+      sprintf(utf8,"%c", event->keyval);
+      cairo_text_extents (data->cr, utf8, &extents);
+      cairo_show_text (data->cr, utf8); 
+      cairo_stroke(data->cr);
+      /* move cursor to the x step */
+      x +=  extents.x_advance;
+      gdk_display_warp_pointer (data->display, screen, x, y);  
+   }
+  else
+    {
+      return FALSE;
+    }
 
   return TRUE;
 }
