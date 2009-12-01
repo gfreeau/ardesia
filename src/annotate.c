@@ -57,7 +57,7 @@
 
 
 /* set the DEBUG to 1 to read the debug messages */
-#define DEBUG 1
+#define DEBUG 0
 
 cairo_text_extents_t extents;
 
