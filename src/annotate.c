@@ -454,6 +454,7 @@ void annotate_redo()
 /* Undo and put the cursor in the old position */
 void annotate_undo_and_restore_pointer()
 {
+  annotate_save_redo();
   AnnotateSave* annotate_save = annotate_undolist_get_head();
   if (annotate_save)
     {
@@ -469,9 +470,6 @@ void annotate_undo_and_restore_pointer()
       /* delete from undolist */
       annotate_undo_free(annotate_save);
       g_free(annotate_save);
-      annotate_save = annotate_undolist_get_head();
-      /* add to redo */
-      data->redolist = g_list_prepend (data->redolist, annotate_save);
     } 
 }
 
@@ -479,7 +477,6 @@ void annotate_undo_and_restore_pointer()
 /* Hide the annotations */
 void annotate_hide_annotation ()
 {
-  annotate_save_undo();
   data->cr = gdk_cairo_create(data->area->window);
   clear_cairo_context(data->cr);
   cairo_paint(data->cr);
@@ -489,8 +486,17 @@ void annotate_hide_annotation ()
 /* Show the annotations */
 void annotate_show_annotation ()
 {
-  annotate_undo();
-  annotate_save_undo();
+  AnnotateSave* annotate_save = annotate_redolist_get_head();
+  if (annotate_save)
+    {
+      GdkBitmap* saved_pixmap = annotate_save->bitmap;
+      gdk_draw_drawable (data->area->window,
+                         data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+                         saved_pixmap,
+                         0, 0,
+                         0, 0,
+                         data->width, data->height);
+    }
 }
 
 
@@ -1199,24 +1205,28 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
    {
        x -=  extents.x_advance;
        gdk_display_warp_pointer (data->display, screen, x, y); 
+      annotate_save_redo();
        return FALSE;
    }
   else if ((event->keyval == GDK_Right) ||  (event->keyval == GDK_KP_Space))
    {
        x +=  extents.x_advance;
        gdk_display_warp_pointer (data->display, screen, x, y); 
+      annotate_save_redo();
        return FALSE;
    }
   else if (event->keyval == GDK_Up)
    {
        y -=  extents.height;
        gdk_display_warp_pointer (data->display, screen, x, y); 
+      annotate_save_redo();
        return FALSE;
    }
   else if (event->keyval == GDK_Down)
    {
        y +=  extents.height;
        gdk_display_warp_pointer (data->display, screen, x, y); 
+      annotate_save_redo();
        return FALSE;
    }
   else if (isprint(event->keyval))
@@ -1231,6 +1241,7 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       /* move cursor to the x step */
       x +=  extents.x_advance;
       gdk_display_warp_pointer (data->display, screen, x, y);  
+      annotate_save_redo();
    }
   else
     {
