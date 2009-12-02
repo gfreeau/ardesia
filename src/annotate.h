@@ -41,6 +41,9 @@ cairo_t* get_annotation_cairo_context();
 /* Undo to the last save point */
 void annotate_undo();
 
+/* Redo to the last save point */
+void annotate_redo();
+
 /* Quit the annotation */
 void annotate_quit();
 

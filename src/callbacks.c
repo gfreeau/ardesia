@@ -340,6 +340,14 @@ void on_buttonUndo_activate              (GtkToolButton   *toolbutton,
 }
 
 
+void on_buttonRedo_activate              (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
+{
+  grab = TRUE;
+  annotate_redo();
+}
+
+
 void on_buttonClear_activate              (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
