@@ -354,13 +354,41 @@ AnnotateSave* annotate_redolist_get_head()
 void annotate_undo_free(AnnotateSave* annotate_save)
 {
   data->undolist = g_list_remove(data->undolist, annotate_save);
+  g_free(annotate_save);
 }
 
 
 void annotate_redo_free(AnnotateSave* annotate_save)
 {
   data->redolist = g_list_remove(data->redolist, annotate_save);
+  g_free(annotate_save);
 }
+
+
+/* load the annotation in the pixmap */
+void load_image(GdkBitmap* saved_pixmap)
+{
+  gdk_draw_drawable (saved_pixmap,
+                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+                     data->area->window,
+                     0, 0,
+                     0, 0,
+                     data->width, data->height);
+}
+
+
+/* store the pixmap in the annotation window */
+void store_image(GdkBitmap* saved_pixmap)
+{
+  gdk_draw_drawable (data->area->window,
+                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+                     saved_pixmap,
+                     0, 0,
+                     0, 0,
+                     data->width, data->height);
+
+}
+
 
 
 /* Make a save point for undo */
@@ -370,12 +398,7 @@ void annotate_save_undo()
   AnnotateSave* annotate_save = malloc(sizeof(AnnotateSave));
   GdkBitmap* saved_pixmap = gdk_pixmap_new (data->area->window, data->width,
                                  data->height, -1);
-  gdk_draw_drawable (saved_pixmap,
-                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                     data->area->window,
-                     0, 0,
-                     0, 0,
-                     data->width, data->height);
+  load_image(saved_pixmap);
   int x;
   int y;
   gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
@@ -393,12 +416,7 @@ void annotate_save_redo()
   AnnotateSave* annotate_save = malloc(sizeof(AnnotateSave));
   GdkBitmap* saved_pixmap = gdk_pixmap_new (data->area->window, data->width,
                                  data->height, -1);
-  gdk_draw_drawable (saved_pixmap,
-                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                     data->area->window,
-                     0, 0,
-                     0, 0,
-                     data->width, data->height);
+  load_image(saved_pixmap);
   int x;
   int y;
   gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
@@ -417,15 +435,9 @@ void annotate_undo()
   if (annotate_save)
     {
       GdkBitmap* saved_pixmap = annotate_save->bitmap;
-      gdk_draw_drawable (data->area->window,
-                         data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                         saved_pixmap,
-                         0, 0,
-                         0, 0,
-                         data->width, data->height);
+      store_image(saved_pixmap);
       /* delete from undolist */
       annotate_undo_free(annotate_save);
-      g_free(annotate_save);
     }
 }
 
@@ -438,15 +450,9 @@ void annotate_redo()
   if (annotate_save)
     {
       GdkBitmap* saved_pixmap = annotate_save->bitmap;
-      gdk_draw_drawable (data->area->window,
-                         data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                         saved_pixmap,
-                         0, 0,
-                         0, 0,
-                         data->width, data->height);
+      store_image(saved_pixmap);
       /* delete from redolist */
       annotate_redo_free(annotate_save);
-      g_free(annotate_save);
     }
 }
 
@@ -459,17 +465,11 @@ void annotate_undo_and_restore_pointer()
   if (annotate_save)
     {
       GdkBitmap* saved_pixmap = annotate_save->bitmap;
-      gdk_draw_drawable (data->area->window,
-                         data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                         saved_pixmap,
-                         0, 0,
-                         0, 0,
-                         data->width, data->height);
+      store_image(saved_pixmap);
       GdkScreen   *screen = gdk_display_get_default_screen (data->display);
       gdk_display_warp_pointer (data->display, screen, annotate_save->xcursor, annotate_save->ycursor); 
       /* delete from undolist */
       annotate_undo_free(annotate_save);
-      g_free(annotate_save);
     } 
 }
 
@@ -491,12 +491,7 @@ void annotate_show_annotation ()
   if (annotate_save)
     {
       GdkBitmap* saved_pixmap = annotate_save->bitmap;
-      gdk_draw_drawable (data->area->window,
-                         data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                         saved_pixmap,
-                         0, 0,
-                         0, 0,
-                         data->width, data->height);
+      store_image(saved_pixmap);
       /* delete from undolist */
       annotate_undo_free(annotate_save);
     }
