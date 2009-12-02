@@ -267,6 +267,19 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToolItem" id="undoSeparatorItem">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkVSeparator" id="undoseparator">
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToolButton" id="buttonClear">
                 <property name="width_request">32</property>
                 <property name="height_request">34</property>
