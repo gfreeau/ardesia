@@ -1188,7 +1188,8 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   cairo_text_extents_t extents;
   cairo_select_font_face (data->cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
   cairo_set_font_size (data->cr, data->cur_context->width*5);
-  cairo_text_extents (data->cr, "L" , &extents);
+  /* This is a trick we must found the maximum height and width of the font */
+  cairo_text_extents (data->cr, "j" , &extents);
    
   if (event->keyval != GDK_BackSpace)
     {
