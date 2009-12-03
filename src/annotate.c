@@ -225,8 +225,9 @@ void annotate_undolist_free ()
 
   while (ptr)
     {
-      g_free (ptr->data);
-      ptr = ptr->next;
+      AnnotateSave* annotate_save = ptr->data; 
+      g_object_unref (annotate_save->bitmap);
+      g_free (annotate_save);
     }
 
   g_list_free (data->undolist);
@@ -243,7 +244,9 @@ void annotate_redolist_free ()
 
   while (ptr)
     {
-      g_free (ptr->data);
+      AnnotateSave* annotate_save = ptr->data; 
+      g_object_unref (annotate_save->bitmap);
+      g_free (annotate_save);
       ptr = ptr->next;
     }
 
@@ -354,6 +357,7 @@ AnnotateSave* annotate_redolist_get_head()
 void annotate_undo_free(AnnotateSave* annotate_save)
 {
   data->undolist = g_list_remove(data->undolist, annotate_save);
+  g_object_unref (annotate_save->bitmap);
   g_free(annotate_save);
 }
 
@@ -361,6 +365,7 @@ void annotate_undo_free(AnnotateSave* annotate_save)
 void annotate_redo_free(AnnotateSave* annotate_save)
 {
   data->redolist = g_list_remove(data->redolist, annotate_save);
+  g_object_unref (annotate_save->bitmap);
   g_free(annotate_save);
 }
 
