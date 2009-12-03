@@ -62,7 +62,6 @@
 #define g_slist_first(n) g_slist_nth (n,0)
 
 
-cairo_text_extents_t extents;
 
 typedef enum
   {
@@ -1186,7 +1185,12 @@ gboolean event_configure (GtkWidget *widget,
 gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
 {
 
-   if (event->keyval != GDK_BackSpace)
+  cairo_text_extents_t extents;
+  cairo_select_font_face (data->cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+  cairo_set_font_size (data->cr, data->cur_context->width*5);
+  cairo_text_extents (data->cr, "L" , &extents);
+   
+  if (event->keyval != GDK_BackSpace)
     {
       // save
       annotate_save_undo();
@@ -1199,28 +1203,22 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   cairo_move_to(data->cr, x, y);
   GdkScreen   *screen = gdk_display_get_default_screen (data->display);
 
-  if (x + extents.x_advance >= data->width)
+  if (event->keyval == GDK_BackSpace)
+    {
+       // undo
+       annotate_undo_and_restore_pointer();
+       return FALSE;
+    }
+  /* is finished the line or is pressed enter */
+  else if ((x + extents.x_advance >= data->width) ||
+      (event->keyval == GDK_ISO_Enter) || 	
+      (event->keyval == GDK_KP_Enter))
     {
       x = 0;
       y +=  extents.height;
       gdk_display_warp_pointer (data->display, screen, x, y);  
       return FALSE;
     } 
-  if (event->keyval == GDK_Return ||
-      event->keyval == GDK_ISO_Enter || 	
-      event->keyval == GDK_KP_Enter)
-    {
-       x = 0;
-       y +=  extents.height;
-       gdk_display_warp_pointer (data->display, screen, x, y);  
-       return FALSE;
-    }  
-  else if (event->keyval == GDK_BackSpace)
-    {
-       // undo
-       annotate_undo_and_restore_pointer();
-       return FALSE;
-    }
   else if (event->keyval == GDK_Left)
    {
        x -=  extents.x_advance;
@@ -1247,8 +1245,6 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
    }
   else if (isprint(event->keyval))
     {
-      cairo_select_font_face (data->cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-      cairo_set_font_size (data->cr, data->cur_context->width*5);
       char *utf8 = malloc(2) ;
       sprintf(utf8,"%c", event->keyval);
       cairo_text_extents (data->cr, utf8, &extents);
