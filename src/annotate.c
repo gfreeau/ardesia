@@ -211,7 +211,7 @@ void annotate_coord_list_free ()
 
   while (ptr)
     {
-      g_free (ptr->data);
+      g_free(ptr->data);
       ptr = ptr->next;
     }
 
@@ -231,11 +231,8 @@ void annotate_undolist_free ()
       AnnotateSave* annotate_save = (AnnotateSave*) ptr->data; 
       if (annotate_save)
         { 
-          if (annotate_save->pixmap)
-            {
-              g_object_unref (annotate_save->pixmap);
-            }
-          g_free (annotate_save);
+          g_object_unref(annotate_save->pixmap);
+          free(annotate_save);
         }
       ptr = ptr->next; 
     }
@@ -256,11 +253,8 @@ void annotate_redolist_free ()
       AnnotateSave* annotate_save = ptr->data; 
       if (annotate_save)
         { 
-          if (annotate_save->pixmap)
-            {
-              g_object_unref (annotate_save->pixmap);
-            }
-          g_free (annotate_save);
+          g_object_unref(annotate_save->pixmap);
+          free(annotate_save);
         }
       ptr = ptr->next;
     }
@@ -373,10 +367,10 @@ void annotate_undo_free(AnnotateSave* annotate_save)
 {
   if (annotate_save->pixmap)
     {
-      g_object_unref (annotate_save->pixmap);
+      g_object_unref(annotate_save->pixmap);
     }
   data->undolist = g_slist_remove(data->undolist, annotate_save);
-  g_free(annotate_save);
+  free(annotate_save);
 }
 
 
@@ -387,7 +381,7 @@ void annotate_redo_free(AnnotateSave* annotate_save)
       g_object_unref (annotate_save->pixmap);
     }
   data->redolist = g_slist_remove(data->redolist, annotate_save);
-  g_free(annotate_save);
+  free(annotate_save);
 }
 
 
@@ -421,7 +415,7 @@ void store_image(GdkPixmap* saved_pixmap)
 void annotate_save_undo()
 {
   /* PIXMAP FOR UNDO */
-  AnnotateSave* annotate_save = g_malloc (sizeof (AnnotateSave));
+  AnnotateSave* annotate_save = malloc (sizeof (AnnotateSave));
   GdkPixmap* saved_pixmap = gdk_pixmap_new (data->area->window, data->width,
                                  data->height, -1);
   load_image(saved_pixmap);
@@ -582,7 +576,7 @@ void set_pen_cursor(char *color)
   char *line = malloc(12);
   strcpy(line, ". c #");
   strncat(line, color, 6);
-  paint_cursor_xpm[2]= line;
+  paint_cursor_xpm[2] = line;
   /* now the xpm cursor has been coloured */
   cursor_src = gdk_pixbuf_new_from_xpm_data (paint_cursor_xpm);
   int height = gdk_pixbuf_get_height (cursor_src);
@@ -787,8 +781,9 @@ void annotate_eraser_grab ()
 /* Clear the screen */
 void clear_screen()
 {
-  data->cr = gdk_cairo_create(data->area->window);
-  clear_cairo_context(data->cr);
+  cairo_t *cr = gdk_cairo_create(data->area->window);
+  clear_cairo_context(cr);
+  cairo_destroy(cr);
 }
 
 
@@ -1393,7 +1388,7 @@ void setup_app ()
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
   cairo_t* shape_cr = gdk_cairo_create(data->shape);
   clear_cairo_context(shape_cr);
-
+  cairo_destroy(shape_cr);
 }
 
 
@@ -1404,7 +1399,11 @@ void annotate_quit()
   annotate_release_grab(); 
   /* destroy cairo */
   cairo_destroy(data->cr);
+  gtk_widget_destroy(data->area); 
+  gtk_widget_destroy(data->win); 
   /* free all */
+  g_free(data->default_pen);
+  g_free(data->default_eraser);
   annotate_coord_list_free ();
   annotate_undolist_free ();
   annotate_redolist_free ();
@@ -1416,7 +1415,6 @@ void annotate_quit()
 int annotate_init (int x, int y, int width, int height)
 {
   data = g_malloc (sizeof (AnnotateData));
-  
   data->debug = DEBUG;
   /* Untoggle zone is setted on ardesia zone */
   data->untogglexpos = x;
