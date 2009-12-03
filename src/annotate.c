@@ -1262,6 +1262,7 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       x +=  extents.x_advance;
       gdk_display_warp_pointer (data->display, screen, x, y);  
       annotate_redolist_free ();
+      free(utf8);
    }
   else
     {
