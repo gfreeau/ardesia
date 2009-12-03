@@ -591,6 +591,7 @@ void set_pen_cursor(char *color)
   gdk_flush ();
   g_object_unref (cursor_src);
   gdk_cursor_destroy (cursor);
+  free(line);
 }
 
 
