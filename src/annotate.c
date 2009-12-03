@@ -430,10 +430,10 @@ void annotate_save_redo()
 /* Undo to the last save point */
 void annotate_undo()
 {
-  annotate_save_redo();
   AnnotateSave* annotate_save = annotate_undolist_get_head();
   if (annotate_save)
     {
+      annotate_save_redo();
       GdkBitmap* saved_pixmap = annotate_save->bitmap;
       store_image(saved_pixmap);
       /* delete from undolist */
@@ -445,10 +445,10 @@ void annotate_undo()
 /* Redo to the last save point */
 void annotate_redo()
 {
-  annotate_save_undo();
   AnnotateSave* annotate_save = annotate_redolist_get_head();
   if (annotate_save)
     {
+      annotate_save_undo();
       GdkBitmap* saved_pixmap = annotate_save->bitmap;
       store_image(saved_pixmap);
       /* delete from redolist */
