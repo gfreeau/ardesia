@@ -59,6 +59,9 @@
 /* set the DEBUG to 1 to read the debug messages */
 #define DEBUG 0
 
+#define g_slist_first(n) g_slist_nth (n,0)
+
+
 cairo_text_extents_t extents;
 
 typedef enum
@@ -107,8 +110,8 @@ typedef struct
   GdkDisplay  *display;
 
   GdkPixmap   *shape;
-  GList       *undolist;
-  GList       *redolist;
+  GSList       *undolist;
+  GSList       *redolist;
  
   AnnotatePaintContext *default_pen;
   AnnotatePaintContext *default_eraser;
@@ -116,7 +119,7 @@ typedef struct
 
   gdouble      lastx;
   gdouble      lasty;
-  GList       *coordlist;
+  GSList       *coordlist;
 
   GdkDevice   *device;
   guint        state;
@@ -197,14 +200,14 @@ void annotate_coord_list_prepend (gint x, gint y, gint width)
   point->x = x;
   point->y = y;
   point->width = width;
-  data->coordlist = g_list_prepend (data->coordlist, point);
+  data->coordlist = g_slist_prepend (data->coordlist, point);
 }
 
 
 /* Free the list of the painted point */
 void annotate_coord_list_free ()
 {
-  GList *ptr = data->coordlist;
+  GSList *ptr = data->coordlist;
 
   while (ptr)
     {
@@ -212,7 +215,7 @@ void annotate_coord_list_free ()
       ptr = ptr->next;
     }
 
-  g_list_free (data->coordlist);
+  g_slist_free (data->coordlist);
 
   data->coordlist = NULL;
 }
@@ -221,7 +224,7 @@ void annotate_coord_list_free ()
 /* Free the list of the undo point */
 void annotate_undolist_free ()
 {
-  GList *ptr = data->undolist;
+  GSList *ptr = data->undolist;
 
   while (ptr)
     {
@@ -237,7 +240,7 @@ void annotate_undolist_free ()
       ptr = ptr->next; 
     }
 
-  g_list_free (data->undolist);
+  g_slist_free (data->undolist);
 
   data->undolist = NULL;
 }
@@ -246,7 +249,7 @@ void annotate_undolist_free ()
 /* Free the list of the redo point */
 void annotate_redolist_free ()
 {
-  GList *ptr = data->redolist;
+  GSList *ptr = data->redolist;
 
   while (ptr)
     {
@@ -262,7 +265,7 @@ void annotate_redolist_free ()
       ptr = ptr->next;
     }
 
-  g_list_free (data->redolist);
+  g_slist_free (data->redolist);
 
   data->redolist = NULL;
 }
@@ -277,7 +280,7 @@ gboolean annotate_coord_list_get_arrow_param (AnnotateData* data,
   gint x0, y0, r2, dist;
   gboolean success = FALSE;
   AnnotateStrokeCoordinate  *cur_point, *valid_point;
-  GList *ptr = data->coordlist;
+  GSList *ptr = data->coordlist;
   guint width;
 
   valid_point = NULL;
@@ -331,24 +334,24 @@ void clear_cairo_context(cairo_t* cr)
 /* Insert a new save undo point */
 void annotate_save_undo_push(AnnotateSave* annotate_save)
 {
-  data->undolist = g_list_prepend (data->undolist, annotate_save);
+  data->undolist = g_slist_prepend (data->undolist, annotate_save);
 }
 
 
 /* Insert a new save redo point */
 void annotate_save_redo_push(AnnotateSave* annotate_save)
 {
-  data->redolist = g_list_prepend (data->redolist, annotate_save);
+  data->redolist = g_slist_prepend (data->redolist, annotate_save);
 }
 
 
 /* Get the head savepoint */
 AnnotateSave* annotate_undolist_get_head()
 {
-  GList *ptr = data->undolist;
+  GSList *ptr = data->undolist;
   if (ptr)
     {
-      return g_list_first(ptr)->data;
+      return g_slist_first(ptr)->data;
     }
   return NULL;
 }
@@ -357,10 +360,10 @@ AnnotateSave* annotate_undolist_get_head()
 /* Get the head savepoint */
 AnnotateSave* annotate_redolist_get_head()
 {
-  GList *ptr = data->redolist;
+  GSList *ptr = data->redolist;
   if (ptr)
     {
-      return g_list_first(ptr)->data;
+      return g_slist_first(ptr)->data;
     }
   return NULL;
 }
@@ -372,7 +375,7 @@ void annotate_undo_free(AnnotateSave* annotate_save)
     {
       g_object_unref (annotate_save->pixmap);
     }
-  data->undolist = g_list_remove(data->undolist, annotate_save);
+  data->undolist = g_slist_remove(data->undolist, annotate_save);
   g_free(annotate_save);
 }
 
@@ -383,7 +386,7 @@ void annotate_redo_free(AnnotateSave* annotate_save)
     {
       g_object_unref (annotate_save->pixmap);
     }
-  data->redolist = g_list_remove(data->redolist, annotate_save);
+  data->redolist = g_slist_remove(data->redolist, annotate_save);
   g_free(annotate_save);
 }
 
@@ -986,10 +989,10 @@ void annotate_draw_back_arrow (gint x1, gint y1,
 {
   AnnotateData *revertcoordata = g_malloc (sizeof (AnnotateData));
   revertcoordata->cur_context = data->cur_context;
-  GList *ptr = data->coordlist;
+  GSList *ptr = data->coordlist;
   if (ptr)
     {
-      GList *revptr = g_list_reverse(ptr);
+      GSList *revptr = g_slist_reverse(ptr);
       revertcoordata->coordlist = revptr;
       AnnotateStrokeCoordinate  *first_point;
       first_point = revptr->data;
