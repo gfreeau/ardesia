@@ -31,6 +31,17 @@
 #include <annotate.h>
 #include <stdlib.h> 
 
+
+typedef struct
+{
+  gchar*     rgb;
+  gchar*     a;
+} BackgroundColorData;
+
+
+GtkWidget* background_window = NULL;
+
+
 /* Load the contents of the file image with name "filename" into the pixbuf */
 gboolean load_png (const char *filename, GdkPixbuf **pixmap)
 {
@@ -56,15 +67,6 @@ gboolean load_png (const char *filename, GdkPixbuf **pixmap)
   return FALSE;
 }
 
-GtkWidget* background_window = NULL;
-
-
-typedef struct
-{
-  gchar*     rgb;
-  gchar*     a;
-} BackgroundColorData;
-
 
 static gboolean on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
@@ -76,9 +78,11 @@ static gboolean on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *e
   cairo_fill(cr);
   cairo_paint(cr);
   cairo_destroy(cr);    
+  g_object_unref (G_OBJECT (pixbuf));
   
   return TRUE;
 }
+
 
 /* Remove the background */
 void clear_background()
@@ -107,8 +111,10 @@ static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *
 
   cairo_paint(cr);
   cairo_destroy(cr);    
+  free(bg_data);
   return TRUE;
 }
+
 
 /* Create the background window */
 void create_background_window()
@@ -149,7 +155,7 @@ void change_background_color (char* rgb, char *a)
 {
   clear_background();
   
-  BackgroundColorData *data = g_malloc (sizeof (BackgroundColorData));
+  BackgroundColorData *data = malloc (sizeof (BackgroundColorData));
   data->rgb = rgb; 
   data->a = a; 
 
