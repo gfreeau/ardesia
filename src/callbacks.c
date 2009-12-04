@@ -84,14 +84,13 @@ int        arrow = 0;
 gchar*       workspace_dir = NULL;
 
 
-
-
 /* Called when close the program */
 gboolean  quit()
 {
   gboolean ret = FALSE;
   quit_recorder();
   annotate_quit();
+
   /* Disalloc */
   g_object_unref ( G_OBJECT(gtkBuilder) ); 
 
@@ -116,11 +115,22 @@ void add_alpha(char *color)
    color[8]=0;  
 }
 
+/* free color */
+void set_color(char* selected_color)
+{
+  if (color == NULL)
+    {
+      color = malloc(COLORSIZE);
+    }
+  grab = TRUE;
+  pencil = TRUE;
+  strcpy(color, selected_color);
+}
 
 /* Start to annotate calling annotate */
 void annotate()
 {
-  if (color==NULL)
+  if (color == NULL)
     {
       color = malloc(COLORSIZE);
       strcpy(color,"FF0000");
@@ -371,100 +381,70 @@ void on_buttonColor_activate	          (GtkToolButton   *toolbutton,
 void on_colorBlack_activate               (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
-  grab = TRUE;
-  pencil = TRUE;
-  color = malloc(COLORSIZE);
-  strcpy(color,"000000");
+  set_color("000000");
 }
 
 
 void on_colorBlue_activate                (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
-  grab = TRUE;
-  pencil = TRUE;
-  color = malloc(COLORSIZE);
-  strcpy(color,"3333CC");
+  set_color("3333CC");
 }
 
 
 void on_colorRed_activate                 (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
-  grab = TRUE;
-  pencil = TRUE;
-  color = malloc(COLORSIZE);
-  strcpy(color,"FF0000");
+  set_color("FF0000");
 }
 
 
 void on_colorGreen_activate               (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
-  grab = TRUE;
-  pencil = TRUE;
-  color = malloc(COLORSIZE);
-  strcpy(color,"008000");
+  set_color("008000");
 }
 
 
 void on_colorLightBlue_activate           (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
-  grab = TRUE;
-  pencil = TRUE;
-  color = malloc(COLORSIZE);
-  strcpy(color,"00C0FF");
+  set_color("00C0FF");
 }
 
 
 void on_colorLightGreen_activate            (GtkToolButton   *toolbutton,
                                              gpointer         user_data)
 {
-  grab = TRUE;
-  pencil = TRUE;
-  color = malloc(COLORSIZE);
-  strcpy(color,"00FF00");
+  set_color("00FF00");
 }
 
 
 void on_colorMagenta_activate               (GtkToolButton   *toolbutton,
                                              gpointer         user_data)
 {
-  grab = TRUE;
-  pencil = TRUE;
-  color = malloc(COLORSIZE);
-  strcpy(color,"FF00FF");
+  set_color("FF00FF");
 }
 
 
 void on_colorOrange_activate                (GtkToolButton   *toolbutton,
                                              gpointer         user_data)
 {
-  grab = TRUE;
-  pencil = TRUE;
-  color = malloc(COLORSIZE);
-  strcpy(color,"FF8000");
+  set_color("FF8000");
 }
 
 
 void on_colorYellow_activate                (GtkToolButton   *toolbutton,
                                              gpointer         user_data)
 {
-  grab = TRUE;
-  pencil = TRUE;
-  color = malloc(COLORSIZE);
-  strcpy(color,"FFFF00");
+  set_color("FFFF00");
 }
 
 
 void on_colorWhite_activate                (GtkToolButton   *toolbutton,
 	       			            gpointer         user_data)
 {
-  grab = TRUE;
-  pencil = TRUE;
-  color = malloc(COLORSIZE);
-  strcpy(color,"FFFFFF");
+  set_color("FFFFFF");
 }
 
 

@@ -80,7 +80,7 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
           gtk_color_selection_set_has_palette(colorsel, TRUE);
           gtk_color_selection_get_current_color   (colorsel, gdkcolor);
           color = gdkcolor_to_rgb(gdkcolor);
-          if (picked_color==NULL)
+          if (picked_color == NULL)
             {
 	       picked_color = malloc(strlen(color));
             }
@@ -90,7 +90,7 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
 	default:
 	  break;
 	}
-      if (colorDialog!=NULL)
+      if (colorDialog != NULL)
       {
         gtk_widget_destroy(colorDialog);
       }

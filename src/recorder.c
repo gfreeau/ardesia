@@ -89,7 +89,7 @@ void missing_program_dialog()
 {
   GtkWidget *msg_dialog;
   msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
-                                       GTK_BUTTONS_OK, "To run Ardesia you need to install a composite manager such as Compiz or xcompmgr");
+                                       GTK_BUTTONS_OK, "To run Ardesia you need to install a composite manager such as Compiz");
   gtk_window_stick((GtkWindow*)msg_dialog);
 
   gtk_dialog_run(GTK_DIALOG(msg_dialog));
