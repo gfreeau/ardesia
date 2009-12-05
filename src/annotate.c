@@ -1386,6 +1386,9 @@ void setup_app ()
   cairo_t* shape_cr = gdk_cairo_create(data->shape);
   clear_cairo_context(shape_cr);
   cairo_destroy(shape_cr);
+  
+  /* this allow the mouse focus below the transparent window */ 
+  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0); 
 }
 
 
