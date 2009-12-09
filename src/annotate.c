@@ -108,6 +108,7 @@ typedef struct
 
   GdkDisplay  *display;
 
+  GdkPixmap   *pixmap;
   GdkPixmap   *shape;
   GSList       *undolist;
   GSList       *redolist;
@@ -496,23 +497,66 @@ void annotate_undo_and_restore_pointer()
 /* Hide the annotations */
 void annotate_hide_annotation ()
 {
-  annotate_save_redo();
-  data->cr = gdk_cairo_create(data->area->window);
-  clear_cairo_context(data->cr);
-  cairo_paint(data->cr);
+  GdkPixmap *transparent_pixmap = gdk_pixmap_new (data->area->window, data->width,
+                                 data->height, -1);
+  cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
+  clear_cairo_context(transparent_cr);
+
+  gdk_draw_drawable (data->area->window,
+                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+                     transparent_pixmap,
+                     0, 0,
+                     0, 0,
+                     data->width, data->height);
+}
+
+
+/* Repaint the window */
+gint repaint ()
+{
+  gdk_draw_drawable (data->area->window,
+                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+                     data->pixmap,
+                     0, 0,
+                     0, 0,
+                     data->width, data->height);
+  return 1;
 }
 
 
 /* Show the annotations */
 void annotate_show_annotation ()
 {
-  AnnotateSave* annotate_save = annotate_redolist_get_head();
-  if (annotate_save)
+  repaint();
+}
+
+
+/* Releare keyboard grab */
+void annotate_release_keyboard_grab()
+{
+  gdk_error_trap_push ();
+  gdk_display_keyboard_ungrab (data->display, GDK_CURRENT_TIME);
+  gdk_flush ();
+  if (gdk_error_trap_pop ())
     {
-      GdkPixmap* saved_pixmap = annotate_save->pixmap;
-      store_image(saved_pixmap);
-      /* delete from undolist */
-      annotate_undo_free(annotate_save);
+      g_printerr("Error ungrabbing keyboard, ignoring.");
+    }
+}
+
+
+/* Acquire keyboard grab */
+void annotate_acquire_keyboard_grab()
+{
+  GdkGrabStatus result;
+  gdk_error_trap_push(); 
+  result = gdk_keyboard_grab (data->area->window,
+			      ANNOTATE_KEYBOARD_EVENTS,
+			      GDK_CURRENT_TIME); 
+  
+  gdk_flush ();
+  if (gdk_error_trap_pop ())
+    {
+      g_printerr("Error grabbing keyboard, ignoring.");
     }
 }
 
@@ -521,9 +565,9 @@ void annotate_show_annotation ()
 void annotate_release_grab ()
 {           
   gdk_error_trap_push ();
-
+ 
   gdk_display_pointer_ungrab (data->display, GDK_CURRENT_TIME);
-  gdk_display_keyboard_ungrab (data->display, GDK_CURRENT_TIME);
+  annotate_release_keyboard_grab();
   /* inherit cursor from root window */
   gdk_window_set_cursor (data->win->window, NULL);
   gdk_flush ();
@@ -672,6 +716,9 @@ void select_color()
 /* Grab the cursor */
 void annotate_acquire_grab ()
 {
+  /* This is a workaround to reput the annotation window over the background window */
+  gtk_widget_hide (data->win);
+  gtk_widget_show (data->win);
 
   GdkGrabStatus result;
   gdk_error_trap_push(); 
@@ -683,15 +730,10 @@ void annotate_acquire_grab ()
 			     NULL,
 			     GDK_CURRENT_TIME); 
 
-  result = gdk_keyboard_grab (data->area->window,
-			      ANNOTATE_KEYBOARD_EVENTS,
-			      GDK_CURRENT_TIME); 
   gdk_flush ();
   if (gdk_error_trap_pop ())
     {
-      /* this probably means the device table is outdated, 
-	 e.g. this device doesn't exist anymore */
-      g_printerr("Error grabbing Device while grabbing all, ignoring.");
+      g_printerr("Error grabbing pointer, ignoring.");
     }
    
   switch (result)
@@ -722,10 +764,11 @@ void annotate_acquire_grab ()
       set_pen_cursor(data->cur_context->fg_color);
     } 
   
-  data->cr = gdk_cairo_create(data->area->window);
+  data->cr = gdk_cairo_create(data->pixmap);
   cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
   cairo_set_line_width(data->cr,data->cur_context->width);
   select_color();  
+  annotate_acquire_keyboard_grab();
 }
 
 
@@ -780,9 +823,10 @@ void annotate_eraser_grab ()
 /* Clear the screen */
 void clear_screen()
 {
-  cairo_t *cr = gdk_cairo_create(data->area->window);
-  clear_cairo_context(cr);
-  cairo_destroy(cr);
+  data->cr=gdk_cairo_create(data->pixmap);
+  clear_cairo_context(data->cr);
+  cairo_destroy(data->cr);
+  repaint();
 }
 
 
@@ -1067,7 +1111,6 @@ gboolean paint (GtkWidget *win,
   data->lasty = ev->y;
   annotate_coord_list_prepend (ev->x, ev->y, data->maxwidth);
   data->painted = TRUE;
-
   return TRUE;
 }
 
@@ -1117,6 +1160,7 @@ gboolean paintto (GtkWidget *win,
   data->lastx = ev->x;
   data->lasty = ev->y;
   annotate_redolist_free ();
+  repaint();
   return TRUE;
 }
 
@@ -1161,6 +1205,7 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
     }
 
   cairo_stroke(data->cr);
+  repaint();
   annotate_coord_list_free (data);
  
   return TRUE;
@@ -1176,7 +1221,8 @@ gboolean event_configure (GtkWidget *widget,
                           GdkEventExpose *event,
                           gpointer user_data)
 {
-
+  data->pixmap = gdk_pixmap_new (data->area->window, data->width,
+                                 data->height, -1);
   clear_screen();
   return TRUE;
 }
@@ -1270,7 +1316,13 @@ gboolean event_expose (GtkWidget *widget,
                        GdkEventExpose *event, 
                        gpointer user_data)
 {
-  clear_screen();
+  gdk_draw_drawable (data->area->window,
+                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+                     data->pixmap,
+                     event->area.x, event->area.y,
+                     event->area.x, event->area.y,
+                     event->area.width, event->area.height);
+  //clear_screen();
   return TRUE;
 }
 

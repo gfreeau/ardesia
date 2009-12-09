@@ -56,7 +56,7 @@ void setInitialWidth(int val)
 /* Create the main window */
 GtkWidget* create_mainWindow (void)
 {
-  GtkWidget *mainWindow = NULL;
+  GtkWidget *main_window = NULL;
 
   /* Initialize the main window */
   gtkBuilder= gtk_builder_new();
@@ -65,7 +65,7 @@ GtkWidget* create_mainWindow (void)
   gtk_builder_add_from_file(gtkBuilder,PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S PACKAGE".ui",NULL);
   
   /* Fill the window by the gtk builder xml */
-  mainWindow = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
+  main_window = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
 
   /* Set the width to 15 in the thick scale */ 
   setInitialWidth(15);
@@ -73,5 +73,5 @@ GtkWidget* create_mainWindow (void)
   /* Connect all signals by reflection */
   gtk_builder_connect_signals ( gtkBuilder, NULL );
   
-  return mainWindow;
+  return main_window;
 }

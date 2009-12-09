@@ -62,6 +62,7 @@ void on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointe
     }
 }
 
+
 /* Shot when the ok button in preference dialog is pushed */
 void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
 {

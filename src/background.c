@@ -71,11 +71,10 @@ gboolean load_png (const char *filename, GdkPixbuf **pixmap)
 static gboolean on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   GdkPixbuf *pixbuf = (GdkPixbuf *) data; 
-  cairo_t *cr=gdk_cairo_create(widget->window);
+  cairo_t *cr = gdk_cairo_create(widget->window);
   cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
   gdk_cairo_set_source_pixbuf(cr, pixbuf, 0.0, 0.0);
 
-  cairo_fill(cr);
   cairo_paint(cr);
   cairo_destroy(cr);    
   g_object_unref (G_OBJECT (pixbuf));
@@ -98,10 +97,7 @@ void clear_background()
 static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   BackgroundColorData* bg_data = (BackgroundColorData*) data;
-  int width, height;
-  gtk_window_get_size (GTK_WINDOW(widget),
-			     &width, &height);
-  cairo_t *cr=gdk_cairo_create(widget->window);
+  cairo_t *cr = gdk_cairo_create(widget->window);
   cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
 
   int r,g,b,a;
@@ -167,11 +163,6 @@ void change_background_color (char* rgb, char *a)
   GdkScreen *screen = gdk_display_get_default_screen (display);
   
   GdkColormap *colormap = gdk_screen_get_rgba_colormap (screen);
-  if (colormap == NULL)
-    {
-      /* alpha channel is not supported then I try to use plain rgb */
-      colormap = gdk_screen_get_rgb_colormap (screen);
-    }
   gtk_widget_set_default_colormap(colormap);
 
   gtk_widget_show_all(background_window);
