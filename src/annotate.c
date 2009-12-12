@@ -394,7 +394,7 @@ void load_image(GdkPixmap* saved_pixmap)
 {
   gdk_draw_drawable (saved_pixmap,
                      data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                     data->area->window,
+                     data->pixmap,
                      0, 0,
                      0, 0,
                      data->width, data->height);
@@ -404,13 +404,13 @@ void load_image(GdkPixmap* saved_pixmap)
 /* store the pixmap in the annotation window */
 void store_image(GdkPixmap* saved_pixmap)
 {
-  gdk_draw_drawable (data->area->window,
+  gdk_draw_drawable (data->pixmap,
                      data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
                      saved_pixmap,
                      0, 0,
                      0, 0,
                      data->width, data->height);
-
+ repaint();
 }
 
 
