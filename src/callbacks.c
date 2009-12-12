@@ -27,8 +27,9 @@
  * you are in the right place. In any case good reading!
  * Pay attentioni; all the things are delegated to the annotate commandline tool
  */
+
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+  #include <config.h>
 #endif
 
 #include <gtk/gtk.h>

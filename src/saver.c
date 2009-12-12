@@ -22,6 +22,9 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+  #include <config.h>
+#endif
 
 #include <gtk/gtk.h>
 #include "stdlib.h"
@@ -29,6 +32,7 @@
 #include "stdio.h"
 #include <string.h> 
 #include "utils.h"
+#include "gettext.h"
 
 #include <png.h>
 
@@ -143,7 +147,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
                                                  0, 0, 0, 0, width, height);
 
   
-  GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save image as image", parent, GTK_FILE_CHOOSER_ACTION_SAVE,
+  GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext("Save image"), parent, GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
@@ -157,7 +161,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
   gtk_image_set_from_pixbuf (GTK_IMAGE (preview), previewPixbuf);
   gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);
   
-  gtk_window_set_title (GTK_WINDOW (chooser), "Select a file");
+  gtk_window_set_title (GTK_WINDOW (chooser), gettext("Select a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), workspace_dir);
   
   gchar* filename =  malloc(256*sizeof(char));
@@ -182,7 +186,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
       if (file_exists(filename,(char *) workspace_dir))
         {
 	  GtkWidget *msg_dialog; 
-	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
+	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
           gtk_window_stick((GtkWindow*)msg_dialog);
 
           int result = gtk_dialog_run(GTK_DIALOG(msg_dialog));

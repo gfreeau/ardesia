@@ -28,7 +28,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+  #include <config.h>
 #endif
 
 #include <gtk/gtk.h>
@@ -39,6 +39,7 @@
 #include "string.h"
 #include "unistd.h"
 #include "background.h"
+#include "gettext.h"
 
 #include <X11/Xutil.h>
 
@@ -125,7 +126,7 @@ void check_composite()
       /* composited must be enabled */
       GtkWidget *msg_dialog; 
       msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
-                                           GTK_BUTTONS_OK, "In order to run Ardesia you need to enable the Compiz composite manager");
+                                           GTK_BUTTONS_OK, gettext("In order to run Ardesia you need to enable the Compiz composite manager"));
       gtk_window_stick((GtkWindow*)msg_dialog);
                  
       gtk_dialog_run(GTK_DIALOG(msg_dialog));
@@ -159,6 +160,13 @@ int main (int argc, char *argv[])
   int position = SOUTH;
   char* arg = NULL;
   gboolean loadbackground = FALSE;
+
+#ifdef ENABLE_NLS
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
+  textdomain (PACKAGE);
+#endif
+
   if (argc>1)
     {
       arg = argv[1];
@@ -211,10 +219,9 @@ int main (int argc, char *argv[])
     } 
 
   gtk_set_locale ();
-  
   gtk_init (&argc, &argv);
   check_composite();
-   
+  
   /*
    * The following code create one of each component
    * (except popup menus), just so that you see something after building
@@ -245,10 +252,9 @@ int main (int argc, char *argv[])
   gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), get_annotation_window() );
   
   gtk_widget_show (ardesiaBarWindow);
-   
+  
   gtk_main ();
   
-
   gtk_widget_destroy(ardesiaBarWindow); 
 
   return 0;

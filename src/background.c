@@ -24,6 +24,10 @@
  
 /* This is the file whith the code to handle images */
 
+#ifdef HAVE_CONFIG_H
+  #include <config.h>
+#endif
+
 #include <png.h>
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>

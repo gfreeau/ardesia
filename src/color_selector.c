@@ -19,6 +19,10 @@
  */
 
 
+#ifdef HAVE_CONFIG_H
+  #include <config.h>
+#endif
+
 #include <gtk/gtk.h>
 #include "stdlib.h"
 #include "unistd.h"
@@ -26,7 +30,7 @@
 #include <string.h> 
 #include "background.h"
 #include "utils.h"
-
+#include "gettext.h"
 
 /* old picked color in RGBA format */
 gchar*       picked_color = NULL;
@@ -39,12 +43,12 @@ gchar*       picked_color = NULL;
 gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar* workspace_dir, gchar* color)
 {
   GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON(toolbutton);
- 
+  
   if (gtk_toggle_tool_button_get_active(button))
     {
 
       /* open color widget */
-      GtkWidget* colorDialog = gtk_color_selection_dialog_new ("Changing color");
+      GtkWidget* colorDialog = gtk_color_selection_dialog_new (gettext("Changing color"));
       
       gtk_window_set_transient_for(GTK_WINDOW(colorDialog), parent);
       gtk_window_stick((GtkWindow*)colorDialog);

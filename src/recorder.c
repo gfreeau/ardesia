@@ -22,6 +22,9 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+  #include <config.h>
+#endif
 
 #include <gtk/gtk.h>
 #include "stdlib.h"
@@ -29,6 +32,7 @@
 #include "stdio.h"
 #include <string.h> 
 #include "utils.h"
+#include "gettext.h"
 
 /* pid of the recording process */
 int          recorderpid = -1;
@@ -89,7 +93,7 @@ void missing_program_dialog()
 {
   GtkWidget *msg_dialog;
   msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
-                                       GTK_BUTTONS_OK, "To run Ardesia you need to install a composite manager such as Compiz");
+                                       GTK_BUTTONS_OK, gettext("To record with Ardesia you must install the recordmydesktop program"));
   gtk_window_stick((GtkWindow*)msg_dialog);
 
   gtk_dialog_run(GTK_DIALOG(msg_dialog));
@@ -116,13 +120,13 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
       workspace_dir = (char *) get_desktop_dir();
     }	
 
-  GtkWidget *chooser = gtk_file_chooser_dialog_new ("Save video as ogv", parent, GTK_FILE_CHOOSER_ACTION_SAVE,
+  GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext("Save video as ogv"), parent, GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
   gtk_window_stick((GtkWindow*)chooser);
   
-  gtk_window_set_title (GTK_WINDOW (chooser), "Select a file");
+  gtk_window_set_title (GTK_WINDOW (chooser), gettext("Select a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), workspace_dir);
   gchar* filename =  malloc(256*sizeof(char));
   sprintf(filename,"ardesia_%s", date);
@@ -147,7 +151,7 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
 	{
 	  GtkWidget *msg_dialog; 
                    
-	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, "File Exists. Overwrite");
+	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
 
 	  gtk_window_stick((GtkWindow*)msg_dialog);
                  
