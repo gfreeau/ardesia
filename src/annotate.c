@@ -1301,6 +1301,7 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       cairo_text_extents (data->cr, utf8, &extents);
       cairo_show_text (data->cr, utf8); 
       cairo_stroke(data->cr);
+      repaint();
       /* move cursor to the x step */
       x +=  extents.x_advance;
       gdk_display_warp_pointer (data->display, screen, x, y);  
