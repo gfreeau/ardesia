@@ -715,8 +715,8 @@ install-data-local:
             fi \
           done \
         fi  
-	cp -p src/ardesia.ui $(DESTDIR)$(pkgdatadir); 
-	cp -p src/preferenceDialog.ui $(DESTDIR)$(pkgdatadir); 
+	cp -p src/ardesia.glade $(DESTDIR)$(pkgdatadir); 
+	cp -p src/preferenceDialog.glade $(DESTDIR)$(pkgdatadir); 
 
 dist-hook:
 	if test -d pixmaps; then \
@@ -735,8 +735,8 @@ dist-hook:
             fi \
           done \
         fi 
-	cp -p src/ardesia.ui $(DESTDIR)$(pkgdatadir); 
-	cp -p src/preferenceDialog.ui $(DESTDIR)$(pkgdatadir); 
+	cp -p src/ardesia.glade $(DESTDIR)$(pkgdatadir); 
+	cp -p src/preferenceDialog.glade $(DESTDIR)$(pkgdatadir); 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

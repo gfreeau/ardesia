@@ -159,7 +159,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
   dialogGtkBuilder= gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
-  gchar* name = "preferenceDialog.ui";
+  gchar* name = "preferenceDialog.glade";
   gchar* ui_location =  (gchar *) malloc((strlen(installation_location) + strlen(name) + 1 )* sizeof(gchar));
   sprintf(ui_location, "%s%s", installation_location, name);
   gtk_builder_add_from_file(dialogGtkBuilder, ui_location, NULL);

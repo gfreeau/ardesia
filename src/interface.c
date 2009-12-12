@@ -62,7 +62,7 @@ GtkWidget* create_mainWindow (void)
   gtkBuilder= gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
-  gtk_builder_add_from_file(gtkBuilder,PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S PACKAGE".ui",NULL);
+  gtk_builder_add_from_file(gtkBuilder,PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S PACKAGE".glade",NULL);
   
   /* Fill the window by the gtk builder xml */
   main_window = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
