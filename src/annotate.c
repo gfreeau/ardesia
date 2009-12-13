@@ -92,11 +92,13 @@ typedef struct
 } AnnotateStrokeCoordinate;
 
 
-typedef struct
+typedef struct _AnnotateSave
 {
   gint xcursor;
   gint ycursor;
   GdkPixmap *pixmap;
+  struct _AnnotateSave *next;
+  struct _AnnotateSave *previous;
 } AnnotateSave;
 
 
@@ -112,10 +114,8 @@ typedef struct
 
   GdkDisplay  *display;
 
-  GdkPixmap   *pixmap;
   GdkPixmap   *shape;
-  GSList       *undolist;
-  GSList       *redolist;
+  AnnotateSave *savelist;
  
   AnnotatePaintContext *default_pen;
   AnnotatePaintContext *default_eraser;
@@ -226,46 +226,35 @@ void annotate_coord_list_free ()
 
 
 /* Free the list of the undo point */
-void annotate_undolist_free ()
+void annotate_savelist_free ()
 {
-  GSList *ptr = data->undolist;
+  AnnotateSave* annotate_save = data->savelist;
 
-  while (ptr)
+  while (annotate_save)
     {
-      AnnotateSave* annotate_save = (AnnotateSave*) ptr->data; 
-      if (annotate_save)
-        { 
-          g_object_unref(annotate_save->pixmap);
-          free(annotate_save);
-        }
-      ptr = ptr->next; 
+      annotate_save =  annotate_save->previous; 
     }
 
-  g_slist_free (data->undolist);
-
-  data->undolist = NULL;
+   while(annotate_save)
+    { 
+      g_object_unref(annotate_save->pixmap);
+      free(annotate_save);
+      annotate_save =  annotate_save->next; 
+    }
+  data->savelist = NULL;
 }
 
 
 /* Free the list of the redo point */
 void annotate_redolist_free ()
 {
-  GSList *ptr = data->redolist;
-
-  while (ptr)
-    {
-      AnnotateSave* annotate_save = ptr->data; 
-      if (annotate_save)
-        { 
-          g_object_unref(annotate_save->pixmap);
-          free(annotate_save);
-        }
-      ptr = ptr->next;
-    }
-
-  g_slist_free (data->redolist);
-
-  data->redolist = NULL;
+  AnnotateSave* annotate_save = data->savelist->next;
+  while(annotate_save)
+    { 
+      g_object_unref(annotate_save->pixmap);
+      free(annotate_save);
+      annotate_save =  annotate_save->next; 
+    }  
 }
 
 
@@ -329,139 +318,16 @@ void clear_cairo_context(cairo_t* cr)
 }
 
 
-/* Insert a new save undo point */
-void annotate_save_undo_push(AnnotateSave* annotate_save)
-{
-  data->undolist = g_slist_prepend (data->undolist, annotate_save);
-}
-
-
-/* Insert a new save redo point */
-void annotate_save_redo_push(AnnotateSave* annotate_save)
-{
-  data->redolist = g_slist_prepend (data->redolist, annotate_save);
-}
-
-
-/* Get the head savepoint */
-AnnotateSave* annotate_undolist_get_head()
-{
-  GSList *ptr = data->undolist;
-  if (ptr)
-    {
-      return g_slist_first(ptr)->data;
-    }
-  return NULL;
-}
-
-
-/* Get the head savepoint */
-AnnotateSave* annotate_redolist_get_head()
-{
-  GSList *ptr = data->redolist;
-  if (ptr)
-    {
-      return g_slist_first(ptr)->data;
-    }
-  return NULL;
-}
-
-
-void annotate_undo_free(AnnotateSave* annotate_save)
-{
-  if (annotate_save->pixmap)
-    {
-      g_object_unref(annotate_save->pixmap);
-    }
-  data->undolist = g_slist_remove(data->undolist, annotate_save);
-  free(annotate_save);
-}
-
-
-void annotate_redo_free(AnnotateSave* annotate_save)
-{
-  if (annotate_save->pixmap)
-    {
-      g_object_unref (annotate_save->pixmap);
-    }
-  data->redolist = g_slist_remove(data->redolist, annotate_save);
-  free(annotate_save);
-}
-
-
-/* load the annotation in the pixmap */
-void load_image(GdkPixmap* saved_pixmap)
-{
-  gdk_draw_drawable (saved_pixmap,
-                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                     data->pixmap,
-                     0, 0,
-                     0, 0,
-                     data->width, data->height);
-}
-
-
-/* store the pixmap in the annotation window */
-void store_image(GdkPixmap* saved_pixmap)
-{
-  gdk_draw_drawable (data->pixmap,
-                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                     saved_pixmap,
-                     0, 0,
-                     0, 0,
-                     data->width, data->height);
- repaint();
-}
-
-
-
-/* Make a save point for undo */
-void annotate_save_undo()
-{
-  /* PIXMAP FOR UNDO */
-  AnnotateSave* annotate_save = malloc (sizeof (AnnotateSave));
-  GdkPixmap* saved_pixmap = gdk_pixmap_new (data->area->window, data->width,
-                                 data->height, -1);
-  load_image(saved_pixmap);
-  int x;
-  int y;
-  gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
-  annotate_save->pixmap = saved_pixmap;  
-  annotate_save->xcursor=x;  
-  annotate_save->ycursor=y;   
-  annotate_save_undo_push(annotate_save);
-}
-
-
-/* Make a save point for redo */
-void annotate_save_redo()
-{
-  /* PIXMAP FOR UNDO */
-  AnnotateSave* annotate_save = g_malloc (sizeof (AnnotateSave));
-  GdkPixmap* saved_pixmap = gdk_pixmap_new (data->area->window, data->width,
-                                 data->height, -1);
-  load_image(saved_pixmap);
-  int x;
-  int y;
-  gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
-  annotate_save->pixmap = saved_pixmap;  
-  annotate_save->xcursor=x;  
-  annotate_save->ycursor=y;   
-  annotate_save_redo_push(annotate_save);
-}
-
-
 /* Undo to the last save point */
 void annotate_undo()
 {
-  AnnotateSave* annotate_save = annotate_undolist_get_head();
-  if (annotate_save)
+  if (data->savelist)
     {
-      annotate_save_redo();
-      GdkPixmap* saved_pixmap = annotate_save->pixmap;
-      store_image(saved_pixmap);
-      /* delete from undolist */
-      annotate_undo_free(annotate_save);
+      if (data->savelist->previous)
+        {
+          data->savelist = data->savelist->previous;
+          repaint(); 
+        }
     }
 }
 
@@ -469,14 +335,13 @@ void annotate_undo()
 /* Redo to the last save point */
 void annotate_redo()
 {
-  AnnotateSave* annotate_save = annotate_redolist_get_head();
-  if (annotate_save)
+  if (data->savelist)
     {
-      annotate_save_undo();
-      GdkPixmap* saved_pixmap = annotate_save->pixmap;
-      store_image(saved_pixmap);
-      /* delete from redolist */
-      annotate_redo_free(annotate_save);
+      if (data->savelist->next)
+        {
+          data->savelist = data->savelist->next;
+          repaint(); 
+        }
     }
 }
 
@@ -484,17 +349,9 @@ void annotate_redo()
 /* Undo and put the cursor in the old position */
 void annotate_undo_and_restore_pointer()
 {
-  annotate_save_redo();
-  AnnotateSave* annotate_save = annotate_undolist_get_head();
-  if (annotate_save)
-    {
-      GdkPixmap* saved_pixmap = annotate_save->pixmap;
-      store_image(saved_pixmap);
-      GdkScreen   *screen = gdk_display_get_default_screen (data->display);
-      gdk_display_warp_pointer (data->display, screen, annotate_save->xcursor, annotate_save->ycursor); 
-      /* delete from undolist */
-      annotate_undo_free(annotate_save);
-    } 
+  annotate_undo();
+  GdkScreen   *screen = gdk_display_get_default_screen (data->display);
+  gdk_display_warp_pointer (data->display, screen, data->savelist->xcursor, data->savelist->ycursor); 
 }
 
 
@@ -518,9 +375,11 @@ void annotate_hide_annotation ()
 /* Repaint the window */
 gint repaint ()
 {
+  AnnotateSave* annotate_save = data->savelist;
+  GdkPixmap* saved_pixmap = annotate_save->pixmap;
   gdk_draw_drawable (data->area->window,
                      data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                     data->pixmap,
+                     saved_pixmap,
                      0, 0,
                      0, 0,
                      data->width, data->height);
@@ -768,10 +627,6 @@ void annotate_acquire_grab ()
       set_pen_cursor(data->cur_context->fg_color);
     } 
   
-  data->cr = gdk_cairo_create(data->pixmap);
-  cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
-  cairo_set_line_width(data->cr,data->cur_context->width);
-  select_color();  
   annotate_acquire_keyboard_grab();
 }
 
@@ -824,10 +679,39 @@ void annotate_eraser_grab ()
 }
 
 
+void alloc_pixmap()
+{
+  AnnotateSave * save = malloc(sizeof(AnnotateData));
+  save->previous  = NULL;
+  save->next  = NULL;
+  save->pixmap = gdk_pixmap_new (data->area->window, data->width,
+                                 data->height, -1);
+ 
+ if (data->savelist != NULL)
+    {
+      data->savelist->next=save;
+      save->previous=data->savelist;
+      gdk_draw_drawable (save->pixmap,
+                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+                     save->previous->pixmap,
+                     0, 0,
+                     0, 0,
+                     data->width, data->height);
+    }
+  data->savelist=save;
+  
+  data->cr = gdk_cairo_create(data->savelist->pixmap);
+  cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
+  cairo_set_line_width(data->cr,data->cur_context->width);
+  select_color();  
+}
+
+
 /* Clear the screen */
 void clear_screen()
 {
-  data->cr=gdk_cairo_create(data->pixmap);
+  alloc_pixmap();
+  data->cr=gdk_cairo_create(data->savelist->pixmap);
   clear_cairo_context(data->cr);
   cairo_destroy(data->cr);
   repaint();
@@ -1096,7 +980,8 @@ gboolean paint (GtkWidget *win,
                 gpointer user_data)
 {
 
-  annotate_save_undo();
+  alloc_pixmap();
+  
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
     {
@@ -1163,7 +1048,7 @@ gboolean paintto (GtkWidget *win,
     
   data->lastx = ev->x;
   data->lasty = ev->y;
-  annotate_redolist_free ();
+  
   repaint();
   return TRUE;
 }
@@ -1209,7 +1094,9 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
     }
 
   cairo_stroke(data->cr);
+  
   repaint();
+
   annotate_coord_list_free (data);
  
   return TRUE;
@@ -1225,8 +1112,6 @@ gboolean event_configure (GtkWidget *widget,
                           GdkEventExpose *event,
                           gpointer user_data)
 {
-  data->pixmap = gdk_pixmap_new (data->area->window, data->width,
-                                 data->height, -1);
   clear_screen();
   return TRUE;
 }
@@ -1234,23 +1119,30 @@ gboolean event_configure (GtkWidget *widget,
 /* press keyboard event */
 gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
 {
-
+ 
+  if (event->keyval != GDK_BackSpace)
+    {
+      alloc_pixmap();
+    }
+  
   cairo_text_extents_t extents;
   cairo_select_font_face (data->cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
   cairo_set_font_size (data->cr, data->cur_context->width*5);
   /* This is a trick we must found the maximum height and width of the font */
   cairo_text_extents (data->cr, "j" , &extents);
+  
    
-  if (event->keyval != GDK_BackSpace)
-    {
-      // save
-      annotate_save_undo();
-    }
-
   /* move cairo to the mouse position */
   int x;
   int y;
   gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);  
+  
+  if (event->keyval != GDK_BackSpace)
+    {
+      data->savelist->previous->xcursor=x;  
+      data->savelist->previous->ycursor=y;   
+    }
+  
   cairo_move_to(data->cr, x, y);
   GdkScreen   *screen = gdk_display_get_default_screen (data->display);
 
@@ -1301,10 +1193,14 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       cairo_text_extents (data->cr, utf8, &extents);
       cairo_show_text (data->cr, utf8); 
       cairo_stroke(data->cr);
+     
       repaint();
+ 
       /* move cursor to the x step */
       x +=  extents.x_advance;
       gdk_display_warp_pointer (data->display, screen, x, y);  
+      data->savelist->xcursor=x;  
+      data->savelist->ycursor=y;   
       annotate_redolist_free ();
       free(utf8);
    }
@@ -1323,11 +1219,10 @@ gboolean event_expose (GtkWidget *widget,
 {
   gdk_draw_drawable (data->area->window,
                      data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                     data->pixmap,
+                     data->savelist->pixmap,
                      event->area.x, event->area.y,
                      event->area.x, event->area.y,
                      event->area.width, event->area.height);
-  //clear_screen();
   return TRUE;
 }
 
@@ -1422,9 +1317,8 @@ void setup_app ()
   data->painted = FALSE;
 
   data->coordlist = NULL;
-  data->undolist = NULL;
-  data->redolist = NULL;
-
+  data->savelist = NULL;
+  
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN,
 						  color, 15, 0);
   data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER,
@@ -1462,8 +1356,7 @@ void annotate_quit()
   g_free(data->default_pen);
   g_free(data->default_eraser);
   annotate_coord_list_free ();
-  annotate_undolist_free ();
-  annotate_redolist_free ();
+  annotate_savelist_free ();
   g_free (data);
 }
 
