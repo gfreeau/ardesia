@@ -200,7 +200,7 @@ void annotate_paint_context_free (AnnotatePaintContext *context)
 void annotate_coord_list_prepend (gint x, gint y, gint width)
 {
   AnnotateStrokeCoordinate *point;
-  point = malloc (sizeof (AnnotateStrokeCoordinate));
+  point = g_malloc (sizeof (AnnotateStrokeCoordinate));
   point->x = x;
   point->y = y;
   point->width = width;
@@ -215,7 +215,7 @@ void annotate_coord_list_free ()
 
   while (ptr)
     {
-      free(ptr->data);
+      g_free(ptr->data);
       ptr = ptr->next;
     }
 
@@ -672,9 +672,21 @@ void annotate_eraser_grab ()
 }
 
 
-/* Allocate a new pixmap and configure the new cairo context */
-void init_cairo()
+/* Destroy cairo context */
+void destroy_cairo()
 {
+  if (data->cr != NULL)
+    {
+      cairo_destroy(data->cr);
+      data->cr = NULL;
+    }
+}
+
+
+/* Destroy old cairo context, allocate a new pixmap and configure the new cairo context */
+void reset_cairo()
+{
+  destroy_cairo();
   AnnotateSave * save = malloc(sizeof(AnnotateData));
   save->previous  = NULL;
   save->next  = NULL;
@@ -702,24 +714,13 @@ void init_cairo()
 }
 
 
-/* Destroy cairo context */
-void destroy_cairo()
-{
-  if (data->cr != NULL)
-    {
-      cairo_destroy(data->cr);
-      data->cr = NULL;
-    }
-}
-
 /* Clear the screen */
 void clear_screen()
 {
-  init_cairo();
+  reset_cairo();
   data->cr=gdk_cairo_create(data->savelist->pixmap);
   clear_cairo_context(data->cr);
   repaint();
-  destroy_cairo();
 }
 
 
@@ -986,7 +987,7 @@ gboolean paint (GtkWidget *win,
                 gpointer user_data)
 {
 
-  init_cairo();
+  reset_cairo();
   
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
@@ -1103,8 +1104,6 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   
   repaint();
   
-  destroy_cairo();
-
   annotate_coord_list_free (data);
  
   return TRUE;
@@ -1136,15 +1135,12 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
        return FALSE;
     }
   
-  init_cairo();
- 
- 
+  reset_cairo();
+  
   /* This is a trick we must found the maximum height and width of the font */
   cairo_text_extents_t extents;
-  cairo_select_font_face (data->cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
   cairo_set_font_size (data->cr, data->cur_context->width*5);
-  cairo_text_extents (data->cr, "j" , &extents);
-  
+  cairo_text_extents (data->cr, "j" , &extents); 
    
   /* move cairo to the mouse position */
   int x;
@@ -1207,7 +1203,6 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       annotate_redolist_free ();
       free(utf8);
    }
-  destroy_cairo();
   return FALSE;
 }
 
@@ -1319,6 +1314,7 @@ void setup_app ()
 
   data->coordlist = NULL;
   data->savelist = NULL;
+  data->cr = NULL;
   
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN,
 						  color, 15, 0);
@@ -1359,6 +1355,7 @@ void annotate_quit()
   annotate_coord_list_free ();
   annotate_savelist_free ();
   free (data);
+  cairo_debug_reset_static_data();
 }
 
 
