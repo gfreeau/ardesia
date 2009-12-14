@@ -1355,7 +1355,6 @@ void annotate_quit()
   annotate_coord_list_free ();
   annotate_savelist_free ();
   free (data);
-  cairo_debug_reset_static_data();
 }
 
 
