@@ -159,8 +159,10 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
   GtkWidget*   preview = gtk_image_new ();
   GdkPixbuf*   previewPixbuf = gdk_pixbuf_scale_simple(buf, 128, 128, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (preview), previewPixbuf);
-  gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);
-  
+  gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);   
+  g_object_unref (G_OBJECT (previewPixbuf));
+
+ 
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Select a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), workspace_dir);
   
@@ -172,6 +174,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
 
+      screenshot = TRUE;
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
       workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
       char* supported_extension = ".png";
@@ -195,12 +198,10 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
 	      gtk_widget_destroy(msg_dialog);
             }
 	  if ( result == GTK_RESPONSE_NO)
-            { 
-	      g_free(filename);
-	      return; 
+            {
+		screenshot = FALSE;
 	    } 
 	}
-      screenshot = TRUE;
     }
   if (chooser != NULL)
     {

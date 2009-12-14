@@ -388,6 +388,7 @@ void annotate_hide_annotation ()
                      0, 0,
                      0, 0,
                      data->width, data->height);
+  cairo_destroy(transparent_cr);
 }
 
 
@@ -401,30 +402,19 @@ void annotate_show_annotation ()
 /* Releare keyboard grab */
 void annotate_release_keyboard_grab()
 {
-  gdk_error_trap_push ();
   gdk_display_keyboard_ungrab (data->display, GDK_CURRENT_TIME);
   gdk_flush ();
-  if (gdk_error_trap_pop ())
-    {
-      g_printerr("Error ungrabbing keyboard, ignoring.");
-    }
 }
 
 
 /* Acquire keyboard grab */
 void annotate_acquire_keyboard_grab()
 {
-  GdkGrabStatus result;
-  gdk_error_trap_push(); 
-  result = gdk_keyboard_grab (data->area->window,
-			      ANNOTATE_KEYBOARD_EVENTS,
-			      GDK_CURRENT_TIME); 
+ gdk_keyboard_grab (data->area->window,
+	            ANNOTATE_KEYBOARD_EVENTS,
+	            GDK_CURRENT_TIME); 
   
   gdk_flush ();
-  if (gdk_error_trap_pop ())
-    {
-      g_printerr("Error grabbing keyboard, ignoring.");
-    }
 }
 
 
@@ -694,6 +684,7 @@ void init_cairo()
     {
       data->savelist->next=save;
       save->previous=data->savelist;
+      /* copy the old pixmap in the new one */
       gdk_draw_drawable (save->pixmap,
                      data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
                      save->previous->pixmap,
@@ -710,14 +701,24 @@ void init_cairo()
 }
 
 
+/* Destroy cairo context */
+void destroy_cairo()
+{
+  if (data->cr != NULL)
+    {
+      cairo_destroy(data->cr);
+      data->cr = NULL;
+    }
+}
+
 /* Clear the screen */
 void clear_screen()
 {
   init_cairo();
   data->cr=gdk_cairo_create(data->savelist->pixmap);
   clear_cairo_context(data->cr);
-  cairo_destroy(data->cr);
   repaint();
+  destroy_cairo();
 }
 
 
@@ -1099,7 +1100,8 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   cairo_stroke(data->cr);
   
   repaint();
-  cairo_destroy(data->cr);
+  
+  destroy_cairo();
 
   annotate_coord_list_free (data);
  
@@ -1120,19 +1122,25 @@ gboolean event_configure (GtkWidget *widget,
   return TRUE;
 }
 
+
 /* press keyboard event */
 gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
 {
  
-  if (event->keyval != GDK_BackSpace)
+  if (event->keyval == GDK_BackSpace)
     {
-      init_cairo();
+       // undo
+       annotate_undo_and_restore_pointer();
+       return FALSE;
     }
   
+  init_cairo();
+ 
+ 
+  /* This is a trick we must found the maximum height and width of the font */
   cairo_text_extents_t extents;
   cairo_select_font_face (data->cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
   cairo_set_font_size (data->cr, data->cur_context->width*5);
-  /* This is a trick we must found the maximum height and width of the font */
   cairo_text_extents (data->cr, "j" , &extents);
   
    
@@ -1140,58 +1148,47 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   int x;
   int y;
   gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);  
-  
-  if (event->keyval != GDK_BackSpace)
-    {
-      data->savelist->previous->xcursor=x;  
-      data->savelist->previous->ycursor=y;   
-    }
+ 
+  /* store the pointer position */ 
+  data->savelist->previous->xcursor=x;  
+  data->savelist->previous->ycursor=y;   
   
   cairo_move_to(data->cr, x, y);
   GdkScreen   *screen = gdk_display_get_default_screen (data->display);
 
-  if (event->keyval == GDK_BackSpace)
-    {
-       // undo
-       annotate_undo_and_restore_pointer();
-       return FALSE;
-    }
   /* is finished the line or is pressed enter */
-  else if ((x + extents.x_advance >= data->width) ||
+  if ((x + extents.x_advance >= data->width) ||
       (event->keyval == GDK_ISO_Enter) || 	
       (event->keyval == GDK_KP_Enter))
     {
       x = 0;
       y +=  extents.height;
+      /* go to the new line */
       gdk_display_warp_pointer (data->display, screen, x, y);  
-      return FALSE;
     } 
   else if (event->keyval == GDK_Left)
    {
        x -=  extents.x_advance;
        gdk_display_warp_pointer (data->display, screen, x, y); 
-       return FALSE;
    }
   else if ((event->keyval == GDK_Right) ||  (event->keyval == GDK_KP_Space))
    {
        x +=  extents.x_advance;
        gdk_display_warp_pointer (data->display, screen, x, y); 
-       return FALSE;
    }
   else if (event->keyval == GDK_Up)
    {
        y -=  extents.height;
        gdk_display_warp_pointer (data->display, screen, x, y); 
-       return FALSE;
    }
   else if (event->keyval == GDK_Down)
    {
        y +=  extents.height;
        gdk_display_warp_pointer (data->display, screen, x, y); 
-       return FALSE;
    }
   else if (isprint(event->keyval))
     {
+      /* The character is printable */
       char *utf8 = malloc(2) ;
       sprintf(utf8,"%c", event->keyval);
       cairo_text_extents (data->cr, utf8, &extents);
@@ -1208,12 +1205,8 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       annotate_redolist_free ();
       free(utf8);
    }
-  else
-    {
-      return FALSE;
-    }
-
-  return TRUE;
+  destroy_cairo();
+  return FALSE;
 }
 
 
@@ -1355,7 +1348,7 @@ void annotate_quit()
   /* ungrab all */
   annotate_release_grab(); 
   /* destroy cairo */
-  cairo_destroy(data->cr);
+  destroy_cairo();
   gtk_widget_destroy(data->area); 
   gtk_widget_destroy(data->win); 
   /* free all */

@@ -163,6 +163,8 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
 	  if ( result  == GTK_RESPONSE_NO)
 	    { 
 	      g_free(filename);
+              g_free(date);
+              gtk_widget_destroy (chooser);
 	      return status; 
 	    } 
 	}
@@ -177,10 +179,10 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
          missing_program_dialog(); 
        }
     }
-    if (chooser != NULL)
-      { 
-        gtk_widget_destroy (chooser);
-      } 
+  if (chooser != NULL)
+   { 
+     gtk_widget_destroy (chooser);
+   } 
       
   g_free(filename);
   g_free(date);
