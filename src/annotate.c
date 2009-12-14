@@ -225,7 +225,7 @@ void annotate_coord_list_free ()
 }
 
 
-/* Free the list of the undo point */
+/* Free the list of the savepoint  */
 void annotate_savelist_free ()
 {
   AnnotateSave* annotate_save = data->savelist;
@@ -234,21 +234,25 @@ void annotate_savelist_free ()
     {
       annotate_save =  annotate_save->previous; 
     }
+  /* annotate_save point to the first save point */
 
-   while(annotate_save)
+  while(annotate_save)
     { 
       g_object_unref(annotate_save->pixmap);
       free(annotate_save);
       annotate_save =  annotate_save->next; 
     }
+  /* all the savepoint might be deleted */
+
   data->savelist = NULL;
 }
 
 
-/* Free the list of the redo point */
+/* Free the list of the  savepoint for the redo */
 void annotate_redolist_free ()
 {
   AnnotateSave* annotate_save = data->savelist->next;
+  /* delete all the savepoint after the current pointed */
   while(annotate_save)
     { 
       g_object_unref(annotate_save->pixmap);
@@ -318,6 +322,21 @@ void clear_cairo_context(cairo_t* cr)
 }
 
 
+/* Repaint the window */
+gint repaint ()
+{
+  AnnotateSave* annotate_save = data->savelist;
+  GdkPixmap* saved_pixmap = annotate_save->pixmap;
+  gdk_draw_drawable (data->area->window,
+                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+                     saved_pixmap,
+                     0, 0,
+                     0, 0,
+                     data->width, data->height);
+  return 1;
+}
+
+
 /* Undo to the last save point */
 void annotate_undo()
 {
@@ -369,21 +388,6 @@ void annotate_hide_annotation ()
                      0, 0,
                      0, 0,
                      data->width, data->height);
-}
-
-
-/* Repaint the window */
-gint repaint ()
-{
-  AnnotateSave* annotate_save = data->savelist;
-  GdkPixmap* saved_pixmap = annotate_save->pixmap;
-  gdk_draw_drawable (data->area->window,
-                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                     saved_pixmap,
-                     0, 0,
-                     0, 0,
-                     data->width, data->height);
-  return 1;
 }
 
 
@@ -440,11 +444,9 @@ void annotate_release_grab ()
 	 e.g. this device doesn't exist anymore */
       g_printerr("Error ungrabbing mouse device while ungrabbing all, ignoring.\n");
     }
-
   
   gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0); 
   
-
   if(data->debug)
     {
       g_printerr ("DEBUG: Ungrabbed pointer.\n");
@@ -679,7 +681,8 @@ void annotate_eraser_grab ()
 }
 
 
-void alloc_pixmap()
+/* Allocate a new pixmap and configure the new cairo context */
+void init_cairo()
 {
   AnnotateSave * save = malloc(sizeof(AnnotateData));
   save->previous  = NULL;
@@ -710,7 +713,7 @@ void alloc_pixmap()
 /* Clear the screen */
 void clear_screen()
 {
-  alloc_pixmap();
+  init_cairo();
   data->cr=gdk_cairo_create(data->savelist->pixmap);
   clear_cairo_context(data->cr);
   cairo_destroy(data->cr);
@@ -980,7 +983,7 @@ gboolean paint (GtkWidget *win,
                 gpointer user_data)
 {
 
-  alloc_pixmap();
+  init_cairo();
   
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
@@ -1096,6 +1099,7 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   cairo_stroke(data->cr);
   
   repaint();
+  cairo_destroy(data->cr);
 
   annotate_coord_list_free (data);
  
@@ -1122,7 +1126,7 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
  
   if (event->keyval != GDK_BackSpace)
     {
-      alloc_pixmap();
+      init_cairo();
     }
   
   cairo_text_extents_t extents;
@@ -1212,11 +1216,13 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   return TRUE;
 }
 
-/* Expose event */
+
+/* Expose event: this occurs when the windows is show */
 gboolean event_expose (GtkWidget *widget, 
                        GdkEventExpose *event, 
                        gpointer user_data)
 {
+  /* draw the pixmap in the window */
   gdk_draw_drawable (data->area->window,
                      data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
                      data->savelist->pixmap,
