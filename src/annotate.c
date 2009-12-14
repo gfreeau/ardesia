@@ -146,7 +146,7 @@ AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
                                                    guint arrowsize)
 {
   AnnotatePaintContext *context;
-  context = g_malloc (sizeof (AnnotatePaintContext));
+  context = malloc (sizeof (AnnotatePaintContext));
   context->type = type;
   context->width = width;
   context->arrowsize = arrowsize;
@@ -192,15 +192,15 @@ void annotate_paint_context_print (gchar *name, AnnotatePaintContext *context)
 /* Free the memory allocated by paint context */
 void annotate_paint_context_free (AnnotatePaintContext *context)
 {
-  g_free (context);
+  free (context);
 }
 
 
-/* Add to the list of the painted point the poin (x,y) with the width width */
+/* Add to the list of the painted point the point (x,y) storing the width */
 void annotate_coord_list_prepend (gint x, gint y, gint width)
 {
   AnnotateStrokeCoordinate *point;
-  point = g_malloc (sizeof (AnnotateStrokeCoordinate));
+  point = malloc (sizeof (AnnotateStrokeCoordinate));
   point->x = x;
   point->y = y;
   point->width = width;
@@ -215,7 +215,7 @@ void annotate_coord_list_free ()
 
   while (ptr)
     {
-      g_free(ptr->data);
+      free(ptr->data);
       ptr = ptr->next;
     }
 
@@ -509,6 +509,7 @@ void set_eraser_cursor()
   gdk_flush ();
   g_object_unref (pixmap);
   gdk_cursor_destroy (cursor);
+  cairo_destroy(eraser_cr);
 }
 
 /*
@@ -918,7 +919,7 @@ void annotate_draw_arrow (gint x1, gint y1,
 void annotate_draw_back_arrow (gint x1, gint y1,
 			       gint width, gfloat direction)
 {
-  AnnotateData *revertcoordata = g_malloc (sizeof (AnnotateData));
+  AnnotateData *revertcoordata = malloc (sizeof (AnnotateData));
   revertcoordata->cur_context = data->cur_context;
   GSList *ptr = data->coordlist;
   if (ptr)
@@ -933,6 +934,7 @@ void annotate_draw_back_arrow (gint x1, gint y1,
 					   &width, &direction);
       annotate_draw_arrow (x0, y0, width, direction);
     }
+  free(revertcoordata);
 }
 
 
@@ -1352,18 +1354,18 @@ void annotate_quit()
   gtk_widget_destroy(data->area); 
   gtk_widget_destroy(data->win); 
   /* free all */
-  g_free(data->default_pen);
-  g_free(data->default_eraser);
+  free(data->default_pen);
+  free(data->default_eraser);
   annotate_coord_list_free ();
   annotate_savelist_free ();
-  g_free (data);
+  free (data);
 }
 
 
 /* Init the annotation */
 int annotate_init (int x, int y, int width, int height)
 {
-  data = g_malloc (sizeof (AnnotateData));
+  data = malloc (sizeof (AnnotateData));
   data->debug = DEBUG;
   /* Untoggle zone is setted on ardesia zone */
   data->untogglexpos = x;
