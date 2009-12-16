@@ -72,6 +72,16 @@ gboolean load_png (const char *filename, GdkPixbuf **pixmap)
 }
 
 
+/* Put the background window above the annotation window */
+static void put_background_above_annotations()
+{
+  GtkWindow* annotate_window = get_annotation_window();
+  gtk_widget_show_all(annotate_window);
+  gdk_window_restack (GTK_WIDGET(annotate_window)->window, background_window->window, TRUE);
+}
+
+
+/* The windows has been exposed after the show_all request to change the background image */
 static gboolean on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   GdkPixbuf *pixbuf = (GdkPixbuf *) data; 
@@ -81,8 +91,7 @@ static gboolean on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *e
 
   cairo_paint(cr);
   cairo_destroy(cr);    
-  g_object_unref (G_OBJECT (pixbuf));
-  
+  put_background_above_annotations();
   return TRUE;
 }
 
@@ -98,6 +107,7 @@ void clear_background()
 }
 
 
+/* The windows has been exposed after the show_all request to change the background color */
 static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   BackgroundColorData* bg_data = (BackgroundColorData*) data;
@@ -111,7 +121,7 @@ static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *
 
   cairo_paint(cr);
   cairo_destroy(cr);    
-  free(bg_data);
+  put_background_above_annotations();
   return TRUE;
 }
 

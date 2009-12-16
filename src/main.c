@@ -47,7 +47,7 @@ int NORTH=1;
 int SOUTH=2;
 
 /* space from border in pixel */
-int SPACE_FROM_BORDER = 30;
+int SPACE_FROM_BORDER = 25;
 
 
 
