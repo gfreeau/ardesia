@@ -46,8 +46,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "paint_cursor.xpm"
-
 #define ANNOTATE_MOUSE_EVENTS    ( GDK_PROXIMITY_IN_MASK |      \
 				   GDK_PROXIMITY_OUT_MASK |	\
 				   GDK_POINTER_MOTION_MASK |	\
@@ -470,20 +468,45 @@ void annotate_select_pen()
 /* Set the cursor patching the xpm with the selected color */
 void set_pen_cursor(char *color)
 {
-  GdkPixbuf *cursor_src;
-  char *line = malloc(12);
-  strcpy(line, ". c #");
-  strncat(line, color, 6);
-  paint_cursor_xpm[2] = line;
-  /* now the xpm cursor has been coloured */
-  cursor_src = gdk_pixbuf_new_from_xpm_data (paint_cursor_xpm);
-  int height = gdk_pixbuf_get_height (cursor_src);
-  GdkCursor* cursor = gdk_cursor_new_from_pixbuf (data->display, cursor_src, 1, height-1);
+  gint size = 12;
+  
+  gint context_width = data->cur_context->width;;
+  GdkPixmap *pixmap = gdk_pixmap_new (NULL, size*3 + context_width, size*3 + context_width, 1);
+   
+  int circle_width = 2; 
+  cairo_t *pen_cr = gdk_cairo_create(pixmap);
+  clear_cairo_context(pen_cr);
+  
+  double angle1 = 45.0  * (M_PI/180.0);  /* angles are specified */
+  double angle2 = 225.0 * (M_PI/180.0);  /* in radians           */
+ 
+  cairo_set_operator(pen_cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_line_width(pen_cr, circle_width);
+  int r,g,b;
+  sscanf (color, "%02X%02X%02X", &r, &g, &b);
+  cairo_set_source_rgba (pen_cr, (double) r/256, (double) g/256, (double) b/256, 1);
+  
+  cairo_arc(pen_cr, 5* size/2 + context_width/2, size/2, (size/2)-circle_width, angle2, angle1);
+  cairo_arc(pen_cr, size/2 + context_width/2, 5 * size/2, (size/2)-circle_width, angle1, angle2); 
+  cairo_fill(pen_cr);
+  cairo_stroke(pen_cr);
+ 
+  cairo_arc(pen_cr, size/2 + context_width/2 , 5 * size/2, context_width/2, 0, 2 *M_PI);
+  cairo_stroke(pen_cr);
+   
+  GdkColor background_color =  {0, 0xFFFF, 0xFFFF, 0xFFFF}; 
+  GdkColor foreground_color ;
+  char* rgb = malloc (8);
+  rgb[0] = '#';
+  strncpy(&rgb[1], color, 6); 
+  rgb[7] = 0;
+ 
+  gdk_color_parse(rgb, &foreground_color); 
+  GdkCursor* cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, &foreground_color, &background_color, size/2 + context_width/2, 5* size/2);
   gdk_window_set_cursor (data->win->window, cursor);
   gdk_flush ();
-  g_object_unref (cursor_src);
   gdk_cursor_destroy (cursor);
-  free(line);
+  free(rgb);
 }
 
 
