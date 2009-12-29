@@ -56,19 +56,15 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
       GtkColorSelection *colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
     
       /* color initially selected */ 
-      GdkColor* gdkcolor = g_malloc (sizeof (GdkColor));
-      gchar    *ccolor = malloc(strlen(color)+2);
+      GdkColor* gdkcolor;
       if (picked_color != NULL)
         {
-           strncpy(&ccolor[1],picked_color,strlen(picked_color)+1);
+           gdkcolor = rgb_to_gdkcolor(picked_color);
         }
       else
         {
-           strncpy(&ccolor[1],color,strlen(color)+1); 
+           gdkcolor = rgb_to_gdkcolor(color);
         }
-      ccolor[0]='#'; 
-      gdk_color_parse (ccolor, gdkcolor);
-      g_free(ccolor);
 
       gtk_color_selection_set_current_color(colorsel, gdkcolor);
       gtk_color_selection_set_previous_color(colorsel, gdkcolor);

@@ -26,6 +26,14 @@
 /* Take a GdkColor and return the RGB string */
 char * gdkcolor_to_rgb(GdkColor* gdkcolor);
 
+
+/*
+ * Take an rgb or a rgba string and return the pointer to the allocated GdkColor 
+ * neglecting the alpha channel
+ */
+GdkColor* rgb_to_gdkcolor(char* rgb);
+
+
 /* Get the current date and format in a printable format */
 char* get_date();
 

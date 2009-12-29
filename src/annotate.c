@@ -45,6 +45,7 @@
 #include <sys/msg.h>
 #include <stdio.h>
 #include <string.h>
+#include <utils.h>
 
 #define ANNOTATE_MOUSE_EVENTS    ( GDK_PROXIMITY_IN_MASK |      \
 				   GDK_PROXIMITY_OUT_MASK |	\
@@ -310,12 +311,27 @@ gboolean annotate_coord_list_get_arrow_param (AnnotateData* data,
   return success;
 }
 
+/* Set the cairo surface color to the RGBA string */
+void cairo_set_source_color_from_string( cairo_t * cr, char* color)
+{
+  int r,g,b,a;
+  sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+  cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
+}
+
+
+/* Set the cairo surface color to transparent */
+void  cairo_set_transparent_color(cairo_t * cr)
+{
+  cairo_set_source_rgba (cr, 0, 0, 0, 0);
+}
+
 
 /* Clear cairo context */
 void clear_cairo_context(cairo_t* cr)
 {
   cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgba(cr,0,0,0,0);
+  cairo_set_transparent_color(cr);
   cairo_paint(cr);
 }
 
@@ -476,37 +492,27 @@ void set_pen_cursor(char *color)
   int circle_width = 2; 
   cairo_t *pen_cr = gdk_cairo_create(pixmap);
   clear_cairo_context(pen_cr);
-  
-  double angle1 = 45.0  * (M_PI/180.0);  /* angles are specified */
-  double angle2 = 225.0 * (M_PI/180.0);  /* in radians           */
- 
+   
   cairo_set_operator(pen_cr,CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(pen_cr, circle_width);
-  int r,g,b;
-  sscanf (color, "%02X%02X%02X", &r, &g, &b);
-  cairo_set_source_rgba (pen_cr, (double) r/256, (double) g/256, (double) b/256, 1);
-  
-  cairo_arc(pen_cr, 5* size/2 + context_width/2, size/2, (size/2)-circle_width, angle2, angle1);
-  cairo_arc(pen_cr, size/2 + context_width/2, 5 * size/2, (size/2)-circle_width, angle1, angle2); 
+  cairo_set_source_color_from_string(pen_cr, data->cur_context->fg_color);
+   
+  cairo_arc(pen_cr, 5* size/2 + context_width/2, size/2, (size/2)-circle_width, M_PI * 5/4, M_PI/4);
+  cairo_arc(pen_cr, size/2 + context_width/2, 5 * size/2, (size/2)-circle_width, M_PI/4, M_PI * 5/4); 
   cairo_fill(pen_cr);
-  cairo_stroke(pen_cr);
  
-  cairo_arc(pen_cr, size/2 + context_width/2 , 5 * size/2, context_width/2, 0, 2 *M_PI);
+  cairo_arc(pen_cr, size/2 + context_width/2 , 5 * size/2, context_width/2, 0, 2 * M_PI);
   cairo_stroke(pen_cr);
    
   GdkColor background_color =  {0, 0xFFFF, 0xFFFF, 0xFFFF}; 
-  GdkColor foreground_color ;
-  char* rgb = malloc (8);
-  rgb[0] = '#';
-  strncpy(&rgb[1], color, 6); 
-  rgb[7] = 0;
- 
-  gdk_color_parse(rgb, &foreground_color); 
-  GdkCursor* cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, &foreground_color, &background_color, size/2 + context_width/2, 5* size/2);
+  GdkColor *foreground_color_p = rgb_to_gdkcolor(color);
+
+  GdkCursor* cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, &background_color, size/2 + context_width/2, 5* size/2);
   gdk_window_set_cursor (data->win->window, cursor);
   gdk_flush ();
   gdk_cursor_destroy (cursor);
-  free(rgb);
+  g_free(foreground_color_p);
+  cairo_destroy(pen_cr);
 }
 
 
@@ -559,22 +565,6 @@ gboolean in_unlock_area(int x, int y)
       return 1;
     }
   return 0;
-}
-
-
-/* Set the cairo surface color to the RGBA string */
-void cairo_set_source_color_from_string( cairo_t * cr, char* color)
-{
-  int r,g,b,a;
-  sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-  cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
-}
-
-
-/* Set the cairo surface color to transparent */
-void  cairo_set_transparent_color(cairo_t * cr)
-{
-  cairo_set_source_rgba (cr, 0.0, 0.0,0.0, 0.0);
 }
 
 
@@ -1077,6 +1067,7 @@ gboolean paintto (GtkWidget *win,
   data->lastx = ev->x;
   data->lasty = ev->y;
   
+  
   repaint();
   return TRUE;
 }
@@ -1097,10 +1088,9 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   gint width = data->cur_context->arrowsize * data->cur_context->width / 2;
   gfloat direction = 0;
 
-  cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2*M_PI);
+  cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2 * M_PI);
   cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
   cairo_fill (data->cr);
-  cairo_stroke(data->cr);
   
   if ((ev->x != data->lastx) ||
       (ev->y != data->lasty))
@@ -1122,7 +1112,7 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
     }
 
   cairo_stroke(data->cr);
-  
+   
   repaint();
   
   annotate_coord_list_free (data);
@@ -1160,7 +1150,7 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   
   /* This is a trick we must found the maximum height and width of the font */
   cairo_text_extents_t extents;
-  cairo_set_font_size (data->cr, data->cur_context->width*5);
+  cairo_set_font_size (data->cr, data->cur_context->width * 5);
   cairo_text_extents (data->cr, "j" , &extents); 
    
   /* move cairo to the mouse position */
@@ -1353,7 +1343,7 @@ void setup_app ()
   /* SHAPE PIXMAP */
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
   cairo_t* shape_cr = gdk_cairo_create(data->shape);
-  clear_cairo_context(shape_cr);
+  clear_cairo_context(shape_cr); 
   cairo_destroy(shape_cr);
   
   /* this allow the mouse focus below the transparent window */ 

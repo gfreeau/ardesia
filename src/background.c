@@ -76,7 +76,7 @@ gboolean load_png (const char *filename, GdkPixbuf **pixmap)
 static void put_background_above_annotations()
 {
   GtkWindow* annotate_window = get_annotation_window();
-  gtk_widget_show_all(annotate_window);
+  gtk_widget_show_all(GTK_WIDGET(annotate_window));
   gdk_window_restack (GTK_WIDGET(annotate_window)->window, background_window->window, TRUE);
 }
 
