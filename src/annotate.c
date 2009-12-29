@@ -811,7 +811,7 @@ void annotate_select_tool (GdkDevice *device, guint state)
 
 
 /* Draw line from (x1,y1) to (x2,y2) */
-void annotate_draw_line_int (gint x1, gint y1,
+void annotate_draw_line (gint x1, gint y1,
 			     gint x2, gint y2)
 {
   cairo_move_to(data->cr, x1, y1);
@@ -819,70 +819,6 @@ void annotate_draw_line_int (gint x1, gint y1,
   cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
   cairo_stroke(data->cr);
   data->painted = TRUE;
-}
-
-
-/* 
- * Draw a line; 
- * the algorithm is done to deny the overlapping 
- * of the line with the bar 
- */
-void annotate_draw_line (gint x1, gint y1,
-		         gint x2, gint y2)
-{
-  int x0 = data->untogglexpos;
-  int y0 = data->untoggleypos;
-  int width = data->untogglewidth;
-  int height = data->untoggleheight;
-  int y = y0;
-  /* verify if the candidate y intersects the bar and belong to the line */
-  if (((y1<y2)&&(y1<y)&&(y<y2))||((y1>y2)&&(y2<y)&&(y<y1)))
-    {
-      /* interleaved y found the corrispondent x */
-      /* (x,y0) this will be the first point that intersects the rectangle */
-      int x=-1;
-      /* calculate the x with the formula to calculate the rect passing from (x1.y1) (x2,y2) */
-      if (x1!=x2)
-	{
-	  x=((x2-x1)*(y-y1)/(y2-y1))+x1;
-	}
-      else
-	{
-	  x=x1;
-	}
-      /* verify if the candidate x intersects the bar and belong to the line */
-      if (((x0<x)&&(x<x+width))&&(((x1<=x2)&&(x1<=x)&&(x<=x2))||((x1>x2)&&(x2<x)&&(x<x1))))
-	{
-	  /* interleaved y0+height found the corrispondent xp */
-	  /* (xp, y0+height) this will be the second point that intersects the rectangle */
-	  int yp = y0 + height;
-	  int xp = -1;
-	  if (x1!=x2)
-	    {
-	      xp=((x2-x1)*(yp-y1)/(y2-y1))+x1;
-	    }
-	  else
-	    {
-	      xp=x;
-	    }
-	  /* draw the first and the second segments */
-	  if  (y1<y2)
-	    {
-	      annotate_draw_line_int (x1, y1, x, y);    
-	      annotate_draw_line_int (xp, yp, x2, y2);
-	      return;    
-	    }
-	  else
-	    {
-	      /* viceversa */
-	      annotate_draw_line_int (x1, y1, xp, yp);    
-	      annotate_draw_line_int (x, y, x2, y2);
-	      return;    
-	    }
-	}
-    }
-  /* no intersection with the bar draw the full line */ 
-  annotate_draw_line_int (x1, y1, x2, y2);    
 }
 
 
