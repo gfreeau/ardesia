@@ -3,7 +3,7 @@
   <requires lib="gtk+" version="2.14"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">760</property>
+    <property name="width_request">800</property>
     <property name="can_focus">True</property>
     <property name="has_focus">True</property>
     <property name="is_focus">True</property>
@@ -324,6 +324,21 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToggleToolButton" id="buttonRectifier">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Rectifier</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">rectifier</property>
+                <signal name="toggled" handler="on_toolsRectifier_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToggleToolButton" id="buttonArrow">
                 <property name="width_request">32</property>
                 <property name="height_request">34</property>
@@ -429,6 +444,10 @@
   <object class="GtkImage" id="highlighter">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/highlighter.png</property>
+  </object>
+  <object class="GtkImage" id="rectifier">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/shapes.png</property>
   </object>
   <object class="GtkImage" id="black">
     <property name="visible">True</property>

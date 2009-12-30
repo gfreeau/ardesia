@@ -45,9 +45,9 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_ardesia_OBJECTS = background.$(OBJEXT) annotate.$(OBJEXT) \
-	main.$(OBJEXT) interface.$(OBJEXT) utils.$(OBJEXT) \
-	saver.$(OBJEXT) color_selector.$(OBJEXT) \
+am_ardesia_OBJECTS = background.$(OBJEXT) broken.$(OBJEXT) \
+	annotate.$(OBJEXT) main.$(OBJEXT) interface.$(OBJEXT) \
+	utils.$(OBJEXT) saver.$(OBJEXT) color_selector.$(OBJEXT) \
 	preference_dialog.$(OBJEXT) recorder.$(OBJEXT) \
 	callbacks.$(OBJEXT)
 ardesia_OBJECTS = $(am_ardesia_OBJECTS)
@@ -181,6 +181,7 @@ INCLUDES = \
 
 ardesia_SOURCES = \
         background.c background.h\
+        broken.c broken.h\
         annotate.c annotate.h\
 	main.c \
 	interface.c interface.h \
@@ -275,6 +276,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/annotate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/background.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/broken.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/callbacks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/color_selector.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@

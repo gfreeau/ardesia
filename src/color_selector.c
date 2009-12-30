@@ -1,5 +1,5 @@
 /* 
- * Annotate -- a program for painting on the screen 
+ * Ardesia -- a program for painting on the screen 
  * Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>
  *
  * This program is free software; you can redistribute it and/or modify

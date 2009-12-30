@@ -78,6 +78,8 @@ int          tickness = 15;
 
 gboolean     highlighter = FALSE;
 
+gboolean     rectifier = FALSE;
+
 /* arrow=0 mean no arrow, arrow=1 mean normal arrow, arrow=2 mean double arrow */
 int        arrow = 0;
 
@@ -140,6 +142,8 @@ void annotate()
   add_alpha(color);
   
   annotate_set_color(color);
+
+  annotate_set_rectifier(rectifier);
 
   annotate_set_width(tickness);
 
@@ -218,6 +222,22 @@ on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
   else
     {
        highlighter = FALSE;
+    }
+}
+
+
+void
+on_toolsRectifier_activate          (GtkToolButton   *toolbutton,
+				      gpointer         user_data)
+{
+  grab = TRUE;
+  if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
+    {
+       rectifier = TRUE;
+    }
+  else
+    {
+       rectifier = FALSE;
     }
 }
 

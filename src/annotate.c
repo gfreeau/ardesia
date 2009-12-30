@@ -1,5 +1,5 @@
 /* 
- * Annotate -- a program for painting on the screen 
+ * Ardesia-- a program for painting on the screen 
  * Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>
  *
  * Some parts of this file are been copied from gromit
@@ -22,7 +22,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-  #include <config.h>
+#include <config.h>
 #endif
 
 #include <glib.h>
@@ -46,16 +46,19 @@
 #include <stdio.h>
 #include <string.h>
 #include <utils.h>
+#include <annotate.h>
+#include <broken.h>
+
 
 #define ANNOTATE_MOUSE_EVENTS    ( GDK_PROXIMITY_IN_MASK |      \
 				   GDK_PROXIMITY_OUT_MASK |	\
 				   GDK_POINTER_MOTION_MASK |	\
 				   GDK_BUTTON_PRESS_MASK |      \
 				   GDK_BUTTON_RELEASE_MASK      \
-                                 )
+				   )
 
-#define ANNOTATE_KEYBOARD_EVENTS ( GDK_KEY_PRESS_MASK           \
-                                 )
+#define ANNOTATE_KEYBOARD_EVENTS ( GDK_KEY_PRESS_MASK	\
+				   )
 
 
 
@@ -81,14 +84,6 @@ typedef struct
   gchar*          fg_color;
   gdouble         pressure;
 } AnnotatePaintContext;
-
-
-typedef struct
-{
-  gint x;
-  gint y;
-  gint width;
-} AnnotateStrokeCoordinate;
 
 
 typedef struct _AnnotateSave
@@ -131,6 +126,7 @@ typedef struct
   guint        maxwidth;
   guint        height;
   gboolean     painted;
+  gboolean     rectify;
   guint        arrow;
   gboolean     debug;
 } AnnotateData;
@@ -157,7 +153,7 @@ AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
 /* Get the annotation window */
 GtkWindow* get_annotation_window()
 {
-   return GTK_WINDOW(data->win);
+  return GTK_WINDOW(data->win);
 }
 
 
@@ -205,6 +201,8 @@ void annotate_coord_list_prepend (gint x, gint y, gint width)
   point->width = width;
   data->coordlist = g_slist_prepend (data->coordlist, point);
 }
+
+
 
 
 /* Free the list of the painted point */
@@ -392,7 +390,7 @@ void annotate_undo_and_restore_pointer()
 void annotate_hide_annotation ()
 {
   GdkPixmap *transparent_pixmap = gdk_pixmap_new (data->area->window, data->width,
-                                 data->height, -1);
+						  data->height, -1);
   cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
   clear_cairo_context(transparent_cr);
 
@@ -424,9 +422,9 @@ void annotate_release_keyboard_grab()
 /* Acquire keyboard grab */
 void annotate_acquire_keyboard_grab()
 {
- gdk_keyboard_grab (data->area->window,
-	            ANNOTATE_KEYBOARD_EVENTS,
-	            GDK_CURRENT_TIME); 
+  gdk_keyboard_grab (data->area->window,
+		     ANNOTATE_KEYBOARD_EVENTS,
+		     GDK_CURRENT_TIME); 
   
   gdk_flush ();
 }
@@ -572,12 +570,12 @@ gboolean in_unlock_area(int x, int y)
 void select_color()
 {
   if (!(data->cur_context->type == ANNOTATE_ERASER))
-     {
-       cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
-     }
+    {
+      cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
+    }
   else
     {
-       cairo_set_transparent_color(data->cr);
+      cairo_set_transparent_color(data->cr);
     }
 }
 
@@ -638,16 +636,21 @@ void annotate_acquire_grab ()
 /* Set color */
 void annotate_set_color(gchar* color)
 {
-   data->cur_context->fg_color = color;
+  data->cur_context->fg_color = color;
 }
 
 
 /* Set width */
 void annotate_set_width(guint width)
 {
-   data->cur_context->width = width;
+  data->cur_context->width = width;
 }
 
+/* Set rectifier */
+void annotate_set_rectifier(gboolean rectify)
+{
+  data->rectify = rectify;
+}
 
 /* Set arrow type */
 void annotate_set_arrow(int arrow)
@@ -704,17 +707,17 @@ void reset_cairo()
   save->pixmap = gdk_pixmap_new (data->area->window, data->width,
                                  data->height, -1);
  
- if (data->savelist != NULL)
+  if (data->savelist != NULL)
     {
       data->savelist->next=save;
       save->previous=data->savelist;
       /* copy the old pixmap in the new one */
       gdk_draw_drawable (save->pixmap,
-                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
-                     save->previous->pixmap,
-                     0, 0,
-                     0, 0,
-                     data->width, data->height);
+			 data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+			 save->previous->pixmap,
+			 0, 0,
+			 0, 0,
+			 data->width, data->height);
     }
   data->savelist=save;
   
@@ -812,7 +815,7 @@ void annotate_select_tool (GdkDevice *device, guint state)
 
 /* Draw line from (x1,y1) to (x2,y2) */
 void annotate_draw_line (gint x1, gint y1,
-			     gint x2, gint y2)
+			 gint x2, gint y2)
 {
   cairo_move_to(data->cr, x1, y1);
   cairo_line_to(data->cr, x2, y2);
@@ -1009,6 +1012,66 @@ gboolean paintto (GtkWidget *win,
 }
 
 
+/* This draw an ellipse taking the top left edge coordinates the width and the eight of the bouded rectangle */
+void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
+{
+  cairo_save(data->cr);
+  cairo_translate (data->cr, x + width / 2., y + height / 2.);
+  cairo_scale (data->cr, width / 2., height / 2.);
+  cairo_arc (data->cr, 0., 0., 1., 0., 2 * M_PI);
+  cairo_restore(data->cr);
+}
+
+
+/* Rectify the line or the shape*/
+void rectify()
+{
+      annotate_undo();
+      reset_cairo();
+      gboolean ellipse = FALSE;
+      GSList *outptr = broken(data->coordlist, &ellipse);   
+      GSList *ptr = outptr;   
+
+      AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
+
+      gint lastx = out_point->x; 
+      gint lasty = out_point->y;
+
+      if (!ellipse)
+	{
+	  cairo_move_to(data->cr, lastx, lasty);
+	  while (outptr)
+	    {
+	      out_point = (AnnotateStrokeCoordinate*)outptr->data;
+	      gint curx = out_point->x; 
+	      gint cury = out_point->y;
+	      /* draw line */
+	      annotate_draw_line (lastx, lasty, curx, cury);
+	      lastx = curx;
+	      lasty = cury;
+	      outptr = outptr ->next;   
+	    } 
+	}
+      else
+	{
+          /* make an ellipse */
+	  outptr = outptr ->next;   
+	  outptr = outptr ->next;   
+	  out_point = (AnnotateStrokeCoordinate*)outptr->data;
+	  gint curx = out_point->x; 
+	  gint cury = out_point->y;
+	  cairo_draw_ellipse(lastx,lasty, curx-lastx, cury-lasty);
+	}
+      while (ptr)
+	{
+	  g_free(ptr->data);
+	  ptr = ptr->next;
+	}
+
+      g_slist_free (ptr);
+}
+
+
 /* This shots when the button is realeased */
 gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 {
@@ -1021,6 +1084,7 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       return FALSE;
     }
 
+  
   gint width = data->cur_context->arrowsize * data->cur_context->width / 2;
   gfloat direction = 0;
 
@@ -1034,6 +1098,18 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       paintto (win, (GdkEventMotion *) ev, user_data);
     }
 
+
+  cairo_stroke(data->cr);
+  repaint();
+
+  /* Rectifier code */
+  if ((data->rectify)  && ( g_slist_length(data->coordlist)> 3))
+
+    {
+      rectify();
+    } 
+
+  /* If is selected an arrowtype the draw the arrow */
   if (data->arrow>0 && data->cur_context->arrowsize > 0 &&
       annotate_coord_list_get_arrow_param (data, width * 3,
 					   &width, &direction))
@@ -1048,7 +1124,6 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
     }
 
   cairo_stroke(data->cr);
-   
   repaint();
   
   annotate_coord_list_free (data);
@@ -1077,9 +1152,9 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
  
   if (event->keyval == GDK_BackSpace)
     {
-       // undo
-       annotate_undo_and_restore_pointer();
-       return FALSE;
+      // undo
+      annotate_undo_and_restore_pointer();
+      return FALSE;
     }
   
   reset_cairo();
@@ -1112,25 +1187,25 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       gdk_display_warp_pointer (data->display, screen, x, y);  
     } 
   else if (event->keyval == GDK_Left)
-   {
-       x -=  extents.x_advance;
-       gdk_display_warp_pointer (data->display, screen, x, y); 
-   }
+    {
+      x -=  extents.x_advance;
+      gdk_display_warp_pointer (data->display, screen, x, y); 
+    }
   else if ((event->keyval == GDK_Right) ||  (event->keyval == GDK_KP_Space))
-   {
-       x +=  extents.x_advance;
-       gdk_display_warp_pointer (data->display, screen, x, y); 
-   }
+    {
+      x +=  extents.x_advance;
+      gdk_display_warp_pointer (data->display, screen, x, y); 
+    }
   else if (event->keyval == GDK_Up)
-   {
-       y -=  extents.height;
-       gdk_display_warp_pointer (data->display, screen, x, y); 
-   }
+    {
+      y -=  extents.height;
+      gdk_display_warp_pointer (data->display, screen, x, y); 
+    }
   else if (event->keyval == GDK_Down)
-   {
-       y +=  extents.height;
-       gdk_display_warp_pointer (data->display, screen, x, y); 
-   }
+    {
+      y +=  extents.height;
+      gdk_display_warp_pointer (data->display, screen, x, y); 
+    }
   else if (isprint(event->keyval))
     {
       /* The character is printable */
@@ -1149,7 +1224,7 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       data->savelist->ycursor=y;   
       annotate_redolist_free ();
       free(utf8);
-   }
+    }
   return FALSE;
 }
 
@@ -1258,6 +1333,7 @@ void setup_app ()
 
   data->arrow = 0; 
   data->painted = FALSE;
+  data->rectify = FALSE;
 
   data->coordlist = NULL;
   data->savelist = NULL;

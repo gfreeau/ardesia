@@ -23,6 +23,15 @@
  */
 
 
+/* Struct to store the painted point */
+typedef struct
+{
+  gint x;
+  gint y;
+  gint width;
+} AnnotateStrokeCoordinate;
+
+
 /* Initialize the annotation window */
 int annotate_init (int x, int y, int width, int height);
 
@@ -52,6 +61,9 @@ void annotate_set_color(gchar* color);
 
 /* Set line width */
 void annotate_set_width(guint width);
+
+/* Set rectifier */
+void annotate_set_rectifier(gboolean rectify);
 
 /* Set arrow type */
 void annotate_set_arrow(int arrow);
