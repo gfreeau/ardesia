@@ -1029,7 +1029,8 @@ void rectify()
       annotate_undo();
       reset_cairo();
       gboolean ellipse = FALSE;
-      GSList *outptr = broken(data->coordlist, &ellipse);   
+      gboolean close_path = FALSE;
+      GSList *outptr = broken(data->coordlist, &ellipse, &close_path);   
       GSList *ptr = outptr;   
 
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
@@ -1039,18 +1040,32 @@ void rectify()
 
       if (!ellipse)
 	{
-	  cairo_move_to(data->cr, lastx, lasty);
-	  while (outptr)
-	    {
+           if (close_path)
+            {
+              // rectangle
+              outptr = outptr ->next;   
+	      outptr = outptr ->next;   
 	      out_point = (AnnotateStrokeCoordinate*)outptr->data;
 	      gint curx = out_point->x; 
 	      gint cury = out_point->y;
-	      /* draw line */
-	      annotate_draw_line (lastx, lasty, curx, cury);
-	      lastx = curx;
-	      lasty = cury;
-	      outptr = outptr ->next;   
-	    } 
+              cairo_rectangle (data->cr, lastx,lasty, curx-lastx, cury-lasty);
+            }
+          else
+            {
+              // broken line
+              cairo_move_to(data->cr, lastx, lasty);
+	      while (outptr)
+	      {
+	     	 out_point = (AnnotateStrokeCoordinate*)outptr->data;
+	      	gint curx = out_point->x; 
+	      	gint cury = out_point->y;
+	      	/* draw line */
+	      	annotate_draw_line (lastx, lasty, curx, cury);
+	      	lastx = curx;
+	      	lasty = cury;
+	      	outptr = outptr ->next;   
+	      } 
+            }
 	}
       else
 	{
@@ -1062,12 +1077,12 @@ void rectify()
 	  gint cury = out_point->y;
 	  cairo_draw_ellipse(lastx,lasty, curx-lastx, cury-lasty);
 	}
+    
       while (ptr)
 	{
 	  g_free(ptr->data);
 	  ptr = ptr->next;
 	}
-
       g_slist_free (ptr);
 }
 

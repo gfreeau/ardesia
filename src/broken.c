@@ -53,7 +53,7 @@
 
 static  double     tollerance = 15;
 
-GSList*                   broken(GSList* listInp,  gboolean* ellipse)
+GSList*                   broken(GSList* listInp,  gboolean* ellipse, gboolean*  close_path)
 {
     
   int X1,X2,Y1,Y2;
@@ -64,6 +64,7 @@ GSList*                   broken(GSList* listInp,  gboolean* ellipse)
   double H;
    
   *ellipse = FALSE;
+  *close_path = FALSE;
   GSList* listOut = NULL; 
   /*copy the first one point */
   AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*)listInp->data;
@@ -137,17 +138,14 @@ GSList*                   broken(GSList* listInp,  gboolean* ellipse)
   last_point->width = width;
   if ((abs(Cx-first_point->x)<tollerance*5) &&(abs(By-first_point->y)<tollerance*5))
     {
+      /* close_path */
+      *close_path = TRUE;
       if (numpoint>6)
 	{
 	  *ellipse = TRUE;
 	}
       if (numpoint<5)
 	{
-	  AnnotateStrokeCoordinate* point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
-	  point->x = first_point->x;
-	  point->y = first_point->y;
-	  point->width = first_point->width;
-	  listOut = g_slist_prepend (listOut, point);
 	  return listOut;
 	}
       listOut = g_slist_prepend (listOut, last_point);
@@ -171,19 +169,18 @@ GSList*                   broken(GSList* listInp,  gboolean* ellipse)
 	}   
       g_slist_free (savedListOut);
       listOut = NULL;
+
       AnnotateStrokeCoordinate* point0 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
       point0->x = minx;
       point0->y = miny;
       point0->width = width;
       listOut = g_slist_prepend (listOut, point0);
-                      
- 
+                       
       AnnotateStrokeCoordinate* point1 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
       point1->x = maxx;
       point1->y = miny;
       point1->width = width;
       listOut = g_slist_prepend (listOut, point1);
-
 
       AnnotateStrokeCoordinate* point2 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
       point2->x = maxx;
@@ -196,12 +193,6 @@ GSList*                   broken(GSList* listInp,  gboolean* ellipse)
       point3->y = maxy;
       point3->width = width;
       listOut = g_slist_prepend (listOut, point3);
-
-      AnnotateStrokeCoordinate* point4 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
-      point4->x = minx;
-      point4->y = miny;
-      point4->width = width;
-      listOut = g_slist_prepend (listOut, point4);
 
     }
   else

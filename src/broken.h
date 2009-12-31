@@ -24,6 +24,6 @@
 #ifndef BROKEN_FILE
     #define BROKEN_FILE
 
-    GSList*    broken( GSList* inp, gboolean* ellipse);
+    GSList*    broken( GSList* inp, gboolean* ellipse, gboolean* close_path);
 
 #endif
