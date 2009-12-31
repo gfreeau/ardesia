@@ -953,7 +953,11 @@ gboolean paint (GtkWidget *win,
       g_printerr("DEBUG: Device '%s': Button %i Down at (x,y)=(%.2f : %.2f)\n",
                  ev->device->name, ev->button, ev->x, ev->y);
     }
- 
+  cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2 * M_PI);
+  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
+  cairo_fill (data->cr);
+  cairo_move_to (data->cr, ev->x, ev->y);
+  repaint();
   data->lastx = ev->x;
   data->lasty = ev->y;
   annotate_coord_list_prepend (ev->x, ev->y, data->maxwidth);
@@ -1042,21 +1046,22 @@ void rectify()
   if (close_path)
     {
       // rectangle
-      outptr = outptr ->next;   
-      outptr = outptr ->next;   
-      out_point = (AnnotateStrokeCoordinate*)outptr->data;
-      gint curx = out_point->x; 
-      gint cury = out_point->y;
-      if (!ellipse)
-	{
-	  //rectangle
-	  cairo_rectangle (data->cr, lastx,lasty, curx-lastx, cury-lasty);
-	}
-      else
-	{
-	  //ellipse
-	  cairo_draw_ellipse(lastx,lasty, curx-lastx, cury-lasty);          
-	}
+      AnnotateStrokeCoordinate* point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 2);
+      if (point3)
+        { 
+          gint curx = point3->x; 
+          gint cury = point3->y;
+          if (!ellipse)
+	  {
+	    //rectangle
+	    cairo_rectangle (data->cr, lastx,lasty, curx-lastx, cury-lasty);
+	  }
+        else
+	  {
+	    //ellipse
+	    cairo_draw_ellipse(lastx,lasty, curx-lastx, cury-lasty);          
+	  }
+        }
     }
   else
     {
@@ -1067,12 +1072,12 @@ void rectify()
 	  out_point = (AnnotateStrokeCoordinate*)outptr->data;
 	  gint curx = out_point->x; 
 	  gint cury = out_point->y;
-	  /* draw line */
+	  // draw line
 	  annotate_draw_line (lastx, lasty, curx, cury);
 	  lastx = curx;
 	  lasty = cury;
 	  outptr = outptr ->next;   
-	} 
+	}
     }
   while (ptr)
     {
