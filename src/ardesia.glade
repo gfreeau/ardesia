@@ -3,7 +3,7 @@
   <requires lib="gtk+" version="2.14"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">800</property>
+    <property name="width_request">830</property>
     <property name="can_focus">True</property>
     <property name="has_focus">True</property>
     <property name="is_focus">True</property>
@@ -339,6 +339,21 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToolButton" id="buttonFiller">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Filler</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">filler</property>
+                <signal name="clicked" handler="on_toolsFiller_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToggleToolButton" id="buttonArrow">
                 <property name="width_request">32</property>
                 <property name="height_request">34</property>
@@ -448,6 +463,10 @@
   <object class="GtkImage" id="rectifier">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/shapes.png</property>
+  </object>
+  <object class="GtkImage" id="filler">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/filler.png</property>
   </object>
   <object class="GtkImage" id="black">
     <property name="visible">True</property>

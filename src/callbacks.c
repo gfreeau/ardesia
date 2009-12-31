@@ -144,7 +144,7 @@ void annotate()
   annotate_set_color(color);
 
   annotate_set_rectifier(rectifier);
-
+  
   annotate_set_width(tickness);
 
   annotate_set_arrow(arrow);
@@ -239,6 +239,15 @@ on_toolsRectifier_activate          (GtkToolButton   *toolbutton,
     {
        rectifier = FALSE;
     }
+}
+
+
+void
+on_toolsFiller_activate          (GtkToolButton   *toolbutton,
+                                      gpointer         user_data)
+{
+  grab = TRUE;
+  annotate_fill();
 }
 
 

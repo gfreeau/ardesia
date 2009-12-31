@@ -652,6 +652,7 @@ void annotate_set_rectifier(gboolean rectify)
   data->rectify = rectify;
 }
 
+
 /* Set arrow type */
 void annotate_set_arrow(int arrow)
 {
@@ -817,10 +818,9 @@ void annotate_select_tool (GdkDevice *device, guint state)
 void annotate_draw_line (gint x1, gint y1,
 			 gint x2, gint y2)
 {
-  cairo_move_to(data->cr, x1, y1);
   cairo_line_to(data->cr, x2, y2);
   cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
-  cairo_stroke(data->cr);
+  cairo_stroke_preserve(data->cr);
   data->painted = TRUE;
 }
 
@@ -853,10 +853,11 @@ void annotate_draw_arrow (gint x1, gint y1,
   arrowhead [3].x = x1 - 2 * widthcos - widthsin ;
   arrowhead [3].y = y1 +  widthcos - 2 * widthsin ;
 
-  cairo_line_to(data->cr, arrowhead[0].x, arrowhead[0].y);
+  cairo_move_to(data->cr, arrowhead[2].x, arrowhead[2].y); 
   cairo_line_to(data->cr, arrowhead[1].x, arrowhead[1].y);
-  cairo_line_to(data->cr, arrowhead[2].x, arrowhead[2].y);
+  cairo_line_to(data->cr, arrowhead[0].x, arrowhead[0].y);
   cairo_line_to(data->cr, arrowhead[3].x, arrowhead[3].y);
+
   cairo_close_path(data->cr);
   cairo_fill_preserve(data->cr);
   cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
@@ -1026,64 +1027,69 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
 /* Rectify the line or the shape*/
 void rectify()
 {
-      annotate_undo();
-      reset_cairo();
-      gboolean ellipse = FALSE;
-      gboolean close_path = FALSE;
-      GSList *outptr = broken(data->coordlist, &ellipse, &close_path);   
-      GSList *ptr = outptr;   
+  annotate_undo();
+  reset_cairo();
+  gboolean ellipse = FALSE;
+  gboolean close_path = FALSE;
+  GSList *outptr = broken(data->coordlist, &ellipse, &close_path);   
+  GSList *ptr = outptr;   
 
-      AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
+  AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
 
-      gint lastx = out_point->x; 
-      gint lasty = out_point->y;
+  gint lastx = out_point->x; 
+  gint lasty = out_point->y;
 
+  if (close_path)
+    {
+      // rectangle
+      outptr = outptr ->next;   
+      outptr = outptr ->next;   
+      out_point = (AnnotateStrokeCoordinate*)outptr->data;
+      gint curx = out_point->x; 
+      gint cury = out_point->y;
       if (!ellipse)
 	{
-           if (close_path)
-            {
-              // rectangle
-              outptr = outptr ->next;   
-	      outptr = outptr ->next;   
-	      out_point = (AnnotateStrokeCoordinate*)outptr->data;
-	      gint curx = out_point->x; 
-	      gint cury = out_point->y;
-              cairo_rectangle (data->cr, lastx,lasty, curx-lastx, cury-lasty);
-            }
-          else
-            {
-              // broken line
-              cairo_move_to(data->cr, lastx, lasty);
-	      while (outptr)
-	      {
-	     	 out_point = (AnnotateStrokeCoordinate*)outptr->data;
-	      	gint curx = out_point->x; 
-	      	gint cury = out_point->y;
-	      	/* draw line */
-	      	annotate_draw_line (lastx, lasty, curx, cury);
-	      	lastx = curx;
-	      	lasty = cury;
-	      	outptr = outptr ->next;   
-	      } 
-            }
+	  //rectangle
+	  cairo_rectangle (data->cr, lastx,lasty, curx-lastx, cury-lasty);
 	}
       else
 	{
-          /* make an ellipse */
-	  outptr = outptr ->next;   
-	  outptr = outptr ->next;   
+	  //ellipse
+	  cairo_draw_ellipse(lastx,lasty, curx-lastx, cury-lasty);          
+	}
+    }
+  else
+    {
+      // broken line
+      cairo_move_to(data->cr, lastx, lasty);
+      while (outptr)
+	{
 	  out_point = (AnnotateStrokeCoordinate*)outptr->data;
 	  gint curx = out_point->x; 
 	  gint cury = out_point->y;
-	  cairo_draw_ellipse(lastx,lasty, curx-lastx, cury-lasty);
-	}
-    
-      while (ptr)
-	{
-	  g_free(ptr->data);
-	  ptr = ptr->next;
-	}
-      g_slist_free (ptr);
+	  /* draw line */
+	  annotate_draw_line (lastx, lasty, curx, cury);
+	  lastx = curx;
+	  lasty = cury;
+	  outptr = outptr ->next;   
+	} 
+    }
+  while (ptr)
+    {
+      g_free(ptr->data);
+      ptr = ptr->next;
+    }
+  g_slist_free (ptr);
+}
+
+
+/* fill the last shape if it is a close path */
+void annotate_fill()
+{
+   select_color();  
+   cairo_fill(data->cr);
+   cairo_stroke(data->cr);
+   repaint();
 }
 
 
@@ -1103,18 +1109,9 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   gint width = data->cur_context->arrowsize * data->cur_context->width / 2;
   gfloat direction = 0;
 
-  cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2 * M_PI);
-  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
-  cairo_fill (data->cr);
-  
-  if ((ev->x != data->lastx) ||
-      (ev->y != data->lasty))
-    {
-      paintto (win, (GdkEventMotion *) ev, user_data);
-    }
+  cairo_line_to(data->cr, ev->x, ev->y);
 
-
-  cairo_stroke(data->cr);
+  cairo_stroke_preserve(data->cr);
   repaint();
 
   /* Rectifier code */
@@ -1138,7 +1135,7 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
         }
     }
 
-  cairo_stroke(data->cr);
+  cairo_stroke_preserve(data->cr);
   repaint();
   
   annotate_coord_list_free (data);
