@@ -46,10 +46,10 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_ardesia_OBJECTS = background.$(OBJEXT) broken.$(OBJEXT) \
-	annotate.$(OBJEXT) main.$(OBJEXT) interface.$(OBJEXT) \
-	utils.$(OBJEXT) saver.$(OBJEXT) color_selector.$(OBJEXT) \
-	preference_dialog.$(OBJEXT) recorder.$(OBJEXT) \
-	callbacks.$(OBJEXT)
+	bezier_spline.$(OBJEXT) annotate.$(OBJEXT) main.$(OBJEXT) \
+	interface.$(OBJEXT) utils.$(OBJEXT) saver.$(OBJEXT) \
+	color_selector.$(OBJEXT) preference_dialog.$(OBJEXT) \
+	recorder.$(OBJEXT) callbacks.$(OBJEXT)
 ardesia_OBJECTS = $(am_ardesia_OBJECTS)
 am__DEPENDENCIES_1 =
 ardesia_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -182,6 +182,7 @@ INCLUDES = \
 ardesia_SOURCES = \
         background.c background.h\
         broken.c broken.h\
+        bezier_spline.c bezier_spline.h\
         annotate.c annotate.h\
 	main.c \
 	interface.c interface.h \
@@ -276,6 +277,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/annotate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/background.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bezier_spline.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/broken.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/callbacks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/color_selector.Po@am__quote@

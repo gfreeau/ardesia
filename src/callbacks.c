@@ -80,6 +80,8 @@ gboolean     highlighter = FALSE;
 
 gboolean     rectifier = FALSE;
 
+gboolean     rounder = FALSE;
+
 /* arrow=0 mean no arrow, arrow=1 mean normal arrow, arrow=2 mean double arrow */
 int        arrow = 0;
 
@@ -144,6 +146,8 @@ void annotate()
   annotate_set_color(color);
 
   annotate_set_rectifier(rectifier);
+  
+  annotate_set_rounder(rounder);
   
   annotate_set_width(tickness);
 
@@ -233,11 +237,41 @@ on_toolsRectifier_activate          (GtkToolButton   *toolbutton,
   grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
+       /* if rounder is active release it */
+      GtkToggleToolButton* rounderToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonRounder"));
+      if (gtk_toggle_tool_button_get_active(rounderToolButton))
+        {
+	  gtk_toggle_tool_button_set_active(rounderToolButton, FALSE); 
+          rounder = FALSE;
+        }
        rectifier = TRUE;
     }
   else
     {
        rectifier = FALSE;
+    }
+}
+
+
+void
+on_toolsRounder_activate          (GtkToolButton   *toolbutton,
+				      gpointer         user_data)
+{
+  grab = TRUE;
+  if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
+    {
+      /* if rectifier is active release it */
+      GtkToggleToolButton* rectifierToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonRectifier"));
+      if (gtk_toggle_tool_button_get_active( rectifierToolButton))
+        {
+	  gtk_toggle_tool_button_set_active( rectifierToolButton, FALSE); 
+          rectifier = FALSE;
+        }
+       rounder = TRUE;
+    }
+  else
+    {
+       rounder = FALSE;
     }
 }
 

@@ -65,6 +65,9 @@ void annotate_set_width(guint width);
 /* Set rectifier */
 void annotate_set_rectifier(gboolean rectify);
 
+/* Set rounder */
+void annotate_set_rounder(gboolean rounder);
+
 /* fill the last shape if it is a close path */
 void annotate_fill();
 

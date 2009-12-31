@@ -3,7 +3,7 @@
   <requires lib="gtk+" version="2.14"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">830</property>
+    <property name="width_request">860</property>
     <property name="can_focus">True</property>
     <property name="has_focus">True</property>
     <property name="is_focus">True</property>
@@ -339,6 +339,21 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToggleToolButton" id="buttonRounder">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Rounder</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">rounder</property>
+                <signal name="toggled" handler="on_toolsRounder_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToolButton" id="buttonFiller">
                 <property name="width_request">32</property>
                 <property name="height_request">34</property>
@@ -462,7 +477,11 @@
   </object>
   <object class="GtkImage" id="rectifier">
     <property name="visible">True</property>
-    <property name="pixbuf">pixmaps/shapes.png</property>
+    <property name="pixbuf">pixmaps/rectifier.png</property>
+  </object>
+  <object class="GtkImage" id="rounder">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/rounder.png</property>
   </object>
   <object class="GtkImage" id="filler">
     <property name="visible">True</property>

@@ -21,9 +21,5 @@
  *
  */
 
-#ifndef BROKEN_FILE
-    #define BROKEN_FILE
-
-    GSList*    broken( GSList* inp, gboolean* close_path);
-
-#endif
+/* Spline the lines */
+void spline (cairo_t *cr, GSList *list);

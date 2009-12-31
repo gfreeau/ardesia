@@ -13,6 +13,7 @@ bin_PROGRAMS = ardesia
 ardesia_SOURCES = \
         background.c background.h\
         broken.c broken.h\
+        bezier_spline.c bezier_spline.h\
         annotate.c annotate.h\
 	main.c \
 	interface.c interface.h \

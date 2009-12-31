@@ -53,7 +53,7 @@
 
 static  double     tollerance = 15;
 
-GSList*                   broken(GSList* listInp,  gboolean* ellipse, gboolean*  close_path)
+GSList* broken(GSList* listInp, gboolean* close_path)
 {
     
   int X1,X2,Y1,Y2;
@@ -63,7 +63,6 @@ GSList*                   broken(GSList* listInp,  gboolean* ellipse, gboolean* 
     
   double H;
    
-  *ellipse = FALSE;
   *close_path = FALSE;
   GSList* listOut = NULL; 
   /*copy the first one point */
@@ -140,10 +139,6 @@ GSList*                   broken(GSList* listInp,  gboolean* ellipse, gboolean* 
     {
       /* close_path */
       *close_path = TRUE;
-      if (numpoint>6)
-	{
-	  *ellipse = TRUE;
-	}
       if (numpoint<5)
 	{
 	  return listOut;
