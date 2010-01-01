@@ -1036,7 +1036,8 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
 }
 
 
-void broke(GSList* outptr)
+/** Draw the point list */
+void draw_point_list(GSList* outptr)
 {
 
   AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
@@ -1066,24 +1067,10 @@ void rectify()
   GSList *outptr = broken(data->coordlist, &close_path);   
   GSList *ptr = outptr;   
 
+  draw_point_list(outptr);     
   if (close_path)
     {
-      // rectangle
-      AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
-      gint lastx = out_point->x; 
-      gint lasty = out_point->y;
-      AnnotateStrokeCoordinate* point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 2);
-      if (point3)
-        { 
-          gint curx = point3->x; 
-          gint cury = point3->y;
-	  cairo_rectangle (data->cr, lastx, lasty, curx-lastx, cury-lasty);
-        }
-    }
-  else
-    {
-	//broken line 
-        broke(outptr);     
+      cairo_close_path(data->cr);   
     }
   while (ptr)
     {
@@ -1165,13 +1152,13 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   if ( g_slist_length(data->coordlist)> 3)
     {
       if (data->rectify)
-      {
-        rectify();
-      } 
-    else if (data->roundify)
-      {
-        roundify(); 
-      }
+	{
+	  rectify();
+	} 
+      else if (data->roundify)
+	{
+	  roundify(); 
+	}
     }
 
   /* If is selected an arrowtype the draw the arrow */

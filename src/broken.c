@@ -48,7 +48,7 @@
 #include <broken.h>
 
 
-static  double     tollerance = 15;
+ 
 
 GSList* broken(GSList* listInp, gboolean* close_path)
 {
@@ -59,16 +59,28 @@ GSList* broken(GSList* listInp, gboolean* close_path)
   int numpoint = 2;
     
   double H;
-   
+  double     tollerance = 15;
+  
   *close_path = FALSE;
   GSList* listOut = NULL; 
+  
   /*copy the first one point */
   AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*)listInp->data;
   AnnotateStrokeCoordinate* first_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
   first_point->x = inp_point->x;
   first_point->y = inp_point->y;
   first_point->width = inp_point->width;
-   
+  
+  guint lenght = g_slist_length(listInp); 
+  AnnotateStrokeCoordinate* end_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, lenght-1);
+
+
+  if ((abs(end_point->x-first_point->x)<tollerance) &&(abs(end_point->y-first_point->y)<tollerance))
+    {
+      /* close path */
+      *close_path = TRUE;
+    } 
+
   listOut = g_slist_prepend (listOut, first_point); 
  
   area = 0.;
@@ -125,12 +137,12 @@ GSList* broken(GSList* listInp, gboolean* close_path)
       listInp = listInp->next;   
 
     }
-    
-  if ((abs(Cx-first_point->x)<tollerance) &&(abs(By-first_point->y)<tollerance))
+  
+  if (*close_path)
     {
+      //printf(" point %d \n", numpoint );
       /* close path */
-      *close_path = TRUE;
-      if (numpoint<5)
+      if (numpoint != 5)
 	{
 	  return listOut;
 	}
