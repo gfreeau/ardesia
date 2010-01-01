@@ -135,7 +135,7 @@ GSList* broken(GSList* listInp, gboolean* close_path)
   last_point->x = Cx;
   last_point->y = Cy;
   last_point->width = width;
-  if ((abs(Cx-first_point->x)<tollerance*5) &&(abs(By-first_point->y)<tollerance*5))
+  if ((abs(Cx-first_point->x)<tollerance) &&(abs(By-first_point->y)<tollerance))
     {
       /* close_path */
       *close_path = TRUE;

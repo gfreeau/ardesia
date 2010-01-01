@@ -1082,7 +1082,7 @@ void rectify()
     }
   else
     {
-	//broken line
+	//broken line 
         broke(outptr);     
     }
   while (ptr)
@@ -1162,14 +1162,16 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   repaint();
 
   /* Rectifier code */
-  if ((data->rectify)  && ( g_slist_length(data->coordlist)> 3))
-
+  if ( g_slist_length(data->coordlist)> 3)
     {
-      rectify();
-    } 
-  else if ((data->roundify)  && ( g_slist_length(data->coordlist)> 3))
-    {
-      roundify(); 
+      if (data->rectify)
+      {
+        rectify();
+      } 
+    else if (data->roundify)
+      {
+        roundify(); 
+      }
     }
 
   /* If is selected an arrowtype the draw the arrow */
