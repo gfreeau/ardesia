@@ -1064,7 +1064,7 @@ void rectify()
   annotate_undo();
   reset_cairo();
   gboolean close_path = FALSE;
-  GSList *outptr = broken(data->coordlist, &close_path);   
+  GSList *outptr = broken(data->coordlist, &close_path, TRUE);   
   GSList *ptr = outptr;   
 
   draw_point_list(outptr);     
@@ -1087,7 +1087,7 @@ void roundify()
   annotate_undo();
   reset_cairo();
   gboolean close_path = FALSE;
-  GSList *outptr = broken(data->coordlist, &close_path);   
+  GSList *outptr = broken(data->coordlist, &close_path, FALSE);   
   GSList *ptr = outptr;   
 
   if (close_path)
@@ -1142,8 +1142,18 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   
   gint width = data->cur_context->arrowsize * data->cur_context->width / 2;
   gfloat direction = 0;
+ 
+  AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*)data->coordlist->data;
+  int tollerance = 15;
 
-  cairo_line_to(data->cr, ev->x, ev->y);
+  if ((abs(ev->x-first_point->x)<tollerance) &&(abs(ev->y-first_point->y)<tollerance))
+    {
+      cairo_line_to(data->cr, first_point->x, first_point->y);
+    }
+  else
+    {
+      cairo_line_to(data->cr, ev->x, ev->y);
+    }
 
   cairo_stroke_preserve(data->cr);
   repaint();

@@ -50,7 +50,7 @@
 
  
 
-GSList* broken(GSList* listInp, gboolean* close_path)
+GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
 {
     
   int X1,X2,Y1,Y2;
@@ -142,7 +142,7 @@ GSList* broken(GSList* listInp, gboolean* close_path)
     {
       //printf(" point %d \n", numpoint );
       /* close path */
-      if (numpoint != 5)
+      if ((numpoint != 5)&&(rectify))
 	{
 	  return listOut;
 	}
