@@ -2,9 +2,6 @@
  * Ardesia-- a program for painting on the screen 
  * Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>
  *
- * Some parts of this file are been copied from gromit
- * Copyright (C) 2000 Simon Budig <Simon.Budig@unix-ag.org>
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -106,8 +103,7 @@ GSList* broken(GSList* listInp, gboolean* close_path)
 	  numpoint ++;
 	  Ax = Bx;
 	  Ay = By;
-	  // Prendi come ulteriore punto quello con scarto quadratico medio 
-	  // superiore alla tolleranza prescritta
+          // Take a further point with standard deviation greater than the tollerance
 	  inp_point = (AnnotateStrokeCoordinate*)listOut->data;
 	  if (abs(Bx-inp_point->x)<tollerance)
 	    {
@@ -130,20 +126,14 @@ GSList* broken(GSList* listInp, gboolean* close_path)
 
     }
     
-
-  AnnotateStrokeCoordinate* last_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
-  last_point->x = Cx;
-  last_point->y = Cy;
-  last_point->width = width;
   if ((abs(Cx-first_point->x)<tollerance) &&(abs(By-first_point->y)<tollerance))
     {
-      /* close_path */
+      /* close path */
       *close_path = TRUE;
       if (numpoint<5)
 	{
 	  return listOut;
 	}
-      listOut = g_slist_prepend (listOut, last_point);
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)listOut->data;
       gint minx = out_point->x;
       gint miny = out_point->y;
@@ -151,7 +141,6 @@ GSList* broken(GSList* listInp, gboolean* close_path)
       gint maxy = out_point->y;
       GSList* savedListOut = listOut;
                        
-      /* closed path */
       while (listOut)
 	{
 	  AnnotateStrokeCoordinate* cur_point = (AnnotateStrokeCoordinate*)listOut->data;
@@ -192,6 +181,10 @@ GSList* broken(GSList* listInp, gboolean* close_path)
     }
   else
     {
+      AnnotateStrokeCoordinate* last_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+      last_point->x = Cx;
+      last_point->y = Cy;
+      last_point->width = width;
       listOut = g_slist_prepend (listOut, last_point);
     }
 

@@ -1025,7 +1025,7 @@ gboolean paintto (GtkWidget *win,
 }
 
 
-/* This draw an ellipse taking the top left edge coordinates the width and the eight of the bouded rectangle */
+/* This draw an ellipse taking the top left edge coordinates the width and the eight of the bounded rectangle */
 void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
 {
   cairo_save(data->cr);
