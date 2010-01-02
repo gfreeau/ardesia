@@ -56,7 +56,7 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
   int X1,X2,Y1,Y2;
   double  area;
   int Ax, Ay, Bx, By, Cx, Cy;
-  int numpoint = 2;
+  int numpoint = 0;
     
   double H;
   double     tollerance = 15;
@@ -82,7 +82,8 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
     } 
 
   listOut = g_slist_prepend (listOut, first_point); 
- 
+  numpoint++; 
+
   area = 0.;
   Ax = inp_point->x;
   Ay = inp_point->y;
@@ -112,7 +113,6 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
        
       if (abs(H) > tollerance)
 	{   
-	  numpoint ++;
 	  Ax = Bx;
 	  Ay = By;
           // Take a further point with standard deviation greater than the tollerance
@@ -130,6 +130,7 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
 	  add_point->y = By;
 	  add_point->width = width;
 	  listOut = g_slist_prepend (listOut, add_point);
+          numpoint++; 
 	  area = 0.;
 	}
       Bx = Cx;
@@ -142,7 +143,7 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
     {
       //printf(" point %d \n", numpoint );
       /* close path */
-      if ((numpoint != 5)&&(rectify))
+      if ((numpoint != 4) && (rectify))
 	{
 	  return listOut;
 	}
