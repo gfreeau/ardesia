@@ -47,8 +47,52 @@
 #include <annotate.h>
 #include <broken.h>
 
+double     tollerance = 15;
 
+
+/* x is roundable to y */
+gboolean is_similar(int x, int y)
+{
+  int delta = abs(x-y); 
+  if (delta <= tollerance) 
+    {
+      return TRUE;
+    }
+  return FALSE;
+}
  
+
+/* 
+ * The list of point is roundable to a rectangle
+ * Note this algorithm found only the rettangle parallel to the axis
+ * in other case we must reason on degrees 
+ */
+gboolean is_a_rectangle(GSList* list)
+{
+  AnnotateStrokeCoordinate* point0 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
+  AnnotateStrokeCoordinate* point1 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 1);
+  if (!(is_similar(point0->x, point1->x)))
+    {
+      return FALSE; 
+    }
+  AnnotateStrokeCoordinate* point2 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 2);
+  if (!(is_similar(point1->y, point2->y)))
+    {
+      return FALSE; 
+    }
+  AnnotateStrokeCoordinate* point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 3);
+  if (!(is_similar(point2->x, point3->x)))
+    {
+      return FALSE; 
+    }
+  if (!(is_similar(point3->y, point0->y)))
+    {
+      return FALSE; 
+    }
+  // is a rectangle
+  return TRUE;
+}
+
 
 GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
 {
@@ -59,7 +103,6 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
   int numpoint = 0;
     
   double H;
-  double     tollerance = 15;
   
   *close_path = FALSE;
   GSList* listOut = NULL; 
@@ -75,7 +118,7 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
   AnnotateStrokeCoordinate* end_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, lenght-1);
 
 
-  if ((abs(end_point->x-first_point->x)<tollerance) &&(abs(end_point->y-first_point->y)<tollerance))
+  if ((is_similar(end_point->x,first_point->x)) &&(is_similar(end_point->y,first_point->y)))
     {
       /* close path */
       *close_path = TRUE;
@@ -141,11 +184,20 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
   
   if (*close_path)
     {
-      //printf(" point %d \n", numpoint );
       /* close path */
-      if ((numpoint != 4) && (rectify))
+      if (rectify)
 	{
-	  return listOut;
+	  if (numpoint != 4)
+            {
+	      return listOut;
+	    }
+	  else
+	    {
+              if (!(is_a_rectangle(listOut)))
+                {
+		  return listOut; 
+                }
+	    }
 	}
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)listOut->data;
       gint minx = out_point->x;
