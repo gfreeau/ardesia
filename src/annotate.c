@@ -1158,36 +1158,39 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   cairo_stroke_preserve(data->cr);
   repaint();
 
-  /* Rectifier code */
-  if ( g_slist_length(data->coordlist)> 3)
+  if (!(data->cur_context->type == ANNOTATE_ERASER))
     {
-      if (data->rectify)
+      /* Rectifier code */
+      if ( g_slist_length(data->coordlist)> 3)
 	{
-	  rectify();
-	} 
-      else if (data->roundify)
-	{
-	  roundify(); 
+	  if (data->rectify)
+	    {
+	      rectify();
+	    } 
+	  else if (data->roundify)
+	    {
+	      roundify(); 
+	    }
 	}
-    }
 
-  /* If is selected an arrowtype the draw the arrow */
-  if (data->arrow>0 && data->cur_context->arrowsize > 0 &&
-      annotate_coord_list_get_arrow_param (data, width * 3,
-					   &width, &direction))
-    {
-      /* print arrow at the end of the line */
-      annotate_draw_arrow (ev->x, ev->y, width, direction);
-      if (data->arrow==2)
-        {
-          /* print arrow at the beginning of the line */
-          annotate_draw_back_arrow (ev->x, ev->y, width, direction);
-        }
-    }
+      /* If is selected an arrowtype the draw the arrow */
+      if (data->arrow>0 && data->cur_context->arrowsize > 0 &&
+	  annotate_coord_list_get_arrow_param (data, width * 3,
+					       &width, &direction))
+	{
+	  /* print arrow at the end of the line */
+	  annotate_draw_arrow (ev->x, ev->y, width, direction);
+	  if (data->arrow==2)
+	    {
+	      /* print arrow at the beginning of the line */
+	      annotate_draw_back_arrow (ev->x, ev->y, width, direction);
+	    }
+	}
 
-  cairo_stroke_preserve(data->cr);
-  repaint();
-  
+      cairo_stroke_preserve(data->cr);
+      repaint();
+    } 
+
   annotate_coord_list_free (data);
  
   return TRUE;
