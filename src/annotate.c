@@ -1092,7 +1092,7 @@ void roundify()
 
   if (close_path)
     {
-      // ellipse
+      // draw outbounded ellipse with rectangle in the outptr list
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
       gint lastx = out_point->x; 
       gint lasty = out_point->y;
