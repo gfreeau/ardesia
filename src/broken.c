@@ -94,38 +94,23 @@ gboolean is_a_rectangle(GSList* list)
 }
 
 
-GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
+/* Return the relevant point of the line */
+GSList* extract_relevant_points(GSList *listInp, gboolean close_path)
 {
-    
+  AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*)listInp->data;
+  double H;
+  int Ax, Ay, Bx, By, Cx, Cy;
   int X1,X2,Y1,Y2;
   double  area;
-  int Ax, Ay, Bx, By, Cx, Cy;
-  int numpoint = 0;
-    
-  double H;
-  
-  *close_path = FALSE;
-  GSList* listOut = NULL; 
+  GSList* listOut = NULL;
   
   /*copy the first one point */
-  AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*)listInp->data;
   AnnotateStrokeCoordinate* first_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
   first_point->x = inp_point->x;
   first_point->y = inp_point->y;
   first_point->width = inp_point->width;
-  
-  guint lenght = g_slist_length(listInp); 
-  AnnotateStrokeCoordinate* end_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, lenght-1);
-
-
-  if ((is_similar(end_point->x,first_point->x)) &&(is_similar(end_point->y,first_point->y)))
-    {
-      /* close path */
-      *close_path = TRUE;
-    } 
-
+ 
   listOut = g_slist_prepend (listOut, first_point); 
-  numpoint++; 
 
   area = 0.;
   Ax = inp_point->x;
@@ -137,10 +122,9 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
   By = inp_point->y;
   Cx = inp_point->x;
   Cy = inp_point->y;
-  gint width = inp_point->width;
   
   listInp = listInp->next;   
- 
+
   while (listInp)
     {
       inp_point = (AnnotateStrokeCoordinate*)listInp->data;
@@ -151,14 +135,14 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
       X2 = Cx-Ax;
       Y2 = Cy-Ay;
       area += (double)(X1*Y2 - X2*Y1);
-     
+ 
       H = (2*area)/sqrt(X2*X2+Y2*Y2);
-       
+   
       if (abs(H) > tollerance)
 	{   
 	  Ax = Bx;
 	  Ay = By;
-          // Take a further point with standard deviation greater than the tollerance
+	  // Take a further point with standard deviation greater than the tollerance
 	  inp_point = (AnnotateStrokeCoordinate*)listOut->data;
 	  if (abs(Bx-inp_point->x)<tollerance)
 	    {
@@ -171,23 +155,51 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
 	  AnnotateStrokeCoordinate* add_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
 	  add_point->x = Bx;
 	  add_point->y = By;
-	  add_point->width = width;
+	  add_point->width = inp_point->width;
 	  listOut = g_slist_prepend (listOut, add_point);
-          numpoint++; 
 	  area = 0.;
 	}
       Bx = Cx;
       By = Cy;
       listInp = listInp->next;   
-
     }
+
+  if (!close_path)
+    {
+      AnnotateStrokeCoordinate* last_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+      last_point->x = Cx;
+      last_point->y = Cy;
+      last_point->width = inp_point->width;
+      listOut = g_slist_prepend (listOut, last_point);
+    }
+
+  return listOut;
+}
+
+
+GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
+{
+     
+  *close_path = FALSE;
+  
+  AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*)listInp->data;
+  guint lenght = g_slist_length(listInp); 
+  AnnotateStrokeCoordinate* end_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, lenght-1);
+
+  if ((is_similar(end_point->x,inp_point->x)) &&(is_similar(end_point->y,inp_point->y)))
+    {
+      /* close path */
+      *close_path = TRUE;
+    } 
+  
+  GSList* listOut = extract_relevant_points(listInp, *close_path);  
   
   if (*close_path)
     {
       /* close path */
       if (rectify)
 	{
-	  if (numpoint != 4)
+	  if ( g_slist_length(listOut) != 4)
             {
 	      return listOut;
 	    }
@@ -205,6 +217,7 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
       gint maxx = out_point->x;
       gint maxy = out_point->y;
       GSList* savedListOut = listOut;
+      gint width = inp_point->width;
                        
       while (listOut)
 	{
@@ -244,15 +257,6 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
       listOut = g_slist_prepend (listOut, point3);
 
     }
-  else
-    {
-      AnnotateStrokeCoordinate* last_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
-      last_point->x = Cx;
-      last_point->y = Cy;
-      last_point->width = width;
-      listOut = g_slist_prepend (listOut, last_point);
-    }
-
 
   return listOut;
 }
