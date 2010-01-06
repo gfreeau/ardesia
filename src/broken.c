@@ -69,6 +69,10 @@ gboolean is_similar(int x, int y)
  */
 gboolean is_a_rectangle(GSList* list)
 {
+  if ( g_slist_length(list) != 4)
+    {
+      return FALSE; 
+    }
   AnnotateStrokeCoordinate* point0 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
   AnnotateStrokeCoordinate* point1 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 1);
   if (!(is_similar(point0->x, point1->x)))
@@ -177,6 +181,58 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path)
 }
 
 
+GSList*  extract_outbounded_rectangle(GSList* listOut)
+{
+  AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)listOut->data;
+  gint minx = out_point->x;
+  gint miny = out_point->y;
+  gint maxx = out_point->x;
+  gint maxy = out_point->y;
+  GSList* savedListOut = listOut;
+  gint total_width = 0;
+  gint lenght = g_slist_length(listOut);
+                       
+  while (listOut)
+    {
+      AnnotateStrokeCoordinate* cur_point = (AnnotateStrokeCoordinate*)listOut->data;
+      minx = MIN(minx,cur_point->x);
+      miny = MIN(miny,cur_point->y);
+      maxx = MAX(maxx,cur_point->x);
+      maxy = MAX(maxy,cur_point->y);
+      total_width = total_width + cur_point->width; 
+      g_free(listOut->data);
+      listOut = listOut->next;
+    }   
+  g_slist_free (savedListOut);
+  listOut = NULL;
+  gint media_width = total_width/lenght; 
+  AnnotateStrokeCoordinate* point0 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+  point0->x = minx;
+  point0->y = miny;
+  point0->width = media_width;
+  listOut = g_slist_prepend (listOut, point0);
+                       
+  AnnotateStrokeCoordinate* point1 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+  point1->x = maxx;
+  point1->y = miny;
+  point1->width = media_width;
+  listOut = g_slist_prepend (listOut, point1);
+
+  AnnotateStrokeCoordinate* point2 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+  point2->x = maxx;
+  point2->y = maxy;
+  point2->width = media_width;
+  listOut = g_slist_prepend (listOut, point2);
+
+  AnnotateStrokeCoordinate* point3 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+  point3->x = minx;
+  point3->y = maxy;
+  point3->width = media_width;
+  listOut = g_slist_prepend (listOut, point3);
+  return listOut;
+}
+
+
 GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
 {
      
@@ -199,63 +255,21 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
       /* close path */
       if (rectify)
 	{
-	  if ( g_slist_length(listOut) != 4)
+          if (!(is_a_rectangle(listOut)))
             {
-	      return listOut;
+              return listOut; 
 	    }
-	  else
-	    {
-              if (!(is_a_rectangle(listOut)))
-                {
-		  return listOut; 
-                }
-	    }
+          else
+            {
+              /* is a rectangle */
+              listOut = extract_outbounded_rectangle(listOut); 
+            }
 	}
-      AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)listOut->data;
-      gint minx = out_point->x;
-      gint miny = out_point->y;
-      gint maxx = out_point->x;
-      gint maxy = out_point->y;
-      GSList* savedListOut = listOut;
-      gint width = inp_point->width;
-                       
-      while (listOut)
-	{
-	  AnnotateStrokeCoordinate* cur_point = (AnnotateStrokeCoordinate*)listOut->data;
-	  minx = MIN(minx,cur_point->x);
-	  miny = MIN(miny,cur_point->y);
-	  maxx = MAX(maxx,cur_point->x);
-	  maxy = MAX(maxy,cur_point->y); 
-	  g_free(listOut->data);
-	  listOut = listOut->next;
-	}   
-      g_slist_free (savedListOut);
-      listOut = NULL;
-
-      AnnotateStrokeCoordinate* point0 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
-      point0->x = minx;
-      point0->y = miny;
-      point0->width = width;
-      listOut = g_slist_prepend (listOut, point0);
-                       
-      AnnotateStrokeCoordinate* point1 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
-      point1->x = maxx;
-      point1->y = miny;
-      point1->width = width;
-      listOut = g_slist_prepend (listOut, point1);
-
-      AnnotateStrokeCoordinate* point2 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
-      point2->x = maxx;
-      point2->y = maxy;
-      point2->width = width;
-      listOut = g_slist_prepend (listOut, point2);
-
-      AnnotateStrokeCoordinate* point3 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
-      point3->x = minx;
-      point3->y = maxy;
-      point3->width = width;
-      listOut = g_slist_prepend (listOut, point3);
-
+      else
+        {
+           /*  make the outbounded rectangle that will used to draw the ellipse */
+           listOut = extract_outbounded_rectangle(listOut);
+        }  
     }
 
   return listOut;
