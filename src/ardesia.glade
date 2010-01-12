@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <interface>
-  <requires lib="gtk+" version="2.14"/>
+  <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
     <property name="width_request">860</property>
