@@ -886,7 +886,6 @@ void annotate_draw_back_arrow (gint x1, gint y1,
       annotate_coord_list_get_arrow_param (revertcoordata, width * 3,
 					   &width, &direction);
       annotate_draw_arrow (x0, y0, width, direction);
-      g_slist_free(revptr);
     }
   free(revertcoordata);
 }
