@@ -47,20 +47,58 @@
 #include <annotate.h>
 #include <broken.h>
 
-double     tollerance = 15;
+double     tollerance = 20;
 
 
-/* x is roundable to y */
-gboolean is_similar(int x, int y)
+/* number x is roundable to y */
+gboolean is_similar(int x, int y, int pixel_tollerance)
 {
   int delta = abs(x-y); 
-  if (delta <= tollerance) 
+  if (delta <= pixel_tollerance) 
     {
       return TRUE;
     }
   return FALSE;
 }
- 
+
+
+int get_distance(int x1, int y1, int x2, int y2)
+{
+      return (sqrt(pow(x1-x2,2) + pow(y1-y2,2)));
+}
+
+
+gboolean is_similar_point(int x1, int y1, int x2, int y2, int pixel_tollerance)
+{
+  double distance = get_distance(x1, y1, x2, y2);
+  if (distance < pixel_tollerance)
+    {
+      return TRUE;
+    }
+  else
+    {
+      return FALSE;
+    }
+}
+
+
+/* The list contain a point roundable to x y*/
+gboolean contain_similar_point(int x, int y, GSList* list, int pixel_tollerance)
+{
+  int i;
+  gint lenght = g_slist_length(list);
+  for (i=0; i<lenght; i++)
+    {
+      AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
+      
+      if (is_similar_point(x, y, point->x, point->y, tollerance))
+       {
+         return TRUE;
+       }
+    } 
+  return FALSE;
+} 
+
 
 /* 
  * The list of point is roundable to a rectangle
@@ -75,21 +113,21 @@ gboolean is_a_rectangle(GSList* list)
     }
   AnnotateStrokeCoordinate* point0 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
   AnnotateStrokeCoordinate* point1 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 1);
-  if (!(is_similar(point0->x, point1->x)))
+  if (!(is_similar(point0->x, point1->x, tollerance)))
     {
       return FALSE; 
     }
   AnnotateStrokeCoordinate* point2 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 2);
-  if (!(is_similar(point1->y, point2->y)))
+  if (!(is_similar(point1->y, point2->y, tollerance)))
     {
       return FALSE; 
     }
   AnnotateStrokeCoordinate* point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 3);
-  if (!(is_similar(point2->x, point3->x)))
+  if (!(is_similar(point2->x, point3->x, tollerance)))
     {
       return FALSE; 
     }
-  if (!(is_similar(point3->y, point0->y)))
+  if (!(is_similar(point3->y, point0->y, tollerance)))
     {
       return FALSE; 
     }
@@ -203,7 +241,7 @@ void found_min_and_max(GSList* listOut, gint* minx, gint* miny, gint* maxx, gint
 }
 
 
-gboolean is_similar_to_a_regular_poligon(GSList* list)
+gboolean is_similar_to_a_regular_poligon(GSList* list, int pixel_tollerance)
 {
   gint lenght = g_slist_length(list);
   double old_distance = 0;
@@ -212,10 +250,10 @@ gboolean is_similar_to_a_regular_poligon(GSList* list)
   for (i=1; i<lenght; i++)
     {
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
-      double distance = (sqrt(pow(point->x-old_point->x,2)+pow(point->y-old_point->y,2)));
-      if (old_distance!=0)
+      double distance = get_distance(point->x, point->y, old_point->x, old_point->y);
+      if (old_distance != 0)
         {
-          if (!(is_similar(distance, old_distance)))
+          if (!(is_similar(distance, old_distance, pixel_tollerance *2)))
             {
               return FALSE; 
             }
@@ -250,6 +288,13 @@ GSList* extract_poligon(GSList* listIn)
     {
       x1 = radius * cos(angle_off) + cx;
       y1 = radius * sin(angle_off) + cy;
+      if (i==0) 
+        {
+           if (!contain_similar_point(x1, y1, listIn, tollerance*2))
+             {
+                return listIn;  
+             }
+        } 
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, i);
       point->x = x1;
       point->y = y1;
@@ -306,7 +351,7 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
   guint lenght = g_slist_length(listInp); 
   AnnotateStrokeCoordinate* end_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, lenght-1);
 
-  if ((is_similar(end_point->x,inp_point->x)) &&(is_similar(end_point->y,inp_point->y)))
+  if ((is_similar(end_point->x, inp_point->x, tollerance)) &&(is_similar(end_point->y, inp_point->y, tollerance)))
     {
       /* close path */
       *close_path = TRUE;
@@ -319,31 +364,27 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
       /* close path */
       if (rectify)
 	{
-          if (!(is_a_rectangle(listOut)))
+          // is similar to regular a poligoin
+          if (is_similar_to_a_regular_poligon(listOut, tollerance * 2))
             {
-             if ( g_slist_length(listOut) > 4)
-               {
-                 // is similar to regular a poligoin
-                 if (is_similar_to_a_regular_poligon(listOut))
-                   {
-                     listOut = extract_poligon(listOut);
-                   }  
-                 return listOut;
-               }
-             else
-               {
-                 return listOut;
-               } 
-	    }
+              listOut = extract_poligon(listOut);
+            } 
           else
             {
-              /* is a rectangle */
-              GSList* listOutN = extract_outbounded_rectangle(listOut);
-              g_slist_foreach(listOut, (GFunc)g_free, NULL);
-	      g_slist_free(listOut);
-              listOut = listOutN;
-              return listOut;
-            }
+              if (is_a_rectangle(listOut))
+                {
+                  /* is a rectangle */
+                  GSList* listOutN = extract_outbounded_rectangle(listOut);
+                  g_slist_foreach(listOut, (GFunc)g_free, NULL);
+	          g_slist_free(listOut);
+                  listOut = listOutN;
+                  return listOut;
+                }
+              else
+                {
+                  return listOut;
+                } 
+            } 
 	}
       else
         {
