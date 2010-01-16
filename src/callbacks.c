@@ -97,9 +97,12 @@ gboolean  quit()
   annotate_quit();
 
   /* Disalloc */
+  gtk_main_quit();
+  GtkWidget* main_window = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
+  gtk_widget_destroy(main_window);
   g_object_unref ( G_OBJECT(gtkBuilder) ); 
 
-  gtk_main_quit();
+
   exit(ret);
 }
 
@@ -117,7 +120,7 @@ void add_alpha(char *color)
       color[6]='F';  
       color[7]='F';  
     }
-   color[8]=0;  
+   color[8]=0;
 }
 
 /* free color */

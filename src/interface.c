@@ -59,13 +59,13 @@ GtkWidget* create_mainWindow (void)
   GtkWidget *main_window = NULL;
 
   /* Initialize the main window */
-  gtkBuilder= gtk_builder_new();
+  gtkBuilder = gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
-  gtk_builder_add_from_file(gtkBuilder,PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S PACKAGE".glade",NULL);
+  gtk_builder_add_from_file(gtkBuilder, PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S PACKAGE".glade",NULL);
   
   /* Fill the window by the gtk builder xml */
-  main_window = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
+  main_window = GTK_WIDGET(gtk_builder_get_object(gtkBuilder, "winMain"));
 
   /* Set the width to 15 in the thick scale */ 
   setInitialWidth(15);

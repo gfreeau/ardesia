@@ -34,7 +34,7 @@
 #include <gdk/gdk.h>
 
 /* Take a GdkColor and return the RGB string */
-char * gdkcolor_to_rgb(GdkColor* gdkcolor)
+char* gdkcolor_to_rgb(GdkColor* gdkcolor)
 {
   char*   ret= malloc(7*sizeof(char));;
   /* transform in the  RGB format e.g. FF0000 */ 

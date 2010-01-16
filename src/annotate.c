@@ -197,7 +197,7 @@ void annotate_paint_context_free (AnnotatePaintContext *context)
 void annotate_coord_list_prepend (gint x, gint y, gint width)
 {
   AnnotateStrokeCoordinate *point;
-  point = g_malloc (sizeof (AnnotateStrokeCoordinate));
+  point = malloc (sizeof (AnnotateStrokeCoordinate));
   point->x = x;
   point->y = y;
   point->width = width;
@@ -211,7 +211,7 @@ void annotate_coord_list_prepend (gint x, gint y, gint width)
 void annotate_coord_list_free ()
 {
   GSList *ptr = data->coordlist;
-  g_slist_foreach(ptr, (GFunc)g_free, NULL);
+  g_slist_foreach(ptr, (GFunc)free, NULL);
   g_slist_free(ptr);
   data->coordlist = NULL;
 }
@@ -503,6 +503,7 @@ void set_pen_cursor(char *color)
   GdkCursor* cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, &background_color, size/2 + context_width/2, 5* size/2);
   gdk_window_set_cursor (data->win->window, cursor);
   gdk_flush ();
+  g_object_unref (pixmap);
   gdk_cursor_destroy (cursor);
   g_free(foreground_color_p);
   cairo_destroy(pen_cr);
@@ -564,14 +565,17 @@ gboolean in_unlock_area(int x, int y)
 /* Color selector; if eraser than select the transparent color else alloc the right color */ 
 void select_color()
 {
-  if (!(data->cur_context->type == ANNOTATE_ERASER))
+  if (data->cur_context)
     {
-      cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
-    }
-  else
-    {
-      cairo_set_transparent_color(data->cr);
-    }
+      if (!(data->cur_context->type == ANNOTATE_ERASER))
+        {
+          cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
+        }
+      else
+        {
+          cairo_set_transparent_color(data->cr);
+        }
+   }
 }
 
 
@@ -702,7 +706,7 @@ void destroy_cairo()
 void reset_cairo()
 {
   destroy_cairo();
-  AnnotateSave * save = malloc(sizeof(AnnotateData));
+  AnnotateSave *save = malloc(sizeof(AnnotateSave));
   save->previous  = NULL;
   save->next  = NULL;
   save->pixmap = gdk_pixmap_new (data->area->window, data->width,
@@ -1113,10 +1117,13 @@ void roundify()
 /* fill the last shape if it is a close path */
 void annotate_fill()
 {
-  select_color();  
-  cairo_fill(data->cr);
-  cairo_stroke(data->cr);
-  repaint();
+  if (data->cr)
+    {
+      select_color();  
+      cairo_fill(data->cr);
+      cairo_stroke(data->cr);
+      repaint();
+    }
 }
 
 
@@ -1351,6 +1358,7 @@ void setup_app ()
   /* default color is opaque red */ 
   char *color ="FF0000FF";
 
+  data->cr = NULL;
   data->display = gdk_display_get_default ();
   GdkScreen   *screen = gdk_display_get_default_screen (data->display);
 
