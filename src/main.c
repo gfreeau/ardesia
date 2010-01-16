@@ -50,7 +50,6 @@ int SOUTH=2;
 int SPACE_FROM_BORDER = 25;
 
 
-
 /* Get the screen resolution asking to the Xorg server throught the xlib libraries */
 int getScreenResolution(Display *display, int *width, int *height)
 {
@@ -101,8 +100,10 @@ int calculate_initial_position(GtkWidget *ardesiaBarWindow, int *x, int *y, int 
       return -1;
     }
   calculate_centered_position(ardesiaBarWindow,dwidth,dheight, x, y, wwidth, wheight, position);
+  XCloseDisplay (display);
   return 0; 
 }
+
 
 /* Print command line help */
 void print_help()
@@ -116,6 +117,8 @@ void print_help()
   printf("\n");
 }
 
+
+/* check if a composite manager is active */
 void check_composite()
 {
   GdkDisplay *display = gdk_display_get_default ();
@@ -123,7 +126,7 @@ void check_composite()
   gboolean composite = gdk_screen_is_composited (screen);
   if (!composite)
     {
-      /* composited must be enabled */
+      /* composite manager must be enabled */
       GtkWidget *msg_dialog; 
       msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
                                            GTK_BUTTONS_OK, gettext("In order to run Ardesia you need to enable the Compiz composite manager"));

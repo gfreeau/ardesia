@@ -43,6 +43,7 @@ typedef struct
 } BackgroundColorData;
 
 
+BackgroundColorData *bg_data;
 GtkWidget* background_window = NULL;
 
 
@@ -111,7 +112,6 @@ void clear_background()
 /* The windows has been exposed after the show_all request to change the background color */
 static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-  BackgroundColorData* bg_data = (BackgroundColorData*) data;
   cairo_t *cr = gdk_cairo_create(widget->window);
   cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
 
@@ -125,6 +125,7 @@ static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *
   put_background_above_annotations();
   free(bg_data->rgb);
   free(bg_data->a);
+  free(bg_data);
   return TRUE;
 }
 
@@ -168,13 +169,13 @@ void change_background_color (char* rgb, char *a)
 {
   clear_background();
   
-  BackgroundColorData *data = malloc (sizeof (BackgroundColorData));
-  data->rgb = rgb; 
-  data->a = a; 
+  bg_data = malloc (sizeof (BackgroundColorData));
+  bg_data->rgb = rgb; 
+  bg_data->a = a; 
 
   create_background_window();
   
-  g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_color_expose_event), data);
+  g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_color_expose_event), NULL);
 
   GdkDisplay *display = gdk_display_get_default ();
   GdkScreen *screen = gdk_display_get_default_screen (display);

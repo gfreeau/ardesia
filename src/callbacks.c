@@ -59,7 +59,7 @@
 #include <errno.h>
 
 
-#define COLORSIZE 9
+#define COLORSIZE 8
 
 /* annotation is visible */
 gboolean     visible = TRUE;
@@ -102,7 +102,6 @@ gboolean  quit()
   gtk_widget_destroy(main_window);
   g_object_unref ( G_OBJECT(gtkBuilder) ); 
 
-
   exit(ret);
 }
 
@@ -112,16 +111,15 @@ void add_alpha(char *color)
 {
   if (highlighter)
     {
-      color[6]='8';  
-      color[7]='8';  
+      strncpy(&color[6], "88", 2);
     }
   else
     {
-      color[6]='F';  
-      color[7]='F';  
+      strncpy(&color[6], "FF", 2);
     }
-   color[8]=0;
+  color[8]=0;
 }
+
 
 /* free color */
 void set_color(char* selected_color)
@@ -134,6 +132,7 @@ void set_color(char* selected_color)
   pencil = TRUE;
   strcpy(color, selected_color);
 }
+
 
 /* Start to annotate calling annotate */
 void annotate()

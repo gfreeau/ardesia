@@ -116,6 +116,7 @@ void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
     {
       gtk_widget_destroy(preferenceDialog);
     }
+  g_object_unref ( G_OBJECT(dialogGtkBuilder) );
 }
 
 
@@ -144,6 +145,7 @@ void on_preferenceCancelButton_clicked    (GtkButton *buton,
     {
       gtk_widget_destroy(preferenceDialog);
     }
+  g_object_unref ( G_OBJECT(dialogGtkBuilder) );
 }
 
 
@@ -206,10 +208,11 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
   }
 
   gtk_dialog_run(GTK_DIALOG(preferenceDialog));
-  if (preferenceDialog!=NULL)
+  if (preferenceDialog != NULL)
     {
       gtk_widget_destroy(preferenceDialog);
     }
+  g_object_unref ( G_OBJECT(dialogGtkBuilder) );
 }
 
 

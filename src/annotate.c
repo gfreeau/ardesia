@@ -694,11 +694,14 @@ void annotate_eraser_grab ()
 /* Destroy cairo context */
 void destroy_cairo()
 {
-  if (data->cr != NULL)
+   
+  int refcount = cairo_get_reference_count(data->cr);
+  int i = 0;
+  for  (i=0; i<refcount; i++)
     {
       cairo_destroy(data->cr);
-      data->cr = NULL;
     }
+  data->cr = NULL;
 }
 
 

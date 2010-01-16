@@ -53,6 +53,7 @@ void setInitialWidth(int val)
   gtk_range_set_value(&hScale->scale.range, val);
 }
 
+
 /* Create the main window */
 GtkWidget* create_mainWindow (void)
 {

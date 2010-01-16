@@ -36,6 +36,7 @@
 
 #include <png.h>
 
+
 /* Save the contents of the pixfuf in the file with name filename */
 gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
 {
@@ -134,7 +135,7 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
 void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char* workspace_dir)
 {
   char * date = get_date();
-  if (workspace_dir==NULL)
+  if (workspace_dir == NULL)
     {
       workspace_dir = (char *) get_desktop_dir();
     }	
@@ -166,7 +167,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Select a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), workspace_dir);
   
-  gchar* filename =  malloc(256*sizeof(char));
+  gchar* filename =  g_malloc(256*sizeof(gchar));
   sprintf(filename,"ardesia_%s", date);
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   gboolean screenshot = FALSE;
@@ -176,12 +177,13 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
 
       screenshot = TRUE;
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
+      free(workspace_dir);
       workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
       char* supported_extension = ".png";
       char* extension = strrchr(filename, '.');
       if ((extension==0) || (strcmp(extension, supported_extension) != 0))
         {
-          filename = (gchar *) realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar)); 
+          filename = (gchar *) g_realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar)); 
           (void) strcat((gchar *)filename, supported_extension);
           free(extension);
         }           

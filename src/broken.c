@@ -68,6 +68,7 @@ int get_distance(int x1, int y1, int x2, int y2)
 }
 
 
+/* The point (x1,y2) caan be rounded to (x2,y2) if the distance is minor that the pixel_tollerance */
 gboolean is_similar_point(int x1, int y1, int x2, int y2, int pixel_tollerance)
 {
   double distance = get_distance(x1, y1, x2, y2);
@@ -82,7 +83,7 @@ gboolean is_similar_point(int x1, int y1, int x2, int y2, int pixel_tollerance)
 }
 
 
-/* The list contain a point roundable to x y*/
+/* The list contain a point roundable to x y */
 gboolean contain_similar_point(int x, int y, GSList* list, int pixel_tollerance)
 {
   int i;
@@ -103,7 +104,6 @@ gboolean contain_similar_point(int x, int y, GSList* list, int pixel_tollerance)
 /* 
  * The list of point is roundable to a rectangle
  * Note this algorithm found only the rettangle parallel to the axis
- * in other case we must reason on degrees 
  */
 gboolean is_a_rectangle(GSList* list)
 {
@@ -136,7 +136,7 @@ gboolean is_a_rectangle(GSList* list)
 }
 
 
-/* Return the relevant point of the line */
+/* Return a subpath of listInp containg only the meaningful points using the standard deviation */
 GSList* extract_relevant_points(GSList *listInp, gboolean close_path)
 {
   AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*)listInp->data;
@@ -219,28 +219,30 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path)
 }
 
 
-void found_min_and_max(GSList* listOut, gint* minx, gint* miny, gint* maxx, gint* maxy, gint* total_width)
+/* Take the list and the rurn the minx miny maxx and maxy points */
+void found_min_and_max(GSList* list, gint* minx, gint* miny, gint* maxx, gint* maxy, gint* total_width)
 {
-  AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)listOut->data;
+  AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)list->data;
   *minx = out_point->x;
   *miny = out_point->y;
   *maxx = out_point->x;
   *maxy = out_point->y;
   *total_width = out_point->width;
   
-  while (listOut)
+  while (list)
     {
-      AnnotateStrokeCoordinate* cur_point = (AnnotateStrokeCoordinate*)listOut->data;
+      AnnotateStrokeCoordinate* cur_point = (AnnotateStrokeCoordinate*)list->data;
       *minx = MIN(*minx, cur_point->x);
       *miny = MIN(*miny, cur_point->y);
       *maxx = MAX(*maxx, cur_point->x);
       *maxy = MAX(*maxy, cur_point->y);
       *total_width = *total_width + cur_point->width;
-      listOut = listOut->next; 
+      list = list->next; 
     }   
 }
 
 
+/* The path described in list is similar to a regular poligon */
 gboolean is_similar_to_a_regular_poligon(GSList* list, int pixel_tollerance)
 {
   gint lenght = g_slist_length(list);
@@ -265,6 +267,7 @@ gboolean is_similar_to_a_regular_poligon(GSList* list, int pixel_tollerance)
 }
 
 
+/* Take a path and return the regular poligon path */
 GSList* extract_poligon(GSList* listIn)
 {
   int cx, cy;
@@ -304,6 +307,7 @@ GSList* extract_poligon(GSList* listIn)
 }
 
 
+/* Return the outbounded rectangle outside the path described to listIn */
 GSList*  extract_outbounded_rectangle(GSList* listIn)
 { 
   gint minx;
@@ -342,6 +346,7 @@ GSList*  extract_outbounded_rectangle(GSList* listIn)
 }
 
 
+/* Take a list of point and return magically the new path */
 GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
 {
      

@@ -33,6 +33,7 @@
 #include <errno.h>
 #include <gdk/gdk.h>
 
+
 /* Take a GdkColor and return the RGB string */
 char* gdkcolor_to_rgb(GdkColor* gdkcolor)
 {
@@ -50,10 +51,10 @@ char* gdkcolor_to_rgb(GdkColor* gdkcolor)
 GdkColor* rgb_to_gdkcolor(char* rgb)
 {
    GdkColor* gdkcolor = g_malloc (sizeof (GdkColor));
-   gchar    *ccolor = malloc(8);
+   gchar    *ccolor = malloc(7);
    ccolor[0]='#';
    strncpy(&ccolor[1], rgb, 6);
-   ccolor[7] = 0;
+   ccolor[7]=0;
    gdk_color_parse (ccolor, gdkcolor);
    g_free(ccolor);
    return gdkcolor;
@@ -78,7 +79,7 @@ char* get_date()
 gboolean file_exists(char* filename, char* desktop_dir)
 {
   char* afterslash = strrchr(filename, '/');
-  if (afterslash==0)
+  if (afterslash == 0)
     {
       /* relative path */
       filename = strcat(filename,desktop_dir);
