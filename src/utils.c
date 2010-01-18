@@ -34,12 +34,12 @@
 #include <gdk/gdk.h>
 
 
-/* Take a GdkColor and return the RGB string */
-char* gdkcolor_to_rgb(GdkColor* gdkcolor)
+/* Take a GdkColor and return the RGBA string */
+char* gdkcolor_to_rgba(GdkColor* gdkcolor)
 {
-  char*   ret= malloc(7*sizeof(char));;
-  /* transform in the  RGB format e.g. FF0000 */ 
-  sprintf(ret,"%02x%02x%02x", gdkcolor->red/257, gdkcolor->green/257, gdkcolor->blue/257);
+  char*   ret= malloc(9*sizeof(char));;
+  /* transform in the  RGBA format e.g. FF0000FF */ 
+  sprintf(ret,"%02x%02x%02xFF", gdkcolor->red/257, gdkcolor->green/257, gdkcolor->blue/257);
   return ret;
 }
 
@@ -51,9 +51,10 @@ char* gdkcolor_to_rgb(GdkColor* gdkcolor)
 GdkColor* rgb_to_gdkcolor(char* rgb)
 {
    GdkColor* gdkcolor = g_malloc (sizeof (GdkColor));
-   gchar    *ccolor = malloc(7);
+   gchar    *ccolor = malloc(8);
    ccolor[0]='#';
    strncpy(&ccolor[1], rgb, 6);
+   ccolor[7]=0;
    gdk_color_parse (ccolor, gdkcolor);
    g_free(ccolor);
    return gdkcolor;

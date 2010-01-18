@@ -83,7 +83,7 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
             {
               free(color);
             }
-          color = gdkcolor_to_rgb(gdkcolor);
+          color = gdkcolor_to_rgba(gdkcolor);
           if (picked_color == NULL)
             {
 	       picked_color = malloc(strlen(color));

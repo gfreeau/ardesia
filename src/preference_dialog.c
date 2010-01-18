@@ -76,10 +76,14 @@ void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
       GtkColorButton* backgroundColorButton = GTK_COLOR_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"backgroundColorButton"));
       GdkColor* gdkcolor = g_malloc (sizeof (GdkColor)); 
       gtk_color_button_get_color(backgroundColorButton,gdkcolor);
-      char* rgb = gdkcolor_to_rgb(gdkcolor);
+
+      char* rgb = gdkcolor_to_rgba(gdkcolor);
       char* a = malloc(3);
       sprintf(a,"%02x", gtk_color_button_get_alpha (backgroundColorButton)/257);
-      change_background_color(rgb,a);
+      strncpy(&rgb[6], a, 2);
+      change_background_color(rgb);
+      free(a);
+      free(rgb);
       g_free(gdkcolor);
       background = 1;  
     }

@@ -59,7 +59,7 @@
 #include <errno.h>
 
 
-#define COLORSIZE 8
+#define COLORSIZE 9
 
 /* annotation is visible */
 gboolean     visible = TRUE;
@@ -118,6 +118,7 @@ void add_alpha(char *color)
     {
       strncpy(&color[6], "FF", 2);
     }
+   color[8]=0;
 }
 
 

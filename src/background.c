@@ -36,15 +36,8 @@
 #include <stdlib.h> 
 
 
-typedef struct
-{
-  gchar*     rgb;
-  gchar*     a;
-} BackgroundColorData;
-
-
-BackgroundColorData *bg_data;
 GtkWidget* background_window = NULL;
+char* background_color = NULL;
 
 
 /* Load the contents of the file image with name "filename" into the pixbuf */
@@ -104,12 +97,6 @@ void clear_background()
     { 
       /* destroy brutally the background window */
       gtk_widget_destroy(background_window);
-      if (bg_data)
-        { 
-          free(bg_data->rgb);
-          free(bg_data->a);
-          free(bg_data);
-        }
     }
 }
 
@@ -121,8 +108,7 @@ static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *
   cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
 
   int r,g,b,a;
-  sscanf (bg_data->rgb, "%02X%02X%02X", &r, &g, &b);
-  sscanf (bg_data->a, "%02X", &a);
+  sscanf (background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
   cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
 
   cairo_paint(cr);
@@ -148,10 +134,10 @@ void create_background_window()
 /* Change the background image of ardesia  */
 void change_background_image (const char *name)
 {
-  clear_background();
   GdkPixbuf *pixbuf = NULL; 
   load_png(name,&pixbuf);   
   
+  clear_background();
   create_background_window();
 
   g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_file_expose_event), pixbuf);
@@ -167,18 +153,17 @@ void change_background_image (const char *name)
 
 
 /* Change the background color of ardesia  */
-void change_background_color (char* rgb, char *a)
+void change_background_color (char* rgba)
 {
-  clear_background();
-  
-  if (!bg_data)
+  if (background_color == NULL)
     {
-      bg_data = malloc (sizeof (BackgroundColorData));
+      background_color =  malloc(9);
     }
   
-  bg_data->rgb = rgb; 
-  bg_data->a = a; 
-
+  strcpy(background_color, rgba);
+  
+  clear_background();
+ 
   create_background_window();
   
   g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_color_expose_event), NULL);
