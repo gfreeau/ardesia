@@ -475,7 +475,7 @@ void annotate_select_pen()
 
 
 /* Set the cursor patching the xpm with the selected color */
-void set_pen_cursor(char *color)
+void set_pen_cursor()
 {
   gint size = 12;
   
@@ -498,7 +498,7 @@ void set_pen_cursor(char *color)
   cairo_stroke(pen_cr);
    
   GdkColor background_color =  {0, 0xFFFF, 0xFFFF, 0xFFFF}; 
-  GdkColor *foreground_color_p = rgb_to_gdkcolor(color);
+  GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color);
 
   GdkCursor* cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, &background_color, size/2 + context_width/2, 5* size/2);
   gdk_window_set_cursor (data->win->window, cursor);
@@ -625,7 +625,7 @@ void annotate_acquire_grab ()
     } 
   else
     {
-      set_pen_cursor(data->cur_context->fg_color);
+      set_pen_cursor();
     } 
   
   annotate_acquire_keyboard_grab();

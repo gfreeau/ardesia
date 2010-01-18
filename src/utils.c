@@ -54,7 +54,6 @@ GdkColor* rgb_to_gdkcolor(char* rgb)
    gchar    *ccolor = malloc(7);
    ccolor[0]='#';
    strncpy(&ccolor[1], rgb, 6);
-   ccolor[7]=0;
    gdk_color_parse (ccolor, gdkcolor);
    g_free(ccolor);
    return gdkcolor;

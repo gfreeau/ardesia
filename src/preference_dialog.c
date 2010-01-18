@@ -116,7 +116,6 @@ void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
     {
       gtk_widget_destroy(preferenceDialog);
     }
-  g_object_unref ( G_OBJECT(dialogGtkBuilder) );
 }
 
 
@@ -145,7 +144,6 @@ void on_preferenceCancelButton_clicked    (GtkButton *buton,
     {
       gtk_widget_destroy(preferenceDialog);
     }
-  g_object_unref ( G_OBJECT(dialogGtkBuilder) );
 }
 
 
@@ -158,7 +156,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
   GtkWidget *preferenceDialog;
 
   /* Initialize the main window */
-  dialogGtkBuilder= gtk_builder_new();
+  dialogGtkBuilder = gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
   gchar* name = "preferenceDialog.glade";
@@ -194,15 +192,15 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
   gtk_color_button_set_use_alpha      (GTK_COLOR_BUTTON(color_button), TRUE);
  
   /* Connect all signals by reflection */
-  gtk_builder_connect_signals ( dialogGtkBuilder, NULL );
+  gtk_builder_connect_signals (dialogGtkBuilder, NULL);
 
   GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"file"));
   GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(dialogGtkBuilder,"color"));
-  if (background==1)
+  if (background == 1)
   {
      gtk_toggle_button_set_active(colorToolButton,TRUE);
   }
-  else if (background==2)
+  else if (background == 2)
   {
      gtk_toggle_button_set_active(imageToolButton,TRUE);
   }
@@ -212,7 +210,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
     {
       gtk_widget_destroy(preferenceDialog);
     }
-  g_object_unref ( G_OBJECT(dialogGtkBuilder) );
+  g_object_unref (G_OBJECT(dialogGtkBuilder) );
 }
 
 

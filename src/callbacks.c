@@ -94,6 +94,7 @@ gboolean  quit()
 {
   gboolean ret = FALSE;
   quit_recorder();
+  clear_background();
   annotate_quit();
 
   /* Disalloc */
@@ -117,7 +118,6 @@ void add_alpha(char *color)
     {
       strncpy(&color[6], "FF", 2);
     }
-  color[8]=0;
 }
 
 

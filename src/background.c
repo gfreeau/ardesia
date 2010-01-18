@@ -91,7 +91,6 @@ static gboolean on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *e
   gdk_cairo_set_source_pixbuf(cr, pixbuf, 0.0, 0.0);
 
   cairo_paint(cr);
-  g_object_unref(pixbuf);
   cairo_destroy(cr);    
   put_background_above_annotations();
   return TRUE;
@@ -105,6 +104,12 @@ void clear_background()
     { 
       /* destroy brutally the background window */
       gtk_widget_destroy(background_window);
+      if (bg_data)
+        { 
+          free(bg_data->rgb);
+          free(bg_data->a);
+          free(bg_data);
+        }
     }
 }
 
@@ -123,9 +128,6 @@ static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *
   cairo_paint(cr);
   cairo_destroy(cr);    
   put_background_above_annotations();
-  free(bg_data->rgb);
-  free(bg_data->a);
-  free(bg_data);
   return TRUE;
 }
 
@@ -169,7 +171,11 @@ void change_background_color (char* rgb, char *a)
 {
   clear_background();
   
-  bg_data = malloc (sizeof (BackgroundColorData));
+  if (!bg_data)
+    {
+      bg_data = malloc (sizeof (BackgroundColorData));
+    }
+  
   bg_data->rgb = rgb; 
   bg_data->a = a; 
 
