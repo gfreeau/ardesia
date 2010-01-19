@@ -486,7 +486,7 @@ void set_pen_cursor()
   cairo_t *pen_cr = gdk_cairo_create(pixmap);
   clear_cairo_context(pen_cr);
    
-  cairo_set_operator(pen_cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_operator(pen_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(pen_cr, circle_width);
   cairo_set_source_color_from_string(pen_cr, data->cur_context->fg_color);
    
@@ -518,7 +518,7 @@ void set_eraser_cursor()
   int circle_width = 2; 
   cairo_t *eraser_cr = gdk_cairo_create(pixmap);
   clear_cairo_context(eraser_cr);
-  cairo_set_operator(eraser_cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_operator(eraser_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(eraser_cr, circle_width);
   cairo_set_source_rgba(eraser_cr,0,0,0,1);
   
@@ -731,7 +731,8 @@ void reset_cairo()
   
   data->cr = gdk_cairo_create(data->savelist->pixmap);
   cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
-  cairo_set_line_width(data->cr,data->cur_context->width);
+  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_line_width(data->cr, data->cur_context->width);
   select_color();  
 }
 
@@ -740,7 +741,7 @@ void reset_cairo()
 void clear_screen()
 {
   reset_cairo();
-  data->cr=gdk_cairo_create(data->savelist->pixmap);
+  data->cr = gdk_cairo_create(data->savelist->pixmap);
   clear_cairo_context(data->cr);
   repaint();
 }
@@ -826,7 +827,6 @@ void annotate_draw_line (gint x1, gint y1,
 			 gint x2, gint y2)
 {
   cairo_line_to(data->cr, x2, y2);
-  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
   cairo_stroke_preserve(data->cr);
   data->painted = TRUE;
 }
@@ -868,7 +868,6 @@ void annotate_draw_arrow (gint x1, gint y1,
 
   cairo_close_path(data->cr);
   cairo_fill_preserve(data->cr);
-  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
   cairo_stroke(data->cr);
  
   data->painted = TRUE;
@@ -962,7 +961,6 @@ gboolean paint (GtkWidget *win,
                  ev->device->name, ev->button, ev->x, ev->y);
     }
   cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2 * M_PI);
-  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
   cairo_fill (data->cr);
   cairo_move_to (data->cr, ev->x, ev->y);
   repaint();
