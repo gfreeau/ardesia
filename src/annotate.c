@@ -731,6 +731,7 @@ void reset_cairo()
   
   data->cr = gdk_cairo_create(data->savelist->pixmap);
   cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
+  cairo_set_line_join(data->cr, CAIRO_LINE_JOIN_ROUND); 
   cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(data->cr, data->cur_context->width);
   select_color();  
