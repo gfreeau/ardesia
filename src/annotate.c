@@ -946,6 +946,13 @@ gboolean paint (GtkWidget *win,
                 gpointer user_data)
 {
 
+  
+  /* only button1 allowed */
+  if (!(ev->button==1))
+  {
+      return FALSE;
+  }  
+
   reset_cairo();
   
   if (in_unlock_area(ev->x,ev->y))
@@ -997,8 +1004,6 @@ gboolean paintto (GtkWidget *win,
   else
     {
       /* the button is not pressed */
-      data->lastx = ev->x;
-      data->lasty = ev->y;
       return FALSE;
     }
 
@@ -1132,7 +1137,13 @@ void annotate_fill()
 /* This shots when the button is realeased */
 gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 {
- 
+   
+  /* only button1 allowed */
+  if (!(ev->button==1))
+  {
+      return FALSE;
+  }  
+
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
     {
