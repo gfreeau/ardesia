@@ -105,8 +105,7 @@ typedef struct
   int untoggleheight;
   cairo_t     *cr;
   GtkWidget   *win;
-  GtkWidget   *area;
-
+  
   GdkDisplay  *display;
 
   GdkPixmap   *shape;
@@ -334,8 +333,8 @@ gint repaint ()
 {
   AnnotateSave* annotate_save = data->savelist;
   GdkPixmap* saved_pixmap = annotate_save->pixmap;
-  gdk_draw_drawable (data->area->window,
-                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+  gdk_draw_drawable (data->win->window,
+                     data->win->style->fg_gc[GTK_WIDGET_STATE (data->win)],
                      saved_pixmap,
                      0, 0,
                      0, 0,
@@ -384,13 +383,13 @@ void annotate_undo_and_restore_pointer()
 /* Hide the annotations */
 void annotate_hide_annotation ()
 {
-  GdkPixmap *transparent_pixmap = gdk_pixmap_new (data->area->window, data->width,
+  GdkPixmap *transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
 						  data->height, -1);
   cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
   clear_cairo_context(transparent_cr);
 
-  gdk_draw_drawable (data->area->window,
-                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+  gdk_draw_drawable (data->win->window,
+                     data->win->style->fg_gc[GTK_WIDGET_STATE (data->win)],
                      transparent_pixmap,
                      0, 0,
                      0, 0,
@@ -417,7 +416,7 @@ void annotate_release_keyboard_grab()
 /* Acquire keyboard grab */
 void annotate_acquire_keyboard_grab()
 {
-  gdk_keyboard_grab (data->area->window,
+  gdk_keyboard_grab (data->win->window,
 		     ANNOTATE_KEYBOARD_EVENTS,
 		     GDK_CURRENT_TIME); 
   
@@ -589,7 +588,7 @@ void annotate_acquire_grab ()
 
   gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);   
 
-  result = gdk_pointer_grab (data->area->window, FALSE,
+  result = gdk_pointer_grab (data->win->window, FALSE,
 			     ANNOTATE_MOUSE_EVENTS, 0,
 			     NULL,
 			     GDK_CURRENT_TIME); 
@@ -712,7 +711,7 @@ void reset_cairo()
   AnnotateSave *save = malloc(sizeof(AnnotateSave));
   save->previous  = NULL;
   save->next  = NULL;
-  save->pixmap = gdk_pixmap_new (data->area->window, data->width,
+  save->pixmap = gdk_pixmap_new (data->win->window, data->width,
                                  data->height, -1);
  
   if (data->savelist != NULL)
@@ -721,7 +720,7 @@ void reset_cairo()
       save->previous=data->savelist;
       /* copy the old pixmap in the new one */
       gdk_draw_drawable (save->pixmap,
-			 data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+			 data->win->style->fg_gc[GTK_WIDGET_STATE (data->win)],
 			 save->previous->pixmap,
 			 0, 0,
 			 0, 0,
@@ -1313,8 +1312,8 @@ gboolean event_expose (GtkWidget *widget,
                        gpointer user_data)
 {
   /* draw the pixmap in the window */
-  gdk_draw_drawable (data->area->window,
-                     data->area->style->fg_gc[GTK_WIDGET_STATE (data->area)],
+  gdk_draw_drawable (data->win->window,
+                     data->win->style->fg_gc[GTK_WIDGET_STATE (data->win)],
                      data->savelist->pixmap,
                      event->area.x, event->area.y,
                      event->area.x, event->area.y,
@@ -1379,22 +1378,16 @@ void setup_app ()
   data->height = gdk_screen_get_height (screen);
 
   data->win = gtk_window_new (GTK_WINDOW_POPUP);
+  gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);
+  gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);
  
   gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
   gtk_widget_set_default_colormap(gdk_screen_get_rgba_colormap(screen));
+   
  
-  /* DRAWING AREA */
-  data->area = gtk_drawing_area_new ();
-  gtk_drawing_area_size (GTK_DRAWING_AREA (data->area),
-                         data->width, data->height);
-
-  gtk_container_add (GTK_CONTAINER (data->win), data->area);
-
-  gtk_window_fullscreen(GTK_WINDOW(data->win));
- 
-  g_signal_connect (data->area,"configure_event",
+  g_signal_connect (data->win,"configure_event",
                     G_CALLBACK (event_configure), NULL);
-  g_signal_connect (data->area, "expose_event",
+  g_signal_connect (data->win, "expose_event",
 		    G_CALLBACK (event_expose), NULL);
   g_signal_connect (data->win, "button_press_event", 
 		    G_CALLBACK(paint), NULL);
@@ -1450,7 +1443,6 @@ void annotate_quit()
   annotate_release_grab(); 
   /* destroy cairo */
   destroy_cairo();
-  gtk_widget_destroy(data->area); 
   gtk_widget_destroy(data->win); 
   /* free all */
   free(data->default_pen);
