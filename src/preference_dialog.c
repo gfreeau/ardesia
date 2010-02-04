@@ -155,9 +155,10 @@ void on_preferenceCancelButton_clicked    (GtkButton *buton,
  * Start the dialog that ask to the user
  * the background setting
  */
-void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char *installation_location)
+void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
 {
-  GtkWidget *preferenceDialog;
+ char *installation_location = PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S;
+ GtkWidget *preferenceDialog;
 
   /* Initialize the main window */
   dialogGtkBuilder = gtk_builder_new();

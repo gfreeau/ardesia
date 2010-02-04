@@ -22,4 +22,4 @@
  * Start the dialog that ask to the user
  * the background setting
  */
-void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char * installation_location);
+void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent);

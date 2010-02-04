@@ -403,8 +403,7 @@ void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
 					   gpointer         user_data)
 {
   grab = FALSE;
-  start_preference_dialog(toolbutton, get_annotation_window(), 
-                          PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S);
+  start_preference_dialog(toolbutton, get_annotation_window());
   annotate();
 }
 

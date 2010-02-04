@@ -24,7 +24,7 @@
 
 
 /* Take a GdkColor and return the RGB string */
-char * gdkcolor_to_rgb(GdkColor* gdkcolor);
+char* gdkcolor_to_rgba(GdkColor* gdkcolor);
 
 
 /*
