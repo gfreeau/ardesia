@@ -47,7 +47,7 @@
 #include <annotate.h>
 #include <broken.h>
 
-double     tollerance = 20;
+double     tollerance = 30;
 
 
 /* number x is roundable to y */
