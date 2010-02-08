@@ -874,6 +874,7 @@ void annotate_draw_arrow (gint x1, gint y1,
   arrowhead [3].y = y1 +  widthcos - 2 * widthsin ;
 
   cairo_stroke(data->cr);
+  cairo_save(data->cr);
   cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_BUTT);
   cairo_set_line_join(data->cr, CAIRO_LINE_JOIN_MITER); 
   cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
@@ -888,6 +889,7 @@ void annotate_draw_arrow (gint x1, gint y1,
   cairo_close_path(data->cr);
   cairo_fill_preserve(data->cr);
   cairo_stroke(data->cr);
+  cairo_restore(data->cr);
  
   data->painted = TRUE;
 }
@@ -1080,7 +1082,7 @@ void draw_point_list(GSList* outptr)
 
 
 /* Rectify the line or the shape*/
-void rectify()
+gboolean rectify()
 {
   annotate_undo();
   reset_cairo();
@@ -1093,11 +1095,12 @@ void rectify()
     {
       cairo_close_path(data->cr);   
     }
+  return close_path;
 }
 
 
 /* Roundify the line or the shape*/
-void roundify()
+gboolean roundify()
 {
   annotate_undo();
   reset_cairo();
@@ -1124,6 +1127,7 @@ void roundify()
     {
       spline(data->cr, outptr);
     }
+  return close_path;
 }
 
 
@@ -1181,34 +1185,38 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 
   cairo_stroke_preserve(data->cr);
   add_save_point();
-
+  
   if (!(data->cur_context->type == ANNOTATE_ERASER))
     {
+      gboolean closed_path = FALSE;
       /* Rectifier code */
       if ( g_slist_length(data->coordlist)> 3)
 	{
 	  if (data->rectify)
 	    {
-	      rectify();
+	      closed_path = rectify();
 	    } 
 	  else if (data->roundify)
 	    {
-	      roundify(); 
+	      closed_path = roundify(); 
 	    }
 	}
-      gboolean arrowparam =  annotate_coord_list_get_arrow_param (data, width * 3,
+      if (!closed_path)
+        {
+          gboolean arrowparam =  annotate_coord_list_get_arrow_param (data, width * 3,
 					       &width, &direction);
-      /* If is selected an arrowtype the draw the arrow */
-      if (data->arrow>0 && data->cur_context->arrowsize > 0 && arrowparam)
-	{
-	  /* print arrow at the end of the line */
-	  annotate_draw_arrow (ev->x, ev->y, width, direction);
-	  if (data->arrow==2)
+          /* If is selected an arrowtype the draw the arrow */
+          if (data->arrow>0 && data->cur_context->arrowsize > 0 && arrowparam)
 	    {
-	      /* print arrow at the beginning of the line */
-	      annotate_draw_back_arrow (ev->x, ev->y, width, direction);
+	      /* print arrow at the end of the line */
+	      annotate_draw_arrow (ev->x, ev->y, width, direction);
+	      if (data->arrow==2)
+	        {
+	          /* print arrow at the beginning of the line */
+	          annotate_draw_back_arrow (ev->x, ev->y, width, direction);
+	        }
 	    }
-	}
+        }
 
       cairo_stroke_preserve(data->cr);
       add_save_point();
