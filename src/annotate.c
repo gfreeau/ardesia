@@ -1024,8 +1024,7 @@ gboolean paintto (GtkWidget *win,
     
   data->lastx = ev->x;
   data->lasty = ev->y;
-  
-  add_save_point();
+ 
   return TRUE;
 }
 
@@ -1390,7 +1389,6 @@ void setup_app ()
  
   gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
   gtk_widget_set_default_colormap(gdk_screen_get_rgba_colormap(screen));
-   
  
   g_signal_connect (data->win,"configure_event",
                     G_CALLBACK (event_configure), NULL);
@@ -1431,6 +1429,9 @@ void setup_app ()
   setup_input_devices (data);
   
   gtk_widget_show_all(data->win);
+  
+  gtk_widget_set_app_paintable(data->win, TRUE);
+  gtk_widget_set_double_buffered(data->win, FALSE);
     
   /* SHAPE PIXMAP */
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
