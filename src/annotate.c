@@ -272,7 +272,7 @@ gboolean annotate_coord_list_get_arrow_param (AnnotateData* data,
       cur_point = ptr->data;
       x0 = cur_point->x;
       y0 = cur_point->y;
-      r2 = search_radius * search_radius;
+      r2 = pow(search_radius, 2);
       dist = 0;
 
       while (ptr && dist < r2)
@@ -281,14 +281,12 @@ gboolean annotate_coord_list_get_arrow_param (AnnotateData* data,
           if (ptr)
             {
               cur_point = ptr->data;
-              dist = (cur_point->x - x0) * (cur_point->x - x0) +
-		(cur_point->y - y0) * (cur_point->y - y0);
+              dist = pow(cur_point->x - x0, 2) + pow(cur_point->y - y0, 2);
               width = cur_point->width * data->cur_context->arrowsize;
-              if (width * 2 <= dist &&
-                  (!valid_point || valid_point->width < cur_point->width))
+              if(!valid_point || valid_point->width < cur_point->width)
 		{
 		  valid_point = cur_point;
-		}
+                }
             }
         }
 
@@ -1198,10 +1196,10 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 	      roundify(); 
 	    }
 	}
+      gboolean arrowparam =  annotate_coord_list_get_arrow_param (data, width * 3,
+					       &width, &direction);
       /* If is selected an arrowtype the draw the arrow */
-      if (data->arrow>0 && data->cur_context->arrowsize > 0 &&
-	  annotate_coord_list_get_arrow_param (data, width * 3,
-					       &width, &direction))
+      if (data->arrow>0 && data->cur_context->arrowsize > 0 && arrowparam)
 	{
 	  /* print arrow at the end of the line */
 	  annotate_draw_arrow (ev->x, ev->y, width, direction);
