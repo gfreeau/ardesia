@@ -91,7 +91,7 @@ typedef struct _AnnotateSave
 {
   gint xcursor;
   gint ycursor;
-  GdkPixmap *pixmap;
+  cairo_surface_t *surface;
   struct _AnnotateSave *next;
   struct _AnnotateSave *previous;
 } AnnotateSave;
@@ -228,8 +228,8 @@ void annotate_savelist_free ()
   /* annotate_save point to the first save point */
 
   while(annotate_save)
-    { 
-      g_object_unref(annotate_save->pixmap);
+    {
+      cairo_surface_destroy(annotate_save->surface); 
       free(annotate_save);
       annotate_save =  annotate_save->next; 
     }
@@ -246,7 +246,7 @@ void annotate_redolist_free ()
   /* delete all the savepoint after the current pointed */
   while(annotate_save)
     { 
-      g_object_unref(annotate_save->pixmap);
+      cairo_surface_destroy(annotate_save->surface); 
       free(annotate_save);
       annotate_save =  annotate_save->next; 
     }  
@@ -330,23 +330,22 @@ void clear_cairo_context(cairo_t* cr)
 gint add_save_point ()
 {
   AnnotateSave* annotate_save = data->savelist;
-  GdkPixmap* saved_pixmap = annotate_save->pixmap;
-  gdk_draw_drawable (saved_pixmap,
-                     data->win->style->fg_gc[GTK_WIDGET_STATE (data->win)],
-                     data->win->window,
-                     0, 0,
-                     0, 0,
-                     data->width, data->height);
+  cairo_surface_t* saved_surface = annotate_save->surface;
+  cairo_surface_t* source_surface = cairo_get_target(data->cr);
+  cairo_t *cr = cairo_create (saved_surface);
+  cairo_set_source_surface (cr, source_surface, 0, 0);
+  cairo_paint(cr);
+  cairo_destroy(cr);
   return 1;
 }
 
 
-void restore_pixmap()
+void restore_surface()
 {
   AnnotateSave* annotate_save = data->savelist;
-  GdkPixmap* saved_pixmap = annotate_save->pixmap;
+  cairo_surface_t* saved_surface = annotate_save->surface;
   cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
-  gdk_cairo_set_source_pixmap(data->cr, saved_pixmap, 0.0, 0.0);
+  cairo_set_source_surface (data->cr, saved_surface, 0, 0);
   cairo_paint(data->cr);
 }
 
@@ -359,7 +358,7 @@ void annotate_undo()
       if (data->savelist->previous)
         {
           data->savelist = data->savelist->previous;
-          restore_pixmap(); 
+          restore_surface(); 
         }
     }
 }
@@ -373,7 +372,7 @@ void annotate_redo()
       if (data->savelist->next)
         {
           data->savelist = data->savelist->next;
-          restore_pixmap(); 
+          restore_surface(); 
         }
     }
 }
@@ -404,7 +403,7 @@ void annotate_hide_annotation ()
 /* Show the annotations */
 void annotate_show_annotation ()
 {
-  restore_pixmap();
+  restore_surface();
 }
 
 
@@ -722,24 +721,23 @@ void reset_cairo()
   AnnotateSave *save = malloc(sizeof(AnnotateSave));
   save->previous  = NULL;
   save->next  = NULL;
-  save->pixmap = gdk_pixmap_new (data->win->window, data->width,
-                                 data->height, -1);
- 
+  save->surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, data->width, data->height); 
+
   if (data->savelist != NULL)
     {
       data->savelist->next=save;
       save->previous=data->savelist;
-      /* copy the old pixmap in the new one */
-      gdk_draw_drawable (save->pixmap,
-			 data->win->style->fg_gc[GTK_WIDGET_STATE (data->win)],
-			 save->previous->pixmap,
-			 0, 0,
-			 0, 0,
-			 data->width, data->height);
+
+      /* copy the old surface in the new one */
+      cairo_surface_t* saved_surface = save->surface;
+      cairo_surface_t* source_surface = save->previous->surface;
+      cairo_t *cr = cairo_create (saved_surface);
+      cairo_set_source_surface (cr, source_surface, 0, 0);
+      cairo_paint(cr);
+      cairo_destroy(cr);
     }
   data->savelist=save;
-  
-  configure_pen_options(); 
+  configure_pen_options();  
 }
 
 
@@ -1297,6 +1295,7 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       sprintf(utf8,"%c", event->keyval);
       cairo_text_extents (data->cr, utf8, &extents);
       cairo_show_text (data->cr, utf8); 
+      cairo_stroke(data->cr);
       add_save_point();
  
       /* move cursor to the x step */
@@ -1325,13 +1324,8 @@ gboolean event_expose (GtkWidget *widget,
   cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
   clear_cairo_context(transparent_cr);
   cairo_destroy(transparent_cr);
-   
-  gdk_draw_drawable (data->win->window,
-                     data->win->style->fg_gc[GTK_WIDGET_STATE (data->win)],
-                     data->savelist->pixmap,
-                     event->area.x, event->area.y,
-                     event->area.x, event->area.y,
-                     event->area.width, event->area.height);
+  //TODO paint surface in window
+  restore_surface();
   return TRUE;
 }
 
