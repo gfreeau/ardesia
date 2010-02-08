@@ -152,7 +152,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path)
   first_point->y = inp_point->y;
   first_point->width = inp_point->width;
  
-  listOut = g_slist_prepend (listOut, first_point); 
+  listOut = g_slist_append (listOut, first_point); 
 
   area = 0.;
   Ax = inp_point->x;
@@ -198,7 +198,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path)
 	  add_point->x = Bx;
 	  add_point->y = By;
 	  add_point->width = inp_point->width;
-	  listOut = g_slist_prepend (listOut, add_point);
+	  listOut = g_slist_append (listOut, add_point);
 	  area = 0.;
 	}
       Bx = Cx;
@@ -212,7 +212,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path)
       last_point->x = Cx;
       last_point->y = Cy;
       last_point->width = inp_point->width;
-      listOut = g_slist_prepend (listOut, last_point);
+      listOut = g_slist_append (listOut, last_point);
     }
 
   return listOut;

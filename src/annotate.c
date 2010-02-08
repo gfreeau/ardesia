@@ -853,7 +853,7 @@ void annotate_draw_arrow (gint x1, gint y1,
 {
   GdkPoint arrowhead [4];
 
-  int penwidth = data->cur_context->width;
+  int penwidth = data->cur_context->width/2;
   int penwidthcos = 2 * penwidth * cos (direction);
   int penwidthsin = 2 * penwidth * sin (direction);
   int widthcos = penwidthcos;
@@ -876,6 +876,12 @@ void annotate_draw_arrow (gint x1, gint y1,
   arrowhead [3].y = y1 +  widthcos - 2 * widthsin ;
 
   cairo_stroke(data->cr);
+  cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_BUTT);
+  cairo_set_line_join(data->cr, CAIRO_LINE_JOIN_MITER); 
+  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_line_width(data->cr, penwidth);
+  select_color();  
+
   cairo_move_to(data->cr, arrowhead[2].x, arrowhead[2].y); 
   cairo_line_to(data->cr, arrowhead[1].x, arrowhead[1].y);
   cairo_line_to(data->cr, arrowhead[0].x, arrowhead[0].y);
@@ -1192,7 +1198,6 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 	      roundify(); 
 	    }
 	}
-
       /* If is selected an arrowtype the draw the arrow */
       if (data->arrow>0 && data->cur_context->arrowsize > 0 &&
 	  annotate_coord_list_get_arrow_param (data, width * 3,
@@ -1218,24 +1223,6 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 /*
  * Functions for handling various (GTK+)-Events
  */
-
-/* Configure event */
-gboolean event_configure (GtkWidget *widget,
-                          GdkEventExpose *event,
-                          gpointer user_data)
-{
-  data->cr = gdk_cairo_create(data->win->window);
-  clear_screen();
-   
-  transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
-						  data->height, -1);
-  cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
-  clear_cairo_context(transparent_cr);
-  cairo_destroy(transparent_cr);
-   
-  return TRUE;
-}
-
 
 /* press keyboard event */
 gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
@@ -1323,6 +1310,16 @@ gboolean event_expose (GtkWidget *widget,
                        GdkEventExpose *event, 
                        gpointer user_data)
 {
+
+  data->cr = gdk_cairo_create(data->win->window);
+  clear_screen();
+   
+  transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
+						  data->height, -1);
+  cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
+  clear_cairo_context(transparent_cr);
+  cairo_destroy(transparent_cr);
+   
   gdk_draw_drawable (data->win->window,
                      data->win->style->fg_gc[GTK_WIDGET_STATE (data->win)],
                      data->savelist->pixmap,
@@ -1395,8 +1392,6 @@ void setup_app ()
   gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
   gtk_widget_set_default_colormap(gdk_screen_get_rgba_colormap(screen));
  
-  g_signal_connect (data->win,"configure_event",
-                    G_CALLBACK (event_configure), NULL);
   g_signal_connect (data->win, "expose_event",
 		    G_CALLBACK (event_expose), NULL);
   g_signal_connect (data->win, "button_press_event", 
