@@ -3,7 +3,7 @@
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">860</property>
+    <property name="width_request">890</property>
     <property name="can_focus">True</property>
     <property name="has_focus">True</property>
     <property name="is_focus">True</property>
@@ -280,6 +280,21 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToolButton" id="buttonUnlock">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Unlock</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">unlock</property>
+                <signal name="clicked" handler="on_buttonUnlock_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToolButton" id="buttonClear">
                 <property name="width_request">32</property>
                 <property name="height_request">34</property>
@@ -526,6 +541,10 @@
   <object class="GtkImage" id="doublearrow">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/doublearrow.png</property>
+  </object>
+  <object class="GtkImage" id="unlock">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/unlock.png</property>
   </object>
   <object class="GtkAdjustment" id="widthAdjustment">
     <property name="value">15</property>

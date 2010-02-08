@@ -408,6 +408,14 @@ void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
 }
 
 
+void on_buttonUnlock_activate              (GtkToolButton   *toolbutton,
+					   gpointer         user_data)
+{
+  grab = FALSE;
+  annotate_release_grab ();
+}
+
+
 void on_buttonUndo_activate              (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
