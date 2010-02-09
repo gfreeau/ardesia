@@ -727,14 +727,6 @@ void reset_cairo()
     {
       data->savelist->next=save;
       save->previous=data->savelist;
-
-      /* copy the old surface in the new one */
-      cairo_surface_t* saved_surface = save->surface;
-      cairo_surface_t* source_surface = save->previous->surface;
-      cairo_t *cr = cairo_create (saved_surface);
-      cairo_set_source_surface (cr, source_surface, 0, 0);
-      cairo_paint(cr);
-      cairo_destroy(cr);
     }
   data->savelist=save;
   configure_pen_options();  
@@ -746,7 +738,6 @@ void clear_screen()
 {
   reset_cairo();
   clear_cairo_context(data->cr);
-  cairo_stroke(data->cr);
   add_save_point();
 }
 
