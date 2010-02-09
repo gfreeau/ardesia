@@ -746,6 +746,7 @@ void clear_screen()
 {
   reset_cairo();
   clear_cairo_context(data->cr);
+  cairo_stroke(data->cr);
   add_save_point();
 }
 
@@ -988,7 +989,6 @@ gboolean paint (GtkWidget *win,
   cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2 * M_PI);
   cairo_fill (data->cr);
   cairo_move_to (data->cr, ev->x, ev->y);
-  add_save_point();
   data->lastx = ev->x;
   data->lasty = ev->y;
   annotate_coord_list_prepend (ev->x, ev->y, data->maxwidth);
@@ -1324,7 +1324,6 @@ gboolean event_expose (GtkWidget *widget,
   cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
   clear_cairo_context(transparent_cr);
   cairo_destroy(transparent_cr);
-  //TODO paint surface in window
   restore_surface();
   return TRUE;
 }
