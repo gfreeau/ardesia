@@ -320,9 +320,11 @@ void  cairo_set_transparent_color(cairo_t * cr)
 /* Clear cairo context */
 void clear_cairo_context(cairo_t* cr)
 {
+  cairo_save(cr);
   cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
   cairo_set_transparent_color(cr);
   cairo_paint(cr);
+  cairo_restore(cr);
 }
 
 
