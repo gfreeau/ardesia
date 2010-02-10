@@ -130,6 +130,7 @@ typedef struct
   gboolean     roundify;
   guint        arrow;
   gboolean     debug;
+  gboolean     cursor_hidden;
 } AnnotateData;
 
 AnnotateData* data;
@@ -578,7 +579,7 @@ void select_color()
         {
           cairo_set_transparent_color(data->cr);
         }
-   }
+    }
 }
 
 
@@ -951,18 +952,50 @@ gboolean proximity_out (GtkWidget *win,
   return FALSE;
 }
 
+void hide_cursor()
+{
+  char invisible_cursor_bits[] = { 0x0 };
+  GdkCursor* cursor;
+  GdkBitmap *empty_bitmap;
+  GdkColor color = { 0, 0, 0, 0 };
+  empty_bitmap = gdk_bitmap_create_from_data (data->win->window,
+					      invisible_cursor_bits,
+					      1, 1);
+  cursor = gdk_cursor_new_from_pixmap (empty_bitmap, empty_bitmap, &color,
+				       &color, 0, 0);
+  gdk_window_set_cursor(data->win->window, cursor);
+  gdk_cursor_destroy(cursor);
+  data->cursor_hidden = TRUE;
+}
+
+void unhide_cursor()
+{
+  if (data->cursor_hidden)
+    {
+      if(data->cur_context && data->cur_context->type == ANNOTATE_ERASER)
+	{
+	  set_eraser_cursor(data);
+	} 
+      else
+	{
+	  set_pen_cursor();
+	}
+      data->cursor_hidden = FALSE;
+    }  
+}
 
 /* This is called when the button is pushed */
 gboolean paint (GtkWidget *win,
                 GdkEventButton *ev, 
                 gpointer user_data)
 { 
+  unhide_cursor();  
   annotate_coord_list_free (data);
   /* only button1 allowed */
   if (!(ev->button==1))
-  {
+    {
       return FALSE;
-  }  
+    }  
 
   reset_cairo();
   
@@ -979,13 +1012,6 @@ gboolean paint (GtkWidget *win,
       g_printerr("DEBUG: Device '%s': Button %i Down at (x,y)=(%.2f : %.2f)\n",
                  ev->device->name, ev->button, ev->x, ev->y);
     }
-  cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2 * M_PI);
-  cairo_fill (data->cr);
-  cairo_move_to (data->cr, ev->x, ev->y);
-  data->lastx = ev->x;
-  data->lasty = ev->y;
-  annotate_coord_list_prepend (ev->x, ev->y, data->maxwidth);
-  data->painted = TRUE;
   return TRUE;
 }
 
@@ -995,7 +1021,7 @@ gboolean paintto (GtkWidget *win,
                   GdkEventMotion *ev, 
                   gpointer user_data)
 {
-
+  unhide_cursor();  
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
     {
@@ -1020,7 +1046,7 @@ gboolean paintto (GtkWidget *win,
   if (!(ev->device->source == GDK_SOURCE_MOUSE))
     {
       gint width = (CLAMP (pressure * pressure,0,1) *
-			(double) data->cur_context->width);
+		    (double) data->cur_context->width);
       if (width!=data->maxwidth)
         {
           data->maxwidth = width; 
@@ -1034,7 +1060,7 @@ gboolean paintto (GtkWidget *win,
 
   data->lastx = ev->x;
   data->lasty = ev->y;
- 
+
   return TRUE;
 }
 
@@ -1128,10 +1154,10 @@ void annotate_fill()
   if (data->cr)
     {
       if (!(data->roundify)&&(!(data->rectify)))
-      {
-        draw_point_list(data->coordlist);     
-        cairo_close_path(data->cr);      
-      }
+	{
+	  draw_point_list(data->coordlist);     
+	  cairo_close_path(data->cr);      
+	}
       select_color();
       cairo_fill(data->cr);
       cairo_stroke(data->cr);
@@ -1146,9 +1172,9 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
    
   /* only button1 allowed */
   if (!(ev->button==1))
-  {
+    {
       return FALSE;
-  }  
+    }  
 
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
@@ -1161,57 +1187,74 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   
   gint width = data->cur_context->arrowsize * data->cur_context->width / 2;
   gfloat direction = 0;
- 
-  AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*)data->coordlist->data;
-  int tollerance = 15;
 
-  if ((abs(ev->x-first_point->x)<tollerance) &&(abs(ev->y-first_point->y)<tollerance))
-    {
-      cairo_line_to(data->cr, first_point->x, first_point->y);
+  if (!data->coordlist)
+    {  
+      cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2 * M_PI);
+      cairo_fill (data->cr);
+      cairo_move_to (data->cr, ev->x, ev->y);
+      data->lastx = ev->x;
+      data->lasty = ev->y;
+      annotate_coord_list_prepend (ev->x, ev->y, data->maxwidth);
+      data->painted = TRUE;
     }
   else
-    {
-      cairo_line_to(data->cr, ev->x, ev->y);
+    { 
+      AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*)data->coordlist->data;
+      int tollerance = 15;
+ 
+      if ((abs(ev->x-first_point->x)<tollerance) &&(abs(ev->y-first_point->y)<tollerance))
+	{
+	  cairo_line_to(data->cr, first_point->x, first_point->y);
+	}
+      else
+	{
+	  cairo_line_to(data->cr, ev->x, ev->y);
+	}
     }
 
   cairo_stroke_preserve(data->cr);
   add_save_point();
-  
-  if (!(data->cur_context->type == ANNOTATE_ERASER))
-    {
-      gboolean closed_path = FALSE;
-      /* Rectifier code */
-      if ( g_slist_length(data->coordlist)> 3)
+ 
+  if (data->coordlist)
+    {  
+      if (!(data->cur_context->type == ANNOTATE_ERASER))
 	{
-	  if (data->rectify)
+	  gboolean closed_path = FALSE;
+	  /* Rectifier code */
+	  if ( g_slist_length(data->coordlist)> 3)
 	    {
-	      closed_path = rectify();
-	    } 
-	  else if (data->roundify)
-	    {
-	      closed_path = roundify(); 
+	      if (data->rectify)
+		{
+		  closed_path = rectify();
+		} 
+	      else if (data->roundify)
+		{
+		  closed_path = roundify(); 
+		}
 	    }
-	}
-      if (!closed_path)
-        {
-          gboolean arrowparam =  annotate_coord_list_get_arrow_param (data, width * 3,
-					       &width, &direction);
-          /* If is selected an arrowtype the draw the arrow */
-          if (data->arrow>0 && data->cur_context->arrowsize > 0 && arrowparam)
+	  if (!closed_path)
 	    {
-	      /* print arrow at the end of the line */
-	      annotate_draw_arrow (ev->x, ev->y, width, direction);
-	      if (data->arrow==2)
-	        {
-	          /* print arrow at the beginning of the line */
-	          annotate_draw_back_arrow (ev->x, ev->y, width, direction);
-	        }
+	      gboolean arrowparam =  annotate_coord_list_get_arrow_param (data, width * 3,
+									  &width, &direction);
+	      /* If is selected an arrowtype the draw the arrow */
+	      if (data->arrow>0 && data->cur_context->arrowsize > 0 && arrowparam)
+		{
+		  /* print arrow at the end of the line */
+		  annotate_draw_arrow (ev->x, ev->y, width, direction);
+		  if (data->arrow==2)
+		    {
+		      /* print arrow at the beginning of the line */
+		      annotate_draw_back_arrow (ev->x, ev->y, width, direction);
+		    }
+		}
 	    }
-        }
 
-      cairo_stroke_preserve(data->cr);
-      add_save_point();
+	  cairo_stroke_preserve(data->cr);
+	  add_save_point();
+	}
     } 
+  hide_cursor();  
  
   return TRUE;
 }
@@ -1313,7 +1356,7 @@ gboolean event_expose (GtkWidget *widget,
   clear_screen();
    
   transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
-						  data->height, -1);
+				       data->height, -1);
   cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
   clear_cairo_context(transparent_cr);
   cairo_destroy(transparent_cr);
@@ -1465,6 +1508,7 @@ int annotate_init (int x, int y, int width, int height)
   data->untoggleypos = y;
   data->untogglewidth = width;
   data->untoggleheight = height;
+  data->cursor_hidden = FALSE;
  
   setup_app ();
 
