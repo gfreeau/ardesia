@@ -323,25 +323,25 @@ GSList*  extract_outbounded_rectangle(GSList* listIn)
   point0->x = minx;
   point0->y = miny;
   point0->width = media_width;
-  listOut = g_slist_prepend (listOut, point0);
+  listOut = g_slist_append (listOut, point0);
                        
   AnnotateStrokeCoordinate* point1 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
   point1->x = maxx;
   point1->y = miny;
   point1->width = media_width;
-  listOut = g_slist_prepend (listOut, point1);
+  listOut = g_slist_append (listOut, point1);
 
   AnnotateStrokeCoordinate* point2 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
   point2->x = maxx;
   point2->y = maxy;
   point2->width = media_width;
-  listOut = g_slist_prepend (listOut, point2);
+  listOut = g_slist_append (listOut, point2);
 
   AnnotateStrokeCoordinate* point3 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
   point3->x = minx;
   point3->y = maxy;
   point3->width = media_width;
-  listOut = g_slist_prepend (listOut, point3);
+  listOut = g_slist_append (listOut, point3);
   return listOut;
 }
 

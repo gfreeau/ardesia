@@ -81,7 +81,6 @@ typedef struct
 {
   AnnotatePaintType type;
   guint           width;
-  guint           arrowsize;
   gchar*          fg_color;
   gdouble         pressure;
 } AnnotatePaintContext;
@@ -139,14 +138,12 @@ AnnotateData* data;
 /* Create a new paint context */
 AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
 			                           char* fg_color, 
-                                                   guint width, 
-                                                   guint arrowsize)
+                                                   guint width)
 {
   AnnotatePaintContext *context;
   context = malloc (sizeof (AnnotatePaintContext));
   context->type = type;
   context->width = width;
-  context->arrowsize = arrowsize;
   context->fg_color = fg_color;
   return context;
 }
@@ -181,7 +178,6 @@ void annotate_paint_context_print (gchar *name, AnnotatePaintContext *context)
     }
 
   g_printerr ("width: %3d, ", context->width);
-  g_printerr ("arrowsize: %3d, ", context->arrowsize);
   g_printerr ("color: %s\n", context->fg_color);
 }
 
@@ -194,14 +190,14 @@ void annotate_paint_context_free (AnnotatePaintContext *context)
 
 
 /* Add to the list of the painted point the point (x,y) storing the width */
-void annotate_coord_list_prepend (gint x, gint y, gint width)
+void annotate_coord_list_append (gint x, gint y, gint width)
 {
   AnnotateStrokeCoordinate *point;
   point = malloc (sizeof (AnnotateStrokeCoordinate));
   point->x = x;
   point->y = y;
   point->width = width;
-  data->coordlist = g_slist_prepend (data->coordlist, point);
+  data->coordlist = g_slist_append (data->coordlist, point);
 }
 
 
@@ -254,53 +250,29 @@ void annotate_redolist_free ()
 }
 
 
-/* Calculate parameters for the arrow */
-gboolean annotate_coord_list_get_arrow_param (AnnotateData* data,
-				     	      gint        search_radius,
-				              gint       *ret_width,
-				              gfloat     *ret_direction)
+/* Calculate the direction in radiants */
+gfloat annotate_get_arrow_direction (gboolean revert)
 {
-  gint x0, y0, r2, dist;
-  gboolean success = FALSE;
-  AnnotateStrokeCoordinate  *cur_point, *valid_point;
-  GSList *ptr = data->coordlist;
-  guint width;
-
-  valid_point = NULL;
-
-  if (ptr)
-    {
-      cur_point = ptr->data;
-      x0 = cur_point->x;
-      y0 = cur_point->y;
-      r2 = pow(search_radius, 2);
-      dist = 0;
-
-      while (ptr && dist < r2)
-        {
-          ptr = ptr->next;
-          if (ptr)
-            {
-              cur_point = ptr->data;
-              dist = pow(cur_point->x - x0, 2) + pow(cur_point->y - y0, 2);
-              width = cur_point->width * data->cur_context->arrowsize;
-              if(!valid_point || valid_point->width < cur_point->width)
-		{
-		  valid_point = cur_point;
-                }
-            }
-        }
-
-      if (valid_point)
-        {
-          *ret_width = MAX (valid_point->width * data->cur_context->arrowsize, 2);
-          *ret_direction = atan2 (y0 - valid_point->y, x0 - valid_point->x);
-          success = TRUE;
-        }
-    }
-
-  return success;
+  GSList *outptr =   data->coordlist;   
+  // make the standard deviation 
+  outptr = extract_relevant_points(outptr, FALSE);   
+  AnnotateStrokeCoordinate* point = NULL;
+  AnnotateStrokeCoordinate* oldpoint = NULL;
+  if (revert)
+  {
+      oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 1);
+      point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 0);
+  }
+  else
+  {
+      gint lenght = g_slist_length(outptr);
+      oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, lenght-2);
+      point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, lenght-1);
+  }
+  // calculate the tan beetween the last two point 
+  return atan2 (point->y -oldpoint->y, point->x-oldpoint->x);
 }
+
 
 /* Set the cairo surface color to the RGBA string */
 void cairo_set_source_color_from_string( cairo_t * cr, char* color)
@@ -665,15 +637,6 @@ void annotate_set_rounder(gboolean roundify)
 void annotate_set_arrow(int arrow)
 {
   data->arrow = arrow;
-  if (arrow>0)
-    { 
-      /* set the arrowsize with a function depending on line width */
-      data->cur_context->arrowsize =  log(data->cur_context->width+7);
-    }
-  else
-    {
-      data->cur_context->arrowsize =  0;
-    }
 }
 
 
@@ -839,32 +802,41 @@ void annotate_draw_line (gint x1, gint y1,
 
 
 /* Draw an arrow using some polygons */
-void annotate_draw_arrow (gint x1, gint y1,
-		          gint width, gfloat direction)
+void annotate_draw_arrow (gboolean revert)
 {
+  gfloat direction = annotate_get_arrow_direction (revert);
+  gint lenght = g_slist_length(data->coordlist);
+  int i = 0;
+  if (!revert)
+  {
+       i = lenght-1; 
+  }
+  AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, i);
+
   GdkPoint arrowhead [4];
 
   int penwidth = data->cur_context->width/2;
+  
   int penwidthcos = 2 * penwidth * cos (direction);
   int penwidthsin = 2 * penwidth * sin (direction);
   int widthcos = penwidthcos;
   int widthsin = penwidthsin;
 
   /* Vertex of the arrow */
-  arrowhead [0].x = x1 + penwidthcos;
-  arrowhead [0].y = y1 + penwidthsin;
+  arrowhead [0].x = point->x + penwidthcos;
+  arrowhead [0].y = point->y + penwidthsin;
 
   /* left point */
-  arrowhead [1].x = x1 - 2 * widthcos + widthsin ;
-  arrowhead [1].y = y1 -  widthcos -  2 * widthsin ;
+  arrowhead [1].x = point->x - 2 * widthcos + widthsin ;
+  arrowhead [1].y = point->y -  widthcos -  2 * widthsin ;
 
   /* origin */
-  arrowhead [2].x = x1 - widthcos ;
-  arrowhead [2].y = y1 - widthsin ;
+  arrowhead [2].x = point->x - widthcos ;
+  arrowhead [2].y = point->y - widthsin ;
 
   /* right point */
-  arrowhead [3].x = x1 - 2 * widthcos - widthsin ;
-  arrowhead [3].y = y1 +  widthcos - 2 * widthsin ;
+  arrowhead [3].x = point->x - 2 * widthcos - widthsin ;
+  arrowhead [3].y = point->y +  widthcos - 2 * widthsin ;
 
   cairo_stroke(data->cr);
   cairo_save(data->cr);
@@ -887,28 +859,6 @@ void annotate_draw_arrow (gint x1, gint y1,
   data->painted = TRUE;
 }
 
-
-/* Draw a back arrow using some polygons */
-void annotate_draw_back_arrow (gint x1, gint y1,
-			       gint width, gfloat direction)
-{
-  AnnotateData *revertcoordata = malloc (sizeof (AnnotateData));
-  revertcoordata->cur_context = data->cur_context;
-  GSList *ptr = data->coordlist;
-  if (ptr)
-    {
-      GSList *revptr = g_slist_reverse(ptr);
-      revertcoordata->coordlist = revptr;
-      AnnotateStrokeCoordinate  *first_point;
-      first_point = revptr->data;
-      int x0 = first_point->x;
-      int y0 = first_point->y;
-      annotate_coord_list_get_arrow_param (revertcoordata, width * 3,
-					   &width, &direction);
-      annotate_draw_arrow (x0, y0, width, direction);
-    }
-  free(revertcoordata);
-}
 
 
 /*
@@ -1056,7 +1006,7 @@ gboolean paintto (GtkWidget *win,
 
   annotate_draw_line (data->lastx, data->lasty, ev->x, ev->y, TRUE);
    
-  annotate_coord_list_prepend (ev->x, ev->y, data->maxwidth);
+  annotate_coord_list_append (ev->x, ev->y, data->maxwidth);
 
   data->lastx = ev->x;
   data->lasty = ev->y;
@@ -1185,8 +1135,6 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
     }
 
   
-  gint width = data->cur_context->arrowsize * data->cur_context->width / 2;
-  gfloat direction = 0;
 
   if (!data->coordlist)
     {  
@@ -1195,7 +1143,7 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       cairo_move_to (data->cr, ev->x, ev->y);
       data->lastx = ev->x;
       data->lasty = ev->y;
-      annotate_coord_list_prepend (ev->x, ev->y, data->maxwidth);
+      annotate_coord_list_append (ev->x, ev->y, data->maxwidth);
       data->painted = TRUE;
     }
   else
@@ -1235,17 +1183,15 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 	    }
 	  if (!closed_path)
 	    {
-	      gboolean arrowparam =  annotate_coord_list_get_arrow_param (data, width * 3,
-									  &width, &direction);
 	      /* If is selected an arrowtype the draw the arrow */
-	      if (data->arrow>0 && data->cur_context->arrowsize > 0 && arrowparam)
+	      if (data->arrow>0)
 		{
 		  /* print arrow at the end of the line */
-		  annotate_draw_arrow (ev->x, ev->y, width, direction);
+		  annotate_draw_arrow (FALSE);
 		  if (data->arrow==2)
 		    {
 		      /* print arrow at the beginning of the line */
-		      annotate_draw_back_arrow (ev->x, ev->y, width, direction);
+		      annotate_draw_arrow (TRUE);
 		    }
 		}
 	    }
@@ -1458,9 +1404,9 @@ void setup_app ()
   data->cr = NULL;
   
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN,
-						  color, 15, 0);
+						  color, 15);
   data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER,
-						     NULL, 15, 0);
+						     NULL, 15);
 
   data->cur_context = data->default_pen;
 
