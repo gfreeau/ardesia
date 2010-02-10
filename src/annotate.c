@@ -1351,15 +1351,20 @@ gboolean event_expose (GtkWidget *widget,
                        GdkEventExpose *event, 
                        gpointer user_data)
 {
-
-  data->cr = gdk_cairo_create(data->win->window);
-  clear_screen();
-   
-  transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
+  if (!data->cr)
+  {
+    data->cr = gdk_cairo_create(data->win->window);
+    clear_screen();
+  }
+  
+  if (!transparent_pixmap)
+  {
+    transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
 				       data->height, -1);
-  cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
-  clear_cairo_context(transparent_cr);
-  cairo_destroy(transparent_cr);
+    cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
+    clear_cairo_context(transparent_cr);
+    cairo_destroy(transparent_cr);
+  }
   restore_surface();
   return TRUE;
 }
