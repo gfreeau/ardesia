@@ -481,7 +481,7 @@ void set_pen_cursor()
   gdk_flush ();
   g_object_unref (pixmap);
   gdk_cursor_destroy (cursor);
-  gdk_color_free(foreground_color_p);
+  g_free(foreground_color_p);
   cairo_destroy(pen_cr);
 }
 
