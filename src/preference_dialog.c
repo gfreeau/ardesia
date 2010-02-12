@@ -84,7 +84,7 @@ void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
       change_background_color(rgb);
       free(a);
       free(rgb);
-      g_free(gdkcolor);
+      gdk_color_free(gdkcolor);
       background = 1;  
     }
   else 

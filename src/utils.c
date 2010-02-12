@@ -89,7 +89,6 @@ gboolean file_exists(char* filename, char* desktop_dir)
     if(errno == ENOENT) {
       return FALSE;
     } else {
-      perror("");
       exit(0);
     }
   }

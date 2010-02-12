@@ -97,7 +97,7 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
       {
         gtk_widget_destroy(colorDialog);
       }
-      g_free(gdkcolor);
+      gdk_color_free(gdkcolor);
     }
    return color;
 }

@@ -481,7 +481,7 @@ void set_pen_cursor()
   gdk_flush ();
   g_object_unref (pixmap);
   gdk_cursor_destroy (cursor);
-  g_free(foreground_color_p);
+  gdk_color_free(foreground_color_p);
   cairo_destroy(pen_cr);
 }
 
@@ -915,6 +915,7 @@ void hide_cursor()
 				       &color, 0, 0);
   gdk_window_set_cursor(data->win->window, cursor);
   gdk_cursor_destroy(cursor);
+  g_object_unref(empty_bitmap);
   data->cursor_hidden = TRUE;
 }
 
