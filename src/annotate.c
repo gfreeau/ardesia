@@ -129,6 +129,7 @@ typedef struct
   gboolean     roundify;
   guint        arrow;
   gboolean     debug;
+  gboolean     is_grabbed;
   gboolean     cursor_hidden;
 } AnnotateData;
 
@@ -290,14 +291,31 @@ void  cairo_set_transparent_color(cairo_t * cr)
 }
 
 
+/* Color selector; if eraser than select the transparent color else alloc the right color */ 
+void select_color()
+{
+  if (data->cur_context)
+    {
+      if (!(data->cur_context->type == ANNOTATE_ERASER))
+        {
+          cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
+        }
+      else
+        {
+          cairo_set_transparent_color(data->cr);
+        }
+    }
+}
+
+
 /* Clear cairo context */
 void clear_cairo_context(cairo_t* cr)
 {
-  cairo_save(cr);
   cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
   cairo_set_transparent_color(cr);
   cairo_paint(cr);
-  cairo_restore(cr);
+  if (data->cr)
+  select_color();  
 }
 
 
@@ -404,6 +422,8 @@ void annotate_acquire_keyboard_grab()
 /* Release the mouse pointer */
 void annotate_release_grab ()
 {           
+  if (data->is_grabbed)
+  {
   gdk_error_trap_push ();
  
   gdk_display_pointer_ungrab (data->display, GDK_CURRENT_TIME);
@@ -424,6 +444,8 @@ void annotate_release_grab ()
     {
       g_printerr ("DEBUG: Ungrabbed pointer.\n");
     }
+  data->is_grabbed=FALSE;
+  }
 }
 
 
@@ -538,26 +560,11 @@ gboolean in_unlock_area(int x, int y)
 }
 
 
-/* Color selector; if eraser than select the transparent color else alloc the right color */ 
-void select_color()
-{
-  if (data->cur_context)
-    {
-      if (!(data->cur_context->type == ANNOTATE_ERASER))
-        {
-          cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
-        }
-      else
-        {
-          cairo_set_transparent_color(data->cr);
-        }
-    }
-}
-
-
 /* Grab the cursor */
 void annotate_acquire_grab ()
 {
+  if  (!data->is_grabbed)
+  {
   gtk_widget_show (data->win);
 
   GdkGrabStatus result;
@@ -605,6 +612,8 @@ void annotate_acquire_grab ()
     } 
   
   annotate_acquire_keyboard_grab();
+  data->is_grabbed=TRUE;
+  }
 }
 
 
@@ -683,7 +692,12 @@ void configure_pen_options()
 /* Destroy old cairo context, allocate a new pixmap and configure the new cairo context */
 void reset_cairo()
 {
-  cairo_stroke(data->cr);
+  if (data->cr)
+  {
+    cairo_destroy(data->cr);
+    data->cr = gdk_cairo_create(data->win->window);
+}  
+
   AnnotateSave *save = malloc(sizeof(AnnotateSave));
   save->previous  = NULL;
   save->next  = NULL;
@@ -949,7 +963,6 @@ gboolean paint (GtkWidget *win,
     }  
 
   reset_cairo();
-  
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
     {
@@ -1024,6 +1037,8 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
   cairo_scale (data->cr, width / 2., height / 2.);
   cairo_arc (data->cr, 0., 0., 1., 0., 2 * M_PI);
   cairo_restore(data->cr);
+  cairo_stroke(data->cr);
+  select_color();  
 }
 
 
@@ -1067,7 +1082,7 @@ gboolean rectify()
 }
 
 
-/* Roundify the line or the shape*/
+/* Roundify the line or the shape */
 gboolean roundify()
 {
   annotate_undo();
@@ -1162,7 +1177,7 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 	}
     }
 
-  cairo_stroke_preserve(data->cr);
+  cairo_stroke(data->cr);
   add_save_point();
  
   if (data->coordlist)
@@ -1197,7 +1212,7 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 		}
 	    }
 
-	  cairo_stroke_preserve(data->cr);
+	  cairo_stroke(data->cr);
 	  add_save_point();
 	}
     } 
@@ -1461,6 +1476,7 @@ int annotate_init (int x, int y, int width, int height)
   data->untogglewidth = width;
   data->untoggleheight = height;
   data->cursor_hidden = FALSE;
+  data->is_grabbed=FALSE;
  
   setup_app ();
 
