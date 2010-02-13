@@ -97,6 +97,7 @@ void clear_background()
     { 
       /* destroy brutally the background window */
       gtk_widget_destroy(background_window);
+      background_window = NULL;
     }
 }
 

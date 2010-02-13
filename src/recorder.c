@@ -43,12 +43,27 @@ int          recorderpid = -1;
  */
 int start_recorder(char* filename)
 {
-  char* argv[5];
+  char* argv[20];
   argv[0] = "recordmydesktop";
-  argv[1] = "--on-the-fly-encoding";
-  argv[2] = "-o";
-  argv[3] = filename;
-  argv[4] = (char*) NULL ;
+  argv[1] = "--quick-subsampling";
+  argv[2] = "--on-the-fly-encoding";
+  argv[3] = "-v_quality";
+  argv[4] = "10";
+  argv[5] = "-v_bitrate";
+  argv[6] = "50000";
+  argv[7] = "-s_quality";
+  argv[8] = "1";
+  argv[9] = "--fps";
+  argv[10] = "10";
+  argv[11] = "--freq";
+  argv[12] = "48000";
+  argv[13] = "--buffer-size";
+  argv[14] = "16384";
+  argv[15] = "-device";
+  argv[16] = "plughw:0,0";
+  argv[17] = "-o";
+  argv[18] = filename;
+  argv[19] = (char*) NULL ;
   pid_t pid;
 
   pid = fork();
