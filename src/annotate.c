@@ -336,9 +336,10 @@ gint add_save_point ()
 void restore_surface()
 {
   AnnotateSave* annotate_save = data->savelist;
+  cairo_new_path(data->cr);
+  //cairo_destroy(data->cr);
+  //data->cr = gdk_cairo_create(data->win->window); 
   cairo_surface_t* saved_surface = annotate_save->surface;
-  cairo_destroy(data->cr);
-  data->cr = gdk_cairo_create(data->win->window); 
   cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_source_surface (data->cr, saved_surface, 0, 0);
   cairo_paint(data->cr);
@@ -694,6 +695,7 @@ void configure_pen_options()
 /* Destroy old cairo context, allocate a new pixmap and configure the new cairo context */
 void reset_cairo()
 {
+  cairo_new_path(data->cr);
   AnnotateSave *save = malloc(sizeof(AnnotateSave));
   save->previous  = NULL;
   save->next  = NULL;
