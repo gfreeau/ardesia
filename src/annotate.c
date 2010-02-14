@@ -692,13 +692,11 @@ void configure_pen_options()
 /* Destroy old cairo context, allocate a new pixmap and configure the new cairo context */
 void reset_cairo()
 {
-  /*
   if (data->cr)
   {
     cairo_destroy(data->cr);
     data->cr = gdk_cairo_create(data->win->window);
   } 
-  */ 
 
   AnnotateSave *save = malloc(sizeof(AnnotateSave));
   save->previous  = NULL;
@@ -1179,8 +1177,6 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 	}
     }
 
-  cairo_stroke(data->cr);
-  add_save_point();
  
   if (data->coordlist)
     {  
@@ -1214,10 +1210,10 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 		}
 	    }
 
-	  cairo_stroke(data->cr);
-	  add_save_point();
 	}
     } 
+  cairo_stroke(data->cr);
+  add_save_point();
   hide_cursor();  
  
   return TRUE;
