@@ -337,6 +337,8 @@ void restore_surface()
 {
   AnnotateSave* annotate_save = data->savelist;
   cairo_surface_t* saved_surface = annotate_save->surface;
+  cairo_destroy(data->cr);
+  data->cr = gdk_cairo_create(data->win->window); 
   cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_source_surface (data->cr, saved_surface, 0, 0);
   cairo_paint(data->cr);
@@ -692,12 +694,6 @@ void configure_pen_options()
 /* Destroy old cairo context, allocate a new pixmap and configure the new cairo context */
 void reset_cairo()
 {
-  if (data->cr)
-  {
-    cairo_destroy(data->cr);
-    data->cr = gdk_cairo_create(data->win->window);
-  } 
-
   AnnotateSave *save = malloc(sizeof(AnnotateSave));
   save->previous  = NULL;
   save->next  = NULL;
@@ -1037,7 +1033,6 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
   cairo_scale (data->cr, width / 2., height / 2.);
   cairo_arc (data->cr, 0., 0., 1., 0., 2 * M_PI);
   cairo_restore(data->cr);
-  cairo_stroke(data->cr);
   select_color();  
 }
 
@@ -1119,6 +1114,7 @@ void annotate_fill()
 {
   if (data->cr)
     {
+      //reset_cairo();
       if (!(data->roundify)&&(!(data->rectify)))
 	{
 	  draw_point_list(data->coordlist);     
@@ -1212,7 +1208,7 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 
 	}
     } 
-  cairo_stroke(data->cr);
+  cairo_stroke_preserve(data->cr);
   add_save_point();
   hide_cursor();  
  
