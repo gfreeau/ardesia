@@ -695,7 +695,6 @@ void configure_pen_options()
 /* Destroy old cairo context, allocate a new pixmap and configure the new cairo context */
 void reset_cairo()
 {
-  cairo_new_path(data->cr);
   AnnotateSave *save = malloc(sizeof(AnnotateSave));
   save->previous  = NULL;
   save->next  = NULL;
@@ -961,6 +960,7 @@ gboolean paint (GtkWidget *win,
     }  
 
   reset_cairo();
+  cairo_move_to(data->cr,ev->x,ev->y);
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
     {
@@ -1151,7 +1151,7 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   
 
   if (!data->coordlist)
-    {  
+    { 
       cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2 * M_PI);
       cairo_fill (data->cr);
       cairo_move_to (data->cr, ev->x, ev->y);
@@ -1168,10 +1168,6 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       if ((abs(ev->x-first_point->x)<tollerance) &&(abs(ev->y-first_point->y)<tollerance))
 	{
 	  cairo_line_to(data->cr, first_point->x, first_point->y);
-	}
-      else
-	{
-	  cairo_line_to(data->cr, ev->x, ev->y);
 	}
     }
 
