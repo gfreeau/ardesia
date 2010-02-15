@@ -695,6 +695,8 @@ void configure_pen_options()
 /* Destroy old cairo context, allocate a new pixmap and configure the new cairo context */
 void reset_cairo()
 {
+  if (data->cr)
+  cairo_new_path(data->cr);
   AnnotateSave *save = malloc(sizeof(AnnotateSave));
   save->previous  = NULL;
   save->next  = NULL;
