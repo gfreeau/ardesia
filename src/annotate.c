@@ -304,10 +304,7 @@ void select_color()
     {
       if (!(data->cur_context->type == ANNOTATE_ERASER))
         {
-          if (data->cur_context->fg_color)
-          {
-            cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
-          }
+          cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
         }
       else
         {
@@ -1393,6 +1390,11 @@ void setup_input_devices ()
 void setup_app ()
 { 
   /* default color is opaque red */ 
+  char*  color = malloc(9);
+  strcpy(color,"FF0000");
+  strncpy(&color[6], "FF", 2);
+  color[8]=0;
+
 
   data->cr = NULL;
   data->display = gdk_display_get_default ();
@@ -1434,7 +1436,7 @@ void setup_app ()
   data->cr = NULL;
   
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN,
-						  NULL, 15);
+						  color, 15);
   data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER,
 						     NULL, 15);
  
@@ -1446,6 +1448,7 @@ void setup_app ()
   
   gtk_widget_show_all(data->win);
   
+  gtk_widget_set_app_paintable(data->win, TRUE);
   gtk_widget_set_double_buffered(data->win, FALSE);
     
   /* SHAPE PIXMAP */
