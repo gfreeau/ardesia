@@ -1481,6 +1481,7 @@ void annotate_quit()
   data->shape = NULL;
   annotate_coord_list_free ();
   annotate_savelist_free ();
+  free(data->default_pen->fg_color);
   free(data->default_pen);
   free(data->default_eraser);
   free (data);
