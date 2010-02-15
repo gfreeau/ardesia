@@ -128,25 +128,22 @@ void set_color(char* selected_color)
   if (color == NULL)
     {
       color = malloc(COLORSIZE);
+      strcpy(color,"FF0000");
     }
   grab = TRUE;
   pencil = TRUE;
   strcpy(color, selected_color);
+  
+  add_alpha(color);
+  
+  annotate_set_color(color);
 }
 
 
 /* Start to annotate calling annotate */
 void annotate()
 {
-  if (color == NULL)
-    {
-      color = malloc(COLORSIZE);
-      strcpy(color,"FF0000");
-    }
   
-  add_alpha(color);
-  
-  annotate_set_color(color);
 
   annotate_set_rectifier(rectifier);
   
