@@ -221,7 +221,7 @@ void annotate_savelist_free ()
 {
   AnnotateSave* annotate_save = data->savelist;
 
-  while (annotate_save)
+  while (annotate_save->previous)
     {
       annotate_save =  annotate_save->previous; 
     }
@@ -250,7 +250,7 @@ void annotate_redolist_free ()
       free(annotate_save);
       annotate_save =  annotate_save->next; 
     }  
-  annotate_save=NULL;
+  data->savelist->next=NULL;
 }
 
 
@@ -357,8 +357,6 @@ void restore_surface()
 {
   AnnotateSave* annotate_save = data->savelist;
   cairo_new_path(data->cr);
-  //cairo_destroy(data->cr);
-  //data->cr = gdk_cairo_create(data->win->window); 
   cairo_surface_t* saved_surface = annotate_save->surface;
   cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_source_surface (data->cr, saved_surface, 0, 0);
