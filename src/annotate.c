@@ -144,7 +144,7 @@ AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
                                                    guint width)
 {
   AnnotatePaintContext *context;
-  context = malloc (sizeof (AnnotatePaintContext));
+  context = g_malloc (sizeof (AnnotatePaintContext));
   context->type = type;
   context->width = width;
   context->fg_color = fg_color;
@@ -188,7 +188,7 @@ void annotate_paint_context_print (gchar *name, AnnotatePaintContext *context)
 /* Free the memory allocated by paint context */
 void annotate_paint_context_free (AnnotatePaintContext *context)
 {
-  free (context);
+  g_free (context);
 }
 
 
@@ -196,7 +196,7 @@ void annotate_paint_context_free (AnnotatePaintContext *context)
 void annotate_coord_list_append (gint x, gint y, gint width)
 {
   AnnotateStrokeCoordinate *point;
-  point = malloc (sizeof (AnnotateStrokeCoordinate));
+  point = g_malloc (sizeof (AnnotateStrokeCoordinate));
   point->x = x;
   point->y = y;
   point->width = width;
@@ -210,32 +210,9 @@ void annotate_coord_list_append (gint x, gint y, gint width)
 void annotate_coord_list_free ()
 {
   GSList *ptr = data->coordlist;
-  g_slist_foreach(ptr, (GFunc)free, NULL);
+  g_slist_foreach(ptr, (GFunc)g_free, NULL);
   g_slist_free(ptr);
   data->coordlist = NULL;
-}
-
-
-/* Free the list of the savepoint  */
-void annotate_savelist_free ()
-{
-  AnnotateSave* annotate_save = data->savelist;
-
-  while (annotate_save->previous)
-    {
-      annotate_save =  annotate_save->previous; 
-    }
-  /* annotate_save point to the first save point */
-
-  while(annotate_save)
-    {
-      cairo_surface_destroy(annotate_save->surface); 
-      free(annotate_save);
-      annotate_save =  annotate_save->next; 
-    }
-  /* all the savepoint might be deleted */
-
-  data->savelist = NULL;
 }
 
 
@@ -244,14 +221,57 @@ void annotate_redolist_free ()
 {
   AnnotateSave* annotate_save = data->savelist->next;
   /* delete all the savepoint after the current pointed */
-  while(annotate_save)
-    { 
-      cairo_surface_destroy(annotate_save->surface); 
-      free(annotate_save);
-      annotate_save =  annotate_save->next; 
-    }  
+  while(1)
+    {
+      if (annotate_save->next)
+      {
+        annotate_save =  annotate_save->next; 
+        if (annotate_save->previous)
+        {
+          if (annotate_save->previous->surface)
+          {
+            cairo_surface_destroy(annotate_save->previous->surface);
+          } 
+          g_free(annotate_save->previous);
+        }
+      }
+      else
+      {
+        if (annotate_save->surface)
+        {
+           cairo_surface_destroy(annotate_save->surface);
+        } 
+        g_free(annotate_save);
+        break;
+      }
+    }
   data->savelist->next=NULL;
 }
+
+
+/* Free the list of the savepoint  */
+void annotate_savelist_free ()
+{
+  AnnotateSave* annotate_save = data->savelist;
+
+  while (1)
+    {
+      if (annotate_save->previous)
+      {
+        annotate_save =  annotate_save->previous;
+      }
+      else
+      {
+        break;
+      } 
+    }
+  /* annotate_save point to the first save point */
+
+  data->savelist = annotate_save;
+  annotate_redolist_free ();
+}
+
+
 
 
 /* Calculate the direction in radiants */
@@ -275,7 +295,7 @@ gfloat annotate_get_arrow_direction (gboolean revert)
   }
   // calculate the tan beetween the last two point 
   gfloat ret = atan2 (point->y -oldpoint->y, point->x-oldpoint->x);
-  g_slist_foreach(outptr, (GFunc)free, NULL);
+  g_slist_foreach(outptr, (GFunc)g_free, NULL);
   g_slist_free(outptr); 
   return ret;
 }
@@ -331,6 +351,19 @@ void clear_cairo_context(cairo_t* cr)
 /* Repaint the window */
 gint add_save_point ()
 {
+  AnnotateSave *save = g_malloc(sizeof(AnnotateSave));
+  save->previous  = NULL;
+  save->next  = NULL;
+  save->surface  = NULL;
+
+  if (data->savelist != NULL)
+    {
+      data->savelist->next=save;
+      save->previous=data->savelist;
+    }
+  data->savelist=save;
+
+
   AnnotateSave* annotate_save = data->savelist;
   if (data->savelist->next)
   {
@@ -727,17 +760,6 @@ void reset_cairo()
   {
     cairo_new_path(data->cr);
   }
-  AnnotateSave *save = malloc(sizeof(AnnotateSave));
-  save->previous  = NULL;
-  save->next  = NULL;
-  save->surface  = NULL;
-
-  if (data->savelist != NULL)
-    {
-      data->savelist->next=save;
-      save->previous=data->savelist;
-    }
-  data->savelist=save;
   configure_pen_options();  
 }
 
@@ -1097,7 +1119,9 @@ void draw_point_list(GSList* outptr)
 /* Rectify the line or the shape*/
 gboolean rectify()
 {
+  add_save_point();
   annotate_undo();
+  annotate_redolist_free();
   reset_cairo();
   gboolean close_path = FALSE;
   GSList *outptr = broken(data->coordlist, &close_path, TRUE);   
@@ -1115,7 +1139,9 @@ gboolean rectify()
 /* Roundify the line or the shape */
 gboolean roundify()
 {
+  add_save_point();
   annotate_undo();
+  annotate_redolist_free();
   reset_cairo();
   gboolean close_path = FALSE;
   GSList *outptr = broken(data->coordlist, &close_path, FALSE);   
@@ -1154,6 +1180,7 @@ void annotate_fill()
 	  draw_point_list(data->coordlist);     
 	  cairo_close_path(data->cr);      
 	}
+      select_color();
       cairo_fill(data->cr);
       cairo_stroke(data->cr);
       add_save_point();
@@ -1312,7 +1339,7 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   else if (isprint(event->keyval))
     {
       /* The character is printable */
-      char *utf8 = malloc(2) ;
+      char *utf8 = g_malloc(2) ;
       sprintf(utf8,"%c", event->keyval);
       cairo_text_extents (data->cr, utf8, &extents);
       cairo_show_text (data->cr, utf8); 
@@ -1325,7 +1352,7 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       data->savelist->xcursor=x;  
       data->savelist->ycursor=y;   
       annotate_redolist_free ();
-      free(utf8);
+      g_free(utf8);
     }
   return FALSE;
 }
@@ -1340,18 +1367,16 @@ gboolean event_expose (GtkWidget *widget,
   {
     data->cr = gdk_cairo_create(data->win->window);
     clear_screen();
-  }
-  
-  if (!transparent_pixmap)
-  {
     transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
 				       data->height, -1);
     cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
     clear_cairo_context(transparent_cr);
     cairo_destroy(transparent_cr);
   }
-  
-  restore_surface();
+  else
+  {
+    restore_surface();
+  }
   return TRUE;
 }
 
@@ -1394,7 +1419,7 @@ void setup_input_devices ()
 void setup_app ()
 { 
   /* default color is opaque red */ 
-  char*  color = malloc(9);
+  char*  color = g_malloc(9);
   strcpy(color,"FF0000");
   strncpy(&color[6], "FF", 2);
   color[8]=0;
@@ -1485,10 +1510,10 @@ void annotate_quit()
   data->shape = NULL;
   annotate_coord_list_free ();
   annotate_savelist_free ();
-  free(data->default_pen->fg_color);
-  free(data->default_pen);
-  free(data->default_eraser);
-  free (data);
+  g_free(data->default_pen->fg_color);
+  g_free(data->default_pen);
+  g_free(data->default_eraser);
+  g_free (data);
   if (cursor)
   {
     gdk_cursor_unref(cursor);
@@ -1499,7 +1524,7 @@ void annotate_quit()
 /* Init the annotation */
 int annotate_init (int x, int y, int width, int height)
 {
-  data = malloc (sizeof (AnnotateData));
+  data = g_malloc (sizeof (AnnotateData));
   data->debug = DEBUG;
   /* Untoggle zone is setted on ardesia zone */
   data->untogglexpos = x;

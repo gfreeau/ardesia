@@ -37,7 +37,7 @@
 /* Take a GdkColor and return the RGBA string */
 char* gdkcolor_to_rgba(GdkColor* gdkcolor)
 {
-  char*   ret= malloc(9*sizeof(char));;
+  char*   ret= g_malloc(9*sizeof(char));;
   /* transform in the  RGBA format e.g. FF0000FF */ 
   sprintf(ret,"%02x%02x%02xFF", gdkcolor->red/257, gdkcolor->green/257, gdkcolor->blue/257);
   return ret;
@@ -51,7 +51,7 @@ char* gdkcolor_to_rgba(GdkColor* gdkcolor)
 GdkColor* rgb_to_gdkcolor(char* rgb)
 {
    GdkColor* gdkcolor = g_malloc (sizeof (GdkColor));
-   gchar    *ccolor = malloc(8);
+   gchar *ccolor = g_malloc(8);
    ccolor[0]='#';
    strncpy(&ccolor[1], rgb, 6);
    ccolor[7]=0;
@@ -69,7 +69,7 @@ char* get_date()
   time( &now );
   t = localtime( &now );
 
-  char* date = malloc(64*sizeof(char));
+  char* date = g_malloc(64*sizeof(char));
   sprintf(date, "%d-%d-%d_%d:%d:%d", t->tm_mday,t->tm_mon+1,t->tm_year+1900,t->tm_hour,t->tm_min,t->tm_sec);
   return date;
 }

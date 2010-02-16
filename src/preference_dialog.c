@@ -78,12 +78,12 @@ void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
       gtk_color_button_get_color(backgroundColorButton,gdkcolor);
 
       char* rgb = gdkcolor_to_rgba(gdkcolor);
-      char* a = malloc(3);
+      char* a = g_malloc(3);
       sprintf(a,"%02x", gtk_color_button_get_alpha (backgroundColorButton)/257);
       strncpy(&rgb[6], a, 2);
       change_background_color(rgb);
-      free(a);
-      free(rgb);
+      g_free(a);
+      g_free(rgb);
       g_free(gdkcolor);
       background = 1;  
     }
@@ -165,10 +165,10 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
 
   /* Load the gtk builder file created with glade */
   gchar* name = "preferenceDialog.glade";
-  gchar* ui_location =  (gchar *) malloc((strlen(installation_location) + strlen(name) + 1 )* sizeof(gchar));
+  gchar* ui_location =  (gchar *) g_malloc((strlen(installation_location) + strlen(name) + 1 )* sizeof(gchar));
   sprintf(ui_location, "%s%s", installation_location, name);
   gtk_builder_add_from_file(dialogGtkBuilder, ui_location, NULL);
-  free(ui_location);
+  g_free(ui_location);
  
   
   /* Fill the window by the gtk builder xml */
@@ -178,11 +178,11 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   
   GtkFileChooser* chooser = GTK_FILE_CHOOSER(gtk_builder_get_object(dialogGtkBuilder,"imageChooserButton"));
   gchar* default_dir_name = "backgrounds";
-  char* default_dir = malloc((strlen(installation_location) + strlen(default_dir_name) + 2 )* sizeof(gchar));
+  gchar* default_dir = g_malloc((strlen(installation_location) + strlen(default_dir_name) + 2 )* sizeof(gchar));
   sprintf(default_dir, "%s%s", installation_location, default_dir_name);
 
   gtk_file_chooser_set_current_folder(chooser, default_dir);
-  free(default_dir); 
+  g_free(default_dir); 
  
   GtkFileFilter *filter = gtk_file_filter_new ();
   gtk_file_filter_set_name (filter, "PNG and JPEG");

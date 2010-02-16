@@ -132,12 +132,12 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
  * Start the dialog that ask to the user where save the image
  * containing the screenshot
  */
-void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char* workspace_dir)
+void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar* workspace_dir)
 {
   char * date = get_date();
   if (workspace_dir == NULL)
     {
-      workspace_dir = (char *) get_desktop_dir();
+      workspace_dir = get_desktop_dir();
     }	
 
   gint height = gdk_screen_height ();
@@ -177,7 +177,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
 
       screenshot = TRUE;
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      free(workspace_dir);
+      g_free(workspace_dir);
       workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
       char* supported_extension = ".png";
       char* extension = strrchr(filename, '.');
@@ -185,7 +185,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
         {
           filename = (gchar *) g_realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar)); 
           (void) strcat((gchar *)filename, supported_extension);
-          free(extension);
+          g_free(extension);
         }           
 
       if (file_exists(filename,(char *) workspace_dir))
@@ -215,7 +215,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
       /* store the pixbuf grabbed on file */
       save_png (buf, filename);
     }
-  free(date);
+  g_free(date);
   g_free(filename);
   g_object_unref (buf);
 }

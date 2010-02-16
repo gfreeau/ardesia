@@ -143,7 +143,7 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
   
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Select a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), workspace_dir);
-  gchar* filename =  malloc(256*sizeof(gchar));
+  gchar* filename =  g_malloc(256*sizeof(gchar));
   sprintf(filename,"ardesia_%s", date);
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   
@@ -151,7 +151,7 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      free(workspace_dir);
+      g_free(workspace_dir);
       workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
       char* supported_extension = ".ogv";
       char* extension = strrchr(filename, '.');
@@ -159,7 +159,7 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
 	{
 	  filename = (gchar *) g_realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar));
 	  (void) strcat((gchar *)filename, supported_extension);
-          free(extension);
+          g_free(extension);
 	}
  
       if (file_exists(filename, (char *) workspace_dir) == TRUE)

@@ -96,13 +96,10 @@ gboolean  quit()
   quit_recorder();
   clear_background();
   annotate_quit();
-
-  /* Disalloc */
-  gtk_main_quit();
   GtkWidget* main_window = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
   gtk_widget_destroy(main_window);
   g_object_unref ( G_OBJECT(gtkBuilder) ); 
-
+  gtk_main_quit();
   exit(ret);
 }
 
@@ -128,22 +125,25 @@ void set_color(char* selected_color)
   if (color == NULL)
     {
       color = malloc(COLORSIZE);
-      strcpy(color,"FF0000");
     }
   grab = TRUE;
   pencil = TRUE;
   strcpy(color, selected_color);
-  
-  add_alpha(color);
-  
-  annotate_set_color(color);
 }
 
 
 /* Start to annotate calling annotate */
 void annotate()
 {
+  if (color == NULL)
+    {
+      color = malloc(COLORSIZE);
+      strcpy(color,"FF0000");
+    }
   
+  add_alpha(color);
+  
+  annotate_set_color(color);
 
   annotate_set_rectifier(rectifier);
   

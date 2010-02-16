@@ -158,7 +158,7 @@ void change_background_color (char* rgba)
 {
   if (background_color == NULL)
     {
-      background_color =  malloc(9);
+      background_color =  g_malloc(9);
     }
   
   strcpy(background_color, rgba);
