@@ -221,7 +221,7 @@ void annotate_redolist_free ()
 {
   AnnotateSave* annotate_save = data->savelist->next;
   /* delete all the savepoint after the current pointed */
-  while(1)
+  while(annotate_save)
     {
       if (annotate_save->next)
       {
@@ -254,7 +254,7 @@ void annotate_savelist_free ()
 {
   AnnotateSave* annotate_save = data->savelist;
 
-  while (1)
+  while (annotate_save)
     {
       if (annotate_save->previous)
       {
@@ -684,7 +684,6 @@ void annotate_acquire_grab ()
 void annotate_set_color(gchar* color)
 {
   data->cur_context->fg_color = color;
-  select_color();
 }
 
 
@@ -1373,10 +1372,7 @@ gboolean event_expose (GtkWidget *widget,
     clear_cairo_context(transparent_cr);
     cairo_destroy(transparent_cr);
   }
-  else
-  {
-    restore_surface();
-  }
+  restore_surface();
   return TRUE;
 }
 
@@ -1488,6 +1484,7 @@ void setup_app ()
   
   /* this allow the mouse focus below the transparent window */ 
   gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0); 
+  
 }
 
 

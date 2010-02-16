@@ -252,9 +252,13 @@ int main (int argc, char *argv[])
   {
      change_background_image(arg); 
   }
-  
-  gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), get_annotation_window() );
-  
+ 
+  GtkWindow* annotation_window = get_annotation_window();  
+  if (annotation_window)
+  {
+    gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), annotation_window );
+  }
+
   gtk_widget_show (ardesiaBarWindow);
   
   gtk_main ();
