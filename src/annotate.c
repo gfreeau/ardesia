@@ -352,12 +352,15 @@ gint add_save_point ()
 
 void restore_surface()
 {
-  AnnotateSave* annotate_save = data->savelist;
-  cairo_new_path(data->cr);
-  cairo_surface_t* saved_surface = annotate_save->surface;
-  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_surface (data->cr, saved_surface, 0, 0);
-  cairo_paint(data->cr);
+  if (data->cr)
+  {
+    AnnotateSave* annotate_save = data->savelist;
+    cairo_new_path(data->cr);
+    cairo_surface_t* saved_surface = annotate_save->surface;
+    cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
+    cairo_set_source_surface (data->cr, saved_surface, 0, 0);
+    cairo_paint(data->cr);
+  }
 }
 
 
@@ -1347,6 +1350,7 @@ gboolean event_expose (GtkWidget *widget,
     clear_cairo_context(transparent_cr);
     cairo_destroy(transparent_cr);
   }
+  
   restore_surface();
   return TRUE;
 }
