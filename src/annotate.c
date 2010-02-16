@@ -1485,6 +1485,10 @@ void annotate_quit()
   free(data->default_pen);
   free(data->default_eraser);
   free (data);
+  if (cursor)
+  {
+    gdk_cursor_unref(cursor);
+  }
 }
 
 
