@@ -139,6 +139,7 @@ void check_composite()
         }
       exit(0);
     }
+  gtk_widget_set_default_colormap(gdk_screen_get_rgba_colormap(screen));
  }
 
 
@@ -232,8 +233,8 @@ int main (int argc, char *argv[])
    * the project. Delete any components that you don't want shown initially.
    */
   GtkWidget *ardesiaBarWindow = create_mainWindow ();
-  int width = -1;
-  int height = -1;
+  int width;
+  int height;
   gtk_window_get_size (GTK_WINDOW(ardesiaBarWindow) , &width, &height);
 
   int x, y;

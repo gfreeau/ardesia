@@ -155,7 +155,14 @@ AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
 /* Get the annotation window */
 GtkWindow* get_annotation_window()
 {
-  return GTK_WINDOW(data->win);
+  if (data)
+  {
+    return GTK_WINDOW(data->win);
+  }
+  else
+  {
+    return NULL;
+  }
 }
 
 
@@ -383,6 +390,7 @@ gint add_save_point ()
 }
 
 
+/* Draw the last save point on the window restoring the surface */
 void restore_surface()
 {
   if (data->cr)
@@ -596,6 +604,7 @@ void set_eraser_cursor()
   cairo_destroy(eraser_cr);
 }
 
+
 /*
  * This is function return if the point (x,y) in inside the ardesia panel area
  * or in a zone where we must unlock the pointer
@@ -742,7 +751,7 @@ void destroy_cairo()
   data->cr = NULL;
 }
 
-
+/* Configure pen option for cairo context */
 void configure_pen_options()
 {
   cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
@@ -965,6 +974,8 @@ gboolean proximity_out (GtkWidget *win,
   return FALSE;
 }
 
+
+/* Hide the cursor */
 void hide_cursor()
 {
   char invisible_cursor_bits[] = { 0x0 };
@@ -985,6 +996,8 @@ void hide_cursor()
   data->cursor_hidden = TRUE;
 }
 
+
+/* Unhide the cursor */
 void unhide_cursor()
 {
   if (data->cursor_hidden)
@@ -1000,6 +1013,7 @@ void unhide_cursor()
       data->cursor_hidden = FALSE;
     }  
 }
+
 
 /* This is called when the button is pushed */
 gboolean paint (GtkWidget *win,
@@ -1097,7 +1111,6 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
 /** Draw the point list */
 void draw_point_list(GSList* outptr)
 {
-
   AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
   gint lastx = out_point->x; 
   gint lasty = out_point->y;
@@ -1206,8 +1219,6 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       return FALSE;
     }
 
-  
-
   if (!data->coordlist)
     { 
       cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2 * M_PI);
@@ -1229,7 +1240,6 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 	}
     }
 
- 
   if (data->coordlist)
     {  
       if (!(data->cur_context->type == ANNOTATE_ERASER))
@@ -1411,7 +1421,7 @@ void setup_input_devices ()
     }
 }
 
-
+/* Connect the window to the callback signals */
 void annotate_connect_signals()
 { 
   g_signal_connect (data->win, "expose_event",
@@ -1441,19 +1451,16 @@ void setup_app ()
   strncpy(&color[6], "FF", 2);
   color[8]=0;
 
-
   data->cr = NULL;
   data->display = gdk_display_get_default ();
-  GdkScreen   *screen = gdk_display_get_default_screen (data->display);
-
+  
+  GdkScreen* screen = gdk_display_get_default_screen (data->display);
   data->width = gdk_screen_get_width (screen);
   data->height = gdk_screen_get_height (screen);
 
   data->win = gtk_window_new (GTK_WINDOW_POPUP);
   gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);
- 
   gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
-  gtk_widget_set_default_colormap(gdk_screen_get_rgba_colormap(screen));
 
   gtk_widget_set_app_paintable(data->win, TRUE);
   gtk_widget_set_double_buffered(data->win, FALSE);
@@ -1479,10 +1486,7 @@ void setup_app ()
   data->state = 0;
 
   setup_input_devices (data);
-  
-  gtk_widget_show_all(data->win);
-  
-    
+   
   /* SHAPE PIXMAP */
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
   cairo_t* shape_cr = gdk_cairo_create(data->shape);
@@ -1491,6 +1495,7 @@ void setup_app ()
   
   /* this allow the mouse focus below the transparent window */ 
   gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0); 
+  gtk_widget_show_all(data->win);
   
 }
 
@@ -1498,7 +1503,6 @@ void setup_app ()
 /* Quit the annotation */
 void annotate_quit()
 {
-   
   /* ungrab all */
   annotate_release_grab(); 
   /* destroy cairo */
