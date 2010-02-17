@@ -1463,8 +1463,6 @@ void setup_app ()
  
   gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
   
-  annotate_connect_signals();
- 
   data->arrow = 0; 
   data->painted = FALSE;
   data->rectify = FALSE;
@@ -1486,6 +1484,8 @@ void setup_app ()
   setup_input_devices (data);
   
   gtk_widget_show_all(data->win);
+  
+  annotate_connect_signals();
   
   gtk_widget_set_app_paintable(data->win, TRUE);
   gtk_widget_set_double_buffered(data->win, FALSE);
