@@ -86,7 +86,7 @@ gboolean     rounder = FALSE;
 int        arrow = 0;
 
 /* Default folder where store images and videos */
-gchar*       workspace_dir = NULL;
+char*       workspace_dir = NULL;
 
 
 /* Called when close the program */

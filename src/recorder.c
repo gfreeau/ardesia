@@ -162,7 +162,7 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
           g_free(extension);
 	}
  
-      if (file_exists(filename, (char *) workspace_dir) == TRUE)
+      if (file_exists(filename, (char *) workspace_dir))
 	{
 	  GtkWidget *msg_dialog; 
                    

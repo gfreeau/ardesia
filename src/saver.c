@@ -132,12 +132,12 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
  * Start the dialog that ask to the user where save the image
  * containing the screenshot
  */
-void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar* workspace_dir)
+void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char* workspace_dir)
 {
-  char * date = get_date();
+  char* date = get_date();
   if (workspace_dir == NULL)
     {
-      workspace_dir = get_desktop_dir();
+      workspace_dir = (char *) get_desktop_dir();
     }	
 
   gint height = gdk_screen_height ();

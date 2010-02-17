@@ -105,7 +105,7 @@ gboolean file_exists(char* filename, char* desktop_dir)
  * We can investigate how-to do this
  * in a desktop environment independant way
  */
-const gchar * get_desktop_dir (void)
+const gchar* get_desktop_dir (void)
 {
   GConfClient *gconf_client = NULL;
   gboolean desktop_is_home_dir = FALSE;
