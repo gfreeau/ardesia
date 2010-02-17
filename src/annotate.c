@@ -980,6 +980,7 @@ void hide_cursor()
   cursor = gdk_cursor_new_from_pixmap (empty_bitmap, empty_bitmap, &color,
 				       &color, 0, 0);
   gdk_window_set_cursor(data->win->window, cursor);
+  gdk_flush ();
   g_object_unref(empty_bitmap);
   data->cursor_hidden = TRUE;
 }
