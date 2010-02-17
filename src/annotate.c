@@ -1412,6 +1412,26 @@ void setup_input_devices ()
 }
 
 
+void annotate_connect_signals()
+{ 
+  g_signal_connect (data->win, "expose_event",
+		    G_CALLBACK (event_expose), NULL);
+  g_signal_connect (data->win, "button_press_event", 
+		    G_CALLBACK(paint), NULL);
+  g_signal_connect (data->win, "motion_notify_event",
+		    G_CALLBACK (paintto), NULL);
+  g_signal_connect (data->win, "button_release_event",
+		    G_CALLBACK (paintend), NULL);
+  g_signal_connect (data->win, "proximity_in_event",
+		    G_CALLBACK (proximity_in), NULL);
+  g_signal_connect (data->win, "proximity_out_event",
+		    G_CALLBACK (proximity_out), NULL);
+
+  g_signal_connect (data->win, "key_press_event",
+		    G_CALLBACK (key_press), NULL);
+}
+
+
 /* Setup the application */
 void setup_app ()
 { 
@@ -1438,21 +1458,7 @@ void setup_app ()
   gtk_widget_set_app_paintable(data->win, TRUE);
   gtk_widget_set_double_buffered(data->win, FALSE);
  
-  g_signal_connect (data->win, "expose_event",
-		    G_CALLBACK (event_expose), NULL);
-  g_signal_connect (data->win, "button_press_event", 
-		    G_CALLBACK(paint), NULL);
-  g_signal_connect (data->win, "motion_notify_event",
-		    G_CALLBACK (paintto), NULL);
-  g_signal_connect (data->win, "button_release_event",
-		    G_CALLBACK (paintend), NULL);
-  g_signal_connect (data->win, "proximity_in_event",
-		    G_CALLBACK (proximity_in), NULL);
-  g_signal_connect (data->win, "proximity_out_event",
-		    G_CALLBACK (proximity_out), NULL);
-
-  g_signal_connect (data->win, "key_press_event",
-		    G_CALLBACK (key_press), NULL);
+  annotate_connect_signals();
 
   data->arrow = 0; 
   data->painted = FALSE;
