@@ -1453,20 +1453,18 @@ void setup_app ()
 
   data->cr = NULL;
   data->display = gdk_display_get_default ();
-  
-  GdkScreen* screen = gdk_display_get_default_screen (data->display);
+  GdkScreen   *screen = gdk_display_get_default_screen (data->display);
+
   data->width = gdk_screen_get_width (screen);
   data->height = gdk_screen_get_height (screen);
 
   data->win = gtk_window_new (GTK_WINDOW_POPUP);
   gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);
-  gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
-
-  gtk_widget_set_app_paintable(data->win, TRUE);
-  gtk_widget_set_double_buffered(data->win, FALSE);
  
+  gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
+  
   annotate_connect_signals();
-
+ 
   data->arrow = 0; 
   data->painted = FALSE;
   data->rectify = FALSE;
@@ -1477,16 +1475,21 @@ void setup_app ()
   data->cr = NULL;
   
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN,
-						  color, 15);
+                                                  color, 15);
   data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER,
-						     NULL, 15);
- 
+                                                     NULL, 15);
+
   data->cur_context = data->default_pen;
 
   data->state = 0;
 
   setup_input_devices (data);
-   
+  
+  gtk_widget_show_all(data->win);
+  
+  gtk_widget_set_app_paintable(data->win, TRUE);
+  gtk_widget_set_double_buffered(data->win, FALSE);
+
   /* SHAPE PIXMAP */
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
   cairo_t* shape_cr = gdk_cairo_create(data->shape);
@@ -1494,9 +1497,7 @@ void setup_app ()
   cairo_destroy(shape_cr);
   
   /* this allow the mouse focus below the transparent window */ 
-  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0); 
-  gtk_widget_show_all(data->win);
-  
+  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);  
 }
 
 

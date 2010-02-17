@@ -8,7 +8,6 @@
     <property name="type">popup</property>
     <property name="title" translatable="yes">Ardesia</property>
     <property name="resizable">False</property>
-    <property name="decorated">False</property>
     <property name="deletable">False</property>
     <property name="opacity">0.7</property>
     <property name="startup_id">Ardesia</property>
