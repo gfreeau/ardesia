@@ -1430,10 +1430,12 @@ void setup_app ()
 
   data->win = gtk_window_new (GTK_WINDOW_POPUP);
   gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);
-  gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);
  
   gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
   gtk_widget_set_default_colormap(gdk_screen_get_rgba_colormap(screen));
+
+  gtk_widget_set_app_paintable(data->win, TRUE);
+  gtk_widget_set_double_buffered(data->win, FALSE);
  
   g_signal_connect (data->win, "expose_event",
 		    G_CALLBACK (event_expose), NULL);
@@ -1473,8 +1475,6 @@ void setup_app ()
   
   gtk_widget_show_all(data->win);
   
-  gtk_widget_set_app_paintable(data->win, TRUE);
-  gtk_widget_set_double_buffered(data->win, FALSE);
     
   /* SHAPE PIXMAP */
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
@@ -1529,7 +1529,6 @@ int annotate_init (int x, int y, int width, int height)
   data->untogglewidth = width;
   data->untoggleheight = height;
   data->cursor_hidden = FALSE;
-  data->is_grabbed=FALSE;
   data->is_grabbed=FALSE;
  
   setup_app ();
