@@ -877,8 +877,8 @@ void annotate_draw_line (gint x1, gint y1,
 /* Draw an arrow using some polygons */
 void annotate_draw_arrow (gboolean revert)
 {
-  gfloat direction = annotate_get_arrow_direction (revert);
   gint lenght = g_slist_length(data->coordlist);
+  gfloat direction = annotate_get_arrow_direction (revert);
   int i = 0;
   if (!revert)
   {

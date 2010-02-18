@@ -139,7 +139,12 @@ gboolean is_a_rectangle(GSList* list)
 /* Return a subpath of listInp containg only the meaningful points using the standard deviation */
 GSList* extract_relevant_points(GSList *listInp, gboolean close_path)
 {
-  AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*)listInp->data;
+  gint lenght = g_slist_length(listInp);
+  if (lenght<3)
+  {
+     return listInp;
+  }
+  AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*)listInp->data; 
   double H;
   int Ax, Ay, Bx, By, Cx, Cy;
   int X1,X2,Y1,Y2;
