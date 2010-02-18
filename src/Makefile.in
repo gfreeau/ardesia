@@ -49,7 +49,7 @@ am_ardesia_OBJECTS = background.$(OBJEXT) broken.$(OBJEXT) \
 	bezier_spline.$(OBJEXT) annotate.$(OBJEXT) main.$(OBJEXT) \
 	interface.$(OBJEXT) utils.$(OBJEXT) saver.$(OBJEXT) \
 	color_selector.$(OBJEXT) preference_dialog.$(OBJEXT) \
-	recorder.$(OBJEXT) callbacks.$(OBJEXT)
+	info_dialog.$(OBJEXT) recorder.$(OBJEXT) callbacks.$(OBJEXT)
 ardesia_OBJECTS = $(am_ardesia_OBJECTS)
 am__DEPENDENCIES_1 =
 ardesia_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -190,6 +190,7 @@ ardesia_SOURCES = \
         saver.c saver.h\
         color_selector.c color_selector.h\
         preference_dialog.c preference_dialog.h\
+        info_dialog.c info_dialog.h\
         recorder.c recorder.h\
 	callbacks.c
 
@@ -281,6 +282,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/broken.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/callbacks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/color_selector.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/info_dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/preference_dialog.Po@am__quote@

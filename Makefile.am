@@ -25,6 +25,7 @@ install-data-local:
         fi  
 	cp -p src/ardesia.glade $(DESTDIR)$(pkgdatadir); 
 	cp -p src/preferenceDialog.glade $(DESTDIR)$(pkgdatadir); 
+	cp -p src/infoDialog.glade $(DESTDIR)$(pkgdatadir); 
 
 dist-hook:
 	if test -d pixmaps; then \
@@ -45,3 +46,4 @@ dist-hook:
         fi 
 	cp -p src/ardesia.glade $(DESTDIR)$(pkgdatadir); 
 	cp -p src/preferenceDialog.glade $(DESTDIR)$(pkgdatadir); 
+	cp -p src/infoDialog.glade $(DESTDIR)$(pkgdatadir); 

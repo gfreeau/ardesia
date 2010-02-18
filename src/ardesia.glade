@@ -3,7 +3,7 @@
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">890</property>
+    <property name="width_request">925</property>
     <property name="events">GDK_LEAVE_NOTIFY_MASK</property>
     <property name="type">popup</property>
     <property name="title" translatable="yes">Ardesia</property>
@@ -447,6 +447,22 @@
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-media-record</property>
                 <signal name="toggled" handler="on_toolsRecorder_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="buttonInfo">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Info</property>
+                <property name="label" translatable="yes">info</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-info</property>
+                <signal name="clicked" handler="on_info"/>
               </object>
               <packing>
                 <property name="expand">False</property>

@@ -39,6 +39,7 @@
 #include "saver.h"
 #include "color_selector.h"
 #include "preference_dialog.h"
+#include "info_dialog.h"
 
 #include "annotate.h"
 
@@ -174,6 +175,16 @@ gboolean on_quit                          (GtkWidget       *widget,
                                            gpointer         user_data)
 {
   return quit();
+}
+
+
+/* Called when push the info button */
+gboolean on_info                         (GtkToolButton   *toolbutton,
+					   gpointer         user_data)
+{
+  start_info_dialog(toolbutton, get_annotation_window());
+  annotate();
+  return TRUE;
 }
 
 
