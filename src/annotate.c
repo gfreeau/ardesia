@@ -1309,9 +1309,15 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   int y;
   gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);  
  
-  /* store the pointer position */ 
-  data->savelist->previous->xcursor=x;  
-  data->savelist->previous->ycursor=y;   
+  /* store the pointer position */
+  if (data->savelist)
+  {
+    if (data->savelist->previous)
+    { 
+      data->savelist->previous->xcursor=x;  
+      data->savelist->previous->ycursor=y;  
+    }
+  } 
   
   cairo_move_to(data->cr, x, y);
   GdkScreen   *screen = gdk_display_get_default_screen (data->display);
