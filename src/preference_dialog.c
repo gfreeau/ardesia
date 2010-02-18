@@ -115,11 +115,6 @@ void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
           background = 0;  
 	} 
     }        
-  GtkWidget *preferenceDialog = GTK_WIDGET(gtk_builder_get_object(preferenceDialogGtkBuilder,"preferences"));
-  if (preferenceDialog != NULL)
-    {
-      gtk_widget_destroy(preferenceDialog);
-    }
 }
 
 
@@ -143,11 +138,6 @@ void on_backgroundColorButton_color_set (GtkButton *buton, gpointer user_date)
 void on_preferenceCancelButton_clicked    (GtkButton *buton,
                                            gpointer user_date)
 {
-  GtkWidget *preferenceDialog = GTK_WIDGET(gtk_builder_get_object(preferenceDialogGtkBuilder,"preferences"));
-  if (preferenceDialog != NULL)
-    {
-      gtk_widget_destroy(preferenceDialog);
-    }
 }
 
 
@@ -197,7 +187,6 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
  
   /* Connect all signals by reflection */
   gtk_builder_connect_signals (preferenceDialogGtkBuilder, NULL);
-
   GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(preferenceDialogGtkBuilder,"file"));
   GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(preferenceDialogGtkBuilder,"color"));
   if (background == 1)
@@ -214,7 +203,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
     {
       gtk_widget_destroy(preferenceDialog);
     }
-  g_object_unref (G_OBJECT(preferenceDialogGtkBuilder) );
+  g_object_unref (preferenceDialogGtkBuilder);
 }
 
 
