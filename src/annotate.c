@@ -344,7 +344,7 @@ void select_color()
 /* Clear cairo context */
 void clear_cairo_context(cairo_t* cr)
 {
-  if (data->cr)
+  if (cr)
   {
     cairo_save(cr);
     cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
