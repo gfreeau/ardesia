@@ -99,7 +99,7 @@ gboolean  quit()
   annotate_quit();
   GtkWidget* main_window = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
   gtk_widget_destroy(main_window);
-  gfree(workspace_dir);
+  g_free(workspace_dir);
   g_object_unref (gtkBuilder); 
   gtk_main_quit();
   exit(ret);
