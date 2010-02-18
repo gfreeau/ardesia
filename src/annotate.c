@@ -1111,21 +1111,24 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
 /** Draw the point list */
 void draw_point_list(GSList* outptr)
 {
-  AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
-  gint lastx = out_point->x; 
-  gint lasty = out_point->y;
-  cairo_move_to(data->cr, lastx, lasty);
-  while (outptr)
-    {
-      out_point = (AnnotateStrokeCoordinate*)outptr->data;
-      gint curx = out_point->x; 
-      gint cury = out_point->y;
-      // draw line
-      annotate_draw_line (lastx, lasty, curx, cury, FALSE);
-      lastx = curx;
-      lasty = cury;
-      outptr = outptr ->next;   
-    }
+  if (outptr)
+  {
+    AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
+    gint lastx = out_point->x; 
+    gint lasty = out_point->y;
+    cairo_move_to(data->cr, lastx, lasty);
+    while (outptr)
+      {
+        out_point = (AnnotateStrokeCoordinate*)outptr->data;
+        gint curx = out_point->x; 
+        gint cury = out_point->y;
+        // draw line
+        annotate_draw_line (lastx, lasty, curx, cury, FALSE);
+        lastx = curx;
+        lasty = cury;
+        outptr = outptr ->next;   
+      }
+  }
 }
 
 
