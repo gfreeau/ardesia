@@ -64,7 +64,7 @@ gboolean is_similar(int x, int y, int pixel_tollerance)
 
 int get_distance(int x1, int y1, int x2, int y2)
 {
-      return (sqrt(pow(x1-x2,2) + pow(y1-y2,2)));
+  return (sqrt(pow(x1-x2,2) + pow(y1-y2,2)));
 }
 
 
@@ -86,6 +86,10 @@ gboolean is_similar_point(int x1, int y1, int x2, int y2, int pixel_tollerance)
 /* The list contain a point roundable to x y */
 gboolean contain_similar_point(int x, int y, GSList* list, int pixel_tollerance)
 {
+  if (!list)
+    {
+      return FALSE;
+    }
   int i;
   gint lenght = g_slist_length(list);
   for (i=0; i<lenght; i++)
@@ -93,9 +97,9 @@ gboolean contain_similar_point(int x, int y, GSList* list, int pixel_tollerance)
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
       
       if (is_similar_point(x, y, point->x, point->y, tollerance))
-       {
-         return TRUE;
-       }
+	{
+	  return TRUE;
+	}
     } 
   return FALSE;
 } 
@@ -107,6 +111,10 @@ gboolean contain_similar_point(int x, int y, GSList* list, int pixel_tollerance)
  */
 gboolean is_a_rectangle(GSList* list)
 {
+  if (!list)
+    {
+      return FALSE;
+    }
   if ( g_slist_length(list) != 4)
     {
       return FALSE; 
@@ -141,9 +149,9 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path)
 {
   gint lenght = g_slist_length(listInp);
   if (lenght<3)
-  {
-     return listInp;
-  }
+    {
+      return listInp;
+    }
   AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*)listInp->data; 
   double H;
   int Ax, Ay, Bx, By, Cx, Cy;
@@ -250,6 +258,10 @@ void found_min_and_max(GSList* list, gint* minx, gint* miny, gint* maxx, gint* m
 /* The path described in list is similar to a regular poligon */
 gboolean is_similar_to_a_regular_poligon(GSList* list, int pixel_tollerance)
 {
+  if (!list)
+    {
+      return FALSE;
+    }
   gint lenght = g_slist_length(list);
   double old_distance = 0;
   int i = 0;
@@ -268,13 +280,17 @@ gboolean is_similar_to_a_regular_poligon(GSList* list, int pixel_tollerance)
       old_distance = distance;
       old_point = point;
     }
-   return TRUE;
+  return TRUE;
 }
 
 
 /* Take a path and return the regular poligon path */
 GSList* extract_poligon(GSList* listIn)
 {
+  if (!listIn)
+    {
+      return NULL;
+    }
   int cx, cy;
   int radius;
   gint minx;
@@ -298,10 +314,10 @@ GSList* extract_poligon(GSList* listIn)
       y1 = radius * sin(angle_off) + cy;
       if (i==0) 
         {
-           if (!contain_similar_point(x1, y1, listIn, tollerance*2))
-             {
-                return listIn;  
-             }
+	  if (!contain_similar_point(x1, y1, listIn, tollerance*2))
+	    {
+	      return listIn;  
+	    }
         } 
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, i);
       point->x = x1;
@@ -315,6 +331,10 @@ GSList* extract_poligon(GSList* listIn)
 /* Return the outbounded rectangle outside the path described to listIn */
 GSList*  extract_outbounded_rectangle(GSList* listIn)
 { 
+  if (!listIn)
+    {
+      return NULL;
+    }
   gint minx;
   gint miny;
   gint maxx;
@@ -354,6 +374,10 @@ GSList*  extract_outbounded_rectangle(GSList* listIn)
 /* Take a list of point and return magically the new path */
 GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
 {
+  if (!listInp)
+    {
+      return NULL;
+    }
      
   *close_path = FALSE;
   
@@ -368,44 +392,45 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
     } 
   
   GSList* listOut = extract_relevant_points(listInp, *close_path);  
-  
-  if (*close_path)
-    {
-      /* close path */
-      if (rectify)
+  if (listOut)
+    { 
+      if (*close_path)
 	{
-          // is similar to regular a poligoin
-          if (is_similar_to_a_regular_poligon(listOut, tollerance * 2))
-            {
-              listOut = extract_poligon(listOut);
-            } 
-          else
-            {
-              if (is_a_rectangle(listOut))
-                {
-                  /* is a rectangle */
-                  GSList* listOutN = extract_outbounded_rectangle(listOut);
-                  g_slist_foreach(listOut, (GFunc)g_free, NULL);
-	          g_slist_free(listOut);
-                  listOut = listOutN;
-                  return listOut;
-                }
-              else
-                {
-                  return listOut;
-                } 
-            } 
+	  /* close path */
+	  if (rectify)
+	    {
+	      // is similar to regular a poligoin
+	      if (is_similar_to_a_regular_poligon(listOut, tollerance * 2))
+		{
+		  listOut = extract_poligon(listOut);
+		} 
+	      else
+		{
+		  if (is_a_rectangle(listOut))
+		    {
+		      /* is a rectangle */
+		      GSList* listOutN = extract_outbounded_rectangle(listOut);
+		      g_slist_foreach(listOut, (GFunc)g_free, NULL);
+		      g_slist_free(listOut);
+		      listOut = listOutN;
+		      return listOut;
+		    }
+		  else
+		    {
+		      return listOut;
+		    } 
+		} 
+	    }
+	  else
+	    {
+	      /*  make the outbounded rectangle that will used to draw the ellipse */
+	      GSList* listOutN = extract_outbounded_rectangle(listOut);
+	      g_slist_foreach(listOut, (GFunc)g_free, NULL);
+	      g_slist_free(listOut);
+	      listOut = listOutN;
+	      return listOut;
+	    }  
 	}
-      else
-        {
-           /*  make the outbounded rectangle that will used to draw the ellipse */
-           GSList* listOutN = extract_outbounded_rectangle(listOut);
-           g_slist_foreach(listOut, (GFunc)g_free, NULL);
-	   g_slist_free(listOut);
-           listOut = listOutN;
-           return listOut;
-        }  
     }
-
   return listOut;
 }

@@ -203,7 +203,3 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
   g_free(date);
   return status;
 } 
-
-
-
-

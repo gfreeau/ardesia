@@ -77,10 +77,13 @@ gchar*       color = NULL;
 /* selected line width */
 int          tickness = 15;
 
+/* highlighter flag */
 gboolean     highlighter = FALSE;
 
+/* rectifier flag */
 gboolean     rectifier = FALSE;
 
+/* rounder flag */
 gboolean     rounder = FALSE;
 
 /* arrow=0 mean no arrow, arrow=1 mean normal arrow, arrow=2 mean double arrow */

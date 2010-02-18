@@ -156,13 +156,13 @@ AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
 GtkWindow* get_annotation_window()
 {
   if (data)
-  {
-    return GTK_WINDOW(data->win);
-  }
+    {
+      return GTK_WINDOW(data->win);
+    }
   else
-  {
-    return NULL;
-  }
+    {
+      return NULL;
+    }
 }
 
 
@@ -216,43 +216,52 @@ void annotate_coord_list_append (gint x, gint y, gint width)
 /* Free the list of the painted point */
 void annotate_coord_list_free ()
 {
-  GSList *ptr = data->coordlist;
-  g_slist_foreach(ptr, (GFunc)g_free, NULL);
-  g_slist_free(ptr);
-  data->coordlist = NULL;
+  if (data->coordlist)
+    {
+      GSList *ptr = data->coordlist;
+      g_slist_foreach(ptr, (GFunc)g_free, NULL);
+      g_slist_free(ptr);
+      data->coordlist = NULL;
+    }
 }
 
 
 /* Free the list of the  savepoint for the redo */
 void annotate_redolist_free ()
 {
-  AnnotateSave* annotate_save = data->savelist->next;
-  /* delete all the savepoint after the current pointed */
-  while(annotate_save)
+  if (data->savelist)
     {
-      if (annotate_save->next)
-      {
-        annotate_save =  annotate_save->next; 
-        if (annotate_save->previous)
-        {
-          if (annotate_save->previous->surface)
-          {
-            cairo_surface_destroy(annotate_save->previous->surface);
-          } 
-          g_free(annotate_save->previous);
-        }
-      }
-      else
-      {
-        if (annotate_save->surface)
-        {
-           cairo_surface_destroy(annotate_save->surface);
-        } 
-        g_free(annotate_save);
-        break;
-      }
+      if (data->savelist->next)
+	{
+	  AnnotateSave* annotate_save = data->savelist->next;
+	  /* delete all the savepoint after the current pointed */
+	  while(annotate_save)
+	    {
+	      if (annotate_save->next)
+		{
+		  annotate_save =  annotate_save->next; 
+		  if (annotate_save->previous)
+		    {
+		      if (annotate_save->previous->surface)
+			{
+			  cairo_surface_destroy(annotate_save->previous->surface);
+			} 
+		      g_free(annotate_save->previous);
+		    }
+		}
+	      else
+		{
+		  if (annotate_save->surface)
+		    {
+		      cairo_surface_destroy(annotate_save->surface);
+		    } 
+		  g_free(annotate_save);
+		  break;
+		}
+	    }
+	  data->savelist->next=NULL;
+	}
     }
-  data->savelist->next=NULL;
 }
 
 
@@ -264,16 +273,15 @@ void annotate_savelist_free ()
   while (annotate_save)
     {
       if (annotate_save->previous)
-      {
-        annotate_save =  annotate_save->previous;
-      }
+	{
+	  annotate_save =  annotate_save->previous;
+	}
       else
-      {
-        break;
-      } 
+	{
+	  break;
+	} 
     }
   /* annotate_save point to the first save point */
-
   data->savelist = annotate_save;
   annotate_redolist_free ();
 }
@@ -290,16 +298,16 @@ gfloat annotate_get_arrow_direction (gboolean revert)
   AnnotateStrokeCoordinate* point = NULL;
   AnnotateStrokeCoordinate* oldpoint = NULL;
   if (revert)
-  {
+    {
       oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 1);
       point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 0);
-  }
+    }
   else
-  {
+    {
       gint lenght = g_slist_length(outptr);
       oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, lenght-2);
       point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, lenght-1);
-  }
+    }
   // calculate the tan beetween the last two point 
   gfloat ret = atan2 (point->y -oldpoint->y, point->x-oldpoint->x);
   g_slist_foreach(outptr, (GFunc)g_free, NULL);
@@ -345,17 +353,17 @@ void select_color()
 void clear_cairo_context(cairo_t* cr)
 {
   if (cr)
-  {
-    cairo_save(cr);
-    cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
-    cairo_set_transparent_color(cr);
-    cairo_paint(cr);
-    cairo_restore(cr);
-  } 
+    {
+      cairo_save(cr);
+      cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
+      cairo_set_transparent_color(cr);
+      cairo_paint(cr);
+      cairo_restore(cr);
+    } 
 }
 
 
-/* Repaint the window */
+/* Add a save point */
 gint add_save_point ()
 {
   AnnotateSave *save = g_malloc(sizeof(AnnotateSave));
@@ -372,14 +380,11 @@ gint add_save_point ()
 
 
   AnnotateSave* annotate_save = data->savelist;
-  if (data->savelist->next)
-  {
-      annotate_redolist_free ();
-  }
+  annotate_redolist_free ();
   if (!(annotate_save->surface))
-  {
-    annotate_save->surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, data->width, data->height); 
-  }
+    {
+      annotate_save->surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, data->width, data->height); 
+    }
   cairo_surface_t* saved_surface = annotate_save->surface;
   cairo_surface_t* source_surface = cairo_get_target(data->cr);
   cairo_t *cr = cairo_create (saved_surface);
@@ -394,14 +399,14 @@ gint add_save_point ()
 void restore_surface()
 {
   if (data->cr)
-  {
-    AnnotateSave* annotate_save = data->savelist;
-    cairo_new_path(data->cr);
-    cairo_surface_t* saved_surface = annotate_save->surface;
-    cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
-    cairo_set_source_surface (data->cr, saved_surface, 0, 0);
-    cairo_paint(data->cr);
-  }
+    {
+      AnnotateSave* annotate_save = data->savelist;
+      cairo_new_path(data->cr);
+      cairo_surface_t* saved_surface = annotate_save->surface;
+      cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
+      cairo_set_source_surface (data->cr, saved_surface, 0, 0);
+      cairo_paint(data->cr);
+    }
 }
 
 
@@ -485,29 +490,29 @@ void annotate_acquire_keyboard_grab()
 void annotate_release_grab ()
 {           
   if (data->is_grabbed)
-  {
-  gdk_error_trap_push ();
+    {
+      gdk_error_trap_push ();
  
-  gdk_display_pointer_ungrab (data->display, GDK_CURRENT_TIME);
-  annotate_release_keyboard_grab();
-  /* inherit cursor from root window */
-  gdk_window_set_cursor (data->win->window, NULL);
-  gdk_flush ();
-  if (gdk_error_trap_pop ())
-    {
-      /* this probably means the device table is outdated, 
-	 e.g. this device doesn't exist anymore */
-      g_printerr("Error ungrabbing mouse device while ungrabbing all, ignoring.\n");
-    }
+      gdk_display_pointer_ungrab (data->display, GDK_CURRENT_TIME);
+      annotate_release_keyboard_grab();
+      /* inherit cursor from root window */
+      gdk_window_set_cursor (data->win->window, NULL);
+      gdk_flush ();
+      if (gdk_error_trap_pop ())
+	{
+	  /* this probably means the device table is outdated, 
+	     e.g. this device doesn't exist anymore */
+	  g_printerr("Error ungrabbing mouse device while ungrabbing all, ignoring.\n");
+	}
   
-  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0); 
+      gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0); 
   
-  if(data->debug)
-    {
-      g_printerr ("DEBUG: Ungrabbed pointer.\n");
+      if(data->debug)
+	{
+	  g_printerr ("DEBUG: Ungrabbed pointer.\n");
+	}
+      data->is_grabbed=FALSE;
     }
-  data->is_grabbed=FALSE;
-  }
 }
 
 
@@ -561,9 +566,9 @@ void set_pen_cursor()
   GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color);
 
   if (cursor)
-  {
-    gdk_cursor_unref(cursor);
-  }
+    {
+      gdk_cursor_unref(cursor);
+    }
   cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
   gdk_window_set_cursor (data->win->window, cursor);
   gdk_flush ();
@@ -592,9 +597,9 @@ void set_eraser_cursor()
   GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
   GdkColor *foreground_color_p = rgb_to_gdkcolor("FF0000");
   if (cursor)
-  {
-    gdk_cursor_unref(cursor);
-  }
+    {
+      gdk_cursor_unref(cursor);
+    }
   cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, size/2, size/2);
   gdk_window_set_cursor (data->win->window, cursor);
   gdk_flush ();
@@ -636,56 +641,56 @@ gboolean in_unlock_area(int x, int y)
 void annotate_acquire_grab ()
 {
   if  (!data->is_grabbed)
-  {
-  gtk_widget_show (data->win);
-
-  GdkGrabStatus result;
-  gdk_error_trap_push(); 
-
-  gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);   
-
-  result = gdk_pointer_grab (data->win->window, FALSE,
-			     ANNOTATE_MOUSE_EVENTS, 0,
-			     NULL,
-			     GDK_CURRENT_TIME); 
-
-  gdk_flush ();
-  if (gdk_error_trap_pop ())
     {
-      g_printerr("Error grabbing pointer, ignoring.");
-    }
+      gtk_widget_show (data->win);
+
+      GdkGrabStatus result;
+      gdk_error_trap_push(); 
+
+      gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);   
+
+      result = gdk_pointer_grab (data->win->window, FALSE,
+				 ANNOTATE_MOUSE_EVENTS, 0,
+				 NULL,
+				 GDK_CURRENT_TIME); 
+
+      gdk_flush ();
+      if (gdk_error_trap_pop ())
+	{
+	  g_printerr("Error grabbing pointer, ignoring.");
+	}
    
-  switch (result)
-    {
-    case GDK_GRAB_SUCCESS:
-      break;
-    case GDK_GRAB_ALREADY_GRABBED:
-      g_printerr ("Grabbing Pointer failed: %s\n", "AlreadyGrabbed");
-      break;
-    case GDK_GRAB_INVALID_TIME:
-      g_printerr ("Grabbing Pointer failed: %s\n", "GrabInvalidTime");
-      break;
-    case GDK_GRAB_NOT_VIEWABLE:
-      g_printerr ("Grabbing Pointer failed: %s\n", "GrabNotViewable");
-      break;
-    case GDK_GRAB_FROZEN:
-      g_printerr ("Grabbing Pointer failed: %s\n", "GrabFrozen");
-      break;
-    default:
-      g_printerr ("Grabbing Pointer failed: %s\n", "Unknown error");
-    }      
-  if(data->cur_context && data->cur_context->type == ANNOTATE_ERASER)
-    {
-      set_eraser_cursor(data);
-    } 
-  else
-    {
-      set_pen_cursor();
-    } 
+      switch (result)
+	{
+	case GDK_GRAB_SUCCESS:
+	  break;
+	case GDK_GRAB_ALREADY_GRABBED:
+	  g_printerr ("Grabbing Pointer failed: %s\n", "AlreadyGrabbed");
+	  break;
+	case GDK_GRAB_INVALID_TIME:
+	  g_printerr ("Grabbing Pointer failed: %s\n", "GrabInvalidTime");
+	  break;
+	case GDK_GRAB_NOT_VIEWABLE:
+	  g_printerr ("Grabbing Pointer failed: %s\n", "GrabNotViewable");
+	  break;
+	case GDK_GRAB_FROZEN:
+	  g_printerr ("Grabbing Pointer failed: %s\n", "GrabFrozen");
+	  break;
+	default:
+	  g_printerr ("Grabbing Pointer failed: %s\n", "Unknown error");
+	}      
+      if(data->cur_context && data->cur_context->type == ANNOTATE_ERASER)
+	{
+	  set_eraser_cursor(data);
+	} 
+      else
+	{
+	  set_pen_cursor();
+	} 
   
-  annotate_acquire_keyboard_grab();
-  data->is_grabbed=TRUE;
-  }
+      annotate_acquire_keyboard_grab();
+      data->is_grabbed = TRUE;
+    }
 }
 
 
@@ -765,9 +770,9 @@ void configure_pen_options()
 void reset_cairo()
 {
   if (data->cr)
-  {
-    cairo_new_path(data->cr);
-  }
+    {
+      cairo_new_path(data->cr);
+    }
   configure_pen_options();  
 }
 
@@ -878,12 +883,16 @@ void annotate_draw_line (gint x1, gint y1,
 void annotate_draw_arrow (gboolean revert)
 {
   gint lenght = g_slist_length(data->coordlist);
+  if (lenght<3)
+    {
+      return;
+    }
   gfloat direction = annotate_get_arrow_direction (revert);
   int i = 0;
   if (!revert)
-  {
-       i = lenght-1; 
-  }
+    {
+      i = lenght-1; 
+    }
   AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, i);
 
   GdkPoint arrowhead [4];
@@ -985,9 +994,9 @@ void hide_cursor()
 					      invisible_cursor_bits,
 					      1, 1);
   if (cursor)
-  {
-    gdk_cursor_unref (cursor);
-  }
+    {
+      gdk_cursor_unref (cursor);
+    }
   cursor = gdk_cursor_new_from_pixmap (empty_bitmap, empty_bitmap, &color,
 				       &color, 0, 0);
   gdk_window_set_cursor(data->win->window, cursor);
@@ -1112,23 +1121,23 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
 void draw_point_list(GSList* outptr)
 {
   if (outptr)
-  {
-    AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
-    gint lastx = out_point->x; 
-    gint lasty = out_point->y;
-    cairo_move_to(data->cr, lastx, lasty);
-    while (outptr)
-      {
-        out_point = (AnnotateStrokeCoordinate*)outptr->data;
-        gint curx = out_point->x; 
-        gint cury = out_point->y;
-        // draw line
-        annotate_draw_line (lastx, lasty, curx, cury, FALSE);
-        lastx = curx;
-        lasty = cury;
-        outptr = outptr ->next;   
-      }
-  }
+    {
+      AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
+      gint lastx = out_point->x; 
+      gint lasty = out_point->y;
+      cairo_move_to(data->cr, lastx, lasty);
+      while (outptr)
+	{
+	  out_point = (AnnotateStrokeCoordinate*)outptr->data;
+	  gint curx = out_point->x; 
+	  gint cury = out_point->y;
+	  // draw line
+	  annotate_draw_line (lastx, lasty, curx, cury, FALSE);
+	  lastx = curx;
+	  lasty = cury;
+	  outptr = outptr->next;   
+	}
+    }
 }
 
 
@@ -1189,7 +1198,7 @@ gboolean roundify()
 /* fill the last shape if it is a close path */
 void annotate_fill()
 {
-  if (data->cr)
+  if ((data->cr)&&(data->coordlist))
     {
       if (!(data->roundify)&&(!(data->rectify)))
 	{
@@ -1314,13 +1323,13 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
  
   /* store the pointer position */
   if (data->savelist)
-  {
-    if (data->savelist->previous)
-    { 
-      data->savelist->previous->xcursor=x;  
-      data->savelist->previous->ycursor=y;  
-    }
-  } 
+    {
+      if (data->savelist->previous)
+	{ 
+	  data->savelist->previous->xcursor=x;  
+	  data->savelist->previous->ycursor=y;  
+	}
+    } 
   
   cairo_move_to(data->cr, x, y);
   GdkScreen   *screen = gdk_display_get_default_screen (data->display);
@@ -1383,15 +1392,16 @@ gboolean event_expose (GtkWidget *widget,
                        gpointer user_data)
 {
   if (!(data->cr))
-  {
-    data->cr = gdk_cairo_create(data->win->window);
-    clear_screen();
-    transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
-				       data->height, -1);
-    cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
-    clear_cairo_context(transparent_cr);
-    cairo_destroy(transparent_cr);
-  }
+    {
+      /** is the first expose */
+      data->cr = gdk_cairo_create(data->win->window);
+      clear_screen();
+      transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
+					   data->height, -1);
+      cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
+      clear_cairo_context(transparent_cr);
+      cairo_destroy(transparent_cr);
+    }
   restore_surface();
   return TRUE;
 }
@@ -1458,7 +1468,7 @@ void setup_app ()
   char*  color = g_malloc(9);
   strcpy(color,"FF0000");
   strncpy(&color[6], "FF", 2);
-  color[8]=0;
+  color[8] = 0;
 
   data->cr = NULL;
   data->display = gdk_display_get_default ();
@@ -1518,7 +1528,7 @@ void annotate_quit()
   /* destroy cairo */
   destroy_cairo();
   g_signal_handlers_disconnect_by_func (data->win,
-           G_CALLBACK (event_expose), NULL);
+					G_CALLBACK (event_expose), NULL);
   gtk_widget_destroy(data->win); 
   data->win = NULL;
   /* free all */
@@ -1533,9 +1543,9 @@ void annotate_quit()
   g_free(data->default_eraser);
   g_free (data);
   if (cursor)
-  {
-    gdk_cursor_unref(cursor);
-  }
+    {
+      gdk_cursor_unref(cursor);
+    }
 }
 
 
@@ -1550,7 +1560,7 @@ int annotate_init (int x, int y, int width, int height)
   data->untogglewidth = width;
   data->untoggleheight = height;
   data->cursor_hidden = FALSE;
-  data->is_grabbed=FALSE;
+  data->is_grabbed = FALSE;
  
   setup_app ();
 
