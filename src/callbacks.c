@@ -398,6 +398,11 @@ void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
           /* put icon to stop */
           gtk_tool_button_set_stock_id (toolbutton, "gtk-media-stop");
         }
+      else
+       {
+	  gtk_widget_hide(toolbutton);
+           
+       }
     }
   annotate();
 }

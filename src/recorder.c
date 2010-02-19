@@ -67,6 +67,8 @@ int start_recorder(char* filename)
   pid_t pid;
 
   pid = fork();
+  int status;
+  wait(&status);
 
   if (pid < 0)
     {
@@ -104,10 +106,11 @@ void quit_recorder()
 
 
 /* Missing program dialog */
-void missing_program_dialog(GtkWidget* chooser)
+void missing_program_dialog(GtkWindow* parent_window)
 {
   GtkWidget *miss_dialog;
-  miss_dialog = gtk_message_dialog_new (GTK_WINDOW (chooser), GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
+  
+  miss_dialog = gtk_message_dialog_new (parent_window, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
                                        GTK_BUTTONS_OK, gettext("To record with Ardesia you must install the recordmydesktop program"));
   gtk_window_stick((GtkWindow*)miss_dialog);
 
@@ -192,12 +195,12 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
       else
        {
          status = FALSE;
-         missing_program_dialog(chooser); 
+         missing_program_dialog(parent); 
        }
     }
   if (chooser)
    { 
-     gtk_widget_destroy (chooser);
+     g_object_destroy (chooser);
    } 
       
   g_free(filename);
