@@ -64,12 +64,10 @@ int start_recorder(char* filename)
   argv[17] = "-o";
   argv[18] = filename;
   argv[19] = (char*) NULL ;
+  
   pid_t pid;
-
   pid = fork();
-  int status;
-  wait(&status);
-
+  
   if (pid < 0)
     {
       return -1;
@@ -83,6 +81,30 @@ int start_recorder(char* filename)
     }
   return pid;
 }
+
+
+int check_recorder()
+{
+  char* argv[3];
+  argv[0] = "recordmydesktop";
+  argv[1] = "--version";
+  argv[2] = (char*) NULL ;
+  
+  pid_t pid;
+  pid = fork();
+  int status;
+  wait(&status);
+  if (pid == 0)
+    {
+      if (execvp(argv[0], argv) < 0)
+ 
+        {
+          return -1;
+        }
+    }
+  return pid;
+}
+
 
 /* Return if the recording is active */
 gboolean is_recording()
@@ -187,10 +209,11 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
 	      return status; 
 	    } 
 	}
-      recorderpid = start_recorder(filename);
+      recorderpid = check_recorder(filename);
       if (recorderpid > 0)
         {
           status = TRUE;
+          recorderpid = start_recorder(filename);
         }
       else
        {
@@ -200,7 +223,7 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
     }
   if (chooser)
    { 
-     g_object_destroy (chooser);
+     gtk_widget_destroy (chooser);
    } 
       
   g_free(filename);
