@@ -883,7 +883,7 @@ void annotate_draw_line (gint x1, gint y1,
 void annotate_draw_arrow (gboolean revert)
 {
   gint lenght = g_slist_length(data->coordlist);
-  if (lenght<3)
+  if (lenght<2)
     {
       return;
     }
