@@ -931,33 +931,31 @@ void annotate_draw_arrow (gboolean revert)
 
   int penwidth = data->cur_context->width/1.5;
   
-  int penwidthcos = 2 * penwidth * cos (direction);
-  int penwidthsin = 2 * penwidth * sin (direction);
-  int widthcos = penwidthcos;
-  int widthsin = penwidthsin;
+  int widthcos = penwidth * cos (direction);
+  int widthsin = penwidth * sin (direction);
 
   /* Vertex of the arrow */
-  arrowhead [0].x = point->x + penwidthcos;
-  arrowhead [0].y = point->y + penwidthsin;
+  arrowhead [0].x = point->x + widthcos;
+  arrowhead [0].y = point->y + widthsin;
 
   /* left point */
-  arrowhead [1].x = point->x - 2 * widthcos + widthsin ;
-  arrowhead [1].y = point->y -  widthcos -  2 * widthsin ;
+  arrowhead [1].x = point->x - 1.5 * widthcos + widthsin ;
+  arrowhead [1].y = point->y -  widthcos -  1.5 * widthsin ;
 
   /* origin */
-  arrowhead [2].x = point->x - widthcos ;
-  arrowhead [2].y = point->y - widthsin ;
+  arrowhead [2].x = point->x - 1.2 * widthcos ;
+  arrowhead [2].y = point->y - 1.2 * widthsin ;
 
   /* right point */
-  arrowhead [3].x = point->x - 2 * widthcos - widthsin ;
-  arrowhead [3].y = point->y +  widthcos - 2 * widthsin ;
+  arrowhead [3].x = point->x - 1.5 * widthcos - widthsin ;
+  arrowhead [3].y = point->y +  widthcos - 1.5 * widthsin ;
 
-  cairo_stroke(data->cr);
+  cairo_stroke(data->cr); 
   cairo_save(data->cr);
-  cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_BUTT);
+
   cairo_set_line_join(data->cr, CAIRO_LINE_JOIN_MITER); 
   cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_line_width(data->cr, penwidth);
+  cairo_set_line_width(data->cr, data->cur_context->width);
 
   cairo_move_to(data->cr, arrowhead[2].x, arrowhead[2].y); 
   cairo_line_to(data->cr, arrowhead[1].x, arrowhead[1].y);
