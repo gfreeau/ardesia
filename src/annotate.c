@@ -63,9 +63,6 @@
 
 
 
-/* set the DEBUG to 1 to read the debug messages */
-#define DEBUG 0
-
 #define g_slist_first(n) g_slist_nth (n,0)
 
 GdkPixmap *transparent_pixmap = NULL;
@@ -192,6 +189,7 @@ void annotate_paint_context_print (gchar *name, AnnotatePaintContext *context)
 }
 
 
+
 /* Free the memory allocated by paint context */
 void annotate_paint_context_free (AnnotatePaintContext *context)
 {
@@ -287,8 +285,6 @@ void annotate_savelist_free ()
 }
 
 
-
-
 /* Calculate the direction in radiants */
 gfloat annotate_get_arrow_direction (gboolean revert)
 {
@@ -339,10 +335,18 @@ void select_color()
     {
       if (!(data->cur_context->type == ANNOTATE_ERASER))
         {
+          if (data->debug)
+	    { 
+	      g_printerr("Select color %s\n", data->cur_context->fg_color);
+	    }
           cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
         }
       else
         {
+          if (data->debug)
+	    { 
+	      g_printerr("Select transparent color for erase\n");
+	    }
           cairo_set_transparent_color(data->cr);
         }
     }
@@ -413,6 +417,10 @@ void restore_surface()
 /* Undo to the last save point */
 void annotate_undo()
 {
+  if (data->debug)
+    {
+      g_printerr("Undo\n");
+    }
   if (data->savelist)
     {
       if (data->savelist->previous)
@@ -427,6 +435,10 @@ void annotate_undo()
 /* Redo to the last save point */
 void annotate_redo()
 {
+  if (data->debug)
+    {
+      g_printerr("Redo\n");
+    }
   if (data->savelist)
     {
       if (data->savelist->next)
@@ -450,7 +462,10 @@ void annotate_undo_and_restore_pointer()
 /* Hide the annotations */
 void annotate_hide_annotation ()
 {
-
+  if (data->debug)
+    {
+      g_printerr("Hide annotations\n");
+    }
   gdk_draw_drawable (data->win->window,
                      data->win->style->fg_gc[GTK_WIDGET_STATE (data->win)],
                      transparent_pixmap,
@@ -463,6 +478,10 @@ void annotate_hide_annotation ()
 /* Show the annotations */
 void annotate_show_annotation ()
 {
+  if (data->debug)
+    {
+      g_printerr("Show annotations\n");
+    }
   restore_surface();
 }
 
@@ -502,14 +521,14 @@ void annotate_release_grab ()
 	{
 	  /* this probably means the device table is outdated, 
 	     e.g. this device doesn't exist anymore */
-	  g_printerr("Error ungrabbing mouse device while ungrabbing all, ignoring.\n");
+	  g_printerr("Ungrab mouse device error\n");
 	}
   
       gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0); 
   
-      if(data->debug)
+      if (data->debug)
 	{
-	  g_printerr ("DEBUG: Ungrabbed pointer.\n");
+	  g_printerr ("Release grab\n");
 	}
       data->is_grabbed=FALSE;
     }
@@ -519,6 +538,10 @@ void annotate_release_grab ()
 /* Select the default eraser tool */
 void annotate_select_eraser()
 {
+  if (data->debug)
+    {
+      g_printerr("Select eraser\n");
+    }
   AnnotatePaintContext *eraser = data->default_eraser;
   data->cur_context = eraser;
 }
@@ -657,7 +680,7 @@ void annotate_acquire_grab ()
       gdk_flush ();
       if (gdk_error_trap_pop ())
 	{
-	  g_printerr("Error grabbing pointer, ignoring.");
+	  g_printerr("Grab pointer error\n");
 	}
    
       switch (result)
@@ -665,19 +688,19 @@ void annotate_acquire_grab ()
 	case GDK_GRAB_SUCCESS:
 	  break;
 	case GDK_GRAB_ALREADY_GRABBED:
-	  g_printerr ("Grabbing Pointer failed: %s\n", "AlreadyGrabbed");
+	  g_printerr ("Grab Pointer failed: AlreadyGrabbed\n");
 	  break;
 	case GDK_GRAB_INVALID_TIME:
-	  g_printerr ("Grabbing Pointer failed: %s\n", "GrabInvalidTime");
+          g_printerr ("Grab Pointer failed: GrabInvalidTime\n");
 	  break;
 	case GDK_GRAB_NOT_VIEWABLE:
-	  g_printerr ("Grabbing Pointer failed: %s\n", "GrabNotViewable");
+          g_printerr ("Grab Pointer failed: GrabNotViewable\n");
 	  break;
 	case GDK_GRAB_FROZEN:
-	  g_printerr ("Grabbing Pointer failed: %s\n", "GrabFrozen");
+          g_printerr ("Grab Pointer failed: GrabFrozen\n");
 	  break;
 	default:
-	  g_printerr ("Grabbing Pointer failed: %s\n", "Unknown error");
+          g_printerr ("Grab Pointer failed: Unknown error\n");
 	}      
       if(data->cur_context && data->cur_context->type == ANNOTATE_ERASER)
 	{
@@ -690,6 +713,10 @@ void annotate_acquire_grab ()
   
       annotate_acquire_keyboard_grab();
       data->is_grabbed = TRUE;
+      if (data->debug)
+	{
+	  g_printerr("Acquire grab\n");
+	}
     }
 }
 
@@ -777,20 +804,17 @@ void reset_cairo()
 }
 
 
-/* Clear the screen */
-void clear_screen()
-{
-  reset_cairo();
-  clear_cairo_context(data->cr);
-  add_save_point();
-}
-
-
 /* Clear the annotations windows */
 void annotate_clear_screen ()
 {
-  clear_screen();
-  data->painted = FALSE;
+  if (data->debug)
+    {
+      g_printerr("Clear screen\n");
+    }
+  reset_cairo();
+  clear_cairo_context(data->cr);
+  add_save_point();
+  data->painted = TRUE;
 }
 
 
@@ -852,7 +876,7 @@ void annotate_select_tool (GdkDevice *device, guint state)
     }
   else
     {
-      g_printerr ("ERROR: Attempt to select nonexistent device!\n");
+      g_printerr("Attempt to select nonexistent device!\n");
       data->cur_context = data->default_pen;
     }
 
@@ -882,12 +906,20 @@ void annotate_draw_line (gint x1, gint y1,
 /* Draw an arrow using some polygons */
 void annotate_draw_arrow (gboolean revert)
 {
+  if (data->debug)
+    {
+      g_printerr("Draw arrow\n");
+    }
   gint lenght = g_slist_length(data->coordlist);
   if (lenght<2)
     {
       return;
     }
   gfloat direction = annotate_get_arrow_direction (revert);
+  if (data->debug)
+    {
+      g_printerr("Arrow direction %f\n", direction/M_PI*180);
+    }
   int i = 0;
   if (!revert)
     {
@@ -956,10 +988,9 @@ gboolean proximity_in (GtkWidget *win,
 
   gdk_window_get_pointer (data->win->window, &x, &y, &state);
   annotate_select_tool (ev->device, state);
-
-  if(data->debug)
+  if (data->debug)
     {
-      g_printerr("DEBUG: proximity in device  %s: \n", ev->device->name);
+      g_printerr("Proximity in device %s\n", ev->device->name);
     }
   return TRUE;
 }
@@ -975,10 +1006,9 @@ gboolean proximity_out (GtkWidget *win,
 
   data->state = 0;
   data->device = NULL;
-
-  if(data->debug)
+  if (data->debug)
     {
-      g_printerr("DEBUG: proximity out device  %s: \n", ev->device->name);
+      g_printerr("Proximity out device %s\n", ev->device->name);
     }
   return FALSE;
 }
@@ -1045,12 +1075,11 @@ gboolean paint (GtkWidget *win,
       /* the last point was outside the bar then ungrab */
       annotate_release_grab ();
       return FALSE;
-    }
- 
-  if(data->debug)
-    {
-      g_printerr("DEBUG: Device '%s': Button %i Down at (x,y)=(%.2f : %.2f)\n",
-                 ev->device->name, ev->button, ev->x, ev->y);
+    }   
+  if (data->debug)
+    {    
+      g_printerr("Device '%s': Button %i Down at (x,y)=(%.2f : %.2f)\n",
+		 ev->device->name, ev->button, ev->x, ev->y);
     }
   return TRUE;
 }
@@ -1108,6 +1137,10 @@ gboolean paintto (GtkWidget *win,
 /* This draw an ellipse taking the top left edge coordinates the width and the eight of the bounded rectangle */
 void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
 {
+  if (data->debug)
+    {
+      g_printerr("Draw ellipse\n");
+    }
   cairo_save(data->cr);
   cairo_translate (data->cr, x + width / 2., y + height / 2.);
   cairo_scale (data->cr, width / 2., height / 2.);
@@ -1144,6 +1177,10 @@ void draw_point_list(GSList* outptr)
 /* Rectify the line or the shape*/
 gboolean rectify()
 {
+  if (data->debug)
+    {
+      g_printerr("rectify\n");
+    }
   add_save_point();
   annotate_undo();
   annotate_redolist_free();
@@ -1164,6 +1201,10 @@ gboolean rectify()
 /* Roundify the line or the shape */
 gboolean roundify()
 {
+  if (data->debug)
+    {
+      g_printerr("Roundify\n");
+    }
   add_save_point();
   annotate_undo();
   annotate_redolist_free();
@@ -1208,6 +1249,10 @@ void annotate_fill()
       select_color();
       cairo_fill(data->cr);
       cairo_stroke(data->cr);
+      if (data->debug)
+        {
+          g_printerr("Fill\n");
+        }
       add_save_point();
     }
 }
@@ -1216,7 +1261,10 @@ void annotate_fill()
 /* This shots when the button is realeased */
 gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 {
-   
+  if (data->debug)
+    {
+      g_printerr("Release button\n");
+    }
   /* only button1 allowed */
   if (!(ev->button==1))
     {
@@ -1391,11 +1439,15 @@ gboolean event_expose (GtkWidget *widget,
                        GdkEventExpose *event, 
                        gpointer user_data)
 {
+  if (data->debug)
+    {
+      g_printerr("Expose event\n");
+    }
   if (!(data->cr))
     {
       /** is the first expose */
       data->cr = gdk_cairo_create(data->win->window);
-      clear_screen();
+      annotate_clear_screen();
       transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
 					   data->height, -1);
       cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
@@ -1550,10 +1602,10 @@ void annotate_quit()
 
 
 /* Init the annotation */
-int annotate_init (int x, int y, int width, int height)
+int annotate_init (int x, int y, int width, int height, gboolean debug)
 {
   data = g_malloc (sizeof (AnnotateData));
-  data->debug = DEBUG;
+  data->debug = debug;
   /* Untoggle zone is setted on ardesia zone */
   data->untogglexpos = x;
   data->untoggleypos = y;

@@ -172,15 +172,28 @@ int main (int argc, char *argv[])
   textdomain (PACKAGE);
 #endif
 
-  if (argc>1)
+  gboolean debug = FALSE;
+ 
+  int i=1;
+  if (argc>i)
     {
-      arg = argv[1];
+     arg = argv[i];
+     if ((strcmp (arg, "--verbose") == 0) 
+	  || (strcmp (arg, "-v") == 0))
+	{
+           debug=TRUE;
+          if (argc>i+1)
+          {
+            i = i+1;
+          }
+        }
+      arg = argv[i];
       if ((strcmp (arg, "--gravity") == 0) 
 	  || (strcmp (arg, "-g") == 0))
 	{
-	  if (argc>2)
+	  if (argc>i+1)
 	    {
-	      arg = argv[2];
+	      arg = argv[i+1];
 	      if (strcmp (arg, "north") == 0)
 		{
 		  position = NORTH;
@@ -194,11 +207,15 @@ int main (int argc, char *argv[])
 		  print_help();
 		  exit(1);
 		}
-	      if (argc>3)
+	      if (argc>i+2)
 		{
-                  arg=argv[3];
-		  loadbackground = TRUE;
+                  arg=argv[i+2];
 		}
+
+              else
+                {
+                  arg=NULL;
+                }
 	    }
 	  else
 	    {
@@ -212,15 +229,14 @@ int main (int argc, char *argv[])
 	{
 	  print_help();
 	  exit(1); 
-	} 
-      else
-	{
-          if (!(strncmp (arg, "--",2) == 0))
-          {
-             loadbackground = TRUE;   
-          }
 	}
-
+      if (arg)
+      {
+        if (!(strncmp (arg, "-",1) == 0))
+          {
+            loadbackground = TRUE;   
+          }
+      }
     } 
 
   gtk_set_locale ();
@@ -247,7 +263,7 @@ int main (int argc, char *argv[])
   gtk_window_move(GTK_WINDOW(ardesiaBarWindow),x,y);  
   
   /** Init annotate */
-  annotate_init(x, y, width, height);
+  annotate_init(x, y, width, height, debug);
 
   if (loadbackground)
   {
