@@ -241,7 +241,6 @@ on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
     {
        highlighter = FALSE;
     }
-  add_alpha(color);
 }
 
 
@@ -296,6 +295,7 @@ on_toolsFiller_activate          (GtkToolButton   *toolbutton,
                                       gpointer         user_data)
 {
   grab = TRUE;
+  add_alpha(color);
   annotate_fill();
 }
 
