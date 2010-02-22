@@ -48,6 +48,7 @@
 #include <utils.h>
 #include <annotate.h>
 #include <broken.h>
+#include "background.h"
 #include <bezier_spline.h>
 
 

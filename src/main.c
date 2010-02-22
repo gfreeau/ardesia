@@ -38,7 +38,6 @@
 #include "stdlib.h"
 #include "string.h"
 #include "unistd.h"
-#include "background.h"
 #include "gettext.h"
 #include "getopt.h"
 
@@ -118,6 +117,8 @@ int calculate_initial_position(GtkWidget *ardesiaBarWindow, int *x, int *y, int 
 void print_help()
 {
   char* version = "0.3";
+  char* year = "2009-2010";
+  char* author = "Pietro Pilolli";
   printf("Usage: ardesia [options] [filename]\n\n");
   printf("options:\n");
   printf("  --verbose,\t-v\t\tEnable verbosity to see the log\n");
@@ -128,7 +129,7 @@ void print_help()
   printf("\n");
   printf("filename:\t  \t\tThe file containig the image to be be used as background\n");
   printf("\n");
-  printf("Ardesia 0.3 (C) 2009-2010 Pietro Pilolli\n");
+  printf("Ardesia %s (C) %s %s\n", version, year, author);
   exit(1);
 }
 
