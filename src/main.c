@@ -28,7 +28,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-  #include <config.h>
+#include <config.h>
 #endif
 
 #include <gtk/gtk.h>
@@ -40,6 +40,7 @@
 #include "unistd.h"
 #include "background.h"
 #include "gettext.h"
+#include "getopt.h"
 
 #include <X11/Xutil.h>
 
@@ -116,13 +117,19 @@ int calculate_initial_position(GtkWidget *ardesiaBarWindow, int *x, int *y, int 
 /* Print command line help */
 void print_help()
 {
-  printf("Usage: ardesia [options]\n\n");
+  char* version = "0.3";
+  printf("Usage: ardesia [options] [filename]\n\n");
   printf("options:\n");
-  printf("--gravity,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
-  printf("\t\t\t\tnorth\n");
-  printf("\t\t\t\tsouth\n");
-  printf("--help,   \t-h\t\tShows the help screen\n");
+  printf("  --verbose,\t-v\t\tEnable verbosity to see the log\n");
+  printf("  --gravity,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
+  printf("  \t\t\t\tnorth\n");
+  printf("  \t\t\t\tsouth\n");
+  printf("  --help,   \t-h\t\tShows the help screen\n");
   printf("\n");
+  printf("filename:\t  \t\tThe file containig the image to be be used as background\n");
+  printf("\n");
+  printf("Ardesia 0.3 (C) 2009-2010 Pietro Pilolli\n");
+  exit(1);
 }
 
 
@@ -148,86 +155,71 @@ void check_composite()
       exit(0);
     }
   gtk_widget_set_default_colormap(gdk_screen_get_rgba_colormap(screen));
- }
+}
 
 
 CommandLine* parse_options(int argc, char *argv[])
 {
-  CommandLine* commandline = g_malloc(sizeof(CommandLine));
-  
+  CommandLine* commandline = g_malloc(sizeof(CommandLine)); 
   commandline->position = SOUTH;
   commandline->debug = FALSE;
   commandline->backgroundimage = NULL;
-  char* arg = NULL;
-  gboolean loadbackground = FALSE;
-  int i=1;
-  if (argc>i)
-    {
-     arg = argv[i];
-     if ((strcmp (arg, "--verbose") == 0) 
-	  || (strcmp (arg, "-v") == 0))
-	{
-          commandline->debug=TRUE;
-          if (argc>i+1)
-          {
-            i = i+1;
-          }
-        }
-      arg = argv[i];
-      if ((strcmp (arg, "--gravity") == 0) 
-	  || (strcmp (arg, "-g") == 0))
-	{
-	  if (argc>i+1)
-	    {
-	      arg = argv[i+1];
-	      if (strcmp (arg, "north") == 0)
-		{
-		  commandline->position = NORTH;
-		}
-	      else if (strcmp (arg, "south") == 0)
-		{
-		  commandline->position = SOUTH;
-		}
-	      else
-		{
-		  print_help();
-		  exit(1);
-		}
-	      if (argc>i+2)
-		{
-                  arg=argv[i+2];
-		}
 
-              else
-                {
-                  arg=NULL;
-                }
+  /* getopt_long stores the option index here. */
+  while (1)
+    {
+      int c;
+      static struct option long_options[] =
+	{
+	  /* These options set a flag. */
+	  {"help", no_argument,       0, 'h'},
+	  {"verbose", no_argument,       0, 'v'},
+	  /* These options don't set a flag.
+	     We distinguish them by their indices. */
+	  {"gravity", required_argument, 0, 'g'},
+	  {0, 0, 0, 0}
+	};
+
+     
+      int option_index = 0;
+      c = getopt_long (argc, argv, "hvg:",
+		       long_options, &option_index);
+     
+      /* Detect the end of the options. */
+      if (c == -1)
+	break;
+
+      switch (c)
+	{
+	case 'h':
+	  print_help();
+	  break;
+	case 'v':
+	  commandline->debug=TRUE;
+	  break;
+	case 'g':
+	  if (strcmp (optarg, "north") == 0)
+	    {
+	      commandline->position = NORTH;
+	    }
+	  else if (strcmp (optarg, "south") == 0)
+	    {
+	      commandline->position = SOUTH;
 	    }
 	  else
 	    {
-	      printf("Required missing argument\n");
 	      print_help();
-	      exit(0);  
 	    }
-	}
-      else if ((strcmp (arg, "--help") == 0) 
-	       || (strcmp (arg, "-h") == 0))
-	{
+	  break;
+	default:
 	  print_help();
-	  exit(1); 
-	}
-      if (arg)
-      {
-        if (!(strncmp (arg, "-",1) == 0))
-          {
-            loadbackground = TRUE;   
-          }
-      }
+	  break;
+	} 
     }
-  if (loadbackground)
-  {
-     commandline->backgroundimage = arg;
-  } 
+  if (optind<argc)
+    {
+      commandline->backgroundimage = argv[optind];
+    } 
   return commandline;
 }
 
@@ -287,9 +279,9 @@ int main (int argc, char *argv[])
  
   GtkWindow* annotation_window = get_annotation_window();  
   if (annotation_window)
-  {
-    gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), annotation_window );
-  }
+    {
+      gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), annotation_window );
+    }
 
   gtk_widget_show (ardesiaBarWindow);
   
