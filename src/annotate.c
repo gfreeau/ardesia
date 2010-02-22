@@ -929,38 +929,38 @@ void annotate_draw_arrow (gboolean revert)
 
   GdkPoint arrowhead [4];
 
-  int penwidth = data->cur_context->width/1.5;
+  int penwidth = data->cur_context->width;
   
-  int widthcos = penwidth * cos (direction);
-  int widthsin = penwidth * sin (direction);
+  double widthcos = penwidth * cos (direction);
+  double widthsin = penwidth * sin (direction);
 
   /* Vertex of the arrow */
-  arrowhead [0].x = point->x + widthcos;
-  arrowhead [0].y = point->y + widthsin;
+  double arrowhead0x = point->x + widthcos;
+  double arrowhead0y = point->y + widthsin;
 
   /* left point */
-  arrowhead [1].x = point->x - 1.5 * widthcos + widthsin ;
-  arrowhead [1].y = point->y -  widthcos -  1.5 * widthsin ;
+  double arrowhead1x = point->x - widthcos + widthsin ;
+  double arrowhead1y = point->y -  widthcos - widthsin ;
 
   /* origin */
-  arrowhead [2].x = point->x - 1.2 * widthcos ;
-  arrowhead [2].y = point->y - 1.2 * widthsin ;
+  double arrowhead2x = point->x - 0.8 * widthcos ;
+  double arrowhead2y = point->y - 0.8 * widthsin ;
 
   /* right point */
-  arrowhead [3].x = point->x - 1.5 * widthcos - widthsin ;
-  arrowhead [3].y = point->y +  widthcos - 1.5 * widthsin ;
+  double arrowhead3x = point->x - widthcos - widthsin ;
+  double arrowhead3y = point->y +  widthcos - widthsin ;
 
   cairo_stroke(data->cr); 
   cairo_save(data->cr);
 
   cairo_set_line_join(data->cr, CAIRO_LINE_JOIN_MITER); 
   cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_line_width(data->cr, data->cur_context->width);
+  cairo_set_line_width(data->cr, penwidth);
 
-  cairo_move_to(data->cr, arrowhead[2].x, arrowhead[2].y); 
-  cairo_line_to(data->cr, arrowhead[1].x, arrowhead[1].y);
-  cairo_line_to(data->cr, arrowhead[0].x, arrowhead[0].y);
-  cairo_line_to(data->cr, arrowhead[3].x, arrowhead[3].y);
+  cairo_move_to(data->cr, arrowhead2x, arrowhead2y); 
+  cairo_line_to(data->cr, arrowhead1x, arrowhead1y);
+  cairo_line_to(data->cr, arrowhead0x, arrowhead0y);
+  cairo_line_to(data->cr, arrowhead3x, arrowhead3y);
 
   cairo_close_path(data->cr);
   cairo_fill_preserve(data->cr);
