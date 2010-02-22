@@ -908,7 +908,7 @@ void annotate_draw_arrow (gboolean revert)
 {
   if (data->debug)
     {
-      g_printerr("Draw arrow\n");
+      g_printerr("Draw arrow: ");
     }
   gint lenght = g_slist_length(data->coordlist);
   if (lenght<2)
@@ -967,6 +967,10 @@ void annotate_draw_arrow (gboolean revert)
   cairo_stroke(data->cr);
   cairo_restore(data->cr);
  
+  if (data->debug)
+    {
+      g_printerr("with vertex at (x,y)=(%d : %d)\n",  arrowhead [0].x , arrowhead [0].y  );
+    }
   data->painted = TRUE;
 }
 
@@ -1261,7 +1265,8 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 {
   if (data->debug)
     {
-      g_printerr("Release button\n");
+      g_printerr("Device '%s': Button %i Up at (x,y)=(%.2f : %.2f)\n",
+		 ev->device->name, ev->button, ev->x, ev->y);
     }
   /* only button1 allowed */
   if (!(ev->button==1))
