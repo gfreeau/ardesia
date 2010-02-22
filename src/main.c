@@ -121,7 +121,7 @@ void print_help()
   char* author = "Pietro Pilolli";
   printf("Usage: ardesia [options] [filename]\n\n");
   printf("options:\n");
-  printf("  --verbose,\t-v\t\tEnable verbosity to see the log\n");
+  printf("  --verbose,\t-v\t\tEnable verbose mode to see the logs\n");
   printf("  --gravity,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
   printf("  \t\t\t\tnorth\n");
   printf("  \t\t\t\tsouth\n");
