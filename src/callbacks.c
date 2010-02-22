@@ -400,7 +400,7 @@ void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
         }
       else
        {
-	  gtk_widget_hide(toolbutton);
+	  gtk_widget_hide(GTK_WIDGET(toolbutton));
            
        }
     }
