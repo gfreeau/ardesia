@@ -102,12 +102,23 @@ gboolean  quit()
   annotate_quit();
   GtkWidget* main_window = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
   gtk_widget_destroy(main_window);
+  g_free(color);
   g_free(workspace_dir);
   g_object_unref (gtkBuilder); 
   gtk_main_quit();
   exit(ret);
 }
 
+
+gboolean on_window_configure_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+{
+  if (color == NULL)
+    {
+      color = malloc(COLORSIZE);
+      set_color("FF0000");
+      add_alpha(color);
+    }
+}
 
 /* Add alpha channel to build the RGBA string */
 void add_alpha(char *color)
@@ -127,10 +138,6 @@ void add_alpha(char *color)
 /* free color */
 void set_color(char* selected_color)
 {
-  if (color == NULL)
-    {
-      color = malloc(COLORSIZE);
-    }
   grab = TRUE;
   pencil = TRUE;
   strcpy(color, selected_color);
@@ -144,11 +151,6 @@ void set_color(char* selected_color)
 /* Start to annotate calling annotate */
 void annotate()
 {
-  if (color == NULL)
-    {
-      set_color("FF0000");
-    }
-
   annotate_set_rectifier(rectifier);
   
   annotate_set_rounder(rounder);
@@ -241,6 +243,7 @@ on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
     {
        highlighter = FALSE;
     }
+  add_alpha(color);
 }
 
 
@@ -295,7 +298,6 @@ on_toolsFiller_activate          (GtkToolButton   *toolbutton,
                                       gpointer         user_data)
 {
   grab = TRUE;
-  add_alpha(color);
   annotate_fill();
 }
 

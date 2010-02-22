@@ -1520,11 +1520,7 @@ void annotate_connect_signals()
 /* Setup the application */
 void setup_app ()
 { 
-  /* default color is opaque red */ 
   char*  color = g_malloc(9);
-  strcpy(color,"FF0000");
-  strncpy(&color[6], "FF", 2);
-  color[8] = 0;
 
   data->cr = NULL;
   data->display = gdk_display_get_default ();
