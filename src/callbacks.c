@@ -134,6 +134,10 @@ void set_color(char* selected_color)
   grab = TRUE;
   pencil = TRUE;
   strcpy(color, selected_color);
+  
+  add_alpha(color);
+  
+  annotate_set_color(color);
 }
 
 
@@ -142,13 +146,8 @@ void annotate()
 {
   if (color == NULL)
     {
-      color = malloc(COLORSIZE);
-      strcpy(color,"FF0000");
+      set_color("FF0000");
     }
-  
-  add_alpha(color);
-  
-  annotate_set_color(color);
 
   annotate_set_rectifier(rectifier);
   
@@ -242,6 +241,7 @@ on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
     {
        highlighter = FALSE;
     }
+  add_alpha(color);
 }
 
 
