@@ -50,6 +50,14 @@ int SOUTH=2;
 int SPACE_FROM_BORDER = 25;
 
 
+typedef struct
+{
+  char* backgroundimage;
+  gboolean debug;
+  int position;
+} CommandLine;
+
+
 /* Get the screen resolution asking to the Xorg server throught the xlib libraries */
 int getScreenResolution(Display *display, int *width, int *height)
 {
@@ -143,37 +151,15 @@ void check_composite()
  }
 
 
-/* 
- * The main entry of the program;
- * not all the koders 
- * start to read the code by here 
- * a lot of 
- * are only patchers 
- * bad merchants
- * hopeless 
- * and without any horizon;
- * avoid to 
- * stay closed to 
- * this kind of people
- * if you are not immune from 
- * the enemy that 
- * tains the world: 
- * the slavery
- */
-int main (int argc, char *argv[])
+CommandLine* parse_options(int argc, char *argv[])
 {
-  int position = SOUTH;
+  CommandLine* commandline = g_malloc(sizeof(CommandLine));
+  
+  commandline->position = SOUTH;
+  commandline->debug = FALSE;
+  commandline->backgroundimage = NULL;
   char* arg = NULL;
   gboolean loadbackground = FALSE;
-
-#ifdef ENABLE_NLS
-  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
-  bind_textdomain_codeset (PACKAGE, "UTF-8");
-  textdomain (PACKAGE);
-#endif
-
-  gboolean debug = FALSE;
- 
   int i=1;
   if (argc>i)
     {
@@ -181,7 +167,7 @@ int main (int argc, char *argv[])
      if ((strcmp (arg, "--verbose") == 0) 
 	  || (strcmp (arg, "-v") == 0))
 	{
-           debug=TRUE;
+          commandline->debug=TRUE;
           if (argc>i+1)
           {
             i = i+1;
@@ -196,11 +182,11 @@ int main (int argc, char *argv[])
 	      arg = argv[i+1];
 	      if (strcmp (arg, "north") == 0)
 		{
-		  position = NORTH;
+		  commandline->position = NORTH;
 		}
 	      else if (strcmp (arg, "south") == 0)
 		{
-		  position = SOUTH;
+		  commandline->position = SOUTH;
 		}
 	      else
 		{
@@ -237,8 +223,40 @@ int main (int argc, char *argv[])
             loadbackground = TRUE;   
           }
       }
-    } 
+    }
+  if (loadbackground)
+  {
+     commandline->backgroundimage = arg;
+  } 
+  return commandline;
+}
 
+/* 
+ * The main entry of the program;
+ * not all the koders 
+ * start to read the code by here 
+ * a lot of 
+ * are only patchers 
+ * bad merchants
+ * hopeless 
+ * and without any horizon;
+ * avoid to 
+ * stay closed to 
+ * this kind of people
+ * if you are not immune from 
+ * the enemy that 
+ * tains the world: 
+ * the slavery
+ */
+int main (int argc, char *argv[])
+{
+
+#ifdef ENABLE_NLS
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
+  textdomain (PACKAGE);
+#endif
+ 
   gtk_set_locale ();
   gtk_init (&argc, &argv);
   check_composite();
@@ -255,20 +273,17 @@ int main (int argc, char *argv[])
 
   int x, y;
 
+  CommandLine* commandline = parse_options(argc, argv);
+  
   /* calculate_initial_position the window in the desired position */
-  if (calculate_initial_position(ardesiaBarWindow,&x,&y,width,height,position) < 0)
+  if (calculate_initial_position(ardesiaBarWindow,&x,&y,width,height,commandline->position) < 0)
     {
       exit(0);
     }
   gtk_window_move(GTK_WINDOW(ardesiaBarWindow),x,y);  
   
   /** Init annotate */
-  annotate_init(x, y, width, height, debug);
-
-  if (loadbackground)
-  {
-     change_background_image(arg); 
-  }
+  annotate_init(x, y, width, height, commandline->debug, commandline->backgroundimage); 
  
   GtkWindow* annotation_window = get_annotation_window();  
   if (annotation_window)

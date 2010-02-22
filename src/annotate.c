@@ -1605,7 +1605,7 @@ void annotate_quit()
 
 
 /* Init the annotation */
-int annotate_init (int x, int y, int width, int height, gboolean debug)
+int annotate_init (int x, int y, int width, int height, gboolean debug, char* backgroundimage)
 {
   data = g_malloc (sizeof (AnnotateData));
   data->debug = debug;
@@ -1618,6 +1618,9 @@ int annotate_init (int x, int y, int width, int height, gboolean debug)
   data->is_grabbed = FALSE;
  
   setup_app ();
-
+  if (backgroundimage)
+  {
+     change_background_image(backgroundimage);
+  }
   return 0;
 }

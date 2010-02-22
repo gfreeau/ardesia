@@ -33,7 +33,7 @@ typedef struct
 
 
 /* Initialize the annotation window */
-int annotate_init (int x, int y, int width, int height, gboolean debug);
+int annotate_init (int x, int y, int width, int height, gboolean debug, char* backgroundimage);
 
 /* Get the annotation window */
 GtkWindow* get_annotation_window();
