@@ -370,7 +370,7 @@ void on_toolsScreenShot_activate	  (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
   grab = FALSE;
-  start_save_image_dialog(toolbutton, get_annotation_window(), workspace_dir);
+  start_save_image_dialog(toolbutton, get_annotation_window(), &workspace_dir);
   annotate();
 }
 
@@ -392,7 +392,7 @@ void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
       /* Release grab */
       annotate_release_grab ();
       /* the recording is not active */ 
-      gboolean status = start_save_video_dialog(toolbutton, get_annotation_window(), workspace_dir);
+      gboolean status = start_save_video_dialog(toolbutton, get_annotation_window(), &workspace_dir);
       if (status)
         {
           /* set stop tooltip */ 
@@ -464,7 +464,7 @@ void on_buttonColor_activate	          (GtkToolButton   *toolbutton,
 {
   grab = FALSE;
   pencil = TRUE;
-  color = start_color_selector_dialog(toolbutton, get_annotation_window(), workspace_dir, color);
+  set_color(start_color_selector_dialog(toolbutton, get_annotation_window(), color));
   annotate();
 }
 

@@ -30,7 +30,7 @@ extern GtkWidget* background_window;
 gboolean save_png (GdkPixbuf *pixbuf, const char *filename);
 
 /* Load png file contents in pixbuf */
-gboolean load_png (const char *name, GdkPixbuf **pixmap);
+void load_png (const char *name);
 
 /* Make screenshot */
 void make_screenshot(char* filename);

@@ -132,12 +132,12 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
  * Start the dialog that ask to the user where save the image
  * containing the screenshot
  */
-void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char* workspace_dir)
+void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char** workspace_dir)
 {
   char* date = get_date();
-  if (!workspace_dir)
+  if (!(*workspace_dir))
     {
-      workspace_dir = (char *) get_desktop_dir();
+      *workspace_dir = (char *) get_desktop_dir();
     }	
 
   gint height = gdk_screen_height ();
@@ -165,7 +165,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
 
  
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Select a file"));
-  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), workspace_dir);
+  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
   
   gchar* filename =  malloc(256*sizeof(char));
   sprintf(filename,"ardesia_%s", date);
@@ -177,7 +177,9 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
 
       screenshot = TRUE;
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
+      char* tmp = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
+      strcpy(*workspace_dir, tmp);
+      free(tmp);
       char* supported_extension = ".png";
       char* extension = strrchr(filename, '.');
       if ((extension==0) || (strcmp(extension, supported_extension) != 0))

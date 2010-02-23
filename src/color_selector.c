@@ -40,7 +40,7 @@ gchar*       picked_color = NULL;
  * containing the screenshot
  * it return the selected color
  */
-gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar* workspace_dir, gchar* color)
+gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar* color)
 {
   GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON(toolbutton);
   

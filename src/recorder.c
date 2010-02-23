@@ -151,14 +151,14 @@ void missing_program_dialog(GtkWindow* parent_window)
  * This function take as input the recor toolbutton in ardesia bar
  * return true is the recorder is started
  */
-gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char *workspace_dir)
+gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char **workspace_dir)
 {
   gboolean status = FALSE;
    
   char * date = get_date();
-  if (workspace_dir == NULL)
+  if (!(*workspace_dir))
     {
-      workspace_dir = (char *) get_desktop_dir();
+      *workspace_dir = (char *) get_desktop_dir();
     }	
 
   GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext("Save video as ogv"), parent, GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -168,7 +168,7 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
   gtk_window_stick((GtkWindow*)chooser);
   
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Select a file"));
-  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), workspace_dir);
+  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
   gchar* filename =  g_malloc(256*sizeof(gchar));
   sprintf(filename,"ardesia_%s", date);
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
@@ -177,8 +177,10 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      g_free(workspace_dir);
-      workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
+     
+      char* tmp = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
+      strcpy(*workspace_dir, tmp);
+      free(tmp);
       char* supported_extension = ".ogv";
       char* extension = strrchr(filename, '.');
       if ((extension==0) || (strcmp(extension, supported_extension) != 0))

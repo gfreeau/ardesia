@@ -38,31 +38,28 @@
 
 GtkWidget* background_window = NULL;
 char* background_color = NULL;
+GdkPixbuf *pixbuf = NULL; 
 
 
 /* Load the contents of the file image with name "filename" into the pixbuf */
-gboolean load_png (const char *filename, GdkPixbuf **pixmap)
+void load_png (const char *filename)
 {
-  *pixmap = gdk_pixbuf_new_from_file (filename, NULL);
+  pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+  GdkPixbuf *scaled = NULL;
 
-  if (*pixmap)
+  if (pixbuf)
     {
-      GdkPixbuf *scaled;
       gint height = gdk_screen_height ();
       gint width = gdk_screen_width ();
-      scaled = gdk_pixbuf_scale_simple(*pixmap, width, height, GDK_INTERP_BILINEAR);
-      g_object_unref (G_OBJECT (*pixmap));
-      *pixmap = scaled;
-      return TRUE;
+      scaled = gdk_pixbuf_scale_simple(pixbuf, width, height, GDK_INTERP_BILINEAR);
+      g_object_unref (G_OBJECT (pixbuf));
     }
   else
     {
        fprintf (stderr, "couldn't load %s\n", filename);
        exit(0);
     }
-
-  *pixmap = NULL;
-  return FALSE;
+  pixbuf = scaled;
 }
 
 
@@ -78,7 +75,6 @@ static void put_background_above_annotations()
 /* The windows has been exposed after the show_all request to change the background image */
 static gboolean on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-  GdkPixbuf *pixbuf = (GdkPixbuf *) data; 
   cairo_t *cr = gdk_cairo_create(widget->window);
   cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
   gdk_cairo_set_source_pixbuf(cr, pixbuf, 0.0, 0.0);
@@ -98,6 +94,11 @@ void clear_background()
       /* destroy brutally the background window */
       gtk_widget_destroy(background_window);
       background_window = NULL;
+      if (pixbuf)
+      {
+        g_object_unref (G_OBJECT (pixbuf));
+        pixbuf = NULL;
+      }
     }
 }
 
@@ -135,13 +136,11 @@ void create_background_window()
 /* Change the background image of ardesia  */
 void change_background_image (const char *name)
 {
-  GdkPixbuf *pixbuf = NULL; 
-  load_png(name,&pixbuf);   
-  
   clear_background();
+  load_png(name);   
   create_background_window();
 
-  g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_file_expose_event), pixbuf);
+  g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_file_expose_event), NULL);
 
   GdkDisplay *display = gdk_display_get_default ();
   GdkScreen *screen = gdk_display_get_default_screen (display);
@@ -150,6 +149,7 @@ void change_background_image (const char *name)
   gtk_widget_set_default_colormap(colormap);
 
   gtk_widget_show_all(background_window);
+  
 }
 
 

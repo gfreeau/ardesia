@@ -138,14 +138,13 @@ AnnotateData* data;
 
 /* Create a new paint context */
 AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
-			                           char* fg_color, 
                                                    guint width)
 {
   AnnotatePaintContext *context;
   context = g_malloc (sizeof (AnnotatePaintContext));
   context->type = type;
   context->width = width;
-  context->fg_color = fg_color;
+  context->fg_color = NULL;
   return context;
 }
 
@@ -231,35 +230,35 @@ void annotate_redolist_free ()
   if (data->savelist)
     {
       if (data->savelist->next)
-	{
-	  AnnotateSave* annotate_save = data->savelist->next;
-	  /* delete all the savepoint after the current pointed */
-	  while(annotate_save)
-	    {
-	      if (annotate_save->next)
-		{
-		  annotate_save =  annotate_save->next; 
-		  if (annotate_save->previous)
-		    {
-		      if (annotate_save->previous->surface)
-			{
-			  cairo_surface_destroy(annotate_save->previous->surface);
-			} 
-		      g_free(annotate_save->previous);
-		    }
-		}
-	      else
-		{
-		  if (annotate_save->surface)
-		    {
-		      cairo_surface_destroy(annotate_save->surface);
-		    } 
-		  g_free(annotate_save);
-		  break;
-		}
-	    }
-	  data->savelist->next=NULL;
-	}
+        {
+          AnnotateSave* annotate_save = data->savelist->next;
+          /* delete all the savepoint after the current pointed */
+          while(annotate_save)
+            {
+              if (annotate_save->next)
+                {
+                  annotate_save =  annotate_save->next; 
+                  if (annotate_save->previous)
+                    {
+                      if (annotate_save->previous->surface)
+                        {
+                          cairo_surface_destroy(annotate_save->previous->surface);
+                        } 
+                      g_free(annotate_save->previous);
+                    }
+                }
+              else
+                {
+                  if (annotate_save->surface)
+                    {
+                      cairo_surface_destroy(annotate_save->surface);
+                    } 
+                  g_free(annotate_save);
+                  break;
+                }
+            }
+          data->savelist->next=NULL;
+        }
     }
 }
 
@@ -378,6 +377,7 @@ gint add_save_point ()
 
   if (data->savelist != NULL)
     {
+      annotate_redolist_free ();
       data->savelist->next=save;
       save->previous=data->savelist;
     }
@@ -385,7 +385,6 @@ gint add_save_point ()
 
 
   AnnotateSave* annotate_save = data->savelist;
-  annotate_redolist_free ();
   if (!(annotate_save->surface))
     {
       annotate_save->surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, data->width, data->height); 
@@ -1520,8 +1519,6 @@ void annotate_connect_signals()
 /* Setup the application */
 void setup_app ()
 { 
-  char*  color = g_malloc(9);
-
   data->cr = NULL;
   data->display = gdk_display_get_default ();
   GdkScreen   *screen = gdk_display_get_default_screen (data->display);
@@ -1543,10 +1540,8 @@ void setup_app ()
   data->savelist = NULL;
   data->cr = NULL;
   
-  data->default_pen = annotate_paint_context_new (ANNOTATE_PEN,
-                                                  color, 15);
-  data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER,
-                                                     NULL, 15);
+  data->default_pen = annotate_paint_context_new (ANNOTATE_PEN, 15);
+  data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER, 15);
 
   data->cur_context = data->default_pen;
 
@@ -1616,8 +1611,8 @@ int annotate_init (int x, int y, int width, int height, gboolean debug, char* ba
  
   setup_app ();
   if (backgroundimage)
-  {
-     change_background_image(backgroundimage);
-  }
+    {
+      change_background_image(backgroundimage);
+    }
   return 0;
 }
