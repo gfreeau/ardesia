@@ -513,6 +513,7 @@ void annotate_release_pointer_grab()
   gdk_display_pointer_ungrab (data->display, GDK_CURRENT_TIME);
   /* inherit cursor from root window */
   gdk_window_set_cursor (data->win->window, NULL);
+  gdk_flush ();
   if (gdk_error_trap_pop ())
     {
       /* this probably means the device table is outdated, 
@@ -706,19 +707,26 @@ void annotate_acquire_pointer_grab()
     }       
 }
 
+
+void annotate_select_cursor()
+{
+  if(data->cur_context && data->cur_context->type == ANNOTATE_ERASER)
+    {
+      set_eraser_cursor(data);
+    } 
+  else
+    {
+      set_pen_cursor();
+    } 
+}
+
 /* Grab the cursor */
 void annotate_acquire_grab ()
 {
   if  (!data->is_grabbed)
     {
-      if(data->cur_context && data->cur_context->type == ANNOTATE_ERASER)
-	{
-	  set_eraser_cursor(data);
-	} 
-      else
-	{
-	  set_pen_cursor();
-	} 
+      annotate_acquire_pointer_grab();
+      annotate_select_cursor();
   
       annotate_acquire_keyboard_grab();
       data->is_grabbed = TRUE;
