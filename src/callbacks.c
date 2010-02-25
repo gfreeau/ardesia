@@ -110,16 +110,6 @@ gboolean  quit()
 }
 
 
-gboolean on_window_configure_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
-{
-  if (color == NULL)
-    {
-      color = malloc(COLORSIZE);
-      set_color("FF0000");
-      add_alpha(color);
-    }
-}
-
 /* Add alpha channel to build the RGBA string */
 void add_alpha(char *color)
 {
@@ -145,6 +135,18 @@ void set_color(char* selected_color)
   add_alpha(color);
   
   annotate_set_color(color);
+}
+
+
+gboolean on_window_configure_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+{
+  if (color == NULL)
+    {
+      color = malloc(COLORSIZE);
+      set_color("FF0000");
+      add_alpha(color);
+    }
+  return TRUE;
 }
 
 
