@@ -505,27 +505,32 @@ void annotate_acquire_keyboard_grab()
 }
 
 
-/* Release the mouse pointer */
+/* Release pointer grab */
+void annotate_release_pointer_grab()
+{
+  gdk_error_trap_push ();
+ 
+  gdk_display_pointer_ungrab (data->display, GDK_CURRENT_TIME);
+  /* inherit cursor from root window */
+  gdk_window_set_cursor (data->win->window, NULL);
+  if (gdk_error_trap_pop ())
+    {
+      /* this probably means the device table is outdated, 
+	 e.g. this device doesn't exist anymore */
+      g_printerr("Ungrab pointer device error\n");
+    }
+  
+  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);  
+  gdk_flush ();
+}
+
+/* Release the pointer pointer */
 void annotate_release_grab ()
 {           
   if (data->is_grabbed)
     {
-      gdk_error_trap_push ();
- 
-      gdk_display_pointer_ungrab (data->display, GDK_CURRENT_TIME);
+      annotate_release_pointer_grab(); 
       annotate_release_keyboard_grab();
-      /* inherit cursor from root window */
-      gdk_window_set_cursor (data->win->window, NULL);
-      gdk_flush ();
-      if (gdk_error_trap_pop ())
-	{
-	  /* this probably means the device table is outdated, 
-	     e.g. this device doesn't exist anymore */
-	  g_printerr("Ungrab mouse device error\n");
-	}
-  
-      gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0); 
-  
       if (data->debug)
 	{
 	  g_printerr ("Release grab\n");
@@ -659,49 +664,53 @@ gboolean in_unlock_area(int x, int y)
   return 0;
 }
 
+/* Acquirte pointer grab */
+void annotate_acquire_pointer_grab()
+{
+  gtk_widget_show (data->win);
+
+  GdkGrabStatus result;
+  gdk_error_trap_push(); 
+
+  gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);   
+
+  result = gdk_pointer_grab (data->win->window, FALSE,
+			     ANNOTATE_MOUSE_EVENTS, 0,
+			     NULL,
+			     GDK_CURRENT_TIME); 
+
+  gdk_flush ();
+  if (gdk_error_trap_pop ())
+    {
+      g_printerr("Grab pointer error\n");
+    }
+   
+  switch (result)
+    {
+    case GDK_GRAB_SUCCESS:
+      break;
+    case GDK_GRAB_ALREADY_GRABBED:
+      g_printerr ("Grab Pointer failed: AlreadyGrabbed\n");
+      break;
+    case GDK_GRAB_INVALID_TIME:
+      g_printerr ("Grab Pointer failed: GrabInvalidTime\n");
+      break;
+    case GDK_GRAB_NOT_VIEWABLE:
+      g_printerr ("Grab Pointer failed: GrabNotViewable\n");
+      break;
+    case GDK_GRAB_FROZEN:
+      g_printerr ("Grab Pointer failed: GrabFrozen\n");
+      break;
+    default:
+      g_printerr ("Grab Pointer failed: Unknown error\n");
+    }       
+}
 
 /* Grab the cursor */
 void annotate_acquire_grab ()
 {
   if  (!data->is_grabbed)
     {
-      gtk_widget_show (data->win);
-
-      GdkGrabStatus result;
-      gdk_error_trap_push(); 
-
-      gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);   
-
-      result = gdk_pointer_grab (data->win->window, FALSE,
-				 ANNOTATE_MOUSE_EVENTS, 0,
-				 NULL,
-				 GDK_CURRENT_TIME); 
-
-      gdk_flush ();
-      if (gdk_error_trap_pop ())
-	{
-	  g_printerr("Grab pointer error\n");
-	}
-   
-      switch (result)
-	{
-	case GDK_GRAB_SUCCESS:
-	  break;
-	case GDK_GRAB_ALREADY_GRABBED:
-	  g_printerr ("Grab Pointer failed: AlreadyGrabbed\n");
-	  break;
-	case GDK_GRAB_INVALID_TIME:
-          g_printerr ("Grab Pointer failed: GrabInvalidTime\n");
-	  break;
-	case GDK_GRAB_NOT_VIEWABLE:
-          g_printerr ("Grab Pointer failed: GrabNotViewable\n");
-	  break;
-	case GDK_GRAB_FROZEN:
-          g_printerr ("Grab Pointer failed: GrabFrozen\n");
-	  break;
-	default:
-          g_printerr ("Grab Pointer failed: Unknown error\n");
-	}      
       if(data->cur_context && data->cur_context->type == ANNOTATE_ERASER)
 	{
 	  set_eraser_cursor(data);
@@ -1367,7 +1376,7 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   cairo_set_font_size (data->cr, data->cur_context->width * 5);
   cairo_text_extents (data->cr, "j" , &extents); 
    
-  /* move cairo to the mouse position */
+  /* move cairo to the pointer position */
   int x;
   int y;
   gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);  
@@ -1562,7 +1571,7 @@ void setup_app ()
   clear_cairo_context(shape_cr); 
   cairo_destroy(shape_cr);
   
-  /* this allow the mouse focus below the transparent window */ 
+  /* this allow the pointer focus below the transparent window */ 
   gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);  
 }
 
