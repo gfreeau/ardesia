@@ -40,6 +40,7 @@
 #include "color_selector.h"
 #include "preference_dialog.h"
 #include "info_dialog.h"
+#include "text_widget.h"
 
 #include "annotate.h"
 
@@ -301,6 +302,16 @@ on_toolsFiller_activate          (GtkToolButton   *toolbutton,
 {
   grab = TRUE;
   annotate_fill();
+}
+
+
+void
+on_toolsText_activate(GtkToolButton   *toolbutton,
+                                      gpointer         user_data)
+{
+       grab = FALSE;
+       annotate_release_grab ();
+       start_text_widget( get_annotation_window(), color, tickness);
 }
 
 

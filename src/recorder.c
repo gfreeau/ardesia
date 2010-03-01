@@ -128,7 +128,7 @@ void quit_recorder()
 
 
 /* Missing program dialog */
-void missing_program_dialog(GtkWindow* parent_window)
+void missing_recorder_program_dialog(GtkWindow* parent_window)
 {
   GtkWidget *miss_dialog;
   
@@ -220,7 +220,7 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
       else
        {
          status = FALSE;
-         missing_program_dialog(parent); 
+         missing_recorder_program_dialog(parent); 
        }
     }
   if (chooser)

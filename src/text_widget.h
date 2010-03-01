@@ -22,39 +22,9 @@
  *
  */
 
-
-/* Take a GdkColor and return the RGB string */
-char* gdkcolor_to_rgba(GdkColor* gdkcolor);
+/** Widget for text insertion */
 
 
-/* Set the cairo surface color to the RGBA string */
-void cairo_set_source_color_from_string( cairo_t * cr, char* color);
+void start_text_widget(GtkWindow *parent, char* color, int tickness);
 
-
-/* Set the cairo surface color to transparent */
-void  cairo_set_transparent_color(cairo_t * cr);
-
-/*
- * Take an rgb or a rgba string and return the pointer to the allocated GdkColor 
- * neglecting the alpha channel
- */
-GdkColor* rgb_to_gdkcolor(char* rgb);
-
-
-/* Get the current date and format in a printable format */
-char* get_date();
-
-
-/* Return if a file exists */
-gboolean file_exists(char* filename, char* desktop_dir);
-
-
-/*
- * Get the desktop folder;
- * Now this function use gconf to found the folder,
- * this means that this rutine works properly only
- * with the gnome desktop environment
- * We can investigate how-to do this
- * in a desktop environment independant way
- */
-const gchar* get_desktop_dir (void);
+void stop_text_widget();

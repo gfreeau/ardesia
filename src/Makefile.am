@@ -21,6 +21,7 @@ ardesia_SOURCES = \
         saver.c saver.h\
         color_selector.c color_selector.h\
         preference_dialog.c preference_dialog.h\
+        text_widget.c text_widget.h\
         info_dialog.c info_dialog.h\
         recorder.c recorder.h\
 	callbacks.c

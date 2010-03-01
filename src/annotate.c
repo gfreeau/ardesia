@@ -312,22 +312,6 @@ gfloat annotate_get_arrow_direction (gboolean revert)
 }
 
 
-/* Set the cairo surface color to the RGBA string */
-void cairo_set_source_color_from_string( cairo_t * cr, char* color)
-{
-  int r,g,b,a;
-  sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-  cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
-}
-
-
-/* Set the cairo surface color to transparent */
-void  cairo_set_transparent_color(cairo_t * cr)
-{
-  cairo_set_source_rgba (cr, 0, 0, 0, 0);
-}
-
-
 /* Color selector; if eraser than select the transparent color else alloc the right color */ 
 void select_color()
 {
@@ -396,6 +380,41 @@ gint add_save_point ()
   cairo_paint(cr);
   cairo_destroy(cr);
   return 1;
+}
+
+
+/* Configure pen option for cairo context */
+void configure_pen_options()
+{
+  cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
+  cairo_set_line_join(data->cr, CAIRO_LINE_JOIN_ROUND); 
+  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_line_width(data->cr, data->cur_context->width);
+  select_color();  
+}
+
+
+/* Destroy old cairo context, allocate a new pixmap and configure the new cairo context */
+void reset_cairo()
+{
+  if (data->cr)
+    {
+      cairo_new_path(data->cr);
+    }
+  configure_pen_options();  
+}
+
+
+/* Paint the context over the annotation window */
+void merge_context(cairo_t * cr)
+{
+  reset_cairo();
+  cairo_new_path(data->cr);
+  cairo_surface_t* source_surface = cairo_get_target(cr);
+  cairo_set_operator(data->cr, CAIRO_OPERATOR_OVER);
+  cairo_set_source_surface (data->cr,  source_surface, 0, 0);
+  cairo_paint(data->cr);
+  add_save_point();
 }
 
 
@@ -486,25 +505,6 @@ void annotate_show_annotation ()
 }
 
 
-/* Releare keyboard grab */
-void annotate_release_keyboard_grab()
-{
-  gdk_display_keyboard_ungrab (data->display, GDK_CURRENT_TIME);
-  gdk_flush ();
-}
-
-
-/* Acquire keyboard grab */
-void annotate_acquire_keyboard_grab()
-{
-  gdk_keyboard_grab (data->win->window,
-		     ANNOTATE_KEYBOARD_EVENTS,
-		     GDK_CURRENT_TIME); 
-  
-  gdk_flush ();
-}
-
-
 /* Release pointer grab */
 void annotate_release_pointer_grab()
 {
@@ -531,7 +531,6 @@ void annotate_release_grab ()
   if (data->is_grabbed)
     {
       annotate_release_pointer_grab(); 
-      annotate_release_keyboard_grab();
       if (data->debug)
 	{
 	  g_printerr ("Release grab\n");
@@ -728,7 +727,6 @@ void annotate_acquire_grab ()
       annotate_acquire_pointer_grab();
       annotate_select_cursor();
   
-      annotate_acquire_keyboard_grab();
       data->is_grabbed = TRUE;
       if (data->debug)
 	{
@@ -798,26 +796,6 @@ void destroy_cairo()
       cairo_destroy(data->cr);
     }
   data->cr = NULL;
-}
-
-/* Configure pen option for cairo context */
-void configure_pen_options()
-{
-  cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
-  cairo_set_line_join(data->cr, CAIRO_LINE_JOIN_ROUND); 
-  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_line_width(data->cr, data->cur_context->width);
-  select_color();  
-}
-
-/* Destroy old cairo context, allocate a new pixmap and configure the new cairo context */
-void reset_cairo()
-{
-  if (data->cr)
-    {
-      cairo_new_path(data->cr);
-    }
-  configure_pen_options();  
 }
 
 
@@ -1366,93 +1344,6 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
  * Functions for handling various (GTK+)-Events
  */
 
-/* press keyboard event */
-gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
-{
- 
-  if (event->keyval == GDK_BackSpace)
-    {
-      // undo
-      annotate_undo_and_restore_pointer();
-      return FALSE;
-    }
-  
-  reset_cairo();
-  
-  /* This is a trick we must found the maximum height and width of the font */
-  cairo_text_extents_t extents;
-  cairo_set_font_size (data->cr, data->cur_context->width * 5);
-  cairo_text_extents (data->cr, "j" , &extents); 
-   
-  /* move cairo to the pointer position */
-  int x;
-  int y;
-  gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);  
- 
-  /* store the pointer position */
-  if (data->savelist)
-    {
-      if (data->savelist->previous)
-	{ 
-	  data->savelist->previous->xcursor=x;  
-	  data->savelist->previous->ycursor=y;  
-	}
-    } 
-  
-  cairo_move_to(data->cr, x, y);
-  GdkScreen   *screen = gdk_display_get_default_screen (data->display);
-
-  /* is finished the line or is pressed enter */
-  if ((x + extents.x_advance >= data->width) ||
-      (event->keyval == GDK_ISO_Enter) || 	
-      (event->keyval == GDK_KP_Enter))
-    {
-      x = 0;
-      y +=  extents.height;
-      /* go to the new line */
-      gdk_display_warp_pointer (data->display, screen, x, y);  
-    } 
-  else if (event->keyval == GDK_Left)
-    {
-      x -=  extents.x_advance;
-      gdk_display_warp_pointer (data->display, screen, x, y); 
-    }
-  else if ((event->keyval == GDK_Right) ||  (event->keyval == GDK_KP_Space))
-    {
-      x +=  extents.x_advance;
-      gdk_display_warp_pointer (data->display, screen, x, y); 
-    }
-  else if (event->keyval == GDK_Up)
-    {
-      y -=  extents.height;
-      gdk_display_warp_pointer (data->display, screen, x, y); 
-    }
-  else if (event->keyval == GDK_Down)
-    {
-      y +=  extents.height;
-      gdk_display_warp_pointer (data->display, screen, x, y); 
-    }
-  else if (isprint(event->keyval))
-    {
-      /* The character is printable */
-      char *utf8 = g_malloc(2) ;
-      sprintf(utf8,"%c", event->keyval);
-      cairo_text_extents (data->cr, utf8, &extents);
-      cairo_show_text (data->cr, utf8); 
-      cairo_stroke(data->cr);
-      add_save_point();
- 
-      /* move cursor to the x step */
-      x +=  extents.x_advance;
-      gdk_display_warp_pointer (data->display, screen, x, y);  
-      data->savelist->xcursor=x;  
-      data->savelist->ycursor=y;   
-      annotate_redolist_free ();
-      g_free(utf8);
-    }
-  return FALSE;
-}
-
 
 /* Expose event: this occurs when the windows is show */
 gboolean event_expose (GtkWidget *widget, 
@@ -1528,8 +1419,6 @@ void annotate_connect_signals()
   g_signal_connect (data->win, "proximity_out_event",
 		    G_CALLBACK (proximity_out), NULL);
 
-  g_signal_connect (data->win, "key_press_event",
-		    G_CALLBACK (key_press), NULL);
 }
 
 

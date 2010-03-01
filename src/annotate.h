@@ -89,4 +89,7 @@ void annotate_acquire_grab ();
 /* Clear the annotations windows */
 void annotate_clear_screen ();
 
+/* Paint the context over the annotation window */
+void merge_context(cairo_t * cr);
+
 

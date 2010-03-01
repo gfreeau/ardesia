@@ -25,7 +25,7 @@
 /* This is the file whith the code to handle images */
 
 #ifdef HAVE_CONFIG_H
-  #include <config.h>
+#include <config.h>
 #endif
 
 #include <png.h>
@@ -56,8 +56,8 @@ void load_png (const char *filename)
     }
   else
     {
-       fprintf (stderr, "couldn't load %s\n", filename);
-       exit(0);
+      fprintf (stderr, "couldn't load %s\n", filename);
+      exit(0);
     }
   pixbuf = scaled;
 }
@@ -95,10 +95,10 @@ void clear_background()
       gtk_widget_destroy(background_window);
       background_window = NULL;
       if (pixbuf)
-      {
-        g_object_unref (G_OBJECT (pixbuf));
-        pixbuf = NULL;
-      }
+	{
+	  g_object_unref (G_OBJECT (pixbuf));
+	  pixbuf = NULL;
+	}
     }
 }
 
@@ -168,12 +168,6 @@ void change_background_color (char* rgba)
   create_background_window();
   
   g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_color_expose_event), NULL);
-
-  GdkDisplay *display = gdk_display_get_default ();
-  GdkScreen *screen = gdk_display_get_default_screen (display);
-  
-  GdkColormap *colormap = gdk_screen_get_rgba_colormap (screen);
-  gtk_widget_set_default_colormap(colormap);
 
   gtk_widget_show_all(background_window);
 }
