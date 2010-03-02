@@ -36,6 +36,7 @@
 #include <ctype.h>
 #include <text_widget.h>
 #include <utils.h>
+#include <annotate.h>
 
 GtkWidget* text_window = NULL;
 cairo_t *text_cr = NULL;
@@ -121,7 +122,8 @@ void delete_character()
 gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
 {
  
-  if (event->keyval == GDK_BackSpace)
+  if ((event->keyval == GDK_BackSpace)
+     || (event->keyval == GDK_Delete))
     {
       // undo
       delete_character();
