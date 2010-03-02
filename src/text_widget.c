@@ -139,7 +139,9 @@ gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     move_editor_cursor();  
   }
   /* is pressed enter */
-  else if (event->keyval == GDK_Return)
+   else if ((event->keyval == GDK_Return) ||
+            (event->keyval == GDK_ISO_Enter) || 	
+            (event->keyval == GDK_KP_Enter))
     {
       stop_text_widget();
     } 
