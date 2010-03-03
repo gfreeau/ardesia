@@ -29,7 +29,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-  #include <config.h>
+#include <config.h>
 #endif
 
 #include <gtk/gtk.h>
@@ -122,7 +122,7 @@ void add_alpha(char *color)
     {
       strncpy(&color[6], "FF", 2);
     }
-   color[8]=0;
+  color[8]=0;
 }
 
 
@@ -188,7 +188,7 @@ gboolean on_quit                          (GtkWidget       *widget,
 
 /* Called when push the info button */
 gboolean on_info                         (GtkToolButton   *toolbutton,
-					   gpointer         user_data)
+					  gpointer         user_data)
 {
   start_info_dialog(toolbutton, get_annotation_window());
   annotate();
@@ -198,20 +198,20 @@ gboolean on_info                         (GtkToolButton   *toolbutton,
 
 /* Called when leave the window */
 gboolean on_winMain_leave_notify_event   (GtkWidget       *widget,
-                                           GdkEvent        *event,
-                                           gpointer         user_data)
+					  GdkEvent        *event,
+					  gpointer         user_data)
 {
   if (grab)
-  {
-    if (pencil)
-      { 
-        annotate();
-      }
-    else
-      {
-        erase();
-      }
-  }
+    {
+      if (pencil)
+	{ 
+	  annotate();
+	}
+      else
+	{
+	  erase();
+	}
+    }
   grab=FALSE;
   return TRUE;
 }
@@ -235,16 +235,16 @@ void on_toolsEraser_activate              (GtkToolButton   *toolbutton,
 
 void
 on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
-				      gpointer         user_data)
+				       gpointer         user_data)
 {
   grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
-       highlighter = TRUE;
+      highlighter = TRUE;
     }
   else
     {
-       highlighter = FALSE;
+      highlighter = FALSE;
     }
   add_alpha(color);
 }
@@ -252,30 +252,30 @@ on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
 
 void
 on_toolsRectifier_activate          (GtkToolButton   *toolbutton,
-				      gpointer         user_data)
+				     gpointer         user_data)
 {
   grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
-       /* if rounder is active release it */
+      /* if rounder is active release it */
       GtkToggleToolButton* rounderToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonRounder"));
       if (gtk_toggle_tool_button_get_active(rounderToolButton))
         {
 	  gtk_toggle_tool_button_set_active(rounderToolButton, FALSE); 
           rounder = FALSE;
         }
-       rectifier = TRUE;
+      rectifier = TRUE;
     }
   else
     {
-       rectifier = FALSE;
+      rectifier = FALSE;
     }
 }
 
 
 void
 on_toolsRounder_activate          (GtkToolButton   *toolbutton,
-				      gpointer         user_data)
+				   gpointer         user_data)
 {
   grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
@@ -287,18 +287,18 @@ on_toolsRounder_activate          (GtkToolButton   *toolbutton,
 	  gtk_toggle_tool_button_set_active( rectifierToolButton, FALSE); 
           rectifier = FALSE;
         }
-       rounder = TRUE;
+      rounder = TRUE;
     }
   else
     {
-       rounder = FALSE;
+      rounder = FALSE;
     }
 }
 
 
 void
 on_toolsFiller_activate          (GtkToolButton   *toolbutton,
-                                      gpointer         user_data)
+				  gpointer         user_data)
 {
   grab = TRUE;
   annotate_fill();
@@ -307,11 +307,11 @@ on_toolsFiller_activate          (GtkToolButton   *toolbutton,
 
 void
 on_toolsText_activate(GtkToolButton   *toolbutton,
-                                      gpointer         user_data)
+		      gpointer         user_data)
 {
-       grab = FALSE;
-       annotate_release_grab ();
-       start_text_widget( get_annotation_window(), color, tickness);
+  grab = FALSE;
+  annotate_release_grab ();
+  start_text_widget( get_annotation_window(), color, tickness);
 }
 
 
@@ -414,10 +414,10 @@ void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
           gtk_tool_button_set_stock_id (toolbutton, "gtk-media-stop");
         }
       else
-       {
+	{
 	  gtk_widget_hide(GTK_WIDGET(toolbutton));
            
-       }
+	}
     }
   annotate();
 }
@@ -441,7 +441,7 @@ void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
 
 
 void on_buttonUnlock_activate              (GtkToolButton   *toolbutton,
-					   gpointer         user_data)
+					    gpointer         user_data)
 {
   grab = FALSE;
   annotate_release_grab ();
@@ -449,7 +449,7 @@ void on_buttonUnlock_activate              (GtkToolButton   *toolbutton,
 
 
 void on_buttonUndo_activate              (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
+					  gpointer         user_data)
 {
   grab = TRUE;
   annotate_undo();
@@ -457,7 +457,7 @@ void on_buttonUndo_activate              (GtkToolButton   *toolbutton,
 
 
 void on_buttonRedo_activate              (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
+					  gpointer         user_data)
 {
   grab = TRUE;
   annotate_redo();

@@ -33,6 +33,9 @@
 #include <string.h> 
 #include "utils.h"
 #include "gettext.h"
+#include <sys/wait.h>
+
+
 
 /* pid of the recording process */
 int          recorderpid = -1;

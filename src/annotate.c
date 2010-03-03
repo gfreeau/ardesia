@@ -337,20 +337,6 @@ void select_color()
 }
 
 
-/* Clear cairo context */
-void clear_cairo_context(cairo_t* cr)
-{
-  if (cr)
-    {
-      cairo_save(cr);
-      cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
-      cairo_set_transparent_color(cr);
-      cairo_paint(cr);
-      cairo_restore(cr);
-    } 
-}
-
-
 /* Add a save point */
 gint add_save_point ()
 {
@@ -508,22 +494,12 @@ void annotate_show_annotation ()
 /* Release pointer grab */
 void annotate_release_pointer_grab()
 {
-  gdk_error_trap_push ();
- 
-  gdk_display_pointer_ungrab (data->display, GDK_CURRENT_TIME);
-  /* inherit cursor from root window */
-  gdk_window_set_cursor (data->win->window, NULL);
-  gdk_flush ();
-  if (gdk_error_trap_pop ())
-    {
-      /* this probably means the device table is outdated, 
-	 e.g. this device doesn't exist anymore */
-      g_printerr("Ungrab pointer device error\n");
-    }
+  ungrab_pointer(data->display,data->win);
   
   gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);  
   gdk_flush ();
 }
+
 
 /* Release the pointer pointer */
 void annotate_release_grab ()
@@ -664,60 +640,26 @@ gboolean in_unlock_area(int x, int y)
   return 0;
 }
 
-/* Acquirte pointer grab */
+/* Acquire pointer grab */
 void annotate_acquire_pointer_grab()
 {
-  gtk_widget_show (data->win);
-
-  GdkGrabStatus result;
-  gdk_error_trap_push(); 
-
-  gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);   
-
-  result = gdk_pointer_grab (data->win->window, FALSE,
-			     ANNOTATE_MOUSE_EVENTS, 0,
-			     NULL,
-			     GDK_CURRENT_TIME); 
-
-  gdk_flush ();
-  if (gdk_error_trap_pop ())
-    {
-      g_printerr("Grab pointer error\n");
-    }
-   
-  switch (result)
-    {
-    case GDK_GRAB_SUCCESS:
-      break;
-    case GDK_GRAB_ALREADY_GRABBED:
-      g_printerr ("Grab Pointer failed: AlreadyGrabbed\n");
-      break;
-    case GDK_GRAB_INVALID_TIME:
-      g_printerr ("Grab Pointer failed: GrabInvalidTime\n");
-      break;
-    case GDK_GRAB_NOT_VIEWABLE:
-      g_printerr ("Grab Pointer failed: GrabNotViewable\n");
-      break;
-    case GDK_GRAB_FROZEN:
-      g_printerr ("Grab Pointer failed: GrabFrozen\n");
-      break;
-    default:
-      g_printerr ("Grab Pointer failed: Unknown error\n");
-    }       
+  grab_pointer(data->win, ANNOTATE_MOUSE_EVENTS);
 }
 
 
+/* Select pen or eraser cursor */
 void annotate_select_cursor()
 {
   if(data->cur_context && data->cur_context->type == ANNOTATE_ERASER)
     {
-      set_eraser_cursor(data);
+      set_eraser_cursor();
     } 
   else
     {
       set_pen_cursor();
     } 
 }
+
 
 /* Grab the cursor */
 void annotate_acquire_grab ()
@@ -771,8 +713,8 @@ void annotate_set_arrow(int arrow)
 /* Start to paint */
 void annotate_toggle_grab ()
 { 
-  annotate_select_pen(data);
-  annotate_acquire_grab (data);
+  annotate_select_pen();
+  annotate_acquire_grab ();
 }
 
 
@@ -780,9 +722,9 @@ void annotate_toggle_grab ()
 void annotate_eraser_grab ()
 {
   /* Get the with message */
-  annotate_select_eraser(data);
+  annotate_select_eraser();
   annotate_configure_eraser(data->cur_context->width);
-  annotate_acquire_grab (data);
+  annotate_acquire_grab ();
 }
 
 
@@ -1040,7 +982,7 @@ void unhide_cursor()
     {
       if(data->cur_context && data->cur_context->type == ANNOTATE_ERASER)
 	{
-	  set_eraser_cursor(data);
+	  set_eraser_cursor();
 	} 
       else
 	{
@@ -1057,7 +999,7 @@ gboolean paint (GtkWidget *win,
                 gpointer user_data)
 { 
   unhide_cursor();  
-  annotate_coord_list_free (data);
+  annotate_coord_list_free();
   /* only button1 allowed */
   if (!(ev->button==1))
     {
@@ -1184,7 +1126,7 @@ gboolean rectify()
   reset_cairo();
   gboolean close_path = FALSE;
   GSList *outptr = broken(data->coordlist, &close_path, TRUE);   
-  annotate_coord_list_free (data);
+  annotate_coord_list_free();
   data->coordlist = outptr;
   draw_point_list(outptr);     
   if (close_path)
@@ -1208,7 +1150,7 @@ gboolean roundify()
   reset_cairo();
   gboolean close_path = FALSE;
   GSList *outptr = broken(data->coordlist, &close_path, FALSE);   
-  annotate_coord_list_free (data);
+  annotate_coord_list_free();
   data->coordlist = outptr;
 
   if (close_path)
@@ -1453,7 +1395,7 @@ void setup_app ()
 
   data->state = 0;
 
-  setup_input_devices (data);
+  setup_input_devices();
   
   gtk_widget_show_all(data->win);
   
@@ -1489,8 +1431,8 @@ void annotate_quit()
   transparent_pixmap = NULL;
   g_object_unref(data->shape);
   data->shape = NULL;
-  annotate_coord_list_free ();
-  annotate_savelist_free ();
+  annotate_coord_list_free();
+  annotate_savelist_free();
   g_free(data->default_pen->fg_color);
   g_free(data->default_pen);
   g_free(data->default_eraser);

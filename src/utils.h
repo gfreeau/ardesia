@@ -23,6 +23,14 @@
  */
 
 
+/* Ungrab pointer */
+void ungrab_pointer(GdkDisplay* display, GtkWidget *win);
+
+
+/* Grab pointer */
+void grab_pointer(GtkWidget *win, GdkEventMask eventmask);
+
+
 /* Take a GdkColor and return the RGB string */
 char* gdkcolor_to_rgba(GdkColor* gdkcolor);
 
@@ -33,6 +41,11 @@ void cairo_set_source_color_from_string( cairo_t * cr, char* color);
 
 /* Set the cairo surface color to transparent */
 void  cairo_set_transparent_color(cairo_t * cr);
+
+
+/* Clear cairo context */
+void clear_cairo_context(cairo_t* cr);
+
 
 /*
  * Take an rgb or a rgba string and return the pointer to the allocated GdkColor 

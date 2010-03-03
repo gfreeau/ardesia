@@ -19,7 +19,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-  #include <config.h>
+#include <config.h>
 #endif
 
 #include "time.h"
@@ -32,6 +32,65 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <gdk/gdk.h>
+#include <gtk/gtk.h>
+
+
+
+/* Grab pointer */
+void grab_pointer(GtkWidget *win, GdkEventMask eventmask)
+{
+  gtk_widget_show (win);
+  GdkGrabStatus result;
+  gdk_error_trap_push(); 
+  gtk_widget_input_shape_combine_mask(win, NULL, 0, 0);   
+  result = gdk_pointer_grab (win->window, FALSE,
+			     eventmask, 0,
+			     NULL,
+			     GDK_CURRENT_TIME); 
+
+  gdk_flush ();
+  if (gdk_error_trap_pop ())
+    {
+      g_printerr("Grab pointer error\n");
+    }
+   
+  switch (result)
+    {
+    case GDK_GRAB_SUCCESS:
+      break;
+    case GDK_GRAB_ALREADY_GRABBED:
+      g_printerr ("Grab Pointer failed: AlreadyGrabbed\n");
+      break;
+    case GDK_GRAB_INVALID_TIME:
+      g_printerr ("Grab Pointer failed: GrabInvalidTime\n");
+      break;
+    case GDK_GRAB_NOT_VIEWABLE:
+      g_printerr ("Grab Pointer failed: GrabNotViewable\n");
+      break;
+    case GDK_GRAB_FROZEN:
+      g_printerr ("Grab Pointer failed: GrabFrozen\n");
+      break;
+    default:
+      g_printerr ("Grab Pointer failed: Unknown error\n");
+    }       
+
+}
+
+/* Ungrab pointer */
+void ungrab_pointer(GdkDisplay* display, GtkWidget* win)
+{
+  gdk_error_trap_push ();
+  gdk_display_pointer_ungrab (display, GDK_CURRENT_TIME);
+  /* inherit cursor from root window */
+  gdk_window_set_cursor (win->window, NULL);
+  gdk_flush ();
+  if (gdk_error_trap_pop ())
+    {
+      /* this probably means the device table is outdated, 
+	 e.g. this device doesn't exist anymore */
+      g_printerr("Ungrab pointer device error\n");
+    }
+}
 
 
 /* Take a GdkColor and return the RGBA string */
@@ -50,14 +109,35 @@ char* gdkcolor_to_rgba(GdkColor* gdkcolor)
  */
 GdkColor* rgb_to_gdkcolor(char* rgb)
 {
-   GdkColor* gdkcolor = g_malloc (sizeof (GdkColor));
-   gchar *ccolor = g_malloc(8);
-   ccolor[0]='#';
-   strncpy(&ccolor[1], rgb, 6);
-   ccolor[7]=0;
-   gdk_color_parse (ccolor, gdkcolor);
-   g_free(ccolor);
-   return gdkcolor;
+  GdkColor* gdkcolor = g_malloc (sizeof (GdkColor));
+  gchar *ccolor = g_malloc(8);
+  ccolor[0]='#';
+  strncpy(&ccolor[1], rgb, 6);
+  ccolor[7]=0;
+  gdk_color_parse (ccolor, gdkcolor);
+  g_free(ccolor);
+  return gdkcolor;
+}
+
+
+/* Set the cairo surface color to transparent */
+void  cairo_set_transparent_color(cairo_t * cr)
+{
+  cairo_set_source_rgba (cr, 0, 0, 0, 0);
+}
+
+
+/* Clear cairo context */
+void clear_cairo_context(cairo_t* cr)
+{
+  if (cr)
+    {
+      cairo_save(cr);
+      cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
+      cairo_set_transparent_color(cr);
+      cairo_paint(cr);
+      cairo_restore(cr);
+    } 
 }
 
 
@@ -67,13 +147,6 @@ void cairo_set_source_color_from_string( cairo_t * cr, char* color)
   int r,g,b,a;
   sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
   cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
-}
-
-
-/* Set the cairo surface color to transparent */
-void  cairo_set_transparent_color(cairo_t * cr)
-{
-  cairo_set_source_rgba (cr, 0, 0, 0, 0);
 }
 
 
