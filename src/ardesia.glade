@@ -10,7 +10,7 @@
     <property name="resizable">False</property>
     <property name="decorated">False</property>
     <property name="deletable">False</property>
-    <property name="opacity">0.69999999999999996</property>
+    <property name="opacity">0.7</property>
     <property name="startup_id">Ardesia</property>
     <signal name="leave_notify_event" handler="on_winMain_leave_notify_event"/>
     <signal name="configure_event" handler="on_window_configure_event"/>
@@ -55,7 +55,138 @@
               <object class="GtkToolItem" id="thickSeparatorItem">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkVSeparator" id="thickseparator">
+                  <object class="GtkVSeparator" id="thickSeparator">
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToggleToolButton" id="buttonDoubleArrow">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Bidirectional Arrow</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">doublearrow</property>
+                <signal name="toggled" handler="on_toolsDoubleArrow_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToggleToolButton" id="buttonArrow">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Arrow</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">arrow</property>
+                <signal name="toggled" handler="on_toolsArrow_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="buttonFiller">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Filler</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">filler</property>
+                <signal name="clicked" handler="on_toolsFiller_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToggleToolButton" id="buttonRectifier">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Rectifier</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">rectifier</property>
+                <signal name="toggled" handler="on_toolsRectifier_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToggleToolButton" id="buttonRounder">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Rounder</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">rounder</property>
+                <signal name="toggled" handler="on_toolsRounder_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolItem" id="toolSeparatorItem">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkVSeparator" id="toolseparator">
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="buttonText">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Insert Text</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-italic</property>
+                <signal name="clicked" handler="on_toolsText_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToggleToolButton" id="buttonHighlighter">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Highlighter</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">highlighter</property>
+                <signal name="toggled" handler="on_toolsHighlighter_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolItem" id="colorItem">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkVSeparator" id="colorSeparator">
                     <property name="visible">True</property>
                   </object>
                 </child>
@@ -223,10 +354,67 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolItem" id="colorItem">
+              <object class="GtkToolItem" id="screenItem">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkVSeparator" id="colorSeparator">
+                  <object class="GtkVSeparator" id="screenSeparator">
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="buttonUnlock">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Unlock</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">unlock</property>
+                <signal name="clicked" handler="on_buttonUnlock_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToggleToolButton" id="buttonView">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Hide</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-find</property>
+                <signal name="toggled" handler="on_toolsVisible_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="buttonClear">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Clear</property>
+                <property name="stock_id">gtk-clear</property>
+                <signal name="clicked" handler="on_buttonClear_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolItem" id="undoItem">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkVSeparator" id="undoSeparator">
                     <property name="visible">True</property>
                   </object>
                 </child>
@@ -264,165 +452,16 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolItem" id="undoSeparatorItem">
+              <object class="GtkToolItem" id="otherSeparatorItem">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkVSeparator" id="undoseparator">
+                  <object class="GtkVSeparator" id="otherSeparator">
                     <property name="visible">True</property>
                   </object>
                 </child>
               </object>
               <packing>
                 <property name="expand">False</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="buttonUnlock">
-                <property name="width_request">32</property>
-                <property name="height_request">34</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Unlock</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">unlock</property>
-                <signal name="clicked" handler="on_buttonUnlock_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="buttonClear">
-                <property name="width_request">32</property>
-                <property name="height_request">34</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Clear</property>
-                <property name="stock_id">gtk-clear</property>
-                <signal name="clicked" handler="on_buttonClear_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleToolButton" id="buttonView">
-                <property name="width_request">32</property>
-                <property name="height_request">34</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Hide</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-find</property>
-                <signal name="toggled" handler="on_toolsVisible_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleToolButton" id="buttonHighlighter">
-                <property name="width_request">32</property>
-                <property name="height_request">34</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Highlighter</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">highlighter</property>
-                <signal name="toggled" handler="on_toolsHighlighter_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleToolButton" id="buttonRectifier">
-                <property name="width_request">32</property>
-                <property name="height_request">34</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Rectifier</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">rectifier</property>
-                <signal name="toggled" handler="on_toolsRectifier_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleToolButton" id="buttonRounder">
-                <property name="width_request">32</property>
-                <property name="height_request">34</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Rounder</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">rounder</property>
-                <signal name="toggled" handler="on_toolsRounder_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="buttonFiller">
-                <property name="width_request">32</property>
-                <property name="height_request">34</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Filler</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">filler</property>
-                <signal name="clicked" handler="on_toolsFiller_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="buttonText">
-                <property name="width_request">32</property>
-                <property name="height_request">34</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Insert Text</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-italic</property>
-                <signal name="clicked" handler="on_toolsText_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleToolButton" id="buttonArrow">
-                <property name="width_request">32</property>
-                <property name="height_request">34</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Arrow</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">arrow</property>
-                <signal name="toggled" handler="on_toolsArrow_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleToolButton" id="buttonDoubleArrow">
-                <property name="width_request">32</property>
-                <property name="height_request">34</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Bidirectional Arrow</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">doublearrow</property>
-                <signal name="toggled" handler="on_toolsDoubleArrow_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>
