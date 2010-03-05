@@ -93,6 +93,8 @@ int        arrow = 0;
 /* Default folder where store images and videos */
 char*       workspace_dir = NULL;
 
+gboolean text = FALSE;
+
 
 /* Called when close the program */
 gboolean  quit()
@@ -101,11 +103,14 @@ gboolean  quit()
   quit_recorder();
   clear_background();
   annotate_quit();
-  GtkWidget* main_window = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
-  gtk_widget_destroy(main_window);
+  if (gtkBuilder)
+  {
+    GtkWidget* main_window = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
+    gtk_widget_destroy(main_window);
+    g_object_unref (gtkBuilder); 
+  }
   g_free(color);
   g_free(workspace_dir);
-  g_object_unref (gtkBuilder); 
   gtk_main_quit();
   exit(ret);
 }
@@ -186,14 +191,57 @@ gboolean on_quit                          (GtkWidget       *widget,
 }
 
 
+/* When a mouse enter in window */
+gboolean on_winMain_enter_notify_event(GtkWidget       *widget,
+				       GdkEvent        *event,
+				       gpointer         user_data)
+{
+  if (text)
+    {
+      stop_text_widget();
+
+    }
+  return TRUE;
+}
+
+
+/* Start to paint with the selected tool */
+void start_tool()
+{
+  if (grab)
+    {
+      if (text)
+	{
+	  annotate_release_grab ();
+	  start_text_widget( get_annotation_window(), color, tickness);
+	}
+      else 
+	{
+	  if (pencil)
+	    { 
+	      annotate();
+	    }
+	  else
+	    {
+	      erase();
+	    }   
+	  grab = FALSE;
+	}
+    }
+}
+
+
 /* Called when push the info button */
 gboolean on_info                         (GtkToolButton   *toolbutton,
 					  gpointer         user_data)
 {
+  grab = FALSE;
   start_info_dialog(toolbutton, get_annotation_window());
-  annotate();
+  grab = TRUE;
+  start_tool();
   return TRUE;
 }
+
 
 
 /* Called when leave the window */
@@ -201,18 +249,7 @@ gboolean on_winMain_leave_notify_event   (GtkWidget       *widget,
 					  GdkEvent        *event,
 					  gpointer         user_data)
 {
-  if (grab)
-    {
-      if (pencil)
-	{ 
-	  annotate();
-	}
-      else
-	{
-	  erase();
-	}
-    }
-  grab=FALSE;
+  start_tool();
   return TRUE;
 }
 
@@ -222,14 +259,6 @@ gboolean on_winMain_delete_event          (GtkWidget       *widget,
                                            gpointer         user_data)
 {
   return quit();
-}
-
-
-void on_toolsEraser_activate              (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
-{
-  grab = TRUE;
-  pencil = FALSE;
 }
 
 
@@ -305,13 +334,50 @@ on_toolsFiller_activate          (GtkToolButton   *toolbutton,
 }
 
 
-void
-on_toolsText_activate(GtkToolButton   *toolbutton,
-		      gpointer         user_data)
+void disable_arrow()
 {
-  grab = FALSE;
-  annotate_release_grab ();
-  start_text_widget( get_annotation_window(), color, tickness);
+  /* if single arrow is active release it */
+  GtkToggleToolButton* arrowToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonArrow"));
+  if (gtk_toggle_tool_button_get_active(arrowToolButton))
+    {
+      gtk_toggle_tool_button_set_active(arrowToolButton, FALSE); 
+    }
+}
+
+
+void disable_double_arrow()
+{
+  /* if double arrow is active release it */
+  GtkToggleToolButton* doubleArrowToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonDoubleArrow"));
+  if (gtk_toggle_tool_button_get_active(doubleArrowToolButton))
+    {
+      gtk_toggle_tool_button_set_active(doubleArrowToolButton, FALSE); 
+    }
+}
+
+
+void disable_text()
+{
+  /* if text is active release it */
+  GtkToggleToolButton* textToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonText"));
+  if (gtk_toggle_tool_button_get_active(textToolButton))
+    {
+      gtk_toggle_tool_button_set_active(textToolButton, FALSE); 
+      grab = TRUE;
+      text = FALSE;
+    }
+}
+
+
+void disable_eraser()
+{
+  /* if eraser is active release it */
+  GtkToggleToolButton* eraserToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonEraser"));
+  if (gtk_toggle_tool_button_get_active(eraserToolButton))
+    {
+      gtk_toggle_tool_button_set_active(eraserToolButton, FALSE); 
+      pencil = TRUE;
+    }
 }
 
 
@@ -321,12 +387,9 @@ void on_toolsArrow_activate               (GtkToolButton   *toolbutton,
   grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
-      /* if single arrow is active release it */
-      GtkToggleToolButton* doubleArrowToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonDoubleArrow"));
-      if (gtk_toggle_tool_button_get_active(doubleArrowToolButton))
-        {
-	  gtk_toggle_tool_button_set_active(doubleArrowToolButton, FALSE); 
-        }
+      disable_double_arrow();
+      disable_text();
+      disable_eraser();
       arrow=1;
     }
   else
@@ -342,12 +405,9 @@ void on_toolsDoubleArrow_activate         (GtkToolButton   *toolbutton,
   grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
-      /* if single arrow is active release it */
-      GtkToggleToolButton* arrowToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonArrow"));
-      if (gtk_toggle_tool_button_get_active(arrowToolButton))
-        {
-	  gtk_toggle_tool_button_set_active(arrowToolButton, FALSE); 
-        }
+      disable_arrow();
+      disable_text();
+      disable_eraser();
       arrow=2;
     }
   else
@@ -356,6 +416,43 @@ void on_toolsDoubleArrow_activate         (GtkToolButton   *toolbutton,
     }
 }
 
+
+void
+on_toolsText_activate(GtkToolButton   *toolbutton,
+		      gpointer         user_data)
+{
+  if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
+    {
+      disable_arrow();
+      disable_double_arrow();
+      disable_eraser();
+      grab = TRUE;
+      text = TRUE;
+    }
+  else
+    {
+      grab = TRUE;
+      text = FALSE;
+    }
+}
+
+void on_toolsEraser_activate              (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
+{
+   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
+    {
+      disable_arrow();
+      disable_double_arrow();
+      disable_text();
+      grab = TRUE;
+      pencil = FALSE;
+    }
+  else
+    {
+      grab = TRUE;
+      pencil = TRUE;
+    }
+}
 
 void on_toolsVisible_activate             (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
@@ -384,7 +481,8 @@ void on_toolsScreenShot_activate	  (GtkToolButton   *toolbutton,
 {
   grab = FALSE;
   start_save_image_dialog(toolbutton, get_annotation_window(), &workspace_dir);
-  annotate();
+  grab = TRUE;
+  start_tool();
 }
 
 
@@ -419,7 +517,8 @@ void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
            
 	}
     }
-  annotate();
+  grab = TRUE;
+  start_tool();
 }
 
 
@@ -436,7 +535,8 @@ void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
 {
   grab = FALSE;
   start_preference_dialog(toolbutton, get_annotation_window());
-  annotate();
+  grab = TRUE;
+  start_tool();
 }
 
 
@@ -478,7 +578,8 @@ void on_buttonColor_activate	          (GtkToolButton   *toolbutton,
   grab = FALSE;
   pencil = TRUE;
   set_color(start_color_selector_dialog(toolbutton, get_annotation_window(), color));
-  annotate();
+  grab = TRUE;
+  start_tool();
 }
 
 

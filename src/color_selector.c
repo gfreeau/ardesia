@@ -20,7 +20,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-  #include <config.h>
+#include <config.h>
 #endif
 
 #include <gtk/gtk.h>
@@ -32,8 +32,10 @@
 #include "utils.h"
 #include "gettext.h"
 
+
 /* old picked color in RGBA format */
 gchar*       picked_color = NULL;
+
 
 /*
  * Start the dialog that ask to the user where save the image
@@ -59,11 +61,11 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
       GdkColor* gdkcolor;
       if (picked_color != NULL)
         {
-           gdkcolor = rgb_to_gdkcolor(picked_color);
+	  gdkcolor = rgb_to_gdkcolor(picked_color);
         }
       else
         {
-           gdkcolor = rgb_to_gdkcolor(color);
+	  gdkcolor = rgb_to_gdkcolor(color);
         }
 
       gtk_color_selection_set_current_color(colorsel, gdkcolor);
@@ -83,7 +85,7 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
           color = gdkcolor_to_rgba(gdkcolor);
           if (picked_color == NULL)
             {
-	       picked_color = g_malloc(strlen(color));
+	      picked_color = g_malloc(strlen(color));
             }
           strncpy(picked_color, color, strlen(color));
 	  break;
@@ -91,10 +93,10 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
 	  break;
 	}
       if (colorDialog != NULL)
-      {
-        gtk_widget_destroy(colorDialog);
-      }
+	{
+	  gtk_widget_destroy(colorDialog);
+	}
       g_free(gdkcolor);
     }
-   return color;
+  return color;
 }

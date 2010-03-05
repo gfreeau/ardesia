@@ -12,12 +12,14 @@
     <property name="deletable">False</property>
     <property name="opacity">0.7</property>
     <property name="startup_id">Ardesia</property>
+    <signal name="enter_notify_event" handler="on_winMain_enter_notify_event"/>
     <signal name="leave_notify_event" handler="on_winMain_leave_notify_event"/>
     <signal name="configure_event" handler="on_window_configure_event"/>
     <signal name="delete_event" handler="on_winMain_delete_event"/>
     <child>
       <object class="GtkVBox" id="toolboxMain">
         <property name="visible">True</property>
+        <property name="events">GDK_POINTER_MOTION_MASK | GDK_STRUCTURE_MASK</property>
         <property name="homogeneous">True</property>
         <child>
           <object class="GtkToolbar" id="toolbarPen">
@@ -95,18 +97,46 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="buttonFiller">
+              <object class="GtkToggleToolButton" id="buttonText">
                 <property name="width_request">32</property>
                 <property name="height_request">34</property>
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Filler</property>
+                <property name="tooltip_text" translatable="yes">Insert Text</property>
                 <property name="use_underline">True</property>
-                <property name="label_widget">filler</property>
-                <signal name="clicked" handler="on_toolsFiller_activate"/>
+                <property name="stock_id">gtk-italic</property>
+                <signal name="clicked" handler="on_toolsText_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToggleToolButton" id="buttonEraser">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Eraser</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">eraser</property>
+                <signal name="clicked" handler="on_toolsEraser_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>  
+            <child>
+              <object class="GtkToolItem" id="toolSeparatorItem">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkVSeparator" id="toolseparator">
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
               </packing>
             </child>
             <child>
@@ -140,27 +170,14 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolItem" id="toolSeparatorItem">
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkVSeparator" id="toolseparator">
-                    <property name="visible">True</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="buttonText">
+              <object class="GtkToolButton" id="buttonFiller">
                 <property name="width_request">32</property>
                 <property name="height_request">34</property>
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Insert Text</property>
+                <property name="tooltip_text" translatable="yes">Filler</property>
                 <property name="use_underline">True</property>
-                <property name="stock_id">gtk-italic</property>
-                <signal name="clicked" handler="on_toolsText_activate"/>
+                <property name="label_widget">filler</property>
+                <signal name="clicked" handler="on_toolsFiller_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -181,7 +198,7 @@
                 <property name="expand">False</property>
                 <property name="homogeneous">True</property>
               </packing>
-            </child>
+            </child>    
             <child>
               <object class="GtkToolItem" id="colorItem">
                 <property name="visible">True</property>
@@ -338,22 +355,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkRadioToolButton" id="buttonEraser">
-                <property name="width_request">32</property>
-                <property name="height_request">34</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Eraser</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">eraser</property>
-                <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_toolsEraser_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkToolItem" id="screenItem">
                 <property name="visible">True</property>
                 <child>
@@ -382,6 +383,20 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToolButton" id="buttonClear">
+                <property name="width_request">32</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Clear</property>
+                <property name="stock_id">gtk-clear</property>
+                <signal name="clicked" handler="on_buttonClear_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToggleToolButton" id="buttonView">
                 <property name="width_request">32</property>
                 <property name="height_request">34</property>
@@ -390,20 +405,6 @@
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-find</property>
                 <signal name="toggled" handler="on_toolsVisible_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="buttonClear">
-                <property name="width_request">32</property>
-                <property name="height_request">34</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Clear</property>
-                <property name="stock_id">gtk-clear</property>
-                <signal name="clicked" handler="on_buttonClear_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>

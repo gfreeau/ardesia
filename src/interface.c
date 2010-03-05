@@ -58,7 +58,8 @@ void setInitialWidth(int val)
 GtkWidget* create_mainWindow (void)
 {
   GtkWidget *main_window = NULL;
-
+  gtkBuilder = NULL;
+  
   /* Initialize the main window */
   gtkBuilder = gtk_builder_new();
 

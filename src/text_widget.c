@@ -37,6 +37,7 @@
 #include <text_widget.h>
 #include <utils.h>
 #include <annotate.h>
+#include <interface.h>
 
 #define TEXT_MOUSE_EVENTS        ( GDK_PROXIMITY_IN_MASK |      \
 				   GDK_PROXIMITY_OUT_MASK |	\
@@ -44,10 +45,6 @@
 				   GDK_BUTTON_PRESS_MASK |      \
 				   GDK_BUTTON_RELEASE_MASK      \
 				   )
-
-GtkWidget* text_window = NULL;
-cairo_t *text_cr = NULL;
-int text_pen_width = 15;
 
 typedef struct
 {
@@ -64,29 +61,27 @@ typedef struct
   int y;
 } Pos;
 
-
-
-int letterc;
-
-Pos* pos;
-
-char* text_color = NULL;
+Pos* pos = NULL;
 
 GdkDisplay* display = NULL;
+GdkScreen* screen = NULL;
+GtkWidget* text_window = NULL;
+GdkCursor* text_cursor;
+
+GSList *letterlist = NULL;
+
+cairo_t *text_cr = NULL;
 cairo_text_extents_t extents;
+
+int text_pen_width = 15;
+char* text_color = NULL;
 
 int screen_width;
 int screen_height;
 
 int max_font_height;
 
-GSList *letterlist = NULL;
-
-GdkCursor* cursor;
-
 gboolean is_visible_cursor = FALSE;
-
-int timeout_id;
 
 
 /* Creation of the text window */
@@ -94,9 +89,8 @@ void create_text_window(GtkWindow *parent)
 {
   text_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_fullscreen(GTK_WINDOW(text_window));
- 
   gtk_window_set_transient_for(GTK_WINDOW(text_window), parent);
-  gtk_window_set_modal(GTK_WINDOW(text_window), TRUE); 
+  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(text_window), TRUE);
   gtk_window_set_keep_above (GTK_WINDOW(text_window), TRUE);
   gtk_window_set_skip_pager_hint(GTK_WINDOW(text_window), TRUE);
   gtk_window_stick(GTK_WINDOW(text_window));
@@ -214,73 +208,38 @@ void init(GtkWidget *win)
 }
 
 
-/* Hide the cursor */
-gboolean  hide_text_cursor(GtkWidget * window)
-{
-  if (text_window)
-    {
-      char invisible_cursor_bits[] = { 0x0 };
-      GdkBitmap *empty_bitmap;
-      GdkColor color = { 0, 0, 0, 0 };
-      empty_bitmap = gdk_bitmap_create_from_data (text_window->window,
-						  invisible_cursor_bits,
-						  1, 1);
-      if (cursor)
-	{
-	  gdk_cursor_unref (cursor);
-	}
-      cursor = gdk_cursor_new_from_pixmap (empty_bitmap, empty_bitmap, &color,
-					   &color, 0, 0);
-      gdk_window_set_cursor(text_window->window, cursor);
-      gdk_flush ();
-      g_object_unref(empty_bitmap);
-    }
-  return TRUE;
-}
-
-
 /* Set the eraser cursor */
-gboolean set_text_cursor(GtkWidget * window)
+gboolean set_text_pointer(GtkWidget * window)
 {
+  int height = max_font_height;
+  int width = text_pen_width;
+  GdkPixmap *pixmap = gdk_pixmap_new (NULL, width ,height, 1);
 
-  if ((!is_visible_cursor)&&(text_window))
-    {
-      int height = max_font_height;
-      int width = text_pen_width;
-      GdkPixmap *pixmap = gdk_pixmap_new (NULL, width ,height, 1);
-
-      cairo_t *text_cursor_cr = gdk_cairo_create(pixmap);
-      clear_cairo_context(text_cursor_cr);
+  cairo_t *text_pointer_cr = gdk_cairo_create(pixmap);
+  clear_cairo_context(text_pointer_cr);
   
-      cairo_set_line_cap (text_cursor_cr, CAIRO_LINE_CAP_ROUND);
-      cairo_set_line_join(text_cursor_cr, CAIRO_LINE_JOIN_ROUND); 
-      cairo_set_operator(text_cursor_cr, CAIRO_OPERATOR_SOURCE);
-      cairo_set_line_width(text_cursor_cr, text_pen_width);
-      cairo_set_source_color_from_string(text_cursor_cr, text_color);
-      cairo_rectangle(text_cursor_cr, 0,0, 5, height);  
+  cairo_set_line_cap (text_pointer_cr, CAIRO_LINE_CAP_ROUND);
+  cairo_set_line_join(text_pointer_cr, CAIRO_LINE_JOIN_ROUND); 
+  cairo_set_operator(text_pointer_cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_line_width(text_pointer_cr, text_pen_width);
+  cairo_set_source_color_from_string(text_pointer_cr, text_color);
+  cairo_rectangle(text_pointer_cr, 0,0, 5, height);  
 
-      cairo_stroke(text_cursor_cr);
+  cairo_stroke(text_pointer_cr);
   
-      GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
-      GdkColor *foreground_color_p = rgb_to_gdkcolor(text_color);
-      if (cursor)
-	{
-	  gdk_cursor_unref(cursor);
-	}
-      cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, 0, height);
-      gdk_window_set_cursor (text_window->window, cursor);
-      gdk_flush ();
-      g_object_unref (pixmap);
-      g_free(foreground_color_p);
-      g_free(background_color_p);
-      cairo_destroy(text_cursor_cr);
-      is_visible_cursor=TRUE;
-    }
-  else
+  GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
+  GdkColor *foreground_color_p = rgb_to_gdkcolor(text_color);
+  if (text_cursor)
     {
-      hide_text_cursor(window);
-      is_visible_cursor=FALSE;
+      gdk_cursor_unref(text_cursor);
     }
+  text_cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, 0, height);
+  gdk_window_set_cursor (text_window->window, text_cursor);
+  gdk_flush ();
+  g_object_unref (pixmap);
+  g_free(foreground_color_p);
+  g_free(background_color_p);
+  cairo_destroy(text_pointer_cr);
   return TRUE;
 }
 
@@ -299,11 +258,8 @@ static gboolean on_window_text_configure_event(GtkWidget *widget, GdkEventExpose
 
       grab_pointer(text_window, TEXT_MOUSE_EVENTS);
   
-      set_text_cursor(widget);
-
-      timeout_id = g_timeout_add(1000, (GSourceFunc) set_text_cursor, (gpointer) widget);
+      set_text_pointer(widget);
     }
-
 
   return TRUE;
 }
@@ -315,8 +271,7 @@ static gboolean on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *e
   if (!display)
     {
       display = gdk_display_get_default ();
-      GdkScreen* screen = gdk_display_get_default_screen (display);
-    
+      screen = gdk_display_get_default_screen (display);
       screen_width = gdk_screen_get_width (screen);
       screen_height = gdk_screen_get_height (screen);
     }
@@ -336,8 +291,9 @@ void add_shape(GtkWidget *win)
   
   cairo_set_source_rgba (shape_cr, 0, 0, 0, 0);
   cairo_paint(shape_cr);
-
   gtk_widget_input_shape_combine_mask(win, shape, 0, 0);
+  g_object_unref (shape);
+  cairo_destroy(shape_cr);
 }
 
 
@@ -347,7 +303,7 @@ gboolean press (GtkWidget *win,
                 gpointer user_data)
 {
   ungrab_pointer(display, win);
- 
+
   add_shape(win);
    
   pos->x = ev->x;
@@ -358,7 +314,34 @@ gboolean press (GtkWidget *win,
 }
 
 
-/* Start the widget for the text insertion */
+/* This shots when the ponter is moving */
+gboolean on_window_text_motion_notify_event (GtkWidget *win, 
+					     GdkEventMotion *ev, 
+					     gpointer user_data)
+{
+  GtkWidget *bar = GTK_WIDGET(gtk_builder_get_object(gtkBuilder, "winMain"));
+  int x, y, width, height;
+  gtk_window_get_position             (GTK_WINDOW(bar),
+				       &x,
+				       &y);
+  gtk_window_get_size                 (GTK_WINDOW(bar),
+                                             
+				       &width,
+				       &height);
+
+  /* rectangle that contains the panel */
+  if ((ev->y>=y)&&(ev->y<y+height))
+    {
+      if ((ev->x>=x)&&(ev->x<x+width))
+	{
+	  stop_text_widget();
+	}
+    }
+  return TRUE;;
+}
+
+/* 
+   Start the widget for the text insertion */
 void start_text_widget(GtkWindow *parent, char* color, int tickness)
 {
   
@@ -373,7 +356,7 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
 
   g_signal_connect(G_OBJECT(text_window), "configure-event", G_CALLBACK(on_window_text_configure_event), NULL);
   g_signal_connect(G_OBJECT(text_window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
-
+  g_signal_connect (G_OBJECT(text_window), "motion_notify_event",G_CALLBACK (on_window_text_motion_notify_event), NULL);
   g_signal_connect (G_OBJECT(text_window), "button_press_event", 
 		    G_CALLBACK(press), NULL);
 
@@ -388,14 +371,29 @@ void stop_text_widget()
 {
   if (text_cr)
     {
-      merge_context(text_cr);
-      cairo_destroy(text_cr);       
+      if (letterlist)
+        {
+          g_slist_foreach(letterlist, (GFunc)g_free, NULL);
+          g_slist_free(letterlist);
+          letterlist = NULL;
+          merge_context(text_cr);
+        } 
+      cairo_destroy(text_cr);     
       text_cr = NULL;
     }
   if (text_window)
     {
-      g_source_remove(timeout_id);
       gtk_widget_destroy(text_window);
       text_window= NULL;
+    }
+  if (text_cursor)
+    {
+      gdk_cursor_unref(text_cursor);
+      text_cursor = NULL;
+    }
+  if (pos)
+    {
+      g_free(pos);
+      pos = NULL;
     }
 }

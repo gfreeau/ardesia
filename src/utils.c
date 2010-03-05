@@ -34,7 +34,7 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
-
+const gchar* desktop_dir = NULL;
 
 /* Grab pointer */
 void grab_pointer(GtkWidget *win, GdkEventMask eventmask)
@@ -96,7 +96,7 @@ void ungrab_pointer(GdkDisplay* display, GtkWidget* win)
 /* Take a GdkColor and return the RGBA string */
 char* gdkcolor_to_rgba(GdkColor* gdkcolor)
 {
-  char*   ret= g_malloc(9*sizeof(char));;
+  char* ret= g_malloc(9*sizeof(char));;
   /* transform in the  RGBA format e.g. FF0000FF */ 
   sprintf(ret,"%02x%02x%02xFF", gdkcolor->red/257, gdkcolor->green/257, gdkcolor->blue/257);
   return ret;

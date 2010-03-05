@@ -142,12 +142,6 @@ void change_background_image (const char *name)
 
   g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_file_expose_event), NULL);
 
-  GdkDisplay *display = gdk_display_get_default ();
-  GdkScreen *screen = gdk_display_get_default_screen (display);
-  
-  GdkColormap *colormap = gdk_screen_get_rgba_colormap (screen);
-  gtk_widget_set_default_colormap(colormap);
-
   gtk_widget_show_all(background_window);
   
 }

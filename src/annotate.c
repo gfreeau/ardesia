@@ -66,9 +66,7 @@
 
 #define g_slist_first(n) g_slist_nth (n,0)
 
-GdkPixmap *transparent_pixmap = NULL;
 
-GdkCursor* cursor = NULL;
 
 typedef enum
   {
@@ -105,6 +103,7 @@ typedef struct
   cairo_t     *cr;
   GtkWidget   *win;
   
+  GdkScreen   *screen;
   GdkDisplay  *display;
 
   GdkPixmap   *shape;
@@ -135,6 +134,9 @@ typedef struct
 
 AnnotateData* data;
 
+GdkPixmap *transparent_pixmap = NULL;
+
+GdkCursor* cursor = NULL;
 
 /* Create a new paint context */
 AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
@@ -365,6 +367,10 @@ gint add_save_point ()
   cairo_set_source_surface (cr, source_surface, 0, 0);
   cairo_paint(cr);
   cairo_destroy(cr);
+  if (data->debug)
+    { 
+      g_printerr("Add save point\n");
+    }
   return 1;
 }
 
@@ -459,8 +465,7 @@ void annotate_redo()
 void annotate_undo_and_restore_pointer()
 {
   annotate_undo();
-  GdkScreen   *screen = gdk_display_get_default_screen (data->display);
-  gdk_display_warp_pointer (data->display, screen, data->savelist->xcursor, data->savelist->ycursor); 
+  gdk_display_warp_pointer (data->display, data->screen, data->savelist->xcursor, data->savelist->ycursor); 
 }
 
 
@@ -495,7 +500,6 @@ void annotate_show_annotation ()
 void annotate_release_pointer_grab()
 {
   ungrab_pointer(data->display,data->win);
-  
   gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);  
   gdk_flush ();
 }
@@ -1369,10 +1373,10 @@ void setup_app ()
 { 
   data->cr = NULL;
   data->display = gdk_display_get_default ();
-  GdkScreen   *screen = gdk_display_get_default_screen (data->display);
+  data->screen = gdk_display_get_default_screen (data->display);
 
-  data->width = gdk_screen_get_width (screen);
-  data->height = gdk_screen_get_height (screen);
+  data->width = gdk_screen_get_width (data->screen);
+  data->height = gdk_screen_get_height (data->screen);
 
   data->win = gtk_window_new (GTK_WINDOW_POPUP);
   gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);
