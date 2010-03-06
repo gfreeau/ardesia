@@ -334,68 +334,13 @@ on_toolsFiller_activate          (GtkToolButton   *toolbutton,
 }
 
 
-void disable_arrow()
-{
-  /* if single arrow is active release it */
-  GtkToggleToolButton* arrowToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonArrow"));
-  if (gtk_toggle_tool_button_get_active(arrowToolButton))
-    {
-      gtk_toggle_tool_button_set_active(arrowToolButton, FALSE); 
-    }
-}
-
-
-void disable_double_arrow()
-{
-  /* if double arrow is active release it */
-  GtkToggleToolButton* doubleArrowToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonDoubleArrow"));
-  if (gtk_toggle_tool_button_get_active(doubleArrowToolButton))
-    {
-      gtk_toggle_tool_button_set_active(doubleArrowToolButton, FALSE); 
-    }
-}
-
-
-void disable_text()
-{
-  /* if text is active release it */
-  GtkToggleToolButton* textToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonText"));
-  if (gtk_toggle_tool_button_get_active(textToolButton))
-    {
-      gtk_toggle_tool_button_set_active(textToolButton, FALSE); 
-      grab = TRUE;
-      text = FALSE;
-    }
-}
-
-
-void disable_eraser()
-{
-  /* if eraser is active release it */
-  GtkToggleToolButton* eraserToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonEraser"));
-  if (gtk_toggle_tool_button_get_active(eraserToolButton))
-    {
-      gtk_toggle_tool_button_set_active(eraserToolButton, FALSE); 
-      pencil = TRUE;
-    }
-}
-
-
 void on_toolsArrow_activate               (GtkToolButton   *toolbutton,
 				           gpointer         user_data)
 {
   grab = TRUE;
-  if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
-    {
-      disable_double_arrow();
-      disable_text();
-      disable_eraser();
-      arrow=1;
-    }
-  else
-    {
-      arrow=0;
-    }
+  text = FALSE;
+  pencil = TRUE;
+  arrow = 1;
 }
 
 
@@ -403,17 +348,9 @@ void on_toolsDoubleArrow_activate         (GtkToolButton   *toolbutton,
 					   gpointer         user_data)
 {
   grab = TRUE;
-  if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
-    {
-      disable_arrow();
-      disable_text();
-      disable_eraser();
-      arrow=2;
-    }
-  else
-    {
-      arrow=0;
-    }
+  text = FALSE;
+  pencil = TRUE;
+  arrow = 2;
 }
 
 
@@ -421,38 +358,30 @@ void
 on_toolsText_activate(GtkToolButton   *toolbutton,
 		      gpointer         user_data)
 {
-  if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
-    {
-      disable_arrow();
-      disable_double_arrow();
-      disable_eraser();
-      grab = TRUE;
-      text = TRUE;
-    }
-  else
-    {
-      grab = TRUE;
-      text = FALSE;
-    }
+  grab = TRUE;
+  text = TRUE;
+  arrow = 0;
 }
+
+void on_toolsPencil_activate              (GtkToolButton   *toolbutton,
+                                           gpointer         user_data)
+{
+      text = FALSE;
+      grab = TRUE;
+      pencil = TRUE;
+      arrow = 0;
+}
+
 
 void on_toolsEraser_activate              (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
-   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
-    {
-      disable_arrow();
-      disable_double_arrow();
-      disable_text();
+      text = FALSE;
       grab = TRUE;
       pencil = FALSE;
-    }
-  else
-    {
-      grab = TRUE;
-      pencil = TRUE;
-    }
+      arrow = 0;
 }
+
 
 void on_toolsVisible_activate             (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
