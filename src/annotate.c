@@ -398,13 +398,13 @@ void reset_cairo()
 
 
 /* Paint the context over the annotation window */
-void merge_context(cairo_t * cr)
+void merge_context(cairo_t * cr, int yoffset)
 {
   reset_cairo();
   cairo_new_path(data->cr);
   cairo_surface_t* source_surface = cairo_get_target(cr);
   cairo_set_operator(data->cr, CAIRO_OPERATOR_OVER);
-  cairo_set_source_surface (data->cr,  source_surface, 0, 0);
+  cairo_set_source_surface (data->cr,  source_surface, 0, yoffset);
   cairo_paint(data->cr);
   add_save_point();
 }

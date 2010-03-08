@@ -198,8 +198,7 @@ gboolean on_winMain_enter_notify_event(GtkWidget       *widget,
 {
   if (text)
     {
-      stop_text_widget();
-
+      //stop_text_widget();
     }
   return TRUE;
 }

@@ -90,6 +90,6 @@ void annotate_acquire_grab ();
 void annotate_clear_screen ();
 
 /* Paint the context over the annotation window */
-void merge_context(cairo_t * cr);
+void merge_context(cairo_t * cr, int yoffset);
 
 
