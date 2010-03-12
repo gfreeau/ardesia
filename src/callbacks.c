@@ -72,6 +72,9 @@ gboolean     pencil = TRUE;
 /* grab when leave */
 gboolean     grab = FALSE;
 
+/* Is the text inserction enabled */
+gboolean text = FALSE;
+
 /* selected color in RGBA format */
 gchar*       color = NULL;
 
@@ -93,7 +96,6 @@ int        arrow = 0;
 /* Default folder where store images and videos */
 char*       workspace_dir = NULL;
 
-gboolean text = FALSE;
 
 
 /* Called when close the program */
@@ -188,19 +190,6 @@ gboolean on_quit                          (GtkWidget       *widget,
                                            gpointer         user_data)
 {
   return quit();
-}
-
-
-/* When a mouse enter in window */
-gboolean on_winMain_enter_notify_event(GtkWidget       *widget,
-				       GdkEvent        *event,
-				       gpointer         user_data)
-{
-  if (text)
-    {
-      //stop_text_widget();
-    }
-  return TRUE;
 }
 
 
