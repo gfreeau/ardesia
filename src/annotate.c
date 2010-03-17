@@ -766,12 +766,12 @@ void annotate_select_tool (GdkDevice *device, guint state)
   guint req_buttons = 0, req_modifier = 0;
   guint i, j, success = 0;
   AnnotatePaintContext *context = NULL;
-  guchar *name;
+  gchar *name;
  
   if (device)
     {
       len = strlen (device->name);
-      name = (guchar*) g_strndup (device->name, len + 3);
+      name = g_strndup (device->name, len + 3);
       
       /* Extract Button/Modifiers from state (see GdkModifierType) */
       req_buttons = (state >> 8) & 31;
