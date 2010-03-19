@@ -102,7 +102,10 @@ void create_text_window(GtkWindow *parent)
 /* Move the pen cursor */
 void move_editor_cursor()
 {
-  cairo_move_to(text_cr, pos->x, pos->y);
+  if (text_cr)
+    {
+       cairo_move_to(text_cr, pos->x, pos->y);
+    }
 }
 
 
@@ -192,17 +195,21 @@ gboolean set_text_pointer(GtkWidget * window)
   GdkPixmap *pixmap = gdk_pixmap_new (NULL, width ,height, 1);
 
   cairo_t *text_pointer_cr = gdk_cairo_create(pixmap);
-  clear_cairo_context(text_pointer_cr);
   
-  cairo_set_line_cap (text_pointer_cr, CAIRO_LINE_CAP_ROUND);
-  cairo_set_line_join(text_pointer_cr, CAIRO_LINE_JOIN_ROUND); 
-  cairo_set_operator(text_pointer_cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_line_width(text_pointer_cr, text_pen_width);
-  cairo_set_source_color_from_string(text_pointer_cr, text_color);
-  cairo_rectangle(text_pointer_cr, 0,0, 5, height);  
+  if (text_pointer_cr)
+    {
+       clear_cairo_context(text_pointer_cr);
+  
+       cairo_set_line_cap (text_pointer_cr, CAIRO_LINE_CAP_ROUND);
+       cairo_set_line_join(text_pointer_cr, CAIRO_LINE_JOIN_ROUND); 
+       cairo_set_operator(text_pointer_cr, CAIRO_OPERATOR_SOURCE);
+       cairo_set_line_width(text_pointer_cr, text_pen_width);
+       cairo_set_source_color_from_string(text_pointer_cr, text_color);
+       cairo_rectangle(text_pointer_cr, 0,0, 5, height);  
 
-  cairo_stroke(text_pointer_cr);
-  
+       cairo_stroke(text_pointer_cr);
+     } 
+ 
   GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
   GdkColor *foreground_color_p = rgb_to_gdkcolor(text_color);
   if (text_cursor)
