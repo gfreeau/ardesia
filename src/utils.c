@@ -123,7 +123,10 @@ GdkColor* rgb_to_gdkcolor(char* rgb)
 /* Set the cairo surface color to transparent */
 void  cairo_set_transparent_color(cairo_t * cr)
 {
-  cairo_set_source_rgba (cr, 0, 0, 0, 0);
+  if (cr)
+    {
+      cairo_set_source_rgba (cr, 0, 0, 0, 0);
+    }
 }
 
 
@@ -144,9 +147,12 @@ void clear_cairo_context(cairo_t* cr)
 /* Set the cairo surface color to the RGBA string */
 void cairo_set_source_color_from_string( cairo_t * cr, char* color)
 {
-  int r,g,b,a;
-  sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-  cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
+ if (cr)
+   {
+     int r,g,b,a;
+     sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+     cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
+   }
 }
 
 

@@ -90,10 +90,7 @@ void create_text_window(GtkWindow *parent)
 {
   text_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_maximize(GTK_WINDOW(text_window));
-  //gtk_window_fullscreen(GTK_WINDOW(text_window));
-  //gtk_window_set_transient_for(GTK_WINDOW(text_window), parent);
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(text_window), TRUE);
-  //gtk_window_set_keep_above (GTK_WINDOW(text_window), TRUE);
   gtk_window_set_skip_pager_hint(GTK_WINDOW(text_window), TRUE);
   gtk_window_stick(GTK_WINDOW(text_window));
   gtk_window_set_decorated(GTK_WINDOW(text_window), FALSE);
@@ -226,8 +223,6 @@ gboolean set_text_pointer(GtkWidget * window)
 /* The windows has been configured  */
 static gboolean on_window_text_configure_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-
-
   return TRUE;
 }
 
@@ -236,18 +231,21 @@ static gboolean on_window_text_configure_event(GtkWidget *widget, GdkEventExpose
 void init(GtkWidget *win)
 {
   text_cr = gdk_cairo_create(win->window);
-     
-  cairo_set_operator(text_cr,CAIRO_OPERATOR_SOURCE);
-  cairo_set_transparent_color(text_cr);
-  cairo_paint(text_cr);
-  cairo_stroke(text_cr);   
- 
-  cairo_set_line_cap (text_cr, CAIRO_LINE_CAP_ROUND);
-  cairo_set_line_join(text_cr, CAIRO_LINE_JOIN_ROUND); 
-  cairo_set_operator(text_cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_line_width(text_cr, text_pen_width);
-  cairo_set_source_color_from_string(text_cr, text_color);
   
+  if (text_cr)
+    {
+      cairo_set_operator(text_cr,CAIRO_OPERATOR_SOURCE);
+      cairo_set_transparent_color(text_cr);
+      cairo_paint(text_cr);
+      cairo_stroke(text_cr);   
+ 
+      cairo_set_line_cap (text_cr, CAIRO_LINE_CAP_ROUND);
+      cairo_set_line_join(text_cr, CAIRO_LINE_JOIN_ROUND); 
+      cairo_set_operator(text_cr, CAIRO_OPERATOR_SOURCE);
+      cairo_set_line_width(text_cr, text_pen_width);
+      cairo_set_source_color_from_string(text_cr, text_color);
+    }  
+
   pos = g_malloc (sizeof(Pos));
   pos->x = text_pen_width;
   pos->y = text_pen_width;
@@ -264,29 +262,32 @@ static gboolean on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *e
       screen = gdk_display_get_default_screen (display);
       screen_width = gdk_screen_get_width (screen);
     }
-  int width, height;
-  gtk_window_get_size                 (GTK_WINDOW(widget),
-                                             
-				       &width,
-				       &height);
-   int x, y;
-   gtk_window_get_position             (GTK_WINDOW(widget),
-				       &x,
-				       &y);
-  if (screen_width==width)
+  if (widget)
     {
-      yoffset = y;
-  
-      init(widget);
+      int width, height;
+      gtk_window_get_size(GTK_WINDOW(widget), &width, &height);
+      int x, y;
+      gtk_window_get_position(GTK_WINDOW(widget), &x, &y);
+      if (screen_width==width)
+        {
+          yoffset = y;
+          init(widget);
        
-      /* This is a trick we must found the maximum height and text_pen_width of the font */
-      cairo_set_font_size (text_cr, text_pen_width * 2);
-      cairo_text_extents (text_cr, "|" , &extents);
-      max_font_height = extents.height;
-
-      grab_pointer(text_window, TEXT_MOUSE_EVENTS);
+          if (text_cr)
+            {
+              /* This is a trick we must found the maximum height and text_pen_width of the font */
+              cairo_set_font_size (text_cr, text_pen_width * 2);
+              cairo_text_extents (text_cr, "|" , &extents);
+              max_font_height = extents.height;
+            }
+          
+          if (text_window)
+            {
+              grab_pointer(text_window, TEXT_MOUSE_EVENTS);
+            }
   
-      set_text_pointer(widget);
+          set_text_pointer(widget);
+        }
     }
   return TRUE;
 }
@@ -298,11 +299,9 @@ gboolean press (GtkWidget *win,
                 gpointer user_data)
 {
   ungrab_pointer(display, win);
-   
   pos->x = ev->x;
   pos->y = ev->y;
   move_editor_cursor();
-      
   return TRUE;
 }
 
@@ -312,33 +311,33 @@ gboolean on_window_text_motion_notify_event (GtkWidget *win,
 					     GdkEventMotion *ev, 
 					     gpointer user_data)
 {
-
-  GtkWidget *bar = GTK_WIDGET(gtk_builder_get_object(gtkBuilder, "winMain"));
-  int x, y, width, height;
-  gtk_window_get_position             (GTK_WINDOW(bar),
-				       &x,
-				       &y);
-  gtk_window_get_size                 (GTK_WINDOW(bar),
-                                             
-				       &width,
-				       &height);
-
-  /* rectangle that contains the panel */
-  if ((ev->y>=y)&&(ev->y<y+height))
+  if (!ev)
     {
-      if ((ev->x>=x)&&(ev->x<x+width))
-	{
-	  stop_text_widget();
-	}
+      return FALSE;
     }
+  GtkWidget *bar = GTK_WIDGET(gtk_builder_get_object(gtkBuilder, "winMain"));
+  if (bar)
+    {
+      int x, y, width, height;
+      gtk_window_get_position(GTK_WINDOW(bar), &x, &y);
+      gtk_window_get_size(GTK_WINDOW(bar), &width, &height);
+      /* rectangle that contains the panel */
+      if ((ev->y>=y)&&(ev->y<y+height))
+        {
+           if ((ev->x>=x)&&(ev->x<x+width))
+	     {
+	        stop_text_widget();
+	     }
+        }
+    }
+
+  
   return TRUE;;
 }
 
-/* 
-   Start the widget for the text insertion */
+/* Start the widget for the text insertion */
 void start_text_widget(GtkWindow *parent, char* color, int tickness)
-{
-  
+{ 
   text_pen_width = tickness;
   text_color = color;
   create_text_window(parent);

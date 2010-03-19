@@ -76,11 +76,13 @@ static void put_background_above_annotations()
 static gboolean on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *cr = gdk_cairo_create(widget->window);
-  cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-  gdk_cairo_set_source_pixbuf(cr, pixbuf, 0.0, 0.0);
-
-  cairo_paint(cr);
-  cairo_destroy(cr);    
+  if (cr)
+  {
+    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+    gdk_cairo_set_source_pixbuf(cr, pixbuf, 0.0, 0.0);
+    cairo_paint(cr);
+    cairo_destroy(cr);
+  }    
   put_background_above_annotations();
   return TRUE;
 }
@@ -107,14 +109,15 @@ void clear_background()
 static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *cr = gdk_cairo_create(widget->window);
-  cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-
-  int r,g,b,a;
-  sscanf (background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-  cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
-
-  cairo_paint(cr);
-  cairo_destroy(cr);    
+  if (cr)
+    {
+      cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+      int r,g,b,a;
+      sscanf (background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+      cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
+      cairo_paint(cr);
+      cairo_destroy(cr);
+    }    
   put_background_above_annotations();
   return TRUE;
 }
