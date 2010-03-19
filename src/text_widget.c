@@ -318,7 +318,9 @@ gboolean on_window_text_motion_notify_event (GtkWidget *win,
 					     GdkEventMotion *ev, 
 					     gpointer user_data)
 {
-  if (!ev)
+  GdkModifierType state = (GdkModifierType) ev->state;
+  /* only button1 allowed and valid event */
+  if ((!ev)||(!(state & GDK_BUTTON1_MASK)))
     {
       return FALSE;
     }
