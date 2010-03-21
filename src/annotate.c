@@ -317,10 +317,6 @@ gfloat annotate_get_arrow_direction (gboolean revert)
 /* Color selector; if eraser than select the transparent color else alloc the right color */ 
 void select_color()
 {
-  if (!data->cr)
-    {
-       return;
-    }
   if (data->cur_context)
     {
       if (!(data->cur_context->type == ANNOTATE_ERASER))
@@ -344,12 +340,8 @@ void select_color()
 
 
 /* Add a save point */
-void add_save_point ()
+gint add_save_point ()
 {
-  if (!data->cr)
-    {
-       return;
-    }
   AnnotateSave *save = g_malloc(sizeof(AnnotateSave));
   save->previous  = NULL;
   save->next  = NULL;
@@ -379,19 +371,17 @@ void add_save_point ()
     { 
       g_printerr("Add save point\n");
     }
+  return 1;
 }
 
 
 /* Configure pen option for cairo context */
 void configure_pen_options()
 {
-  if (data->cr)
-    {
-       cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
-       cairo_set_line_join(data->cr, CAIRO_LINE_JOIN_ROUND); 
-       cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
-       cairo_set_line_width(data->cr, data->cur_context->width);
-    }
+  cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
+  cairo_set_line_join(data->cr, CAIRO_LINE_JOIN_ROUND); 
+  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_line_width(data->cr, data->cur_context->width);
   select_color();  
 }
 
@@ -403,22 +393,20 @@ void reset_cairo()
     {
       cairo_new_path(data->cr);
     }
+  configure_pen_options();  
 }
 
 
 /* Paint the context over the annotation window */
 void merge_context(cairo_t * cr, int yoffset)
 {
-  if (data->cr)
-  {
-      reset_cairo();
-      cairo_new_path(data->cr);
-      cairo_surface_t* source_surface = cairo_get_target(cr);
-      cairo_set_operator(data->cr, CAIRO_OPERATOR_OVER);
-      cairo_set_source_surface (data->cr,  source_surface, 0, yoffset);
-      cairo_paint(data->cr);
-      add_save_point();
-  }
+  reset_cairo();
+  cairo_new_path(data->cr);
+  cairo_surface_t* source_surface = cairo_get_target(cr);
+  cairo_set_operator(data->cr, CAIRO_OPERATOR_OVER);
+  cairo_set_source_surface (data->cr,  source_surface, 0, yoffset);
+  cairo_paint(data->cr);
+  add_save_point();
 }
 
 
@@ -765,10 +753,7 @@ void annotate_clear_screen ()
       g_printerr("Clear screen\n");
     }
   reset_cairo();
-  if (data->cr)
-    {
-      clear_cairo_context(data->cr);
-    }
+  clear_cairo_context(data->cr);
   add_save_point();
   data->painted = TRUE;
 }
@@ -845,11 +830,6 @@ void annotate_select_tool (GdkDevice *device, guint state)
 void annotate_draw_line (gint x1, gint y1,
 			 gint x2, gint y2, gboolean stroke)
 {
-  if (!(data->cr))
-    {
-       data->painted = FALSE;
-       return;
-    }
   if (!stroke)
     {
       cairo_line_to(data->cr, x2, y2);
@@ -867,11 +847,6 @@ void annotate_draw_line (gint x1, gint y1,
 /* Draw an arrow using some polygons */
 void annotate_draw_arrow (gboolean revert)
 {
-  if (!(data->cr))
-    {
-       data->painted = FALSE;
-       return;
-    }
   if (data->debug)
     {
       g_printerr("Draw arrow: ");
@@ -1027,11 +1002,6 @@ gboolean paint (GtkWidget *win,
                 GdkEventButton *ev, 
                 gpointer user_data)
 { 
-  if (!ev)
-    {
-       return FALSE;
-    }
-  configure_pen_options();  
   unhide_cursor();  
   annotate_coord_list_free();
   /* only button1 allowed */
@@ -1041,10 +1011,7 @@ gboolean paint (GtkWidget *win,
     }  
 
   reset_cairo();
-  if (data->cr)
-    {
-       cairo_move_to(data->cr,ev->x,ev->y);
-    }
+  cairo_move_to(data->cr,ev->x,ev->y);
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
     {
@@ -1066,11 +1033,6 @@ gboolean paintto (GtkWidget *win,
                   GdkEventMotion *ev, 
                   gpointer user_data)
 {
-  if (!ev)
-    {
-       return FALSE;
-    }
-  configure_pen_options();  
   unhide_cursor();  
   if (in_unlock_area(ev->x,ev->y))
     /* point is in the ardesia bar */
@@ -1100,10 +1062,7 @@ gboolean paintto (GtkWidget *win,
       if (width!=data->maxwidth)
         {
           data->maxwidth = width; 
-          if (data->cr)
-            {
-               cairo_set_line_width(data->cr, data->maxwidth);
-            }
+          cairo_set_line_width(data->cr, data->maxwidth);
         }
     }
 
@@ -1125,14 +1084,11 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
     {
       g_printerr("Draw ellipse\n");
     }
-  if (data->cr)
-    {
-       cairo_save(data->cr);
-       cairo_translate (data->cr, x + width / 2., y + height / 2.);
-       cairo_scale (data->cr, width / 2., height / 2.);
-       cairo_arc (data->cr, 0., 0., 1., 0., 2 * M_PI);
-       cairo_restore(data->cr);
-    }
+  cairo_save(data->cr);
+  cairo_translate (data->cr, x + width / 2., y + height / 2.);
+  cairo_scale (data->cr, width / 2., height / 2.);
+  cairo_arc (data->cr, 0., 0., 1., 0., 2 * M_PI);
+  cairo_restore(data->cr);
   select_color();  
 }
 
@@ -1177,7 +1133,7 @@ gboolean rectify()
   annotate_coord_list_free();
   data->coordlist = outptr;
   draw_point_list(outptr);     
-  if ((close_path)&&(data->cr))
+  if (close_path)
     {
       cairo_close_path(data->cr);   
     }
@@ -1248,10 +1204,6 @@ void annotate_fill()
 /* This shots when the button is realeased */
 gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 {
-  if (!ev)
-    {
-       return FALSE;
-    }
   if (data->debug)
     {
       g_printerr("Device '%s': Button %i Up at (x,y)=(%.2f : %.2f)\n",
@@ -1326,10 +1278,7 @@ gboolean paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 
 	}
     } 
-  if (data->cr)
-    {
-       cairo_stroke_preserve(data->cr);
-    }
+  cairo_stroke_preserve(data->cr);
   add_save_point();
   hide_cursor();  
  
@@ -1359,11 +1308,8 @@ gboolean event_expose (GtkWidget *widget,
       transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
 					   data->height, -1);
       cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
-      if (transparent_cr)
-        {
-           clear_cairo_context(transparent_cr);
-           cairo_destroy(transparent_cr);
-        }
+      clear_cairo_context(transparent_cr);
+      cairo_destroy(transparent_cr);
     }
   restore_surface();
   return TRUE;
