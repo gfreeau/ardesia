@@ -96,6 +96,7 @@ void create_text_window(GtkWindow *parent)
   gtk_window_set_decorated(GTK_WINDOW(text_window), FALSE);
   gtk_widget_set_app_paintable(text_window, TRUE);
   gtk_widget_set_double_buffered(text_window, FALSE);
+  gtk_window_set_transient_for(text_window, get_annotation_window() );
 }
 
 
@@ -318,12 +319,6 @@ gboolean on_window_text_motion_notify_event (GtkWidget *win,
 					     GdkEventMotion *ev, 
 					     gpointer user_data)
 {
-  GdkModifierType state = (GdkModifierType) ev->state;
-  /* only button1 allowed and valid event */
-  if ((!ev)||(!(state & GDK_BUTTON1_MASK)))
-    {
-      return FALSE;
-    }
   GtkWidget *bar = GTK_WIDGET(gtk_builder_get_object(gtkBuilder, "winMain"));
   if (bar)
     {

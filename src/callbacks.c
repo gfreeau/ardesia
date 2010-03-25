@@ -231,13 +231,22 @@ gboolean on_info                         (GtkToolButton   *toolbutton,
 }
 
 
-
 /* Called when leave the window */
 gboolean on_winMain_leave_notify_event   (GtkWidget       *widget,
 					  GdkEvent        *event,
 					  gpointer         user_data)
 {
   start_tool();
+  return TRUE;
+}
+
+
+/* Called when enter the window */
+gboolean on_winMain_enter_notify_event   (GtkWidget       *widget,
+					  GdkEvent        *event,
+					  gpointer         user_data)
+{
+  stop_text_widget();
   return TRUE;
 }
 
