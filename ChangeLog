@@ -1,0 +1,69 @@
+-----------
+ ChangeLog
+-----------
+
+ - Addded the text insertion
+
+ - Added getopt support
+ 
+ - Added electronic whiteboard support 
+
+ - Shape recognition of regular poligons
+ 
+ - Support for tablet
+ 
+ - Add filler tool
+
+ - Add broken line and line smoothing
+
+ - Add shape recognition
+
+ - Added gettext support
+
+ - Draw Text
+
+ - Redo/Undo feature
+
+ - Dynamic change of eraser cursor size
+   depending on the selected width
+
+ - New pen cursor
+
+ - Add preference dialog
+
+ - Add file selector for record
+
+ - Add file selector for save
+
+ - Add the png file annotation
+
+ - Add colored pen cursor
+
+ - Fix a color selector misbehaviour
+
+ - Add button to clear all the screen
+
+ - Adjusted arrow
+ 
+ - Add bidirectional arrow 
+ 
+ - Debug system 
+
+ - On the fly encoding now is done with recordmydesktop
+
+ - Make screencast
+ 
+ - Make Screenshot
+ 
+ - Color selector
+
+ - Width slide seletor
+
+ - Draw arrow
+
+ - Interface written using the new glade format "gtk builder"; 
+   libglade is not needed for the runtime
+
+===
+EOF
+==

@@ -1,0 +1,20 @@
+Source: ardesia
+Section: Utilities
+Priority: extra
+Maintainer: Pilolli Pietro <pilolli@fbk.eu>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.1
+Homepage:
+
+Package: ardesia
+Architecture: any
+Depends:  libatk1.0-0 (>= 1.9.0), libc6 (>= 2.3.4-1), libcairo2 (>= 1.0.2), libfontconfig1 (>= 2.3.0), libglib2.0-0 (>= 2.8.0), libgtk2.0-0 (>= 2.8.0), libpango1.0-0 (>= 1.10.1), libx11-6, libxcursor1 (>> 1.1.2), libxext6, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libgsl0ldbl, recordmydesktop
+Description: Gtk interface to make annotations on the screen.
+ Ardesia enables you to make coloured free-hand annotations on your screen and record it.
+ .
+ This is especially useful when making presentations, to highlight
+ things or point out things of interest.
+ .
+ Ardesia is XInput-Aware, so if you have a graphic tablet or a whiteboard
+ you can draw lines with different strength, select color, erase things, etc.
+

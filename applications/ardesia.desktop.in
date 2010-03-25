@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=0.2
+Type=Application
+Name=Ardesia
+GenericName=Presentation helper
+Comment=Annotate on the desktop screen.
+Exec=ardesia %U
+TryExec=ardesia
+Icon=ardesia.png
+Terminal=false
+Categories=GNOME;GTK;Utility;
+StartupNotify=true
+MimeType=image/png,image/svg+xml;
+Encoding=UTF-8

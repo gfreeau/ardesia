@@ -1,1 +1,124 @@
-Please refer to the toplevel README
+========================================================
+   ##    #####   #####   ######   ####      #      ##
+  #  #   #    #  #    #  #       #          #     #  #
+ #    #  #    #  #    #  #####    ####      #    #    #
+ ######  #####   #    #  #            #     #    ######
+ #    #  #   #   #    #  #       #    #     #    #    #
+ #    #  #    #  #####   ######   ####      #    #    #
+========================================================
+
+
+--------------
+ Introduction
+--------------
+
+Ardesia is a small tool to make annotations sketching 
+on the screen.
+
+Ardesia is XInput-Aware, so if you have a mouse, a graphic tablet, 
+a touch screen or a whiteboard, you can draw lines with different strength,
+select color, erase things and draw arrows. 
+You can free-hand draw geometrical shapes using the shape recognizer, 
+insert text with the keyboard and highlight screen areas. 
+You can draw upon the desktop or select an image as background.
+
+Ardesia has been designed with the Glade/GtkBuilder tool
+and it use to draw the cairo graphics library.
+
+For more info about annotate and the new feature,
+please read the NEWS file located in the current folder.
+
+
+---------
+ License
+---------
+
+This Program is distributed under the Gnu General Public License. See
+the file COPYING for details.
+
+
+--------------
+ Installation
+--------------
+
+Please read the INSTALL file located on the current folder
+
+
+----------------------
+ Runtime Requirements
+----------------------
+
+In order to run Ardesia you need to enable the Compiz composite manager.
+To use the recording feature you must install the recordmydesktop 
+package.
+If you don't use the keyboard, I suggest you to use the "onboard" virtual
+keyboard or the "cellwriter" handwriting recognizer.
+
+-------
+ Usage
+-------
+
+Start Ardesia clicking in the menu on Applications/Graphics/Ardesia
+
+You can annotate a png file on your desktop right clicking it
+and selecting the "open with Ardesia" item
+
+You can found some suitable backgrounds png examples under the folder
+backgrounds:
+
+e.g. /usr/local/share/ardesia/backgrounds/
+
+Now you can select colors and annotate the screen.
+If you want unlock the mouse and came back to the normal mouse use
+point upon the ardesia bar or point on the top-left corner of your screen. 
+
+The default behaviour of ardesia is appear in the low zone of the screen
+If you want modify this launch ardesia from command line in this way:
+
+# ardesia --gravity north
+
+With Ardesia you can annotate image files such as png, jpeg and svg.
+
+For example with this command you will have a lined paper 
+similar to notebook:
+
+# ardesia /usr/local/share/ardesia/backgrounds/notebook_paper.png
+
+Here it follows a complete description of the options for the Ardesia:
+
+Usage: ardesia [options] [filename]
+
+options:
+  --verbose,	-v		Enable verbosity to see the log
+  --gravity,	-g		Set the gravity of the bar. Possible values are:
+  				north
+  				south
+  --help,   	-h		Shows the help screen
+
+filename:	  		The file containig the image to be be used as background
+
+You can even select different background images and colors using the preference dialog.
+
+
+-------
+ Info
+-------
+
+  * To get info about the tool, please contact:
+
+      pilolli@fbk.eu
+
+  * To report bugs, please contact:
+
+      alpha@paranoici.org
+
+
+Have fun!
+
+===
+EOF
+===
+
+
+
+

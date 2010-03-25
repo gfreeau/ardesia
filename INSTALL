@@ -1,1 +1,82 @@
-/usr/share/automake-1.11/INSTALL
+-------
+ Build
+-------
+
+The build use the autotools system
+
+The compilation requires the following packages:
+
+- gcc
+- make
+- automake
+- autoconf
+- libtool
+- libgtk2.0-0 > 2.14
+- libgtk2.0-dev > 2.14
+- libatk1.0-0
+- libatk1.0-dev
+- libx11-6
+- libx11-dev
+- libpng12-0
+- libpng12-dev
+- libglib2.0-0
+- libglib2.0-dev
+- libgconf2-4
+- libgconf2-dev
+- libfontconfig1
+- libfontconfig1-dev
+- libfreetype6
+- libfreetype6-dev
+- libgsl0ldbl
+- libgsl0-dev
+- libc6
+- libc6-dev
+
+If you are using ubuntu karmic you can simply run this command: 
+
+  # sudo apt-get install gcc make automake autoconf libtool libgtk2.0-dev \
+    libatk1.0-dev libx11-dev libpng12-dev libglib2.0-dev libgconf2-dev \ 
+    libfontconfig1-dev libfreetype6-dev libgsl0-dev libc6-dev
+
+You can compile the tool in the standard way:
+
+  # ./configure
+  # make
+  # sudo make install
+
+
+--------------------------------
+ Make the DEBIAN/UBUNTU package
+--------------------------------
+
+The creation of the packgage requires the following
+packages:
+
+- devscripts
+
+To build the deb package run:
+
+  # make deb
+
+the deb file ../ardesia_xxx-debian-x_arch.deb
+will be created
+
+
+-------
+ Info
+-------
+
+  * To get info about the tool, please contact:
+
+      pilolli@fbk.eu
+
+  * To report bugs, please contact:
+
+      alpha@paranoici.org
+
+
+Enjoy!
+
+===
+EOF
+===

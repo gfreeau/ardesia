@@ -1,20 +1,23 @@
 /* 
- * Ardesia -- a program for painting on the screen 
+ * Ardesia -- a program for painting on the screen
+ * with this program you can play, draw, learn and teach
+ * This program has been written such as a freedom sonet
+ * We believe in the freedom and in the freedom of education
+ *
  * Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * Ardesia is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * 
+ * Ardesia is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -28,8 +31,10 @@
 #include "stdio.h"
 #include <string.h> 
 #include "background.h"
-#include "interface.h"
 #include "utils.h"
+
+#define PREFERENCE_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/preference_dialog.ui"
+#define UI_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/backgrounds"
 
 /* Preference dialog */
 GtkBuilder*  preferenceDialogGtkBuilder = NULL;
@@ -155,11 +160,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   preferenceDialogGtkBuilder = gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
-  gchar* name = "preferenceDialog.glade";
-  gchar* ui_location =  (gchar *) g_malloc((strlen(installation_location) + strlen(name) + 1 )* sizeof(gchar));
-  sprintf(ui_location, "%s%s", installation_location, name);
-  gtk_builder_add_from_file(preferenceDialogGtkBuilder, ui_location, NULL);
-  g_free(ui_location);
+  gtk_builder_add_from_file(preferenceDialogGtkBuilder, PREFERENCE_UI_FILE, NULL);
  
   /* Fill the window by the gtk builder xml */
   preferenceDialog = GTK_WIDGET(gtk_builder_get_object(preferenceDialogGtkBuilder,"preferences"));
@@ -168,11 +169,8 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   
   GtkFileChooser* chooser = GTK_FILE_CHOOSER(gtk_builder_get_object(preferenceDialogGtkBuilder,"imageChooserButton"));
   gchar* default_dir_name = "backgrounds";
-  gchar* default_dir = g_malloc((strlen(installation_location) + strlen(default_dir_name) + 2 )* sizeof(gchar));
-  sprintf(default_dir, "%s%s", installation_location, default_dir_name);
 
-  gtk_file_chooser_set_current_folder(chooser, default_dir);
-  g_free(default_dir); 
+  gtk_file_chooser_set_current_folder(chooser, UI_FOLDER);
  
   GtkFileFilter *filter = gtk_file_filter_new ();
   gtk_file_filter_set_name (filter, "PNG and JPEG");

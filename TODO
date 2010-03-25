@@ -1,0 +1,34 @@
+======================================
+   ####### ####### ######  #######
+      #    #     # #     # #     #
+      #    #     # #     # #     #
+      #    #     # #     # #     #
+      #    #     # #     # #     #
+      #    #     # #     # #     #
+      #    ####### ######  #######
+======================================
+
+- Documentation
+  - Create video tutorial
+
+- Code review
+  - Undo-redo using svg file
+
+- Usability
+  - specify the default file name 
+    and the default folder name used for the sceenshot 
+  - specify the default file name 
+    and the default folder name used for the screencast
+  - Move or decide the bar position
+
+- Possible future features
+  - Svg export 
+  - Pdf export 
+  - Mini video player with play-pause, backward and forward
+  - Realtime streaming
+  - Printer support
+  - Multi pointer support using the xinput2 libraries
+
+===
+EOF
+===

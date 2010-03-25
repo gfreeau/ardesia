@@ -6,42 +6,69 @@
  *
  * Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * Ardesia is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * 
+ * Ardesia is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdio.h>
+
+#include <config.h>
+
+#include <gtk/gtk.h>
+#include "stdlib.h"
 
 
 /*
- * Initial main.c.
+ * Standard gettext macros.
  */
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
 #endif
 
-#include <gtk/gtk.h>
 
+
+#include "callbacks.h"
+#include <X11/Xutil.h>
 #include "annotate.h"
-#include "interface.h"
 #include "stdlib.h"
 #include "string.h"
 #include "unistd.h"
-#include "gettext.h"
 #include "getopt.h"
 
-#include <X11/Xutil.h>
+
+/* For testing propose use the local (not installed) ui file */
+#define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.ui"
+/* #define UI_FILE "src/ardesia.ui" */
 
 int NORTH=1;
 int SOUTH=2;
@@ -49,6 +76,7 @@ int SOUTH=2;
 /* space from border in pixel */
 int SPACE_FROM_BORDER = 25;
 
+GtkBuilder *gtkBuilder;
 
 typedef struct
 {
@@ -224,71 +252,90 @@ CommandLine* parse_options(int argc, char *argv[])
   return commandline;
 }
 
-/* 
- * The main entry of the program;
- * not all the koders 
- * start to read the code by here 
- * a lot of 
- * are only patchers 
- * bad merchants
- * hopeless 
- * and without any horizon;
- * avoid to 
- * stay closed to 
- * this kind of people
- * if you are not immune from 
- * the enemy that 
- * tains the world: 
- * the slavery
- */
-int main (int argc, char *argv[])
+/* Set the defult width of the pen line */
+void setInitialWidth(int val)
 {
+  GtkWidget* widthWidget = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thickScale"));
+  GtkHScale* hScale = (GtkHScale *) widthWidget;
+  gtk_range_set_value(&hScale->scale.range, val);
+}
+
+
+GtkWidget*
+create_window (void)
+{
+	GtkWidget *window;
+	
+	GError* error = NULL;
+
+	gtkBuilder = gtk_builder_new ();
+	if (!gtk_builder_add_from_file (gtkBuilder, UI_FILE, &error))
+	{
+		g_warning ("Couldn't load builder file: %s", error->message);
+		g_error_free (error);
+	}
+
+	/* This is important */
+	gtk_builder_connect_signals (gtkBuilder, NULL);
+	window = GTK_WIDGET (gtk_builder_get_object (gtkBuilder, "winMain"));
+    /* Set the width to 15 in the thick scale */
+    setInitialWidth(15);
+
+	return window;
+}
+
+
+int
+main (int argc, char *argv[])
+{
+	GtkWidget *ardesiaBarWindow ;
+
 
 #ifdef ENABLE_NLS
-  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
-  bind_textdomain_codeset (PACKAGE, "UTF-8");
-  textdomain (PACKAGE);
+	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
 #endif
- 
-  gtk_set_locale ();
-  gtk_init (&argc, &argv);
-  check_composite();
-  
-  /*
-   * The following code create one of each component
-   * (except popup menus), just so that you see something after building
-   * the project. Delete any components that you don't want shown initially.
-   */
-  GtkWidget *ardesiaBarWindow = create_mainWindow ();
-  int width;
-  int height;
-  gtk_window_get_size (GTK_WINDOW(ardesiaBarWindow) , &width, &height);
 
-  int x, y;
 
-  CommandLine* commandline = parse_options(argc, argv);
-  
-  /* calculate_initial_position the window in the desired position */
-  if (calculate_initial_position(ardesiaBarWindow,&x,&y,width,height,commandline->position) < 0)
-    {
-      exit(0);
-    }
-  gtk_window_move(GTK_WINDOW(ardesiaBarWindow),x,y);  
-  
-  /** Init annotate */
-  annotate_init(x, y, width, height, commandline->debug, commandline->backgroundimage); 
- 
-  GtkWindow* annotation_window = get_annotation_window();  
-  if (annotation_window)
-    {
-      gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), annotation_window );
-    }
+	gtk_set_locale ();
+	gtk_init (&argc, &argv);
 
-  gtk_widget_show (ardesiaBarWindow);
-  
-  gtk_main ();
- 
-  gtk_widget_destroy(ardesiaBarWindow); 
+	check_composite();
 
-  return 0;
+	ardesiaBarWindow = create_window ();
+	/*
+	 * The following code create one of each component
+	 * (except popup menus), just so that you see something after building
+	 * the project. Delete any components that you don't want shown initially.
+	 */
+	int width;
+	int height;
+	gtk_window_get_size (GTK_WINDOW(ardesiaBarWindow) , &width, &height);
+
+	int x, y;
+
+	CommandLine* commandline = parse_options(argc, argv);
+
+	/* calculate_initial_position the window in the desired position */
+	if (calculate_initial_position(ardesiaBarWindow,&x,&y,width,height,commandline->position) < 0)
+	{
+		exit(0);
+	}
+	gtk_window_move(GTK_WINDOW(ardesiaBarWindow),x,y);  
+
+	/** Init annotate */
+	annotate_init(x, y, width, height, commandline->debug, commandline->backgroundimage); 
+
+	GtkWindow* annotation_window = get_annotation_window();  
+	if (annotation_window)
+	{
+		gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), annotation_window );
+	}
+
+	gtk_widget_show (ardesiaBarWindow);
+
+	gtk_main ();
+    g_object_unref (gtkBuilder);	
+	return 0;
 }

@@ -1,49 +1,54 @@
 ## Process this file with automake to produce Makefile.in
+## Created by Anjuta
 
 SUBDIRS = src po
 
-EXTRA_DIST = \
-	autogen.sh 
+ardesiadocdir = ${prefix}/doc/ardesia
+ardesiadoc_DATA = \
+	README\
+	COPYING\
+	AUTHORS\
+	ChangeLog\
+	INSTALL\
+	NEWS
 
-install-data-local:
-	@$(NORMAL_INSTALL)
-	if test -d $(srcdir)/pixmaps; then \
-	  $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/pixmaps; \
-	  for pixmap in $(srcdir)/pixmaps/*; do \
-	    if test -f $$pixmap; then \
-	      $(INSTALL_DATA) $$pixmap $(DESTDIR)$(pkgdatadir)/pixmaps; \
-	    fi \
-	  done \
-	fi
-	if test -d $(srcdir)/backgrounds; then \
-          $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/backgrounds; \
-          for background in $(srcdir)/backgrounds/*; do \
-            if test -f $$background; then \
-              $(INSTALL_DATA) $$background $(DESTDIR)$(pkgdatadir)/backgrounds; \
-            fi \
-          done \
-        fi  
-	cp -p src/ardesia.glade $(DESTDIR)$(pkgdatadir); 
-	cp -p src/preferenceDialog.glade $(DESTDIR)$(pkgdatadir); 
-	cp -p src/infoDialog.glade $(DESTDIR)$(pkgdatadir); 
+desktopdir = $(datadir)/applications
+desktop_in_files = applications/ardesia.desktop.in
+desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
+@INTLTOOL_DESKTOP_RULE@
 
-dist-hook:
-	if test -d pixmaps; then \
-	  mkdir $(distdir)/pixmaps; \
-	  for pixmap in pixmaps/*; do \
-	    if test -f $$pixmap; then \
-	      cp -p $$pixmap $(distdir)/pixmaps; \
-	    fi \
-	  done \
-	fi 
-	if test -d backgrounds; then \
-          mkdir $(distdir)/backgrounds; \
-          for background in backgrounds/*; do \
-            if test -f $$background; then \
-              cp -p $$background $(distdir)/backgrounds; \
-            fi \
-          done \
-        fi 
-	cp -p src/ardesia.glade $(DESTDIR)$(pkgdatadir); 
-	cp -p src/preferenceDialog.glade $(DESTDIR)$(pkgdatadir); 
-	cp -p src/infoDialog.glade $(DESTDIR)$(pkgdatadir); 
+pixmapdir = $(datadir)/pixmaps
+pixmap_DATA = pixmaps/ardesia.png
+
+INTLTOOL_FILES = intltool-extract.in \
+	intltool-merge.in \
+	intltool-update.in
+
+EXTRA_DIST = $(ardesiadoc_DATA) \
+	$(INTLTOOL_FILES)
+
+DISTCLEANFILES = intltool-extract \
+	intltool-merge \
+	intltool-update \
+	po/.intltool-merge-cache
+
+deb:
+	debuild -us -uc -b
+
+clean:
+	@for i in $(SUBDIRS); do \
+        echo "Clearing in $$i..."; \
+        (cd $$i; $(MAKE) clean); done
+	rm -f  applications/ardesia.desktop
+	rm -fr debian/tmp
+	rm -fr debian/files
+	rm -fr debian/ardesia
+	rm -f  debian/debhelper.log
+	rm -fr debian/substvars
+	rm -f  ardesia/config.log
+
+# Remove doc directory on uninstall
+uninstall-local:
+	rm -fr $(ardesiadocdir)
+	rm -fr $(uidir)
+	rm -fr $(datadir)/ardesia

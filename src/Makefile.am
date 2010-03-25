@@ -1,30 +1,70 @@
 ## Process this file with automake to produce Makefile.in
 
-AM_CFLAGS=-export-dynamic -Wall
+## Created by Anjuta
 
+uidir = $(datadir)/ardesia/ui
+uipixmapsdir = $(uidir)/pixmaps
+uibackgroundsdir = $(uidir)/backgrounds
+ui_DATA = ardesia.ui \ 
+	preference_dialog.ui \
+	info_dialog.ui
 
-INCLUDES = \
-	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
+AM_CPPFLAGS = \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
-	@PACKAGE_CFLAGS@
+	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
+	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
+	$(ARDESIA_CFLAGS)
+
+AM_CFLAGS =\
+	 -Wall\
+	 -g
 
 bin_PROGRAMS = ardesia
 
 ardesia_SOURCES = \
-        background.c background.h\
-        broken.c broken.h\
-        bezier_spline.c bezier_spline.h\
-        annotate.c annotate.h\
-	main.c \
-	interface.c interface.h \
-        utils.c utils.h\
-        saver.c saver.h\
-        color_selector.c color_selector.h\
-        preference_dialog.c preference_dialog.h\
-        text_widget.c text_widget.h\
-        info_dialog.c info_dialog.h\
-        recorder.c recorder.h\
-	callbacks.c
+	callbacks.c \
+	callbacks.h \
+	background.c \
+	background.h \
+        broken.c \
+	broken.h \
+        bezier_spline.c \
+	bezier_spline.h \
+        annotate.c \
+	annotate.h \
+        utils.c \
+	utils.h \
+        saver.c \
+	saver.h \
+        color_selector.c \
+	color_selector.h \
+        preference_dialog.c \
+	preference_dialog.h \
+        text_widget.c \
+	text_widget.h \
+        info_dialog.c \
+	info_dialog.h \
+        recorder.c \
+	recorder.h \
+	main.c
 
-ardesia_LDADD = @PACKAGE_LIBS@ $(INTLLIBS)
 
+
+ardesia_LDFLAGS = \
+	-Wl,--export-dynamic
+
+ardesia_LDADD = $(ARDESIA_LIBS)
+
+EXTRA_DIST = $(ui_DATA)
+
+install-data-local:
+	mkdir -p $(uipixmapsdir) 
+	cp -r pixmaps/* $(uipixmapsdir) 
+	mkdir -p $(uibackgroundsdir) 
+	cp -r backgrounds/* $(uibackgroundsdir) 
+
+# Remove ui directory on uninstall
+uninstall-local:
+	rm -fr $(uipixmapsdir) 
+	rm -fr $(uibackgroundsdir) 
+	
