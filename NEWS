@@ -1,0 +1,102 @@
+=================================
+ #     # ####### #     #  #####
+ ##    # #       #  #  # #     #
+ # #   # #       #  #  # #
+ #  #  # #####   #  #  #  #####
+ #   # # #       #  #  #       #
+ #    ## #       #  #  # #     #
+ #     # #######  ## ##   #####
+=================================
+
+
+=================
+  RELEASE NOTES
+=================
+
+-------------
+ ardesia 0.3
+-------------
+
+Features:
+- using getopt as Unix standard for the command line parsing
+- added info button with author info and license agreement
+  (issue 11)
+- added the verbosity option to trace the tool
+- undo/redo using vector graphics instead of raw images
+- added electronic whiteboard support
+
+Bug fix:
+- fill close path with or within the highlighter
+- fix the behaviour of recoreder if the recordmydesktop tool
+  is missed (issue 9)
+- solved some memory leaks
+
+Usability:
+- better user interface
+- better arrow painting
+- added unlock button
+- increase the painting performance
+- enanchment in the shape recognizer
+- Dynamic change of eraser and pen cursor 
+  depending on the selected width
+- hide the cursor after a paint to avoid that the cursor 
+  overlap the annotations
+- lighter recording using subsampling; this allow to have 
+  a good streamable video for busier machines too
+- Added tablet support
+- Added text insertion using keyboard
+- Added text insertion using external text input program
+  This feature is tested using
+  - the "onboard" virtual keyboard 
+  - the "cellwriter" handwriting recognizer
+
+-------------
+ ardesia 0.2
+-------------
+
+The first public stable realease rewritten in C from scratch
+
+Dependencies:
+  - libgtk-2 > 2.14; interface rewritten using 
+    the new "gtk builder" glade format
+  - recordmydesktop used at runtime for the on the fly recording
+
+Usability:
+  - Multiple language support
+  - English and Italian translations
+  - Added the color selector dialog
+  - Added a button to clear all the screen
+  - New pen and eraser cursor
+  - Add the preference dialog that allow to change the background
+
+Features:
+  - Draw rect lines
+  - Draw broken lines
+  - Smoothing alghoritm for curves
+  - Draw rectangles
+  - Draw ellipses
+  - Add text insertion
+  - Draw arrow and double arrow
+  - Save in jpeg or png format
+  - Make screencast
+  - Width selection
+  - Color selection 
+  - Highlighter
+  - Undo/redo
+  - Draw Text
+  - Realtime recorder 
+  - Open png, jpeg and svg images as background
+  - Background color and opacity selection
+
+
+-------------
+ ardesia 0.1
+-------------
+
+The initial protipe written in python;
+this is not public distributed.
+
+
+=====
+ EOF
+=====
