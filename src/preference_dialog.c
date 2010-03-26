@@ -34,7 +34,7 @@
 #include "utils.h"
 
 #define PREFERENCE_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/preference_dialog.ui"
-#define UI_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/backgrounds"
+#define BACKGROUNDS_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/backgrounds"
 
 /* Preference dialog */
 GtkBuilder*  preferenceDialogGtkBuilder = NULL;
@@ -153,7 +153,6 @@ void on_preferenceCancelButton_clicked    (GtkButton *buton,
  */
 void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
 {
- char *installation_location = PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S;
  GtkWidget *preferenceDialog;
 
   /* Initialize the main window */
@@ -168,9 +167,8 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   gtk_window_stick((GtkWindow*)preferenceDialog);
   
   GtkFileChooser* chooser = GTK_FILE_CHOOSER(gtk_builder_get_object(preferenceDialogGtkBuilder,"imageChooserButton"));
-  gchar* default_dir_name = "backgrounds";
 
-  gtk_file_chooser_set_current_folder(chooser, UI_FOLDER);
+  gtk_file_chooser_set_current_folder(chooser, BACKGROUNDS_FOLDER);
  
   GtkFileFilter *filter = gtk_file_filter_new ();
   gtk_file_filter_set_name (filter, "PNG and JPEG");
