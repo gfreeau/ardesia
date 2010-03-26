@@ -58,7 +58,7 @@ keyboard or the "cellwriter" handwriting recognizer.
  Usage
 -------
 
-Start Ardesia clicking in the menu on Applications/Graphics/Ardesia
+Start Ardesia clicking in the menu on Applications/Tools/Ardesia
 
 You can annotate a png file on your desktop right clicking it
 and selecting the "open with Ardesia" item
@@ -66,7 +66,7 @@ and selecting the "open with Ardesia" item
 You can found some suitable backgrounds png examples under the folder
 backgrounds:
 
-e.g. /usr/local/share/ardesia/backgrounds/
+e.g. /usr/local/share/ardesia/ui/backgrounds
 
 Now you can select colors and annotate the screen.
 If you want unlock the mouse and came back to the normal mouse use
