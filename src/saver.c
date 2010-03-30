@@ -35,7 +35,7 @@
 #include <png.h>
 
 
-/* Save the contents of the pixfuf in the file with name filename */
+/* Save the contents of the pixbuf in the file with name filename */
 gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
 {
   FILE *handle;

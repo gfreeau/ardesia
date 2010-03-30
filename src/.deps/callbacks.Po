@@ -420,11 +420,7 @@ callbacks.o: callbacks.c ../config.h callbacks.h \
  /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
  /usr/include/getopt.h /usr/include/bits/unistd.h /usr/include/string.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
- /usr/include/bits/string3.h /usr/include/X11/Xutil.h \
- /usr/include/X11/Xlib.h /usr/include/X11/X.h \
- /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h \
- /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h \
- /usr/include/X11/Xatom.h /usr/include/math.h \
+ /usr/include/bits/string3.h /usr/include/math.h \
  /usr/include/bits/huge_val.h /usr/include/bits/huge_valf.h \
  /usr/include/bits/huge_vall.h /usr/include/bits/inf.h \
  /usr/include/bits/nan.h /usr/include/bits/mathdef.h \
@@ -1449,22 +1445,6 @@ annotate.h:
 /usr/include/bits/string2.h:
 
 /usr/include/bits/string3.h:
-
-/usr/include/X11/Xutil.h:
-
-/usr/include/X11/Xlib.h:
-
-/usr/include/X11/X.h:
-
-/usr/include/X11/Xfuncproto.h:
-
-/usr/include/X11/Xosdefs.h:
-
-/usr/include/X11/keysym.h:
-
-/usr/include/X11/keysymdef.h:
-
-/usr/include/X11/Xatom.h:
 
 /usr/include/math.h:
 

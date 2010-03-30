@@ -1,28 +1,14 @@
-background.o: background.c ../config.h /usr/include/libpng12/png.h \
- /usr/include/zlib.h /usr/include/zconf.h /usr/include/zlibdefs.h \
- /usr/include/sys/types.h /usr/include/features.h \
- /usr/include/bits/predefs.h /usr/include/sys/cdefs.h \
- /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
- /usr/include/gnu/stubs-64.h /usr/include/bits/types.h \
- /usr/include/bits/typesizes.h /usr/include/time.h \
+background.o: background.c ../config.h /usr/include/string.h \
+ /usr/include/features.h /usr/include/bits/predefs.h \
+ /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+ /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.4.1/include/stddef.h \
- /usr/include/endian.h /usr/include/bits/endian.h \
- /usr/include/bits/byteswap.h /usr/include/sys/select.h \
- /usr/include/bits/select.h /usr/include/bits/sigset.h \
- /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
- /usr/include/bits/pthreadtypes.h /usr/include/unistd.h \
- /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
- /usr/include/getopt.h /usr/include/bits/unistd.h \
- /usr/include/libpng12/pngconf.h /usr/include/stdio.h \
- /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.4.1/include/stdarg.h \
- /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/bits/stdio.h /usr/include/bits/stdio2.h \
- /usr/include/setjmp.h /usr/include/bits/setjmp.h /usr/include/string.h \
  /usr/include/xlocale.h /usr/include/bits/string.h \
- /usr/include/bits/string2.h /usr/include/stdlib.h \
- /usr/include/bits/string3.h /usr/include/gtk-2.0/gtk/gtk.h \
- /usr/include/gtk-2.0/gdk/gdk.h \
+ /usr/include/bits/string2.h /usr/include/endian.h \
+ /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/stdlib.h /usr/include/bits/string3.h \
+ /usr/include/gtk-2.0/gtk/gtk.h /usr/include/gtk-2.0/gdk/gdk.h \
  /usr/include/gtk-2.0/gdk/gdkapplaunchcontext.h \
  /usr/include/glib-2.0/gio/gio.h /usr/include/glib-2.0/gio/giotypes.h \
  /usr/include/glib-2.0/gio/gioenums.h /usr/include/glib-2.0/glib-object.h \
@@ -40,14 +26,16 @@ background.o: background.c ../config.h /usr/include/libpng12/png.h \
  /usr/include/glib-2.0/glib/garray.h \
  /usr/include/glib-2.0/glib/gasyncqueue.h \
  /usr/include/glib-2.0/glib/gthread.h /usr/include/glib-2.0/glib/gerror.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.1/include/stdarg.h \
  /usr/include/glib-2.0/glib/gquark.h /usr/include/glib-2.0/glib/gutils.h \
  /usr/include/glib-2.0/glib/gatomic.h \
  /usr/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h \
- /usr/include/bits/signum.h /usr/include/bits/siginfo.h \
+ /usr/include/bits/sigset.h /usr/include/bits/signum.h \
+ /usr/include/time.h /usr/include/bits/siginfo.h \
  /usr/include/bits/sigaction.h /usr/include/bits/sigcontext.h \
- /usr/include/bits/sigstack.h /usr/include/bits/sigthread.h \
- /usr/include/glib-2.0/glib/gbase64.h \
- /usr/include/glib-2.0/glib/gbookmarkfile.h \
+ /usr/include/bits/sigstack.h /usr/include/bits/pthreadtypes.h \
+ /usr/include/bits/sigthread.h /usr/include/glib-2.0/glib/gbase64.h \
+ /usr/include/glib-2.0/glib/gbookmarkfile.h /usr/include/bits/time.h \
  /usr/include/glib-2.0/glib/gcache.h /usr/include/glib-2.0/glib/glist.h \
  /usr/include/glib-2.0/glib/gmem.h /usr/include/glib-2.0/glib/gslice.h \
  /usr/include/glib-2.0/glib/gchecksum.h \
@@ -178,7 +166,10 @@ background.o: background.c ../config.h /usr/include/libpng12/png.h \
  /usr/include/pango-1.0/pango/pango-layout.h \
  /usr/include/pango-1.0/pango/pango-tabs.h \
  /usr/include/pango-1.0/pango/pango-renderer.h \
- /usr/include/pango-1.0/pango/pango-utils.h \
+ /usr/include/pango-1.0/pango/pango-utils.h /usr/include/stdio.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/bits/stdio.h /usr/include/bits/stdio2.h \
  /usr/lib/gtk-2.0/include/gdkconfig.h \
  /usr/include/gtk-2.0/gdk/gdkdisplay.h \
  /usr/include/gtk-2.0/gdk/gdkevents.h /usr/include/gtk-2.0/gdk/gdkcolor.h \
@@ -423,19 +414,13 @@ background.o: background.c ../config.h /usr/include/libpng12/png.h \
  /usr/include/gtk-2.0/gtk/gtkoptionmenu.h \
  /usr/include/gtk-2.0/gtk/gtkpreview.h \
  /usr/include/gtk-2.0/gtk/gtktipsquery.h background.h annotate.h \
+ /usr/include/sys/types.h /usr/include/sys/select.h \
+ /usr/include/bits/select.h /usr/include/sys/sysmacros.h \
  /usr/include/alloca.h /usr/include/bits/stdlib.h
 
 ../config.h:
 
-/usr/include/libpng12/png.h:
-
-/usr/include/zlib.h:
-
-/usr/include/zconf.h:
-
-/usr/include/zlibdefs.h:
-
-/usr/include/sys/types.h:
+/usr/include/string.h:
 
 /usr/include/features.h:
 
@@ -449,13 +434,13 @@ background.o: background.c ../config.h /usr/include/libpng12/png.h \
 
 /usr/include/gnu/stubs-64.h:
 
-/usr/include/bits/types.h:
-
-/usr/include/bits/typesizes.h:
-
-/usr/include/time.h:
-
 /usr/lib/gcc/x86_64-linux-gnu/4.4.1/include/stddef.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/bits/string.h:
+
+/usr/include/bits/string2.h:
 
 /usr/include/endian.h:
 
@@ -463,59 +448,9 @@ background.o: background.c ../config.h /usr/include/libpng12/png.h \
 
 /usr/include/bits/byteswap.h:
 
-/usr/include/sys/select.h:
+/usr/include/bits/types.h:
 
-/usr/include/bits/select.h:
-
-/usr/include/bits/sigset.h:
-
-/usr/include/bits/time.h:
-
-/usr/include/sys/sysmacros.h:
-
-/usr/include/bits/pthreadtypes.h:
-
-/usr/include/unistd.h:
-
-/usr/include/bits/posix_opt.h:
-
-/usr/include/bits/confname.h:
-
-/usr/include/getopt.h:
-
-/usr/include/bits/unistd.h:
-
-/usr/include/libpng12/pngconf.h:
-
-/usr/include/stdio.h:
-
-/usr/include/libio.h:
-
-/usr/include/_G_config.h:
-
-/usr/include/wchar.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.4.1/include/stdarg.h:
-
-/usr/include/bits/stdio_lim.h:
-
-/usr/include/bits/sys_errlist.h:
-
-/usr/include/bits/stdio.h:
-
-/usr/include/bits/stdio2.h:
-
-/usr/include/setjmp.h:
-
-/usr/include/bits/setjmp.h:
-
-/usr/include/string.h:
-
-/usr/include/xlocale.h:
-
-/usr/include/bits/string.h:
-
-/usr/include/bits/string2.h:
+/usr/include/bits/typesizes.h:
 
 /usr/include/stdlib.h:
 
@@ -573,6 +508,8 @@ background.o: background.c ../config.h /usr/include/libpng12/png.h \
 
 /usr/include/glib-2.0/glib/gerror.h:
 
+/usr/lib/gcc/x86_64-linux-gnu/4.4.1/include/stdarg.h:
+
 /usr/include/glib-2.0/glib/gquark.h:
 
 /usr/include/glib-2.0/glib/gutils.h:
@@ -583,7 +520,11 @@ background.o: background.c ../config.h /usr/include/libpng12/png.h \
 
 /usr/include/signal.h:
 
+/usr/include/bits/sigset.h:
+
 /usr/include/bits/signum.h:
+
+/usr/include/time.h:
 
 /usr/include/bits/siginfo.h:
 
@@ -593,11 +534,15 @@ background.o: background.c ../config.h /usr/include/libpng12/png.h \
 
 /usr/include/bits/sigstack.h:
 
+/usr/include/bits/pthreadtypes.h:
+
 /usr/include/bits/sigthread.h:
 
 /usr/include/glib-2.0/glib/gbase64.h:
 
 /usr/include/glib-2.0/glib/gbookmarkfile.h:
+
+/usr/include/bits/time.h:
 
 /usr/include/glib-2.0/glib/gcache.h:
 
@@ -896,6 +841,22 @@ background.o: background.c ../config.h /usr/include/libpng12/png.h \
 /usr/include/pango-1.0/pango/pango-renderer.h:
 
 /usr/include/pango-1.0/pango/pango-utils.h:
+
+/usr/include/stdio.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/usr/include/bits/sys_errlist.h:
+
+/usr/include/bits/stdio.h:
+
+/usr/include/bits/stdio2.h:
 
 /usr/lib/gtk-2.0/include/gdkconfig.h:
 
@@ -1436,6 +1397,14 @@ background.o: background.c ../config.h /usr/include/libpng12/png.h \
 background.h:
 
 annotate.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/bits/select.h:
+
+/usr/include/sys/sysmacros.h:
 
 /usr/include/alloca.h:
 

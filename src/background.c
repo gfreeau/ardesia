@@ -27,7 +27,7 @@
 #include <config.h>
 #endif
 
-#include <png.h>
+#include <string.h>
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <background.h>

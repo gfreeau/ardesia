@@ -28,7 +28,6 @@
 
 #include <glib.h>
 #include <gdk/gdkinput.h>
-#include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -42,8 +41,6 @@
 #include <ctype.h>
 
 #include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
 #include <stdio.h>
 #include <string.h>
 #include <utils.h>

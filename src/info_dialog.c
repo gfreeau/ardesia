@@ -44,8 +44,7 @@ GtkBuilder*  infoDialogGtkBuilder = NULL;
  */
 void start_info_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
 {
- char *installation_location = PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S;
- GtkWidget *infoDialog;
+  GtkWidget *infoDialog;
 
   /* Initialize the main window */
   infoDialogGtkBuilder = gtk_builder_new();

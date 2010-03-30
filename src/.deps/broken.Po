@@ -106,8 +106,8 @@ broken.o: broken.c /usr/include/math.h /usr/include/features.h \
  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/bits/stdio.h /usr/include/bits/stdio2.h \
- /usr/lib/gtk-2.0/include/gdkconfig.h /usr/include/gtk-2.0/gdk/gdkx.h \
- /usr/include/gtk-2.0/gdk/gdkprivate.h /usr/include/gtk-2.0/gdk/gdk.h \
+ /usr/lib/gtk-2.0/include/gdkconfig.h /usr/include/gtk-2.0/gtk/gtk.h \
+ /usr/include/gtk-2.0/gdk/gdk.h \
  /usr/include/gtk-2.0/gdk/gdkapplaunchcontext.h \
  /usr/include/glib-2.0/gio/gio.h /usr/include/glib-2.0/gio/giotypes.h \
  /usr/include/glib-2.0/gio/gioenums.h \
@@ -201,14 +201,7 @@ broken.o: broken.c /usr/include/math.h /usr/include/features.h \
  /usr/include/gtk-2.0/gdk/gdkspawn.h \
  /usr/include/gtk-2.0/gdk/gdktestutils.h \
  /usr/include/gtk-2.0/gdk/gdkwindow.h \
- /usr/include/gtk-2.0/gdk/gdkvisual.h /usr/include/X11/Xlib.h \
- /usr/include/sys/types.h /usr/include/endian.h \
- /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
- /usr/include/sys/select.h /usr/include/bits/select.h \
- /usr/include/sys/sysmacros.h /usr/include/X11/X.h \
- /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h \
- /usr/include/X11/Xutil.h /usr/include/X11/keysym.h \
- /usr/include/X11/keysymdef.h /usr/include/gtk-2.0/gtk/gtk.h \
+ /usr/include/gtk-2.0/gdk/gdkvisual.h \
  /usr/include/gtk-2.0/gtk/gtkaboutdialog.h \
  /usr/include/gtk-2.0/gtk/gtkdialog.h \
  /usr/include/gtk-2.0/gtk/gtkwindow.h \
@@ -427,15 +420,16 @@ broken.o: broken.c /usr/include/math.h /usr/include/features.h \
  /usr/include/bits/errno.h /usr/include/linux/errno.h \
  /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
  /usr/include/asm-generic/errno-base.h /usr/include/fcntl.h \
- /usr/include/bits/fcntl.h /usr/include/bits/fcntl2.h \
+ /usr/include/bits/fcntl.h /usr/include/sys/types.h /usr/include/endian.h \
+ /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
+ /usr/include/sys/select.h /usr/include/bits/select.h \
+ /usr/include/sys/sysmacros.h /usr/include/bits/fcntl2.h \
  /usr/include/string.h /usr/include/bits/string.h \
  /usr/include/bits/string2.h /usr/include/stdlib.h \
  /usr/include/bits/string3.h /usr/include/unistd.h \
  /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
  /usr/include/getopt.h /usr/include/bits/unistd.h /usr/include/alloca.h \
- /usr/include/bits/stdlib.h /usr/include/ctype.h /usr/include/sys/ipc.h \
- /usr/include/bits/ipctypes.h /usr/include/bits/ipc.h \
- /usr/include/sys/msg.h /usr/include/bits/msq.h utils.h annotate.h \
+ /usr/include/bits/stdlib.h /usr/include/ctype.h utils.h annotate.h \
  broken.h
 
 /usr/include/math.h:
@@ -734,9 +728,7 @@ broken.o: broken.c /usr/include/math.h /usr/include/features.h \
 
 /usr/lib/gtk-2.0/include/gdkconfig.h:
 
-/usr/include/gtk-2.0/gdk/gdkx.h:
-
-/usr/include/gtk-2.0/gdk/gdkprivate.h:
+/usr/include/gtk-2.0/gtk/gtk.h:
 
 /usr/include/gtk-2.0/gdk/gdk.h:
 
@@ -951,36 +943,6 @@ broken.o: broken.c /usr/include/math.h /usr/include/features.h \
 /usr/include/gtk-2.0/gdk/gdkwindow.h:
 
 /usr/include/gtk-2.0/gdk/gdkvisual.h:
-
-/usr/include/X11/Xlib.h:
-
-/usr/include/sys/types.h:
-
-/usr/include/endian.h:
-
-/usr/include/bits/endian.h:
-
-/usr/include/bits/byteswap.h:
-
-/usr/include/sys/select.h:
-
-/usr/include/bits/select.h:
-
-/usr/include/sys/sysmacros.h:
-
-/usr/include/X11/X.h:
-
-/usr/include/X11/Xfuncproto.h:
-
-/usr/include/X11/Xosdefs.h:
-
-/usr/include/X11/Xutil.h:
-
-/usr/include/X11/keysym.h:
-
-/usr/include/X11/keysymdef.h:
-
-/usr/include/gtk-2.0/gtk/gtk.h:
 
 /usr/include/gtk-2.0/gtk/gtkaboutdialog.h:
 
@@ -1464,6 +1426,20 @@ broken.o: broken.c /usr/include/math.h /usr/include/features.h \
 
 /usr/include/bits/fcntl.h:
 
+/usr/include/sys/types.h:
+
+/usr/include/endian.h:
+
+/usr/include/bits/endian.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/bits/select.h:
+
+/usr/include/sys/sysmacros.h:
+
 /usr/include/bits/fcntl2.h:
 
 /usr/include/string.h:
@@ -1491,16 +1467,6 @@ broken.o: broken.c /usr/include/math.h /usr/include/features.h \
 /usr/include/bits/stdlib.h:
 
 /usr/include/ctype.h:
-
-/usr/include/sys/ipc.h:
-
-/usr/include/bits/ipctypes.h:
-
-/usr/include/bits/ipc.h:
-
-/usr/include/sys/msg.h:
-
-/usr/include/bits/msq.h:
 
 utils.h:
 

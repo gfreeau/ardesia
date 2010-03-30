@@ -26,7 +26,6 @@
 
 #include <glib.h>
 #include <gdk/gdkinput.h>
-#include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -40,8 +39,6 @@
 #include <ctype.h>
 
 #include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
 #include <stdio.h>
 #include <string.h>
 #include <utils.h>
@@ -871,8 +868,6 @@ void annotate_draw_arrow (gboolean revert)
     }
   AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, i);
 
-  GdkPoint arrowhead [4];
-
   int penwidth = data->cur_context->width;
   
   double widthcos = penwidth * cos (direction);
@@ -913,7 +908,7 @@ void annotate_draw_arrow (gboolean revert)
  
   if (data->debug)
     {
-      g_printerr("with vertex at (x,y)=(%d : %d)\n",  arrowhead [0].x , arrowhead [0].y  );
+      g_printerr("with vertex at (x,y)=(%f : %f)\n",  arrowhead0x , arrowhead0y  );
     }
   data->painted = TRUE;
 }
