@@ -58,7 +58,6 @@
 
 
 #include "callbacks.h"
-#include <X11/Xutil.h>
 #include "annotate.h"
 #include "stdlib.h"
 #include "string.h"
@@ -87,11 +86,12 @@ typedef struct
 
 
 /* Get the screen resolution asking to the Xorg server throught the xlib libraries */
-int getScreenResolution(Display *display, int *width, int *height)
+int getScreenResolution(int *width, int *height)
 {
-  Screen *screen = XDefaultScreenOfDisplay(display);
-  *width  = XWidthOfScreen (screen);
-  *height = XHeightOfScreen(screen);
+  GdkDisplay* display = gdk_display_get_default ();
+  GdkScreen* screen = gdk_display_get_default_screen (display);
+  *width = gdk_screen_get_width (screen);
+  *height = (double) gdk_screen_get_height (screen);
   return 0;
 }
 
@@ -128,15 +128,13 @@ void calculate_centered_position(GtkWidget *ardesiaBarWindow, int dwidth, int dh
  */
 int calculate_initial_position(GtkWidget *ardesiaBarWindow, int *x, int *y, int wwidth, int wheight, int position)
 {
-  Display *display = XOpenDisplay (0);  
   int dwidth, dheight;
-  if (getScreenResolution(display, &dwidth, &dheight)<0) 
+  if (getScreenResolution(&dwidth, &dheight)<0) 
     {
       perror ("Fatal error while getting screen resolution\n");
       return -1;
     }
   calculate_centered_position(ardesiaBarWindow,dwidth,dheight, x, y, wwidth, wheight, position);
-  XCloseDisplay (display);
   return 0; 
 }
 

@@ -30,12 +30,16 @@
 #include "unistd.h"
 #include "stdio.h"
 #include <string.h> 
-#include <gconf/gconf-client.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <errno.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
+
+
+#ifndef _WIN32
+  #include <gconf/gconf-client.h>
+#endif
 
 const gchar* desktop_dir = NULL;
 
@@ -176,7 +180,12 @@ char* get_date()
 /* Return if a file exists */
 gboolean file_exists(char* filename, char* desktop_dir)
 {
-  char* afterslash = strrchr(filename, '/');
+  char* afterslash = NULL; 
+  #ifdef _WIN32
+    afterslash = strrchr(filename, '\\');
+  #else
+    afterslash = strrchr(filename, '/');
+  #endif
   if (afterslash == 0)
     {
       /* relative path */
@@ -190,7 +199,6 @@ gboolean file_exists(char* filename, char* desktop_dir)
       exit(0);
     }
   }
-  printf("filename %s exists \n", filename);
   return TRUE;
 }
 
@@ -205,26 +213,29 @@ gboolean file_exists(char* filename, char* desktop_dir)
  */
 const gchar* get_desktop_dir (void)
 {
-  GConfClient *gconf_client = NULL;
-  gboolean desktop_is_home_dir = FALSE;
   const gchar* desktop_dir = NULL;
+  #ifdef _WIN32
+    //TODO
+  #else
+    GConfClient *gconf_client = NULL;
+    gboolean desktop_is_home_dir = FALSE;
 
-  gconf_client = gconf_client_get_default ();
-  desktop_is_home_dir = gconf_client_get_bool (gconf_client,
+    gconf_client = gconf_client_get_default ();
+    desktop_is_home_dir = gconf_client_get_bool (gconf_client,
                                                "/apps/nautilus/preferences/desktop_is_home_dir",
                                                NULL);
-  if (desktop_is_home_dir)
-    {
-      desktop_dir = g_get_home_dir ();
-    }
-  else
-    {
-      desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
-    }
+    if (desktop_is_home_dir)
+      {
+        desktop_dir = g_get_home_dir ();
+      }
+    else
+      {
+        desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
+      }
 
-  g_object_unref (gconf_client);
+    g_object_unref (gconf_client);
+  #endif
 
   return desktop_dir;
 }
-
 

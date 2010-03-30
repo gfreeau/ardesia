@@ -31,8 +31,11 @@
 #include "stdio.h"
 #include <string.h> 
 #include "utils.h"
+#ifdef _WIN32
+  #include <windows.h>
+#else
 #include <sys/wait.h>
-
+#endif
 
 
 /* pid of the recording process */
@@ -44,87 +47,105 @@ int          recorderpid = -1;
  */
 int start_recorder(char* filename)
 {
-  char* argv[20];
-  argv[0] = "recordmydesktop";
-  argv[1] = "--quick-subsampling";
-  argv[2] = "--on-the-fly-encoding";
-  argv[3] = "-v_quality";
-  argv[4] = "10";
-  argv[5] = "-v_bitrate";
-  argv[6] = "50000";
-  argv[7] = "-s_quality";
-  argv[8] = "1";
-  argv[9] = "--fps";
-  argv[10] = "10";
-  argv[11] = "--freq";
-  argv[12] = "48000";
-  argv[13] = "--buffer-size";
-  argv[14] = "16384";
-  argv[15] = "-device";
-  argv[16] = "plughw:0,0";
-  argv[17] = "-o";
-  argv[18] = filename;
-  argv[19] = (char*) NULL ;
+  #ifdef _WIN32
+    //TODO
+    return -1;
+  #else
+    char* argv[20];
+    argv[0] = "recordmydesktop";
+    argv[1] = "--quick-subsampling";
+    argv[2] = "--on-the-fly-encoding";
+    argv[3] = "-v_quality";
+    argv[4] = "10";
+    argv[5] = "-v_bitrate";
+    argv[6] = "50000";
+    argv[7] = "-s_quality";
+    argv[8] = "1";
+    argv[9] = "--fps";
+    argv[10] = "10";
+    argv[11] = "--freq";
+    argv[12] = "48000";
+    argv[13] = "--buffer-size";
+    argv[14] = "16384";
+    argv[15] = "-device";
+    argv[16] = "plughw:0,0";
+    argv[17] = "-o";
+    argv[18] = filename;
+    argv[19] = (char*) NULL ;
   
-  pid_t pid;
-  pid = fork();
+    pid_t pid;
+    pid = fork();
   
-  if (pid < 0)
-    {
-      return -1;
-    }
-  if (pid == 0)
-    {
-      if (execvp(argv[0], argv) < 0)
-        {
-          return -1;
-        }
-    }
-  return pid;
+    if (pid < 0)
+      {
+        return -1;
+      }
+    if (pid == 0)
+      {
+        if (execvp(argv[0], argv) < 0)
+          {
+            return -1;
+          }
+      }
+    return pid;
+  #endif
 }
 
 
 int check_recorder()
 {
-  char* argv[3];
-  argv[0] = "recordmydesktop";
-  argv[1] = "--version";
-  argv[2] = (char*) NULL ;
+  #ifdef _WIN32
+    //TODO
+    return -1;
+  #else
+    char* argv[3];
+    argv[0] = "recordmydesktop";
+    argv[1] = "--version";
+    argv[2] = (char*) NULL ;
   
-  pid_t pid;
-  pid = fork();
-  int status;
-  wait(&status);
-  if (pid == 0)
-    {
-      if (execvp(argv[0], argv) < 0)
- 
-        {
-          return -1;
-        }
-    }
-  return pid;
+    pid_t pid;
+    pid = fork();
+    int status;
+    wait(&status);
+    if (pid == 0)
+      {
+        if (execvp(argv[0], argv) < 0)
+          {
+            return -1;
+          }
+      }
+    return pid;
+  #endif
 }
 
 
 /* Return if the recording is active */
 gboolean is_recording()
 {
-  if (recorderpid == -1)
+  #ifdef _WIN32
+    //TODO
+    return FALSE;
+  #else
+    if (recorderpid == -1)
     {
       return FALSE;
     }
-  return TRUE;
+    return TRUE;
+  #endif
 }
 
 /* Quit to record */
 void quit_recorder()
 {
-  if(is_recording())
-    {
-      kill(recorderpid,SIGTERM);
-      recorderpid=-1;
-    }  
+  #ifdef _WIN32
+    //TODO
+  #else
+    if(is_recording())
+      {
+        kill(recorderpid,SIGTERM);
+        recorderpid=-1;
+      }  
+  #endif
 }
 
 
