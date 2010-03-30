@@ -244,6 +244,7 @@ ui_DATA = ardesia.ui \
 	preference_dialog.ui \
 	info_dialog.ui
 
+INCLUDES = -I$(top_srcdir) -I$(includedir)
 AM_CPPFLAGS = \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
 	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
