@@ -350,25 +350,26 @@ on_toolsText_activate(GtkToolButton   *toolbutton,
   grab = TRUE;
   text = TRUE;
   arrow = 0;
+  start_tool();
 }
 
 void on_toolsPencil_activate              (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
-      text = FALSE;
-      grab = TRUE;
-      pencil = TRUE;
-      arrow = 0;
+  text = FALSE;
+  grab = TRUE;
+  pencil = TRUE;
+  arrow = 0;
 }
 
 
 void on_toolsEraser_activate              (GtkToolButton   *toolbutton,
                                            gpointer         user_data)
 {
-      text = FALSE;
-      grab = TRUE;
-      pencil = FALSE;
-      arrow = 0;
+  text = FALSE;
+  grab = TRUE;
+  pencil = FALSE;
+  arrow = 0;
 }
 
 
