@@ -9,17 +9,15 @@ ui_DATA = ardesia.ui \
 	preference_dialog.ui \
 	info_dialog.ui
 
-INCLUDES = -I$(top_srcdir) -I$(includedir)
-
 AM_CPPFLAGS = \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
 	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
-	$(ARDESIA_CFLAGS)
+	$(ARDESIA_CFLAGS) $(GCONF_CFLAGS)
 
 AM_CFLAGS =\
 	 -Wall\
-	 -g
+	 -g -L$(libdir)
 
 bin_PROGRAMS = ardesia
 
@@ -55,7 +53,7 @@ ardesia_SOURCES = \
 ardesia_LDFLAGS = \
 	-Wl,--export-dynamic
 
-ardesia_LDADD = $(ARDESIA_LIBS)
+ardesia_LDADD = $(ARDESIA_LIBS) $(GCONF_LIBS)
 
 EXTRA_DIST = $(ui_DATA)
 

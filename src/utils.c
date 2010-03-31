@@ -216,6 +216,7 @@ const gchar* get_desktop_dir (void)
   const gchar* desktop_dir = NULL;
   #ifdef _WIN32
     //TODO
+    desktop_dir = "";
   #else
     GConfClient *gconf_client = NULL;
     gboolean desktop_is_home_dir = FALSE;

@@ -28,9 +28,25 @@ IT_PROG_INTLTOOL([0.35.0])
 
 AM_PROG_LIBTOOL
 
+pkg_modules="	gtk+-2.0 >= 2.12 
+		cairo
+                gsl"
 
-PKG_CHECK_MODULES(ARDESIA, [gtk+-2.0 >= 2.12 cairo gconf-2.0 >= 2.0.0 gsl])
 
+PKG_CHECK_MODULES(ARDESIA, [$pkg_modules])
+
+case "$host" in
+  *-*-mingw*|*-*-cygwin*)
+    platform_win32=yes
+    ;;
+  *)
+    platform_win32=no
+    ;;
+esac
+
+if test "$platform_win32" = no; then
+  PKG_CHECK_MODULES(GCONF, [gconf-2.0 >= 2.0.0])
+fi
 
 
 
