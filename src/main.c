@@ -65,9 +65,16 @@
 #include "getopt.h"
 
 
-/* For testing propose use the local (not installed) ui file */
-#define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.ui"
+#ifdef _WIN32
+  #define UI_FILE "ardesia.ui"
+#else
+  #define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.ui"
+#endif 
+/* This is for local testing */
 /* #define UI_FILE "src/ardesia.ui" */
+
+
+
 
 int NORTH=1;
 int SOUTH=2;

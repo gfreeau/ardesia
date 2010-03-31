@@ -33,8 +33,15 @@
 #include "background.h"
 #include "utils.h"
 
-#define PREFERENCE_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/preference_dialog.ui"
-#define BACKGROUNDS_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/backgrounds"
+#ifdef _WIN32
+  #define PREFERENCE_UI_FILE "preference_dialog.ui"
+  #define BACKGROUNDS_FOLDER "backgrounds"
+#else
+  #define PREFERENCE_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/preference_dialog.ui"
+  #define BACKGROUNDS_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/backgrounds"
+#endif 
+
+
 
 /* Preference dialog */
 GtkBuilder*  preferenceDialogGtkBuilder = NULL;
