@@ -170,25 +170,34 @@ void print_help()
 /* check if a composite manager is active */
 void check_composite()
 {
-  GdkDisplay *display = gdk_display_get_default ();
-  GdkScreen   *screen = gdk_display_get_default_screen (display);
-  gboolean composite = gdk_screen_is_composited (screen);
-  if (!composite)
-    {
-      /* composite manager must be enabled */
-      GtkWidget *msg_dialog; 
-      msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
-                                           GTK_BUTTONS_OK, gettext("In order to run Ardesia you need to enable the Compiz composite manager"));
-      gtk_window_stick((GtkWindow*)msg_dialog);
+   #ifdef _WIN32
+    //TODO
+    return ;
+  #else
+    GdkDisplay *display = gdk_display_get_default ();
+    GdkScreen   *screen = gdk_display_get_default_screen (display);
+    gboolean composite = gdk_screen_is_composited (screen);
+    if (!composite)
+      {
+        /* composite manager must be enabled */
+        GtkWidget *msg_dialog; 
+        msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
+                                             GTK_BUTTONS_OK, gettext("In order to run Ardesia you need to enable the Compiz composite manager"));
+        gtk_window_stick((GtkWindow*)msg_dialog);
                  
-      gtk_dialog_run(GTK_DIALOG(msg_dialog));
-      if (msg_dialog != NULL)
-        {
-	  gtk_widget_destroy(msg_dialog);
-        }
-      exit(0);
-    }
-  gtk_widget_set_default_colormap(gdk_screen_get_rgba_colormap(screen));
+        gtk_dialog_run(GTK_DIALOG(msg_dialog));
+        if (msg_dialog != NULL)
+          {
+	    gtk_widget_destroy(msg_dialog);
+          }
+        exit(0);
+      }
+    GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
+    if (colormap)
+      {
+        gtk_widget_set_default_colormap(colormap);
+      }
+ #endif
 }
 
 

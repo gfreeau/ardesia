@@ -138,18 +138,6 @@ void set_color(char* selected_color)
 }
 
 
-gboolean on_window_configure_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
-{
-  if (color == NULL)
-    {
-      color = malloc(COLORSIZE);
-      set_color("FF0000");
-      add_alpha(color);
-    }
-  return TRUE;
-}
-
-
 /* Start to annotate calling annotate */
 void annotate()
 {
@@ -170,18 +158,6 @@ void erase()
 {
   annotate_set_width(tickness); 
   annotate_eraser_grab();
-}
-
-
-/* Start event handler section */
-
-
-/* Called when push the quit button */
-gboolean on_quit                          (GtkWidget       *widget,
-                                           GdkEvent        *event,
-                                           gpointer         user_data)
-{
-  return quit();
 }
 
 
@@ -211,9 +187,36 @@ void start_tool()
 }
 
 
+/* Start event handler section */
+
+
+G_MODULE_EXPORT gboolean
+on_window_configure_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+{
+  if (color == NULL)
+    {
+      color = malloc(COLORSIZE);
+      set_color("FF0000");
+      add_alpha(color);
+    }
+  return TRUE;
+}
+
+
+/* Called when push the quit button */
+G_MODULE_EXPORT gboolean
+on_quit                          (GtkWidget       *widget,
+                                  GdkEvent        *event,
+                                  gpointer         user_data)
+{
+  return quit();
+}
+
+
 /* Called when push the info button */
-gboolean on_info                         (GtkToolButton   *toolbutton,
-					  gpointer         user_data)
+G_MODULE_EXPORT gboolean
+on_info                         (GtkToolButton   *toolbutton,
+			         gpointer         user_data)
 {
   grab = FALSE;
   start_info_dialog(toolbutton, get_annotation_window());
@@ -224,9 +227,10 @@ gboolean on_info                         (GtkToolButton   *toolbutton,
 
 
 /* Called when leave the window */
-gboolean on_winMain_leave_notify_event   (GtkWidget       *widget,
-					  GdkEvent        *event,
-					  gpointer         user_data)
+G_MODULE_EXPORT gboolean
+on_winMain_leave_notify_event   (GtkWidget       *widget,
+			         GdkEvent        *event,
+			         gpointer         user_data)
 {
   start_tool();
   return TRUE;
@@ -234,26 +238,28 @@ gboolean on_winMain_leave_notify_event   (GtkWidget       *widget,
 
 
 /* Called when enter the window */
-gboolean on_winMain_enter_notify_event   (GtkWidget       *widget,
-					  GdkEvent        *event,
-					  gpointer         user_data)
+G_MODULE_EXPORT gboolean
+on_winMain_enter_notify_event   (GtkWidget       *widget,
+				 GdkEvent        *event,
+			         gpointer         user_data)
 {
   stop_text_widget();
   return TRUE;
 }
 
 
-gboolean on_winMain_delete_event          (GtkWidget       *widget,
-                                           GdkEvent        *event,
-                                           gpointer         user_data)
+G_MODULE_EXPORT gboolean
+on_winMain_delete_event          (GtkWidget       *widget,
+                                  GdkEvent        *event,
+                                  gpointer         user_data)
 {
   return quit();
 }
 
 
-void
-on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
-				       gpointer         user_data)
+G_MODULE_EXPORT void
+on_toolsHighlighter_activate     (GtkToolButton   *toolbutton,
+				  gpointer         user_data)
 {
   grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
@@ -268,9 +274,9 @@ on_toolsHighlighter_activate          (GtkToolButton   *toolbutton,
 }
 
 
-void
-on_toolsRectifier_activate          (GtkToolButton   *toolbutton,
-				     gpointer         user_data)
+G_MODULE_EXPORT void
+on_toolsRectifier_activate       (GtkToolButton   *toolbutton,
+				  gpointer         user_data)
 {
   grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
@@ -291,9 +297,9 @@ on_toolsRectifier_activate          (GtkToolButton   *toolbutton,
 }
 
 
-void
-on_toolsRounder_activate          (GtkToolButton   *toolbutton,
-				   gpointer         user_data)
+G_MODULE_EXPORT void
+on_toolsRounder_activate         (GtkToolButton   *toolbutton,
+				  gpointer         user_data)
 {
   grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
@@ -314,7 +320,7 @@ on_toolsRounder_activate          (GtkToolButton   *toolbutton,
 }
 
 
-void
+G_MODULE_EXPORT void
 on_toolsFiller_activate          (GtkToolButton   *toolbutton,
 				  gpointer         user_data)
 {
@@ -323,8 +329,9 @@ on_toolsFiller_activate          (GtkToolButton   *toolbutton,
 }
 
 
-void on_toolsArrow_activate               (GtkToolButton   *toolbutton,
-				           gpointer         user_data)
+G_MODULE_EXPORT void
+on_toolsArrow_activate           (GtkToolButton   *toolbutton,
+				  gpointer         user_data)
 {
   grab = TRUE;
   text = FALSE;
@@ -333,8 +340,9 @@ void on_toolsArrow_activate               (GtkToolButton   *toolbutton,
 }
 
 
-void on_toolsDoubleArrow_activate         (GtkToolButton   *toolbutton,
-					   gpointer         user_data)
+G_MODULE_EXPORT void
+on_toolsDoubleArrow_activate     (GtkToolButton   *toolbutton,
+			          gpointer         user_data)
 {
   grab = TRUE;
   text = FALSE;
@@ -343,9 +351,9 @@ void on_toolsDoubleArrow_activate         (GtkToolButton   *toolbutton,
 }
 
 
-void
-on_toolsText_activate(GtkToolButton   *toolbutton,
-		      gpointer         user_data)
+G_MODULE_EXPORT void
+on_toolsText_activate            (GtkToolButton   *toolbutton,
+		                  gpointer         user_data)
 {
   grab = TRUE;
   text = TRUE;
@@ -353,8 +361,10 @@ on_toolsText_activate(GtkToolButton   *toolbutton,
   start_tool();
 }
 
-void on_toolsPencil_activate              (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
+
+G_MODULE_EXPORT void
+on_toolsPencil_activate          (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   text = FALSE;
   grab = TRUE;
@@ -363,8 +373,9 @@ void on_toolsPencil_activate              (GtkToolButton   *toolbutton,
 }
 
 
-void on_toolsEraser_activate              (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
+G_MODULE_EXPORT void
+on_toolsEraser_activate          (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   text = FALSE;
   grab = TRUE;
@@ -373,8 +384,9 @@ void on_toolsEraser_activate              (GtkToolButton   *toolbutton,
 }
 
 
-void on_toolsVisible_activate             (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
+G_MODULE_EXPORT void
+on_toolsVisible_activate         (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   if (visible)
     {
@@ -395,8 +407,9 @@ void on_toolsVisible_activate             (GtkToolButton   *toolbutton,
 }
 
 
-void on_toolsScreenShot_activate	  (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
+G_MODULE_EXPORT void
+on_toolsScreenShot_activate	 (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   grab = FALSE;
   start_save_image_dialog(toolbutton, get_annotation_window(), &workspace_dir);
@@ -405,8 +418,9 @@ void on_toolsScreenShot_activate	  (GtkToolButton   *toolbutton,
 }
 
 
-void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
+G_MODULE_EXPORT void
+on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 { 
   grab = FALSE;
   if(is_recording())
@@ -441,16 +455,18 @@ void on_toolsRecorder_activate            (GtkToolButton   *toolbutton,
 }
 
 
-void on_thickScale_value_changed          (GtkHScale   *hScale,
-					   gpointer         user_data)
+G_MODULE_EXPORT void
+on_thickScale_value_changed      (GtkHScale   *hScale,
+			          gpointer         user_data)
 {
   grab = TRUE;
   tickness=gtk_range_get_value(&hScale->scale.range);
 }
 
 
-void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
-					   gpointer         user_data)
+G_MODULE_EXPORT void
+on_toolsPreferences_activate	 (GtkToolButton   *toolbutton,
+			          gpointer         user_data)
 {
   grab = FALSE;
   start_preference_dialog(toolbutton, get_annotation_window());
@@ -459,40 +475,45 @@ void on_toolsPreferences_activate	  (GtkToolButton   *toolbutton,
 }
 
 
-void on_buttonUnlock_activate              (GtkToolButton   *toolbutton,
-					    gpointer         user_data)
+G_MODULE_EXPORT void
+on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
+				  gpointer         user_data)
 {
   grab = FALSE;
   annotate_release_grab ();
 }
 
 
-void on_buttonUndo_activate              (GtkToolButton   *toolbutton,
-					  gpointer         user_data)
+G_MODULE_EXPORT void
+on_buttonUndo_activate           (GtkToolButton   *toolbutton,
+			          gpointer         user_data)
 {
   grab = TRUE;
   annotate_undo();
 }
 
 
-void on_buttonRedo_activate              (GtkToolButton   *toolbutton,
-					  gpointer         user_data)
+G_MODULE_EXPORT void
+on_buttonRedo_activate           (GtkToolButton   *toolbutton,
+			          gpointer         user_data)
 {
   grab = TRUE;
   annotate_redo();
 }
 
 
-void on_buttonClear_activate              (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
+G_MODULE_EXPORT void
+on_buttonClear_activate          (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   grab = TRUE;
   annotate_clear_screen (); 
 }
 
 
-void on_buttonColor_activate	          (GtkToolButton   *toolbutton,
-					   gpointer         user_data)
+G_MODULE_EXPORT void
+on_buttonColor_activate	         (GtkToolButton   *toolbutton,
+			          gpointer         user_data)
 {
   grab = FALSE;
   pencil = TRUE;
@@ -504,78 +525,88 @@ void on_buttonColor_activate	          (GtkToolButton   *toolbutton,
 
 /* Start color handlers */
 
-void on_colorBlack_activate               (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
+G_MODULE_EXPORT void
+on_colorBlack_activate           (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   set_color("000000");
 }
 
 
-void on_colorBlue_activate                (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
+G_MODULE_EXPORT void
+on_colorBlue_activate            (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   set_color("3333CC");
 }
 
 
-void on_colorRed_activate                 (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
+G_MODULE_EXPORT void
+on_colorRed_activate             (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   set_color("FF0000");
 }
 
 
-void on_colorGreen_activate               (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
+G_MODULE_EXPORT void
+on_colorGreen_activate           (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   set_color("008000");
 }
 
 
-void on_colorLightBlue_activate           (GtkToolButton   *toolbutton,
-                                           gpointer         user_data)
+G_MODULE_EXPORT void
+on_colorLightBlue_activate       (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   set_color("00C0FF");
 }
 
 
-void on_colorLightGreen_activate            (GtkToolButton   *toolbutton,
-                                             gpointer         user_data)
+G_MODULE_EXPORT void
+on_colorLightGreen_activate      (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   set_color("00FF00");
 }
 
 
-void on_colorMagenta_activate               (GtkToolButton   *toolbutton,
-                                             gpointer         user_data)
+G_MODULE_EXPORT void
+on_colorMagenta_activate         (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   set_color("FF00FF");
 }
 
 
-void on_colorOrange_activate                (GtkToolButton   *toolbutton,
-                                             gpointer         user_data)
+G_MODULE_EXPORT void
+on_colorOrange_activate          (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   set_color("FF8000");
 }
 
 
-void on_colorYellow_activate                (GtkToolButton   *toolbutton,
-                                             gpointer         user_data)
+G_MODULE_EXPORT void
+on_colorYellow_activate          (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
 {
   set_color("FFFF00");
 }
 
 
-void on_colorWhite_activate                (GtkToolButton   *toolbutton,
-	       			            gpointer         user_data)
+G_MODULE_EXPORT void
+on_colorWhite_activate           (GtkToolButton   *toolbutton,
+	       			  gpointer         user_data)
 {
   set_color("FFFFFF");
 }
 
 
 
-void
+G_MODULE_EXPORT void
 destroy (GtkWidget *widget, gpointer data)
 {
 	gtk_main_quit ();
