@@ -349,11 +349,8 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
   g_signal_connect(G_OBJECT(text_window), "configure-event", G_CALLBACK(on_window_text_configure_event), NULL);
   g_signal_connect(G_OBJECT(text_window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
   g_signal_connect (G_OBJECT(text_window), "motion_notify_event",G_CALLBACK (on_window_text_motion_notify_event), NULL);
-  g_signal_connect (G_OBJECT(text_window), "button_release_event", 
-		    G_CALLBACK(release), NULL);
-
-  g_signal_connect (G_OBJECT(text_window), "key_press_event",
-		    G_CALLBACK (key_press), NULL);
+  g_signal_connect (G_OBJECT(text_window), "button_release_event", G_CALLBACK(release), NULL);
+  g_signal_connect (G_OBJECT(text_window), "key_press_event", G_CALLBACK (key_press), NULL);
 
   gtk_widget_show_all(text_window);
  

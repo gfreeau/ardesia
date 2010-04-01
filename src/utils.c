@@ -215,7 +215,7 @@ const gchar* get_desktop_dir (void)
 {
   const gchar* desktop_dir = NULL;
   #ifdef _WIN32
-    //TODO
+    //TODO now we return an empty string it is possbile that the file will be stored in the desktop
     desktop_dir = "";
   #else
     GConfClient *gconf_client = NULL;

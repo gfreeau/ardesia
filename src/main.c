@@ -171,7 +171,7 @@ void print_help()
 void check_composite()
 {
    #ifdef _WIN32
-    //TODO
+    //TODO at the moment we suppose that the alpha channel is available and the no checks
     return ;
   #else
     GdkDisplay *display = gdk_display_get_default ();
@@ -278,78 +278,76 @@ void setInitialWidth(int val)
 GtkWidget*
 create_window (void)
 {
-	GtkWidget *window;
-	
-	GError* error = NULL;
+  GtkWidget *window;
+  GError* error = NULL;
 
-	gtkBuilder = gtk_builder_new ();
-	if (!gtk_builder_add_from_file (gtkBuilder, UI_FILE, &error))
-	{
-		g_warning ("Couldn't load builder file: %s", error->message);
-		g_error_free (error);
-	}
+  gtkBuilder = gtk_builder_new ();
+  if (!gtk_builder_add_from_file (gtkBuilder, UI_FILE, &error))
+    {
+      g_warning ("Couldn't load builder file: %s", error->message);
+      g_error_free (error);
+    }
 
-	/* This is important */
-	gtk_builder_connect_signals (gtkBuilder, NULL);
-	window = GTK_WIDGET (gtk_builder_get_object (gtkBuilder, "winMain"));
-    /* Set the width to 15 in the thick scale */
-    setInitialWidth(15);
+  /* This is important */
+  gtk_builder_connect_signals (gtkBuilder, NULL);
+  window = GTK_WIDGET (gtk_builder_get_object (gtkBuilder, "winMain"));
+  /* Set the width to 15 in the thick scale */
+  setInitialWidth(15);
 
-	return window;
+  return window;
 }
 
 
 int
 main (int argc, char *argv[])
 {
-	GtkWidget *ardesiaBarWindow ;
+  GtkWidget *ardesiaBarWindow ;
+
+  #ifdef ENABLE_NLS
+    bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
+    bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+    textdomain (GETTEXT_PACKAGE);
+  #endif
 
 
-#ifdef ENABLE_NLS
-	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-	textdomain (GETTEXT_PACKAGE);
-#endif
+  gtk_set_locale ();
+  gtk_init (&argc, &argv);
 
+  check_composite();
 
-	gtk_set_locale ();
-	gtk_init (&argc, &argv);
+  ardesiaBarWindow = create_window ();
+  /*
+   * The following code create one of each component
+   * (except popup menus), just so that you see something after building
+   * the project. Delete any components that you don't want shown initially.
+   */
+  int width;
+  int height;
+  gtk_window_get_size (GTK_WINDOW(ardesiaBarWindow) , &width, &height);
 
-	check_composite();
+  int x, y;
 
-	ardesiaBarWindow = create_window ();
-	/*
-	 * The following code create one of each component
-	 * (except popup menus), just so that you see something after building
-	 * the project. Delete any components that you don't want shown initially.
-	 */
-	int width;
-	int height;
-	gtk_window_get_size (GTK_WINDOW(ardesiaBarWindow) , &width, &height);
+  CommandLine* commandline = parse_options(argc, argv);
 
-	int x, y;
+  /* calculate_initial_position the window in the desired position */
+  if (calculate_initial_position(ardesiaBarWindow,&x,&y,width,height,commandline->position) < 0)
+    {
+      exit(0);
+    }
+  gtk_window_move(GTK_WINDOW(ardesiaBarWindow),x,y);  
 
-	CommandLine* commandline = parse_options(argc, argv);
+  /** Init annotate */
+  annotate_init(x, y, width, height, commandline->debug, commandline->backgroundimage); 
 
-	/* calculate_initial_position the window in the desired position */
-	if (calculate_initial_position(ardesiaBarWindow,&x,&y,width,height,commandline->position) < 0)
-	{
-		exit(0);
-	}
-	gtk_window_move(GTK_WINDOW(ardesiaBarWindow),x,y);  
+  GtkWindow* annotation_window = get_annotation_window();  
+  if (annotation_window)
+    {
+      gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), annotation_window );
+    }
 
-	/** Init annotate */
-	annotate_init(x, y, width, height, commandline->debug, commandline->backgroundimage); 
+  gtk_widget_show (ardesiaBarWindow);
 
-	GtkWindow* annotation_window = get_annotation_window();  
-	if (annotation_window)
-	{
-		gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), annotation_window );
-	}
-
-	gtk_widget_show (ardesiaBarWindow);
-
-	gtk_main ();
-    g_object_unref (gtkBuilder);	
-	return 0;
+  gtk_main ();
+  g_object_unref (gtkBuilder);	
+  return 0;
 }

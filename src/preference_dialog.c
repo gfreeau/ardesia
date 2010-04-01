@@ -53,7 +53,8 @@ int 	     background = 0;
 GtkWidget*   preview;
 
 /* Update the preview image */
-void on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer data)
+G_MODULE_EXPORT void
+on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer data)
 {
   char *filename;
   GdkPixbuf *pixbuf;
@@ -79,7 +80,8 @@ void on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointe
 
 
 /* Shot when the ok button in preference dialog is pushed */
-void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
+G_MODULE_EXPORT void
+on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
 {
  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(preferenceDialogGtkBuilder,"color"));
   if (gtk_toggle_button_get_active(colorToolButton))
@@ -131,7 +133,8 @@ void on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
 
 
 /* Shot when the selected folder change in the file browser */
-void on_imageChooserButton_file_set (GtkButton *buton, gpointer user_date)
+G_MODULE_EXPORT void
+on_imageChooserButton_file_set (GtkButton *buton, gpointer user_date)
 {
  GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(preferenceDialogGtkBuilder,"file"));
  gtk_toggle_button_set_active(imageToolButton,TRUE);
@@ -139,7 +142,8 @@ void on_imageChooserButton_file_set (GtkButton *buton, gpointer user_date)
 
 
 /* Shot when is pushed the background color button */
-void on_backgroundColorButton_color_set (GtkButton *buton, gpointer user_date)
+G_MODULE_EXPORT void
+on_backgroundColorButton_color_set (GtkButton *buton, gpointer user_date)
 {
  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(preferenceDialogGtkBuilder,"color"));
  gtk_toggle_button_set_active(colorToolButton,TRUE);
@@ -147,7 +151,8 @@ void on_backgroundColorButton_color_set (GtkButton *buton, gpointer user_date)
 
 
 /* Shot when is pushed the cancel button */
-void on_preferenceCancelButton_clicked    (GtkButton *buton,
+G_MODULE_EXPORT void
+on_preferenceCancelButton_clicked    (GtkButton *buton,
                                            gpointer user_date)
 {
   /* do nothing */

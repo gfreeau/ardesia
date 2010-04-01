@@ -216,7 +216,10 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
 	{
 	  GtkWidget *msg_dialog; 
                    
-	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
+	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), 
+					       GTK_DIALOG_MODAL, 
+                                               GTK_MESSAGE_WARNING,  
+                                               GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
 
 	  gtk_window_stick((GtkWindow*)msg_dialog);
                  

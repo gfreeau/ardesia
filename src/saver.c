@@ -70,7 +70,9 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
                                                  0, 0, 0, 0, width, height);
 
   
-  GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext("Save image"), parent, GTK_FILE_CHOOSER_ACTION_SAVE,
+  GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext("Save image"), 
+ 						    parent, 
+						    GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
@@ -113,7 +115,10 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
       if (file_exists(filename,(char *) workspace_dir))
         {
 	  GtkWidget *msg_dialog; 
-	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING,  GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
+	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), 
+					       GTK_DIALOG_MODAL, 
+                                               GTK_MESSAGE_WARNING,
+                                               GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
           gtk_window_stick((GtkWindow*)msg_dialog);
           int result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
           if (msg_dialog != NULL)
