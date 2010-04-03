@@ -130,7 +130,8 @@ void delete_character()
 
 
 /* Press keyboard event */
-gboolean key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
+G_MODULE_EXPORT gboolean
+key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
 {
  
   if ((event->keyval == GDK_BackSpace)
@@ -226,7 +227,8 @@ gboolean set_text_pointer(GtkWidget * window)
 
 
 /* The windows has been configured  */
-static gboolean on_window_text_configure_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+G_MODULE_EXPORT gboolean
+on_window_text_configure_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   return TRUE;
 }
@@ -259,7 +261,8 @@ void init(GtkWidget *win)
 
 
 /* The windows has been exposed */
-static gboolean on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+G_MODULE_EXPORT gboolean
+on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   if (!display)
     {
@@ -299,9 +302,10 @@ static gboolean on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *e
 
 
 /* This is called when the button is pushed */
-gboolean release (GtkWidget *win,
-                GdkEventButton *ev, 
-                gpointer user_data)
+G_MODULE_EXPORT gboolean
+release (GtkWidget *win,
+         GdkEventButton *ev, 
+         gpointer user_data)
 {
   ungrab_pointer(display, win);
   pos->x = ev->x;
@@ -312,9 +316,10 @@ gboolean release (GtkWidget *win,
 
 
 /* This shots when the ponter is moving */
-gboolean on_window_text_motion_notify_event (GtkWidget *win, 
-					     GdkEventMotion *ev, 
-					     gpointer user_data)
+G_MODULE_EXPORT gboolean
+on_window_text_motion_notify_event (GtkWidget *win, 
+			            GdkEventMotion *ev, 
+			            gpointer user_data)
 {
   GtkWidget *bar = GTK_WIDGET(gtk_builder_get_object(gtkBuilder, "winMain"));
   if (bar)

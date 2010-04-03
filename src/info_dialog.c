@@ -36,7 +36,12 @@
 /* Info dialog */
 GtkBuilder*  infoDialogGtkBuilder = NULL;
 
-#define INFO_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/info_dialog.ui"
+#ifdef _WIN32
+  #define INFO_UI_FILE "info_dialog.ui"
+#else
+  #define INFO_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/info_dialog.ui"
+#endif 
+
 
 /*
  * Start the dialog that give 

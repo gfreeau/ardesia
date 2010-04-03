@@ -72,7 +72,8 @@ static void put_background_above_annotations()
 
 
 /* The windows has been exposed after the show_all request to change the background image */
-static gboolean on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+G_MODULE_EXPORT gboolean
+on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *cr = gdk_cairo_create(widget->window);
   if (cr)
@@ -105,7 +106,8 @@ void clear_background()
 
 
 /* The windows has been exposed after the show_all request to change the background color */
-static gboolean on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+G_MODULE_EXPORT gboolean
+on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *cr = gdk_cairo_create(widget->window);
   if (cr)
