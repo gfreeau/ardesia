@@ -344,6 +344,7 @@ on_window_text_motion_notify_event (GtkWidget *win,
 /* Start the widget for the text insertion */
 void start_text_widget(GtkWindow *parent, char* color, int tickness)
 { 
+  stop_text_widget();
   text_pen_width = tickness;
   text_color = color;
   create_text_window(parent);

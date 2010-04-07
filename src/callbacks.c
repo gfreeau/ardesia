@@ -129,7 +129,6 @@ void add_alpha(char *color)
 void set_color(char* selected_color)
 {
   grab = TRUE;
-  pencil = TRUE;
   strcpy(color, selected_color);
   
   add_alpha(color);
@@ -366,8 +365,8 @@ G_MODULE_EXPORT void
 on_toolsPencil_activate          (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
 {
-  text = FALSE;
   grab = TRUE;
+  text = FALSE;
   pencil = TRUE;
   arrow = 0;
 }
