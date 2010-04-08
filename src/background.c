@@ -34,6 +34,13 @@
 #include <annotate.h>
 #include <stdlib.h> 
 
+#include <cairo.h>
+
+#if defined(_WIN32)
+	#include <cairo-win32.h>
+#else
+	#include <cairo-xlib.h>
+#endif
 
 GtkWidget* background_window = NULL;
 char* background_color = NULL;

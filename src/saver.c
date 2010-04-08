@@ -32,6 +32,13 @@
 #include <string.h> 
 #include "utils.h"
 
+#include <cairo.h>
+
+#if defined(_WIN32)
+	#include <cairo-win32.h>
+#else
+	#include <cairo-xlib.h>
+#endif
 
 /* Save the contents of the pixbuf in the file with name filename */
 gboolean save_png (GdkPixbuf *pixbuf,const char *filename)

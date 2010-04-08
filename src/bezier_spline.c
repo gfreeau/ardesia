@@ -28,6 +28,13 @@
 #include <math.h>
 #include <gsl/gsl_linalg.h>
 
+#include <cairo.h>
+
+#if defined(_WIN32)
+	#include <cairo-win32.h>
+#else
+	#include <cairo-xlib.h>
+#endif
 
 /* Spline the lines with a bezier curves */
 void spline (cairo_t *cr, GSList *list)

@@ -37,6 +37,14 @@
 #include <gtk/gtk.h>
 
 
+#include <cairo.h>
+
+#if defined(_WIN32)
+	#include <cairo-win32.h>
+#else
+	#include <cairo-xlib.h>
+#endif
+
 #ifndef _WIN32
   #include <gconf/gconf-client.h>
 #endif

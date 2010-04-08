@@ -3,6 +3,7 @@
 ## Created by Anjuta
 
 uidir = $(datadir)/ardesia/ui
+scriptsdir = $(datadir)/ardesia/scripts
 uipixmapsdir = $(uidir)/pixmaps
 uibackgroundsdir = $(uidir)/backgrounds
 ui_DATA = ardesia.ui \
@@ -62,6 +63,9 @@ install-data-local:
 	cp -r pixmaps/* $(uipixmapsdir) 
 	mkdir -p $(uibackgroundsdir) 
 	cp -r backgrounds/* $(uibackgroundsdir) 
+	mkdir -p $(scriptsdir) 
+	cp -r scripts/* $(scriptsdir) 
+	chmod a+x scripts/* 
 
 # Remove ui directory on uninstall
 uninstall-local:

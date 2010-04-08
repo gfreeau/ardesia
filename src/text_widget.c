@@ -36,6 +36,14 @@
 #include <utils.h>
 #include <annotate.h>
 
+#include <cairo.h>
+
+#if defined(_WIN32)
+	#include <cairo-win32.h>
+#else
+	#include <cairo-xlib.h>
+#endif
+
 #define TEXT_MOUSE_EVENTS        ( GDK_PROXIMITY_IN_MASK |      \
 				   GDK_PROXIMITY_OUT_MASK |	\
 				   GDK_POINTER_MOTION_MASK |	\

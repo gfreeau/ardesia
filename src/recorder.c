@@ -37,41 +37,30 @@
 #include <sys/wait.h>
 #endif
 
+#ifndef _WIN32
+  #define RECORDER_FILE PACKAGE_DATA_DIR"/ardesia/scripts/recordmydesktop_screencast.sh"
+#endif 
+
 
 /* pid of the recording process */
 int          recorderpid = -1;
+gchar* filename = NULL;
 
 /* 
  * Create a annotate client process the annotate
- * that talk with the server process 
+ * that talk with the server process option is start or stop
  */
-int start_recorder(char* filename)
+int call_recorder(char* option)
 {
   #ifdef _WIN32
     //TODO
     return -1;
   #else
-    char* argv[20];
-    argv[0] = "recordmydesktop";
-    argv[1] = "--quick-subsampling";
-    argv[2] = "--on-the-fly-encoding";
-    argv[3] = "-v_quality";
-    argv[4] = "10";
-    argv[5] = "-v_bitrate";
-    argv[6] = "50000";
-    argv[7] = "-s_quality";
-    argv[8] = "1";
-    argv[9] = "--fps";
-    argv[10] = "10";
-    argv[11] = "--freq";
-    argv[12] = "48000";
-    argv[13] = "--buffer-size";
-    argv[14] = "16384";
-    argv[15] = "-device";
-    argv[16] = "plughw:0,0";
-    argv[17] = "-o";
-    argv[18] = filename;
-    argv[19] = (char*) NULL ;
+    char* argv[4];
+    argv[0] = RECORDER_FILE;
+    argv[1] = filename;
+    argv[2] = option;
+    argv[3] = (char*) NULL ;
   
     pid_t pid;
     pid = fork();
@@ -144,6 +133,8 @@ void quit_recorder()
       {
         kill(recorderpid,SIGTERM);
         recorderpid=-1;
+        call_recorder("stop");
+        g_free(filename);
       }  
   #endif
 }
@@ -191,7 +182,7 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
   
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Select a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
-  gchar* filename =  g_malloc(256*sizeof(gchar));
+  filename =  g_malloc(256*sizeof(gchar));
   sprintf(filename,"ardesia_%s", date);
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   
@@ -236,11 +227,11 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
 	      return status; 
 	    } 
 	}
-      recorderpid = check_recorder(filename);
+      recorderpid = check_recorder();
       if (recorderpid > 0)
         {
           status = TRUE;
-          recorderpid = start_recorder(filename);
+          recorderpid = call_recorder("start");
         }
       else
        {
@@ -253,7 +244,6 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
      gtk_widget_destroy (chooser);
    } 
       
-  g_free(filename);
   g_free(date);
   return status;
 } 

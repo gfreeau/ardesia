@@ -47,6 +47,16 @@
 #include "background.h"
 #include <bezier_spline.h>
 
+#include <cairo.h>
+
+#if defined(_WIN32)
+	#include <cairo-win32.h>
+#else
+	#include <cairo-xlib.h>
+#endif
+
+
+
 
 #define ANNOTATE_MOUSE_EVENTS    ( GDK_PROXIMITY_IN_MASK |      \
 				   GDK_PROXIMITY_OUT_MASK |	\
