@@ -59,13 +59,13 @@ ardesia_LDADD = $(ARDESIA_LIBS) $(GCONF_LIBS)
 EXTRA_DIST = $(ui_DATA)
 
 install-data-local:
-	mkdir -p $(uipixmapsdir) 
-	cp -r pixmaps/* $(uipixmapsdir) 
-	mkdir -p $(uibackgroundsdir) 
-	cp -r backgrounds/* $(uibackgroundsdir) 
-	mkdir -p $(scriptsdir) 
-	cp -r scripts/* $(scriptsdir) 
-	chmod a+x scripts/* 
+	mkdir -p $(DESTDIR)$(uipixmapsdir) 
+	cp -r pixmaps/* $(DESTDIR)$(uipixmapsdir) 
+	mkdir -p $(DESTDIR)$(uibackgroundsdir) 
+	cp -r backgrounds/* $(DESTDIR)$(uibackgroundsdir) 
+	mkdir -p $(DESTDIR)$(scriptsdir) 
+	cp -r scripts/* $(DESTDIR)$(scriptsdir) 
+	chmod a+x $(DESTDIR)$(scriptsdir)/* 
 
 # Remove ui directory on uninstall
 uninstall-local:

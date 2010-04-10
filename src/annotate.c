@@ -51,10 +51,10 @@
 
 #if defined(_WIN32)
 	#include <cairo-win32.h>
+        #include <gdkwin32.h>
 #else
 	#include <cairo-xlib.h>
 #endif
-
 
 
 
@@ -469,14 +469,6 @@ void annotate_redo()
 }
 
 
-/* Undo and put the cursor in the old position */
-void annotate_undo_and_restore_pointer()
-{
-  annotate_undo();
-  gdk_display_warp_pointer (data->display, data->screen, data->savelist->xcursor, data->savelist->ycursor); 
-}
-
-
 /* Hide the annotations */
 void annotate_hide_annotation ()
 {
@@ -524,6 +516,9 @@ void annotate_release_grab ()
 	  g_printerr ("Release grab\n");
 	}
       data->is_grabbed=FALSE;
+      #ifdef _WIN32 
+        gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);
+      #endif
     }
 }
 
@@ -769,6 +764,7 @@ void annotate_clear_screen ()
       g_printerr("Clear screen\n");
     }
   reset_cairo();
+  clear_cairo_context(data->cr);
   clear_cairo_context(data->cr);
   add_save_point();
   data->painted = TRUE;
@@ -1033,6 +1029,11 @@ paint (GtkWidget *win,
   /* only button1 allowed */
   if (!(ev->button==1))
     {
+     if (data->debug)
+       {    
+         g_printerr("Device '%s': Invalid pressure event\n",
+		 ev->device->name);
+       }
       return FALSE;
     }  
 
@@ -1062,12 +1063,33 @@ paintto (GtkWidget *win,
 {
   if (!ev)
     {
+       if (data->debug)
+         {    
+           g_printerr("Device '%s': Invalid move event\n",
+	              ev->device->name);
+         }
        return FALSE;
     }
-  unhide_cursor();  
-  if (in_unlock_area(ev->x,ev->y))
+  unhide_cursor();
+   
+  // This is a workaround some event inside the bar has wrong coords
+  int x,y;
+  #ifdef _WIN32
+    /* get cursor position */
+    gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
+  #else
+    x = ev->x;
+    y = ev->y;   
+  #endif
+
+  if (in_unlock_area(x,y))
     /* point is in the ardesia bar */
     {
+       if (data->debug)
+         {    
+           g_printerr("Device '%s': Move on the bar then ungrab\n",
+	              ev->device->name);
+         }
       /* the last point was outside the bar then ungrab */
       annotate_release_grab ();
       return FALSE;
@@ -1342,7 +1364,6 @@ event_expose (GtkWidget *widget,
     }
   if (!(data->cr))
     {
-      /** is the first expose */
       data->cr = gdk_cairo_create(data->win->window);
       annotate_clear_screen();
       transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
@@ -1420,9 +1441,16 @@ void setup_app ()
 
   data->win = gtk_window_new (GTK_WINDOW_POPUP);
   gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);
+
+  #ifndef _WIN32 
+    gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
+  #else
+    // TODO In windows I am not able to use an rgba transparent  
+    // windows and then I use a sort of semi transparency
+    gtk_window_set_opacity(GTK_WINDOW(data->win), 0.5); 
+  #endif  
+
  
-  gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
-  
   data->arrow = 0; 
   data->painted = FALSE;
   data->rectify = FALSE;
@@ -1453,9 +1481,11 @@ void setup_app ()
   cairo_t* shape_cr = gdk_cairo_create(data->shape);
   clear_cairo_context(shape_cr); 
   cairo_destroy(shape_cr);
-  
+
   /* this allow the pointer focus below the transparent window */ 
-  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);  
+  #ifdef _WIN32 
+     gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);
+  #endif
 }
 
 

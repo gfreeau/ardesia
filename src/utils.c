@@ -41,6 +41,7 @@
 
 #if defined(_WIN32)
 	#include <cairo-win32.h>
+	#include <gdkwin32.h>
 #else
 	#include <cairo-xlib.h>
 #endif
@@ -140,7 +141,7 @@ void  cairo_set_transparent_color(cairo_t * cr)
 {
   if (cr)
     {
-      cairo_set_source_rgba (cr, 0, 0, 0, 0);
+      cairo_set_source_rgba (cr, 1, 1, 1, 0);
     }
 }
 
