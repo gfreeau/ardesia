@@ -97,6 +97,13 @@ void create_text_window(GtkWindow *parent)
   gtk_window_maximize(GTK_WINDOW(text_window));
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(text_window), TRUE);
   gtk_window_set_skip_pager_hint(GTK_WINDOW(text_window), TRUE);
+  #ifndef _WIN32 
+    gtk_window_set_opacity(GTK_WINDOW(text_window), 1); 
+  #else
+    // TODO In windows I am not able to use an rgba transparent  
+    // windows and then I use a sort of semi transparency
+    gtk_window_set_opacity(GTK_WINDOW(text_window), 0.5); 
+  #endif  
   gtk_window_stick(GTK_WINDOW(text_window));
   gtk_window_set_decorated(GTK_WINDOW(text_window), FALSE);
   gtk_widget_set_app_paintable(text_window, TRUE);
@@ -199,6 +206,12 @@ gboolean set_text_pointer(GtkWidget * window)
 {
   int height = max_font_height;
   int width = text_pen_width;
+  
+  #ifdef _WIN32
+    height=5;
+    width=5;  
+  #endif
+
   GdkPixmap *pixmap = gdk_pixmap_new (NULL, width ,height, 1);
 
   cairo_t *text_pointer_cr = gdk_cairo_create(pixmap);

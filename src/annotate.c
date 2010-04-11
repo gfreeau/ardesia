@@ -553,52 +553,64 @@ void annotate_select_pen()
 /* Set the cursor patching the xpm with the selected color */
 void set_pen_cursor()
 {
-  #ifndef _WIN32
-    gint size = 12;
-  
-    gint context_width = data->cur_context->width;;
-    GdkPixmap *pixmap = gdk_pixmap_new (NULL, size*3 + context_width, size*3 + context_width, 1);
-   
-    int circle_width = 2; 
-    cairo_t *pen_cr = gdk_cairo_create(pixmap);
-    clear_cairo_context(pen_cr);
-   
-    cairo_set_operator(pen_cr, CAIRO_OPERATOR_SOURCE);
-    cairo_set_line_width(pen_cr, circle_width);
-    cairo_set_source_color_from_string(pen_cr, data->cur_context->fg_color);
-   
-    cairo_arc(pen_cr, 5* size/2 + context_width/2, size/2, (size/2)-circle_width, M_PI * 5/4, M_PI/4);
-    cairo_arc(pen_cr, size/2 + context_width/2, 5 * size/2, (size/2)-circle_width, M_PI/4, M_PI * 5/4); 
-    cairo_fill(pen_cr);
- 
-    cairo_arc(pen_cr, size/2 + context_width/2 , 5 * size/2, context_width/2, 0, 2 * M_PI);
-    cairo_stroke(pen_cr);
-   
-    GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
-    GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color);
-
-    if (cursor)
-      {
-        gdk_cursor_unref(cursor);
-      }
-    cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
-    gdk_window_set_cursor (data->win->window, cursor);
-    gdk_flush ();
-    g_object_unref (pixmap);
-    g_free(foreground_color_p);
-    g_free(background_color_p);
-    cairo_destroy(pen_cr);
+  gint size=0;
+  #ifdef _WIN32
+    size = 5;
   #else
-    //TODO
+    size=12;
   #endif
+  
+
+  gint context_width = data->cur_context->width;;
+  GdkPixmap *pixmap = gdk_pixmap_new (NULL, size*3 + context_width, size*3 + context_width, 1);
+     
+  int circle_width = 2; 
+  cairo_t *pen_cr = gdk_cairo_create(pixmap);
+  clear_cairo_context(pen_cr);
+   
+  cairo_set_operator(pen_cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_line_width(pen_cr, circle_width);
+  cairo_set_source_color_from_string(pen_cr, data->cur_context->fg_color);
+   
+  cairo_arc(pen_cr, 5* size/2 + context_width/2, size/2, (size/2)-circle_width, M_PI * 5/4, M_PI/4);
+  cairo_arc(pen_cr, size/2 + context_width/2, 5 * size/2, (size/2)-circle_width, M_PI/4, M_PI * 5/4); 
+  cairo_fill(pen_cr);
+ 
+  cairo_arc(pen_cr, size/2 + context_width/2 , 5 * size/2, context_width/2, 0, 2 * M_PI);
+  cairo_stroke(pen_cr);
+   
+  GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
+  GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color);
+
+  if (cursor)
+    {
+      gdk_cursor_unref(cursor);
+    }
+   
+  cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
+  gdk_window_set_cursor (data->win->window, cursor);
+  gdk_flush ();
+  g_object_unref (pixmap);
+  g_free(foreground_color_p);
+  g_free(background_color_p);
+  cairo_destroy(pen_cr);
 }
 
 
 /* Set the eraser cursor */
 void set_eraser_cursor()
 {
-  #ifndef _WIN32
-    gint size = data->cur_context->width;
+  gint size = 0;
+  
+  #ifdef _WIN32
+    size = data->cur_context->width/5;
+    if (size==0) 
+      {
+        size++;
+      }
+  #else
+    size = data->cur_context->width;
+  #endif
     GdkPixmap *pixmap = gdk_pixmap_new (NULL, size, size, 1);
     int circle_width = 2; 
     cairo_t *eraser_cr = gdk_cairo_create(pixmap);
@@ -623,9 +635,6 @@ void set_eraser_cursor()
     g_free(foreground_color_p);
     g_free(background_color_p);
     cairo_destroy(eraser_cr);
-  #else
-    //TODO
-  #endif
 }
 
 
@@ -973,7 +982,6 @@ proximity_out (GtkWidget *win,
 /* Hide the cursor */
 void hide_cursor()
 {
-  #ifndef _WIN32
     char invisible_cursor_bits[] = { 0x0 };
     GdkBitmap *empty_bitmap;
     GdkColor color = { 0, 0, 0, 0 };
@@ -989,10 +997,7 @@ void hide_cursor()
     gdk_window_set_cursor(data->win->window, cursor);
     gdk_flush ();
     g_object_unref(empty_bitmap);
-    data->cursor_hidden = TRUE;
-  #else
-    //TODO
-  #endif
+    data->cursor_hidden = TRUE; 
 }
 
 

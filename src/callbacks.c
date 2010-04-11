@@ -99,8 +99,7 @@ gboolean  quit()
   annotate_quit();
   if (gtkBuilder)
   {
-    GtkWidget* main_window = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
-    gtk_widget_destroy(main_window);
+    gtk_widget_destroy(get_bar_window());
     g_object_unref (gtkBuilder); 
   }
   g_free(color);

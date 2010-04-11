@@ -35,7 +35,7 @@
 #include <errno.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
-
+#include <utils.h>
 
 #include <cairo.h>
 
@@ -51,6 +51,14 @@
 #endif
 
 const gchar* desktop_dir = NULL;
+
+
+
+/* get bar window widget */
+GtkWidget* get_bar_window()
+{
+  return GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
+}
 
 /* Grab pointer */
 void grab_pointer(GtkWidget *win, GdkEventMask eventmask)

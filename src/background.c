@@ -33,6 +33,7 @@
 #include <background.h>
 #include <annotate.h>
 #include <stdlib.h> 
+#include <utils.h> 
 
 #include <cairo.h>
 
@@ -75,6 +76,7 @@ static void put_background_above_annotations()
   GtkWindow* annotate_window = get_annotation_window();
   gtk_widget_show_all(GTK_WIDGET(annotate_window));
   gdk_window_restack (GTK_WIDGET(annotate_window)->window, background_window->window, TRUE);
+  gdk_window_restack (get_bar_window()->window, GTK_WIDGET(annotate_window)->window, TRUE); 
 }
 
 

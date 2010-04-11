@@ -45,6 +45,9 @@
 
 extern GtkBuilder *gtkBuilder;
 
+/* get bar window widget */
+GtkWidget* get_bar_window();
+
 /* Ungrab pointer */
 void ungrab_pointer(GdkDisplay* display, GtkWidget *win);
 
