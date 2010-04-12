@@ -74,8 +74,8 @@ void load_png (const char *filename)
 static void put_background_above_annotations()
 {
   GtkWindow* annotate_window = get_annotation_window();
-  gtk_widget_show_all(GTK_WIDGET(annotate_window));
-  gdk_window_restack ((GTK_WIDGET(annotate_window))->window, background_window->window, TRUE);
+  gtk_window_present(annotate_window);
+  gtk_window_present(get_bar_window());
 }
 
 
@@ -83,15 +83,12 @@ static void put_background_above_annotations()
 G_MODULE_EXPORT gboolean
 on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-  cairo_t *cr = gdk_cairo_create(widget->window);
-  if (cr)
-  {
-    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-    gdk_cairo_set_source_pixbuf(cr, pixbuf, 0.0, 0.0);
-    cairo_paint(cr);
-    cairo_destroy(cr);
-  }    
+  cairo_t *back_cr = gdk_cairo_create(widget->window);
+  cairo_set_operator(back_cr, CAIRO_OPERATOR_SOURCE);
+  gdk_cairo_set_source_pixbuf(back_cr, pixbuf, 0.0, 0.0);
+  cairo_paint(back_cr);
   put_background_above_annotations();
+  cairo_destroy(back_cr);   
   return TRUE;
 }
 
