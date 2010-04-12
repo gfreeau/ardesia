@@ -70,8 +70,8 @@ void load_png (const char *filename)
 }
 
 
-/* Put the background window above the annotation window */
-static void put_background_above_annotations()
+/* Put the background window below the annotation window */
+static void put_background_below_annotations()
 {
   GtkWindow* annotate_window = get_annotation_window();
   gtk_window_present(annotate_window);
@@ -87,7 +87,7 @@ on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
   cairo_set_operator(back_cr, CAIRO_OPERATOR_SOURCE);
   gdk_cairo_set_source_pixbuf(back_cr, pixbuf, 0.0, 0.0);
   cairo_paint(back_cr);
-  put_background_above_annotations();
+  put_background_below_annotations();
   cairo_destroy(back_cr);   
   return TRUE;
 }
@@ -124,7 +124,7 @@ on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer 
       cairo_paint(cr);
       cairo_destroy(cr);
     }    
-  put_background_above_annotations();
+  put_background_below_annotations();
   return TRUE;
 }
 

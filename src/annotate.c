@@ -552,24 +552,24 @@ void annotate_select_pen()
 
 GdkPixmap* get_pen_bitmap(int size)
 {
-    gint context_width = data->cur_context->width;;
-    GdkPixmap *pixmap = gdk_pixmap_new (NULL, size*3 + context_width, size*3 + context_width, 1);
+  gint context_width = data->cur_context->width;;
+  GdkPixmap *pixmap = gdk_pixmap_new (NULL, size*3 + context_width, size*3 + context_width, 1);
      
-    int circle_width = 2; 
-    cairo_t *pen_cr = gdk_cairo_create(pixmap);
-    clear_cairo_context(pen_cr);
+  int circle_width = 2; 
+  cairo_t *pen_cr = gdk_cairo_create(pixmap);
+  clear_cairo_context(pen_cr);
    
-    cairo_set_operator(pen_cr, CAIRO_OPERATOR_SOURCE);
-    cairo_set_line_width(pen_cr, circle_width);
-    cairo_set_source_color_from_string(pen_cr, data->cur_context->fg_color);
-    cairo_arc(pen_cr, 5* size/2 + context_width/2, size/2, (size/2)-circle_width, M_PI * 5/4, M_PI/4);
-    cairo_arc(pen_cr, size/2 + context_width/2, 5 * size/2, (size/2)-circle_width, M_PI/4, M_PI * 5/4); 
-    cairo_fill(pen_cr);
+  cairo_set_operator(pen_cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_line_width(pen_cr, circle_width);
+  cairo_set_source_color_from_string(pen_cr, data->cur_context->fg_color);
+  cairo_arc(pen_cr, 5* size/2 + context_width/2, size/2, (size/2)-circle_width, M_PI * 5/4, M_PI/4);
+  cairo_arc(pen_cr, size/2 + context_width/2, 5 * size/2, (size/2)-circle_width, M_PI/4, M_PI * 5/4); 
+  cairo_fill(pen_cr);
  
-    cairo_arc(pen_cr, size/2 + context_width/2 , 5 * size/2, context_width/2, 0, 2 * M_PI);
-    cairo_stroke(pen_cr);
-    cairo_destroy(pen_cr);
-    return pixmap; 
+  cairo_arc(pen_cr, size/2 + context_width/2 , 5 * size/2, context_width/2, 0, 2 * M_PI);
+  cairo_stroke(pen_cr);
+  cairo_destroy(pen_cr);
+  return pixmap; 
 }
 
 
@@ -1371,8 +1371,8 @@ event_expose (GtkWidget *widget,
       cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
       clear_cairo_context(transparent_cr);
       cairo_destroy(transparent_cr);
+      restore_surface();
     }
-  restore_surface();
   return TRUE;
 }
 
