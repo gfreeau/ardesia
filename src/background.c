@@ -75,8 +75,7 @@ static void put_background_above_annotations()
 {
   GtkWindow* annotate_window = get_annotation_window();
   gtk_widget_show_all(GTK_WIDGET(annotate_window));
-  gdk_window_restack (GTK_WIDGET(annotate_window)->window, background_window->window, TRUE);
-  gdk_window_restack (get_bar_window()->window, GTK_WIDGET(annotate_window)->window, TRUE); 
+  gdk_window_restack ((GTK_WIDGET(annotate_window))->window, background_window->window, TRUE);
 }
 
 
@@ -137,8 +136,13 @@ on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer 
 void create_background_window()
 {
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  //gtk_widget_set_usize (GTK_WIDGET(background_window), gdk_screen_width (), gdk_screen_height ());
   gtk_window_fullscreen(GTK_WINDOW(background_window));
-  gtk_window_stick(GTK_WINDOW(background_window));  
+  if (STICK)
+    {
+      gtk_window_stick(GTK_WINDOW(background_window));  
+    }
+  
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
   gtk_widget_set_app_paintable(background_window, TRUE);
   gtk_window_set_opacity(GTK_WINDOW(background_window), 1); 

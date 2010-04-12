@@ -104,7 +104,10 @@ void create_text_window(GtkWindow *parent)
     // windows and then I use a sort of semi transparency
     gtk_window_set_opacity(GTK_WINDOW(text_window), 0.5); 
   #endif  
-  gtk_window_stick(GTK_WINDOW(text_window));
+  if (STICK)
+    {
+      gtk_window_stick(GTK_WINDOW(text_window));
+    }
   gtk_window_set_decorated(GTK_WINDOW(text_window), FALSE);
   gtk_widget_set_app_paintable(text_window, TRUE);
   gtk_widget_set_double_buffered(text_window, FALSE);

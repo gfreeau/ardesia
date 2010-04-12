@@ -46,6 +46,12 @@ void annotate_show_annotation ();
 /* Get cairo context that contains the annotations */
 cairo_t* get_annotation_cairo_context();
 
+/* Get the cairo context that contains the background */
+cairo_t* get_annotation_cairo_background_context();
+
+/* Set the cairo context that contains the background */
+void set_annotation_cairo_background_context(cairo_t* background_cr);
+
 /* Undo to the last save point */
 void annotate_undo();
 

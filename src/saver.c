@@ -84,9 +84,13 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
   
-  /* with this apperar in all the workspaces */  
-  gtk_window_stick((GtkWindow*) chooser);
- 
+  
+  if (STICK)
+    {
+       /* with this apperar in all the workspaces */ 
+       gtk_window_stick((GtkWindow*) chooser);
+    } 
+
   /* preview of saving */
   GtkWidget*   preview = gtk_image_new ();
   GdkPixbuf*   previewPixbuf = gdk_pixbuf_scale_simple(buf, 128, 128, GDK_INTERP_BILINEAR);
@@ -126,7 +130,12 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
 					       GTK_DIALOG_MODAL, 
                                                GTK_MESSAGE_WARNING,
                                                GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
-          gtk_window_stick((GtkWindow*)msg_dialog);
+          if (STICK)
+          {
+             /* with this apperar in all the workspaces */ 
+             gtk_window_stick((GtkWindow*)msg_dialog);
+          } 
+          
           int result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
           if (msg_dialog != NULL)
             { 

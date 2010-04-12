@@ -147,8 +147,12 @@ void missing_recorder_program_dialog(GtkWindow* parent_window)
   
   miss_dialog = gtk_message_dialog_new (parent_window, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
                                        GTK_BUTTONS_OK, gettext("To record with Ardesia you must install the recordmydesktop program"));
-  gtk_window_stick((GtkWindow*)miss_dialog);
-
+  
+  if (STICK)
+    {
+       gtk_window_stick((GtkWindow*)miss_dialog);
+    }
+ 
   gtk_dialog_run(GTK_DIALOG(miss_dialog));
   
   if (miss_dialog != NULL)
@@ -178,8 +182,11 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
-  gtk_window_stick((GtkWindow*)chooser);
-  
+  if (STICK)
+    {
+       gtk_window_stick((GtkWindow*)chooser);
+    }
+
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Select a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
   filename =  g_malloc(256*sizeof(gchar));
@@ -211,9 +218,11 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
 					       GTK_DIALOG_MODAL, 
                                                GTK_MESSAGE_WARNING,  
                                                GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
-
-	  gtk_window_stick((GtkWindow*)msg_dialog);
-                 
+ 	  if (STICK)
+    	    {
+               gtk_window_stick((GtkWindow*)msg_dialog);
+    	    }
+	     
           gint result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
           if (msg_dialog != NULL)
             {

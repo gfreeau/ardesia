@@ -43,6 +43,8 @@
 #  define N_(String) (String)
 #endif
 
+#define STICK TRUE
+
 extern GtkBuilder *gtkBuilder;
 
 /* get bar window widget */

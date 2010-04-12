@@ -1446,6 +1446,11 @@ void setup_app ()
 
   data->win = gtk_window_new (GTK_WINDOW_POPUP);
   gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);
+  if (STICK)
+    {
+      gtk_window_stick(GTK_WINDOW(data->win));
+    }  
+  //gtk_window_fullscreen(GTK_WINDOW(data->win)); 
 
   #ifndef _WIN32 
     gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
@@ -1487,6 +1492,7 @@ void setup_app ()
   clear_cairo_context(shape_cr); 
   cairo_destroy(shape_cr);
 
+  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
   /* this allow the pointer focus below the transparent window */ 
   #ifdef _WIN32 
      gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);

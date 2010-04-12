@@ -55,8 +55,10 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
       GtkWidget* colorDialog = gtk_color_selection_dialog_new (gettext("Changing color"));
       
       gtk_window_set_transient_for(GTK_WINDOW(colorDialog), parent);
-      gtk_window_stick((GtkWindow*)colorDialog);
-
+      if (STICK)
+        {
+          gtk_window_stick((GtkWindow*)colorDialog);
+        }
       GtkColorSelection *colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
     
       /* color initially selected */ 

@@ -63,7 +63,7 @@
 #include "string.h"
 #include "unistd.h"
 #include "getopt.h"
-
+#include "utils.h"
 
 #ifdef _WIN32
   #define UI_FILE "ardesia.ui"
@@ -183,7 +183,10 @@ void check_composite()
         GtkWidget *msg_dialog; 
         msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
                                              GTK_BUTTONS_OK, gettext("In order to run Ardesia you need to enable the Compiz composite manager"));
-        gtk_window_stick((GtkWindow*)msg_dialog);
+        if (STICK)
+        {
+          gtk_window_stick((GtkWindow*)msg_dialog);
+        }
                  
         gtk_dialog_run(GTK_DIALOG(msg_dialog));
         if (msg_dialog != NULL)
@@ -338,12 +341,11 @@ main (int argc, char *argv[])
 
   /** Init annotate */
   annotate_init(x, y, width, height, commandline->debug, commandline->backgroundimage); 
-
   GtkWindow* annotation_window = get_annotation_window();  
   if (annotation_window)
-    {
+   {
       gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), annotation_window );
-    }
+   }
 
   gtk_widget_show (ardesiaBarWindow);
 
