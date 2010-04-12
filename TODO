@@ -11,6 +11,14 @@
 - Documentation
   - Create video tutorial
 
+- Windows porting
+  - alpha channels
+  - patch background windows
+  - suuport the icons
+  - trick about shape mask
+  - recording
+  - investigate about gconf on windows
+
 - Usability
   - specify the default file name 
     and the default folder name used for the sceenshot 
