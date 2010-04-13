@@ -33,7 +33,9 @@
 #include "background.h"
 #include "utils.h"
 
+
 #ifdef _WIN32
+  #include <gdkwin32.h>
   #define PREFERENCE_UI_FILE "preference_dialog.ui"
   #define BACKGROUNDS_FOLDER "backgrounds"
 #else

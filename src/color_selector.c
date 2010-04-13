@@ -34,6 +34,9 @@
 #include "background.h"
 #include "utils.h"
 
+#if defined(_WIN32)
+  #include <gdkwin32.h>
+#endif
 
 /* old picked color in RGBA format */
 gchar*       picked_color = NULL;

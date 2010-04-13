@@ -24,7 +24,7 @@
 /** Widget for text insertion */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+  #include <config.h>
 #endif
 
 #include <glib.h>
@@ -39,9 +39,10 @@
 #include <cairo.h>
 
 #if defined(_WIN32)
-	#include <cairo-win32.h>
+  #include <gdkwin32.h>
+  #include <cairo-win32.h>
 #else
-	#include <cairo-xlib.h>
+  #include <cairo-xlib.h>
 #endif
 
 #define TEXT_MOUSE_EVENTS        ( GDK_PROXIMITY_IN_MASK |      \

@@ -66,13 +66,11 @@
 #include "utils.h"
 
 #ifdef _WIN32
+  #include <gdkwin32.h>
   #define UI_FILE "ardesia.ui"
 #else
   #define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.ui"
 #endif 
-/* This is for local testing */
-/* #define UI_FILE "src/ardesia.ui" */
-
 
 
 
@@ -83,6 +81,8 @@ int SOUTH=2;
 int SPACE_FROM_BORDER = 25;
 
 GtkBuilder *gtkBuilder;
+
+
 
 typedef struct
 {
@@ -171,7 +171,10 @@ void print_help()
 void check_composite()
 {
    #ifdef _WIN32
-    //TODO at the moment we suppose that the alpha channel is available and the no checks
+    /* 
+       TODO at the moment we suppose that the alpha channel is available and the no checks
+       but it is not true; we must investigate furthermore about how work with alpha channel on win32
+    */
     return ;
   #else
     GdkDisplay *display = gdk_display_get_default ();
@@ -291,7 +294,7 @@ create_window (void)
       g_error_free (error);
     }
 
-  /* This is important */
+  /* This is important; connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals (gtkBuilder, NULL);
   window = GTK_WIDGET (gtk_builder_get_object (gtkBuilder, "winMain"));
   /* Set the width to 15 in the thick scale */

@@ -22,7 +22,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+  #include <config.h>
 #endif
 
 #include "callbacks.h"
@@ -52,6 +52,9 @@
 #include <sys/stat.h>
 #include <errno.h>
 
+#if defined(_WIN32)
+  #include <gdkwin32.h>
+#endif
 
 #define COLORSIZE 9
 
@@ -607,5 +610,5 @@ on_colorWhite_activate           (GtkToolButton   *toolbutton,
 G_MODULE_EXPORT void
 destroy (GtkWidget *widget, gpointer data)
 {
-	gtk_main_quit ();
+  gtk_main_quit ();
 }

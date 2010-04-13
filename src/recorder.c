@@ -32,6 +32,7 @@
 #include <string.h> 
 #include "utils.h"
 #ifdef _WIN32
+  #include <gdkwin32.h>
   #include <windows.h>
 #else
 #include <sys/wait.h>
@@ -53,7 +54,7 @@ gchar* filename = NULL;
 int call_recorder(char* option)
 {
   #ifdef _WIN32
-    //TODO
+    //TODO: this feature is not yet implemented on win32
     return -1;
   #else
     char* argv[4];
@@ -84,7 +85,7 @@ int call_recorder(char* option)
 int check_recorder()
 {
   #ifdef _WIN32
-    //TODO
+    //TODO: this feature is not yet implemented on win32
     return -1;
   #else
     char* argv[3];
@@ -112,7 +113,7 @@ int check_recorder()
 gboolean is_recording()
 {
   #ifdef _WIN32
-    //TODO
+    //TODO: this feature is not yet implemented on win32
     return FALSE;
   #else
     if (recorderpid == -1)

@@ -31,9 +31,10 @@
 #include <cairo.h>
 
 #if defined(_WIN32)
-	#include <cairo-win32.h>
+  #include <cairo-win32.h>
+  #include <gdkwin32.h>
 #else
-	#include <cairo-xlib.h>
+  #include <cairo-xlib.h>
 #endif
 
 /* Spline the lines with a bezier curves */

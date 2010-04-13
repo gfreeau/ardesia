@@ -50,10 +50,10 @@
 #include <cairo.h>
 
 #if defined(_WIN32)
-	#include <cairo-win32.h>
-        #include <gdkwin32.h>
+  #include <cairo-win32.h>
+  #include <gdkwin32.h>
 #else
-	#include <cairo-xlib.h>
+  #include <cairo-xlib.h>
 #endif
 
 
@@ -1450,8 +1450,8 @@ void setup_app ()
   #ifndef _WIN32 
     gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
   #else
-    // TODO In windows I am not able to use an rgba transparent  
-    // windows and then I use a sort of semi transparency
+    // TODO In windows I am not yet able to use an rgba transparent  
+    // windows and then I use a sort of semi transparency 
     gtk_window_set_opacity(GTK_WINDOW(data->win), 0.5); 
   #endif  
 
@@ -1487,8 +1487,9 @@ void setup_app ()
   clear_cairo_context(shape_cr); 
   cairo_destroy(shape_cr);
 
-  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
   /* this allow the pointer focus below the transparent window */ 
+  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
+ 
   #ifdef _WIN32 
      gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);
   #endif

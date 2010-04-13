@@ -22,7 +22,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+  #include <config.h>
 #endif
 
 #include "time.h"
@@ -37,18 +37,16 @@
 #include <gtk/gtk.h>
 #include <utils.h>
 
-#include <cairo.h>
 
 #if defined(_WIN32)
-	#include <cairo-win32.h>
-	#include <gdkwin32.h>
+  #include <cairo-win32.h>
+  #include <gdkwin32.h>
 #else
-	#include <cairo-xlib.h>
-#endif
-
-#ifndef _WIN32
+  #include <cairo.h>
+  #include <cairo-xlib.h>
   #include <gconf/gconf-client.h>
 #endif
+
 
 const gchar* desktop_dir = NULL;
 
@@ -213,7 +211,7 @@ void  cairo_set_transparent_color(cairo_t * cr)
 {
   if (cr)
     {
-      cairo_set_source_rgba (cr, 1, 1, 1, 0);
+      cairo_set_source_rgba (cr, 0, 0, 0, 0);
     }
 }
 
@@ -263,6 +261,7 @@ gboolean file_exists(char* filename, char* desktop_dir)
 {
   char* afterslash = NULL; 
   #ifdef _WIN32
+    //TODO: check if this works on win32
     afterslash = strrchr(filename, '\\');
   #else
     afterslash = strrchr(filename, '/');
@@ -296,7 +295,7 @@ const gchar* get_desktop_dir (void)
 {
   const gchar* desktop_dir = NULL;
   #ifdef _WIN32
-    //TODO now we return an empty string it is possbile that the file will be stored in the desktop
+    //TODO: now we return an empty string; it is possbile that the file will be stored in the desktop
     desktop_dir = "";
   #else
     GConfClient *gconf_client = NULL;
