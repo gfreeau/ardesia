@@ -36,6 +36,7 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include <utils.h>
+#include <gconf/gconf-client.h>
 
 
 #if defined(_WIN32)
@@ -44,7 +45,6 @@
 #else
   #include <cairo.h>
   #include <cairo-xlib.h>
-  #include <gconf/gconf-client.h>
 #endif
 
 
@@ -261,7 +261,6 @@ gboolean file_exists(char* filename, char* desktop_dir)
 {
   char* afterslash = NULL; 
   #ifdef _WIN32
-    //TODO: check if this works on win32
     afterslash = strrchr(filename, '\\');
   #else
     afterslash = strrchr(filename, '/');
@@ -294,28 +293,23 @@ gboolean file_exists(char* filename, char* desktop_dir)
 const gchar* get_desktop_dir (void)
 {
   const gchar* desktop_dir = NULL;
-  #ifdef _WIN32
-    //TODO: now we return an empty string; it is possbile that the file will be stored in the desktop
-    desktop_dir = "";
-  #else
-    GConfClient *gconf_client = NULL;
-    gboolean desktop_is_home_dir = FALSE;
+  GConfClient *gconf_client = NULL;
+  gboolean desktop_is_home_dir = FALSE;
 
-    gconf_client = gconf_client_get_default ();
-    desktop_is_home_dir = gconf_client_get_bool (gconf_client,
+  gconf_client = gconf_client_get_default ();
+  desktop_is_home_dir = gconf_client_get_bool (gconf_client,
                                                "/apps/nautilus/preferences/desktop_is_home_dir",
                                                NULL);
-    if (desktop_is_home_dir)
-      {
-        desktop_dir = g_get_home_dir ();
-      }
-    else
-      {
-        desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
-      }
+  if (desktop_is_home_dir)
+    {
+      desktop_dir = g_get_home_dir ();
+    }
+  else
+    {
+      desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
+    }
 
-    g_object_unref (gconf_client);
-  #endif
+  g_object_unref (gconf_client);
 
   return desktop_dir;
 }

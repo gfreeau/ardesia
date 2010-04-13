@@ -55,7 +55,7 @@ am_ardesia_OBJECTS = callbacks.$(OBJEXT) background.$(OBJEXT) \
 	info_dialog.$(OBJEXT) recorder.$(OBJEXT) main.$(OBJEXT)
 ardesia_OBJECTS = $(am_ardesia_OBJECTS)
 am__DEPENDENCIES_1 =
-ardesia_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+ardesia_DEPENDENCIES = $(am__DEPENDENCIES_1)
 ardesia_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(ardesia_LDFLAGS) \
 	$(LDFLAGS) -o $@
@@ -128,8 +128,6 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
-GCONF_CFLAGS = @GCONF_CFLAGS@
-GCONF_LIBS = @GCONF_LIBS@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@

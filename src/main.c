@@ -155,24 +155,7 @@ void print_help()
 /* check if a composite manager is active */
 void check_composite()
 {
-   #ifdef _WIN32
-    /* 
-       TODO at the moment we suppose that the alpha channel is available and the no checks
-       but it is not true; we must investigate furthermore about how work with alpha channel on win32
-    */
-    GdkVisual * visual = gdk_visual_get_best_with_depth(24);
-    if (visual)
-      {
-        printf("Here\n");
-        GdkColormap *colormap = gdk_colormap_new(visual, FALSE);
-        if (colormap)
-          {
-            gtk_widget_set_default_colormap(colormap);
-            printf("Here\n");
-          }
-      }
-    return ;
-  #else
+  #ifndef _WIN32
     GdkDisplay *display = gdk_display_get_default ();
     GdkScreen   *screen = gdk_display_get_default_screen (display);
     gboolean composite = gdk_screen_is_composited (screen);
@@ -199,7 +182,7 @@ void check_composite()
       {
         gtk_widget_set_default_colormap(colormap);
       }
- #endif
+  #endif
 }
 
 
