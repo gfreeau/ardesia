@@ -85,9 +85,9 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
       switch (result)
 	{
 	case GTK_RESPONSE_OK:
-	  colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
+	  colorsel = GTK_COLOR_SELECTION((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
           gtk_color_selection_set_has_palette(colorsel, TRUE);
-          gtk_color_selection_get_current_color   (colorsel, gdkcolor);
+          gtk_color_selection_get_current_color(colorsel, gdkcolor);
           g_free(color);
           color = gdkcolor_to_rgba(gdkcolor);
           if (picked_color == NULL)

@@ -157,7 +157,6 @@ void change_background_image (const char *name)
   g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_file_expose_event), NULL);
 
   gtk_widget_show_all(background_window);
-  
 }
 
 

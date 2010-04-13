@@ -142,6 +142,8 @@ AnnotateData* data;
 
 GdkPixmap *transparent_pixmap = NULL;
 
+cairo_t *transparent_cr = NULL;
+
 GdkCursor* cursor = NULL;
 
 /* Create a new paint context */
@@ -476,12 +478,11 @@ void annotate_hide_annotation ()
     {
       g_printerr("Hide annotations\n");
     }
-  gdk_draw_drawable (data->win->window,
-                     data->win->style->fg_gc[GTK_WIDGET_STATE (data->win)],
-                     transparent_pixmap,
-                     0, 0,
-                     0, 0,
-                     data->width, data->height);
+   cairo_t *cr = gdk_cairo_create(data->win->window);
+   cairo_surface_t *transparent_surface = cairo_get_target(transparent_cr);
+   cairo_set_source_surface (cr, transparent_surface, 0, 0);
+   cairo_paint(cr);
+   cairo_destroy(cr);
 }
 
 
@@ -769,7 +770,6 @@ void annotate_clear_screen ()
     }
   reset_cairo();
   clear_cairo_context(data->cr);
-  clear_cairo_context(data->cr);
   add_save_point();
   data->painted = TRUE;
 }
@@ -987,8 +987,13 @@ void hide_cursor()
       {
         gdk_cursor_unref (cursor);
       }
-    cursor = gdk_cursor_new_from_pixmap (empty_bitmap, empty_bitmap, &color,
+    #ifdef _WIN32
+      cursor = fixed_gdk_cursor_new_from_pixmap (empty_bitmap, empty_bitmap, &color,
 	             			 &color, 0, 0);
+    #else 
+      cursor = gdk_cursor_new_from_pixmap (empty_bitmap, empty_bitmap, &color,
+	             			 &color, 0, 0);
+    #endif
     gdk_window_set_cursor(data->win->window, cursor);
     gdk_display_sync(gdk_display_get_default());
     g_object_unref(empty_bitmap);
@@ -1219,7 +1224,7 @@ gboolean roundify()
         { 
           gint curx = point3->x; 
           gint cury = point3->y;
-	      cairo_draw_ellipse(lastx,lasty, curx-lastx, cury-lasty);          
+	  cairo_draw_ellipse(lastx,lasty, curx-lastx, cury-lasty);          
         }
     }
   else
@@ -1368,9 +1373,8 @@ event_expose (GtkWidget *widget,
       annotate_clear_screen();
       transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
 					   data->height, -1);
-      cairo_t *transparent_cr = gdk_cairo_create(transparent_pixmap);
+      transparent_cr = gdk_cairo_create(transparent_pixmap);
       clear_cairo_context(transparent_cr);
-      cairo_destroy(transparent_cr);
       restore_surface();
     }
   return TRUE;
@@ -1501,6 +1505,7 @@ void annotate_quit()
 {
   /* ungrab all */
   annotate_release_grab(); 
+  cairo_destroy(transparent_cr);
   /* destroy cairo */
   destroy_cairo();
   g_signal_handlers_disconnect_by_func (data->win,

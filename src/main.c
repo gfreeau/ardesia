@@ -92,17 +92,6 @@ typedef struct
 } CommandLine;
 
 
-/* Get the screen resolution asking to the Xorg server throught the xlib libraries */
-int getScreenResolution(int *width, int *height)
-{
-  GdkDisplay* display = gdk_display_get_default ();
-  GdkScreen* screen = gdk_display_get_default_screen (display);
-  *width = gdk_screen_get_width (screen);
-  *height = (double) gdk_screen_get_height (screen);
-  return 0;
-}
-
-
 /* 
  * Calculate the position where calculate_initial_position the main window 
  * the centered position upon the window manager bar
@@ -135,13 +124,9 @@ void calculate_centered_position(GtkWidget *ardesiaBarWindow, int dwidth, int dh
  */
 int calculate_initial_position(GtkWidget *ardesiaBarWindow, int *x, int *y, int wwidth, int wheight, int position)
 {
-  int dwidth, dheight;
-  if (getScreenResolution(&dwidth, &dheight)<0) 
-    {
-      perror ("Fatal error while getting screen resolution\n");
-      return -1;
-    }
-  calculate_centered_position(ardesiaBarWindow,dwidth,dheight, x, y, wwidth, wheight, position);
+  gint dwidth = gdk_screen_width ();
+  gint dheight = gdk_screen_height ();
+  calculate_centered_position(ardesiaBarWindow, dwidth, dheight, x, y, wwidth, wheight, position);
   return 0; 
 }
 
@@ -175,6 +160,17 @@ void check_composite()
        TODO at the moment we suppose that the alpha channel is available and the no checks
        but it is not true; we must investigate furthermore about how work with alpha channel on win32
     */
+    GdkVisual * visual = gdk_visual_get_best_with_depth(24);
+    if (visual)
+      {
+        printf("Here\n");
+        GdkColormap *colormap = gdk_colormap_new(visual, FALSE);
+        if (colormap)
+          {
+            gtk_widget_set_default_colormap(colormap);
+            printf("Here\n");
+          }
+      }
     return ;
   #else
     GdkDisplay *display = gdk_display_get_default ();

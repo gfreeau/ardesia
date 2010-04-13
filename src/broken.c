@@ -298,12 +298,12 @@ GSList* extract_poligon(GSList* listIn)
   gint maxx;
   gint maxy;
   gint total_width;
-  gint lenght = g_slist_length(listIn);
   found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_width);
   cx = (maxx + minx)/2;   
   cy = (maxy + miny)/2;   
   radius = ((maxx-minx)+(maxy-miny))/4;   
   double angle_off = M_PI/2;
+  gint lenght = g_slist_length(listIn);
   double angle_step = 2 * M_PI / lenght;
   angle_off += angle_step/2;
   double x1, y1;
@@ -399,7 +399,7 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
 	  /* close path */
 	  if (rectify)
 	    {
-	      // is similar to regular a poligoin
+	      // is similar to regular a poligon
 	      if (is_similar_to_a_regular_poligon(listOut, tollerance * 2))
 		{
 		  listOut = extract_poligon(listOut);
