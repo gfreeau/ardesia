@@ -178,8 +178,12 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   /* Fill the window by the gtk builder xml */
   preferenceDialog = GTK_WIDGET(gtk_builder_get_object(preferenceDialogGtkBuilder,"preferences"));
   gtk_window_set_transient_for(GTK_WINDOW(preferenceDialog), parent);
-  gtk_window_stick((GtkWindow*)preferenceDialog);
-  
+
+  if (STICK)
+    {
+      gtk_window_stick((GtkWindow*)preferenceDialog);
+    }  
+
   GtkFileChooser* chooser = GTK_FILE_CHOOSER(gtk_builder_get_object(preferenceDialogGtkBuilder,"imageChooserButton"));
 
   gtk_file_chooser_set_current_folder(chooser, BACKGROUNDS_FOLDER);

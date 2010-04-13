@@ -428,7 +428,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
     {
       quit_recorder();
       /* set stop tooltip */ 
-      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Record");
+      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, "Record");
       /* put icon to record */
       gtk_tool_button_set_stock_id (toolbutton, "gtk-media-record");
     }
@@ -441,7 +441,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
       if (status)
         {
           /* set stop tooltip */ 
-          gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Stop");
+          gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, "Stop");
           /* put icon to stop */
           gtk_tool_button_set_stock_id (toolbutton, "gtk-media-stop");
         }

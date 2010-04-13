@@ -11,10 +11,6 @@
 - Documentation
   - Create video tutorial
 
-- Bug Fix
-  - background window
-  - text insertion
-
 - Windows porting
   - trick about shape mask
   - support the pointer icons

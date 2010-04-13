@@ -35,7 +35,7 @@
   #include <gdkwin32.h>
   #include <windows.h>
 #else
-#include <sys/wait.h>
+  #include <sys/wait.h>
 #endif
 
 #ifndef _WIN32
@@ -151,15 +151,15 @@ void missing_recorder_program_dialog(GtkWindow* parent_window)
   
   if (STICK)
     {
-       gtk_window_stick((GtkWindow*)miss_dialog);
+      gtk_window_stick((GtkWindow*)miss_dialog);
     }
  
   gtk_dialog_run(GTK_DIALOG(miss_dialog));
   
   if (miss_dialog != NULL)
-   {
-     gtk_widget_destroy(miss_dialog);
-   }
+    {
+      gtk_widget_destroy(miss_dialog);
+    }
 }
 
 
@@ -183,6 +183,7 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
+
   if (STICK)
     {
        gtk_window_stick((GtkWindow*)chooser);

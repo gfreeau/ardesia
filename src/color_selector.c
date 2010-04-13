@@ -53,7 +53,6 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
   
   if (gtk_toggle_tool_button_get_active(button))
     {
-
       /* open color widget */
       GtkWidget* colorDialog = gtk_color_selection_dialog_new (gettext("Changing color"));
       
@@ -62,6 +61,7 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
         {
           gtk_window_stick((GtkWindow*)colorDialog);
         }
+
       GtkColorSelection *colorsel = GTK_COLOR_SELECTION ((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
     
       /* color initially selected */ 
@@ -84,20 +84,21 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
       /* Wait for user to select OK or Cancel */
       switch (result)
 	{
-	case GTK_RESPONSE_OK:
-	  colorsel = GTK_COLOR_SELECTION((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
-          gtk_color_selection_set_has_palette(colorsel, TRUE);
-          gtk_color_selection_get_current_color(colorsel, gdkcolor);
-          g_free(color);
-          color = gdkcolor_to_rgba(gdkcolor);
-          if (picked_color == NULL)
-            {
-	      picked_color = g_malloc(strlen(color));
-            }
-          strncpy(picked_color, color, strlen(color));
-	  break;
-	default:
-	  break;
+	  case GTK_RESPONSE_OK:
+	    colorsel = GTK_COLOR_SELECTION((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
+            gtk_color_selection_set_has_palette(colorsel, TRUE);
+            gtk_color_selection_get_current_color(colorsel, gdkcolor);
+            g_free(color);
+            color = gdkcolor_to_rgba(gdkcolor);
+            if (picked_color == NULL)
+              {
+	        picked_color = g_malloc(strlen(color));
+              }
+            strncpy(picked_color, color, strlen(color));
+	    break;
+
+	  default:
+	    break;
 	}
       if (colorDialog != NULL)
 	{
