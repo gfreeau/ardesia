@@ -18,8 +18,10 @@
 - Windows porting
   - trick about shape mask
   - support the pointer icons
+  - recording (using camit ffmpeg2theora)
+  - forwardind to icecast for streaming 
+    (see if is possible port oggfwd)
   - alpha channels
-  - recording
 
 - Usability
   - specify the default file name 
