@@ -11,13 +11,15 @@
 - Documentation
   - Create video tutorial
 
+- Bug Fix
+  - background window
+  - text insertion
+
 - Windows porting
-  - alpha channels
-  - patch background windows
-  - suuport the icons
   - trick about shape mask
+  - support the pointer icons
+  - alpha channels
   - recording
-  - investigate about gconf on windows
 
 - Usability
   - specify the default file name 
