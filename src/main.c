@@ -124,8 +124,8 @@ void calculate_centered_position(GtkWidget *ardesiaBarWindow, int dwidth, int dh
  */
 int calculate_initial_position(GtkWidget *ardesiaBarWindow, int *x, int *y, int wwidth, int wheight, int position)
 {
-  gint dwidth = gdk_screen_width ();
-  gint dheight = gdk_screen_height ();
+  gint dwidth = gdk_screen_width();
+  gint dheight = gdk_screen_height();
   calculate_centered_position(ardesiaBarWindow, dwidth, dheight, x, y, wwidth, wheight, position);
   return 0; 
 }
@@ -210,8 +210,8 @@ CommandLine* parse_options(int argc, char *argv[])
 
      
       int option_index = 0;
-      c = getopt_long (argc, argv, "hvg:",
-		       long_options, &option_index);
+      c = getopt_long(argc, argv, "hvg:",
+		      long_options, &option_index);
      
       /* Detect the end of the options. */
       if (c == -1)
@@ -230,7 +230,7 @@ CommandLine* parse_options(int argc, char *argv[])
 	    {
 	      commandline->position = NORTH;
 	    }
-	  else if (strcmp (optarg, "south") == 0)
+	  else if (strcmp(optarg, "south") == 0)
 	    {
 	      commandline->position = SOUTH;
 	    }
@@ -266,7 +266,7 @@ create_window (void)
   GtkWidget *window;
   GError* error = NULL;
 
-  gtkBuilder = gtk_builder_new ();
+  gtkBuilder = gtk_builder_new();
   if (!gtk_builder_add_from_file (gtkBuilder, UI_FILE, &error))
     {
       g_warning ("Couldn't load builder file: %s", error->message);
@@ -274,8 +274,10 @@ create_window (void)
     }
 
   /* This is important; connect all the callback from gtkbuilder xml file */
-  gtk_builder_connect_signals (gtkBuilder, NULL);
-  window = GTK_WIDGET (gtk_builder_get_object (gtkBuilder, "winMain"));
+  gtk_builder_connect_signals(gtkBuilder, NULL);
+  window = GTK_WIDGET (gtk_builder_get_object(gtkBuilder, "winMain"));
+  // Make as dock to stay keep above
+  gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_DOCK); 
   /* Set the width to 15 in the thick scale */
   setInitialWidth(15);
 
@@ -300,7 +302,8 @@ main (int argc, char *argv[])
 
   check_composite();
 
-  ardesiaBarWindow = create_window ();
+  ardesiaBarWindow = create_window();
+
   /*
    * The following code create one of each component
    * (except popup menus), just so that you see something after building
@@ -308,7 +311,7 @@ main (int argc, char *argv[])
    */
   int width;
   int height;
-  gtk_window_get_size (GTK_WINDOW(ardesiaBarWindow) , &width, &height);
+  gtk_window_get_size(GTK_WINDOW(ardesiaBarWindow) , &width, &height);
 
   int x, y;
 
@@ -321,13 +324,18 @@ main (int argc, char *argv[])
     }
   gtk_window_move(GTK_WINDOW(ardesiaBarWindow),x,y);  
 
+
   /** Init annotate */
   annotate_init(x, y, width, height, commandline->debug, commandline->backgroundimage); 
+  GtkWidget* annotation_window = get_annotation_window();  
+  if (annotation_window)
+   {
+        gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), GTK_WINDOW(annotation_window));
+   }
 
-  gtk_widget_show (ardesiaBarWindow);
-  gtk_window_present(get_annotation_window());
+  gtk_widget_show_all(ardesiaBarWindow);
 
-  gtk_main ();
-  g_object_unref (gtkBuilder);	
+  gtk_main();
+  g_object_unref(gtkBuilder);	
   return 0;
 }

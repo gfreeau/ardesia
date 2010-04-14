@@ -35,7 +35,7 @@ typedef struct
 int annotate_init (int x, int y, int width, int height, gboolean debug, char* backgroundimage);
 
 /* Get the annotation window */
-GtkWindow* get_annotation_window();
+GtkWidget* get_annotation_window();
 
 /* Hide the annotations */
 void annotate_hide_annotation ();
@@ -80,19 +80,19 @@ void annotate_fill();
 void annotate_set_arrow(int arrow);
 
 /* Start to paint */
-void annotate_toggle_grab ();
+void annotate_toggle_grab();
 
 /* Start to erase */
-void annotate_eraser_grab ();
+void annotate_eraser_grab();
 
 /* Release pointer grab */
-void annotate_release_grab ();
+void annotate_release_grab();
 
 /* Acquire pointer grab */
-void annotate_acquire_grab ();
+void annotate_acquire_grab();
 
 /* Clear the annotations windows */
-void annotate_clear_screen ();
+void annotate_clear_screen();
 
 /* Paint the context over the annotation window */
 void merge_context(cairo_t * cr, int yoffset);

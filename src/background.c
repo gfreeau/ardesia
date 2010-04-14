@@ -47,6 +47,13 @@ GtkWidget* background_window = NULL;
 char* background_color = NULL;
 GdkPixbuf *pixbuf = NULL; 
 
+/* Put the background window below the annotation window */
+static void put_background_below_annotations()
+{
+  GtkWindow* annotate_window = get_annotation_window();
+  gtk_window_present(GTK_WINDOW(get_bar_window()));
+  gtk_window_present(GTK_WINDOW(annotate_window));
+}
 
 /* Load the contents of the file image with name "filename" into the pixbuf */
 void load_png (const char *filename)
@@ -57,9 +64,9 @@ void load_png (const char *filename)
   if (pixbuf)
     {
       gint height = gdk_screen_height ();
-      gint width = gdk_screen_width ();
+      gint width = gdk_screen_width();
       scaled = gdk_pixbuf_scale_simple(pixbuf, width, height, GDK_INTERP_BILINEAR);
-      g_object_unref (G_OBJECT (pixbuf));
+      g_object_unref(G_OBJECT (pixbuf));
     }
   else
     {
@@ -67,15 +74,6 @@ void load_png (const char *filename)
       exit(0);
     }
   pixbuf = scaled;
-}
-
-
-/* Put the background window below the annotation window */
-static void put_background_below_annotations()
-{
-  GtkWindow* annotate_window = get_annotation_window();
-  gtk_window_present(GTK_WINDOW(get_bar_window()));
-  gtk_window_present(GTK_WINDOW(annotate_window));
 }
 
 
@@ -103,7 +101,7 @@ void clear_background()
       background_window = NULL;
       if (pixbuf)
 	{
-	  g_object_unref (G_OBJECT (pixbuf));
+	  g_object_unref(G_OBJECT (pixbuf));
 	  pixbuf = NULL;
 	}
     }
@@ -119,12 +117,12 @@ on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer 
     {
       cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
       int r,g,b,a;
-      sscanf (background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-      cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
+      sscanf(background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+      cairo_set_source_rgba(cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
       cairo_paint(cr);
       cairo_destroy(cr);
+      put_background_below_annotations();
     }    
-  put_background_below_annotations();
   return TRUE;
 }
 
@@ -133,7 +131,11 @@ on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer 
 void create_background_window()
 {
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  //gtk_widget_set_usize (GTK_WIDGET(background_window), gdk_screen_width (), gdk_screen_height ());
+  gtk_window_set_type_hint(GTK_WINDOW(background_window), GDK_WINDOW_TYPE_HINT_DOCK); 
+  // Seems that works only in linux 
+  gtk_window_set_transient_for(GTK_WINDOW(get_annotation_window()), GTK_WINDOW(background_window));
+
+  gtk_widget_set_usize (GTK_WIDGET(background_window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(background_window));
   if (STICK)
     {
@@ -165,7 +167,7 @@ void change_background_color (char* rgba)
 {
   if (background_color == NULL)
     {
-      background_color =  g_malloc(9);
+      background_color=g_malloc(9);
     }
   
   strcpy(background_color, rgba);

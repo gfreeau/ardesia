@@ -160,11 +160,11 @@ AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
 
 
 /* Get the annotation window */
-GtkWindow* get_annotation_window()
+GtkWidget* get_annotation_window()
 {
   if (data)
     {
-      return GTK_WINDOW(data->win);
+      return data->win;
     }
   else
     {
@@ -337,7 +337,19 @@ void select_color()
 	    { 
 	      g_printerr("Select color %s\n", data->cur_context->fg_color);
 	    }
-          cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
+          if (data->cur_context->fg_color)
+            {
+              cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
+            }
+          else
+            {
+               if (data->debug)
+	       { 
+	          g_printerr("Called select color but this is not allocated\n");
+                  g_printerr("I put the red one to recover to the problem\n");
+	       }
+               cairo_set_source_color_from_string(data->cr, "FF0000FF");
+            }
         }
       else
         {
@@ -478,11 +490,12 @@ void annotate_hide_annotation ()
     {
       g_printerr("Hide annotations\n");
     }
-   cairo_t *cr = gdk_cairo_create(data->win->window);
-   cairo_surface_t *transparent_surface = cairo_get_target(transparent_cr);
-   cairo_set_source_surface (cr, transparent_surface, 0, 0);
-   cairo_paint(cr);
-   cairo_destroy(cr);
+  gdk_draw_drawable (data->win->window,
+                     data->win->style->fg_gc[GTK_WIDGET_STATE (data->win)],
+                     transparent_pixmap,
+                     0, 0,
+                     0, 0,
+                     data->width, data->height);
 }
 
 
@@ -500,9 +513,9 @@ void annotate_show_annotation ()
 /* Release pointer grab */
 void annotate_release_pointer_grab()
 {
-  ungrab_pointer(data->display,data->win);
-  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);  
-  gdk_flush ();
+  ungrab_pointer(data->display,data->win); 
+  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0); 
+  gdk_flush();
 }
 
 
@@ -517,9 +530,6 @@ void annotate_release_grab ()
 	  g_printerr ("Release grab\n");
 	}
       data->is_grabbed=FALSE;
-      #ifdef _WIN32 
-        gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);
-      #endif
     }
 }
 
@@ -731,7 +741,7 @@ void annotate_set_arrow(int arrow)
 
 
 /* Start to paint */
-void annotate_toggle_grab ()
+void annotate_toggle_grab()
 { 
   annotate_select_pen();
   annotate_acquire_grab ();
@@ -744,7 +754,7 @@ void annotate_eraser_grab ()
   /* Get the with message */
   annotate_select_eraser();
   annotate_configure_eraser(data->cur_context->width);
-  annotate_acquire_grab ();
+  annotate_acquire_grab();
 }
 
 
@@ -846,7 +856,6 @@ void annotate_select_tool (GdkDevice *device, guint state)
 void annotate_draw_line (gint x1, gint y1,
 			 gint x2, gint y2, gboolean stroke)
 {
-  select_color();  
   if (!stroke)
     {
       cairo_line_to(data->cr, x2, y2);
@@ -868,7 +877,6 @@ void annotate_draw_arrow (gboolean revert)
     {
       g_printerr("Draw arrow: ");
     }
-  select_color();  
   gint lenght = g_slist_length(data->coordlist);
   if (lenght<2)
     {
@@ -1140,7 +1148,6 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
     {
       g_printerr("Draw ellipse\n");
     }
-  select_color();  
   cairo_save(data->cr);
   cairo_translate (data->cr, x + width / 2., y + height / 2.);
   cairo_scale (data->cr, width / 2., height / 2.);
@@ -1433,6 +1440,35 @@ void annotate_connect_signals()
 }
 
 
+/* Quit the annotation */
+void annotate_quit()
+{
+  /* ungrab all */
+  annotate_release_grab(); 
+  cairo_destroy(transparent_cr);
+  /* destroy cairo */
+  destroy_cairo();
+  g_signal_handlers_disconnect_by_func (data->win,
+					G_CALLBACK (event_expose), NULL);
+  gtk_widget_destroy(data->win); 
+  data->win = NULL;
+  /* free all */
+  g_object_unref(transparent_pixmap);
+  transparent_pixmap = NULL;
+  g_object_unref(data->shape);
+  data->shape = NULL;
+  annotate_coord_list_free();
+  annotate_savelist_free();
+  g_free(data->default_pen->fg_color);
+  g_free(data->default_pen);
+  g_free(data->default_eraser);
+  g_free (data);
+  if (cursor)
+    {
+      gdk_cursor_unref(cursor);
+    }
+}
+
 /* Setup the application */
 void setup_app ()
 { 
@@ -1443,14 +1479,14 @@ void setup_app ()
   data->width = gdk_screen_get_width (data->screen);
   data->height = gdk_screen_get_height (data->screen);
 
-  data->win = gtk_window_new (GTK_WINDOW_POPUP);
+  data->win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);
   if (STICK)
     {
       gtk_window_stick(GTK_WINDOW(data->win));
     }  
-  //gtk_window_fullscreen(GTK_WINDOW(data->win)); 
-
+  gtk_window_fullscreen(GTK_WINDOW(data->win)); 
+  gtk_window_set_type_hint(GTK_WINDOW(data->win), GDK_WINDOW_TYPE_HINT_DOCK); 
   #ifndef _WIN32 
     gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
   #else
@@ -1491,43 +1527,15 @@ void setup_app ()
   clear_cairo_context(shape_cr); 
   cairo_destroy(shape_cr);
 
+  #ifdef _WIN32 
+     data->shape=NULL;
+  #endif
+
   /* this allow the pointer focus below the transparent window */ 
   gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
  
-  #ifdef _WIN32 
-     gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);
-  #endif
 }
 
-
-/* Quit the annotation */
-void annotate_quit()
-{
-  /* ungrab all */
-  annotate_release_grab(); 
-  cairo_destroy(transparent_cr);
-  /* destroy cairo */
-  destroy_cairo();
-  g_signal_handlers_disconnect_by_func (data->win,
-					G_CALLBACK (event_expose), NULL);
-  gtk_widget_destroy(data->win); 
-  data->win = NULL;
-  /* free all */
-  g_object_unref(transparent_pixmap);
-  transparent_pixmap = NULL;
-  g_object_unref(data->shape);
-  data->shape = NULL;
-  annotate_coord_list_free();
-  annotate_savelist_free();
-  g_free(data->default_pen->fg_color);
-  g_free(data->default_pen);
-  g_free(data->default_eraser);
-  g_free (data);
-  if (cursor)
-    {
-      gdk_cursor_unref(cursor);
-    }
-}
 
 
 /* Init the annotation */
@@ -1542,7 +1550,7 @@ int annotate_init (int x, int y, int width, int height, gboolean debug, char* ba
   data->untoggleheight = height;
   data->cursor_hidden = FALSE;
   data->is_grabbed = FALSE;
- 
+  
   setup_app ();
   if (backgroundimage)
     {

@@ -10,7 +10,7 @@
     <property name="resizable">False</property>
     <property name="decorated">False</property>
     <property name="deletable">False</property>
-    <property name="opacity">0.7</property>
+    <property name="opacity">0.9</property>
     <property name="startup_id">Ardesia</property>
     <signal name="leave_notify_event" handler="on_winMain_leave_notify_event"/>
     <signal name="enter_notify_event" handler="on_winMain_enter_notify_event"/>
@@ -240,7 +240,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">black</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_colorBlack_activate"/>
+                <signal name="toggled" handler="on_colorBlack_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -256,7 +256,7 @@
                 <property name="use_underline">True</property>
                 <property name="icon_widget">lightblue</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_colorLightBlue_activate"/>
+                <signal name="toggled" handler="on_colorLightBlue_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -272,7 +272,7 @@
                 <property name="use_underline">True</property>
                 <property name="icon_widget">lightgreen</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_colorLightGreen_activate"/>
+                <signal name="toggled" handler="on_colorLightGreen_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -288,7 +288,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">yellow</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_colorYellow_activate"/>
+                <signal name="toggled" handler="on_colorYellow_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -304,7 +304,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">orange</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_colorOrange_activate"/>
+                <signal name="toggled" handler="on_colorOrange_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -319,7 +319,7 @@
                 <property name="tooltip_text" translatable="yes">Red</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">red</property>
-                <signal name="clicked" handler="on_colorRed_activate"/>
+                <signal name="toggled" handler="on_colorRed_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -335,7 +335,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">magenta</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_colorMagenta_activate"/>
+                <signal name="toggled" handler="on_colorMagenta_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -351,7 +351,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">white</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_colorWhite_activate"/>
+                <signal name="toggled" handler="on_colorWhite_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>

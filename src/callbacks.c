@@ -169,8 +169,7 @@ void start_tool()
     {
       if (text)
 	{
-	  annotate_release_grab ();
-	  start_text_widget( get_annotation_window(), color, tickness);
+	  start_text_widget( GTK_WINDOW(get_bar_window()), color, tickness);
 	}
       else 
 	{
@@ -220,7 +219,7 @@ on_info                         (GtkToolButton   *toolbutton,
 			         gpointer         user_data)
 {
   grab = FALSE;
-  start_info_dialog(toolbutton, get_annotation_window());
+  start_info_dialog(toolbutton, GTK_WINDOW(get_bar_window()));
   grab = TRUE;
   start_tool();
   return TRUE;
@@ -413,7 +412,7 @@ on_toolsScreenShot_activate	 (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
 {
   grab = FALSE;
-  start_save_image_dialog(toolbutton, get_annotation_window(), &workspace_dir);
+  start_save_image_dialog(toolbutton, GTK_WINDOW(get_bar_window()), &workspace_dir);
   grab = TRUE;
   start_tool();
 }
@@ -437,7 +436,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
       /* Release grab */
       annotate_release_grab ();
       /* the recording is not active */ 
-      gboolean status = start_save_video_dialog(toolbutton, get_annotation_window(), &workspace_dir);
+      gboolean status = start_save_video_dialog(toolbutton, GTK_WINDOW(get_bar_window()), &workspace_dir);
       if (status)
         {
           /* set stop tooltip */ 
@@ -470,7 +469,7 @@ on_toolsPreferences_activate	 (GtkToolButton   *toolbutton,
 			          gpointer         user_data)
 {
   grab = FALSE;
-  start_preference_dialog(toolbutton, get_annotation_window());
+  start_preference_dialog(toolbutton, GTK_WINDOW(get_bar_window()));
   grab = TRUE;
   start_tool();
 }
@@ -518,7 +517,7 @@ on_buttonColor_activate	         (GtkToolButton   *toolbutton,
 {
   grab = FALSE;
   pencil = TRUE;
-  set_color(start_color_selector_dialog(toolbutton, get_annotation_window(), color));
+  set_color(start_color_selector_dialog(toolbutton, GTK_WINDOW(get_bar_window()), color));
   grab = TRUE;
   start_tool();
 }
@@ -606,9 +605,10 @@ on_colorWhite_activate           (GtkToolButton   *toolbutton,
 }
 
 
-
 G_MODULE_EXPORT void
 destroy (GtkWidget *widget, gpointer data)
 {
   gtk_main_quit ();
 }
+
+
