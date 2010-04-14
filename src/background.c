@@ -74,8 +74,8 @@ void load_png (const char *filename)
 static void put_background_below_annotations()
 {
   GtkWindow* annotate_window = get_annotation_window();
-  gtk_window_present(get_bar_window());
-  gtk_window_present(annotate_window);
+  gtk_window_present(GTK_WINDOW(get_bar_window()));
+  gtk_window_present(GTK_WINDOW(annotate_window));
 }
 
 
