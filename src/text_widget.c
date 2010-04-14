@@ -86,8 +86,6 @@ int screen_width;
 
 int max_font_height;
 
-gboolean is_visible_cursor = FALSE;
-
 int yoffset;
 
 
@@ -95,24 +93,27 @@ int yoffset;
 void create_text_window(GtkWindow *parent)
 {
   text_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_maximize(GTK_WINDOW(text_window));
-  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(text_window), TRUE);
-  gtk_window_set_skip_pager_hint(GTK_WINDOW(text_window), TRUE);
+  gtk_window_set_transient_for(GTK_WINDOW(text_window), parent);
+ 
+  gtk_widget_set_usize (GTK_WIDGET(text_window), gdk_screen_width(), gdk_screen_height());
+  gtk_window_fullscreen(GTK_WINDOW(text_window));
+  if (STICK)
+    {
+      gtk_window_stick(GTK_WINDOW(text_window));
+    }
+
+  gtk_window_set_decorated(GTK_WINDOW(text_window), FALSE);
+  gtk_widget_set_app_paintable(text_window, TRUE);
+ 
   #ifndef _WIN32 
     gtk_window_set_opacity(GTK_WINDOW(text_window), 1); 
   #else
     // TODO In windows I am not able to use an rgba transparent  
     // windows and then I use a sort of semi transparency
     gtk_window_set_opacity(GTK_WINDOW(text_window), 0.5); 
-  #endif  
-  if (STICK)
-    {
-      gtk_window_stick(GTK_WINDOW(text_window));
-    }
-  gtk_window_set_decorated(GTK_WINDOW(text_window), FALSE);
-  gtk_widget_set_app_paintable(text_window, TRUE);
+  #endif 
+ 
   gtk_widget_set_double_buffered(text_window, FALSE);
-  gtk_window_set_transient_for(GTK_WINDOW(text_window), get_annotation_window());
 }
 
 
@@ -152,7 +153,6 @@ void delete_character()
 G_MODULE_EXPORT gboolean
 key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
 {
- 
   if ((event->keyval == GDK_BackSpace)
       || (event->keyval == GDK_Delete))
     {
@@ -326,13 +326,26 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
 }
 
 
+
 /* This is called when the button is pushed */
+G_MODULE_EXPORT gboolean
+press (GtkWidget *win,
+         GdkEventButton *ev, 
+         gpointer user_data)
+{
+  grab_pointer(text_window, TEXT_MOUSE_EVENTS);
+  set_text_pointer(win);
+}
+
+
+
+/* This is called when the button is lease */
 G_MODULE_EXPORT gboolean
 release (GtkWidget *win,
          GdkEventButton *ev, 
          gpointer user_data)
 {
-  ungrab_pointer(display, win);
+  ungrab_pointer(display, text_window);
   pos->x = ev->x;
   pos->y = ev->y;
   move_editor_cursor();
@@ -361,8 +374,6 @@ on_window_text_motion_notify_event (GtkWidget *win,
 	     }
         }
     }
-
-  
   return TRUE;;
 }
 
@@ -381,6 +392,7 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
   g_signal_connect(G_OBJECT(text_window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
   g_signal_connect (G_OBJECT(text_window), "motion_notify_event",G_CALLBACK (on_window_text_motion_notify_event), NULL);
   g_signal_connect (G_OBJECT(text_window), "button_release_event", G_CALLBACK(release), NULL);
+  g_signal_connect (G_OBJECT(text_window), "button_press_event", G_CALLBACK(press), NULL);
   g_signal_connect (G_OBJECT(text_window), "key_press_event", G_CALLBACK (key_press), NULL);
 
   gtk_widget_show_all(text_window);

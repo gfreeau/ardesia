@@ -50,9 +50,9 @@ GdkPixbuf *pixbuf = NULL;
 /* Put the background window below the annotation window */
 static void put_background_below_annotations()
 {
-  GtkWindow* annotate_window = get_annotation_window();
-  gtk_window_present(GTK_WINDOW(get_bar_window()));
+  GtkWidget* annotate_window = get_annotation_window();
   gtk_window_present(GTK_WINDOW(annotate_window));
+  gtk_window_present(GTK_WINDOW(get_bar_window()));
 }
 
 /* Load the contents of the file image with name "filename" into the pixbuf */
@@ -144,7 +144,15 @@ void create_background_window()
   
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
   gtk_widget_set_app_paintable(background_window, TRUE);
-  gtk_window_set_opacity(GTK_WINDOW(background_window), 1); 
+  
+  #ifndef _WIN32 
+    gtk_window_set_opacity(GTK_WINDOW(background_window), 1); 
+  #else
+    // TODO In windows I am not able to use an rgba transparent  
+    // windows and then I use a sort of semi transparency
+    gtk_window_set_opacity(GTK_WINDOW(background_window), 0.5); 
+  #endif 
+
   gtk_widget_set_double_buffered(background_window, FALSE);
 }
 

@@ -169,6 +169,7 @@ void start_tool()
     {
       if (text)
 	{
+          annotate_release_grab();
 	  start_text_widget( GTK_WINDOW(get_bar_window()), color, tickness);
 	}
       else 
@@ -358,7 +359,6 @@ on_toolsText_activate            (GtkToolButton   *toolbutton,
   grab = TRUE;
   text = TRUE;
   arrow = 0;
-  start_tool();
 }
 
 
