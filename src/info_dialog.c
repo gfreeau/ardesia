@@ -61,7 +61,7 @@ void start_info_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   /* Fill the window by the gtk builder xml */
   infoDialog = GTK_WIDGET(gtk_builder_get_object(infoDialogGtkBuilder,"aboutdialog"));
   gtk_window_set_transient_for(GTK_WINDOW(infoDialog), parent);
-
+  gtk_window_set_modal(GTK_WINDOW(infoDialog), TRUE);
   if (STICK)
     {
       gtk_window_stick((GtkWindow*)infoDialog);

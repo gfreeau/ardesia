@@ -485,14 +485,14 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToggleToolButton" id="buttonPreferences">
+              <object class="GtkToolButton" id="buttonPreferences">
                 <property name="width_request">32</property>
                 <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Preferences</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-preferences</property>
-                <signal name="toggled" handler="on_toolsPreferences_activate"/>
+                <signal name="clicked" handler="on_toolsPreferences_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>

@@ -148,10 +148,11 @@ void missing_recorder_program_dialog(GtkWindow* parent_window)
   
   miss_dialog = gtk_message_dialog_new (parent_window, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
                                        GTK_BUTTONS_OK, gettext("To record with Ardesia you must install the recordmydesktop program"));
+  gtk_window_set_modal(GTK_WINDOW(miss_dialog), TRUE);
   
   if (STICK)
     {
-      gtk_window_stick((GtkWindow*)miss_dialog);
+      gtk_window_stick(GTK_WINDOW(miss_dialog));
     }
  
   gtk_dialog_run(GTK_DIALOG(miss_dialog));

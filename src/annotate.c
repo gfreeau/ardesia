@@ -673,6 +673,7 @@ gboolean in_unlock_area(int x, int y)
 /* Acquire pointer grab */
 void annotate_acquire_pointer_grab()
 {
+  gtk_widget_show (data->win);
   grab_pointer(data->win, ANNOTATE_MOUSE_EVENTS);
 }
 
@@ -1482,7 +1483,7 @@ void setup_app ()
   data->width = gdk_screen_get_width (data->screen);
   data->height = gdk_screen_get_height (data->screen);
 
-  data->win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  data->win = gtk_window_new (GTK_WINDOW_POPUP);
   gtk_window_set_type_hint(GTK_WINDOW(data->win), GDK_WINDOW_TYPE_HINT_DOCK); 
   
   gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);

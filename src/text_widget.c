@@ -94,7 +94,8 @@ void create_text_window(GtkWindow *parent)
 {
   text_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_transient_for(GTK_WINDOW(text_window), parent);
- 
+  gtk_window_set_modal(GTK_WINDOW(text_window), TRUE);
+
   gtk_widget_set_usize (GTK_WIDGET(text_window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(text_window));
   if (STICK)
@@ -335,6 +336,7 @@ press (GtkWidget *win,
 {
   grab_pointer(text_window, TEXT_MOUSE_EVENTS);
   set_text_pointer(win);
+  return TRUE;
 }
 
 

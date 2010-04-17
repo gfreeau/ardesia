@@ -85,11 +85,11 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
   
-  
+  gtk_window_set_modal(GTK_WINDOW(chooser), TRUE);
   if (STICK)
     {
        /* with this apperar in all the workspaces */ 
-       gtk_window_stick((GtkWindow*) chooser);
+       gtk_window_stick(GTK_WINDOW(chooser));
     } 
 
   /* preview of saving */

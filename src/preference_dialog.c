@@ -178,6 +178,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   /* Fill the window by the gtk builder xml */
   preferenceDialog = GTK_WIDGET(gtk_builder_get_object(preferenceDialogGtkBuilder,"preferences"));
   gtk_window_set_transient_for(GTK_WINDOW(preferenceDialog), parent);
+  gtk_window_set_modal(GTK_WINDOW(preferenceDialog), TRUE);
 
   if (STICK)
     {

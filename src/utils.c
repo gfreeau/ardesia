@@ -125,7 +125,6 @@ GtkWidget* get_bar_window()
 /* Grab pointer */
 void grab_pointer(GtkWidget *win, GdkEventMask eventmask)
 {
-  gtk_widget_show (win);
   GdkGrabStatus result;
   gdk_error_trap_push(); 
   gtk_widget_input_shape_combine_mask(win, NULL, 0, 0);   
