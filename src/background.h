@@ -34,10 +34,10 @@ void load_png (const char *name);
 void make_screenshot(char* filename);
 
 /* Change the background image */
-void change_background_image(const char *filename);
+void change_background_image(GtkWidget* parent, const char *filename);
 
 /* Change the background color */
-void change_background_color(char *rgba);
+void change_background_color(GtkWidget* parent, char *rgba);
 
 /* Clear the background */
 void clear_background();

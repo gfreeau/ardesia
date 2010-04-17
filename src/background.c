@@ -47,13 +47,6 @@ GtkWidget* background_window = NULL;
 char* background_color = NULL;
 GdkPixbuf *pixbuf = NULL; 
 
-/* Put the background window below the annotation window */
-static void put_background_below_annotations()
-{
-  GtkWidget* annotate_window = get_annotation_window();
-  gtk_window_present(GTK_WINDOW(annotate_window));
-  gtk_window_present(GTK_WINDOW(get_bar_window()));
-}
 
 /* Load the contents of the file image with name "filename" into the pixbuf */
 void load_png (const char *filename)
@@ -85,7 +78,6 @@ on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
   cairo_set_operator(back_cr, CAIRO_OPERATOR_SOURCE);
   gdk_cairo_set_source_pixbuf(back_cr, pixbuf, 0.0, 0.0);
   cairo_paint(back_cr);
-  put_background_below_annotations();
   cairo_destroy(back_cr);   
   return TRUE;
 }
@@ -121,19 +113,19 @@ on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer 
       cairo_set_source_rgba(cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
       cairo_paint(cr);
       cairo_destroy(cr);
-      put_background_below_annotations();
     }    
   return TRUE;
 }
 
 
 /* Create the background window */
-void create_background_window()
+void create_background_window(GtkWidget* parent)
 {
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_type_hint(GTK_WINDOW(background_window), GDK_WINDOW_TYPE_HINT_DOCK); 
   // Seems that works only in linux 
-  gtk_window_set_transient_for(GTK_WINDOW(get_annotation_window()), GTK_WINDOW(background_window));
+  gtk_window_set_transient_for(GTK_WINDOW(parent), GTK_WINDOW(background_window));
+  gtk_window_set_keep_above(GTK_WINDOW(parent), TRUE);
 
   gtk_widget_set_usize (GTK_WIDGET(background_window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(background_window));
@@ -158,20 +150,21 @@ void create_background_window()
 
 
 /* Change the background image of ardesia  */
-void change_background_image (const char *name)
+void change_background_image (GtkWidget* parent, const char *name)
 {
   clear_background();
   load_png(name);   
-  create_background_window();
+  create_background_window(parent);
 
   g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_file_expose_event), NULL);
 
-  gtk_widget_show_all(background_window);
+  gtk_widget_show(parent);
+  gtk_widget_show(background_window);
 }
 
 
 /* Change the background color of ardesia  */
-void change_background_color (char* rgba)
+void change_background_color (GtkWidget* parent, char* rgba)
 {
   if (background_color == NULL)
     {
@@ -182,9 +175,10 @@ void change_background_color (char* rgba)
   
   clear_background();
  
-  create_background_window();
+  create_background_window(parent);
   
   g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_color_expose_event), NULL);
 
-  gtk_widget_show_all(background_window);
+  gtk_widget_show(parent);
+  gtk_widget_show(background_window);
 }

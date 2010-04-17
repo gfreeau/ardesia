@@ -328,12 +328,11 @@ main (int argc, char *argv[])
   /** Init annotate */
   annotate_init(x, y, width, height, commandline->debug, commandline->backgroundimage); 
   GtkWidget* annotation_window = get_annotation_window();  
-  if (annotation_window)
-   {
-        gtk_window_set_transient_for(GTK_WINDOW(ardesiaBarWindow), GTK_WINDOW(annotation_window));
-   }
-
-  gtk_widget_show_all(ardesiaBarWindow);
+  
+  gtk_window_set_keep_above(GTK_WINDOW(ardesiaBarWindow), TRUE);
+  gtk_widget_show (annotation_window);
+  gtk_widget_show(ardesiaBarWindow);
+  
 
   gtk_main();
   g_object_unref(gtkBuilder);	

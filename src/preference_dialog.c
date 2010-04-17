@@ -97,7 +97,7 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
       char* a = g_malloc(3);
       sprintf(a,"%02x", gtk_color_button_get_alpha (backgroundColorButton)/257);
       strncpy(&rgb[6], a, 2);
-      change_background_color(rgb);
+      change_background_color(get_annotation_window(), rgb);
       g_free(a);
       g_free(rgb);
       g_free(gdkcolor);
@@ -113,7 +113,7 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
 	  gchar* file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(imageChooserButton)); 
 	  if (file != NULL)
             {
-              change_background_image(file);
+              change_background_image(get_annotation_window(), file);
               g_free(file);
               background = 2;  
             }

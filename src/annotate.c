@@ -515,6 +515,7 @@ void annotate_release_pointer_grab()
 {
   ungrab_pointer(data->display,data->win); 
   gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
+  gtk_window_present(GTK_WINDOW(get_bar_window()));
   gdk_flush();
 }
 
@@ -524,11 +525,11 @@ void annotate_release_grab ()
 {           
   if (data->is_grabbed)
     {
-      annotate_release_pointer_grab(); 
       if (data->debug)
 	{
 	  g_printerr ("Release grab\n");
 	}
+      annotate_release_pointer_grab(); 
       data->is_grabbed=FALSE;
     }
 }
@@ -673,7 +674,7 @@ gboolean in_unlock_area(int x, int y)
 /* Acquire pointer grab */
 void annotate_acquire_pointer_grab()
 {
-  gtk_widget_show (data->win);
+  gtk_window_set_keep_above(GTK_WINDOW(data->win), TRUE);
   grab_pointer(data->win, ANNOTATE_MOUSE_EVENTS);
 }
 
@@ -1483,7 +1484,7 @@ void setup_app ()
   data->width = gdk_screen_get_width (data->screen);
   data->height = gdk_screen_get_height (data->screen);
 
-  data->win = gtk_window_new (GTK_WINDOW_POPUP);
+  data->win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_type_hint(GTK_WINDOW(data->win), GDK_WINDOW_TYPE_HINT_DOCK); 
   
   gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);
@@ -1566,7 +1567,7 @@ int annotate_init (int x, int y, int width, int height, gboolean debug, char* ba
   setup_app ();
   if (backgroundimage)
     {
-      change_background_image(backgroundimage);
+      change_background_image(data->win, backgroundimage);
     }
   return 0;
 }
