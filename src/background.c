@@ -69,10 +69,35 @@ void load_png (const char *filename)
   pixbuf = scaled;
 }
 
-void restack_windows(GtkWidget *widget)
+/* Transparent rectangle to allow to see the bar and pass the event below */
+void make_hole(GtkWidget *widget, cairo_t * cr)
 {
-  gdk_window_restack((get_annotation_window())->window, widget->window, TRUE);
-  gdk_window_restack((get_bar_window())->window,(get_annotation_window())->window, TRUE);
+  int x,y, width, height;
+  GtkWindow* bar = GTK_WINDOW(get_bar_window());
+  gtk_window_get_position(bar, &x, &y);
+  gtk_window_get_size(bar, &width, &height);    
+
+  GdkPixmap* shape = gdk_pixmap_new (NULL, width, height, 1);
+
+  cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_rgba (cr, 0, 0, 0, 0);
+  cairo_rectangle(cr, x, y, width, height);
+  cairo_fill(cr);	
+
+  cairo_t *shape_cr = gdk_cairo_create(shape);
+  cairo_set_operator(shape_cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_rgba (shape_cr, 1, 1, 1, 1);
+  cairo_paint(shape_cr);
+  if (shape_cr)
+    {
+      cairo_set_operator(shape_cr,CAIRO_OPERATOR_SOURCE);
+      cairo_set_source_rgba (shape_cr, 0, 0, 0, 0);
+      cairo_paint(shape_cr);
+      cairo_fill(shape_cr);	
+    }	
+  gtk_widget_input_shape_combine_mask(widget, shape, 0, 0);
+  cairo_destroy(shape_cr);
+   
 }
 
 /* The windows has been exposed after the show_all request to change the background image */
@@ -83,8 +108,8 @@ on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
   cairo_set_operator(back_cr, CAIRO_OPERATOR_SOURCE);
   gdk_cairo_set_source_pixbuf(back_cr, pixbuf, 0.0, 0.0);
   cairo_paint(back_cr);
-  cairo_destroy(back_cr);   
-  restack_windows(widget);
+  make_hole(widget, back_cr);
+  cairo_destroy(back_cr);     
   return FALSE;
 }
 
@@ -111,13 +136,16 @@ G_MODULE_EXPORT gboolean
 on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *cr = gdk_cairo_create(widget->window);
-  cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-  int r,g,b,a;
-  sscanf(background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-  cairo_set_source_rgba(cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
-  cairo_paint(cr);
-  cairo_destroy(cr);
-  restack_windows(widget);   
+  if (cr)
+    {
+      cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+      int r,g,b,a;
+      sscanf(background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+      cairo_set_source_rgba(cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
+      cairo_paint(cr);
+      make_hole(widget, cr);
+      cairo_destroy(cr);
+    }  
   return TRUE;
 }
 
@@ -126,7 +154,10 @@ on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer 
 void create_background_window(GtkWidget* widget)
 {
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  
+
+  gtk_window_set_transient_for(GTK_WINDOW(get_annotation_window()), GTK_WINDOW(background_window));
+  //gtk_window_set_modal(GTK_WINDOW(background_window), TRUE);
+
   gtk_widget_set_usize (GTK_WIDGET(background_window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(background_window));
   if (DOCK)
