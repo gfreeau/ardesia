@@ -98,7 +98,7 @@ gboolean  quit()
 {
   gboolean ret = FALSE;
   quit_recorder();
-  clear_background();
+  clear_background(get_annotation_window());
   annotate_quit();
   if (gtkBuilder)
   {

@@ -120,14 +120,14 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer user_date)
           else
             {
               /* no background */
-	      clear_background();
+	      clear_background(get_annotation_window());
               background = 0;  
             }
 	}
       else
 	{
 	  /* none */
-	  clear_background();  
+	  clear_background(get_annotation_window());  
           background = 0;  
 	} 
     }        

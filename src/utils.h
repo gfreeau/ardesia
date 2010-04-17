@@ -43,7 +43,8 @@
 #  define N_(String) (String)
 #endif
 
-#define STICK TRUE
+#define STICK FALSE
+#define DOCK FALSE
 
 extern GtkBuilder *gtkBuilder;
 

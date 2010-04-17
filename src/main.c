@@ -276,8 +276,12 @@ create_window (void)
   /* This is important; connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(gtkBuilder, NULL);
   window = GTK_WIDGET (gtk_builder_get_object(gtkBuilder, "winMain"));
-  // Make as dock to stay keep above
-  gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_DOCK); 
+  
+  if (DOCK)
+    {
+      // Make as dock 
+      gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_DOCK);
+    } 
   /* Set the width to 15 in the thick scale */
   setInitialWidth(15);
 

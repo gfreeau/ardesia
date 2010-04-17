@@ -1485,15 +1485,18 @@ void setup_app ()
   data->height = gdk_screen_get_height (data->screen);
 
   data->win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_type_hint(GTK_WINDOW(data->win), GDK_WINDOW_TYPE_HINT_DOCK); 
-  
+  if (DOCK)
+   {
+     gtk_window_set_type_hint(GTK_WINDOW(data->win), GDK_WINDOW_TYPE_HINT_DOCK); 
+   }
   gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);
   gtk_window_fullscreen(GTK_WINDOW(data->win)); 
   if (STICK)
     {
       gtk_window_stick(GTK_WINDOW(data->win));
     }  
-  
+  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(data->win), TRUE);
+
   #ifndef _WIN32 
     gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
   #else

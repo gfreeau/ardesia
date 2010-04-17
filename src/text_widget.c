@@ -98,6 +98,11 @@ void create_text_window(GtkWindow *parent)
 
   gtk_widget_set_usize (GTK_WIDGET(text_window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(text_window));
+  if (DOCK)
+   {
+     // Make as dock 
+     gtk_window_set_type_hint(GTK_WINDOW(text_window), GDK_WINDOW_TYPE_HINT_DOCK);
+   } 
   if (STICK)
     {
       gtk_window_stick(GTK_WINDOW(text_window));

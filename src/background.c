@@ -84,7 +84,7 @@ on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
 
 
 /* Remove the background */
-void clear_background()
+void clear_background(GtkWidget* window)
 {
   if (background_window != NULL)
     { 
@@ -119,13 +119,13 @@ on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer 
 
 
 /* Create the background window */
-void create_background_window(GtkWidget* parent)
+void create_background_window(GtkWidget* widget)
 {
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_type_hint(GTK_WINDOW(background_window), GDK_WINDOW_TYPE_HINT_DOCK); 
+  
   // Seems that works only in linux 
-  gtk_window_set_transient_for(GTK_WINDOW(parent), GTK_WINDOW(background_window));
-  gtk_window_set_keep_above(GTK_WINDOW(parent), TRUE);
+  gtk_window_set_transient_for(GTK_WINDOW(widget), GTK_WINDOW(background_window));
+  gtk_window_set_keep_above(GTK_WINDOW(widget), TRUE);
 
   gtk_widget_set_usize (GTK_WIDGET(background_window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(background_window));
@@ -140,7 +140,7 @@ void create_background_window(GtkWidget* parent)
   #ifndef _WIN32 
     gtk_window_set_opacity(GTK_WINDOW(background_window), 1); 
   #else
-    // TODO In windows I am not able to use an rgba transparent  
+    // TODO In windows I am not able to use an rgba transwidget  
     // windows and then I use a sort of semi transparency
     gtk_window_set_opacity(GTK_WINDOW(background_window), 0.5); 
   #endif 
@@ -150,21 +150,21 @@ void create_background_window(GtkWidget* parent)
 
 
 /* Change the background image of ardesia  */
-void change_background_image (GtkWidget* parent, const char *name)
+void change_background_image (GtkWidget* window, const char *name)
 {
-  clear_background();
+  clear_background(window);
   load_png(name);   
-  create_background_window(parent);
+  create_background_window(window);
 
   g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_file_expose_event), NULL);
 
-  gtk_widget_show(parent);
+  gtk_widget_show(window);
   gtk_widget_show(background_window);
 }
 
 
 /* Change the background color of ardesia  */
-void change_background_color (GtkWidget* parent, char* rgba)
+void change_background_color (GtkWidget* window, char* rgba)
 {
   if (background_color == NULL)
     {
@@ -173,12 +173,12 @@ void change_background_color (GtkWidget* parent, char* rgba)
   
   strcpy(background_color, rgba);
   
-  clear_background();
+  clear_background(window);
  
-  create_background_window(parent);
+  create_background_window(window);
   
   g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_color_expose_event), NULL);
 
-  gtk_widget_show(parent);
+  gtk_widget_show(window);
   gtk_widget_show(background_window);
 }
