@@ -69,6 +69,11 @@ void load_png (const char *filename)
   pixbuf = scaled;
 }
 
+void restack_windows(GtkWidget *widget)
+{
+  gdk_window_restack((get_annotation_window())->window, widget->window, TRUE);
+  gdk_window_restack((get_bar_window())->window,(get_annotation_window())->window, TRUE);
+}
 
 /* The windows has been exposed after the show_all request to change the background image */
 G_MODULE_EXPORT gboolean
@@ -79,7 +84,8 @@ on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
   gdk_cairo_set_source_pixbuf(back_cr, pixbuf, 0.0, 0.0);
   cairo_paint(back_cr);
   cairo_destroy(back_cr);   
-  return TRUE;
+  restack_windows(widget);
+  return FALSE;
 }
 
 
@@ -105,15 +111,13 @@ G_MODULE_EXPORT gboolean
 on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *cr = gdk_cairo_create(widget->window);
-  if (cr)
-    {
-      cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-      int r,g,b,a;
-      sscanf(background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-      cairo_set_source_rgba(cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
-      cairo_paint(cr);
-      cairo_destroy(cr);
-    }    
+  cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+  int r,g,b,a;
+  sscanf(background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+  cairo_set_source_rgba(cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
+  cairo_paint(cr);
+  cairo_destroy(cr);
+  restack_windows(widget);   
   return TRUE;
 }
 
@@ -123,18 +127,20 @@ void create_background_window(GtkWidget* widget)
 {
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   
-  // Seems that works only in linux 
-  gtk_window_set_transient_for(GTK_WINDOW(widget), GTK_WINDOW(background_window));
-  gtk_window_set_keep_above(GTK_WINDOW(widget), TRUE);
-
   gtk_widget_set_usize (GTK_WIDGET(background_window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(background_window));
+  if (DOCK)
+   {
+     gtk_window_set_type_hint(GTK_WINDOW(background_window), GDK_WINDOW_TYPE_HINT_DOCK); 
+   }
   if (STICK)
     {
       gtk_window_stick(GTK_WINDOW(background_window));  
     }
   
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
+  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(background_window), TRUE);
+
   gtk_widget_set_app_paintable(background_window, TRUE);
   
   #ifndef _WIN32 
@@ -145,7 +151,7 @@ void create_background_window(GtkWidget* widget)
     gtk_window_set_opacity(GTK_WINDOW(background_window), 0.5); 
   #endif 
 
-  gtk_widget_set_double_buffered(background_window, FALSE);
+  gtk_widget_show_all(background_window);
 }
 
 
@@ -158,7 +164,6 @@ void change_background_image (GtkWidget* window, const char *name)
 
   g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_file_expose_event), NULL);
 
-  gtk_widget_show(window);
   gtk_widget_show(background_window);
 }
 
@@ -179,6 +184,7 @@ void change_background_color (GtkWidget* window, char* rgba)
   
   g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_color_expose_event), NULL);
 
-  gtk_widget_show(window);
-  gtk_widget_show(background_window);
+  
+  gtk_widget_set_app_paintable(background_window, TRUE);
+  gtk_widget_set_double_buffered(background_window, FALSE);
 }

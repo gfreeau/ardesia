@@ -515,7 +515,6 @@ void annotate_release_pointer_grab()
 {
   ungrab_pointer(data->display,data->win); 
   gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
-  gtk_window_present(GTK_WINDOW(get_bar_window()));
   gdk_flush();
 }
 
@@ -675,6 +674,7 @@ gboolean in_unlock_area(int x, int y)
 void annotate_acquire_pointer_grab()
 {
   gtk_window_set_keep_above(GTK_WINDOW(data->win), TRUE);
+  gtk_window_present(GTK_WINDOW(data->win));
   grab_pointer(data->win, ANNOTATE_MOUSE_EVENTS);
 }
 
@@ -1037,7 +1037,7 @@ paint (GtkWidget *win,
 { 
   if (!ev)
     {
-       return FALSE;
+       return TRUE;
     }
   unhide_cursor();  
   annotate_coord_list_free();
@@ -1049,7 +1049,7 @@ paint (GtkWidget *win,
          g_printerr("Device '%s': Invalid pressure event\n",
 		 ev->device->name);
        }
-      return FALSE;
+      return TRUE;
     }  
 
   reset_cairo();
@@ -1059,7 +1059,7 @@ paint (GtkWidget *win,
     {
       /* the last point was outside the bar then ungrab */
       annotate_release_grab ();
-      return FALSE;
+      return TRUE;
     }   
   if (data->debug)
     {    
@@ -1083,7 +1083,7 @@ paintto (GtkWidget *win,
            g_printerr("Device '%s': Invalid move event\n",
 	              ev->device->name);
          }
-       return FALSE;
+       return TRUE;
     }
   unhide_cursor();
    
@@ -1107,7 +1107,7 @@ paintto (GtkWidget *win,
          }
       /* the last point was outside the bar then ungrab */
       annotate_release_grab ();
-      return FALSE;
+      return TRUE;
     }
 
   gdouble pressure = 0;
@@ -1120,7 +1120,7 @@ paintto (GtkWidget *win,
   else
     {
       /* the button is not pressed */
-      return FALSE;
+      return TRUE;
     }
   if (!(ev->device->source == GDK_SOURCE_MOUSE))
     {
@@ -1281,12 +1281,12 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
     }
   if (!ev)
     {
-       return FALSE;
+       return TRUE;
     }
   /* only button1 allowed */
   if (!(ev->button==1))
     {
-      return FALSE;
+      return TRUE;
     }  
 
   if (in_unlock_area(ev->x,ev->y))
@@ -1294,7 +1294,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
     {
       /* the last point was outside the bar then ungrab */
       annotate_release_grab ();
-      return FALSE;
+      return TRUE;
     }
 
   if (!data->coordlist)
