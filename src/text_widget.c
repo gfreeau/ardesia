@@ -74,7 +74,7 @@ GdkScreen* screen = NULL;
 GtkWidget* text_window = NULL;
 GdkCursor* text_cursor;
 
-GSList *letterlist = NULL;
+GSList *letterlist = NULL; 
 
 cairo_t *text_cr = NULL;
 cairo_text_extents_t extents;
@@ -88,6 +88,7 @@ int max_font_height;
 
 int yoffset;
 
+gboolean already_release;
 
 /* Creation of the text window */
 void create_text_window(GtkWindow *parent)
@@ -338,8 +339,7 @@ G_MODULE_EXPORT gboolean
 press (GtkWidget *win,
          GdkEventButton *ev, 
          gpointer user_data)
-{
-      
+{     
   if (inside_bar_window(ev->x, ev->y))
   /* point is in the ardesia bar */
     {
@@ -347,8 +347,11 @@ press (GtkWidget *win,
       stop_text_widget();
       return TRUE;
     }
-  grab_pointer(text_window, TEXT_MOUSE_EVENTS);
-  set_text_pointer(win);
+  if (!already_release)
+    {
+      grab_pointer(text_window, TEXT_MOUSE_EVENTS);
+      set_text_pointer(win);
+    }
   return TRUE;
 }
 
@@ -360,6 +363,7 @@ release (GtkWidget *win,
          GdkEventButton *ev, 
          gpointer user_data)
 {
+  already_release=TRUE;
   ungrab_pointer(display, text_window);
   pos->x = ev->x;
   pos->y = ev->y;
@@ -377,33 +381,31 @@ on_window_text_motion_notify_event (GtkWidget *win,
 			            GdkEventMotion *ev, 
 			            gpointer user_data)
 {
-  GtkWidget *bar = GTK_WIDGET(gtk_builder_get_object(gtkBuilder, "winMain"));
-  if (bar)
-    {
-      // This is a workaround some event inside the bar has wrong coords
-      int x,y;   
-      #ifdef _WIN32
-       /* get cursor position */
-       gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
-      #else
-       x = ev->x;
-       y = ev->y;   
-      #endif
+  // This is a workaround some event inside the bar has wrong coords
+  int x,y;   
+  #ifdef _WIN32
+    /* get cursor position */
+    gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
+  #else
+    x = ev->x;
+    y = ev->y;   
+  #endif
       
-      if (inside_bar_window(x,y))
-      /* point is in the ardesia bar */
-       {
-         /* the last point was outside the bar then ungrab */
-         stop_text_widget();
-         return TRUE;
-       }
+  if (inside_bar_window(x,y))
+    /* point is in the ardesia bar */
+    {
+      /* the last point was outside the bar then ungrab */
+      stop_text_widget();
+      return TRUE;
     }
+
   return TRUE;;
 }
 
 /* Start the widget for the text insertion */
 void start_text_widget(GtkWindow *parent, char* color, int tickness)
-{ 
+{
+  already_release = FALSE;
   stop_text_widget();
   text_pen_width = tickness;
   text_color = color;
