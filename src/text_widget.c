@@ -339,6 +339,14 @@ press (GtkWidget *win,
          GdkEventButton *ev, 
          gpointer user_data)
 {
+      
+  if (inside_bar_window(ev->x, ev->y))
+  /* point is in the ardesia bar */
+    {
+      /* the last point was outside the bar then ungrab */
+      stop_text_widget();
+      return TRUE;
+    }
   grab_pointer(text_window, TEXT_MOUSE_EVENTS);
   set_text_pointer(win);
   return TRUE;
@@ -360,6 +368,9 @@ release (GtkWidget *win,
 }
 
 
+  
+
+
 /* This shots when the ponter is moving */
 G_MODULE_EXPORT gboolean
 on_window_text_motion_notify_event (GtkWidget *win, 
@@ -369,17 +380,23 @@ on_window_text_motion_notify_event (GtkWidget *win,
   GtkWidget *bar = GTK_WIDGET(gtk_builder_get_object(gtkBuilder, "winMain"));
   if (bar)
     {
-      int x, y, width, height;
-      gtk_window_get_position(GTK_WINDOW(bar), &x, &y);
-      gtk_window_get_size(GTK_WINDOW(bar), &width, &height);
-      /* rectangle that contains the panel */
-      if ((ev->y>=y)&&(ev->y<y+height))
-        {
-           if ((ev->x>=x)&&(ev->x<x+width))
-	     {
-	        stop_text_widget();
-	     }
-        }
+      // This is a workaround some event inside the bar has wrong coords
+      int x,y;   
+      #ifdef _WIN32
+       /* get cursor position */
+       gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
+      #else
+       x = ev->x;
+       y = ev->y;   
+      #endif
+      
+      if (inside_bar_window(x,y))
+      /* point is in the ardesia bar */
+       {
+         /* the last point was outside the bar then ungrab */
+         stop_text_widget();
+         return TRUE;
+       }
     }
   return TRUE;;
 }

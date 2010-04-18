@@ -644,32 +644,6 @@ void set_eraser_cursor()
 }
 
 
-/*
- * This is function return if the point (x,y) in inside the ardesia panel area
- * or in a zone where we must unlock the pointer
- */
-gboolean in_unlock_area(int x, int y)
-{
-  int untogglexpos = data->untogglexpos;
-  int untoggleypos = data->untoggleypos;
-  int untogglewidth = data->untogglewidth;
-  int untoggleheight = data->untoggleheight;
-  /* rectangle that contains the panel */
-  if ((y>=untoggleypos)&&(y<untoggleypos+untoggleheight))
-    {
-      if ((x>=untogglexpos)&&(x<untogglexpos+untogglewidth))
-	{
-	  return 1;
-	}
-    }
-  /* top left corner */
-  if ((x<5)&&(y<5))
-    {
-      return 1;
-    }
-  return 0;
-}
-
 /* Acquire pointer grab */
 void annotate_acquire_pointer_grab()
 {
@@ -1054,7 +1028,7 @@ paint (GtkWidget *win,
 
   reset_cairo();
   cairo_move_to(data->cr,ev->x,ev->y);
-  if (in_unlock_area(ev->x,ev->y))
+  if (inside_bar_window(ev->x,ev->y))
     /* point is in the ardesia bar */
     {
       /* the last point was outside the bar then ungrab */
@@ -1097,7 +1071,7 @@ paintto (GtkWidget *win,
     y = ev->y;   
   #endif
 
-  if (in_unlock_area(x,y))
+  if (inside_bar_window(x,y))
     /* point is in the ardesia bar */
     {
        if (data->debug)
@@ -1289,7 +1263,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       return TRUE;
     }  
 
-  if (in_unlock_area(ev->x,ev->y))
+  if (inside_bar_window(ev->x,ev->y))
     /* point is in the ardesia bar */
     {
       /* the last point was outside the bar then ungrab */

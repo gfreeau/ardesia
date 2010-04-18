@@ -74,6 +74,13 @@ void  cairo_set_transparent_color(cairo_t * cr);
 /* Clear cairo context */
 void clear_cairo_context(cairo_t* cr);
 
+/* Transparent rectangle to allow to see the bar and pass the event below */
+void make_hole(GtkWidget *widget, cairo_t * cr);
+
+/*
+ * This is function return if the point (x,y) in inside the ardesia bar window
+ */
+gboolean inside_bar_window(int xp, int yp);
 
 /*
  * Take an rgb or a rgba string and return the pointer to the allocated GdkColor 

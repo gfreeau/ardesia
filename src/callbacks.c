@@ -192,15 +192,16 @@ void start_tool()
 
 
 G_MODULE_EXPORT gboolean
-on_window_configure_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+on_window_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
 {
+  printf("Expose\n");
   if (color == NULL)
     {
       color = malloc(COLORSIZE);
       set_color("FF0000");
       add_alpha(color);
     }
-  return TRUE;
+  return FALSE;
 }
 
 
@@ -244,7 +245,7 @@ on_winMain_enter_notify_event   (GtkWidget       *widget,
 				 GdkEvent        *event,
 			         gpointer         user_data)
 {
-  stop_text_widget();
+  //stop_text_widget();
   return TRUE;
 }
 

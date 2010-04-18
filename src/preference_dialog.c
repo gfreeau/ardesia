@@ -31,6 +31,7 @@
 #include "stdio.h"
 #include <string.h> 
 #include "background.h"
+#include "annotate.h"
 #include "utils.h"
 
 
