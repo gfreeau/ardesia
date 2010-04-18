@@ -95,7 +95,6 @@ void create_text_window(GtkWindow *parent)
 {
   text_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_transient_for(GTK_WINDOW(text_window), parent);
-  gtk_window_set_modal(GTK_WINDOW(text_window), TRUE);
 
   gtk_widget_set_usize (GTK_WIDGET(text_window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(text_window));
@@ -111,7 +110,9 @@ void create_text_window(GtkWindow *parent)
 
   gtk_window_set_decorated(GTK_WINDOW(text_window), FALSE);
   gtk_widget_set_app_paintable(text_window, TRUE);
- 
+  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(text_window), TRUE);
+
+
   #ifndef _WIN32 
     gtk_window_set_opacity(GTK_WINDOW(text_window), 1); 
   #else
@@ -319,8 +320,7 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
               cairo_set_font_size (text_cr, text_pen_width * 2);
               cairo_text_extents (text_cr, "|" , &extents);
               max_font_height = extents.height;
-            }
-          
+            } 
           if (text_window)
             {
               grab_pointer(text_window, TEXT_MOUSE_EVENTS);
@@ -365,6 +365,18 @@ release (GtkWidget *win,
 {
   already_release=TRUE;
   ungrab_pointer(display, text_window);
+  int x, y, width, height;
+  GtkWindow* bar = GTK_WINDOW(text_window);
+  gtk_window_get_position(bar, &x, &y);
+  gtk_window_get_size(bar, &width, &height);    
+
+
+  GdkPixmap* shape = gdk_pixmap_new (NULL, width, height, 1); 
+  cairo_t* shape_cr = gdk_cairo_create(shape);
+  clear_cairo_context(shape_cr); 
+  cairo_destroy(shape_cr);
+
+  gtk_widget_input_shape_combine_mask (win, shape, x,y);
   pos->x = ev->x;
   pos->y = ev->y;
   move_editor_cursor();
