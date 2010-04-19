@@ -370,13 +370,6 @@ release (GtkWidget *win,
   gtk_window_get_position(bar, &x, &y);
   gtk_window_get_size(bar, &width, &height);    
 
-
-  GdkPixmap* shape = gdk_pixmap_new (NULL, width, height, 1); 
-  cairo_t* shape_cr = gdk_cairo_create(shape);
-  clear_cairo_context(shape_cr); 
-  cairo_destroy(shape_cr);
-
-  gtk_widget_input_shape_combine_mask (win, shape, x,y);
   pos->x = ev->x;
   pos->y = ev->y;
   move_editor_cursor();
@@ -428,7 +421,6 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
   g_signal_connect (G_OBJECT(text_window), "key_press_event", G_CALLBACK (key_press), NULL);
 
   gtk_widget_show_all(text_window);
- 
 }
 
 

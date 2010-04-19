@@ -21,24 +21,23 @@
  *
  */
 
-/* Background window */
-extern GtkWidget* background_window;
-
-/* Save pixbuf in png file */
-gboolean save_png (GdkPixbuf *pixbuf, const char *filename);
-
-/* Load png file contents in pixbuf */
-void load_png (const char *name);
-
-/* Make screenshot */
-void make_screenshot(char* filename);
+/* Create the background window */
+GtkWidget* create_background_window();
 
 /* Change the background image */
-void change_background_image(GtkWidget* window, const char *filename);
+void change_background_image(const char *filename);
 
 /* Change the background color */
-void change_background_color(GtkWidget* window, char *rgba);
+void change_background_color(char *rgba);
 
 /* Clear the background */
-void clear_background(GtkWidget* window);
+void clear_background_window();
 
+/** Destroy background window */
+void destroy_background_window();
+
+/* Get the background window */
+GtkWidget* get_background_window();
+
+/* Set the background window */
+void set_background_window(GtkWidget* widget);

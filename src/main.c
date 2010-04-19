@@ -64,6 +64,7 @@
 #include "unistd.h"
 #include "getopt.h"
 #include "utils.h"
+#include "background.h"
 
 #ifdef _WIN32
   #include <gdkwin32.h>
@@ -328,15 +329,23 @@ main (int argc, char *argv[])
     }
   gtk_window_move(GTK_WINDOW(ardesiaBarWindow),x,y);  
 
-
+  GtkWidget* background_window = create_background_window();  
+  set_background_window(background_window);
+  
   /** Init annotate */
-  annotate_init(x, y, width, height, commandline->debug, commandline->backgroundimage); 
+  annotate_init(x, y, width, height, commandline->debug); 
+
   GtkWidget* annotation_window = get_annotation_window();  
-  
+
   gtk_window_set_keep_above(GTK_WINDOW(ardesiaBarWindow), TRUE);
+  gtk_widget_show (background_window);
   gtk_widget_show (annotation_window);
-  gtk_widget_show(ardesiaBarWindow);
   
+  gtk_widget_show(ardesiaBarWindow);
+  if (commandline->backgroundimage)
+    {
+      change_background_image(commandline->backgroundimage);
+    }
 
   gtk_main();
   g_object_unref(gtkBuilder);	

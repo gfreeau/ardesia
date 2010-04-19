@@ -45,11 +45,23 @@
 
 char* background_color = NULL;
 GdkPixbuf *pixbuf = NULL; 
+cairo_t *back_cr = NULL;
+GtkWidget* background_window = NULL;
 
+
+void destroy_pixbuf()
+{
+  if (pixbuf)
+    {
+       g_object_unref(G_OBJECT (pixbuf));
+       pixbuf = NULL;
+    }
+}
 
 /* Load the contents of the file image with name "filename" into the pixbuf */
 void load_png (const char *filename)
 {
+  destroy_pixbuf();
   pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
   GdkPixbuf *scaled = NULL;
 
@@ -69,46 +81,107 @@ void load_png (const char *filename)
 }
 
 
-/* The windows has been exposed after the show_all request to change the background image */
-G_MODULE_EXPORT gboolean
-on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+/* Destroy the background window */
+void destroy_background_window()
 {
-  cairo_t *back_cr = gdk_cairo_create(widget->window);
-  cairo_set_operator(back_cr, CAIRO_OPERATOR_SOURCE);
-  gdk_cairo_set_source_pixbuf(back_cr, pixbuf, 0.0, 0.0);
-  cairo_paint(back_cr);
-  make_hole(widget, back_cr);
-  cairo_destroy(back_cr);     
-  return FALSE;
+  if (background_window != NULL)
+   { 
+      /* destroy brutally the background window */
+      gtk_widget_destroy(background_window);
+      set_background_window(NULL);
+   }
+  if (pixbuf)
+   {
+      g_object_unref(G_OBJECT (pixbuf));
+      pixbuf = NULL;
+   }
+  if (back_cr)
+    {
+      cairo_destroy(back_cr);
+    }
 }
 
 
-/* The windows has been exposed after the show_all request to change the background color */
-G_MODULE_EXPORT gboolean
-on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+/* Clear the background */
+void clear_background_window()
 {
-  cairo_t *cr = gdk_cairo_create(widget->window);
-  if (cr)
-    {
-      cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-      int r,g,b,a;
-      sscanf(background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-      cairo_set_source_rgba(cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
-      cairo_paint(cr);
-      make_hole(widget, cr);
-      cairo_destroy(cr);
-    }  
+  change_background_color ("00000000");
+}
+
+
+G_MODULE_EXPORT gboolean
+back_event_expose (GtkWidget *widget, 
+              GdkEventExpose *event, 
+              gpointer user_data)
+{
+  if (!back_cr)
+  {
+    back_cr = gdk_cairo_create(widget->window);
+    clear_background_window();
+  }
   return TRUE;
 }
 
 
+/* The windows has been exposed after the show_all request to change the background image */
+void load_file()
+{
+  cairo_set_operator(back_cr, CAIRO_OPERATOR_SOURCE);
+  gdk_cairo_set_source_pixbuf(back_cr, pixbuf, 0.0, 0.0);
+  cairo_paint(back_cr);
+  cairo_stroke(back_cr);   
+}
+
+
+/* The windows has been exposed after the show_all request to change the background color */
+void load_color()
+{
+  if (back_cr)
+    {
+      cairo_set_operator(back_cr, CAIRO_OPERATOR_SOURCE);
+      int r,g,b,a;
+      sscanf(background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+      cairo_set_source_rgba(back_cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
+      cairo_paint(back_cr);
+      cairo_stroke(back_cr); 
+    }  
+}
+
+
+/* Change the background image of ardesia  */
+void change_background_image (const char *name)
+{
+   load_png(name);   
+   load_file();
+}
+
+
+/* Change the background color of ardesia  */
+void change_background_color (char* rgba)
+{
+  background_color = rgba;
+  load_color();  
+}
+
+
+/* Get the background window */
+GtkWidget* get_background_window()
+{
+  return background_window;
+}
+
+
+/* Set the background window */
+void set_background_window(GtkWidget* widget)
+{
+  background_window=widget;
+}
+
+
 /* Create the background window */
-GtkWidget* create_background_window(GtkWidget* widget)
+GtkWidget* create_background_window()
 {
   GtkWidget *background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-
-  gtk_window_set_transient_for(GTK_WINDOW(get_annotation_window()), GTK_WINDOW(background_window));
-
   gtk_widget_set_usize (GTK_WIDGET(background_window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(background_window));
   if (DOCK)
@@ -122,8 +195,6 @@ GtkWidget* create_background_window(GtkWidget* widget)
   
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(background_window), TRUE);
-
-  gtk_widget_set_app_paintable(background_window, TRUE);
   
   #ifndef _WIN32 
     gtk_window_set_opacity(GTK_WINDOW(background_window), 1); 
@@ -132,61 +203,12 @@ GtkWidget* create_background_window(GtkWidget* widget)
     // windows and then I use a sort of semi transparency
     gtk_window_set_opacity(GTK_WINDOW(background_window), 0.5); 
   #endif 
-
+  g_signal_connect (background_window, "expose_event",
+		    G_CALLBACK (back_event_expose), NULL);
+  gtk_widget_set_app_paintable(background_window, TRUE);
+  gtk_widget_set_double_buffered(background_window, FALSE);
   gtk_widget_show_all(background_window);
   return  background_window;
 }
 
 
-/* Remove the background */
-void clear_background(GtkWidget* window)
-{
- 
-  GtkWidget *background_window = get_background_window();
-  if (background_window != NULL)
-    { 
-      /* destroy brutally the background window */
-      gtk_widget_destroy(background_window);
-      set_background_window(NULL);
-      if (pixbuf)
-	{
-	  g_object_unref(G_OBJECT (pixbuf));
-	  pixbuf = NULL;
-	}
-    }
-}
-
-
-/* Change the background image of ardesia  */
-void change_background_image (GtkWidget* window, const char *name)
-{
-  clear_background(window);
-  load_png(name);   
-  GtkWidget* background_window = create_background_window(window);
-  set_background_window(background_window);
-  g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_file_expose_event), NULL);
-
-  gtk_widget_show(background_window);
-}
-
-
-/* Change the background color of ardesia  */
-void change_background_color (GtkWidget* window, char* rgba)
-{
-  if (background_color == NULL)
-    {
-      background_color=g_malloc(9);
-    }
-  
-  strcpy(background_color, rgba);
-  
-  clear_background(window);
- 
-  GtkWidget* background_window = create_background_window(window);
-  
-  g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_color_expose_event), NULL);
-
-  
-  gtk_widget_set_app_paintable(background_window, TRUE);
-  gtk_widget_set_double_buffered(background_window, FALSE);
-}

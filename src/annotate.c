@@ -44,7 +44,6 @@
 #include <utils.h>
 #include <annotate.h>
 #include <broken.h>
-#include "background.h"
 #include <bezier_spline.h>
 
 #include <cairo.h>
@@ -146,8 +145,6 @@ cairo_t *transparent_cr = NULL;
 
 GdkCursor* cursor = NULL;
 
-GtkWidget* background_window = NULL;
-
 /* Create a new paint context */
 AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
                                                    guint width)
@@ -172,23 +169,6 @@ GtkWidget* get_annotation_window()
     {
       return NULL;
     }
-}
-
-/* Get the background window */
-GtkWidget* get_background_window()
-{
-  return background_window;
-}
-
-
-/* Get the background window */
-GtkWidget* get_background_window();
-
-
-/* Set the background window */
-void set_background_window(GtkWidget* widget)
-{
-  background_window=widget;
 }
 
 
@@ -667,12 +647,9 @@ void set_eraser_cursor()
 void annotate_acquire_pointer_grab()
 {
   gtk_window_set_keep_above(GTK_WINDOW(data->win), TRUE);
-    if (background_window)
-    {
-         gtk_window_set_keep_above(GTK_WINDOW(background_window), TRUE);
-    }
+  gtk_widget_show (data->win);
   
-  gtk_window_present(GTK_WINDOW(data->win));
+  gtk_widget_show(get_bar_window());
   grab_pointer(data->win, ANNOTATE_MOUSE_EVENTS);
 }
 
@@ -1483,6 +1460,7 @@ void setup_app ()
   data->height = gdk_screen_get_height (data->screen);
 
   data->win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
   if (DOCK)
    {
      gtk_window_set_type_hint(GTK_WINDOW(data->win), GDK_WINDOW_TYPE_HINT_DOCK); 
@@ -1553,7 +1531,7 @@ void setup_app ()
 
 
 /* Init the annotation */
-int annotate_init (int x, int y, int width, int height, gboolean debug, char* backgroundimage)
+int annotate_init (int x, int y, int width, int height, gboolean debug)
 {
   data = g_malloc (sizeof (AnnotateData));
   data->debug = debug;
@@ -1566,9 +1544,6 @@ int annotate_init (int x, int y, int width, int height, gboolean debug, char* ba
   data->is_grabbed = FALSE;
   
   setup_app ();
-  if (backgroundimage)
-    {
-      change_background_image(data->win, backgroundimage);
-    }
+
   return 0;
 }
