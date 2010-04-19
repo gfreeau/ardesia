@@ -329,7 +329,7 @@ main (int argc, char *argv[])
     }
   gtk_window_move(GTK_WINDOW(ardesiaBarWindow),x,y);  
 
-  GtkWidget* background_window = create_background_window();  
+  GtkWidget* background_window = create_background_window(commandline->backgroundimage);  
   set_background_window(background_window);
   
   /** Init annotate */
@@ -342,10 +342,6 @@ main (int argc, char *argv[])
   gtk_widget_show (annotation_window);
   
   gtk_widget_show(ardesiaBarWindow);
-  if (commandline->backgroundimage)
-    {
-      change_background_image(commandline->backgroundimage);
-    }
 
   gtk_main();
   g_object_unref(gtkBuilder);	

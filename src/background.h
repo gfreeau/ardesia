@@ -25,7 +25,7 @@
 GtkWidget* create_background_window();
 
 /* Change the background image */
-void change_background_image(const char *filename);
+void change_background_image(char *backgroundimage);
 
 /* Change the background color */
 void change_background_color(char *rgba);

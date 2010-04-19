@@ -194,7 +194,6 @@ void start_tool()
 G_MODULE_EXPORT gboolean
 on_window_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
 {
-  printf("Expose\n");
   if (color == NULL)
     {
       color = malloc(COLORSIZE);

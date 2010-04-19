@@ -44,25 +44,17 @@
 #endif
 
 char* background_color = NULL;
-GdkPixbuf *pixbuf = NULL; 
+char* background_image = NULL;
+
 cairo_t *back_cr = NULL;
 GtkWidget* background_window = NULL;
 
 
-void destroy_pixbuf()
-{
-  if (pixbuf)
-    {
-       g_object_unref(G_OBJECT (pixbuf));
-       pixbuf = NULL;
-    }
-}
 
 /* Load the contents of the file image with name "filename" into the pixbuf */
-void load_png (const char *filename)
+GdkPixbuf * load_png (const char *filename)
 {
-  destroy_pixbuf();
-  pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+  GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
   GdkPixbuf *scaled = NULL;
 
   if (pixbuf)
@@ -78,6 +70,7 @@ void load_png (const char *filename)
       exit(0);
     }
   pixbuf = scaled;
+  return pixbuf;
 }
 
 
@@ -88,12 +81,6 @@ void destroy_background_window()
    { 
       /* destroy brutally the background window */
       gtk_widget_destroy(background_window);
-      set_background_window(NULL);
-   }
-  if (pixbuf)
-   {
-      g_object_unref(G_OBJECT (pixbuf));
-      pixbuf = NULL;
    }
   if (back_cr)
     {
@@ -115,9 +102,17 @@ back_event_expose (GtkWidget *widget,
               gpointer user_data)
 {
   if (!back_cr)
-  {
-    back_cr = gdk_cairo_create(widget->window);
-    clear_background_window();
+    {
+      back_cr = gdk_cairo_create(widget->window);
+       
+      if (background_image)
+        {
+            change_background_image(background_image);
+        }
+      else
+        {
+           clear_background_window();
+        }
   }
   return TRUE;
 }
@@ -126,10 +121,12 @@ back_event_expose (GtkWidget *widget,
 /* The windows has been exposed after the show_all request to change the background image */
 void load_file()
 {
+  GdkPixbuf* pixbuf = load_png(background_image);   
   cairo_set_operator(back_cr, CAIRO_OPERATOR_SOURCE);
   gdk_cairo_set_source_pixbuf(back_cr, pixbuf, 0.0, 0.0);
   cairo_paint(back_cr);
   cairo_stroke(back_cr);   
+  g_object_unref(G_OBJECT (pixbuf));
 }
 
 
@@ -149,9 +146,9 @@ void load_color()
 
 
 /* Change the background image of ardesia  */
-void change_background_image (const char *name)
+void change_background_image (char *name)
 {
-   load_png(name);   
+   background_image = name;
    load_file();
 }
 
@@ -174,14 +171,15 @@ GtkWidget* get_background_window()
 /* Set the background window */
 void set_background_window(GtkWidget* widget)
 {
-  background_window=widget;
+  background_window = widget;
 }
 
 
 /* Create the background window */
-GtkWidget* create_background_window()
+GtkWidget* create_background_window(char* backgroundimage)
 {
-  GtkWidget *background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  background_image = backgroundimage;
+  background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_usize (GTK_WIDGET(background_window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(background_window));
   if (DOCK)
@@ -208,6 +206,7 @@ GtkWidget* create_background_window()
   gtk_widget_set_app_paintable(background_window, TRUE);
   gtk_widget_set_double_buffered(background_window, FALSE);
   gtk_widget_show_all(background_window);
+
   return  background_window;
 }
 
