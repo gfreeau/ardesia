@@ -37,6 +37,12 @@ int annotate_init (int x, int y, int width, int height, gboolean debug, char* ba
 /* Get the annotation window */
 GtkWidget* get_annotation_window();
 
+/* Get the background window */
+GtkWidget* get_background_window();
+
+/* Set the background window */
+void set_background_window(GtkWidget* widget);
+
 /* Hide the annotations */
 void annotate_hide_annotation ();
 

@@ -43,7 +43,6 @@
 	#include <cairo-xlib.h>
 #endif
 
-GtkWidget* background_window = NULL;
 char* background_color = NULL;
 GdkPixbuf *pixbuf = NULL; 
 
@@ -84,23 +83,6 @@ on_window_file_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
 }
 
 
-/* Remove the background */
-void clear_background(GtkWidget* window)
-{
-  if (background_window != NULL)
-    { 
-      /* destroy brutally the background window */
-      gtk_widget_destroy(background_window);
-      background_window = NULL;
-      if (pixbuf)
-	{
-	  g_object_unref(G_OBJECT (pixbuf));
-	  pixbuf = NULL;
-	}
-    }
-}
-
-
 /* The windows has been exposed after the show_all request to change the background color */
 G_MODULE_EXPORT gboolean
 on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
@@ -121,9 +103,9 @@ on_window_color_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer 
 
 
 /* Create the background window */
-void create_background_window(GtkWidget* widget)
+GtkWidget* create_background_window(GtkWidget* widget)
 {
-  background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  GtkWidget *background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
   gtk_window_set_transient_for(GTK_WINDOW(get_annotation_window()), GTK_WINDOW(background_window));
 
@@ -152,6 +134,26 @@ void create_background_window(GtkWidget* widget)
   #endif 
 
   gtk_widget_show_all(background_window);
+  return  background_window;
+}
+
+
+/* Remove the background */
+void clear_background(GtkWidget* window)
+{
+ 
+  GtkWidget *background_window = get_background_window();
+  if (background_window != NULL)
+    { 
+      /* destroy brutally the background window */
+      gtk_widget_destroy(background_window);
+      set_background_window(NULL);
+      if (pixbuf)
+	{
+	  g_object_unref(G_OBJECT (pixbuf));
+	  pixbuf = NULL;
+	}
+    }
 }
 
 
@@ -160,8 +162,8 @@ void change_background_image (GtkWidget* window, const char *name)
 {
   clear_background(window);
   load_png(name);   
-  create_background_window(window);
-
+  GtkWidget* background_window = create_background_window(window);
+  set_background_window(background_window);
   g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_file_expose_event), NULL);
 
   gtk_widget_show(background_window);
@@ -180,7 +182,7 @@ void change_background_color (GtkWidget* window, char* rgba)
   
   clear_background(window);
  
-  create_background_window(window);
+  GtkWidget* background_window = create_background_window(window);
   
   g_signal_connect(G_OBJECT(background_window), "expose-event", G_CALLBACK(on_window_color_expose_event), NULL);
 

@@ -393,15 +393,9 @@ on_window_text_motion_notify_event (GtkWidget *win,
 			            GdkEventMotion *ev, 
 			            gpointer user_data)
 {
-  // This is a workaround some event inside the bar has wrong coords
   int x,y;   
-  #ifdef _WIN32
-    /* get cursor position */
-    gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
-  #else
-    x = ev->x;
-    y = ev->y;   
-  #endif
+  x = ev->x;
+  y = ev->y;   
       
   if (inside_bar_window(x,y))
     /* point is in the ardesia bar */

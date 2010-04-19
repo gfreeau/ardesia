@@ -146,6 +146,8 @@ cairo_t *transparent_cr = NULL;
 
 GdkCursor* cursor = NULL;
 
+GtkWidget* background_window = NULL;
+
 /* Create a new paint context */
 AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
                                                    guint width)
@@ -170,6 +172,23 @@ GtkWidget* get_annotation_window()
     {
       return NULL;
     }
+}
+
+/* Get the background window */
+GtkWidget* get_background_window()
+{
+  return background_window;
+}
+
+
+/* Get the background window */
+GtkWidget* get_background_window();
+
+
+/* Set the background window */
+void set_background_window(GtkWidget* widget)
+{
+  background_window=widget;
 }
 
 
@@ -648,6 +667,11 @@ void set_eraser_cursor()
 void annotate_acquire_pointer_grab()
 {
   gtk_window_set_keep_above(GTK_WINDOW(data->win), TRUE);
+    if (background_window)
+    {
+         gtk_window_set_keep_above(GTK_WINDOW(background_window), TRUE);
+    }
+  
   gtk_window_present(GTK_WINDOW(data->win));
   grab_pointer(data->win, ANNOTATE_MOUSE_EVENTS);
 }
