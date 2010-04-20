@@ -513,21 +513,8 @@ void annotate_show_annotation ()
 void annotate_release_pointer_grab()
 {
   ungrab_pointer(data->display,data->win); 
-  gdk_window_restack(get_bar_window()->window, data->win->window, TRUE);
-  
-  data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
-  #ifndef _WIN32
-    if (!data->shape)
-    {
 
-       cairo_t* shape_cr = gdk_cairo_create(data->shape);
-       clear_cairo_context(shape_cr); 
-       cairo_destroy(shape_cr);
-    }
-    gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
-  #else
-    gtk_widget_shape_combine_mask(data->win, data->shape, 0, 0);
-  #endif
+  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
   
   gdk_flush();
 }
@@ -661,10 +648,6 @@ void set_eraser_cursor()
 /* Acquire pointer grab */
 void annotate_acquire_pointer_grab()
 {
-  gtk_window_set_keep_above(GTK_WINDOW(data->win), TRUE);
-  gtk_widget_show (data->win);
-  
-  gtk_widget_show(get_bar_window());
   grab_pointer(data->win, ANNOTATE_MOUSE_EVENTS);
 }
 
@@ -1375,6 +1358,12 @@ event_expose (GtkWidget *widget,
       transparent_cr = gdk_cairo_create(transparent_pixmap);
       clear_cairo_context(transparent_cr);
       restore_surface();
+
+      data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
+      cairo_t* shape_cr = gdk_cairo_create(data->shape);
+      clear_cairo_context(shape_cr); 
+      cairo_destroy(shape_cr);
+      gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
     }
   return TRUE;
 }
@@ -1464,19 +1453,20 @@ void annotate_quit()
 void setup_app ()
 { 
   data->cr = NULL;
-  data->display = gdk_display_get_default ();
-  data->screen = gdk_display_get_default_screen (data->display);
+  data->display = gdk_display_get_default();
+  data->screen = gdk_display_get_default_screen(data->display);
 
-  data->width = gdk_screen_get_width (data->screen);
+  data->width = gdk_screen_get_width(data->screen);
   data->height = gdk_screen_get_height (data->screen);
 
-  data->win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  data->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_transient_for(GTK_WINDOW(data->win), GTK_WINDOW(get_background_window()));
 
   if (DOCK)
    {
      gtk_window_set_type_hint(GTK_WINDOW(data->win), GDK_WINDOW_TYPE_HINT_DOCK); 
    }
-  gtk_widget_set_usize (GTK_WIDGET (data->win), data->width, data->height);
+  gtk_widget_set_usize(GTK_WIDGET (data->win), data->width, data->height);
   gtk_window_fullscreen(GTK_WINDOW(data->win)); 
   if (STICK)
     {
@@ -1525,7 +1515,7 @@ void setup_app ()
 /* Init the annotation */
 int annotate_init (int x, int y, int width, int height, gboolean debug)
 {
-  data = g_malloc (sizeof (AnnotateData));
+  data = g_malloc (sizeof(AnnotateData));
   data->debug = debug;
   /* Untoggle zone is setted on ardesia zone */
   data->untogglexpos = x;

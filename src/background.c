@@ -101,10 +101,10 @@ back_event_expose (GtkWidget *widget,
               GdkEventExpose *event, 
               gpointer user_data)
 {
+  
   if (!back_cr)
     {
       back_cr = gdk_cairo_create(widget->window);
-       
       if (background_image)
         {
             change_background_image(background_image);
@@ -121,12 +121,17 @@ back_event_expose (GtkWidget *widget,
 /* The windows has been exposed after the show_all request to change the background image */
 void load_file()
 {
-  GdkPixbuf* pixbuf = load_png(background_image);   
-  cairo_set_operator(back_cr, CAIRO_OPERATOR_SOURCE);
-  gdk_cairo_set_source_pixbuf(back_cr, pixbuf, 0.0, 0.0);
-  cairo_paint(back_cr);
-  cairo_stroke(back_cr);   
-  g_object_unref(G_OBJECT (pixbuf));
+  if (back_cr)
+    {
+      GdkPixbuf* pixbuf = load_png(background_image);   
+      cairo_set_operator(back_cr, CAIRO_OPERATOR_SOURCE);
+      gtk_window_set_opacity(GTK_WINDOW(background_window), 1);
+      gdk_cairo_set_source_pixbuf(back_cr, pixbuf, 0.0, 0.0);
+      cairo_paint(back_cr);
+      cairo_stroke(back_cr);   
+      g_object_unref(G_OBJECT (pixbuf));
+      gtk_widget_input_shape_combine_mask(background_window, NULL, 0, 0);
+    }
 }
 
 
@@ -142,6 +147,7 @@ void load_color()
       cairo_set_source_rgb(back_cr, (double) r/256, (double) g/256, (double) b/256);
       cairo_paint(back_cr);
       cairo_stroke(back_cr); 
+      gtk_widget_input_shape_combine_mask(background_window, NULL, 0, 0);
     }  
 }
 
@@ -183,32 +189,28 @@ GtkWidget* create_background_window(char* backgroundimage)
   background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_usize (GTK_WIDGET(background_window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(background_window));
+
   if (DOCK)
    {
      gtk_window_set_type_hint(GTK_WINDOW(background_window), GDK_WINDOW_TYPE_HINT_DOCK); 
    }
+
   if (STICK)
     {
       gtk_window_stick(GTK_WINDOW(background_window));  
     }
-  
-  gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
-  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(background_window), TRUE);
-  gtk_window_set_accept_focus(GTK_WINDOW(background_window), FALSE);
 
-  #ifndef _WIN32 
-    gtk_window_set_opacity(GTK_WINDOW(background_window), 1); 
-  #else
-    // TODO In windows I am not able to use an rgba transwidget  
-    // windows and then I use a sort of semi transparency
-    gtk_window_set_opacity(GTK_WINDOW(background_window), 0.5); 
-  #endif 
+  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(background_window), TRUE);
+
+  gtk_window_set_opacity(GTK_WINDOW(background_window), 0); 
+
+  gtk_widget_show_all(background_window);
 
   g_signal_connect (background_window, "expose_event",
 		    G_CALLBACK (back_event_expose), NULL);
   gtk_widget_set_app_paintable(background_window, TRUE);
+
   gtk_widget_set_double_buffered(background_window, FALSE);
-  gtk_widget_show_all(background_window);
 
   return  background_window;
 }
