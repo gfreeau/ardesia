@@ -515,15 +515,20 @@ void annotate_release_pointer_grab()
   ungrab_pointer(data->display,data->win); 
   gdk_window_restack(get_bar_window()->window, data->win->window, TRUE);
   
-  if (!data->shape)
+  data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
+  #ifndef _WIN32
+    if (!data->shape)
     {
-       data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
+
        cairo_t* shape_cr = gdk_cairo_create(data->shape);
        clear_cairo_context(shape_cr); 
        cairo_destroy(shape_cr);
     }
-  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
-
+    gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
+  #else
+    gtk_widget_shape_combine_mask(data->win, data->shape, 0, 0);
+  #endif
+  
   gdk_flush();
 }
 

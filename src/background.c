@@ -138,7 +138,8 @@ void load_color()
       cairo_set_operator(back_cr, CAIRO_OPERATOR_SOURCE);
       int r,g,b,a;
       sscanf(background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-      cairo_set_source_rgba(back_cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
+      gtk_window_set_opacity(GTK_WINDOW(background_window), (double) a/256);
+      cairo_set_source_rgb(back_cr, (double) r/256, (double) g/256, (double) b/256);
       cairo_paint(back_cr);
       cairo_stroke(back_cr); 
     }  
@@ -193,7 +194,8 @@ GtkWidget* create_background_window(char* backgroundimage)
   
   gtk_window_set_decorated(GTK_WINDOW(background_window), FALSE);
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(background_window), TRUE);
-  
+  gtk_window_set_accept_focus(GTK_WINDOW(background_window), FALSE);
+
   #ifndef _WIN32 
     gtk_window_set_opacity(GTK_WINDOW(background_window), 1); 
   #else
@@ -201,6 +203,7 @@ GtkWidget* create_background_window(char* backgroundimage)
     // windows and then I use a sort of semi transparency
     gtk_window_set_opacity(GTK_WINDOW(background_window), 0.5); 
   #endif 
+
   g_signal_connect (background_window, "expose_event",
 		    G_CALLBACK (back_event_expose), NULL);
   gtk_widget_set_app_paintable(background_window, TRUE);
