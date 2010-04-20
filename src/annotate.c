@@ -513,7 +513,17 @@ void annotate_show_annotation ()
 void annotate_release_pointer_grab()
 {
   ungrab_pointer(data->display,data->win); 
+  gdk_window_restack(get_bar_window()->window, data->win->window, TRUE);
+  
+  if (!data->shape)
+    {
+       data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
+       cairo_t* shape_cr = gdk_cairo_create(data->shape);
+       clear_cairo_context(shape_cr); 
+       cairo_destroy(shape_cr);
+    }
   gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
+
   gdk_flush();
 }
 
@@ -1361,8 +1371,6 @@ event_expose (GtkWidget *widget,
       clear_cairo_context(transparent_cr);
       restore_surface();
     }
-  gtk_widget_input_shape_combine_mask (data->win, data->shape, 0,0);
-     
   return TRUE;
 }
 
@@ -1434,8 +1442,6 @@ void annotate_quit()
   /* free all */
   g_object_unref(transparent_pixmap);
   transparent_pixmap = NULL;
-  g_object_unref(data->shape);
-  data->shape = NULL;
   annotate_coord_list_free();
   annotate_savelist_free();
   g_free(data->default_pen->fg_color);
@@ -1507,25 +1513,6 @@ void setup_app ()
   gtk_widget_set_app_paintable(data->win, TRUE);
   gtk_widget_set_double_buffered(data->win, FALSE);
 
-  /* SHAPE PIXMAP */
-  data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
-  #ifdef _WIN32 
-     GdkGC *shape_gc = gdk_gc_new (data->shape);
-     GdkGCValues *shape_gcv = g_malloc (sizeof (GdkGCValues));
-     gdk_gc_get_values (shape_gc, shape_gcv);
-     GdkColor* transparent = gdk_color_copy (&(shape_gcv->foreground));
-     gdk_gc_set_foreground (shape_gc, transparent);
-     gdk_draw_rectangle (data->shape, shape_gc,
-                         1, 0, 0, data->width, data->height);
-
-     gtk_widget_input_shape_combine_mask (data->win, data->shape, 0,0);
-  #else
-    cairo_t* shape_cr = gdk_cairo_create(data->shape);
-    clear_cairo_context(shape_cr); 
-    cairo_destroy(shape_cr);
-    /* this allow the pointer focus below the transparent window */ 
-    gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
-  #endif
 }
 
 
