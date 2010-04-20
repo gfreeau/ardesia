@@ -6,10 +6,10 @@
     <property name="height_request">950</property>
     <property name="events">GDK_LEAVE_NOTIFY_MASK</property>
     <property name="title" translatable="yes">Ardesia</property>
-    <property name="resizable">False</property>
-    <property name="decorated">False</property>
+    <property name="resizable">True</property>
+    <property name="decorated">True</property>
     <property name="deletable">False</property>
-    <property name="gravity">north-east</property>
+    <property name="gravity">center</property>
     <property name="opacity">0.9</property>
     <property name="startup_id">Ardesia</property>
     <signal name="expose_event" handler="on_window_expose_event"/>

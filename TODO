@@ -11,6 +11,9 @@
 - Documentation
   - Create video tutorial
 
+- Bug fix
+  - fix the po translation support
+
 - Windows porting
   - trick about shape mask
   - support the pointer icons
@@ -18,13 +21,13 @@
   - forwardind to icecast for streaming 
     (see if is possible port oggfwd)
   - alpha channels
+  - fix the clear uder win
 
 - Usability
   - specify the default file name 
     and the default folder name used for the sceenshot 
   - specify the default file name 
     and the default folder name used for the screencast
-  - Move or decide the bar position
 
 - Possible future features
   - Svg export 

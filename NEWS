@@ -24,10 +24,11 @@ Features:
 - added the verbosity option to trace the tool
 - undo/redo using vector graphics instead of raw images
 - added electronic whiteboard support
+- add stream support with icecast
 
 Bug fix:
 - fill close path with or within the highlighter
-- fix the behaviour of recoreder if the recordmydesktop tool
+- fix the behaviour of recorder if the recordmydesktop tool
   is missed (issue 9)
 - solved some memory leaks
 
@@ -42,13 +43,15 @@ Usability:
 - hide the cursor after a paint to avoid that the cursor 
   overlap the annotations
 - lighter recording using subsampling; this allow to have 
-  a good streamable video for busier machines too
+  a good video for busier machines too
 - Added tablet support
 - Added text insertion using keyboard
 - Added text insertion using external text input program
   This feature is tested using
   - the "onboard" virtual keyboard 
   - the "cellwriter" handwriting recognizer
+- Using a vertical layout 
+- Use three line widthness buttons 
 
 -------------
  ardesia 0.2
