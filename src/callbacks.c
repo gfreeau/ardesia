@@ -59,37 +59,37 @@
 #define COLORSIZE 9
 
 /* annotation is visible */
-gboolean     visible = TRUE;
+gboolean visible = TRUE;
 
 /* pencil is selected */
-gboolean     pencil = TRUE;
+gboolean pencil = TRUE;
 
 /* grab when leave */
-gboolean     grab = FALSE;
+gboolean grab = FALSE;
 
 /* Is the text inserction enabled */
 gboolean text = FALSE;
 
 /* selected color in RGBA format */
-gchar*       color = NULL;
+gchar* color = NULL;
 
 /* selected line width */
-int          tickness = 15;
+int thickness = 15;
 
 /* highlighter flag */
-gboolean     highlighter = FALSE;
+gboolean highlighter = FALSE;
 
 /* rectifier flag */
-gboolean     rectifier = FALSE;
+gboolean rectifier = FALSE;
 
 /* rounder flag */
-gboolean     rounder = FALSE;
+gboolean rounder = FALSE;
 
 /* arrow=0 mean no arrow, arrow=1 mean normal arrow, arrow=2 mean double arrow */
-int        arrow = 0;
+int arrow = 0;
 
 /* Default folder where store images and videos */
-char*       workspace_dir = NULL;
+char* workspace_dir = NULL;
 
 
 
@@ -100,7 +100,6 @@ gboolean  quit()
   quit_recorder();
   destroy_background_window();
   annotate_quit();
-  gtk_widget_destroy(get_bar_window());
   if (gtkBuilder)
   {
     g_object_unref (gtkBuilder); 
@@ -146,7 +145,7 @@ void annotate()
   
   annotate_set_rounder(rounder);
   
-  annotate_set_width(tickness);
+  annotate_set_width(thickness);
 
   annotate_set_arrow(arrow);
 
@@ -157,7 +156,7 @@ void annotate()
 /* Start to erase calling annotate */
 void erase()
 {
-  annotate_set_width(tickness); 
+  annotate_set_width(thickness); 
   annotate_eraser_grab();
 }
 
@@ -170,7 +169,7 @@ void start_tool()
       if (text)
 	{
           annotate_release_grab();
-	  start_text_widget( GTK_WINDOW(get_annotation_window()), color, tickness);
+	  start_text_widget( GTK_WINDOW(get_annotation_window()), color, thickness);
 	}
       else 
 	{
@@ -363,6 +362,33 @@ on_toolsText_activate            (GtkToolButton   *toolbutton,
 
 
 G_MODULE_EXPORT void
+on_toolsThin_activate          (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
+{
+  grab = TRUE;
+  thickness = 7;
+}
+
+
+G_MODULE_EXPORT void
+on_toolsMedium_activate          (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
+{
+  grab = TRUE;
+  thickness = 14;
+}
+
+
+G_MODULE_EXPORT void
+on_toolsThick_activate          (GtkToolButton   *toolbutton,
+                                  gpointer         user_data)
+{
+  grab = TRUE;
+  thickness = 21;
+}
+
+
+G_MODULE_EXPORT void
 on_toolsPencil_activate          (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
 {
@@ -452,15 +478,6 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
     }
   grab = TRUE;
   start_tool();
-}
-
-
-G_MODULE_EXPORT void
-on_thickScale_value_changed      (GtkHScale   *hScale,
-			          gpointer         user_data)
-{
-  grab = TRUE;
-  tickness=gtk_range_get_value(&hScale->scale.range);
 }
 
 

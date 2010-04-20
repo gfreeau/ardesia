@@ -19,13 +19,11 @@ msgstr "Cambia colore"
 
 #: ardesia/src/main.c:148
 msgid "In order to run Ardesia you need to enable the Compiz composite manager"
-msgstr ""
-"Per far girare Ardesia è necessario abilitare il composite manager Compiz"
+msgstr "Per far girare Ardesia è necessario abilitare il composite manager Compiz"
 
 #: ardesia/src/recorder.c:139
 msgid "To record with Ardesia you must install the recordmydesktop program"
-msgstr ""
-"Per registrare con Ardesia devi installare il programma recordmydesktop"
+msgstr "Per registrare con Ardesia devi installare il programma recordmydesktop"
 
 #: ardesia/src/recorder.c:167
 msgid "Save video as ogv"
@@ -44,10 +42,7 @@ msgid "Save image"
 msgstr "Salva immagine"
 
 #: ardesia/src/infoDialog.glade:9
-#, fuzzy
-msgid ""
-"   Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
-"    "
+msgid "   Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
 msgstr "Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
 
 #: ardesia/src/infoDialog.glade:12
@@ -76,10 +71,45 @@ msgid ""
 "USA.\n"
 "   "
 msgstr ""
+"\n"
+"    Ardesia -- un programma per dipengere sullo schermo\n"
+"    con questo programma puoi giocare, disegnare, imparare e insegnare\n"
+"    Questo programma e' stato scritto come un sonetto di liberta'\n"
+"    Crediamo nella liberta' e nella liberta' di insegnamento\n"
+" \n"
+"    Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
+" \n"
+"    This program is free software; you can redistribute it and/or modify\n"
+"    it under the terms of the GNU General Public License as published by\n"
+"    the Free Software Foundation; either version 2 of the License, or\n"
+"    (at your option) any later version.\n"
+" \n"
+"    This program is distributed in the hope that it will be useful,\n"
+"    but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"    GNU General Public License for more details.\n"
+" \n"
+"    You should have received a copy of the GNU General Public License\n"
+"    along with this program; if not, write to the Free Software\n"
+"    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, "
+"USA.\n"
+"   "
 
 #: ardesia/src/ardesia.glade:9
 msgid "Ardesia"
 msgstr "Ardesia"
+
+#: ardesia/src/ardesia.glade:10
+msgid "Thin"
+msgstr "Sottile"
+
+#: ardesia/src/ardesia.glade:20
+msgid "Medium"
+msgstr "Medio"
+
+#: ardesia/src/ardesia.glade:30
+msgid "Thick"
+msgstr "Spesso"
 
 #: ardesia/src/ardesia.glade:37
 msgid "Width"

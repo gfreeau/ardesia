@@ -75,8 +75,8 @@
 
 
 
-int NORTH=1;
-int SOUTH=2;
+int EAST=1;
+int WEST=2;
 
 /* space from border in pixel */
 int SPACE_FROM_BORDER = 25;
@@ -97,22 +97,21 @@ typedef struct
  * Calculate the position where calculate_initial_position the main window 
  * the centered position upon the window manager bar
  */
-void calculate_centered_position(GtkWidget *ardesiaBarWindow, int dwidth, int dheight, int *x, int *y, int wwidth, int wheight, int position)
+void calculate_position(GtkWidget *ardesiaBarWindow, int dwidth, int dheight, int *x, int *y, int wwidth, int wheight, int position)
 {
-  *x = (dwidth - wwidth)/2;
-  if (position==NORTH)
+  *y = ((dheight - wheight)/2); 
+  if (position==WEST)
     {
-      *y = SPACE_FROM_BORDER; 
+      *x = 0;
     }
-  else if (position==SOUTH)
+  else if (position==EAST)
     {
-      /* south */
-      *y = dheight - SPACE_FROM_BORDER - wheight;
-    }  
+      *x = dwidth - wwidth;
+    }
   else
     {
       /* invalid position */
-      perror ("Valid position are NORTH or SOUTH\n");
+      perror ("Valid position are WEST or EAST\n");
       exit(0);
     }
 }
@@ -127,7 +126,7 @@ int calculate_initial_position(GtkWidget *ardesiaBarWindow, int *x, int *y, int 
 {
   gint dwidth = gdk_screen_width();
   gint dheight = gdk_screen_height();
-  calculate_centered_position(ardesiaBarWindow, dwidth, dheight, x, y, wwidth, wheight, position);
+  calculate_position(ardesiaBarWindow, dwidth, dheight, x, y, wwidth, wheight, position);
   return 0; 
 }
 
@@ -142,8 +141,8 @@ void print_help()
   printf("options:\n");
   printf("  --verbose,\t-v\t\tEnable verbose mode to see the logs\n");
   printf("  --gravity,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
-  printf("  \t\t\t\tnorth\n");
-  printf("  \t\t\t\tsouth\n");
+  printf("  \t\t\t\teast\n");
+  printf("  \t\t\t\twest\n");
   printf("  --help,   \t-h\t\tShows the help screen\n");
   printf("\n");
   printf("filename:\t  \t\tThe file containig the image to be be used as background\n");
@@ -190,7 +189,7 @@ void check_composite()
 CommandLine* parse_options(int argc, char *argv[])
 {
   CommandLine* commandline = g_malloc(sizeof(CommandLine)); 
-  commandline->position = SOUTH;
+  commandline->position = EAST;
   commandline->debug = FALSE;
   commandline->backgroundimage = NULL;
 
@@ -227,13 +226,13 @@ CommandLine* parse_options(int argc, char *argv[])
 	  commandline->debug=TRUE;
 	  break;
 	case 'g':
-	  if (strcmp (optarg, "north") == 0)
+	  if (strcmp (optarg, "east") == 0)
 	    {
-	      commandline->position = NORTH;
+	      commandline->position = EAST;
 	    }
-	  else if (strcmp(optarg, "south") == 0)
+	  else if (strcmp(optarg, "west") == 0)
 	    {
-	      commandline->position = SOUTH;
+	      commandline->position = WEST;
 	    }
 	  else
 	    {
@@ -250,14 +249,6 @@ CommandLine* parse_options(int argc, char *argv[])
       commandline->backgroundimage = argv[optind];
     } 
   return commandline;
-}
-
-/* Set the defult width of the pen line */
-void setInitialWidth(int val)
-{
-  GtkWidget* widthWidget = GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thickScale"));
-  GtkHScale* hScale = (GtkHScale *) widthWidget;
-  gtk_range_set_value(&hScale->scale.range, val);
 }
 
 
@@ -283,8 +274,6 @@ create_window (void)
       // Make as dock 
       gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_DOCK);
     } 
-  /* Set the width to 15 in the thick scale */
-  setInitialWidth(15);
 
   return window;
 }

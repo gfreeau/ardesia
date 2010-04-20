@@ -1,3 +1,19 @@
 # List of source files containing translatable strings.
 
 src/main.c
+src/annotate.c
+src/annotate_shape.c
+src/background.c
+src/bezier_spline.c
+src/broken.c
+src/callbacks.c
+src/color_selector.c
+src/info_dialog.c
+src/preference_dialog.c
+src/recorder.c
+src/saver.c
+src/text_widget.c
+src/utils.c
+src/ardesia.ui
+src/info_dialog.ui
+src/preference_dialog.ui
