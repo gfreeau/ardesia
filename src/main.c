@@ -69,21 +69,25 @@
 #ifdef _WIN32
   #include <gdkwin32.h>
   #define UI_FILE "ardesia.ui"
+  #define UI_HOR_FILE "ardesia_horizontal.ui"
 #else
   #define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.ui"
+  #define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia_horizontal.ui"
 #endif 
 
 gboolean compiz_check_enabled = TRUE;
 
-int EAST=1;
-int WEST=2;
-
-/* space from border in pixel */
-int SPACE_FROM_BORDER = 25;
 
 GtkBuilder *gtkBuilder;
 
+int EAST=1;
+int WEST=2;
+int NORTH=3;
+int SOUTH=4;
 
+
+/* space from border in pixel */
+int SPACE_FROM_BORDER = 25;
 
 typedef struct
 {
@@ -92,6 +96,8 @@ typedef struct
   int position;
 } CommandLine;
 
+
+CommandLine *commandline;
 
 /* 
  * Calculate the position where calculate_initial_position the main window 
@@ -110,9 +116,23 @@ void calculate_position(GtkWidget *ardesiaBarWindow, int dwidth, int dheight, in
     }
   else
     {
-      /* invalid position */
-      perror ("Valid position are WEST or EAST\n");
-      exit(0);
+      //horizontal layout
+      *x = (dwidth - wwidth)/2;
+      if (position==NORTH)
+        {
+          *y = SPACE_FROM_BORDER; 
+        }
+      else if (position==SOUTH)
+        {
+          /* south */
+         *y = dheight - SPACE_FROM_BORDER - wheight;
+        }
+      else
+        {  
+          /* invalid position */
+          perror ("Valid position are WEST or EAST\n");
+          exit(0);
+        }
     }
 }
 
@@ -143,6 +163,8 @@ void print_help()
   printf("  --gravity,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
   printf("  \t\t\t\teast\n");
   printf("  \t\t\t\twest\n");
+  printf("  \t\t\t\tnorth\n");
+  printf("  \t\t\t\tsouth\n");
   printf("  --help,   \t-h\t\tShows the help screen\n");
   printf("\n");
   printf("filename:\t  \t\tThe file containig the image to be be used as background\n");
@@ -241,6 +263,14 @@ CommandLine* parse_options(int argc, char *argv[])
 	    {
 	      commandline->position = WEST;
 	    }
+          else if (strcmp(optarg, "north") == 0)
+	    {
+	      commandline->position = NORTH;
+	    }
+          else if (strcmp(optarg, "south") == 0)
+	    {
+	      commandline->position = SOUTH;
+	    }
 	  else
 	    {
 	      print_help();
@@ -266,7 +296,13 @@ create_window (void)
   GError* error = NULL;
 
   gtkBuilder = gtk_builder_new();
-  if (!gtk_builder_add_from_file (gtkBuilder, UI_FILE, &error))
+  char* file = UI_FILE;
+  if (commandline->position>2)
+    {
+      file = UI_HOR_FILE;
+    }
+
+  if (!gtk_builder_add_from_file (gtkBuilder, file, &error))
     {
       g_warning ("Couldn't load builder file: %s", error->message);
       g_error_free (error);
@@ -296,6 +332,8 @@ main (int argc, char *argv[])
 
   set_the_best_colormap();
 
+  commandline = parse_options(argc, argv);
+
   ardesiaBarWindow = create_window();
 
   /*
@@ -309,7 +347,6 @@ main (int argc, char *argv[])
 
   int x, y;
 
-  CommandLine* commandline = parse_options(argc, argv);
 
   /* calculate_initial_position the window in the desired position */
   if (calculate_initial_position(ardesiaBarWindow,&x,&y,width,height,commandline->position) < 0)

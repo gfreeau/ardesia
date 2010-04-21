@@ -7,6 +7,7 @@ scriptsdir = $(datadir)/ardesia/scripts
 uipixmapsdir = $(uidir)/pixmaps
 uibackgroundsdir = $(uidir)/backgrounds
 ui_DATA = ardesia.ui \
+	ardesia_horizontal.ui \
 	preference_dialog.ui \
 	info_dialog.ui
 
