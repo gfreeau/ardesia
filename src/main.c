@@ -73,7 +73,7 @@
   #define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.ui"
 #endif 
 
-
+gboolean compiz_check_enabled = TRUE;
 
 int EAST=1;
 int WEST=2;
@@ -152,30 +152,37 @@ void print_help()
 }
 
 
-/* check if a composite manager is active */
-void check_composite()
+void run_missing_composite_manager_dialog()
 {
-  #ifndef _WIN32
+   GtkWidget *msg_dialog; 
+   msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
+                                        GTK_BUTTONS_OK, gettext("In order to run Ardesia you need to enable the Compiz composite manager"));
+   if (STICK)
+     {
+       gtk_window_stick((GtkWindow*)msg_dialog);
+     }
+                 
+   gtk_dialog_run(GTK_DIALOG(msg_dialog));
+   
+   if (msg_dialog != NULL)
+     {
+       gtk_widget_destroy(msg_dialog);
+     }
+   exit(0);
+}
+
+
+/* check if a composite manager is active */
+void set_the_best_colormap()
+{
+ #ifndef _WIN32
     GdkDisplay *display = gdk_display_get_default ();
     GdkScreen   *screen = gdk_display_get_default_screen (display);
     gboolean composite = gdk_screen_is_composited (screen);
-    if (!composite)
+    if ((!composite)&&(compiz_check_enabled))
       {
-        /* composite manager must be enabled */
-        GtkWidget *msg_dialog; 
-        msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
-                                             GTK_BUTTONS_OK, gettext("In order to run Ardesia you need to enable the Compiz composite manager"));
-        if (STICK)
-        {
-          gtk_window_stick((GtkWindow*)msg_dialog);
-        }
-                 
-        gtk_dialog_run(GTK_DIALOG(msg_dialog));
-        if (msg_dialog != NULL)
-          {
-	    gtk_widget_destroy(msg_dialog);
-          }
-        exit(0);
+         /* composite manager must be enabled */
+         run_missing_composite_manager_dialog();
       }
     GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
     if (colormap)
@@ -268,12 +275,6 @@ create_window (void)
   /* This is important; connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(gtkBuilder, NULL);
   window = GTK_WIDGET (gtk_builder_get_object(gtkBuilder, "winMain"));
-  
-  if (DOCK)
-    {
-      // Make as dock 
-      gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_DOCK);
-    } 
 
   return window;
 }
@@ -290,11 +291,10 @@ main (int argc, char *argv[])
     textdomain (GETTEXT_PACKAGE);
   #endif
 
-
   gtk_set_locale ();
   gtk_init (&argc, &argv);
 
-  check_composite();
+  set_the_best_colormap();
 
   ardesiaBarWindow = create_window();
 
@@ -331,8 +331,6 @@ main (int argc, char *argv[])
   gtk_widget_show(ardesiaBarWindow);
   gtk_widget_show (annotation_window);
   
-  
-
   gtk_main();
   g_object_unref(gtkBuilder);	
   return 0;

@@ -98,11 +98,7 @@ void create_text_window(GtkWindow *parent)
 
   gtk_widget_set_usize (GTK_WIDGET(text_window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(text_window));
-  if (DOCK)
-   {
-     // Make as dock 
-     gtk_window_set_type_hint(GTK_WINDOW(text_window), GDK_WINDOW_TYPE_HINT_DOCK);
-   } 
+
   if (STICK)
     {
       gtk_window_stick(GTK_WINDOW(text_window));
@@ -216,45 +212,44 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 /* Set the eraser cursor */
 gboolean set_text_pointer(GtkWidget * window)
 {
-  int height = max_font_height;
-  int width = text_pen_width;
-  
-  #ifdef _WIN32
-    height=5;
-    width=5;  
-  #endif
+  #ifndef _WIN32
+    int height = max_font_height;
+    int width = text_pen_width;
 
-  GdkPixmap *pixmap = gdk_pixmap_new (NULL, width ,height, 1);
+    GdkPixmap *pixmap = gdk_pixmap_new (NULL, width ,height, 1);
 
-  cairo_t *text_pointer_cr = gdk_cairo_create(pixmap);
+    cairo_t *text_pointer_cr = gdk_cairo_create(pixmap);
   
-  if (text_pointer_cr)
-    {
-       clear_cairo_context(text_pointer_cr);
+    if (text_pointer_cr)
+      {
+         clear_cairo_context(text_pointer_cr);
   
-       cairo_set_line_cap (text_pointer_cr, CAIRO_LINE_CAP_ROUND);
-       cairo_set_line_join(text_pointer_cr, CAIRO_LINE_JOIN_ROUND); 
-       cairo_set_operator(text_pointer_cr, CAIRO_OPERATOR_SOURCE);
-       cairo_set_line_width(text_pointer_cr, text_pen_width);
-       cairo_set_source_color_from_string(text_pointer_cr, text_color);
-       cairo_rectangle(text_pointer_cr, 0,0, 5, height);  
+         cairo_set_line_cap (text_pointer_cr, CAIRO_LINE_CAP_ROUND);
+         cairo_set_line_join(text_pointer_cr, CAIRO_LINE_JOIN_ROUND); 
+         cairo_set_operator(text_pointer_cr, CAIRO_OPERATOR_SOURCE);
+         cairo_set_line_width(text_pointer_cr, text_pen_width);
+         cairo_set_source_color_from_string(text_pointer_cr, text_color);
+         cairo_rectangle(text_pointer_cr, 0,0, 5, height);  
 
-       cairo_stroke(text_pointer_cr);
+         cairo_stroke(text_pointer_cr);
      } 
  
-  GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
-  GdkColor *foreground_color_p = rgb_to_gdkcolor(text_color);
-  if (text_cursor)
-    {
-      gdk_cursor_unref(text_cursor);
-    }
-  text_cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, 0, height);
-  gdk_window_set_cursor (text_window->window, text_cursor);
-  gdk_flush ();
-  g_object_unref (pixmap);
-  g_free(foreground_color_p);
-  g_free(background_color_p);
-  cairo_destroy(text_pointer_cr);
+    GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
+    GdkColor *foreground_color_p = rgb_to_gdkcolor(text_color);
+    if (text_cursor)
+      {
+        gdk_cursor_unref(text_cursor);
+      }
+    text_cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, 0, height);
+    gdk_window_set_cursor (text_window->window, text_cursor);
+    gdk_flush ();
+    g_object_unref (pixmap);
+    g_free(foreground_color_p);
+    g_free(background_color_p);
+    cairo_destroy(text_pointer_cr);
+  #else
+    //TODO native node
+  #endif
   return TRUE;
 }
 

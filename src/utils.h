@@ -44,7 +44,6 @@
 #endif
 
 #define STICK FALSE
-#define DOCK FALSE
 
 extern GtkBuilder *gtkBuilder;
 

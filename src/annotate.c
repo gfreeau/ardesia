@@ -49,9 +49,10 @@
 
 #include <cairo.h>
 
-#if defined(_WIN32)
+#ifdef _WIN32
   #include <cairo-win32.h>
   #include <gdkwin32.h>
+  #include <winuser.h>  
 #else
   #include <cairo-xlib.h>
 #endif
@@ -589,60 +590,64 @@ GdkPixmap* get_pen_bitmap(int size)
 /* Set the cursor patching the xpm with the selected color */
 void set_pen_cursor()
 {
-  gint size=12;
-  if (cursor)
-    {
-      gdk_cursor_unref(cursor);
-    }
-  GdkPixmap* pixmap = get_pen_bitmap(size); 
-  GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
-  GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color); 
-  gint context_width = data->cur_context->width;;
-  #ifdef _WIN32
-     cursor = fixed_gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
+  #ifndef _WIN32
+    gint size=12;
+    if (cursor)
+      {
+        gdk_cursor_unref(cursor);
+      }
+    GdkPixmap* pixmap = get_pen_bitmap(size); 
+    GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
+    GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color); 
+    gint context_width = data->cur_context->width;;
+
+    cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
+
+    gdk_window_set_cursor (data->win->window, cursor);
+    gdk_display_sync(gdk_display_get_default());
+    g_object_unref (pixmap);
+    g_free(foreground_color_p);
+    g_free(background_color_p);
   #else 
-     cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
+     //TODO implement with native code
   #endif
-  gdk_window_set_cursor (data->win->window, cursor);
-  gdk_display_sync(gdk_display_get_default());
-  g_object_unref (pixmap);
-  g_free(foreground_color_p);
-  g_free(background_color_p);
 }
 
 
 /* Set the eraser cursor */
 void set_eraser_cursor()
 {
-  gint size = data->cur_context->width;
-  GdkPixmap *pixmap = gdk_pixmap_new (NULL, size, size, 1);
-  int circle_width = 2; 
-  cairo_t *eraser_cr = gdk_cairo_create(pixmap);
-  clear_cairo_context(eraser_cr);
-  cairo_set_operator(eraser_cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_line_width(eraser_cr, circle_width);
-  cairo_set_source_rgba(eraser_cr,0,0,0,1);
+  #ifndef _WIN32
+    gint size = data->cur_context->width;
+    GdkPixmap *pixmap = gdk_pixmap_new (NULL, size, size, 1);
+    int circle_width = 2; 
+    cairo_t *eraser_cr = gdk_cairo_create(pixmap);
+    clear_cairo_context(eraser_cr);
+    cairo_set_operator(eraser_cr, CAIRO_OPERATOR_SOURCE);
+    cairo_set_line_width(eraser_cr, circle_width);
+    cairo_set_source_rgba(eraser_cr,0,0,0,1);
   
-  cairo_arc(eraser_cr, size/2, size/2, (size/2)-circle_width, 0, 2 * M_PI);
-  cairo_stroke(eraser_cr);
+    cairo_arc(eraser_cr, size/2, size/2, (size/2)-circle_width, 0, 2 * M_PI);
+    cairo_stroke(eraser_cr);
   
-  GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
-  GdkColor *foreground_color_p = rgb_to_gdkcolor("FF0000");
-  if (cursor)
-    {
-      gdk_cursor_unref(cursor);
-    }
-  #ifdef _WIN32
-     cursor = fixed_gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, size/2, size/2);
-  #else 
+    GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
+    GdkColor *foreground_color_p = rgb_to_gdkcolor("FF0000");
+    if (cursor)
+      {
+        gdk_cursor_unref(cursor);
+      }
+ 
      cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, size/2, size/2);
+  
+    gdk_window_set_cursor (data->win->window, cursor);
+    gdk_display_sync(gdk_display_get_default());
+    g_object_unref (pixmap);
+    g_free(foreground_color_p);
+    g_free(background_color_p);
+    cairo_destroy(eraser_cr);
+  #else 
+    //TODO implement with native code
   #endif
-  gdk_window_set_cursor (data->win->window, cursor);
-  gdk_display_sync(gdk_display_get_default());
-  g_object_unref (pixmap);
-  g_free(foreground_color_p);
-  g_free(background_color_p);
-  cairo_destroy(eraser_cr);
 }
 
 
@@ -961,6 +966,7 @@ proximity_out (GtkWidget *win,
 /* Hide the cursor */
 void hide_cursor()
 {
+  #ifndef _WIN32
     char invisible_cursor_bits[] = { 0x0 };
     GdkBitmap *empty_bitmap;
     GdkColor color = { 0, 0, 0, 0 };
@@ -971,17 +977,17 @@ void hide_cursor()
       {
         gdk_cursor_unref (cursor);
       }
-    #ifdef _WIN32
-      cursor = fixed_gdk_cursor_new_from_pixmap (empty_bitmap, empty_bitmap, &color,
-	             			 &color, 0, 0);
-    #else 
+    
       cursor = gdk_cursor_new_from_pixmap (empty_bitmap, empty_bitmap, &color,
 	             			 &color, 0, 0);
-    #endif
+   
     gdk_window_set_cursor(data->win->window, cursor);
     gdk_display_sync(gdk_display_get_default());
     g_object_unref(empty_bitmap);
     data->cursor_hidden = TRUE; 
+   #else 
+     //TODO implement with native code
+   #endif
 }
 
 
@@ -1060,18 +1066,8 @@ paintto (GtkWidget *win,
        return TRUE;
     }
   unhide_cursor();
-   
-  // This is a workaround some event inside the bar has wrong coords
-  int x,y;
-  #ifdef _WIN32
-    /* get cursor position */
-    gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
-  #else
-    x = ev->x;
-    y = ev->y;   
-  #endif
 
-  if (inside_bar_window(x,y))
+  if (inside_bar_window(ev->x, ev->y))
     /* point is in the ardesia bar */
     {
        if (data->debug)
@@ -1463,10 +1459,6 @@ void setup_app ()
   data->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_transient_for(GTK_WINDOW(data->win), GTK_WINDOW(get_background_window()));
 
-  if (DOCK)
-   {
-     gtk_window_set_type_hint(GTK_WINDOW(data->win), GDK_WINDOW_TYPE_HINT_DOCK); 
-   }
   gtk_widget_set_usize(GTK_WIDGET (data->win), data->width, data->height);
   gtk_window_fullscreen(GTK_WINDOW(data->win)); 
   if (STICK)
@@ -1478,7 +1470,7 @@ void setup_app ()
   #ifndef _WIN32 
     gtk_window_set_opacity(GTK_WINDOW(data->win), 1); 
   #else
-    // TODO In windows I am not yet able to use an rgba transparent  
+    // TODO In windows I am not able yet to use an rgba transparent  
     // windows and then I use a sort of semi transparency 
     gtk_window_set_opacity(GTK_WINDOW(data->win), 0.5); 
   #endif  
