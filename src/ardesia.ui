@@ -560,14 +560,6 @@
       </object>
     </child>
   </object>
-  <object class="GtkAdjustment" id="heightAdjustment">
-    <property name="value">15</property>
-    <property name="lower">1</property>
-    <property name="upper">30</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">5</property>
-    <property name="page_size">5</property>
-  </object>
   <object class="GtkImage" id="thin">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/thin.png</property>
