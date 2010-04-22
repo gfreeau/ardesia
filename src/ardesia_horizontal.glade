@@ -3,7 +3,7 @@
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">920</property>
+    <property name="width_request">795</property>
     <property name="events">GDK_LEAVE_NOTIFY_MASK</property>
     <property name="type">toplevel</property>
     <property name="title" translatable="yes">Ardesia</property>
@@ -153,6 +153,7 @@
                 <property name="expand">False</property>
               </packing>
             </child>
+            <!--
             <child>
               <object class="GtkRadioToolButton" id="buttonDoubleArrow">
                 <property name="width_request">29</property>
@@ -168,6 +169,7 @@
                 <property name="homogeneous">True</property>
               </packing>
             </child>
+			-->
             <child>
               <object class="GtkRadioToolButton" id="buttonArrow">
                 <property name="width_request">29</property>
@@ -255,6 +257,7 @@
                 <property name="homogeneous">True</property>
               </packing>
             </child>
+            <!--
             <child>
               <object class="GtkRadioToolButton" id="buttonLightBlue">
                 <property name="width_request">29</property>
@@ -270,6 +273,7 @@
                 <property name="homogeneous">True</property>
               </packing>
             </child>
+            -->
             <child>
               <object class="GtkRadioToolButton" id="buttonLightGreen">
                 <property name="width_request">29</property>
@@ -329,6 +333,7 @@
                 <property name="homogeneous">True</property>
               </packing>
             </child>
+             <!--
             <child>
               <object class="GtkRadioToolButton" id="buttonMagenta">
                 <property name="width_request">29</property>
@@ -344,6 +349,7 @@
                 <property name="homogeneous">True</property>
               </packing>
             </child>
+            -->
             <child>
               <object class="GtkRadioToolButton" id="buttonWhite">
                 <property name="width_request">29</property>
@@ -536,6 +542,7 @@
                 <property name="homogeneous">True</property>
               </packing>
             </child>
+            <!--
             <child>
               <object class="GtkToolButton" id="buttonQuit">
                 <property name="width_request">29</property>
@@ -550,6 +557,7 @@
                 <property name="homogeneous">True</property>
               </packing>
             </child>
+            -->
           </object>
           <packing>
             <property name="expand">False</property>
