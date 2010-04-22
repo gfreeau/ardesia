@@ -68,11 +68,11 @@
 
 #ifdef _WIN32
   #include <gdkwin32.h>
-  #define UI_FILE "ardesia.ui"
-  #define UI_HOR_FILE "ardesia_horizontal.ui"
+  #define UI_FILE "ardesia.glade"
+  #define UI_HOR_FILE "ardesia_horizontal.glade"
 #else
-  #define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.ui"
-  #define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia_horizontal.ui"
+  #define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.glade"
+  #define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia_horizontal.glade"
 #endif 
 
 gboolean compiz_check_enabled = TRUE;

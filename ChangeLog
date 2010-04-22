@@ -2,6 +2,12 @@
  ChangeLog
 -----------
 
+ - The changelog is deprecated I don't want maintain this;
+   Please read the NEWS file or refer to the commit changelog 
+   on the web site
+
+ - Added virtual keyboard support
+
  - Addded the text insertion
 
  - Added getopt support

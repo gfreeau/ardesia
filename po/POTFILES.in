@@ -2,7 +2,6 @@
 
 src/main.c
 src/annotate.c
-src/annotate_shape.c
 src/background.c
 src/bezier_spline.c
 src/broken.c
@@ -14,6 +13,6 @@ src/recorder.c
 src/saver.c
 src/text_widget.c
 src/utils.c
-src/ardesia.ui
-src/info_dialog.ui
-src/preference_dialog.ui
+src/ardesia.glade
+src/info_dialog.glade
+src/preference_dialog.glade

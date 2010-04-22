@@ -70,9 +70,10 @@ e.g. /usr/local/share/ardesia/ui/backgrounds
 
 Now you can select colors and annotate the screen.
 If you want unlock the mouse and came back to the normal mouse use
-point upon the ardesia bar or point on the top-left corner of your screen. 
+point upon the ardesia bar or clicking upon the unlock icon. 
 
-The default behaviour of ardesia is appear in the low zone of the screen
+The default behaviour of ardesia is appear in the east zone of the screen
+with a vertical layout.
 If you want modify this launch ardesia from command line in this way:
 
 # ardesia --gravity north
@@ -80,9 +81,11 @@ If you want modify this launch ardesia from command line in this way:
 With Ardesia you can annotate image files such as png, jpeg and svg.
 
 For example with this command you will have a lined paper 
-similar to notebook:
+similar to a notebook page:
 
 # ardesia /usr/local/share/ardesia/backgrounds/notebook_paper.png
+
+You can open the background image or color with the preference button.
 
 Here it follows a complete description of the options for the Ardesia:
 
@@ -91,6 +94,8 @@ Usage: ardesia [options] [filename]
 options:
   --verbose,	-v		Enable verbosity to see the log
   --gravity,	-g		Set the gravity of the bar. Possible values are:
+  				east
+  				west
   				north
   				south
   --help,   	-h		Shows the help screen

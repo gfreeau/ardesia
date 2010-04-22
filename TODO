@@ -9,19 +9,19 @@
 ======================================
 
 - Documentation
-  - Create video tutorial
-
-- Bug fix
-  - fix the po translation support
+  - Decscription of the button in the README
+  - Make video tutorial
 
 - Windows porting
   - trick about shape mask
+  - alpha channels
+  - fix the clear and hide/unhide under win
   - support the pointer icons
-  - recording (using camit ffmpeg2theora)
+  - recording (using camit and ffmpeg2theora)
   - forwardind to icecast for streaming 
     (see if is possible port oggfwd)
-  - alpha channels
-  - fix the clear uder win
+
+- Investigate about MacOsX porting
 
 - Usability
   - specify the default file name 

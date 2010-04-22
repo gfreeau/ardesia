@@ -6,10 +6,10 @@ uidir = $(datadir)/ardesia/ui
 scriptsdir = $(datadir)/ardesia/scripts
 uipixmapsdir = $(uidir)/pixmaps
 uibackgroundsdir = $(uidir)/backgrounds
-ui_DATA = ardesia.ui \
-	ardesia_horizontal.ui \
-	preference_dialog.ui \
-	info_dialog.ui
+ui_DATA = ardesia.glade \
+	ardesia_horizontal.glade \
+	preference_dialog.glade \
+	info_dialog.glade
 
 AM_CPPFLAGS = \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \

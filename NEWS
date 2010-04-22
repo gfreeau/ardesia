@@ -18,13 +18,16 @@
 -------------
 
 Features:
+- update to gpl-3
 - using getopt as Unix standard for the command line parsing
+- use intltoolize to support the language translation
 - added info button with author info and license agreement
   (issue 11)
 - added the verbosity option to trace the tool
 - undo/redo using vector graphics instead of raw images
 - added electronic whiteboard support
-- add stream support with icecast
+- add stream forward support to an icecast server
+  (enable and configure it in file $(prefix)/share/ardesia/scripts/recordmydesktop_screencast.sh)
 
 Bug fix:
 - fill close path with or within the highlighter
@@ -49,9 +52,13 @@ Usability:
 - Added text insertion using external text input program
   This feature is tested using
   - the "onboard" virtual keyboard 
+  - the "florence-ramble" virtual keyboard 
   - the "cellwriter" handwriting recognizer
-- Using a vertical layout 
-- Use three line widthness buttons 
+- Using a horizontal and vertical layout
+  (see the --gravity option) 
+- Use three line widthness buttons (thin, medium, thick);
+  this seems be more usable with the whiteboard than
+  the old slide 
 
 -------------
  ardesia 0.2

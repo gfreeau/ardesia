@@ -37,10 +37,10 @@
 
 #ifdef _WIN32
   #include <gdkwin32.h>
-  #define PREFERENCE_UI_FILE "preference_dialog.ui"
+  #define PREFERENCE_UI_FILE "preference_dialog.glade"
   #define BACKGROUNDS_FOLDER "backgrounds"
 #else
-  #define PREFERENCE_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/preference_dialog.ui"
+  #define PREFERENCE_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/preference_dialog.glade"
   #define BACKGROUNDS_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/backgrounds"
 #endif 
 
