@@ -110,7 +110,7 @@ void clear_background_window()
   cairo_destroy(shape_cr);
 
   /* This allows the mouse event to be passed to the window below */
-  gtk_widget_input_shape_combine_mask(background_window, background_shape, 0, 0);
+  gdk_window_input_shape_combine_mask (background_window->window,  background_shape, 0, 0);
   
 }
 
@@ -150,7 +150,7 @@ void load_file()
       cairo_stroke(back_cr);   
       g_object_unref(G_OBJECT (pixbuf));
       /* This deny the mouse event to be passed to the window below */
-      gtk_widget_input_shape_combine_mask(background_window, NULL, 0, 0);
+      gdk_window_input_shape_combine_mask (background_window->window,  NULL, 0, 0);
     }
 }
 
@@ -168,7 +168,7 @@ void load_color()
       cairo_paint(back_cr);
       cairo_stroke(back_cr); 
       /* This deny the mouse event to be passed to the window below */
-      gtk_widget_input_shape_combine_mask(background_window, NULL, 0, 0);
+      gdk_window_input_shape_combine_mask (background_window->window,  NULL, 0, 0);
     }  
 }
 

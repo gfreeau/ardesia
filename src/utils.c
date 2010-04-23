@@ -171,36 +171,6 @@ void cairo_set_source_color_from_string( cairo_t * cr, char* color)
    }
 }
 
-/* Transparent rectangle to allow to see the bar and pass the event below */
-void make_hole(GtkWidget *widget, cairo_t * cr)
-{
-  int x, y, width, height;
-  GtkWindow* bar = GTK_WINDOW(get_bar_window());
-  gtk_window_get_position(bar, &x, &y);
-  gtk_window_get_size(bar, &width, &height);    
-
-  GdkPixmap* shape = gdk_pixmap_new (NULL, width, height, 1);
-
-  cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgba (cr, 0, 0, 0, 0);
-  cairo_rectangle(cr, x, y, width, height);
-  cairo_fill(cr);	
-
-  cairo_t *shape_cr = gdk_cairo_create(shape);
-  cairo_set_operator(shape_cr,CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgba (shape_cr, 1, 1, 1, 1);
-  cairo_paint(shape_cr);
-  if (shape_cr)
-    {
-      cairo_set_operator(shape_cr,CAIRO_OPERATOR_SOURCE);
-      cairo_set_source_rgba (shape_cr, 0, 0, 0, 0);
-      cairo_paint(shape_cr);
-      cairo_fill(shape_cr);	
-    }	
-  gtk_widget_input_shape_combine_mask(widget, shape, 0, 0);
-  cairo_destroy(shape_cr);
-   
-}
 
 /*
  * This is function return if the point (x,y) in inside the ardesia bar window
