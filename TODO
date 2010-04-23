@@ -10,6 +10,7 @@
 
 - Documentation
   - Make video tutorial
+  - win32 build howto
 
 - Windows porting
   - trick about shape mask
@@ -29,6 +30,7 @@
     and the default folder name used for the screencast
 
 - Possible future features
+  - Always on the top ardesia bar
   - Pdf export 
   - Svg export 
   - Undo-redo using svg file
