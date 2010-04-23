@@ -188,19 +188,18 @@ void start_tool()
 
 
 /* Start event handler section */
-
-
 G_MODULE_EXPORT gboolean
-on_window_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+on_window_configure_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
 {
-  if (color == NULL)
+   if (color == NULL)
     {
       color = malloc(COLORSIZE);
       set_color("FF0000");
       add_alpha(color);
     }
-  return FALSE;
+   return TRUE;
 }
+
 
 
 /* Called when push the quit button */

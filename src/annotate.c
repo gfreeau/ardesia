@@ -330,6 +330,7 @@ void select_color()
 	    { 
 	      g_printerr("Select color %s\n", data->cur_context->fg_color);
 	    }
+          cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
           if (data->cur_context->fg_color)
             {
               cairo_set_source_color_from_string(data->cr, data->cur_context->fg_color);
@@ -348,9 +349,9 @@ void select_color()
         {
           if (data->debug)
 	    { 
-	      g_printerr("Select transparent color for erase\n");
+	      g_printerr("Select cairo clear operator for erase\n");
 	    }
-          cairo_set_transparent_color(data->cr);
+          cairo_set_operator(data->cr, CAIRO_OPERATOR_CLEAR);
         }
     }
 }
@@ -395,7 +396,6 @@ void configure_pen_options()
 {
   cairo_set_line_cap (data->cr, CAIRO_LINE_CAP_ROUND);
   cairo_set_line_join(data->cr, CAIRO_LINE_JOIN_ROUND); 
-  cairo_set_operator(data->cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(data->cr, data->cur_context->width);
   select_color();  
 }
@@ -1228,6 +1228,25 @@ void annotate_fill()
 }
 
 
+gboolean shape_recognize()
+{
+  gboolean closed_path = FALSE;
+  /* Rectifier code */
+  if ( g_slist_length(data->coordlist)> 3)
+    {
+      if (data->rectify)
+        {
+	  closed_path = rectify();
+	} 
+      else if (data->roundify)
+	{
+	  closed_path = roundify(); 
+	}
+     }
+   return closed_path;
+}
+
+
 /* This shots when the button is realeased */
 G_MODULE_EXPORT gboolean
 paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
@@ -1278,33 +1297,18 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 
   if (data->coordlist)
     {  
-      if (!(data->cur_context->type == ANNOTATE_ERASER))
-	{
-	  gboolean closed_path = FALSE;
-	  /* Rectifier code */
-	  if ( g_slist_length(data->coordlist)> 3)
-	    {
-	      if (data->rectify)
-		{
-		  closed_path = rectify();
-		} 
-	      else if (data->roundify)
-		{
-		  closed_path = roundify(); 
-		}
+      gboolean closed_path = shape_recognize();
+      if (!closed_path)
+        {
+          /* If is selected an arrowtype the draw the arrow */
+	  if (data->arrow)
+            {
+	       /* print arrow at the end of the line */
+	       annotate_draw_arrow ();
 	    }
-	  if (!closed_path)
-	    {
-	      /* If is selected an arrowtype the draw the arrow */
-	      if (data->arrow)
-		{
-		  /* print arrow at the end of the line */
-		  annotate_draw_arrow ();
-		}
-	    }
-
-	}
-    } 
+        }
+    }
+ 
   cairo_stroke_preserve(data->cr);
   add_save_point();
   hide_cursor();  
@@ -1338,12 +1342,6 @@ event_expose (GtkWidget *widget,
       transparent_cr = gdk_cairo_create(transparent_pixmap);
       clear_cairo_context(transparent_cr);
       restore_surface();
-
-      data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
-      cairo_t* shape_cr = gdk_cairo_create(data->shape);
-      clear_cairo_context(shape_cr); 
-      cairo_destroy(shape_cr);
-      gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
     }
   return TRUE;
 }
@@ -1406,22 +1404,39 @@ void annotate_quit()
 {
   /* ungrab all */
   annotate_release_grab(); 
-  cairo_destroy(transparent_cr);
-  /* destroy cairo */
+  if (data->shape)
+    {  
+      g_object_unref(data->shape);
+    }
+  if (transparent_cr)
+    {
+      cairo_destroy(transparent_cr);
+    }
+  /* destroy cairo */  
   destroy_cairo();
+  /* free all */
   g_signal_handlers_disconnect_by_func (data->win,
 					G_CALLBACK (event_expose), NULL);
-  gtk_widget_destroy(data->win); 
-  data->win = NULL;
-  /* free all */
-  g_object_unref(transparent_pixmap);
-  transparent_pixmap = NULL;
+  if (data->win)
+    {
+      gtk_widget_destroy(data->win); 
+      data->win = NULL;
+    }
+  
+  if (transparent_pixmap)
+    {
+      g_object_unref(transparent_pixmap);
+      transparent_pixmap = NULL;
+    }
+
   annotate_coord_list_free();
   annotate_savelist_free();
+
   g_free(data->default_pen->fg_color);
   g_free(data->default_pen);
   g_free(data->default_eraser);
   g_free (data);
+
   if (cursor)
     {
       gdk_cursor_unref(cursor);
@@ -1476,10 +1491,15 @@ void setup_app ()
 
   setup_input_devices();
   
-  gtk_widget_show_all(data->win);
-  
+  data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
+  cairo_t* shape_cr = gdk_cairo_create(data->shape);
+  clear_cairo_context(shape_cr); 
+  cairo_destroy(shape_cr);
+  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
+
   annotate_connect_signals();
- 
+
+  gtk_widget_show_all(data->win);
  
   gtk_widget_set_app_paintable(data->win, TRUE);
   gtk_widget_set_double_buffered(data->win, FALSE);

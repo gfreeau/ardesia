@@ -147,24 +147,13 @@ GdkColor* rgb_to_gdkcolor(char* rgb)
 }
 
 
-/* Set the cairo surface color to transparent */
-void  cairo_set_transparent_color(cairo_t * cr)
-{
-  if (cr)
-    {
-      cairo_set_source_rgba (cr, 0, 0, 0, 0);
-    }
-}
-
-
 /* Clear cairo context */
 void clear_cairo_context(cairo_t* cr)
 {
   if (cr)
     {
       cairo_save(cr);
-      cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
-      cairo_set_transparent_color(cr);
+      cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
       cairo_paint(cr);
       cairo_restore(cr);
     } 

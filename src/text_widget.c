@@ -269,11 +269,9 @@ void init(GtkWidget *win)
   
   if (text_cr)
     {
-      cairo_set_operator(text_cr,CAIRO_OPERATOR_SOURCE);
-      cairo_set_transparent_color(text_cr);
+      cairo_set_operator(text_cr,CAIRO_OPERATOR_CLEAR);
       cairo_paint(text_cr);
       cairo_stroke(text_cr);   
- 
       cairo_set_line_cap (text_cr, CAIRO_LINE_CAP_ROUND);
       cairo_set_line_join(text_cr, CAIRO_LINE_JOIN_ROUND); 
       cairo_set_operator(text_cr, CAIRO_OPERATOR_SOURCE);

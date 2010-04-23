@@ -374,6 +374,7 @@ main (int argc, char *argv[])
   GtkWidget* annotation_window = get_annotation_window();  
 
   gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
+  
   gtk_widget_show (background_window);
   gtk_widget_show(ardesiaBarWindow);
   gtk_widget_show (annotation_window);

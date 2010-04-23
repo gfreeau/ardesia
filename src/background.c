@@ -48,7 +48,7 @@ char* background_image = NULL;
 
 cairo_t *back_cr = NULL;
 GtkWidget* background_window = NULL;
-
+GdkPixmap* background_shape = NULL;
 
 
 /* Load the contents of the file image with name "filename" into the pixbuf */
@@ -77,6 +77,10 @@ GdkPixbuf * load_png (const char *filename)
 /* Destroy the background window */
 void destroy_background_window()
 {
+  if (background_shape)
+   {
+      g_object_unref(background_shape);
+   }
   if (background_window != NULL)
    { 
       /* destroy brutally the background window */
@@ -92,7 +96,19 @@ void destroy_background_window()
 /* Clear the background */
 void clear_background_window()
 {
-  change_background_color ("00000000");
+  cairo_set_operator(back_cr, CAIRO_OPERATOR_CLEAR);
+  gtk_window_set_opacity(GTK_WINDOW(background_window), 0);
+  cairo_paint(back_cr);
+  cairo_stroke(back_cr); 
+  
+  gint height = gdk_screen_height ();
+  gint width = gdk_screen_width();
+
+  background_shape = gdk_pixmap_new (NULL, width, height, 1); 
+  cairo_t* shape_cr = gdk_cairo_create(background_shape);
+  clear_cairo_context(shape_cr); 
+  cairo_destroy(shape_cr);
+  gtk_widget_input_shape_combine_mask(background_window, background_shape, 0, 0);
 }
 
 
