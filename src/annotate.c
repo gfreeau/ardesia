@@ -508,8 +508,9 @@ void annotate_release_pointer_grab()
 {
   ungrab_pointer(data->display,data->win); 
 
-  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
-  
+  /* This allows the mouse event to be passed to the window below when ungrab */
+  gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);  
+
   gdk_flush();
 }
 
@@ -646,6 +647,8 @@ void set_eraser_cursor()
 /* Acquire pointer grab */
 void annotate_acquire_pointer_grab()
 {
+  /* This deny the mouse event to be passed to the window below */
+  gtk_widget_input_shape_combine_mask(data->win, NULL, 0, 0);  
   grab_pointer(data->win, ANNOTATE_MOUSE_EVENTS);
 }
 
@@ -1491,10 +1494,13 @@ void setup_app ()
 
   setup_input_devices();
   
+  /* Initialize a transparent pixmap with depth 1 to be used as input shape */
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
   cairo_t* shape_cr = gdk_cairo_create(data->shape);
   clear_cairo_context(shape_cr); 
   cairo_destroy(shape_cr);
+  
+  /* This allows the mouse event to be passed to the window below at the start of the tool */
   gtk_widget_input_shape_combine_mask(data->win, data->shape, 0, 0);
 
   annotate_connect_signals();
