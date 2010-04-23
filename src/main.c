@@ -163,7 +163,7 @@ void print_help()
   printf("  --verbose ,\t-v\t\tEnable verbose mode to see the logs\n");
   printf("  --decorate,\t-v\t\tDecorate the window with the borders\n");
   printf("  --gravity ,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
-  printf("  \t\t\t\teast; default setting\n");
+  printf("  \t\t\t\teast [default]\n");
   printf("  \t\t\t\twest\n");
   printf("  \t\t\t\tnorth\n");
   printf("  \t\t\t\tsouth\n");

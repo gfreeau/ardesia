@@ -16,11 +16,12 @@ Ardesia is a small tool to make annotations sketching
 on the screen.
 
 Ardesia is XInput-Aware, so if you have a mouse, a graphic tablet, 
-a touch screen or a whiteboard, you can draw lines with different strength,
-select color, erase things and draw arrows. 
+a touch screen or a whiteboard, you can draw lines with 
+different strength. You can select color, erase things and draw arrows. 
 You can free-hand draw geometrical shapes using the shape recognizer, 
 insert text with the keyboard and highlight screen areas. 
-You can draw upon the desktop or select an image as background.
+You can draw upon the desktop or select a coloured layer or an image 
+as a background.
 
 Ardesia has been designed with the Glade/GtkBuilder tool
 and it use to draw the cairo graphics library.
@@ -58,19 +59,75 @@ keyboard or the "cellwriter" handwriting recognizer.
  Usage
 -------
 
-Start Ardesia clicking in the menu on Applications/Tools/Ardesia
+- From Gui
 
-You can annotate a png file on your desktop right clicking it
+Start Ardesia clicking in the menu on Applications/Tools/Ardesia
+Now you can select colors and annotate the screen.
+
+You can annotate an image on your desktop right clicking it
 and selecting the "open with Ardesia" item
+
+Button explanation
+
+- Thin: it selects the thin thickness for the selected tool
+- Medium: it selects the medium thickness for the selected tool
+- Thick: it selects the medium thickness for the selected tool
+- Filler: it fills the last closed path drawn with the selected color;
+  this button can be pushed after a closed path sketch
+- Rectifier: it rectifies your sketch; 
+  if selected transforms the closed path in poligons,
+  if selected transforms the open path in broken lines
+- Rounder: it rounds your sketch; 
+  if selected transforms the closed path in ellipses,
+  if selected transforms the open path in smoothed lines with bezier spline
+- Highlighter: it allows to highlight on the desktop
+- Arrow: it puts an arrow at the end of the line sketched
+- Text: insert a text annotation;
+  you select the text tool and then click on the desktop,
+  now you can insert text with the keyboard, a virtual keyboard such as
+  florence-ramble or with the cellwriter han-writing recognizer
+- Pen: it selects the pen tool
+- Eraser: it selects the eraser tool
+- Blue: it selects the blue color
+- Green: it selects the green color
+- Yellow: it selects the yellow color
+- Red: it selects the red color
+- White: it selects the white color
+- Color selector: it allow to selects an other color through a palette
+- Unlock: it unlocks the grab to annotate on the desktop;
+  after the unlock you can use as usual your desktop,
+  if do you want restart to annotate push a button belonging to the
+  Ardesia bar
+- Clear: it erases all the desktop annotation
+- Hide/Unhide: it hides or unhides the desktop annotations
+- Undo: it reverses the annotation to the older state
+- Redo: it advances the annotation to the more current state 
+- Preferences: it allow to set same preference of the annotator;
+  you can select the background color or the background image
+  to sketch
+- Save: it saves in a picture file you desktop screenshot
+- Record: it records your desktop;
+  it uses the recordmydesktop tool,
+  if do you want allow anyone to see your work 
+  you can forward the stream to an icecast server
+  (please configure the file located at $(prefix)/share/ardesia/scripts/recordmydesktop_screencast.sh).
+  After a correct configuration when you push the record the streaming will start
+- Info: It shows the info about the tool
+- Quit: It allows to quit the program
+
+
+You can even select different background images and colors using the preference dialog.
 
 You can found some suitable backgrounds png examples under the folder
 backgrounds:
 
 e.g. /usr/local/share/ardesia/ui/backgrounds
 
-Now you can select colors and annotate the screen.
 If you want unlock the mouse and came back to the normal mouse use
 point upon the ardesia bar or clicking upon the unlock icon. 
+
+
+- From Command Line
 
 The default behaviour of ardesia is appear in the east zone of the screen
 with a vertical layout.
@@ -85,7 +142,6 @@ similar to a notebook page:
 
 # ardesia /usr/local/share/ardesia/backgrounds/notebook_paper.png
 
-You can open the background image or color with the preference button.
 
 Here it follows a complete description of the options for the Ardesia:
 
@@ -95,16 +151,14 @@ options:
   --verbose ,	-v		Enable verbose mode to see the logs
   --decorate,	-v		Decorate the window with the borders
   --gravity ,	-g		Set the gravity of the bar. Possible values are:
-  				east; default setting
+  				east [default]
   				west
   				north
   				south
+
   --help    ,	-h		Shows the help screen
 
 filename:	  		The file containig the image to be be used as background
-
-
-You can even select different background images and colors using the preference dialog.
 
 
 -------

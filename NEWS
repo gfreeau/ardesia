@@ -26,8 +26,9 @@ Features:
 - added the verbosity option to trace the tool
 - undo/redo using vector graphics instead of raw images
 - added electronic whiteboard support
+- added tablet support
 - add stream forward support to an icecast server
-  (enable and configure it in file $(prefix)/share/ardesia/scripts/recordmydesktop_screencast.sh)
+  (please configure the file located at $(prefix)/share/ardesia/scripts/recordmydesktop_screencast.sh)
 
 Bug fix:
 - fill close path with or within the highlighter
@@ -47,7 +48,6 @@ Usability:
   overlap the annotations
 - lighter recording using subsampling; this allow to have 
   a good video for busier machines too
-- Added tablet support
 - Added text insertion using keyboard
 - Added text insertion using external text input program
   This feature is tested using

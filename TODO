@@ -9,7 +9,6 @@
 ======================================
 
 - Documentation
-  - Decscription of the button in the README
   - Make video tutorial
 
 - Windows porting
@@ -30,9 +29,9 @@
     and the default folder name used for the screencast
 
 - Possible future features
+  - Pdf export 
   - Svg export 
   - Undo-redo using svg file
-  - Pdf export 
   - Mini video player with play-pause, backward and forward
   - Printer support
   - Multi pointer support using the xinput2 libraries
