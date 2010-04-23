@@ -149,7 +149,7 @@ Usage: ardesia [options] [filename]
 
 options:
   --verbose ,	-v		Enable verbose mode to see the logs
-  --decorate,	-v		Decorate the window with the borders
+  --decorate,	-d		Decorate the window with the borders
   --gravity ,	-g		Set the gravity of the bar. Possible values are:
   				east [default]
   				west

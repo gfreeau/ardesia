@@ -161,7 +161,7 @@ void print_help()
   printf("Usage: ardesia [options] [filename]\n\n");
   printf("options:\n");
   printf("  --verbose ,\t-v\t\tEnable verbose mode to see the logs\n");
-  printf("  --decorate,\t-v\t\tDecorate the window with the borders\n");
+  printf("  --decorate,\t-d\t\tDecorate the window with the borders\n");
   printf("  --gravity ,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
   printf("  \t\t\t\teast [default]\n");
   printf("  \t\t\t\twest\n");
