@@ -133,7 +133,7 @@ typedef struct
   gboolean     painted;
   gboolean     rectify;
   gboolean     roundify;
-  guint        arrow;
+  gboolean        arrow;
   gboolean     debug;
   gboolean     is_grabbed;
   gboolean     cursor_hidden;
@@ -275,7 +275,7 @@ void annotate_redolist_free ()
 
 
 /* Free the list of the savepoint  */
-void annotate_savelist_free ()
+void annotate_savelist_free()
 {
   AnnotateSave* annotate_save = data->savelist;
 
@@ -292,29 +292,21 @@ void annotate_savelist_free ()
     }
   /* annotate_save point to the first save point */
   data->savelist = annotate_save;
-  annotate_redolist_free ();
+  annotate_redolist_free();
 }
 
 
 /* Calculate the direction in radiants */
-gfloat annotate_get_arrow_direction (gboolean revert)
+gfloat annotate_get_arrow_direction()
 {
   GSList *outptr =   data->coordlist;   
   // make the standard deviation 
   outptr = extract_relevant_points(outptr, FALSE);   
   AnnotateStrokeCoordinate* point = NULL;
   AnnotateStrokeCoordinate* oldpoint = NULL;
-  if (revert)
-    {
-      oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 1);
-      point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 0);
-    }
-  else
-    {
-      gint lenght = g_slist_length(outptr);
-      oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, lenght-2);
-      point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, lenght-1);
-    }
+  gint lenght = g_slist_length(outptr);
+  oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, lenght-2);
+  point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, lenght-1);
   // calculate the tan beetween the last two point 
   gfloat ret = atan2 (point->y -oldpoint->y, point->x-oldpoint->x);
   g_slist_foreach(outptr, (GFunc)g_free, NULL);
@@ -714,8 +706,8 @@ void annotate_set_rounder(gboolean roundify)
   data->roundify = roundify;
 }
 
-/* Set arrow type */
-void annotate_set_arrow(int arrow)
+/* Set arrow */
+void annotate_set_arrow(gboolean arrow)
 {
   data->arrow = arrow;
 }
@@ -852,7 +844,7 @@ void annotate_draw_line (gint x1, gint y1,
 
 
 /* Draw an arrow using some polygons */
-void annotate_draw_arrow (gboolean revert)
+void annotate_draw_arrow ()
 {
   if (data->debug)
     {
@@ -863,16 +855,12 @@ void annotate_draw_arrow (gboolean revert)
     {
       return;
     }
-  gfloat direction = annotate_get_arrow_direction (revert);
+  gfloat direction = annotate_get_arrow_direction ();
   if (data->debug)
     {
       g_printerr("Arrow direction %f\n", direction/M_PI*180);
     }
-  int i = 0;
-  if (!revert)
-    {
-      i = lenght-1; 
-    }
+  int i = lenght-1;
   AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, i);
 
   int penwidth = data->cur_context->width;
@@ -1308,15 +1296,10 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 	  if (!closed_path)
 	    {
 	      /* If is selected an arrowtype the draw the arrow */
-	      if (data->arrow>0)
+	      if (data->arrow)
 		{
 		  /* print arrow at the end of the line */
-		  annotate_draw_arrow (FALSE);
-		  if (data->arrow==2)
-		    {
-		      /* print arrow at the beginning of the line */
-		      annotate_draw_arrow (TRUE);
-		    }
+		  annotate_draw_arrow ();
 		}
 	    }
 

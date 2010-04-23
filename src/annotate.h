@@ -76,8 +76,8 @@ void annotate_set_rounder(gboolean rounder);
 /* fill the last shape if it is a close path */
 void annotate_fill();
 
-/* Set arrow type */
-void annotate_set_arrow(int arrow);
+/* Set arrow */
+void annotate_set_arrow(gboolean arrow);
 
 /* Start to paint */
 void annotate_toggle_grab();

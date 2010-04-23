@@ -85,8 +85,8 @@ gboolean rectifier = FALSE;
 /* rounder flag */
 gboolean rounder = FALSE;
 
-/* arrow=0 mean no arrow, arrow=1 mean normal arrow, arrow=2 mean double arrow */
-int arrow = 0;
+/* arrow flag */
+gboolean arrow = FALSE;
 
 /* Default folder where store images and videos */
 char* workspace_dir = NULL;
@@ -336,18 +336,7 @@ on_toolsArrow_activate           (GtkToolButton   *toolbutton,
   grab = TRUE;
   text = FALSE;
   pencil = TRUE;
-  arrow = 1;
-}
-
-
-G_MODULE_EXPORT void
-on_toolsDoubleArrow_activate     (GtkToolButton   *toolbutton,
-			          gpointer         user_data)
-{
-  grab = TRUE;
-  text = FALSE;
-  pencil = TRUE;
-  arrow = 2;
+  arrow = TRUE;
 }
 
 
@@ -357,7 +346,7 @@ on_toolsText_activate            (GtkToolButton   *toolbutton,
 {
   grab = TRUE;
   text = TRUE;
-  arrow = 0;
+  arrow = FALSE;
 }
 
 
@@ -395,7 +384,7 @@ on_toolsPencil_activate          (GtkToolButton   *toolbutton,
   grab = TRUE;
   text = FALSE;
   pencil = TRUE;
-  arrow = 0;
+  arrow = FALSE;
 }
 
 
@@ -406,7 +395,7 @@ on_toolsEraser_activate          (GtkToolButton   *toolbutton,
   text = FALSE;
   grab = TRUE;
   pencil = FALSE;
-  arrow = 0;
+  arrow = FALSE;
 }
 
 
@@ -540,16 +529,6 @@ on_buttonColor_activate	         (GtkToolButton   *toolbutton,
 }
 
 
-/* Start color handlers */
-
-G_MODULE_EXPORT void
-on_colorBlack_activate           (GtkToolButton   *toolbutton,
-                                  gpointer         user_data)
-{
-  set_color("000000");
-}
-
-
 G_MODULE_EXPORT void
 on_colorBlue_activate            (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
@@ -575,34 +554,10 @@ on_colorGreen_activate           (GtkToolButton   *toolbutton,
 
 
 G_MODULE_EXPORT void
-on_colorLightBlue_activate       (GtkToolButton   *toolbutton,
-                                  gpointer         user_data)
-{
-  set_color("00C0FF");
-}
-
-
-G_MODULE_EXPORT void
 on_colorLightGreen_activate      (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
 {
   set_color("00FF00");
-}
-
-
-G_MODULE_EXPORT void
-on_colorMagenta_activate         (GtkToolButton   *toolbutton,
-                                  gpointer         user_data)
-{
-  set_color("FF00FF");
-}
-
-
-G_MODULE_EXPORT void
-on_colorOrange_activate          (GtkToolButton   *toolbutton,
-                                  gpointer         user_data)
-{
-  set_color("FF8000");
 }
 
 
