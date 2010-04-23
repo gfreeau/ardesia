@@ -93,6 +93,7 @@ typedef struct
 {
   char* backgroundimage;
   gboolean debug;
+  gboolean decorated;
   int position;
 } CommandLine;
 
@@ -159,13 +160,14 @@ void print_help()
   char* author = "Pietro Pilolli";
   printf("Usage: ardesia [options] [filename]\n\n");
   printf("options:\n");
-  printf("  --verbose,\t-v\t\tEnable verbose mode to see the logs\n");
-  printf("  --gravity,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
-  printf("  \t\t\t\teast\n");
+  printf("  --verbose ,\t-v\t\tEnable verbose mode to see the logs\n");
+  printf("  --decorate,\t-v\t\tDecorate the window with the borders\n");
+  printf("  --gravity ,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
+  printf("  \t\t\t\teast; default setting\n");
   printf("  \t\t\t\twest\n");
   printf("  \t\t\t\tnorth\n");
   printf("  \t\t\t\tsouth\n");
-  printf("  --help,   \t-h\t\tShows the help screen\n");
+  printf("  --help    ,\t-h\t\tShows the help screen\n");
   printf("\n");
   printf("filename:\t  \t\tThe file containig the image to be be used as background\n");
   printf("\n");
@@ -221,6 +223,7 @@ CommandLine* parse_options(int argc, char *argv[])
   commandline->position = EAST;
   commandline->debug = FALSE;
   commandline->backgroundimage = NULL;
+  commandline->decorated=FALSE;
 
   /* getopt_long stores the option index here. */
   while (1)
@@ -230,6 +233,7 @@ CommandLine* parse_options(int argc, char *argv[])
 	{
 	  /* These options set a flag. */
 	  {"help", no_argument,       0, 'h'},
+          {"decorated", no_argument,  0, 'd'},
 	  {"verbose", no_argument,       0, 'v'},
 	  /* These options don't set a flag.
 	     We distinguish them by their indices. */
@@ -237,9 +241,8 @@ CommandLine* parse_options(int argc, char *argv[])
 	  {0, 0, 0, 0}
 	};
 
-     
       int option_index = 0;
-      c = getopt_long(argc, argv, "hvg:",
+      c = getopt_long(argc, argv, "hdvg:",
 		      long_options, &option_index);
      
       /* Detect the end of the options. */
@@ -250,6 +253,9 @@ CommandLine* parse_options(int argc, char *argv[])
 	{
 	case 'h':
 	  print_help();
+	  break;
+        case 'd':
+	  commandline->decorated=TRUE;
 	  break;
 	case 'v':
 	  commandline->debug=TRUE;
@@ -311,6 +317,10 @@ create_window (void)
   /* This is important; connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(gtkBuilder, NULL);
   window = GTK_WIDGET (gtk_builder_get_object(gtkBuilder, "winMain"));
+  if (commandline->decorated)
+    {
+       gtk_window_set_decorated(GTK_WINDOW(window), TRUE);
+    }
 
   return window;
 }
