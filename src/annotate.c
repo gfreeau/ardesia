@@ -108,6 +108,7 @@ typedef struct
   int untogglewidth;
   int untoggleheight;
   cairo_t     *cr;
+  cairo_t     *shape_cr;
   GtkWidget   *win;
   
   GdkScreen   *screen;
@@ -509,7 +510,19 @@ void annotate_release_pointer_grab()
   ungrab_pointer(data->display,data->win); 
 
   /* This allows the mouse event to be passed to the window below when ungrab */
-  gdk_window_input_shape_combine_mask (data->win->window, data->shape, 0, 0);  
+  #ifndef _WIN32
+    gdk_window_input_shape_combine_mask (data->win->window, data->shape, 0, 0);  
+  #else
+    /* This apply a shape in the ardesia bar; in win32 if the pointer is in this part will be passed to the window below */
+    cairo_set_source_rgb(data->shape_cr,1,1,1);
+    cairo_paint(data->shape_cr);
+    cairo_stroke(data->shape_cr);
+    cairo_set_source_rgb(data->shape_cr,0,0,0);
+    cairo_rectangle(data->shape_cr, data->untogglexpos, data->untoggleypos, data->untogglewidth, data->untoggleheight);
+    cairo_fill(data->shape_cr);
+    cairo_stroke(data->shape_cr);
+    gdk_window_shape_combine_mask (data->win->window, data->shape, 0, 0);  
+  #endif
 
   gdk_flush();
 }
@@ -583,7 +596,6 @@ GdkPixmap* get_pen_bitmap(int size)
 /* Set the cursor patching the xpm with the selected color */
 void set_pen_cursor()
 {
-  #ifndef _WIN32
     gint size=12;
     if (cursor)
       {
@@ -592,18 +604,16 @@ void set_pen_cursor()
     GdkPixmap* pixmap = get_pen_bitmap(size); 
     GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
     GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color); 
-    gint context_width = data->cur_context->width;;
+    gint context_width = data->cur_context->width;
+    GdkPixmap *bitmap = gdk_pixmap_new (NULL, size*3 + context_width, size*3 + context_width, 1);
 
-    cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
+    cursor = gdk_cursor_new_from_pixmap (pixmap, bitmap, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
 
     gdk_window_set_cursor (data->win->window, cursor);
     gdk_display_sync(gdk_display_get_default());
     g_object_unref (pixmap);
     g_free(foreground_color_p);
     g_free(background_color_p);
-  #else 
-     //TODO implement with native code
-  #endif
 }
 
 
@@ -1407,6 +1417,10 @@ void annotate_quit()
 {
   /* ungrab all */
   annotate_release_grab(); 
+  if (data->shape_cr)
+    {  
+      cairo_destroy(data->shape_cr);
+    }
   if (data->shape)
     {  
       g_object_unref(data->shape);
@@ -1496,9 +1510,8 @@ void setup_app ()
   
   /* Initialize a transparent pixmap with depth 1 to be used as input shape */
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
-  cairo_t* shape_cr = gdk_cairo_create(data->shape);
-  clear_cairo_context(shape_cr); 
-  cairo_destroy(shape_cr);
+  data->shape_cr = gdk_cairo_create(data->shape);
+  clear_cairo_context(data->shape_cr); 
 
   annotate_connect_signals();
 
