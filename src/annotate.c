@@ -596,6 +596,7 @@ GdkPixmap* get_pen_bitmap(int size)
 /* Set the cursor patching the xpm with the selected color */
 void set_pen_cursor()
 {
+  #ifndef _WIN32
     gint size=12;
     if (cursor)
       {
@@ -614,6 +615,11 @@ void set_pen_cursor()
     g_object_unref (pixmap);
     g_free(foreground_color_p);
     g_free(background_color_p);
+  #else 
+    //TODO implement with native code
+  #endif
+    //TODO implement with native code
+  #endif
 }
 
 
