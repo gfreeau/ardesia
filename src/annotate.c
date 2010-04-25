@@ -521,6 +521,7 @@ void annotate_release_pointer_grab()
     cairo_rectangle(data->shape_cr, data->untogglexpos, data->untoggleypos, data->untogglewidth, data->untoggleheight);
     cairo_fill(data->shape_cr);
     cairo_stroke(data->shape_cr);
+
     gdk_window_shape_combine_mask (data->win->window, data->shape, 0, 0);  
   #endif
 
@@ -616,8 +617,6 @@ void set_pen_cursor()
     g_free(foreground_color_p);
     g_free(background_color_p);
   #else 
-    //TODO implement with native code
-  #endif
     //TODO implement with native code
   #endif
 }
