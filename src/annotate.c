@@ -571,26 +571,33 @@ void annotate_select_pen()
 }
 
 
-GdkPixmap* get_pen_bitmap(int size)
+void get_pen_bitmap(int size, GdkPixmap** pixmap, GdkBitmap** bitmap)
 {
   gint context_width = data->cur_context->width;;
-  GdkPixmap *pixmap = gdk_pixmap_new (NULL, size*3 + context_width, size*3 + context_width, 1);
-     
+  *pixmap = gdk_pixmap_new (NULL, size*3 + context_width, size*3 + context_width, 1);
+  *bitmap =  gdk_pixmap_new (NULL, size*3 + context_width, size*3 + context_width, 1);
   int circle_width = 2; 
-  cairo_t *pen_cr = gdk_cairo_create(pixmap);
+
+  cairo_t *pen_cr = gdk_cairo_create(*pixmap);
   clear_cairo_context(pen_cr);
    
   cairo_set_operator(pen_cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_line_width(pen_cr, circle_width);
-  cairo_set_source_color_from_string(pen_cr, data->cur_context->fg_color);
-  cairo_arc(pen_cr, 5* size/2 + context_width/2, size/2, (size/2)-circle_width, M_PI * 5/4, M_PI/4);
-  cairo_arc(pen_cr, size/2 + context_width/2, 5 * size/2, (size/2)-circle_width, M_PI/4, M_PI * 5/4); 
-  cairo_fill(pen_cr);
+  cairo_set_source_rgb(pen_cr, 0, 0, 0);
+  cairo_paint(pen_cr);
+
+  cairo_t *pen_shape_cr = gdk_cairo_create(*bitmap);
+  clear_cairo_context(pen_shape_cr);
+   
+  cairo_set_operator(pen_shape_cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_line_width(pen_shape_cr, circle_width);
+  cairo_set_source_rgb(pen_shape_cr, 0, 0, 0);
+  cairo_arc(pen_shape_cr, 5* size/2 + context_width/2, size/2, (size/2)-circle_width, M_PI * 5/4, M_PI/4);
+  cairo_arc(pen_shape_cr, size/2 + context_width/2, 5 * size/2, (size/2)-circle_width, M_PI/4, M_PI * 5/4); 
+  cairo_fill(pen_shape_cr);
  
-  cairo_arc(pen_cr, size/2 + context_width/2 , 5 * size/2, context_width/2, 0, 2 * M_PI);
-  cairo_stroke(pen_cr);
-  cairo_destroy(pen_cr);
-  return pixmap; 
+  cairo_arc(pen_shape_cr, size/2 + context_width/2 , 5 * size/2, context_width/2, 0, 2 * M_PI);
+  cairo_stroke(pen_shape_cr);
+  cairo_destroy(pen_shape_cr);
 }
 
 
@@ -603,16 +610,19 @@ void set_pen_cursor()
       {
         gdk_cursor_unref(cursor);
       }
-    GdkPixmap* pixmap = get_pen_bitmap(size); 
+    GdkPixmap *pixmap;
+    GdkBitmap* bitmap;
+    get_pen_bitmap(size, &pixmap, &bitmap); 
     GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
     GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color); 
     gint context_width = data->cur_context->width;
 
-    cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
+    cursor = gdk_cursor_new_from_pixmap (pixmap, bitmap, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
 
     gdk_window_set_cursor (data->win->window, cursor);
     gdk_display_sync(gdk_display_get_default());
     g_object_unref (pixmap);
+    g_object_unref (bitmap);
     g_free(foreground_color_p);
     g_free(background_color_p);
   #else 
@@ -621,21 +631,37 @@ void set_pen_cursor()
 }
 
 
+void get_eraser_bitmap(int size, GdkPixmap** pixmap, GdkBitmap** bitmap)
+{
+    *pixmap = gdk_pixmap_new (NULL, size, size, 1);
+    *bitmap =  gdk_pixmap_new (NULL, size, size, 1);
+    int circle_width = 2; 
+    cairo_t *eraser_cr = gdk_cairo_create(*pixmap);
+    clear_cairo_context(eraser_cr);
+    cairo_set_operator(eraser_cr, CAIRO_OPERATOR_SOURCE);
+    cairo_set_source_rgb(eraser_cr, 0, 0, 0);
+    cairo_paint(eraser_cr);
+    cairo_destroy(eraser_cr);
+
+    cairo_t *eraser_shape_cr = gdk_cairo_create(*bitmap);
+    clear_cairo_context(eraser_shape_cr);
+    cairo_set_line_width(eraser_shape_cr, circle_width);
+    cairo_set_source_rgb(eraser_shape_cr, 0, 0, 0);
+    cairo_arc(eraser_shape_cr, size/2, size/2, (size/2)-circle_width, 0, 2 * M_PI);
+    cairo_stroke(eraser_shape_cr);
+    cairo_destroy(eraser_shape_cr);
+}
+
+
 /* Set the eraser cursor */
 void set_eraser_cursor()
 {
   #ifndef _WIN32
     gint size = data->cur_context->width;
-    GdkPixmap *pixmap = gdk_pixmap_new (NULL, size, size, 1);
-    int circle_width = 2; 
-    cairo_t *eraser_cr = gdk_cairo_create(pixmap);
-    clear_cairo_context(eraser_cr);
-    cairo_set_operator(eraser_cr, CAIRO_OPERATOR_SOURCE);
-    cairo_set_line_width(eraser_cr, circle_width);
-    cairo_set_source_rgba(eraser_cr,0,0,0,1);
-  
-    cairo_arc(eraser_cr, size/2, size/2, (size/2)-circle_width, 0, 2 * M_PI);
-    cairo_stroke(eraser_cr);
+
+    GdkPixmap *pixmap;
+    GdkBitmap *bitmap;
+    get_eraser_bitmap(size, &pixmap, &bitmap); 
   
     GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
     GdkColor *foreground_color_p = rgb_to_gdkcolor("FF0000");
@@ -644,14 +670,14 @@ void set_eraser_cursor()
         gdk_cursor_unref(cursor);
       }
  
-     cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, size/2, size/2);
+    cursor = gdk_cursor_new_from_pixmap (pixmap, bitmap, foreground_color_p, background_color_p, size/2, size/2);
   
     gdk_window_set_cursor (data->win->window, cursor);
     gdk_display_sync(gdk_display_get_default());
     g_object_unref (pixmap);
+    g_object_unref (bitmap);
     g_free(foreground_color_p);
     g_free(background_color_p);
-    cairo_destroy(eraser_cr);
   #else 
     //TODO implement with native code
   #endif
