@@ -50,14 +50,16 @@
 
 const gchar* desktop_dir = NULL;
 
+
+#ifdef WIN32
+
+/* Is the two color similar */
 gboolean colors_too_similar(const GdkColor *colora, const GdkColor *colorb)
 {
   return (abs(colora->red - colorb->red) < 256 &&
 	  abs(colora->green - colorb->green) < 256 &&
 	  abs(colora->blue - colorb->blue) < 256);
 }
-
-#ifdef WIN32
 
 /* gdk_cursor_new_from_pixmap is broken on Windows.
    this is a workaround using gdk_cursor_new_from_pixbuf. */
@@ -117,11 +119,13 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 }
 #endif
 
+
 /* get bar window widget */
 GtkWidget* get_bar_window()
 {
   return GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
 }
+
 
 /* Grab pointer */
 void grab_pointer(GtkWidget *win, GdkEventMask eventmask)
@@ -161,6 +165,7 @@ void grab_pointer(GtkWidget *win, GdkEventMask eventmask)
     }       
 
 }
+
 
 /* Ungrab pointer */
 void ungrab_pointer(GdkDisplay* display, GtkWidget* win)
@@ -265,6 +270,7 @@ char* get_date()
   sprintf(date, "%d-%d-%d_%d:%d:%d", t->tm_mday,t->tm_mon+1,t->tm_year+1900,t->tm_hour,t->tm_min,t->tm_sec);
   return date;
 }
+
 
 /* Get file separator depending on operating system */
 char get_file_separator()

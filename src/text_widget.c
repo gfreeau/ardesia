@@ -212,43 +212,55 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 /* Set the eraser cursor */
 gboolean set_text_pointer(GtkWidget * window)
 {
-  #ifndef _WIN32
-    int height = max_font_height;
-    int width = text_pen_width;
-
-    GdkPixmap *pixmap = gdk_pixmap_new (NULL, width ,height, 1);
-
-    cairo_t *text_pointer_cr = gdk_cairo_create(pixmap);
+  #ifdef _WIN32
+    ungrab_pointer(display, text_window);
+  #endif
   
-    if (text_pointer_cr)
-      {
-         clear_cairo_context(text_pointer_cr);
-  
-         cairo_set_line_cap (text_pointer_cr, CAIRO_LINE_CAP_ROUND);
-         cairo_set_line_join(text_pointer_cr, CAIRO_LINE_JOIN_ROUND); 
-         cairo_set_operator(text_pointer_cr, CAIRO_OPERATOR_SOURCE);
-         cairo_set_line_width(text_pointer_cr, text_pen_width);
-         cairo_set_source_color_from_string(text_pointer_cr, text_color);
-         cairo_rectangle(text_pointer_cr, 0,0, 5, height);  
+  int height = max_font_height;
+  int width = text_pen_width;
 
-         cairo_stroke(text_pointer_cr);
-     } 
+  
+  GdkPixmap *pixmap = gdk_pixmap_new (NULL, width , height, 1);
+  cairo_t *text_pointer_pcr = gdk_cairo_create(pixmap);
+  cairo_set_operator(text_pointer_pcr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_rgb(text_pointer_pcr, 1, 1, 1);
+  cairo_paint(text_pointer_pcr);
+  cairo_stroke(text_pointer_pcr);
+  cairo_destroy(text_pointer_pcr);
+  
+  GdkPixmap *bitmap = gdk_pixmap_new (NULL, width , height, 1);  
+  cairo_t *text_pointer_cr = gdk_cairo_create(bitmap);
+  
+  if (text_pointer_cr)
+    {
+       clear_cairo_context(text_pointer_cr);
+       cairo_set_source_rgb(text_pointer_cr, 1, 1, 1);
+       cairo_set_line_cap (text_pointer_cr, CAIRO_LINE_CAP_ROUND);
+       cairo_set_line_join(text_pointer_cr, CAIRO_LINE_JOIN_ROUND); 
+       cairo_set_operator(text_pointer_cr, CAIRO_OPERATOR_SOURCE);
+       cairo_set_line_width(text_pointer_cr, text_pen_width);
+       cairo_rectangle(text_pointer_cr, 0, 0, 5, height);  
+       cairo_stroke(text_pointer_cr);
+	   cairo_destroy(text_pointer_cr);
+    } 
  
-    GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
-    GdkColor *foreground_color_p = rgb_to_gdkcolor(text_color);
-    if (text_cursor)
-      {
-        gdk_cursor_unref(text_cursor);
-      }
-    text_cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, 0, height);
-    gdk_window_set_cursor (text_window->window, text_cursor);
-    gdk_flush ();
-    g_object_unref (pixmap);
-    g_free(foreground_color_p);
-    g_free(background_color_p);
-    cairo_destroy(text_pointer_cr);
-  #else
-    //TODO native node
+  GdkColor *background_color_p = rgb_to_gdkcolor("000000");
+  GdkColor *foreground_color_p = rgb_to_gdkcolor(text_color);
+  if (text_cursor)
+    {
+      gdk_cursor_unref(text_cursor);
+    }
+  
+  text_cursor = gdk_cursor_new_from_pixmap (pixmap, bitmap, foreground_color_p, background_color_p, 1, height-1);
+  gdk_window_set_cursor (text_window->window, text_cursor);
+  gdk_flush ();
+  g_object_unref (pixmap);
+  g_object_unref (bitmap);
+  g_free(foreground_color_p);
+  g_free(background_color_p);
+  
+  #ifdef _WIN32
+    grab_pointer(text_window, TEXT_MOUSE_EVENTS);
   #endif
   return TRUE;
 }

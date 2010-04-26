@@ -29,7 +29,6 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
@@ -58,7 +57,6 @@
 #endif
 
 
-
 #define ANNOTATE_MOUSE_EVENTS    ( GDK_PROXIMITY_IN_MASK |      \
 				   GDK_PROXIMITY_OUT_MASK |	\
 				   GDK_POINTER_MOTION_MASK |	\
@@ -69,10 +67,8 @@
 #define ANNOTATE_KEYBOARD_EVENTS ( GDK_KEY_PRESS_MASK	\
 				   )
 
-
-
+				   
 #define g_slist_first(n) g_slist_nth (n,0)
-
 
 
 typedef enum
@@ -143,10 +139,9 @@ typedef struct
 AnnotateData* data;
 
 GdkPixmap *transparent_pixmap = NULL;
-
+GdkCursor* cursor = NULL;
 cairo_t *transparent_cr = NULL;
 
-GdkCursor* cursor = NULL;
 
 /* Create a new paint context */
 AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
@@ -201,7 +196,6 @@ void annotate_paint_context_print (gchar *name, AnnotatePaintContext *context)
 }
 
 
-
 /* Free the memory allocated by paint context */
 void annotate_paint_context_free (AnnotatePaintContext *context)
 {
@@ -219,8 +213,6 @@ void annotate_coord_list_append (gint x, gint y, gint width)
   point->width = width;
   data->coordlist = g_slist_append (data->coordlist, point);
 }
-
-
 
 
 /* Free the list of the painted point */
@@ -338,12 +330,12 @@ void select_color()
             }
           else
             {
-               if (data->debug)
-	       { 
-	          g_printerr("Called select color but this is not allocated\n");
+              if (data->debug)
+	            { 
+	              g_printerr("Called select color but this is not allocated\n");
                   g_printerr("I put the red one to recover to the problem\n");
-	       }
-               cairo_set_source_color_from_string(data->cr, "FF0000FF");
+	            }
+              cairo_set_source_color_from_string(data->cr, "FF0000FF");
             }
         }
       else
@@ -513,7 +505,7 @@ void annotate_release_pointer_grab()
   #ifndef _WIN32
     gdk_window_input_shape_combine_mask (data->win->window, data->shape, 0, 0);  
   #else
-    /* This apply a shape in the ardesia bar; in win32 if the pointer is in this part will be passed to the window below */
+    /* This apply a shape in the ardesia bar; in win32 if the pointer is above the bar the events will passed to the window below */
     cairo_set_source_rgb(data->shape_cr,1,1,1);
     cairo_paint(data->shape_cr);
     cairo_stroke(data->shape_cr);
@@ -578,6 +570,7 @@ void annotate_acquire_pointer_grab()
 }
 
 
+/* Create pixmap and mask for the invisible cursor */
 void get_invisible_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
   *pixmap = gdk_pixmap_new (NULL, size, size, 1);
@@ -632,6 +625,7 @@ void hide_cursor()
 }
 
 
+/* Create pixmap and mask for the pen cursor */
 void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
   gint context_width = data->cur_context->width;;
@@ -691,6 +685,7 @@ void set_pen_cursor()
 }
 
 
+/* Create pixmap and mask for the eraser cursor */
 void get_eraser_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
   *pixmap = gdk_pixmap_new (NULL, size, size, 1);
@@ -793,9 +788,9 @@ void annotate_acquire_grab ()
   
       data->is_grabbed = TRUE;
       if (data->debug)
-	{
-	  g_printerr("Acquire grab\n");
-	}
+	    {
+	       g_printerr("Acquire grab\n");
+	    }
     }
 }
 
@@ -972,6 +967,7 @@ void annotate_draw_arrow ()
   gint lenght = g_slist_length(data->coordlist);
   if (lenght<2)
     {
+	  /* if it has lenght 1 then is a point and I don't draw the arrow */
       return;
     }
   gfloat direction = annotate_get_arrow_direction ();
@@ -979,6 +975,7 @@ void annotate_draw_arrow ()
     {
       g_printerr("Arrow direction %f\n", direction/M_PI*180);
     }
+	
   int i = lenght-1;
   AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, i);
 
@@ -1028,7 +1025,6 @@ void annotate_draw_arrow ()
 }
 
 
-
 /*
  * Event-Handlers to perform the drawing
  */
@@ -1051,13 +1047,12 @@ proximity_in (GtkWidget *win,
   return TRUE;
 }
 
-
+/* Device lease */
 G_MODULE_EXPORT gboolean
 proximity_out (GtkWidget *win, 
                GdkEventProximity *ev,
                gpointer user_data)
 {
-  
   data->cur_context = data->default_pen;
 
   data->state = 0;
@@ -1244,11 +1239,15 @@ gboolean roundify()
     {
       g_printerr("Roundify\n");
     }
+	
+  /* Delete the last line drawn*/
   add_save_point();
   annotate_undo();
   annotate_redolist_free();
   reset_cairo();
+  
   gboolean close_path = FALSE;
+  
   GSList *outptr = broken(data->coordlist, &close_path, FALSE);   
   annotate_coord_list_free();
   data->coordlist = outptr;
@@ -1264,7 +1263,7 @@ gboolean roundify()
         { 
           gint curx = point3->x; 
           gint cury = point3->y;
-	  cairo_draw_ellipse(lastx,lasty, curx-lastx, cury-lasty);          
+	      cairo_draw_ellipse(lastx,lasty, curx-lastx, cury-lasty);          
         }
     }
   else
@@ -1301,6 +1300,7 @@ void annotate_fill()
 }
 
 
+/* Call the geometric shape recognizer */
 gboolean shape_recognize()
 {
   gboolean closed_path = FALSE;
@@ -1309,17 +1309,23 @@ gboolean shape_recognize()
     {
       if (data->rectify)
         {
-	  closed_path = rectify();
-	} 
-      else if (data->roundify)
-	{
-	  closed_path = roundify(); 
-	}
-     }
-   return closed_path;
+	      closed_path = rectify();
+	    } 
+       else if (data->roundify)
+	    {
+	      closed_path = roundify(); 
+	    }
+    }
+  return closed_path;
 }
 
-
+void draw_point(int x, int y)
+{
+  cairo_arc (data->cr, x, y, data->cur_context->width/2, 0, 2 * M_PI);
+  cairo_fill (data->cr);
+  cairo_move_to (data->cr, x, y);
+}
+	  
 /* This shots when the button is realeased */
 G_MODULE_EXPORT gboolean
 paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
@@ -1348,24 +1354,24 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
     }
 
   if (!data->coordlist)
-    { 
-      cairo_arc (data->cr, ev->x, ev->y, data->cur_context->width/2, 0, 2 * M_PI);
-      cairo_fill (data->cr);
-      cairo_move_to (data->cr, ev->x, ev->y);
-      data->lastx = ev->x;
+    {
+      draw_point(ev->x, ev->y);
       data->lasty = ev->y;
+      data->lastx = ev->x;	  
       annotate_coord_list_append (ev->x, ev->y, data->maxwidth);
       data->painted = TRUE;
     }
   else
     { 
       AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*)data->coordlist->data;
+	  /* This is the tollerance to force to close the path in a magnetic way */
       int tollerance = 15;
  
+      /* If the distance between two point lesser that tollerance they are the same point for me */
       if ((abs(ev->x-first_point->x)<tollerance) &&(abs(ev->y-first_point->y)<tollerance))
-	{
-	  cairo_line_to(data->cr, first_point->x, first_point->y);
-	}
+	  {
+	    cairo_line_to(data->cr, first_point->x, first_point->y);
+	  }
     }
 
   if (data->coordlist)
@@ -1374,11 +1380,11 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       if (!closed_path)
         {
           /* If is selected an arrowtype the draw the arrow */
-	  if (data->arrow)
+	      if (data->arrow)
             {
-	       /* print arrow at the end of the line */
-	       annotate_draw_arrow ();
-	    }
+	          /* print arrow at the end of the line */
+	          annotate_draw_arrow ();
+	        }
         }
     }
  
@@ -1396,7 +1402,6 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 
 
 /* Expose event: this occurs when the windows is show */
-
 G_MODULE_EXPORT gboolean
 event_expose (GtkWidget *widget, 
               GdkEventExpose *event, 
@@ -1408,6 +1413,7 @@ event_expose (GtkWidget *widget,
     }
   if (!(data->cr))
     {
+	  /* initialize a transparent window */
       data->cr = gdk_cairo_create(data->win->window);
       annotate_clear_screen();
       transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
@@ -1441,7 +1447,7 @@ void setup_input_devices ()
       if (strstr (device->name, "raser") ||
           strstr (device->name, "RASER"))
         {
-	  gdk_device_set_source (device, GDK_SOURCE_ERASER);
+	      gdk_device_set_source (device, GDK_SOURCE_ERASER);
         }
 
       /* Dont touch devices with two or more axis - GDK apparently
@@ -1491,11 +1497,15 @@ void annotate_quit()
     {
       cairo_destroy(transparent_cr);
     }
+	
   /* destroy cairo */  
   destroy_cairo();
-  /* free all */
+  
+  /* disconnect the signals */
   g_signal_handlers_disconnect_by_func (data->win,
 					G_CALLBACK (event_expose), NULL);
+  
+  /* free all */
   if (data->win)
     {
       gtk_widget_destroy(data->win); 
@@ -1526,22 +1536,17 @@ void annotate_quit()
 /* Setup the application */
 void setup_app ()
 { 
-  data->cr = NULL;
-  data->display = gdk_display_get_default();
-  data->screen = gdk_display_get_default_screen(data->display);
-
-  data->width = gdk_screen_get_width(data->screen);
-  data->height = gdk_screen_get_height (data->screen);
-
   data->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_transient_for(GTK_WINDOW(data->win), GTK_WINDOW(get_background_window()));
 
   gtk_widget_set_usize(GTK_WIDGET (data->win), data->width, data->height);
   gtk_window_fullscreen(GTK_WINDOW(data->win)); 
+  
   if (STICK)
     {
       gtk_window_stick(GTK_WINDOW(data->win));
     }  
+	
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(data->win), TRUE);
 
   #ifndef _WIN32 
@@ -1552,20 +1557,10 @@ void setup_app ()
     gtk_window_set_opacity(GTK_WINDOW(data->win), 0.5); 
   #endif  
  
-  data->arrow = 0; 
-  data->painted = FALSE;
-  data->rectify = FALSE;
-  data->roundify = FALSE;
-
-  data->coordlist = NULL;
-  data->savelist = NULL;
-  data->cr = NULL;
-  
+  // initialize pen context
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN, 15);
   data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER, 15);
-
   data->cur_context = data->default_pen;
-
   data->state = 0;
 
   setup_input_devices();
@@ -1575,6 +1570,7 @@ void setup_app ()
   data->shape_cr = gdk_cairo_create(data->shape);
   clear_cairo_context(data->shape_cr); 
 
+  /* connect the signals */
   annotate_connect_signals();
 
   gtk_widget_show_all(data->win);
@@ -1585,19 +1581,34 @@ void setup_app ()
 }
 
 
-
 /* Init the annotation */
 int annotate_init (int x, int y, int width, int height, gboolean debug)
 {
   data = g_malloc (sizeof(AnnotateData));
+  data->cr = NULL;
+  data->coordlist = NULL;
+  data->savelist = NULL;
+  
   data->debug = debug;
+  
   /* Untoggle zone is setted on ardesia zone */
   data->untogglexpos = x;
   data->untoggleypos = y;
   data->untogglewidth = width;
   data->untoggleheight = height;
+  
   data->cursor_hidden = FALSE;
   data->is_grabbed = FALSE;
+  data->arrow = FALSE; 
+  data->painted = FALSE;
+  data->rectify = FALSE;
+  data->roundify = FALSE;
+  
+  data->display = gdk_display_get_default();
+  data->screen = gdk_display_get_default_screen(data->display);
+
+  data->width = gdk_screen_get_width(data->screen);
+  data->height = gdk_screen_get_height (data->screen);
   
   setup_app ();
 

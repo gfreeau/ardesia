@@ -44,9 +44,19 @@
 #endif
 
 #define STICK FALSE
-
+						
+			
 extern GtkBuilder *gtkBuilder;
 
+#ifdef WIN32
+  /* gdk_cursor_new_from_pixmap is broken on Windows.
+     this is a workaround using gdk_cursor_new_from_pixbuf. */
+  GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
+					    const GdkColor *fg, const GdkColor *bg,
+					    gint x, gint y);
+  #define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
+#endif
+						
 /* get bar window widget */
 GtkWidget* get_bar_window();
 

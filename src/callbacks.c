@@ -167,22 +167,22 @@ void start_tool()
   if (grab)
     {
       if (text)
-	{
-          annotate_release_grab();
-	  start_text_widget( GTK_WINDOW(get_annotation_window()), color, thickness);
-	}
+	  {
+        annotate_release_grab();
+	    start_text_widget( GTK_WINDOW(get_annotation_window()), color, thickness);
+	  }
       else 
-	{
-	  if (pencil)
-	    { 
-	      annotate();
-	    }
-	  else
-	    {
-	      erase();
-	    }   
-	  grab = FALSE;
-	}
+	  {
+	    if (pencil)
+	      { 
+	        annotate();
+	      }
+	    else
+	      {
+	        erase();
+	      }   
+	    grab = FALSE;
+	  }
     }
 }
 
