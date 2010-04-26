@@ -607,9 +607,8 @@ void set_pen_cursor()
     GdkColor *background_color_p = rgb_to_gdkcolor("FFFFFF");
     GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color); 
     gint context_width = data->cur_context->width;
-    GdkPixmap *bitmap = gdk_pixmap_new (NULL, size*3 + context_width, size*3 + context_width, 1);
 
-    cursor = gdk_cursor_new_from_pixmap (pixmap, bitmap, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
+    cursor = gdk_cursor_new_from_pixmap (pixmap, pixmap, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
 
     gdk_window_set_cursor (data->win->window, cursor);
     gdk_display_sync(gdk_display_get_default());
