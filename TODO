@@ -10,12 +10,10 @@
 
 - Documentation
   - Make video tutorial
-  - win32 build howto
 
 - Windows porting
   - trick about shape mask
   - alpha channels
-  - support the pointer icons
   - recording (using camit and ffmpeg2theora)
   - forwardind to icecast for streaming 
     (see if is possible port oggfwd)
