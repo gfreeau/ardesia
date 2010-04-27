@@ -71,6 +71,7 @@
 #define g_slist_first(n) g_slist_nth (n,0)
 
 
+/* Enumeration containing tools */
 typedef enum
   {
     ANNOTATE_PEN,
@@ -78,6 +79,7 @@ typedef enum
   } AnnotatePaintType;
 
 
+/* Paint context */
 typedef struct
 {
   AnnotatePaintType type;
@@ -87,6 +89,7 @@ typedef struct
 } AnnotatePaintContext;
 
 
+/* Struct to store the save point */
 typedef struct _AnnotateSave
 {
   gint xcursor;
@@ -97,50 +100,79 @@ typedef struct _AnnotateSave
 } AnnotateSave;
 
 
+/* Annotation data used by the callsbacks */
 typedef struct
 {
+  GdkScreen   *screen;
+  GdkDisplay  *display;
+
+  /* the annotation window */   
+  GtkWidget   *win;
+  /* cairo context attached to the window */
+  cairo_t     *cr;
+  
+  /* the shape pixmap used as mask */   
+  GdkPixmap   *shape;
+  /* cairo context attached to the shape pixmap */
+  cairo_t     *shape_cr;
+   
+  /* bar position */
   int untogglexpos;
   int untoggleypos;
   int untogglewidth;
   int untoggleheight;
-  cairo_t     *cr;
-  cairo_t     *shape_cr;
-  GtkWidget   *win;
-  
-  GdkScreen   *screen;
-  GdkDisplay  *display;
 
-  GdkPixmap   *shape;
-  AnnotateSave *savelist;
+  /* transparent pixmap */
+  GdkPixmap *transparent_pixmap;
+  /* transparent cairo context */
+  cairo_t *transparent_cr;
  
+  /* mouse cursor */ 
+  GdkCursor *cursor;
+ 
+  /* List of the savepoint */ 
+  AnnotateSave *savelist;
+
+  /* Paint context */ 
   AnnotatePaintContext *default_pen;
   AnnotatePaintContext *default_eraser;
   AnnotatePaintContext *cur_context;
 
+  /* last point inserted */
   gdouble      lastx;
   gdouble      lasty;
+
+  /* list of the coodinates of the last line drawn */
   GSList       *coordlist;
 
+  /* tablet device */
   GdkDevice   *device;
   guint        state;
 
+  /* width of the screen */
   guint        width;
-  guint        maxwidth;
   guint        height;
-  gboolean     painted;
+ 
+  /* max thickness of the line depending on pressure */ 
+  guint        maxthckness;
+ 
+  /* post draw operation */ 
   gboolean     rectify;
   gboolean     roundify;
-  gboolean        arrow;
-  gboolean     debug;
+  gboolean     arrow;
+  
+  /* is the cursor grabbed */
   gboolean     is_grabbed;
+  
+  /* is the cursor hidden */
   gboolean     cursor_hidden;
+  
+  /* is the debug enabled */
+  gboolean     debug;
 } AnnotateData;
 
 AnnotateData* data;
 
-GdkPixmap *transparent_pixmap = NULL;
-GdkCursor* cursor = NULL;
-cairo_t *transparent_cr = NULL;
 
 
 /* Create a new paint context */
@@ -478,7 +510,7 @@ void annotate_hide_annotation ()
     }
   gdk_draw_drawable (data->win->window,
                      data->win->style->fg_gc[GTK_WIDGET_STATE (data->win)],
-                     transparent_pixmap,
+                     data->transparent_pixmap,
                      0, 0,
                      0, 0,
                      data->width, data->height);
@@ -591,9 +623,10 @@ void get_invisible_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 /* Hide the cursor */
 void hide_cursor()
 {
-  if (cursor)
+  if (data->cursor)
     {
-      gdk_cursor_unref (cursor);
+      gdk_cursor_unref (data->cursor);
+      data->cursor=NULL;
     }
   
   #ifdef _WIN32
@@ -608,9 +641,9 @@ void hide_cursor()
   GdkColor *background_color_p = rgb_to_gdkcolor("000000");
   GdkColor *foreground_color_p = rgb_to_gdkcolor("FFFFFF");
   
-  cursor = gdk_cursor_new_from_pixmap (pixmap, mask, foreground_color_p, background_color_p, size/2, size/2);    
+  data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask, foreground_color_p, background_color_p, size/2, size/2);    
   
-  gdk_window_set_cursor(data->win->window, cursor);
+  gdk_window_set_cursor(data->win->window, data->cursor);
   gdk_display_sync(gdk_display_get_default());
   
   g_object_unref (pixmap);
@@ -661,9 +694,10 @@ void set_pen_cursor()
     annotate_release_pointer_grab();
   #endif
   gint size=12;
-  if (cursor)
+  if (data->cursor)
     {
-      gdk_cursor_unref(cursor);
+      gdk_cursor_unref(data->cursor);
+      data->cursor=NULL;
     }
   GdkPixmap *pixmap, *mask;
   get_pen_pixmaps(size, &pixmap, &mask); 
@@ -671,9 +705,9 @@ void set_pen_cursor()
   GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color); 
   gint context_width = data->cur_context->width;
 
-  cursor = gdk_cursor_new_from_pixmap (pixmap, mask, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
+  data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask, foreground_color_p, background_color_p, size/2 + context_width/2, 5* size/2);
 
-  gdk_window_set_cursor (data->win->window, cursor);
+  gdk_window_set_cursor (data->win->window, data->cursor);
   gdk_display_sync(gdk_display_get_default());
   g_object_unref (pixmap);
   g_object_unref (mask);
@@ -714,9 +748,10 @@ void set_eraser_cursor()
   #ifdef _WIN32
     annotate_release_pointer_grab();
   #endif
-  if (cursor)
+  if (data->cursor)
     {
-      gdk_cursor_unref(cursor);
+      gdk_cursor_unref(data->cursor);
+      data->cursor=NULL;
     }
   gint size = data->cur_context->width;
 
@@ -726,9 +761,9 @@ void set_eraser_cursor()
   GdkColor *background_color_p = rgb_to_gdkcolor("000000");
   GdkColor *foreground_color_p = rgb_to_gdkcolor("FF0000");
  
-  cursor = gdk_cursor_new_from_pixmap (pixmap, mask, foreground_color_p, background_color_p, size/2, size/2);
+  data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask, foreground_color_p, background_color_p, size/2, size/2);
   
-  gdk_window_set_cursor (data->win->window, cursor);
+  gdk_window_set_cursor (data->win->window, data->cursor);
   gdk_display_sync(gdk_display_get_default());
   g_object_unref (pixmap);
   g_object_unref (mask);
@@ -868,7 +903,6 @@ void annotate_clear_screen ()
   reset_cairo();
   clear_cairo_context(data->cr);
   add_save_point();
-  data->painted = TRUE;
 }
 
 
@@ -953,7 +987,6 @@ void annotate_draw_line (gint x1, gint y1,
       cairo_stroke(data->cr);
       cairo_move_to(data->cr, x2, y2);
     }
-  data->painted = TRUE;
 }
 
 
@@ -1021,7 +1054,6 @@ void annotate_draw_arrow ()
     {
       g_printerr("with vertex at (x,y)=(%f : %f)\n",  arrowhead0x , arrowhead0y  );
     }
-  data->painted = TRUE;
 }
 
 
@@ -1152,15 +1184,15 @@ paintto (GtkWidget *win,
     {
       gint width = (CLAMP (pressure * pressure,0,1) *
 		    (double) data->cur_context->width);
-      if (width!=data->maxwidth)
+      if (width!=data->maxthckness)
         {
-          data->maxwidth = width; 
-          cairo_set_line_width(data->cr, data->maxwidth);
+          data->maxthckness = width; 
+          cairo_set_line_width(data->cr, data->maxthckness);
         }
     }
   annotate_draw_line (data->lastx, data->lasty, ev->x, ev->y, TRUE);
    
-  annotate_coord_list_append (ev->x, ev->y, data->maxwidth);
+  annotate_coord_list_append (ev->x, ev->y, data->maxthckness);
 
   data->lastx = ev->x;
   data->lasty = ev->y;
@@ -1358,8 +1390,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       draw_point(ev->x, ev->y);
       data->lasty = ev->y;
       data->lastx = ev->x;	  
-      annotate_coord_list_append (ev->x, ev->y, data->maxwidth);
-      data->painted = TRUE;
+      annotate_coord_list_append (ev->x, ev->y, data->maxthckness);
     }
   else
     { 
@@ -1416,10 +1447,10 @@ event_expose (GtkWidget *widget,
 	  /* initialize a transparent window */
       data->cr = gdk_cairo_create(data->win->window);
       annotate_clear_screen();
-      transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
+      data->transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
 					   data->height, -1);
-      transparent_cr = gdk_cairo_create(transparent_pixmap);
-      clear_cairo_context(transparent_cr);
+      data->transparent_cr = gdk_cairo_create(data->transparent_pixmap);
+      clear_cairo_context(data->transparent_cr);
       restore_surface();
       /* This allows the mouse event to be passed to the window below at the start of the tool */
       gdk_window_input_shape_combine_mask (data->win->window, data->shape, 0, 0);
@@ -1493,9 +1524,9 @@ void annotate_quit()
     {  
       g_object_unref(data->shape);
     }
-  if (transparent_cr)
+  if (data->transparent_cr)
     {
-      cairo_destroy(transparent_cr);
+      cairo_destroy(data->transparent_cr);
     }
 	
   /* destroy cairo */  
@@ -1512,10 +1543,10 @@ void annotate_quit()
       data->win = NULL;
     }
   
-  if (transparent_pixmap)
+  if (data->transparent_pixmap)
     {
-      g_object_unref(transparent_pixmap);
-      transparent_pixmap = NULL;
+      g_object_unref(data->transparent_pixmap);
+      data->transparent_pixmap = NULL;
     }
 
   annotate_coord_list_free();
@@ -1526,9 +1557,10 @@ void annotate_quit()
   g_free(data->default_eraser);
   g_free (data);
 
-  if (cursor)
+  if (data->cursor)
     {
-      gdk_cursor_unref(cursor);
+      gdk_cursor_unref(data->cursor);
+      data->cursor=NULL;
     }
 }
 
@@ -1588,6 +1620,9 @@ int annotate_init (int x, int y, int width, int height, gboolean debug)
   data->cr = NULL;
   data->coordlist = NULL;
   data->savelist = NULL;
+  data->transparent_pixmap = NULL;
+  data->cursor = NULL;
+  data->transparent_cr = NULL;
   
   data->debug = debug;
   
@@ -1600,7 +1635,6 @@ int annotate_init (int x, int y, int width, int height, gboolean debug)
   data->cursor_hidden = FALSE;
   data->is_grabbed = FALSE;
   data->arrow = FALSE; 
-  data->painted = FALSE;
   data->rectify = FALSE;
   data->roundify = FALSE;
   
