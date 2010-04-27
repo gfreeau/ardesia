@@ -102,6 +102,9 @@ void destroy_background_window()
 /* Clear the background */
 void clear_background_window()
 {
+  #ifdef _WIN32
+    gdk_window_shape_combine_mask (background_data->background_window->window,  background_data->background_shape, 0, 0);
+  #endif
   cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_CLEAR);
   gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0);
   cairo_paint(background_data->back_cr);
@@ -116,8 +119,11 @@ void clear_background_window()
   cairo_destroy(shape_cr);
 
   /* This allows the mouse event to be passed to the window below */
-  gdk_window_input_shape_combine_mask (background_data->background_window->window,  background_data->background_shape, 0, 0);
-  
+  #ifdef _WIN32
+    gdk_window_shape_combine_mask (background_data->background_window->window,  background_data->background_shape, 0, 0);
+  #else
+    gdk_window_input_shape_combine_mask (background_data->background_window->window,  background_data->background_shape, 0, 0);
+  #endif
 }
 
 
@@ -126,7 +132,6 @@ back_event_expose (GtkWidget *widget,
               GdkEventExpose *event, 
               gpointer user_data)
 {
-  
   if (!background_data->back_cr)
     {
       background_data->back_cr = gdk_cairo_create(widget->window);
@@ -138,7 +143,7 @@ back_event_expose (GtkWidget *widget,
         {
            clear_background_window();
         }
-  }
+    }
   return TRUE;
 }
 
@@ -146,17 +151,23 @@ back_event_expose (GtkWidget *widget,
 /* The windows has been exposed after the show_all request to change the background image */
 void load_file()
 {
-  if (background_data->back_cr)
+    if (background_data->back_cr)
     {
-      GdkPixbuf* pixbuf = load_png(background_data->background_image);   
+	  #ifdef _WIN32
+	    gdk_window_shape_combine_mask (background_data->background_window->window,  NULL, 0, 0);
+      #endif
+	  GdkPixbuf* pixbuf = load_png(background_data->background_image);   
       cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_SOURCE);
       gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 1);
       gdk_cairo_set_source_pixbuf(background_data->back_cr, pixbuf, 0.0, 0.0);
       cairo_paint(background_data->back_cr);
       cairo_stroke(background_data->back_cr);   
       g_object_unref(G_OBJECT (pixbuf));
-      /* This deny the mouse event to be passed to the window below */
-      gdk_window_input_shape_combine_mask (background_data->background_window->window,  NULL, 0, 0);
+      #ifdef _WIN32
+        gdk_window_shape_combine_mask (background_data->background_window->window,  NULL, 0, 0);
+      #else 
+        gdk_window_input_shape_combine_mask (background_data->background_window->window,  NULL, 0, 0);
+      #endif
     }
 }
 
@@ -172,9 +183,13 @@ void load_color()
       gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), (double) a/256);
       cairo_set_source_rgb(background_data->back_cr, (double) r/256, (double) g/256, (double) b/256);
       cairo_paint(background_data->back_cr);
-      cairo_stroke(background_data->back_cr); 
-      /* This deny the mouse event to be passed to the window below */
-      gdk_window_input_shape_combine_mask (background_data->background_window->window,  NULL, 0, 0);
+      cairo_stroke(background_data->back_cr);
+      #ifdef _WIN32
+	    /* is opaque an mouse does not go below */
+      #else	  
+        /* This deny the mouse event to be passed to the window below */
+        gdk_window_input_shape_combine_mask (background_data->background_window->window,  NULL, 0, 0);
+	  #endif
     }  
 }
 
@@ -231,16 +246,15 @@ GtkWidget* create_background_window(char* backgroundimage)
 
   gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0); 
 
-  gtk_widget_show_all(background_data->background_window);
-
   g_signal_connect (background_data->background_window, "expose_event",
 		    G_CALLBACK (back_event_expose), NULL);
 
+  gtk_widget_show_all(background_data->background_window);
+  
   gtk_widget_set_app_paintable(background_data->background_window, TRUE);
 
   gtk_widget_set_double_buffered(background_data->background_window, FALSE);
 
   return  background_data->background_window;
 }
-
 

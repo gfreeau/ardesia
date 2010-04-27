@@ -437,14 +437,17 @@ void reset_cairo()
 
 
 /* Paint the context over the annotation window */
-void merge_context(cairo_t * cr, int yoffset)
+void merge_context(cairo_t * cr)
 {
   reset_cairo();
-  cairo_new_path(data->cr);
+ 
+  //This seems broken on windows
   cairo_surface_t* source_surface = cairo_get_target(cr);
   cairo_set_operator(data->cr, CAIRO_OPERATOR_OVER);
-  cairo_set_source_surface (data->cr,  source_surface, 0, yoffset);
+  cairo_set_source_surface (data->cr,  source_surface, 0, 0);
   cairo_paint(data->cr);
+  cairo_stroke(data->cr);
+  
   add_save_point();
 }
 
@@ -537,10 +540,10 @@ void annotate_release_pointer_grab()
     gdk_window_input_shape_combine_mask (data->win->window, data->shape, 0, 0);  
   #else
     /* This apply a shape in the ardesia bar; in win32 if the pointer is above the bar the events will passed to the window below */
-    cairo_set_source_rgb(data->shape_cr,1,1,1);
+    cairo_set_source_rgb(data->shape_cr, 1, 1, 1);
     cairo_paint(data->shape_cr);
     cairo_stroke(data->shape_cr);
-    cairo_set_source_rgb(data->shape_cr,0,0,0);
+    cairo_set_source_rgb(data->shape_cr, 0, 0, 0);
     cairo_rectangle(data->shape_cr, data->untogglexpos, data->untoggleypos, data->untogglewidth, data->untoggleheight);
     cairo_fill(data->shape_cr);
     cairo_stroke(data->shape_cr);
@@ -564,6 +567,7 @@ void annotate_release_grab ()
       annotate_release_pointer_grab(); 
       data->is_grabbed=FALSE;
     }
+  gtk_window_present(GTK_WINDOW(get_bar_window()));
 }
 
 
@@ -817,6 +821,7 @@ void annotate_acquire_grab ()
 {
   if  (!data->is_grabbed)
     {
+	  gtk_window_present(GTK_WINDOW(get_bar_window()));
       annotate_acquire_pointer_grab();
       annotate_select_cursor();
   
@@ -900,7 +905,9 @@ void annotate_clear_screen ()
       g_printerr("Clear screen\n");
     }
   reset_cairo();
+
   clear_cairo_context(data->cr);
+  
   add_save_point();
 }
 
@@ -1446,6 +1453,7 @@ event_expose (GtkWidget *widget,
 	  /* initialize a transparent window */
       data->cr = gdk_cairo_create(data->win->window);
       annotate_clear_screen();
+					 
       data->transparent_pixmap = gdk_pixmap_new (data->win->window, data->width,
 					   data->height, -1);
       data->transparent_cr = gdk_cairo_create(data->transparent_pixmap);
@@ -1588,6 +1596,7 @@ void setup_app ()
     gtk_window_set_opacity(GTK_WINDOW(data->win), 0.5); 
   #endif  
  
+  
   // initialize pen context
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN, 15);
   data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER, 15);

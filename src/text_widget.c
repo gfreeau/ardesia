@@ -86,7 +86,6 @@ int screen_width;
 
 int max_font_height;
 
-int yoffset;
 
 gboolean already_release;
 
@@ -316,7 +315,6 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
       gtk_window_get_position(GTK_WINDOW(widget), &x, &y);
       if (screen_width==width)
         {
-          yoffset = y;
           init(widget);
        
           if (text_cr)
@@ -336,7 +334,6 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
     }
   return TRUE;
 }
-
 
 
 /* This is called when the button is pushed */
@@ -361,7 +358,6 @@ press (GtkWidget *win,
 }
 
 
-
 /* This is called when the button is lease */
 G_MODULE_EXPORT gboolean
 release (GtkWidget *win,
@@ -369,20 +365,13 @@ release (GtkWidget *win,
          gpointer user_data)
 {
   already_release=TRUE;
-  ungrab_pointer(display, text_window);
-  int x, y, width, height;
-  GtkWindow* bar = GTK_WINDOW(text_window);
-  gtk_window_get_position(bar, &x, &y);
-  gtk_window_get_size(bar, &width, &height);    
+  ungrab_pointer(display, text_window);   
 
   pos->x = ev->x;
   pos->y = ev->y;
   move_editor_cursor();
   return TRUE;
 }
-
-
-  
 
 
 /* This shots when the ponter is moving */
@@ -405,6 +394,7 @@ on_window_text_motion_notify_event (GtkWidget *win,
 
   return TRUE;;
 }
+
 
 /* Start the widget for the text insertion */
 void start_text_widget(GtkWindow *parent, char* color, int tickness)
@@ -439,7 +429,7 @@ void stop_text_widget()
           g_slist_foreach(letterlist, (GFunc)g_free, NULL);
           g_slist_free(letterlist);
           letterlist = NULL;
-          merge_context(text_cr, yoffset);
+          merge_context(text_cr);
         } 
       cairo_destroy(text_cr);     
       text_cr = NULL;
@@ -460,3 +450,4 @@ void stop_text_widget()
       pos = NULL;
     }
 }
+

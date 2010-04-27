@@ -57,7 +57,6 @@ typedef struct
 }PreferenceData;
 
 
-
 /* Update the preview image */
 G_MODULE_EXPORT void
 on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer data)
@@ -192,7 +191,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   preferenceDialog = GTK_WIDGET(gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"preferences"));
   gtk_window_set_transient_for(GTK_WINDOW(preferenceDialog), parent);
   gtk_window_set_modal(GTK_WINDOW(preferenceDialog), TRUE);
-
+  
   if (STICK)
     {
       gtk_window_stick((GtkWindow*)preferenceDialog);
@@ -228,6 +227,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   }
 
   gtk_dialog_run(GTK_DIALOG(preferenceDialog));
+    
   if (preferenceDialog != NULL)
     {
       gtk_widget_destroy(preferenceDialog);

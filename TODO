@@ -13,11 +13,14 @@
 
 - Refactoring
 
+- Bug fix merge beetween text window and annotation
+  window in windows
+
 - Windows porting
   - use opaque color upon a (semi) transparent window
   - recording (using camit and ffmpeg2theora)
   - forwardind to icecast for streaming 
-    (see if is possible port oggfwd)
+    (investigate about a oggfwd win32 port)
 
 - Investigate about MacOsX porting
 
@@ -28,12 +31,11 @@
     and the default folder name used for the screencast
 
 - Possible future features
-  - Always on the top ardesia bar
   - Pdf export 
   - Svg export 
+  - Printer support
   - Undo-redo using svg file
   - Mini video player with play-pause, backward and forward
-  - Printer support
   - Multi pointer support using the xinput2 libraries
 
 ===
