@@ -12,8 +12,7 @@
   - Make video tutorial
 
 - Windows porting
-  - trick about shape mask
-  - alpha channels
+  - use opaque color upon a (semi) transparent window
   - recording (using camit and ffmpeg2theora)
   - forwardind to icecast for streaming 
     (see if is possible port oggfwd)
