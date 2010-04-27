@@ -33,9 +33,6 @@
 
 #include "utils.h"
 
-/* Info dialog */
-GtkBuilder*  infoDialogGtkBuilder = NULL;
-
 #ifdef _WIN32
   #include <gdkwin32.h>
   #define INFO_UI_FILE "info_dialog.glade"
@@ -53,7 +50,7 @@ void start_info_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   GtkWidget *infoDialog;
 
   /* Initialize the main window */
-  infoDialogGtkBuilder = gtk_builder_new();
+  GtkBuilder*  infoDialogGtkBuilder = gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
   gtk_builder_add_from_file(infoDialogGtkBuilder, INFO_UI_FILE, NULL);
@@ -78,3 +75,5 @@ void start_info_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
     }
   g_object_unref (infoDialogGtkBuilder);
 }
+
+

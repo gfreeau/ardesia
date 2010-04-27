@@ -171,8 +171,7 @@ typedef struct
   gboolean     debug;
 } AnnotateData;
 
-AnnotateData* data;
-
+static AnnotateData* data;
 
 
 /* Create a new paint context */
@@ -1644,7 +1643,7 @@ int annotate_init (int x, int y, int width, int height, gboolean debug)
   data->width = gdk_screen_get_width(data->screen);
   data->height = gdk_screen_get_height (data->screen);
   
-  setup_app ();
+  setup_app();
 
   return 0;
 }

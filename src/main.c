@@ -107,6 +107,7 @@ CommandLine *commandline;
 void calculate_position(GtkWidget *ardesiaBarWindow, int dwidth, int dheight, int *x, int *y, int wwidth, int wheight, int position)
 {
   *y = ((dheight - wheight)/2); 
+  /* vertical layout */
   if (position==WEST)
     {
       *x = 0;
@@ -117,7 +118,7 @@ void calculate_position(GtkWidget *ardesiaBarWindow, int dwidth, int dheight, in
     }
   else
     {
-      //horizontal layout
+      /* horizontal layout */
       *x = (dwidth - wwidth)/2;
       if (position==NORTH)
         {
@@ -125,7 +126,7 @@ void calculate_position(GtkWidget *ardesiaBarWindow, int dwidth, int dheight, in
         }
       else if (position==SOUTH)
         {
-          /* south */
+         /* south */
          *y = dheight - SPACE_FROM_BORDER - wheight;
         }
       else

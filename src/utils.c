@@ -62,7 +62,8 @@ gboolean colors_too_similar(const GdkColor *colora, const GdkColor *colorb)
 }
 
 /* gdk_cursor_new_from_pixmap is broken on Windows.
-   this is a workaround using gdk_cursor_new_from_pixbuf. */
+   this is a workaround using gdk_cursor_new_from_pixbuf. 
+   Thanks to Dirk Gerrits for this */
 GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 					    const GdkColor *fg, const GdkColor *bg,
 					    gint x, gint y)
@@ -322,6 +323,7 @@ const gchar* get_desktop_dir (void)
 
   gconf_client = gconf_client_get_default ();
 
+  /* in windows gconf daemon is surely not running */
   #ifndef _WIN32
     desktop_is_home_dir = gconf_client_get_bool (gconf_client,
                                                  "/apps/nautilus/preferences/desktop_is_home_dir",

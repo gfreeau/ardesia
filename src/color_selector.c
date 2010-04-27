@@ -39,7 +39,7 @@
 #endif
 
 /* old picked color in RGBA format */
-gchar*       picked_color = NULL;
+static gchar*       picked_color = NULL;
 
 
 /*
