@@ -564,10 +564,11 @@ void annotate_release_grab ()
 	{
 	  g_printerr ("Release grab\n");
 	}
+      gtk_window_set_keep_above(GTK_WINDOW(get_bar_window()), TRUE);
+      gtk_widget_show(get_bar_window());
       annotate_release_pointer_grab(); 
       data->is_grabbed=FALSE;
     }
-  gtk_window_present(GTK_WINDOW(get_bar_window()));
 }
 
 
@@ -821,15 +822,15 @@ void annotate_acquire_grab ()
 {
   if  (!data->is_grabbed)
     {
-	  gtk_window_present(GTK_WINDOW(get_bar_window()));
+      
       annotate_acquire_pointer_grab();
       annotate_select_cursor();
   
       data->is_grabbed = TRUE;
       if (data->debug)
-	    {
-	       g_printerr("Acquire grab\n");
-	    }
+        {
+	   g_printerr("Acquire grab\n");
+	}
     }
 }
 
