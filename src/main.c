@@ -297,7 +297,7 @@ CommandLine* parse_options(int argc, char *argv[])
 
 
 GtkWidget*
-create_window (void)
+create_window (GtkWidget *parent)
 {
   GtkWidget *window;
   GError* error = NULL;
@@ -318,6 +318,7 @@ create_window (void)
   /* This is important; connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(gtkBuilder, NULL);
   window = GTK_WIDGET (gtk_builder_get_object(gtkBuilder, "winMain"));
+  gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(get_background_window()));
   if (commandline->decorated)
     {
        gtk_window_set_decorated(GTK_WINDOW(window), TRUE);
@@ -345,7 +346,11 @@ main (int argc, char *argv[])
 
   commandline = parse_options(argc, argv);
 
-  ardesiaBarWindow = create_window();
+  GtkWidget* background_window = create_background_window(commandline->backgroundimage);  
+  set_background_window(background_window);
+
+  ardesiaBarWindow = create_window(background_window);
+  gtk_widget_show(ardesiaBarWindow);
 
   /*
    * The following code create one of each component
@@ -366,20 +371,15 @@ main (int argc, char *argv[])
     }
   gtk_window_move(GTK_WINDOW(ardesiaBarWindow),x,y);  
 
-  GtkWidget* background_window = create_background_window(commandline->backgroundimage);  
-  set_background_window(background_window);
   
   /** Init annotate */
   annotate_init(x, y, width, height, commandline->debug); 
 
   GtkWidget* annotation_window = get_annotation_window();  
-
-  gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
   
-  gtk_widget_show (background_window);
-  gtk_widget_show(ardesiaBarWindow);
   gtk_widget_show (annotation_window);
   
+
   gtk_main();
   g_object_unref(gtkBuilder);	
   return 0;

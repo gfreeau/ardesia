@@ -563,10 +563,9 @@ void annotate_release_grab ()
       if (data->debug)
 	{
 	  g_printerr ("Release grab\n");
-	}
-      gtk_window_set_keep_above(GTK_WINDOW(get_bar_window()), TRUE);
-      gtk_widget_show(get_bar_window());
+	}    
       annotate_release_pointer_grab(); 
+      gtk_window_present(GTK_WINDOW(get_bar_window()));
       data->is_grabbed=FALSE;
     }
 }
@@ -1577,7 +1576,7 @@ void annotate_quit()
 void setup_app ()
 { 
   data->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_transient_for(GTK_WINDOW(data->win), GTK_WINDOW(get_background_window()));
+  gtk_window_set_transient_for(GTK_WINDOW(data->win), GTK_WINDOW(get_bar_window()));
 
   gtk_widget_set_usize(GTK_WIDGET (data->win), data->width, data->height);
   gtk_window_fullscreen(GTK_WINDOW(data->win)); 
