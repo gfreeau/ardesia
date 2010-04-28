@@ -59,7 +59,7 @@
 #define COLORSIZE 9
 
 /* annotation is visible */
-gboolean visible = TRUE;
+gboolean annotation_is_visible = TRUE;
 
 /* pencil is selected */
 gboolean pencil = TRUE;
@@ -168,7 +168,7 @@ void start_tool()
     {
       if (text)
 	  {
-        annotate_release_grab();
+            annotate_release_grab();
 	    start_text_widget( GTK_WINDOW(get_annotation_window()), color, thickness);
 	  }
       else 
@@ -402,18 +402,18 @@ G_MODULE_EXPORT void
 on_toolsVisible_activate         (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
 {
-  if (visible)
+  if (annotation_is_visible)
     {
       annotate_hide_annotation();
       grab = FALSE;
-      visible=FALSE;
+      annotation_is_visible=FALSE;
       /* set tooltip to unhide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Unhide");
     }
   else
     {
       annotate_show_annotation();
-      visible=TRUE;
+      annotation_is_visible=TRUE;
       grab = TRUE;
       /* set tooltip to hide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Hide");
