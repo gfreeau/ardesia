@@ -171,19 +171,6 @@ typedef struct
 static AnnotateData* data;
  
 
-/* Get the annotation window */
-GtkWidget* get_annotation_window()
-{
-   return data->annotation_window;
-}
-
-
-/* Get the cairo context that contains the annotation */
-cairo_t* get_annotation_cairo_context()
-{
-  return data->annotation_cairo_context;
-}
-
 /* Create a new paint context */
 AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
                                                    guint width)
@@ -456,69 +443,6 @@ void restore_surface()
 }
 
 
-/* Undo to the last save point */
-void annotate_undo()
-{
-  if (data->debug)
-    {
-      g_printerr("Undo\n");
-    }
-  if (data->savelist)
-    {
-      if (data->savelist->previous)
-        {
-          data->savelist = data->savelist->previous;
-          restore_surface(); 
-        }
-    }
-}
-
-
-/* Redo to the last save point */
-void annotate_redo()
-{
-  if (data->debug)
-    {
-      g_printerr("Redo\n");
-    }
-  if (data->savelist)
-    {
-      if (data->savelist->next)
-        {
-          data->savelist = data->savelist->next;
-          restore_surface(); 
-        }
-    }
-}
-
-
-/* Hide the annotations */
-void annotate_hide_annotation ()
-{
-  if (data->debug)
-    {
-      g_printerr("Hide annotations\n");
-    }
-  gdk_draw_drawable (data->annotation_window->window,
-                     data->annotation_window->style->fg_gc[GTK_WIDGET_STATE (data->annotation_window)],
-                     data->transparent_pixmap,
-                     0, 0,
-                     0, 0,
-                     data->width, data->height);
-}
-
-
-/* Show the annotations */
-void annotate_show_annotation ()
-{
-  if (data->debug)
-    {
-      g_printerr("Show annotations\n");
-    }
-  restore_surface();
-}
-
-
 /* Release pointer grab */
 void annotate_release_pointer_grab()
 {
@@ -541,22 +465,6 @@ void annotate_release_pointer_grab()
   #endif
 
   gdk_flush();
-}
-
-
-/* Release the pointer pointer */
-void annotate_release_grab ()
-{           
-  if (data->is_grabbed)
-    {
-      if (data->debug)
-	{
-	  g_printerr ("Release grab\n");
-	}    
-      annotate_release_pointer_grab(); 
-      gtk_window_present(GTK_WINDOW(get_bar_window()));
-      data->is_grabbed=FALSE;
-    }
 }
 
 
@@ -823,56 +731,6 @@ void annotate_acquire_grab ()
 }
 
 
-/* Set color */
-void annotate_set_color(gchar* color)
-{
-  data->cur_context->fg_color = color;
-}
-
-
-/* Set width */
-void annotate_set_width(guint width)
-{
-  data->cur_context->width = width;
-}
-
-/* Set rectifier */
-void annotate_set_rectifier(gboolean rectify)
-{
-  data->rectify = rectify;
-}
-
-/* Set rectifier */
-void annotate_set_rounder(gboolean roundify)
-{
-  data->roundify = roundify;
-}
-
-/* Set arrow */
-void annotate_set_arrow(gboolean arrow)
-{
-  data->arrow = arrow;
-}
-
-
-/* Start to paint */
-void annotate_toggle_grab()
-{ 
-  annotate_select_pen();
-  annotate_acquire_grab ();
-}
-
-
-/* Start to erase */
-void annotate_eraser_grab ()
-{
-  /* Get the with message */
-  annotate_select_eraser();
-  annotate_configure_eraser(data->cur_context->width);
-  annotate_acquire_grab();
-}
-
-
 /* Destroy cairo context */
 void destroy_cairo()
 {
@@ -883,21 +741,6 @@ void destroy_cairo()
       cairo_destroy(data->annotation_cairo_context);
     }
   data->annotation_cairo_context = NULL;
-}
-
-
-/* Clear the annotations windows */
-void annotate_clear_screen ()
-{
-  if (data->debug)
-    {
-      g_printerr("Clear screen\n");
-    }
-  reset_cairo();
-
-  clear_cairo_context(data->annotation_cairo_context);
-  
-  add_save_point();
 }
 
 
@@ -1157,32 +1000,6 @@ gboolean roundify()
 }
 
 
-/* fill the last shape if it is a close path */
-void annotate_fill()
-{
-  if (data->debug)
-    {
-      g_printerr("Fill\n");
-    }
-  if (data->coordlist)
-    {
-      if (!(data->roundify)&&(!(data->rectify)))
-	  {
-	     draw_point_list(data->coordlist);     
-	     cairo_close_path(data->annotation_cairo_context);      
-	  }
-      select_color();
-      cairo_fill(data->annotation_cairo_context);
-      cairo_stroke(data->annotation_cairo_context);
-      if (data->debug)
-        {
-          g_printerr("Fill\n");
-        }
-      add_save_point();
-    }
-}
-
-
 /* Call the geometric shape recognizer */
 gboolean shape_recognize()
 {
@@ -1269,11 +1086,11 @@ event_expose (GtkWidget *widget,
       data->transparent_pixmap = gdk_pixmap_new (data->annotation_window->window, data->width,
 					   data->height, -1);
       data->transparent_cr = gdk_cairo_create(data->transparent_pixmap);
-      clear_cairo_context(data->transparent_cr);
-      restore_surface();
-      /* This allows the mouse event to be passed to the window below at the start of the tool */
-      gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);
+      clear_cairo_context(data->transparent_cr); 
     }
+  restore_surface();
+  /* This allows the mouse event to be passed to the window below at the start of the tool */
+  gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);
   return TRUE;
 }
 
@@ -1498,6 +1315,40 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 }
 
 
+/* Connect the window to the callback signals */
+void annotate_connect_signals()
+{ 
+  g_signal_connect (data->annotation_window, "expose_event",
+		    G_CALLBACK (event_expose), NULL);
+  g_signal_connect (data->annotation_window, "button_press_event", 
+		    G_CALLBACK(paint), NULL);
+  g_signal_connect (data->annotation_window, "motion_notify_event",
+		    G_CALLBACK (paintto), NULL);
+  g_signal_connect (data->annotation_window, "button_release_event",
+		    G_CALLBACK (paintend), NULL);
+  g_signal_connect (data->annotation_window, "proximity_in_event",
+		    G_CALLBACK (proximity_in), NULL);
+  g_signal_connect (data->annotation_window, "proximity_out_event",
+		    G_CALLBACK (proximity_out), NULL);
+
+}
+
+
+/* Called by the ardesia bar callbacks */
+
+
+/* Get the annotation window */
+GtkWidget* get_annotation_window()
+{
+   return data->annotation_window;
+}
+
+
+/* Get the cairo context that contains the annotation */
+cairo_t* get_annotation_cairo_context()
+{
+  return data->annotation_cairo_context;
+}
 
 /* Quit the annotation */
 void annotate_quit()
@@ -1553,22 +1404,176 @@ void annotate_quit()
 }
 
 
-/* Connect the window to the callback signals */
-void annotate_connect_signals()
-{ 
-  g_signal_connect (data->annotation_window, "expose_event",
-		    G_CALLBACK (event_expose), NULL);
-  g_signal_connect (data->annotation_window, "button_press_event", 
-		    G_CALLBACK(paint), NULL);
-  g_signal_connect (data->annotation_window, "motion_notify_event",
-		    G_CALLBACK (paintto), NULL);
-  g_signal_connect (data->annotation_window, "button_release_event",
-		    G_CALLBACK (paintend), NULL);
-  g_signal_connect (data->annotation_window, "proximity_in_event",
-		    G_CALLBACK (proximity_in), NULL);
-  g_signal_connect (data->annotation_window, "proximity_out_event",
-		    G_CALLBACK (proximity_out), NULL);
+/* Set color */
+void annotate_set_color(gchar* color)
+{
+  data->cur_context->fg_color = color;
+}
 
+
+/* Set rectifier */
+void annotate_set_rectifier(gboolean rectify)
+{
+  data->rectify = rectify;
+}
+
+
+/* Set rectifier */
+void annotate_set_rounder(gboolean roundify)
+{
+  data->roundify = roundify;
+}
+
+
+/* Set width */
+void annotate_set_width(guint width)
+{
+  data->cur_context->width = width;
+}
+
+
+/* Set arrow */
+void annotate_set_arrow(gboolean arrow)
+{
+  data->arrow = arrow;
+}
+
+
+/* Start to paint */
+void annotate_toggle_grab()
+{ 
+  annotate_select_pen();
+  annotate_acquire_grab ();
+}
+
+
+/* Start to erase */
+void annotate_eraser_grab ()
+{
+  /* Get the with message */
+  annotate_select_eraser();
+  annotate_configure_eraser(data->cur_context->width);
+  annotate_acquire_grab();
+}
+
+
+/* Release the pointer pointer */
+void annotate_release_grab ()
+{           
+  if (data->is_grabbed)
+    {
+      if (data->debug)
+	{
+	  g_printerr ("Release grab\n");
+	}    
+      annotate_release_pointer_grab(); 
+      gtk_window_present(GTK_WINDOW(get_bar_window()));
+      data->is_grabbed=FALSE;
+    }
+}
+
+
+/* fill the last shape if it is a close path */
+void annotate_fill()
+{
+  if (data->debug)
+    {
+      g_printerr("Fill\n");
+    }
+  if (data->coordlist)
+    {
+      if (!(data->roundify)&&(!(data->rectify)))
+	  {
+	     draw_point_list(data->coordlist);     
+	     cairo_close_path(data->annotation_cairo_context);      
+	  }
+      select_color();
+      cairo_fill(data->annotation_cairo_context);
+      cairo_stroke(data->annotation_cairo_context);
+      if (data->debug)
+        {
+          g_printerr("Fill\n");
+        }
+      add_save_point();
+    }
+}
+
+
+/* Hide the annotations */
+void annotate_hide_annotation ()
+{
+  if (data->debug)
+    {
+      g_printerr("Hide annotations\n");
+    }
+  gdk_draw_drawable (data->annotation_window->window,
+                     data->annotation_window->style->fg_gc[GTK_WIDGET_STATE (data->annotation_window)],
+                     data->transparent_pixmap,
+                     0, 0,
+                     0, 0,
+                     data->width, data->height);
+}
+
+
+/* Show the annotations */
+void annotate_show_annotation ()
+{
+  if (data->debug)
+    {
+      g_printerr("Show annotations\n");
+    }
+  restore_surface();
+}
+
+
+/* Undo to the last save point */
+void annotate_undo()
+{
+  if (data->debug)
+    {
+      g_printerr("Undo\n");
+    }
+  if (data->savelist)
+    {
+      if (data->savelist->previous)
+        {
+          data->savelist = data->savelist->previous;
+          restore_surface(); 
+        }
+    }
+}
+
+
+/* Redo to the last save point */
+void annotate_redo()
+{
+  if (data->debug)
+    {
+      g_printerr("Redo\n");
+    }
+  if (data->savelist)
+    {
+      if (data->savelist->next)
+        {
+          data->savelist = data->savelist->next;
+          restore_surface(); 
+        }
+    }
+}
+
+
+/* Clear the annotations windows */
+void annotate_clear_screen ()
+{
+  if (data->debug)
+    {
+      g_printerr("Clear screen\n");
+    }
+  reset_cairo();
+
+  clear_cairo_context(data->annotation_cairo_context);
+  
+  add_save_point();
 }
 
 
