@@ -48,7 +48,8 @@ ardesia_SOURCES = \
 	info_dialog.h \
         recorder.c \
 	recorder.h \
-	main.c
+	ardesia.c \
+        ardesia.h
 
 
 

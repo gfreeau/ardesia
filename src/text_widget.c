@@ -265,14 +265,6 @@ gboolean set_text_pointer(GtkWidget * window)
 }
 
 
-/* The windows has been configured  */
-G_MODULE_EXPORT gboolean
-on_window_text_configure_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
-{
-  return TRUE;
-}
-
-
 /* Initialization routine */
 void init(GtkWidget *win)
 {
@@ -408,7 +400,6 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
   gtk_widget_set_events (text_window, GDK_EXPOSURE_MASK
 			 | GDK_BUTTON_PRESS_MASK);
 
-  g_signal_connect(G_OBJECT(text_window), "configure-event", G_CALLBACK(on_window_text_configure_event), NULL);
   g_signal_connect(G_OBJECT(text_window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
   g_signal_connect (G_OBJECT(text_window), "motion_notify_event",G_CALLBACK (on_window_text_motion_notify_event), NULL);
   g_signal_connect (G_OBJECT(text_window), "button_release_event", G_CALLBACK(release), NULL);

@@ -112,6 +112,7 @@ typedef struct
 
   /* the shape pixmap used as mask */   
   GdkPixmap   *shape;
+
   /* cairo context attached to the shape pixmap */
   cairo_t     *shape_cr;
    
@@ -123,6 +124,7 @@ typedef struct
 
   /* transparent pixmap */
   GdkPixmap *transparent_pixmap;
+
   /* transparent cairo context */
   cairo_t *transparent_cr;
  

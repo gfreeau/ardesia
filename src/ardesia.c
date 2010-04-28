@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include <ardesia.h>
 
 #include <config.h>
 
@@ -132,7 +133,7 @@ void calculate_position(GtkWidget *ardesiaBarWindow, int dwidth, int dheight, in
       else
         {  
           /* invalid position */
-          perror ("Valid position are WEST or EAST\n");
+          perror ("Valid position are NORTH, SOUTH, WEST or EAST\n");
           exit(0);
         }
     }
@@ -296,6 +297,25 @@ CommandLine* parse_options(int argc, char *argv[])
 }
 
 
+BarData *init_bar_data()
+{
+  BarData *bar_data = (BarData *) g_malloc(sizeof(bar_data));
+  bar_data->color = malloc(COLORSIZE);
+  strcpy(bar_data->color, "FF0000FF");
+  bar_data->annotation_is_visible = TRUE;
+  bar_data->pencil = TRUE;
+  bar_data->grab = FALSE;
+  bar_data->text = FALSE;
+  bar_data->thickness = 14;
+  bar_data->highlighter = FALSE;
+  bar_data->rectifier = FALSE;
+  bar_data->rounder = FALSE;
+  bar_data->arrow = FALSE;
+  bar_data->workspace_dir = NULL;
+  return bar_data;
+}
+
+
 GtkWidget*
 create_window (GtkWidget *parent)
 {
@@ -313,10 +333,12 @@ create_window (GtkWidget *parent)
     {
       g_warning ("Couldn't load builder file: %s", error->message);
       g_error_free (error);
-    }
+    }  
+  
+  BarData *bar_data = init_bar_data();
 
   /* This is important; connect all the callback from gtkbuilder xml file */
-  gtk_builder_connect_signals(gtkBuilder, NULL);
+  gtk_builder_connect_signals(gtkBuilder, (gpointer) bar_data);
   window = GTK_WIDGET (gtk_builder_get_object(gtkBuilder, "winMain"));
   gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(get_background_window()));
   if (commandline->decorated)
