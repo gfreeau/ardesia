@@ -59,15 +59,28 @@
 
 
 /* Called when close the program */
-gboolean  quit()
+gboolean  quit(BarData *bar_data)
 {
+  /* Disallocate all the BarData */
+  
+  /*
+  if (bar_data)
+    {
+      g_free(bar_data->color);
+      if (bar_data->workspace_dir)
+      {
+        g_free(bar_data->workspace_dir);
+      }
+      g_free(bar_data);
+    }
+  */
   quit_recorder();
   destroy_background_window();
   annotate_quit();
   if (gtkBuilder)
-  {
-    g_object_unref (gtkBuilder); 
-  }
+    {
+      g_object_unref (gtkBuilder); 
+    }
   gtk_main_quit();
   exit(0);
 }
@@ -155,7 +168,8 @@ on_quit                          (GtkWidget       *widget,
                                   GdkEvent        *event,
                                   gpointer         user_data)
 {
-  return quit();
+  BarData *bar_data = (BarData*) user_data;
+  return quit(bar_data);
 }
 
 
