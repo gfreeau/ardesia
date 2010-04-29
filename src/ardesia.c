@@ -297,10 +297,10 @@ CommandLine* parse_options(int argc, char *argv[])
 }
 
 
-BarData *init_bar_data()
+BarData* init_bar_data()
 {
-  BarData *bar_data = (BarData *) g_malloc(sizeof(bar_data));
-  bar_data->color = g_malloc(COLORSIZE * sizeof (gchar *));
+  BarData *bar_data = (BarData *) g_malloc(sizeof(BarData));
+  bar_data->color = g_malloc(COLORSIZE * sizeof (gchar*));
   strcpy(bar_data->color, "FF0000FF");
   bar_data->color[8]=0;
   bar_data->annotation_is_visible = TRUE;
