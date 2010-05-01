@@ -454,7 +454,9 @@ void annotate_release_pointer_grab()
   #ifndef _WIN32
     gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);  
   #else
-    /* This apply a shape in the ardesia bar; in win32 if the pointer is above the bar the events will passed to the window below */
+    /* This apply a transparent shape mask above the ardesia bar; 
+       in win32 if the pointer is above the bar the events will passed to the window below
+     */
     cairo_set_source_rgb(data->shape_cr, 1, 1, 1);
     cairo_paint(data->shape_cr);
     cairo_stroke(data->shape_cr);
