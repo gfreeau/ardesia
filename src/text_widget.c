@@ -315,7 +315,8 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
               cairo_set_font_size (text_cr, text_pen_width * 2);
               cairo_text_extents (text_cr, "|" , &extents);
               max_font_height = extents.height;
-            } 
+            }
+          
           if (text_window)
             {
               grab_pointer(text_window, TEXT_MOUSE_EVENTS);
@@ -341,11 +342,7 @@ press (GtkWidget *win,
       stop_text_widget();
       return TRUE;
     }
-  if (!already_release)
-    {
-      grab_pointer(text_window, TEXT_MOUSE_EVENTS);
-      set_text_pointer(win);
-    }
+
   return TRUE;
 }
 
@@ -356,12 +353,35 @@ release (GtkWidget *win,
          GdkEventButton *ev, 
          gpointer user_data)
 {
+  printf("releae\n");
   already_release=TRUE;
-  ungrab_pointer(display, text_window);   
 
   pos->x = ev->x;
   pos->y = ev->y;
   move_editor_cursor();
+  ungrab_pointer(display, text_window);   
+
+  #ifndef _WIN32  
+    int width, height;
+    gtk_window_get_size(GTK_WINDOW(win), &width, &height);
+      
+    /* Initialize a transparent pixmap with depth 1 to be used as input shape */
+    GdkPixmap* shape = gdk_pixmap_new (NULL, width, height, 1); 
+    cairo_t* shape_cr = gdk_cairo_create(shape);
+    clear_cairo_context(shape_cr); 
+          
+    /* This allows the mouse event to be passed to the window below when ungrab */
+    gdk_window_input_shape_combine_mask (text_window->window, shape, 0, 0);  
+
+    gdk_flush();
+
+    cairo_destroy(shape_cr);
+    g_object_unref(shape);
+
+  #else
+    // TODO
+  #endif
+
   return TRUE;
 }
 
