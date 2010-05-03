@@ -170,7 +170,7 @@ void missing_recorder_program_dialog(GtkWindow* parent_window)
  * This function take as input the recor toolbutton in ardesia bar
  * return true is the recorder is started
  */
-gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char **workspace_dir)
+gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, char **workspace_dir)
 {
   gboolean status = FALSE;
    
@@ -249,6 +249,7 @@ gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent,
        {
          status = FALSE;
          missing_recorder_program_dialog(parent); 
+         gtk_widget_hide(GTK_WIDGET(toolbutton));
        }
     }
   if (chooser)
