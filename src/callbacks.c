@@ -109,7 +109,6 @@ void set_color(BarData *bar_data, char* selected_color)
   
   add_alpha(bar_data);
   
-  annotate_set_color(bar_data->color);
 }
 
 
@@ -148,6 +147,7 @@ void start_tool(BarData *bar_data)
 	  }
       else 
 	  {
+            annotate_set_color(bar_data->color);
 	    if (bar_data->pencil)
 	      { 
 	        annotate(bar_data);
@@ -179,9 +179,10 @@ on_info                         (GtkToolButton   *toolbutton,
 			         gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
+  gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
   start_info_dialog(toolbutton, GTK_WINDOW(get_annotation_window()));
-  bar_data->grab = TRUE;
+  bar_data->grab = grab_value;
   start_tool(bar_data);
   return TRUE;
 }
@@ -402,9 +403,10 @@ on_toolsScreenShot_activate	 (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
+  gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
   start_save_image_dialog(toolbutton, GTK_WINDOW(get_annotation_window()), &bar_data->workspace_dir);
-  bar_data->grab = TRUE;
+  bar_data->grab = grab_value;
   start_tool(bar_data);
 }
 
@@ -414,6 +416,9 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
 { 
   BarData *bar_data = (BarData*) user_data;
+
+  gboolean grab_value = bar_data->grab;
+
   bar_data->grab = FALSE;
   if(is_recording())
     {
@@ -439,10 +444,9 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
       else
 	{
 	  gtk_widget_hide(GTK_WIDGET(toolbutton));
-           
 	}
     }
-  bar_data->grab = TRUE;
+  bar_data->grab = grab_value;
   start_tool(bar_data);
 }
 
@@ -452,9 +456,10 @@ on_toolsPreferences_activate	 (GtkToolButton   *toolbutton,
 			          gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
+  gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
   start_preference_dialog(toolbutton, GTK_WINDOW(get_annotation_window()));
-  bar_data->grab = TRUE;
+  bar_data->grab = grab_value;
   start_tool(bar_data);
 }
 
@@ -504,10 +509,11 @@ on_buttonColor_activate	         (GtkToolButton   *toolbutton,
 			          gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
+  gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
   bar_data->pencil = TRUE;
   set_color(bar_data, start_color_selector_dialog(toolbutton, GTK_WINDOW(get_annotation_window()), bar_data->color));
-  bar_data->grab = TRUE;
+  bar_data->grab = grab_value;
   start_tool(bar_data);
 }
 

@@ -607,6 +607,7 @@ void set_pen_cursor()
   GdkPixmap *pixmap, *mask;
   get_pen_pixmaps(size, &pixmap, &mask); 
   GdkColor *background_color_p = rgb_to_gdkcolor("000000");
+
   GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color); 
   gint context_width = data->cur_context->width;
 
@@ -723,15 +724,15 @@ void annotate_acquire_grab ()
 {
   if  (!data->is_grabbed)
     {
-      
-      annotate_acquire_pointer_grab();
-      annotate_select_cursor();
-  
-      data->is_grabbed = TRUE;
       if (data->debug)
         {
 	   g_printerr("Acquire grab\n");
 	}
+      
+      annotate_acquire_pointer_grab();
+      annotate_select_cursor();
+      data->is_grabbed = TRUE;
+
     }
 }
 
@@ -1607,6 +1608,7 @@ void setup_app ()
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN, 15);
   data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER, 15);
   data->cur_context = data->default_pen;
+
   data->state = 0;
 
   setup_input_devices();
