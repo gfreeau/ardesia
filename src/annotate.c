@@ -85,7 +85,6 @@ typedef struct
   AnnotatePaintType type;
   guint           width;
   gchar*          fg_color;
-  gdouble         pressure;
 } AnnotatePaintContext;
 
 
@@ -157,6 +156,8 @@ typedef struct
   /* post draw operation */ 
   gboolean     rectify;
   gboolean     roundify;
+
+  /* arrow */
   gboolean     arrow;
   
   /* is the cursor grabbed */
@@ -815,9 +816,8 @@ void annotate_select_tool (GdkDevice *device, guint state)
 }
 
 
-/* Draw line from (x1,y1) to (x2,y2) */
-void annotate_draw_line (gint x1, gint y1,
-			 gint x2, gint y2, gboolean stroke)
+/* Draw line from the last point drawn to (x2,y2) */
+void annotate_draw_line (gint x2, gint y2, gboolean stroke)
 {
   if (!stroke)
     {
@@ -919,17 +919,16 @@ void draw_point_list(GSList* outptr)
 {
   if (outptr)
     {
-      AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
-      gint lastx = out_point->x; 
-      gint lasty = out_point->y;
-      cairo_move_to(data->annotation_cairo_context, lastx, lasty);
+      AnnotateStrokeCoordinate* out_point;
+      gint lastx; 
+      gint lasty;
       while (outptr)
 	    {
 	      out_point = (AnnotateStrokeCoordinate*)outptr->data;
 	      gint curx = out_point->x; 
 	      gint cury = out_point->y;
 	      // draw line
-	      annotate_draw_line (lastx, lasty, curx, cury, FALSE);
+	      annotate_draw_line (curx, cury, FALSE);
 	      lastx = curx;
 	      lasty = cury;
 	      outptr = outptr->next;   
@@ -993,7 +992,7 @@ gboolean roundify()
         { 
           gint curx = point3->x; 
           gint cury = point3->y;
-	      cairo_draw_ellipse(lastx,lasty, curx-lastx, cury-lasty);          
+	  cairo_draw_ellipse(lastx,lasty, curx-lastx, cury-lasty);          
         }
     }
   else
@@ -1239,12 +1238,10 @@ paintto (GtkWidget *win,
     {
        selected_width = data->cur_context->width;
     }
-  annotate_draw_line (data->lastx, data->lasty, ev->x, ev->y, TRUE);
+  
+  annotate_draw_line (ev->x, ev->y, TRUE);
    
   annotate_coord_list_append (ev->x, ev->y, selected_width);
-
-  data->lastx = ev->x;
-  data->lasty = ev->y;
 
   return TRUE;
 }
@@ -1638,9 +1635,10 @@ int annotate_init (int x, int y, int width, int height, gboolean debug)
   data->coordlist = NULL;
   data->savelist = NULL;
   data->transparent_pixmap = NULL;
-  data->cursor = NULL;
   data->transparent_cr = NULL;
   
+  data->cursor = NULL;
+ 
   data->debug = debug;
   
   /* Untoggle zone is setted on ardesia zone */

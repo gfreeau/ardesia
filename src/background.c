@@ -57,21 +57,22 @@ typedef struct
 static BackGroundData* background_data;
 
 /* Load the contents of the file image with name "filename" into the pixbuf */
-GdkPixbuf * load_png (const char *filename)
+GdkPixbuf * load_png (char *filename)
 {
   GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
   GdkPixbuf *scaled = NULL;
 
   if (pixbuf)
     {
-      gint height = gdk_screen_height ();
-      gint width = gdk_screen_width();
+      gint height;
+      gint width;
+      gdk_drawable_get_size(background_data->background_window->window, &width, &height);
       scaled = gdk_pixbuf_scale_simple(pixbuf, width, height, GDK_INTERP_BILINEAR);
       g_object_unref(G_OBJECT (pixbuf));
     }
   else
     {
-      fprintf (stderr, "couldn't load %s\n", filename);
+      fprintf (stderr, "couldn't load the file %s as background\n", filename);
       exit(0);
     }
   pixbuf = scaled;
@@ -95,6 +96,7 @@ void destroy_background_window()
     {
       cairo_destroy(background_data->back_cr);
     }
+  g_free(background_data->background_color);
   g_free(background_data);
 }
 
@@ -110,9 +112,12 @@ void clear_background_window()
   cairo_paint(background_data->back_cr);
   cairo_stroke(background_data->back_cr); 
   
-  gint height = gdk_screen_height ();
-  gint width = gdk_screen_width();
+  gint height;
+  gint width;
+  gdk_drawable_get_size(background_data->background_window->window, &width, &height);
 
+
+  /* Make the trasparen pixmap to be used as mask */
   background_data->background_shape = gdk_pixmap_new (NULL, width, height, 1); 
   cairo_t* shape_cr = gdk_cairo_create(background_data->background_shape);
   clear_cairo_context(shape_cr); 
@@ -134,15 +139,19 @@ back_event_expose (GtkWidget *widget,
 {
   if (!background_data->back_cr)
     {
-      background_data->back_cr = gdk_cairo_create(widget->window);
-      if (background_data->background_image)
-        {
-            change_background_image(background_data->background_image);
-        }
-      else
-        {
-           clear_background_window();
-        }
+       background_data->back_cr = gdk_cairo_create(widget->window); 
+    }
+  if (background_data->background_image)
+    {
+      change_background_image(background_data->background_image);
+    }
+  else
+    {
+       clear_background_window();
+        if (background_data->background_color)
+          {
+              change_background_color(background_data->background_color);
+          }
     }
   return TRUE;
 }
@@ -156,7 +165,7 @@ void load_file()
       #ifdef _WIN32
         gdk_window_shape_combine_mask (background_data->background_window->window,  NULL, 0, 0);
       #endif
-	  GdkPixbuf* pixbuf = load_png(background_data->background_image);   
+      GdkPixbuf* pixbuf = load_png(background_data->background_image);   
       cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_SOURCE);
       gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 1);
       gdk_cairo_set_source_pixbuf(background_data->back_cr, pixbuf, 0.0, 0.0);
@@ -201,6 +210,7 @@ void load_color()
 void change_background_image (char *name)
 {
    background_data->background_image = name;
+   background_data->background_color = NULL;
    load_file();
 }
 
@@ -208,7 +218,13 @@ void change_background_image (char *name)
 /* Change the background color of ardesia  */
 void change_background_color (char* rgba)
 {
-  background_data->background_color = rgba;
+  background_data->background_image = NULL;
+  if (!(background_data->background_image))
+    {
+       background_data->background_color = (char*)g_malloc(sizeof(char)*9);
+    }
+ 
+  strcpy(background_data->background_color, rgba);
   load_color();  
 }
 
@@ -237,15 +253,16 @@ GtkWidget* create_background_window(char* backgroundimage)
   background_data->background_shape = NULL; 
 
   background_data->background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_widget_set_usize (GTK_WIDGET(background_data->background_window), gdk_screen_width(), gdk_screen_height());
-  gtk_window_fullscreen(GTK_WINDOW(background_data->background_window));
+  gtk_window_set_title(GTK_WINDOW(background_data->background_window), "Ardesia");
+
+  gtk_window_set_decorated(GTK_WINDOW(background_data->background_window), FALSE);
+  
+  gtk_window_maximize(GTK_WINDOW(background_data->background_window));
 
   if (STICK)
     {
       gtk_window_stick(GTK_WINDOW(background_data->background_window));  
     }
-
-  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(background_data->background_window), TRUE);
 
   gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0); 
 

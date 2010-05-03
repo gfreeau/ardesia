@@ -119,7 +119,7 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer data)
 	  if (file != NULL)
             {
               change_background_image(file);
-              g_free(file);
+  
               preferenceData->background = 2;  
             }
           else

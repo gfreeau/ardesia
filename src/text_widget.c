@@ -67,27 +67,28 @@ typedef struct
   int y;
 } Pos;
 
+
+
 Pos* pos = NULL;
 
 GdkDisplay* display = NULL;
 GdkScreen* screen = NULL;
+int screen_width;
+
+int text_pen_width = 16;
+char* text_color = NULL;
+
 GtkWidget* text_window = NULL;
 GdkCursor* text_cursor;
-
-GSList *letterlist = NULL; 
 
 cairo_t *text_cr = NULL;
 cairo_text_extents_t extents;
 
-int text_pen_width = 15;
-char* text_color = NULL;
-
-int screen_width;
-
 int max_font_height;
 
+GSList *letterlist = NULL; 
 
-gboolean already_release;
+
 
 /* Creation of the text window */
 void create_text_window(GtkWindow *parent)
@@ -240,7 +241,7 @@ gboolean set_text_pointer(GtkWidget * window)
        cairo_set_line_width(text_pointer_cr, text_pen_width);
        cairo_rectangle(text_pointer_cr, 0, 0, 5, height);  
        cairo_stroke(text_pointer_cr);
-	   cairo_destroy(text_pointer_cr);
+       cairo_destroy(text_pointer_cr);
     } 
  
   GdkColor *background_color_p = rgb_to_gdkcolor("000000");
@@ -283,9 +284,21 @@ void init(GtkWidget *win)
     }  
 
   pos = g_malloc (sizeof(Pos));
-  pos->x = text_pen_width;
-  pos->y = text_pen_width;
+  pos->x = 0;
+  pos->y = 0;
   move_editor_cursor();
+}
+
+
+G_MODULE_EXPORT gboolean
+on_enter_notify(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+  if (text_window)
+    {
+       grab_pointer(text_window, TEXT_MOUSE_EVENTS);
+       set_text_pointer(widget);
+    }
+  return TRUE;
 }
 
 
@@ -316,13 +329,6 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
               cairo_text_extents (text_cr, "|" , &extents);
               max_font_height = extents.height;
             }
-          
-          if (text_window)
-            {
-              grab_pointer(text_window, TEXT_MOUSE_EVENTS);
-            }
-  
-          set_text_pointer(widget);
         }
     }
   return TRUE;
@@ -353,8 +359,6 @@ release (GtkWidget *win,
          GdkEventButton *ev, 
          gpointer user_data)
 {
-  printf("releae\n");
-  already_release=TRUE;
 
   pos->x = ev->x;
   pos->y = ev->y;
@@ -411,7 +415,6 @@ on_window_text_motion_notify_event (GtkWidget *win,
 /* Start the widget for the text insertion */
 void start_text_widget(GtkWindow *parent, char* color, int tickness)
 {
-  already_release = FALSE;
   stop_text_widget();
   text_pen_width = tickness;
   text_color = color;
@@ -425,6 +428,7 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
   g_signal_connect (G_OBJECT(text_window), "button_release_event", G_CALLBACK(release), NULL);
   g_signal_connect (G_OBJECT(text_window), "button_press_event", G_CALLBACK(press), NULL);
   g_signal_connect (G_OBJECT(text_window), "key_press_event", G_CALLBACK (key_press), NULL);
+  g_signal_connect (G_OBJECT(text_window), "enter_notify_event", G_CALLBACK (on_enter_notify), NULL);
 
   gtk_widget_show_all(text_window);
 }
