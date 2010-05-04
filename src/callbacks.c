@@ -143,7 +143,7 @@ void start_tool(BarData *bar_data)
       if (bar_data->text)
 	  {
             annotate_release_grab();
-	    start_text_widget( GTK_WINDOW(get_annotation_window()), bar_data->color, bar_data->thickness);
+	    start_text_widget( GTK_WINDOW(get_bar_window()), bar_data->color, bar_data->thickness);
 	  }
       else 
 	  {
@@ -181,7 +181,7 @@ on_info                         (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) user_data;
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
-  start_info_dialog(toolbutton, GTK_WINDOW(get_annotation_window()));
+  start_info_dialog(toolbutton, GTK_WINDOW(get_bar_window()));
   bar_data->grab = grab_value;
   start_tool(bar_data);
   return TRUE;
@@ -196,17 +196,6 @@ on_winMain_leave_notify_event   (GtkWidget       *widget,
 {
   BarData *bar_data = (BarData*) user_data;
   start_tool(bar_data);
-  return TRUE;
-}
-
-
-/* Called when enter the window */
-G_MODULE_EXPORT gboolean
-on_winMain_enter_notify_event   (GtkWidget       *widget,
-				 GdkEvent        *event,
-			         gpointer         user_data)
-{
-  //stop_text_widget();
   return TRUE;
 }
 
@@ -405,7 +394,7 @@ on_toolsScreenShot_activate	 (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) user_data;
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
-  start_save_image_dialog(toolbutton, GTK_WINDOW(get_annotation_window()), &bar_data->workspace_dir);
+  start_save_image_dialog(toolbutton, GTK_WINDOW(get_bar_window()), &bar_data->workspace_dir);
   bar_data->grab = grab_value;
   start_tool(bar_data);
 }
@@ -433,7 +422,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
       /* Release grab */
       annotate_release_grab ();
       /* the recording is not active */ 
-      gboolean status = start_save_video_dialog(toolbutton, GTK_WINDOW(get_annotation_window()), &bar_data->workspace_dir);
+      gboolean status = start_save_video_dialog(toolbutton, GTK_WINDOW(get_bar_window()), &bar_data->workspace_dir);
       if (status)
         {
           /* set stop tooltip */ 
@@ -454,7 +443,7 @@ on_toolsPreferences_activate	 (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) user_data;
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
-  start_preference_dialog(toolbutton, GTK_WINDOW(get_annotation_window()));
+  start_preference_dialog(toolbutton, GTK_WINDOW(get_bar_window()));
   bar_data->grab = grab_value;
   start_tool(bar_data);
 }
@@ -508,7 +497,7 @@ on_buttonColor_activate	         (GtkToolButton   *toolbutton,
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
   bar_data->pencil = TRUE;
-  set_color(bar_data, start_color_selector_dialog(toolbutton, GTK_WINDOW(get_annotation_window()), bar_data->color));
+  set_color(bar_data, start_color_selector_dialog(toolbutton, GTK_WINDOW(get_bar_window()), bar_data->color));
   bar_data->grab = grab_value;
   start_tool(bar_data);
 }

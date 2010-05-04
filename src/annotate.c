@@ -451,22 +451,15 @@ void annotate_release_pointer_grab()
 {
   ungrab_pointer(data->display,data->annotation_window); 
 
-  /* This allows the mouse event to be passed to the window below when ungrab */
+  /* This allows the mouse event to be passed to the window below the annotation window when ungrab */
   #ifndef _WIN32
-    gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);  
-  #else
     /* This apply a transparent shape mask above the ardesia bar; 
        in win32 if the pointer is above the bar the events will passed to the window below
      */
-    cairo_set_source_rgb(data->shape_cr, 1, 1, 1);
-    cairo_paint(data->shape_cr);
-    cairo_stroke(data->shape_cr);
-    cairo_set_source_rgb(data->shape_cr, 0, 0, 0);
-    cairo_rectangle(data->shape_cr, data->untogglexpos, data->untoggleypos, data->untogglewidth, data->untoggleheight);
-    cairo_fill(data->shape_cr);
-    cairo_stroke(data->shape_cr);
-
-    gdk_window_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);  
+    gdk_window_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);
+  #else
+    /* Apply the transparent window as input mask */
+    gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);  
   #endif
 
   gdk_flush();
@@ -728,7 +721,8 @@ void annotate_acquire_grab ()
         {
 	   g_printerr("Acquire grab\n");
 	}
-      
+      gtk_window_present(GTK_WINDOW(data->annotation_window));
+
       annotate_acquire_pointer_grab();
       annotate_select_cursor();
       data->is_grabbed = TRUE;
@@ -1083,14 +1077,15 @@ event_expose (GtkWidget *widget,
     }
   if (!(data->annotation_cairo_context))
     {
-	  /* initialize a transparent window */
+      /* initialize a transparent window */
       data->annotation_cairo_context = gdk_cairo_create(data->annotation_window->window);
-      annotate_clear_screen();
-					 
+      annotate_clear_screen();	
+
+      /* Initialize a transparent pixmap used for clear */
       data->transparent_pixmap = gdk_pixmap_new (data->annotation_window->window, data->width,
-					   data->height, -1);
+	         				 data->height, -1);
       data->transparent_cr = gdk_cairo_create(data->transparent_pixmap);
-      clear_cairo_context(data->transparent_cr); 
+      clear_cairo_context(data->transparent_cr); 				 
     }
   restore_surface();
   /* This allows the mouse event to be passed to the window below at the start of the tool */
@@ -1583,7 +1578,10 @@ void annotate_clear_screen ()
 void setup_app ()
 { 
   data->annotation_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(get_bar_window()));
+  gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(get_background_window()));
+ 
+  gtk_widget_set_app_paintable(data->annotation_window, TRUE);
+  gtk_widget_set_double_buffered(data->annotation_window, FALSE);
 
   gtk_widget_set_usize(GTK_WIDGET (data->annotation_window), data->width, data->height);
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window)); 
@@ -1612,19 +1610,26 @@ void setup_app ()
   data->state = 0;
 
   setup_input_devices();
-  
-  /* Initialize a transparent pixmap with depth 1 to be used as input shape */
-  data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
-  data->shape_cr = gdk_cairo_create(data->shape);
-  clear_cairo_context(data->shape_cr); 
+
+  #ifdef _WIN32
+    /* This is a black mask with white above the bar this wiil me used to unlock witn the shape mask in the release */
+    cairo_set_source_rgb(data->shape_cr, 1, 1, 1);
+    cairo_paint(data->shape_cr);
+    cairo_stroke(data->shape_cr);
+    cairo_set_source_rgb(data->shape_cr, 0, 0, 0);
+    cairo_rectangle(data->shape_cr, data->untogglexpos, data->untoggleypos, data->untogglewidth, data->untoggleheight);
+    cairo_fill(data->shape_cr);
+    cairo_stroke(data->shape_cr);
+  #else
+    /* Initialize a transparent pixmap with depth 1 to be used as input shape */
+    data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
+    data->shape_cr = gdk_cairo_create(data->shape);
+    clear_cairo_context(data->shape_cr); 
+  #endif
+ 
 
   /* connect the signals */
   annotate_connect_signals();
-
-  gtk_widget_show_all(data->annotation_window);
- 
-  gtk_widget_set_app_paintable(data->annotation_window, TRUE);
-  gtk_widget_set_double_buffered(data->annotation_window, FALSE);
 
 }
 

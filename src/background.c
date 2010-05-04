@@ -104,6 +104,10 @@ void destroy_background_window()
 /* Clear the background */
 void clear_background_window()
 {
+  g_free(background_data->background_color);
+  background_data->background_color = NULL;
+  g_free(background_data->background_image);
+  background_data->background_image = NULL;
   #ifdef _WIN32
     gdk_window_shape_combine_mask (background_data->background_window->window,  background_data->background_shape, 0, 0);
   #endif
@@ -141,17 +145,21 @@ back_event_expose (GtkWidget *widget,
     {
        background_data->back_cr = gdk_cairo_create(widget->window); 
     }
+
   if (background_data->background_image)
     {
       change_background_image(background_data->background_image);
     }
+  else if (background_data->background_color)
+    {
+       if (background_data->background_color)
+         {
+            change_background_color(background_data->background_color);
+         }
+    }
   else
     {
-       clear_background_window();
-        if (background_data->background_color)
-          {
-              change_background_color(background_data->background_color);
-          }
+       clear_background_window();    
     }
   return TRUE;
 }
@@ -210,6 +218,7 @@ void load_color()
 void change_background_image (char *name)
 {
    background_data->background_image = name;
+   g_free(background_data->background_color);
    background_data->background_color = NULL;
    load_file();
 }
@@ -218,6 +227,7 @@ void change_background_image (char *name)
 /* Change the background color of ardesia  */
 void change_background_color (char* rgba)
 {
+  g_free(background_data->background_image);
   background_data->background_image = NULL;
   if (!(background_data->background_image))
     {
@@ -269,7 +279,6 @@ GtkWidget* create_background_window(char* backgroundimage)
   g_signal_connect (background_data->background_window, "expose_event",
 		    G_CALLBACK (back_event_expose), NULL);
 
-  gtk_widget_show_all(background_data->background_window);
   
   gtk_widget_set_app_paintable(background_data->background_window, TRUE);
 

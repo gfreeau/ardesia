@@ -371,9 +371,10 @@ main (int argc, char *argv[])
 
   GtkWidget* background_window = create_background_window(commandline->backgroundimage);  
   set_background_window(background_window);
+  gtk_widget_show(background_window);
 
   ardesiaBarWindow = create_window(background_window);
-  gtk_widget_show(ardesiaBarWindow);
+
 
   /*
    * The following code create one of each component
@@ -399,9 +400,10 @@ main (int argc, char *argv[])
   annotate_init(x, y, width, height, commandline->debug); 
 
   GtkWidget* annotation_window = get_annotation_window();  
-  
-  gtk_widget_show (annotation_window);
-  
+  gtk_window_set_keep_above(GTK_WINDOW(ardesiaBarWindow), TRUE);
+
+  gtk_widget_show_all (annotation_window);
+  gtk_widget_show_all(ardesiaBarWindow);
 
   gtk_main();
   g_object_unref(gtkBuilder);	

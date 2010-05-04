@@ -10,10 +10,9 @@
     <property name="skip_pager_hint">True</property>
     <property name="decorated">False</property>
     <property name="gravity">center</property>
-    <property name="opacity">0.90000000000000002</property>
+    <property name="opacity">0.9</property>
     <property name="startup_id">Ardesia</property>
     <signal name="leave_notify_event" handler="on_winMain_leave_notify_event"/>
-    <signal name="enter_notify_event" handler="on_winMain_enter_notify_event"/>
     <signal name="delete_event" handler="on_winMain_delete_event"/>
     <child>
       <object class="GtkHBox" id="toolboxMain">
