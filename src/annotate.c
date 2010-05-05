@@ -1144,8 +1144,20 @@ paint (GtkWidget *win,
 { 
   if (!ev)
     {
+       g_printerr("Device '%s': Invalid event; I ungrab all\n",
+		 ev->device->name);
+       annotate_release_grab ();
        return TRUE;
     }
+
+  if (inside_bar_window(ev->x,ev->y))
+    /* point is in the ardesia bar */
+    {
+      /* the last point was outside the bar then ungrab */
+      annotate_release_grab ();
+      return TRUE;
+    }  
+
   unhide_cursor();  
   annotate_coord_list_free();
   /* only button1 allowed */
@@ -1160,14 +1172,7 @@ paint (GtkWidget *win,
     }  
 
   reset_cairo();
-  cairo_move_to(data->annotation_cairo_context,ev->x,ev->y);
-  if (inside_bar_window(ev->x,ev->y))
-    /* point is in the ardesia bar */
-    {
-      /* the last point was outside the bar then ungrab */
-      annotate_release_grab ();
-      return TRUE;
-    }   
+  cairo_move_to(data->annotation_cairo_context,ev->x,ev->y); 
   if (data->debug)
     {    
       g_printerr("Device '%s': Button %i Down at (x,y)=(%.2f : %.2f)\n",
@@ -1185,14 +1190,11 @@ paintto (GtkWidget *win,
 {
   if (!ev)
     {
-       if (data->debug)
-         {    
-           g_printerr("Device '%s': Invalid move event\n",
-	              ev->device->name);
-         }
+       g_printerr("Device '%s': Invalid event; I ungrab all\n",
+		 ev->device->name);
+       annotate_release_grab ();
        return TRUE;
     }
-  unhide_cursor();
 
   if (inside_bar_window(ev->x, ev->y))
     /* point is in the ardesia bar */
@@ -1206,6 +1208,8 @@ paintto (GtkWidget *win,
       annotate_release_grab ();
       return TRUE;
     }
+
+  unhide_cursor();
 
   gdouble pressure = 0;
   GdkModifierType state = (GdkModifierType) ev->state;  
@@ -1252,15 +1256,14 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       g_printerr("Device '%s': Button %i Up at (x,y)=(%.2f : %.2f)\n",
 		 ev->device->name, ev->button, ev->x, ev->y);
     }
+
   if (!ev)
     {
+       g_printerr("Device '%s': Invalid event; I ungrab all\n",
+		 ev->device->name);
+       annotate_release_grab ();
        return TRUE;
     }
-  /* only button1 allowed */
-  if (!(ev->button==1))
-    {
-      return TRUE;
-    }  
 
   if (inside_bar_window(ev->x,ev->y))
     /* point is in the ardesia bar */
@@ -1269,6 +1272,12 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       annotate_release_grab ();
       return TRUE;
     }
+
+  /* only button1 allowed */
+  if (!(ev->button==1))
+    {
+      return TRUE;
+    }  
 
   if (!data->coordlist)
     {
@@ -1290,17 +1299,17 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 	  }
     }
 
-  if (data->coordlist)
+  if ((data->coordlist)&&(!(data->cur_context->type == ANNOTATE_ERASER)))
     {  
       gboolean closed_path = shape_recognize();
       if (!closed_path)
         {
           /* If is selected an arrowtype the draw the arrow */
-	      if (data->arrow)
+	  if (data->arrow)
             {
-	          /* print arrow at the end of the line */
-	          annotate_draw_arrow ();
-	        }
+	       /* print arrow at the end of the line */
+	        annotate_draw_arrow ();
+	    }
         }
     }
  
