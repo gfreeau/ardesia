@@ -381,17 +381,21 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
      
   *close_path = FALSE;
   
-  AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*)listInp->data;
-  guint lenght = g_slist_length(listInp); 
-  AnnotateStrokeCoordinate* end_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, lenght-1);
-
-  if ((is_similar(end_point->x, inp_point->x, TOLLERANCE)) &&(is_similar(end_point->y, inp_point->y, TOLLERANCE)))
-    {
-      /* close path */
-      *close_path = TRUE;
-    } 
   
   GSList* listOut = extract_relevant_points(listInp, *close_path);  
+  guint lenght = g_slist_length(listOut); 
+  AnnotateStrokeCoordinate* beg_point = (AnnotateStrokeCoordinate*)listOut->data;
+  AnnotateStrokeCoordinate* end_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listOut, lenght-1);
+
+  if (lenght>2)
+  {
+    if ((is_similar(end_point->x, beg_point->x, TOLLERANCE)) && (is_similar(end_point->y, beg_point->y, TOLLERANCE)))
+      {
+        /* close path */
+        *close_path = TRUE;
+      }
+  } 
+  
   if (listOut)
     { 
       if (*close_path)
