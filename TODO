@@ -13,8 +13,6 @@
 
 - Refactoring
 
-- Release plan for ubuntu lucid
-
 - Investigate about MacOsX porting
 
 - Windows porting
@@ -34,11 +32,20 @@
 
 - Possible future features
   - Pdf export 
-  - Svg export 
-  - Printer support
   - Undo-redo using svg file
-  - Mini video player with play-pause, backward and forward
-  - Multi pointer support using the xinput2 libraries
+  - Whiteboard Toolbar
+    - ardesia 
+    - wiimote whiteboard driver and calibration gui
+    - Screenshot
+    - Magnifier
+    - Spotlighter
+    - Curtain
+    - Virtual keyboard
+    - Printer support
+    - Recorder
+    - Streamer
+    - Mini video player with play-pause, backward and forward
+    - Multi pointer support using the xinput2 libraries
 
 ===
 EOF
