@@ -57,18 +57,12 @@
 #endif
 
 
-#define ANNOTATE_MOUSE_EVENTS    ( GDK_PROXIMITY_IN_MASK |      \
-				   GDK_PROXIMITY_OUT_MASK |	\
-				   GDK_POINTER_MOTION_MASK |	\
-				   GDK_BUTTON_PRESS_MASK |      \
-				   GDK_BUTTON_RELEASE_MASK      \
-				   )
-
-#define ANNOTATE_KEYBOARD_EVENTS ( GDK_KEY_PRESS_MASK	\
-				   )
-
-				   
-#define g_slist_first(n) g_slist_nth (n,0)
+#define ANNOTATE_MOUSE_EVENTS    ( GDK_PROXIMITY_IN_MASK   |    \
+                                   GDK_PROXIMITY_OUT_MASK  |    \
+                                   GDK_POINTER_MOTION_MASK |    \
+                                   GDK_BUTTON_PRESS_MASK   |    \
+                                   GDK_BUTTON_RELEASE_MASK      \
+                                 )
 
 
 /* Enumeration containing tools */
@@ -449,7 +443,7 @@ void restore_surface()
 /* Release pointer grab */
 void annotate_release_pointer_grab()
 {
-  ungrab_pointer(data->display,data->annotation_window); 
+  gdk_window_set_cursor (data->annotation_window->window, NULL);
 
   /* This allows the mouse event to be passed to the window below when ungrab */
   #ifndef _WIN32
@@ -497,13 +491,6 @@ void annotate_select_pen()
 {
   AnnotatePaintContext *pen = data->default_pen;
   data->cur_context = pen;
-}
-
-
-/* Acquire pointer grab */
-void annotate_acquire_pointer_grab()
-{
-  grab_pointer(data->annotation_window, ANNOTATE_MOUSE_EVENTS);
 }
 
 
@@ -727,10 +714,9 @@ void annotate_acquire_grab ()
       if (data->debug)
         {
 	   g_printerr("Acquire grab\n");
-	}
-      
-      gtk_window_get_focus(GTK_WINDOW(data->annotation_window));
-      annotate_acquire_pointer_grab();
+	} 
+      gtk_widget_grab_focus(data->annotation_window);
+      gtk_widget_input_shape_combine_mask(data->annotation_window, NULL, 0, 0); 
       annotate_select_cursor();
       data->is_grabbed = TRUE;
 
@@ -1343,7 +1329,7 @@ void annotate_connect_signals()
 		    G_CALLBACK (proximity_in), NULL);
   g_signal_connect (data->annotation_window, "proximity_out_event",
 		    G_CALLBACK (proximity_out), NULL);
-
+  gtk_widget_set_events (data->annotation_window, ANNOTATE_MOUSE_EVENTS);
 }
 
 
@@ -1478,7 +1464,7 @@ void annotate_release_grab ()
       if (data->debug)
 	{
 	  g_printerr ("Release grab\n");
-	}    
+	}   
       annotate_release_pointer_grab(); 
       gtk_window_present(GTK_WINDOW(get_bar_window()));
       data->is_grabbed=FALSE;
