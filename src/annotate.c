@@ -445,12 +445,14 @@ void annotate_activate_bar_input()
 {
   gdk_window_set_cursor (data->annotation_window->window, NULL);
 
-  /* This allows the mouse event to be passed to the window below when ungrab */
   #ifndef _WIN32
+    /* This allows the mouse event to be passed to the window below when ungrab */
     gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);  
   #else
-    /* This apply a transparent shape mask above the ardesia bar; 
-       in win32 if the pointer is above the bar the events will passed to the window below
+    /* 
+        This apply a transparent shape mask above the ardesia bar;
+        this has been done because in WIN32 the gdk_window_input_shape_combine_mask is not correctly implemented 
+        in win32 if the pointer is above the bar the events will passed to the window below
      */
     cairo_set_source_rgb(data->shape_cr, 1, 1, 1);
     cairo_paint(data->shape_cr);

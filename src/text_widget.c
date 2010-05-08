@@ -210,9 +210,6 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 /* Set the eraser cursor */
 gboolean set_text_pointer(GtkWidget * window)
 {
-  #ifdef _WIN32
-    ungrab_pointer(display, text_window);
-  #endif
   
   int height = max_font_height;
   int width = text_pen_width;
@@ -257,9 +254,6 @@ gboolean set_text_pointer(GtkWidget * window)
   g_free(foreground_color_p);
   g_free(background_color_p);
   
-  #ifdef _WIN32
-    grab_pointer(text_window, TEXT_MOUSE_EVENTS);
-  #endif
   return TRUE;
 }
 
@@ -293,7 +287,6 @@ on_enter_notify(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   if (text_window)
     {
-       grab_pointer(text_window, TEXT_MOUSE_EVENTS);
        set_text_pointer(widget);
     }
   return TRUE;
@@ -361,9 +354,20 @@ release (GtkWidget *win,
   pos->x = ev->x;
   pos->y = ev->y;
   move_editor_cursor();
-  ungrab_pointer(display, text_window);   
+    
+  gdk_window_set_cursor (text_window->window, NULL);
+  
 
-  #ifndef _WIN32  
+  #ifdef _WIN32  
+    /*
+        TODO try a way to pass the mouse input below the window
+        the gdk_window_input_shape_combine_mask is not correctly implemented
+     */
+  #else
+    /*
+        Apply a transparent window with the gdk_window_input_shape_combine_mask
+        to pass the mouse events below the text window  
+     */
     int width, height;
     gtk_window_get_size(GTK_WINDOW(win), &width, &height);
       
@@ -380,8 +384,6 @@ release (GtkWidget *win,
     cairo_destroy(shape_cr);
     g_object_unref(shape);
 
-  #else
-    // TODO
   #endif
 
   return TRUE;
@@ -418,8 +420,7 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
   text_color = color;
   create_text_window(parent);
       
-  gtk_widget_set_events (text_window, GDK_EXPOSURE_MASK
-			 | GDK_BUTTON_PRESS_MASK);
+  gtk_widget_set_events (text_window, TEXT_MOUSE_EVENTS);
 
   g_signal_connect(G_OBJECT(text_window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
   g_signal_connect (G_OBJECT(text_window), "motion_notify_event",G_CALLBACK (on_window_text_motion_notify_event), NULL);
