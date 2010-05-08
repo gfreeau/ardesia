@@ -129,9 +129,9 @@ void clear_background_window()
 
   /* This allows the mouse event to be passed to the window below */
   #ifdef _WIN32
-    gtk_widget_shape_combine_mask (background_data->background_window,  background_data->background_shape, 0, 0);
+    gdk_window_shape_combine_mask (background_data->background_window->window,  background_data->background_shape, 0, 0);
   #else
-    gtk_widget_input_shape_combine_mask (background_data->background_window,  background_data->background_shape, 0, 0);
+    gdk_window_input_shape_combine_mask (background_data->background_window->window,  background_data->background_shape, 0, 0);
   #endif
 }
 
@@ -181,9 +181,9 @@ void load_file()
       cairo_stroke(background_data->back_cr);   
       g_object_unref(G_OBJECT (pixbuf));
       #ifdef _WIN32
-        gtk_widget_shape_combine_mask (background_data->background_window,  NULL, 0, 0);
+        gdk_window_shape_combine_mask (background_data->background_window->window,  NULL, 0, 0);
       #else 
-        gtk_widget_input_shape_combine_mask (background_data->background_window,  NULL, 0, 0);
+        gdk_window_input_shape_combine_mask (background_data->background_window->window,  NULL, 0, 0);
       #endif
     }
 }
@@ -195,7 +195,7 @@ void load_color()
   if (background_data->back_cr)
     {
       #ifdef _WIN32
-        gtk_widget_shape_combine_mask (background_data->background_window,  NULL, 0, 0);
+        gdk_window_shape_combine_mask (background_data->background_window->window,  NULL, 0, 0);
       #endif
       cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_SOURCE);
       int r,g,b,a;
@@ -205,10 +205,10 @@ void load_color()
       cairo_paint(background_data->back_cr);
       cairo_stroke(background_data->back_cr);
       #ifdef _WIN32
-        gdk_widget_shape_combine_mask (background_data->background_window,  NULL, 0, 0);
+        gdk_window_shape_combine_mask (background_data->background_window->window,  NULL, 0, 0);
       #else 
          /* This deny the mouse event to be passed to the window below */
-        gtk_widget_input_shape_combine_mask (background_data->background_window,  NULL, 0, 0);
+        gdk_window_input_shape_combine_mask (background_data->background_window->window,  NULL, 0, 0);
       #endif
     }  
 }

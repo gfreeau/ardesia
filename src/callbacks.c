@@ -91,7 +91,7 @@ void add_alpha(BarData *bar_data)
 {
   if (bar_data->highlighter)
     {
-      strncpy(&bar_data->color[6], "88", 2);
+      strncpy(&bar_data->color[6], "66", 2);
     }
   else
     {

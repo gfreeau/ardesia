@@ -1095,7 +1095,7 @@ event_expose (GtkWidget *widget,
     }
   restore_surface();
   /* This allows the mouse event to be passed to the window below at the start of the tool */
-  gtk_widget_input_shape_combine_mask (data->annotation_window, data->shape, 0, 0);
+  gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);
   return TRUE;
 }
 

@@ -1,3 +1,10 @@
+2010-05-06 21:06  alpha@paranoici.org
+	* tags/0.3/ardesia/src/callbacks.c: 
+          - decrease alpha for the highlighter;
+            the text under the highlighter is
+            now more visible
+
+
 2010-05-04 21:06  alpha@paranoici.org
 
 	* tags/0.3/ardesia/src/annotate.c: 
