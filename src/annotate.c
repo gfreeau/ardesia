@@ -440,8 +440,8 @@ void restore_surface()
 }
 
 
-/* Release pointer grab */
-void annotate_release_pointer_grab()
+/* This make the input mouse events active for the ardesia bar */
+void annotate_activate_bar_input()
 {
   gdk_window_set_cursor (data->annotation_window->window, NULL);
 
@@ -521,10 +521,6 @@ void hide_cursor()
       data->cursor=NULL;
     }
   
-  #ifdef _WIN32
-    annotate_release_pointer_grab();
-  #endif
-  
   int size = 1;
   
   GdkPixmap *pixmap, *mask;
@@ -543,9 +539,6 @@ void hide_cursor()
   g_free(foreground_color_p);
   g_free(background_color_p);
   
-  #ifdef _WIN32
-    annotate_acquire_pointer_grab();
-  #endif
   data->cursor_hidden = TRUE; 
 }
 
@@ -582,9 +575,6 @@ void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 /* Set the cursor patching the xpm with the selected color */
 void set_pen_cursor()
 {
-  #ifdef _WIN32
-    annotate_release_pointer_grab();
-  #endif
   gint size=12;
   if (data->cursor)
     {
@@ -606,9 +596,6 @@ void set_pen_cursor()
   g_object_unref (mask);
   g_free(foreground_color_p);
   g_free(background_color_p);
-  #ifdef _WIN32
-    annotate_acquire_pointer_grab();
-  #endif
 }
 
 
@@ -638,9 +625,6 @@ void get_eraser_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 /* Set the eraser cursor */
 void set_eraser_cursor()
 {
-  #ifdef _WIN32
-    annotate_release_pointer_grab();
-  #endif
   if (data->cursor)
     {
       gdk_cursor_unref(data->cursor);
@@ -662,9 +646,6 @@ void set_eraser_cursor()
   g_object_unref (mask);
   g_free(foreground_color_p);
   g_free(background_color_p);
-  #ifdef _WIN32
-    annotate_acquire_pointer_grab();
-  #endif
 }
 
 
@@ -687,9 +668,6 @@ void unhide_cursor()
 {
   if (data->cursor_hidden)
     {
-      #ifdef _WIN32
-        annotate_release_pointer_grab();
-      #endif
       if(data->cur_context && data->cur_context->type == ANNOTATE_ERASER)
 	    {
 	      set_eraser_cursor();
@@ -698,9 +676,6 @@ void unhide_cursor()
 	    {
 	      set_pen_cursor();
 	    }
-      #ifdef _WIN32
-        annotate_acquire_pointer_grab();
-      #endif
       data->cursor_hidden = FALSE;  
     }
 }
@@ -1465,7 +1440,7 @@ void annotate_release_grab ()
 	{
 	  g_printerr ("Release grab\n");
 	}   
-      annotate_release_pointer_grab(); 
+      annotate_activate_bar_input(); 
       gtk_window_present(GTK_WINDOW(get_bar_window()));
       data->is_grabbed=FALSE;
     }

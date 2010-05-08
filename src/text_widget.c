@@ -45,12 +45,10 @@
   #include <cairo-xlib.h>
 #endif
 
-#define TEXT_MOUSE_EVENTS        ( GDK_PROXIMITY_IN_MASK |      \
-				   GDK_PROXIMITY_OUT_MASK |	\
-				   GDK_POINTER_MOTION_MASK |	\
-				   GDK_BUTTON_PRESS_MASK |      \
+#define TEXT_MOUSE_EVENTS        ( GDK_POINTER_MOTION_MASK |	\
+				   GDK_BUTTON_PRESS_MASK   |    \
 				   GDK_BUTTON_RELEASE_MASK      \
-				   )
+				 )
 
 typedef struct
 {
