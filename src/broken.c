@@ -199,6 +199,14 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, int pixel_
 	  if (abs(By-inp_point->y)<pixel_tollerance)
 	    {
 	      By=inp_point->y;
+              if (get_distance(Bx, By, inp_point->x, inp_point->y)<pixel_tollerance)
+              {
+                area = 0.;
+                Bx = Cx;
+                By = Cy;
+                listInp = listInp->next;   
+                continue;
+              }
 	    }
 	  AnnotateStrokeCoordinate* add_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
 	  add_point->x = Bx;
@@ -405,10 +413,15 @@ GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, int pixel
 	  else
 	    {
               /*  make the outbounded rectangle that will used to draw the ellipse */
-	      GSList* listOutN = extract_outbounded_rectangle(listOut);
-	      g_slist_foreach(listOut, (GFunc)g_free, NULL);
-	      g_slist_free(listOut);
-	      listOut = listOutN;
+              int lenght = g_slist_length(listOut);
+              if (lenght>2)
+                {
+                  // minimum three point is required
+	          GSList* listOutN = extract_outbounded_rectangle(listOut);
+	          g_slist_foreach(listOut, (GFunc)g_free, NULL);
+	          g_slist_free(listOut);
+	          listOut = listOutN;
+                }
 	      return listOut;
 	    }  
 	}

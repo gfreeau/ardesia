@@ -920,10 +920,10 @@ void draw_point_list(GSList* outptr)
 
 
 /* Rectify the line or the shape*/
-void rectify(gboolean close_path)
+void rectify(gboolean closed_path)
 {
   int tollerance = data->cur_context->width;
-  GSList *outptr = broken(data->coordlist, close_path, TRUE, tollerance);
+  GSList *outptr = broken(data->coordlist, closed_path, TRUE, tollerance);
   gint lenght = g_slist_length(outptr);
 
   if (lenght<3)
@@ -943,7 +943,7 @@ void rectify(gboolean close_path)
   annotate_coord_list_free();
   data->coordlist = outptr;
   draw_point_list(outptr);     
-  if (close_path)
+  if (closed_path)
     {
       cairo_close_path(data->annotation_cairo_context);   
     }
@@ -951,23 +951,13 @@ void rectify(gboolean close_path)
 
 
 /* Roundify the line or the shape */
-void roundify(gboolean close_path)
+void roundify(gboolean closed_path)
 {
   int tollerance = data->cur_context->width * 2;
-  GSList *outptr = broken(data->coordlist, close_path, FALSE, tollerance);  
+  GSList *outptr = broken(data->coordlist, closed_path, FALSE, tollerance);  
   gint lenght = g_slist_length(outptr);
 
-  if (lenght<5)
-    {
-      return;
-    }
-
-  if (data->debug)
-    {
-      g_printerr("Roundify\n");
-    }
-	
-  /* Delete the last line drawn*/
+  /* Delete the last path drawn */
   add_save_point();
   annotate_undo();
   annotate_redolist_free();
@@ -975,10 +965,25 @@ void roundify(gboolean close_path)
      
   annotate_coord_list_free();
   data->coordlist = outptr;
-
-  if (close_path)
+  
+  if (lenght==1)
     {
-      // draw the outbounded ellipse with rectangle in the outptr list
+      /* It is a point */ 
+      AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
+      gint lastx = out_point->x; 
+      gint lasty = out_point->y;
+      draw_point(lastx, lasty);
+      return;
+    }
+  if (lenght==2)
+    {
+      /* It is a rect line */
+      draw_point_list(outptr);
+      return; 
+    }
+  if (closed_path)
+    {
+      // It's an ellipse draw it with the outbounded rectangle in the outptr list
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
       gint lastx = out_point->x; 
       gint lasty = out_point->y;
@@ -987,32 +992,34 @@ void roundify(gboolean close_path)
         { 
           gint curx = point3->x; 
           gint cury = point3->y;
-	  cairo_draw_ellipse(lastx,lasty, curx-lastx, cury-lasty);          
+	  cairo_draw_ellipse(lastx, lasty, curx-lastx, cury-lasty);          
         }
     }
   else
     {
+      // It's a not closed line use Bezier splines to smooth it
       spline(data->annotation_cairo_context, outptr);
     }
 }
 
 
 /* Call the geometric shape recognizer */
-void shape_recognize(gboolean close_path)
+void shape_recognize(gboolean closed_path)
 {
   /* Rectifier code */
   if ( g_slist_length(data->coordlist)> 3)
     {
       if (data->rectify)
         {
-	  rectify(close_path);
+	  rectify(closed_path);
 	} 
        else if (data->roundify)
 	{
-	  roundify(close_path); 
+	  roundify(closed_path); 
 	}
     }
 }
+
 
 void draw_point(int x, int y)
 {
@@ -1314,7 +1321,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
    
       if (!(data->cur_context->type == ANNOTATE_ERASER))
         { 
-          gboolean closed_path = (distance == 0); 
+          gboolean closed_path = (distance == 0) ; 
           shape_recognize(closed_path);
           /* If is selected an arrowtype the draw the arrow */
           if (data->arrow)
