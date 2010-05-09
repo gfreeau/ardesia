@@ -165,7 +165,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path)
   first_point->y = inp_point->y;
   first_point->width = inp_point->width;
  
-  listOut = g_slist_append (listOut, first_point); 
+  listOut = g_slist_prepend (listOut, first_point); 
 
   area = 0.;
   Ax = inp_point->x;
@@ -180,6 +180,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path)
   
   listInp = listInp->next;   
 
+  /* I iter the list and I add the good point with the prepend */
   while (listInp)
     {
       inp_point = (AnnotateStrokeCoordinate*)listInp->data;
@@ -211,7 +212,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path)
 	  add_point->x = Bx;
 	  add_point->y = By;
 	  add_point->width = inp_point->width;
-	  listOut = g_slist_append (listOut, add_point);
+	  listOut = g_slist_prepend (listOut, add_point);
 	  area = 0.;
 	}
       Bx = Cx;
@@ -225,9 +226,11 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path)
       last_point->x = Cx;
       last_point->y = Cy;
       last_point->width = inp_point->width;
-      listOut = g_slist_append (listOut, last_point);
+      listOut = g_slist_prepend (listOut, last_point);
     }
 
+  /* I reverse the list to preserve the initial order */
+  listOut = g_slist_reverse(listOut);
   return listOut;
 }
 
@@ -263,14 +266,14 @@ gboolean is_similar_to_a_regular_poligon(GSList* list, int pixel_tollerance)
       return FALSE;
     }
   gint lenght = g_slist_length(list);
-  double old_distance = 0;
+  double old_distance = -1;
   int i = 0;
   AnnotateStrokeCoordinate* old_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
   for (i=1; i<lenght; i++)
     {
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
       double distance = get_distance(point->x, point->y, old_point->x, old_point->y);
-      if (old_distance != 0)
+      if (old_distance != -1)
         {
           if (!(is_similar(distance, old_distance, pixel_tollerance *2)))
             {
@@ -348,25 +351,25 @@ GSList*  extract_outbounded_rectangle(GSList* listIn)
   point0->x = minx;
   point0->y = miny;
   point0->width = media_width;
-  listOut = g_slist_append (listOut, point0);
+  listOut = g_slist_prepend (listOut, point0);
                        
   AnnotateStrokeCoordinate* point1 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
   point1->x = maxx;
   point1->y = miny;
   point1->width = media_width;
-  listOut = g_slist_append (listOut, point1);
+  listOut = g_slist_prepend (listOut, point1);
 
   AnnotateStrokeCoordinate* point2 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
   point2->x = maxx;
   point2->y = maxy;
   point2->width = media_width;
-  listOut = g_slist_append (listOut, point2);
+  listOut = g_slist_prepend (listOut, point2);
 
   AnnotateStrokeCoordinate* point3 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
   point3->x = minx;
   point3->y = maxy;
   point3->width = media_width;
-  listOut = g_slist_append (listOut, point3);
+  listOut = g_slist_prepend (listOut, point3);
   return listOut;
 }
 
@@ -384,8 +387,8 @@ GSList* broken(GSList* listInp, gboolean* close_path, gboolean rectify)
   
   GSList* listOut = extract_relevant_points(listInp, *close_path);  
   guint lenght = g_slist_length(listOut); 
-  AnnotateStrokeCoordinate* beg_point = (AnnotateStrokeCoordinate*)listOut->data;
-  AnnotateStrokeCoordinate* end_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listOut, lenght-1);
+  AnnotateStrokeCoordinate* end_point = (AnnotateStrokeCoordinate*)listOut->data;
+  AnnotateStrokeCoordinate* beg_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listOut, lenght-1);
 
   if (lenght>2)
   {

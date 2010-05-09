@@ -208,14 +208,14 @@ void annotate_paint_context_free (AnnotatePaintContext *context)
 
 
 /* Add to the list of the painted point the point (x,y) storing the width */
-void annotate_coord_list_append (gint x, gint y, gint width)
+void annotate_coord_list_prepend (gint x, gint y, gint width)
 {
   AnnotateStrokeCoordinate *point;
   point = g_malloc (sizeof (AnnotateStrokeCoordinate));
   point->x = x;
   point->y = y;
   point->width = width;
-  data->coordlist = g_slist_append (data->coordlist, point);
+  data->coordlist = g_slist_prepend (data->coordlist, point);
 }
 
 
@@ -301,9 +301,8 @@ gfloat annotate_get_arrow_direction()
   outptr = extract_relevant_points(outptr, FALSE);   
   AnnotateStrokeCoordinate* point = NULL;
   AnnotateStrokeCoordinate* oldpoint = NULL;
-  gint lenght = g_slist_length(outptr);
-  oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, lenght-2);
-  point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, lenght-1);
+  oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 1);
+  point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 0);
   // calculate the tan beetween the last two point 
   gfloat ret = atan2 (point->y -oldpoint->y, point->x-oldpoint->x);
   g_slist_foreach(outptr, (GFunc)g_free, NULL);
@@ -816,7 +815,7 @@ void annotate_draw_arrow ()
       g_printerr("Arrow direction %f\n", direction/M_PI*180);
     }
 	
-  int i = lenght-1;
+  int i = 0;
   AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, i);
 
   int penwidth = data->cur_context->width;
@@ -1211,7 +1210,7 @@ paintto (GtkWidget *win,
   
   annotate_draw_line (ev->x, ev->y, TRUE);
    
-  annotate_coord_list_append (ev->x, ev->y, selected_width);
+  annotate_coord_list_prepend (ev->x, ev->y, selected_width);
 
   return TRUE;
 }
@@ -1254,7 +1253,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       draw_point(ev->x, ev->y);
       data->lasty = ev->y;
       data->lastx = ev->x;	  
-      annotate_coord_list_append (ev->x, ev->y, data->cur_context->width);
+      annotate_coord_list_prepend (ev->x, ev->y, data->cur_context->width);
     }
   else
     { 
