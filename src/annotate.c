@@ -896,6 +896,16 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
 }
 
 
+/* Draw a poin in x,y respecting the context */
+void draw_point(int x, int y)
+{
+  cairo_arc (data->annotation_cairo_context, 
+             x, y, data->cur_context->width/2, 0, 2 * M_PI);
+  cairo_fill (data->annotation_cairo_context);
+  cairo_move_to (data->annotation_cairo_context, x, y);
+}
+
+
 /** Draw the point list */
 void draw_point_list(GSList* outptr)
 {
@@ -1018,15 +1028,6 @@ void shape_recognize(gboolean closed_path)
 	  roundify(closed_path); 
 	}
     }
-}
-
-
-void draw_point(int x, int y)
-{
-  cairo_arc (data->annotation_cairo_context, 
-             x, y, data->cur_context->width/2, 0, 2 * M_PI);
-  cairo_fill (data->annotation_cairo_context);
-  cairo_move_to (data->annotation_cairo_context, x, y);
 }
 
 

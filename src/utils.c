@@ -132,7 +132,7 @@ GtkWidget* get_bar_window()
 /** Distance beetween two points using the Pitagora theorem */
 int get_distance(int x1, int y1, int x2, int y2)
 {
-  if ((x1==x2) && (y1, y2))
+  if ((x1==x2) && (y1==y2))
     {
       return 0;
     }
