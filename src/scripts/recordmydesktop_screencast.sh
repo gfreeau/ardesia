@@ -1,4 +1,3 @@
-ICECAST="FALSE";
 #These are the right variables 
 #supposing that the icecast server
 #is running in the local machine 
@@ -12,14 +11,16 @@ MOUNTPOINT="/ardesia.ogv"
 # the previous variables as you desire to point to the right
 # running icecast server
 # Client side you must have the oggfwd installed
+ICECAST="FALSE";
 #ICECAST="TRUE";
 
 if [ "$2" = "start" ]
 then
-  mkfifo $1
+  #mkfifo $1
   #This start the recording on file
   echo Start the screencast running recordmydesktop 
   recordmydesktop --quick-subsampling --on-the-fly-encoding -v_quality 10 -v_bitrate 50000 -s_quality 1 --fps 10 --freq 48000 --buffer-size 16384 -device plughw:0,0 --overwrite -o $1 &
+  echo Running $COMMAND
   RECORDPID=$!
   echo $RECORDPID >> /tmp/recordmydesktop.pid
   if [ "$ICECAST" = "TRUE" ]
@@ -41,7 +42,7 @@ then
   then
     OGGFWDPID=$(cat  /tmp/oggfwd.pid)
     echo Stopping the streaming to icecast server $LOCATION 
-    kill -9 $OGGFWDPID
+    kill -15 $OGGFWDPID
     rm /tmp/oggfwd.pid
   fi
 fi
