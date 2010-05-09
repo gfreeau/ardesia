@@ -298,7 +298,7 @@ gfloat annotate_get_arrow_direction()
 {
   GSList *outptr =   data->coordlist;   
   // make the standard deviation 
-  int tollerance = data->cur_context->width *2;
+  int tollerance = data->cur_context->width * 2;
   
   outptr = extract_relevant_points(outptr, FALSE, tollerance);   
   AnnotateStrokeCoordinate* point = NULL;
@@ -306,7 +306,7 @@ gfloat annotate_get_arrow_direction()
   oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 1);
   point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 0);
   // calculate the tan beetween the last two point 
-  gfloat ret = atan2 (point->y -oldpoint->y, point->x-oldpoint->x);
+  gfloat ret = atan2 (point->y-oldpoint->y, point->x-oldpoint->x);
   g_slist_foreach(outptr, (GFunc)g_free, NULL);
   g_slist_free(outptr); 
   return ret;
@@ -904,7 +904,7 @@ void draw_point_list(GSList* outptr)
 
 
 /* Rectify the line or the shape*/
-gboolean rectify()
+void rectify(gboolean close_path)
 {
   if (data->debug)
     {
@@ -914,9 +914,9 @@ gboolean rectify()
   annotate_undo();
   annotate_redolist_free();
   reset_cairo();
-  gboolean close_path = FALSE;
-  int tollerance = data->cur_context->width * 2;
-  GSList *outptr = broken(data->coordlist, &close_path, TRUE, tollerance);   
+  
+  int tollerance = data->cur_context->width;
+  GSList *outptr = broken(data->coordlist, close_path, TRUE, tollerance);   
   annotate_coord_list_free();
   data->coordlist = outptr;
   draw_point_list(outptr);     
@@ -924,12 +924,11 @@ gboolean rectify()
     {
       cairo_close_path(data->annotation_cairo_context);   
     }
-  return close_path;
 }
 
 
 /* Roundify the line or the shape */
-gboolean roundify()
+void roundify(gboolean close_path)
 {
   if (data->debug)
     {
@@ -942,11 +941,10 @@ gboolean roundify()
   annotate_redolist_free();
   reset_cairo();
   
-  gboolean close_path = FALSE;
   
-  int tollerance = data->cur_context->width *2;
+  int tollerance = data->cur_context->width * 2;
 
-  GSList *outptr = broken(data->coordlist, &close_path, FALSE, tollerance);   
+  GSList *outptr = broken(data->coordlist, close_path, FALSE, tollerance);   
   annotate_coord_list_free();
   data->coordlist = outptr;
 
@@ -968,27 +966,24 @@ gboolean roundify()
     {
       spline(data->annotation_cairo_context, outptr);
     }
-  return close_path;
 }
 
 
 /* Call the geometric shape recognizer */
-gboolean shape_recognize()
+void shape_recognize(gboolean close_path)
 {
-  gboolean closed_path = FALSE;
   /* Rectifier code */
   if ( g_slist_length(data->coordlist)> 3)
     {
       if (data->rectify)
         {
-	      closed_path = rectify();
-	    } 
+	  rectify(close_path);
+	} 
        else if (data->roundify)
-	    {
-	      closed_path = roundify(); 
-	    }
+	{
+	  roundify(close_path); 
+	}
     }
-  return closed_path;
 }
 
 void draw_point(int x, int y)
@@ -1144,14 +1139,16 @@ paint (GtkWidget *win,
       return TRUE;
     }  
 
-  reset_cairo();
-  cairo_move_to(data->annotation_cairo_context,ev->x,ev->y);
- 
   if (data->debug)
     {    
       g_printerr("Device '%s': Button %i Down at (x,y)=(%.2f : %.2f)\n",
 		 ev->device->name, ev->button, ev->x, ev->y);
     }
+
+  reset_cairo();
+  cairo_move_to(data->annotation_cairo_context,ev->x,ev->y);
+ 
+  annotate_coord_list_prepend (ev->x, ev->y, data->cur_context->width);
   return TRUE;
 }
 
@@ -1253,6 +1250,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       return TRUE;
     }  
 
+  gboolean closed_path = FALSE;
   if (!data->coordlist)
     {
       draw_point(ev->x, ev->y);
@@ -1269,14 +1267,21 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
  
       /* If the distance between two point lesser that tollerance they are the same point for me */
       if ((abs(ev->x-first_point->x)<tollerance) && (abs(ev->y-first_point->y)<tollerance))
-	  {
-	    cairo_line_to(data->annotation_cairo_context, first_point->x, first_point->y);
-	  }
+        {
+          closed_path = TRUE;
+	  cairo_line_to(data->annotation_cairo_context, first_point->x, first_point->y);
+          annotate_coord_list_prepend (first_point->x, first_point->y, data->cur_context->width);
+	}
+      else
+        {
+          cairo_line_to(data->annotation_cairo_context, ev->x, ev->y);
+          annotate_coord_list_prepend (ev->x, ev->y, data->cur_context->width);
+        }
     }
 
   if ((data->coordlist)&&(!(data->cur_context->type == ANNOTATE_ERASER)))
     {  
-      gboolean closed_path = shape_recognize();
+      shape_recognize(closed_path);
       if (!closed_path)
         {
           /* If is selected an arrowtype the draw the arrow */
