@@ -922,6 +922,15 @@ void draw_point_list(GSList* outptr)
 /* Rectify the line or the shape*/
 void rectify(gboolean close_path)
 {
+  int tollerance = data->cur_context->width;
+  GSList *outptr = broken(data->coordlist, close_path, TRUE, tollerance);
+  gint lenght = g_slist_length(outptr);
+
+  if (lenght<3)
+    {
+      return;
+    }
+
   if (data->debug)
     {
       g_printerr("rectify\n");
@@ -930,9 +939,7 @@ void rectify(gboolean close_path)
   annotate_undo();
   annotate_redolist_free();
   reset_cairo();
-  
-  int tollerance = data->cur_context->width;
-  GSList *outptr = broken(data->coordlist, close_path, TRUE, tollerance);   
+       
   annotate_coord_list_free();
   data->coordlist = outptr;
   draw_point_list(outptr);     
@@ -946,6 +953,15 @@ void rectify(gboolean close_path)
 /* Roundify the line or the shape */
 void roundify(gboolean close_path)
 {
+  int tollerance = data->cur_context->width * 2;
+  GSList *outptr = broken(data->coordlist, close_path, FALSE, tollerance);  
+  gint lenght = g_slist_length(outptr);
+
+  if (lenght<5)
+    {
+      return;
+    }
+
   if (data->debug)
     {
       g_printerr("Roundify\n");
@@ -956,17 +972,13 @@ void roundify(gboolean close_path)
   annotate_undo();
   annotate_redolist_free();
   reset_cairo();
-  
-  
-  int tollerance = data->cur_context->width * 2;
-
-  GSList *outptr = broken(data->coordlist, close_path, FALSE, tollerance);   
+     
   annotate_coord_list_free();
   data->coordlist = outptr;
 
   if (close_path)
     {
-      // draw outbounded ellipse with rectangle in the outptr list
+      // draw the outbounded ellipse with rectangle in the outptr list
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
       gint lastx = out_point->x; 
       gint lasty = out_point->y;
