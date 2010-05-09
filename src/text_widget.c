@@ -332,14 +332,6 @@ press (GtkWidget *win,
          GdkEventButton *ev, 
          gpointer user_data)
 {     
-  if (inside_bar_window(ev->x, ev->y))
-  /* point is in the ardesia bar */
-    {
-      /* the last point was outside the bar then ungrab */
-      stop_text_widget();
-      return TRUE;
-    }
-
   return TRUE;
 }
 
@@ -415,7 +407,6 @@ on_window_text_motion_notify_event (GtkWidget *win,
 /* Start the widget for the text insertion */
 void start_text_widget(GtkWindow *parent, char* color, int tickness)
 {
-  stop_text_widget();
   text_pen_width = tickness;
   text_color = color;
   create_text_window(parent);
