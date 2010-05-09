@@ -15,6 +15,9 @@
 
 - Refactoring
   - Better variables handling
+  - Solve memory leaks
+  - Profile the program
+    to encrease the performance
   - Undo-redo using svg file
 
 
