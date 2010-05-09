@@ -60,6 +60,7 @@ extern GtkBuilder *gtkBuilder;
 /* get bar window widget */
 GtkWidget* get_bar_window();
 
+
 /* Ungrab pointer */
 void ungrab_pointer(GdkDisplay* display, GtkWidget *win);
 
@@ -80,16 +81,21 @@ void cairo_set_source_color_from_string( cairo_t * cr, char* color);
 void  cairo_set_transparent_color(cairo_t * cr);
 
 
+/** Distance beetween two points using the Pitagora theorem */
+int get_distance(int x1, int y1, int x2, int y2);
+
 /* Clear cairo context */
 void clear_cairo_context(cairo_t* cr);
 
 /* Transparent rectangle to allow to see the bar and pass the event below */
 void make_hole(GtkWidget *widget, cairo_t * cr);
 
+
 /*
  * This is function return if the point (x,y) in inside the ardesia bar window
  */
 gboolean inside_bar_window(int xp, int yp);
+
 
 /*
  * Take an rgb or a rgba string and return the pointer to the allocated GdkColor 
@@ -115,3 +121,5 @@ gboolean file_exists(char* filename, char* desktop_dir);
  * in a desktop environment independant way
  */
 const gchar* get_desktop_dir (void);
+
+

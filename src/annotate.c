@@ -809,8 +809,13 @@ void annotate_draw_line (gint x2, gint y2, gboolean stroke)
 
 
 /* Draw an arrow using some polygons */
-void annotate_draw_arrow ()
+void annotate_draw_arrow (int distance)
 {
+  int arrow_minimum_size = data->cur_context->width * 2;
+  if (distance < arrow_minimum_size)
+    {  
+      return;
+    }
   if (data->debug)
     {
       g_printerr("Draw arrow: ");
@@ -821,6 +826,7 @@ void annotate_draw_arrow ()
       /* if it has lenght 1 then is a point and I don't draw the arrow */
       return;
     }
+  
   gfloat direction = annotate_get_arrow_direction ();
   if (data->debug)
     {
@@ -1264,7 +1270,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       return TRUE;
     }  
 
-  gboolean closed_path = FALSE;
+  int distance = -1;
   if (!data->coordlist)
     {
       draw_point(ev->x, ev->y);
@@ -1276,13 +1282,15 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
     { 
       gint lenght = g_slist_length(data->coordlist);
       AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght-1);
+       
       /* This is the tollerance to force to close the path in a magnetic way */
-      int tollerance = data->cur_context->width * 2;
+      int tollerance = data->cur_context->width;
+      distance = get_distance(ev->x, ev->y, first_point->x, first_point->y);
  
       /* If the distance between two point lesser that tollerance they are the same point for me */
-      if ((abs(ev->x-first_point->x)<tollerance) && (abs(ev->y-first_point->y)<tollerance))
+      if (distance<=tollerance)
         {
-          closed_path = TRUE;
+          distance=0;
 	  cairo_line_to(data->annotation_cairo_context, first_point->x, first_point->y);
           annotate_coord_list_prepend (first_point->x, first_point->y, data->cur_context->width);
 	}
@@ -1291,22 +1299,19 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
           cairo_line_to(data->annotation_cairo_context, ev->x, ev->y);
           annotate_coord_list_prepend (ev->x, ev->y, data->cur_context->width);
         }
-    }
-
-  if ((data->coordlist)&&(!(data->cur_context->type == ANNOTATE_ERASER)))
-    {  
-      shape_recognize(closed_path);
-      if (!closed_path)
-        {
+   
+      if (!(data->cur_context->type == ANNOTATE_ERASER))
+        { 
+          gboolean closed_path = (distance == 0); 
+          shape_recognize(closed_path);
           /* If is selected an arrowtype the draw the arrow */
-	  if (data->arrow)
+          if (data->arrow)
             {
-	       /* print arrow at the end of the line */
-	        annotate_draw_arrow ();
+	      /* print arrow at the end of the line */
+	      annotate_draw_arrow (distance);
 	    }
-        }
+         }
     }
- 
   cairo_stroke_preserve(data->annotation_cairo_context);
   add_save_point();
   hide_cursor();  
@@ -1349,6 +1354,7 @@ cairo_t* get_annotation_cairo_context()
 {
   return data->annotation_cairo_context;
 }
+
 
 /* Quit the annotation */
 void annotate_quit()

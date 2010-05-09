@@ -26,6 +26,7 @@
 #endif
 
 #include "time.h"
+#include <math.h>
 #include "stdlib.h"
 #include "unistd.h"
 #include "stdio.h"
@@ -125,6 +126,13 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 GtkWidget* get_bar_window()
 {
   return GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
+}
+
+
+/** Distance beetween two points using the Pitagora theorem */
+int get_distance(int x1, int y1, int x2, int y2)
+{
+  return (sqrt(pow(x1-x2,2) + pow(y1-y2,2)));
 }
 
 
