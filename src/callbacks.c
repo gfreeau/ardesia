@@ -504,11 +504,20 @@ G_MODULE_EXPORT void
 on_buttonColor_activate	         (GtkToolButton   *toolbutton,
 			          gpointer         user_data)
 {
+  if (!gtk_toggle_tool_button_get_active   (toolbutton)) return;
   BarData *bar_data = (BarData*) user_data;
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
   bar_data->pencil = TRUE;
-  set_color(bar_data, start_color_selector_dialog(toolbutton, GTK_WINDOW(get_annotation_window()), bar_data->color));
+  char* new_color = start_color_selector_dialog(toolbutton, GTK_WINDOW(get_annotation_window()), bar_data->color);
+
+  //if valid color
+  if (new_color)
+    { 
+      set_color(bar_data, new_color);
+      g_free(new_color);
+    }
+
   bar_data->grab = grab_value;
   start_tool(bar_data);
 }

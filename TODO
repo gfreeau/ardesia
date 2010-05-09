@@ -8,12 +8,18 @@
       #    ####### ######  #######
 ======================================
 
+
 - Documentation
   - Make video tutorial
 
+
 - Refactoring
+  - Better variables handling
+  - Undo-redo using svg file
+
 
 - Investigate about MacOsX porting
+
 
 - Windows porting
   - use opaque color upon a (semi) transparent window
@@ -30,22 +36,24 @@
   - specify the default file name 
     and the default folder name used for the screencast
 
+
 - Possible future features
+  - Save page (background + annotation)
   - Pdf export 
-  - Undo-redo using svg file
   - Whiteboard Toolbar
-    - ardesia 
+    - ardesia [DONE] 
+    - Screenshot saver [DONE]
+    - Magnifier [DONE]
+    - Spotlighter [DONE]
+    - Curtain [DONE]
+    - Florence-Ramble Virtual keyboard [DONE]
+    - Recorder [DONE]
+    - Streamer [DONE]
     - wiimote whiteboard driver and calibration gui
-    - Screenshot
-    - Magnifier
-    - Spotlighter
-    - Curtain
-    - Virtual keyboard
     - Printer support
-    - Recorder
-    - Streamer
     - Mini video player with play-pause, backward and forward
     - Multi pointer support using the xinput2 libraries
+
 
 ===
 EOF

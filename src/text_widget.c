@@ -139,7 +139,10 @@ void delete_character()
 
       cairo_set_operator (text_cr, CAIRO_OPERATOR_CLEAR);
  
-      cairo_rectangle(text_cr, charInfo->x + charInfo->x_bearing, charInfo->y + charInfo->y_bearing, screen_width,  max_font_height + text_pen_width+3);
+      cairo_rectangle(text_cr, charInfo->x + charInfo->x_bearing, 
+                      charInfo->y + charInfo->y_bearing, 
+                      screen_width, 
+                      max_font_height + text_pen_width + 3);
       cairo_fill(text_cr);
       cairo_stroke(text_cr);
       cairo_set_operator (text_cr, CAIRO_OPERATOR_SOURCE);
@@ -181,10 +184,10 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   else if (isprint(event->keyval))
     {
       /* The character is printable */
-      char *utf8 = g_malloc(2) ;
+      char *utf8 = g_malloc(2 * sizeof(char)) ;
       sprintf(utf8,"%c", event->keyval);
       
-      CharInfo *charInfo = g_malloc (sizeof (CharInfo));
+      CharInfo *charInfo = g_malloc(sizeof (CharInfo));
       charInfo->x = pos->x;
       charInfo->y = pos->y; 
       

@@ -47,10 +47,10 @@ static gchar*       picked_color = NULL;
  * containing the screenshot
  * it return the selected color
  */
-gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar* color)
+gchar* start_color_selector_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar* color)
 {
   GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON(toolbutton);
-  
+  gchar* ret_color = NULL;
   if (gtk_toggle_tool_button_get_active(button))
     {
       /* open color widget */
@@ -88,13 +88,13 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
 	    colorsel = GTK_COLOR_SELECTION((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
             gtk_color_selection_set_has_palette(colorsel, TRUE);
             gtk_color_selection_get_current_color(colorsel, gdkcolor);
-            g_free(color);
-            color = gdkcolor_to_rgba(gdkcolor);
+            ret_color = gdkcolor_to_rgba(gdkcolor);
+            g_free(gdkcolor);
             if (picked_color == NULL)
               {
-	        picked_color = g_malloc(strlen(color));
+	        picked_color = g_malloc(strlen(ret_color));
               }
-            strncpy(picked_color, color, strlen(color));
+            strncpy(picked_color, ret_color, strlen(ret_color));
 	    break;
 
 	  default:
@@ -104,7 +104,6 @@ gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *paren
 	{
 	  gtk_widget_destroy(colorDialog);
 	}
-      g_free(gdkcolor);
     }
-  return color;
+  return ret_color;
 }

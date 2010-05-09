@@ -70,7 +70,7 @@ void grab_pointer(GtkWidget *win, GdkEventMask eventmask);
 
 
 /* Take a GdkColor and return the RGB string */
-char* gdkcolor_to_rgba(GdkColor* gdkcolor);
+gchar* gdkcolor_to_rgba(GdkColor* gdkcolor);
 
 
 /* Set the cairo surface color to the RGBA string */
@@ -105,7 +105,7 @@ GdkColor* rgb_to_gdkcolor(char* rgb);
 
 
 /* Get the current date and format in a printable format */
-char* get_date();
+gchar* get_date();
 
 
 /* Return if a file exists */

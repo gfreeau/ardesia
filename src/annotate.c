@@ -553,7 +553,7 @@ void hide_cursor()
 /* Create pixmap and mask for the pen cursor */
 void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
-  gint context_width = data->cur_context->width;;
+  gint context_width = data->cur_context->width;
   *pixmap = gdk_pixmap_new (NULL, size*3 + context_width, 
                             size*3 + context_width, 1);
   *mask =  gdk_pixmap_new (NULL, size*3 + context_width, 

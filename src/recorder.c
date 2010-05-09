@@ -146,8 +146,10 @@ void missing_recorder_program_dialog(GtkWindow* parent_window)
 {
   GtkWidget *miss_dialog;
   
-  miss_dialog = gtk_message_dialog_new (parent_window, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
-                                       GTK_BUTTONS_OK, gettext("To record with Ardesia you must install the recordmydesktop program"));
+  miss_dialog = gtk_message_dialog_new (parent_window, GTK_DIALOG_MODAL, 
+                                        GTK_MESSAGE_ERROR,
+                                        GTK_BUTTONS_OK, 
+                                        gettext("To record with Ardesia you must install the recordmydesktop program"));
   gtk_window_set_modal(GTK_WINDOW(miss_dialog), TRUE);
   
   if (STICK)
@@ -201,9 +203,9 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, c
     {
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
      
-      char* tmp = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
+      gchar* tmp = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
       strcpy(*workspace_dir, tmp);
-      free(tmp);
+      g_free(tmp);
       char* supported_extension = ".ogv";
       char* extension = strrchr(filename, '.');
       if ((extension==0) || (strcmp(extension, supported_extension) != 0))
