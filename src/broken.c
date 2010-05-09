@@ -387,7 +387,6 @@ GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, int pixel
 	  /* close path */
 	  if (rectify)
 	    {
-              printf("Here\n");
 	      // is similar to regular a poligon
 	      if (is_similar_to_a_regular_poligon(listOut, pixel_tollerance * 2))
 		{
