@@ -16,7 +16,10 @@ ICECAST="FALSE";
 
 if [ "$2" = "start" ]
 then
-  #mkfifo $1
+  if [ "$ICECAST" = "TRUE" ]
+  then
+    mkfifo $1
+  fi
   #This start the recording on file
   echo Start the screencast running recordmydesktop 
   recordmydesktop --quick-subsampling --on-the-fly-encoding -v_quality 10 -v_bitrate 50000 -s_quality 1 --fps 10 --freq 48000 --buffer-size 16384 -device plughw:0,0 --overwrite -o $1 &

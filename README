@@ -160,6 +160,72 @@ options:
 
 filename:	  		The file containig the image to be be used as background
 
+-----------------
+ Troubleshooting
+-----------------
+
+- Ardesia does not start and says that you must enable a composite manager
+  - setup your computer to use the accelerated graphic drivers
+    - intel graphics card might work with the free driver
+    - nvidia graphics driver you must install the proprietary driver
+    - ati you must install the propietary driver
+  - go in the Gnome panel in System/Preference/Appereance and put 
+    the visuals effect to normal
+
+- Ardesia bar is not full visible, it is greater than my desktop
+  - try to put the bar in orizontal position with the gravity option
+    e.g. ardesia -g south
+
+- I can not move the Ardesia Bar. Why?
+  - I have put the bar in the right of the screen because is the best 
+    position to be accessible with the hand and it does not hide
+    important thinks on the desktop
+    Anyway you can choose the position starting the Ardesia bar
+    with the decorate option
+    e.g. ardesia -d
+    Now you can move the ardesia bar everywhere
+
+- Ardesia is not able to record my desktop
+  - verify that you audio driver works fine, recording some speach
+    with an other program
+  - install the recordmydesktop package (it's required)
+  - if you have other problems try to customize the 
+    $PREFIX/share/ardesia/scripts/recordmydesktop_screencast.sh
+  - For the recordmydesktop comnfiguration please visit
+    http://recordmydesktop.sourceforge.net/about.php
+
+- I have read that with Ardesia I can put my presentation on the web.
+  How I can do this?
+  - Ardesia supports the live screencast streaminf 
+    only after that you have configured the file
+    properly
+    In order to make a presentation you must have:
+    - A running icecast2 server 
+      (if you want to be reachable from Internet this machine must have
+       a public IP address and a domain name)
+    - A local machine that you use to make the presentation
+      This computer must:
+      - reach the icecast2 server
+      - have ardesia installed
+      - have oggfwd installed (it is used to forward the stream to the server) 
+    - Open the file $PREFIX/share/ardesia/scripts/recordmydesktop_screencast.sh
+      And configure theese variables:
+      - LOCATION="The_Public_name_of_your_icecast2_server"
+      - PORT="The_port_of_your_icecast2_server"
+      - PASSWORD="Your_password_To_access_to_the_icecast2_server"
+      - MOUNTPOINT="The_mountpoint_of_your_stream"
+      Uncomment the line
+      - ICECAST="TRUE";
+      To enable the streaming
+    - Open Ardesia
+    - Push the record button
+    - Select a name
+    - Enjoy the stream
+      at the uri 
+      http://The_Public_name_of_your_icecast2_server:The_port_of_your_icecast2_server/The_mountpoint_of_your_stream.ogv
+    - Now you can put this link on a web page or publish it in an other way
+    - For furthermore information about icecast2 server visit http://www.icecast.org/
+
 
 -------
  Info
@@ -179,7 +245,5 @@ Have fun!
 ===
 EOF
 ===
-
-
 
 

@@ -19,22 +19,34 @@
 
 Features:
 - update to gpl-3
-- using getopt as Unix standard for the command line parsing
+- using getopt; the Unix standard for the command line parsing
 - use intltoolize to support the language translation
 - added info button with author info and license agreement
   (issue 11)
 - added the verbosity option to trace the tool
-- undo/redo using vector graphics instead of raw images
+- undo/redo using vector graphics surfaces instead of raw images
 - added electronic whiteboard support
 - added tablet support
 - add stream forward support to an icecast server
-  (please configure the file located at $(prefix)/share/ardesia/scripts/recordmydesktop_screencast.sh)
+  to make a live online presentation
+- now you can different ardesia instances
+  one for each workspace
+
 
 Bug fix:
-- fill close path with or within the highlighter
-- fix the behaviour of recorder if the recordmydesktop tool
-  is missed (issue 9)
+- fill now works after a close path drawn 
+  with or within the highlighter selected
+- fix the behaviour of recorder 
+  Now if the recordmydesktop tool
+  is missed a dialog shows the problem 
+  (issue 9)
 - solved some memory leaks
+- solve a critical bug that froze the cursor
+  when the window loose the focus
+- solve a bug that froze the application
+  when the roundifier was enabled 
+  and short a lines was drawn
+
 
 Usability:
 - better user interface
@@ -59,6 +71,9 @@ Usability:
 - Use three line widthness buttons (thin, medium, thick);
   this seems be more usable with the whiteboard than
   the old slide 
+- better shape recognizer
+- fast responsivity
+
 
 -------------
  ardesia 0.2
@@ -104,7 +119,8 @@ Features:
 -------------
 
 The initial protipe written in python;
-this is not public distributed.
+this has not been distributed to the public.
+I have put this version in the trash.
 
 
 =====
