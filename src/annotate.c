@@ -298,7 +298,9 @@ gfloat annotate_get_arrow_direction()
 {
   GSList *outptr =   data->coordlist;   
   // make the standard deviation 
-  outptr = extract_relevant_points(outptr, FALSE);   
+  int tollerance = data->cur_context->width *2;
+  
+  outptr = extract_relevant_points(outptr, FALSE, tollerance);   
   AnnotateStrokeCoordinate* point = NULL;
   AnnotateStrokeCoordinate* oldpoint = NULL;
   oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 1);
@@ -913,7 +915,8 @@ gboolean rectify()
   annotate_redolist_free();
   reset_cairo();
   gboolean close_path = FALSE;
-  GSList *outptr = broken(data->coordlist, &close_path, TRUE);   
+  int tollerance = data->cur_context->width * 2;
+  GSList *outptr = broken(data->coordlist, &close_path, TRUE, tollerance);   
   annotate_coord_list_free();
   data->coordlist = outptr;
   draw_point_list(outptr);     
@@ -941,7 +944,9 @@ gboolean roundify()
   
   gboolean close_path = FALSE;
   
-  GSList *outptr = broken(data->coordlist, &close_path, FALSE);   
+  int tollerance = data->cur_context->width *2;
+
+  GSList *outptr = broken(data->coordlist, &close_path, FALSE, tollerance);   
   annotate_coord_list_free();
   data->coordlist = outptr;
 
@@ -1257,12 +1262,13 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
     }
   else
     { 
-      AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*)data->coordlist->data;
-	  /* This is the tollerance to force to close the path in a magnetic way */
-      int tollerance = 15;
+      gint lenght = g_slist_length(data->coordlist);
+      AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght-1);
+      /* This is the tollerance to force to close the path in a magnetic way */
+      int tollerance = data->cur_context->width * 2;
  
       /* If the distance between two point lesser that tollerance they are the same point for me */
-      if ((abs(ev->x-first_point->x)<tollerance) &&(abs(ev->y-first_point->y)<tollerance))
+      if ((abs(ev->x-first_point->x)<tollerance) && (abs(ev->y-first_point->y)<tollerance))
 	  {
 	    cairo_line_to(data->annotation_cairo_context, first_point->x, first_point->y);
 	  }

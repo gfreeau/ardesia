@@ -25,8 +25,8 @@
     #define BROKEN_FILE
 
     /* Return a subpath of listInp containg only the meaningful points using the standard deviation */
-    GSList* extract_relevant_points(GSList *listInp, gboolean close_path);
+    GSList* extract_relevant_points(GSList *listInp, gboolean close_path, int pixel_tollerance);
     
-    GSList*    broken( GSList* inp, gboolean* close_path, gboolean rectify);
+    GSList*    broken( GSList* inp, gboolean* close_path, gboolean rectify, int pixel_tollerance);
 
 #endif
