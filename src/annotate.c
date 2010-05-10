@@ -132,10 +132,6 @@ typedef struct
   AnnotatePaintContext *default_eraser;
   AnnotatePaintContext *cur_context;
 
-  /* last point inserted */
-  gdouble      lastx;
-  gdouble      lasty;
-
   /* list of the coodinates of the last line drawn */
   GSList       *coordlist;
 
@@ -162,6 +158,7 @@ typedef struct
   
   /* is the debug enabled */
   gboolean     debug;
+
 } AnnotateData;
 
 
@@ -1354,9 +1351,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   int distance = -1;
   if (!data->coordlist)
     {
-      draw_point(ev->x, ev->y);
-      data->lasty = ev->y;
-      data->lastx = ev->x;	  
+      draw_point(ev->x, ev->y);  
       annotate_coord_list_prepend (ev->x, ev->y, data->cur_context->width);
     }
   else
