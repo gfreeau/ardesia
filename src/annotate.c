@@ -379,6 +379,14 @@ void add_save_point ()
   cairo_surface_t* saved_surface = annotate_save->surface;
   cairo_surface_t* source_surface = cairo_get_target(data->annotation_cairo_context);
   cairo_t *cr = cairo_create (saved_surface);
+  if (cairo_status(cr) != CAIRO_STATUS_SUCCESS)
+    {
+       if (data->debug)
+         { 
+           g_printerr ("Unable to allocate the cairo context for the surface to be restored\n"); 
+           exit(1);
+         }
+    }
   cairo_set_source_surface (cr, source_surface, 0, 0);
   cairo_paint(cr);
   cairo_destroy(cr);
@@ -504,16 +512,32 @@ void get_invisible_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
   *pixmap = gdk_pixmap_new (NULL, size, size, 1);
   *mask =  gdk_pixmap_new (NULL, size, size, 1); 
-  cairo_t *eraser_cr = gdk_cairo_create(*pixmap);
-  cairo_set_source_rgb(eraser_cr, 1, 1, 1);
-  cairo_paint(eraser_cr);
-  cairo_stroke(eraser_cr);
-  cairo_destroy(eraser_cr);
+  cairo_t *invisible_cr = gdk_cairo_create(*pixmap);
+  if (cairo_status(invisible_cr) != CAIRO_STATUS_SUCCESS)
+    {
+       if (data->debug)
+         { 
+            g_printerr ("Unable to allocate the cairo context to hide the cursor"); 
+            exit(1);
+         }
+    }
+  cairo_set_source_rgb(invisible_cr, 1, 1, 1);
+  cairo_paint(invisible_cr);
+  cairo_stroke(invisible_cr);
+  cairo_destroy(invisible_cr);
 
-  cairo_t *eraser_shape_cr = gdk_cairo_create(*mask);
-  clear_cairo_context(eraser_shape_cr);
-  cairo_stroke(eraser_shape_cr);
-  cairo_destroy(eraser_shape_cr); 
+  cairo_t *invisible_shape_cr = gdk_cairo_create(*mask);
+  if (cairo_status(invisible_shape_cr) != CAIRO_STATUS_SUCCESS)
+    {
+       if (data->debug)
+         { 
+           g_printerr ("Unable to allocate the cairo context for the surface to be restored\n"); 
+           exit(1);
+         }
+    }
+  clear_cairo_context(invisible_shape_cr);
+  cairo_stroke(invisible_shape_cr);
+  cairo_destroy(invisible_shape_cr); 
 }
 
 
@@ -561,6 +585,12 @@ void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
   int circle_width = 2; 
 
   cairo_t *pen_cr = gdk_cairo_create(*pixmap);
+  if (cairo_status(pen_cr) != CAIRO_STATUS_SUCCESS)
+    {
+       g_printerr ("Unable to allocate the pen cursor cairo context"); 
+       exit(1);
+    }
+
   cairo_set_operator(pen_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_source_rgb(pen_cr, 1, 1, 1);
   cairo_paint(pen_cr);
@@ -568,6 +598,12 @@ void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
   cairo_destroy(pen_cr);
 
   cairo_t *pen_shape_cr = gdk_cairo_create(*mask);
+  if (cairo_status(pen_shape_cr) != CAIRO_STATUS_SUCCESS)
+    {
+       g_printerr ("Unable to allocate the pen shape cursor cairo context"); 
+       exit(1);
+    }
+
   clear_cairo_context(pen_shape_cr);
   cairo_set_operator(pen_shape_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(pen_shape_cr, circle_width);
@@ -619,12 +655,24 @@ void get_eraser_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
   *mask =  gdk_pixmap_new (NULL, size, size, 1);
   int circle_width = 2; 
   cairo_t *eraser_cr = gdk_cairo_create(*pixmap);
+  if (cairo_status(eraser_cr) != CAIRO_STATUS_SUCCESS)
+    {
+       g_printerr ("Unable to allocate the eraser cursor cairo context"); 
+       exit(1);
+    }
+
   cairo_set_source_rgb(eraser_cr, 1, 1, 1);
   cairo_paint(eraser_cr);
   cairo_stroke(eraser_cr);
   cairo_destroy(eraser_cr);
 
   cairo_t *eraser_shape_cr = gdk_cairo_create(*mask);
+  if (cairo_status(eraser_shape_cr) != CAIRO_STATUS_SUCCESS)
+    {
+       g_printerr ("Unable to allocate the eraser shape cursor cairo context"); 
+       exit(1);
+    }
+
   clear_cairo_context(eraser_shape_cr);
   cairo_set_operator(eraser_shape_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(eraser_shape_cr, circle_width);
@@ -1085,13 +1133,26 @@ event_expose (GtkWidget *widget,
     {
 	  /* initialize a transparent window */
       data->annotation_cairo_context = gdk_cairo_create(data->annotation_window->window);
+      if (cairo_status(data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
+        {
+          g_printerr ("Unable to allocate the annotation cairo context"); 
+          exit(1);
+        }     
+
       annotate_clear_screen();
 					 
       data->transparent_pixmap = gdk_pixmap_new (data->annotation_window->window,
                                                  data->width,
 					         data->height, 
                                                  -1);
+
       data->transparent_cr = gdk_cairo_create(data->transparent_pixmap);
+      if (cairo_status(data->transparent_cr) != CAIRO_STATUS_SUCCESS)
+        {
+          g_printerr ("Unable to allocate the transparent cairo context"); 
+          exit(1);
+        }
+
       clear_cairo_context(data->transparent_cr); 
     }
   restore_surface();
@@ -1641,6 +1702,12 @@ void setup_app ()
   /* Initialize a transparent pixmap with depth 1 to be used as input shape */
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
   data->shape_cr = gdk_cairo_create(data->shape);
+  if (cairo_status(data->shape_cr) != CAIRO_STATUS_SUCCESS)
+    {
+       g_printerr ("Unable to allocate the shape cairo context"); 
+       exit(1);
+    }
+
   clear_cairo_context(data->shape_cr); 
 
   /* connect the signals */

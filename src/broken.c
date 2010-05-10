@@ -199,11 +199,12 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, int pixel_
 	  if (abs(By-inp_point->y)<pixel_tollerance)
 	    {
 	      By=inp_point->y;
+              /* If B and inp_point are very closed I neglect the point and continue the loop */
               if (get_distance(Bx, By, inp_point->x, inp_point->y)<pixel_tollerance)
               {
-                area = 0.;
                 Bx = Cx;
                 By = Cy;
+                area = 0.;
                 listInp = listInp->next;   
                 continue;
               }
@@ -222,6 +223,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, int pixel_
 
   if (!close_path)
     {
+      /* Add the last point */
       AnnotateStrokeCoordinate* last_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
       last_point->x = Cx;
       last_point->y = Cy;
@@ -236,8 +238,18 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, int pixel_
 
 
 /* Take the list and the rurn the minx miny maxx and maxy points */
-void found_min_and_max(GSList* list, gint* minx, gint* miny, gint* maxx, gint* maxy, gint* total_width)
+gboolean found_min_and_max(GSList* list, gint* minx, gint* miny, gint* maxx, gint* maxy, gint* total_width)
 {
+  if (!list)
+    {
+      return FALSE;
+    }
+  /* This function has sense only for the list with lenght greater than two */
+  gint lenght = g_slist_length(list);
+  if (lenght < 3)
+    {
+       return FALSE;
+    }
   AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)list->data;
   *minx = out_point->x;
   *miny = out_point->y;
@@ -255,6 +267,7 @@ void found_min_and_max(GSList* list, gint* minx, gint* miny, gint* maxx, gint* m
       *total_width = *total_width + cur_point->width;
       list = list->next; 
     }   
+  return TRUE;
 }
 
 
@@ -305,7 +318,11 @@ GSList* extract_poligon(GSList* listIn)
   gint maxx;
   gint maxy;
   gint total_width;
-  found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_width);
+  gboolean status = found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_width);
+  if (!status)
+    {
+      return NULL;
+    }
   cx = (maxx + minx)/2;   
   cy = (maxy + miny)/2;   
   radius = ((maxx-minx)+(maxy-miny))/4;   
@@ -341,7 +358,11 @@ GSList*  extract_outbounded_rectangle(GSList* listIn)
   gint maxy;
   gint total_width;
   gint lenght = g_slist_length(listIn);
-  found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_width);
+  gboolean status = found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_width);
+  if (!status)
+    {
+      return NULL;
+    }
   GSList* listOut = NULL;
   gint media_width = total_width/lenght; 
   AnnotateStrokeCoordinate* point0 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
