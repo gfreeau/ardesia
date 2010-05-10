@@ -990,6 +990,10 @@ void rectify(gboolean closed_path)
     {
       g_printerr("rectify\n");
     }
+  
+  // try to make straighten
+  straighten(&outptr); 
+
   add_save_point();
   annotate_undo();
   annotate_redolist_free();

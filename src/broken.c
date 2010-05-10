@@ -144,91 +144,77 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, int pixel_
   {
     return NULL;
   }
-  AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*)listInp->data;   
-  double H;
-  int Ax, Ay, Bx, By, Cx, Cy;
-  int X1,X2,Y1,Y2;
-  double  area;
+
+  gint lenght = g_slist_length(listInp);
+
+  /* Initialize the list */
   GSList* listOut = NULL;
   
-  /* copy the first one point */
+  int i = 0;
+  AnnotateStrokeCoordinate* pointA = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, i);
+  AnnotateStrokeCoordinate* pointB = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, i+1);
+  AnnotateStrokeCoordinate* pointC = NULL;
+
+  int Ax = pointA->x;
+  int Ay = pointA->y;
+  int Bx = pointB->x;
+  int By = pointB->y;
+  int Cx = pointB->x;
+  int Cy = pointB->y;
+
+  // add a point with the coordinates of pointA
   AnnotateStrokeCoordinate* first_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
-  first_point->x = inp_point->x;
-  first_point->y = inp_point->y;
-  first_point->width = inp_point->width;
- 
-  listOut = g_slist_prepend (listOut, first_point); 
+  first_point->x = Ax;
+  first_point->y = Ay;
+  first_point->width = pointA->width;
+  listOut = g_slist_prepend (listOut, first_point);
 
-  area = 0.;
-  Ax = inp_point->x;
-  Ay = inp_point->y;
-
-  listInp = listInp->next;   
-  inp_point = (AnnotateStrokeCoordinate*)listInp->data;
-  Bx = inp_point->x;
-  By = inp_point->y;
-  Cx = inp_point->x;
-  Cy = inp_point->y;
+  double area = 0.;
+  double h = 0;
   
-  listInp = listInp->next;   
+  int X1, Y1, X2, Y2;
 
-  /* I iter the list and I add the good point with the prepend */
-  while (listInp)
+  for (i = i+2; i<lenght; i++)
     {
-      inp_point = (AnnotateStrokeCoordinate*)listInp->data;
-      Cx = inp_point->x;
-      Cy = inp_point->y;
-      X1 = Bx-Ax;
-      Y1 = By-Ay;
-      X2 = Cx-Ax;
-      Y2 = Cy-Ay;
-      area += (double)(X1*Y2 - X2*Y1);
- 
-      H = (2*area)/sqrt(X2*X2+Y2*Y2);
-   
-      if (abs(H) > pixel_tollerance)
-	{   
-	  Ax = Bx;
-	  Ay = By;
-	  // Take a further point with standard deviation greater than the tollerance
-	  inp_point = (AnnotateStrokeCoordinate*)listOut->data;
-	  if (abs(Bx-inp_point->x)<pixel_tollerance)
-	    {
-	      Bx=inp_point->x;
-	    }
-	  if (abs(By-inp_point->y)<pixel_tollerance)
-	    {
-	      By=inp_point->y;
-              /* If B and inp_point are very closed I neglect the point and continue the loop */
-              if (get_distance(Bx, By, inp_point->x, inp_point->y)<pixel_tollerance)
-              {
-                Bx = Cx;
-                By = Cy;
-                area = 0.;
-                listInp = listInp->next;   
-                continue;
-              }
-	    }
-	  AnnotateStrokeCoordinate* add_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
-	  add_point->x = Bx;
-	  add_point->y = By;
-	  add_point->width = inp_point->width;
-	  listOut = g_slist_prepend (listOut, add_point);
-	  area = 0.;
-	}
-      Bx = Cx;
-      By = Cy;
-      listInp = listInp->next;   
-    }
+       pointC = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, i);
+       Cx = pointC->x;
+       Cy = pointC->y;
 
+       X1 = Bx - Ax;
+       Y1 = By - Ay;
+       X2 = Cx - Ax;
+       Y2 = Cy - Ay;
+    
+       area += (double) (X1 * Y2 - X2 * Y1);
+    
+       h = (2*area)/sqrt(X2*X2 + Y2*Y2);    
+       
+       if (fabs(h) >= pixel_tollerance)
+         {
+           
+            // add  a point with the B coordinates
+            AnnotateStrokeCoordinate* new_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+            new_point->x = Bx;
+            new_point->y = By;
+            new_point->width = pointB->width;
+            listOut = g_slist_prepend (listOut, new_point);
+            area = 0.0;
+            Ax = Bx;
+            Ay = By;
+         } 
+       // put to B the C coordinates
+       Bx = Cx;
+       By = Cy;
+    }
+  
   if (!close_path)
     {
-      /* Add the last point */
+      /* Add the last point with the coordinates */
       AnnotateStrokeCoordinate* last_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
       last_point->x = Cx;
       last_point->y = Cy;
-      last_point->width = inp_point->width;
-      listOut = g_slist_prepend (listOut, last_point);
+      last_point->width = pointC->width;
+      listOut = g_slist_prepend (listOut, last_point); 
     }
 
   /* I reverse the list to preserve the initial order */
@@ -392,6 +378,48 @@ GSList*  extract_outbounded_rectangle(GSList* listIn)
 }
 
 
+void putx(gpointer current, gpointer value)
+{
+  AnnotateStrokeCoordinate* currentpoint = ( AnnotateStrokeCoordinate* ) current;
+  int* valuex = ( int* ) value;
+  currentpoint->x = *valuex;
+}
+
+
+void puty(gpointer current, gpointer value)
+{
+  AnnotateStrokeCoordinate* currentpoint = ( AnnotateStrokeCoordinate* ) current;
+  int* valuey = ( int* ) value;
+  currentpoint->y = *valuey;
+}
+
+
+void straighten(GSList** list)
+{  
+  gint lenght = g_slist_length(*list);
+  AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (*list, 0);
+  AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (*list, lenght-1);
+  int deltax = abs(first_point->x-last_point->x);
+  int deltay = abs(first_point->y-last_point->y);
+  gfloat direction = atan2(deltay, deltax)/M_PI*180;
+  int degree_threshold = 7;
+  if ((0-degree_threshold<=direction)&&(direction<=0+degree_threshold)) 
+    {
+       // y is the average
+       int y = (first_point->y+last_point->y)/2;
+       // put this y for each element in the list
+       g_slist_foreach(*list, (GFunc)puty, &y);
+    } 
+  if ((90-degree_threshold<=direction)&&(direction<=90+degree_threshold)) 
+    {
+       // x is the average
+       int x = (first_point->x+last_point->x)/2;
+       // put this x for each element in the list
+       g_slist_foreach(*list, (GFunc)putx, &x);
+    } 
+}
+
+                   
 /* Take a list of point and return magically the new path */
 GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, int pixel_tollerance)
 {
@@ -401,7 +429,8 @@ GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, int pixel
     }
   
   GSList* listOut = extract_relevant_points(listInp, close_path, pixel_tollerance);  
-  
+   
+ 
   if (listOut)
     { 
       if (close_path)
@@ -431,7 +460,8 @@ GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, int pixel
 		    } 
 		} 
 	    }
-	  else
+          // roundify
+	  else 
 	    {
               /*  make the outbounded rectangle that will used to draw the ellipse */
               int lenght = g_slist_length(listOut);
