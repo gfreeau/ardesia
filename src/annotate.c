@@ -979,12 +979,6 @@ void rectify(gboolean closed_path)
 {
   int tollerance = data->cur_context->width;
   GSList *outptr = broken(data->coordlist, closed_path, TRUE, tollerance);
-  gint lenght = g_slist_length(outptr);
-
-  if (lenght<3)
-    {
-      return;
-    }
 
   if (data->debug)
     {
@@ -992,10 +986,15 @@ void rectify(gboolean closed_path)
     }
  
   if (!closed_path)
-    { 
-      // try to make straighten
-      straighten(&outptr);
+    {
+        // try to make straighten
+        GSList* straight_list = straighten(outptr);
+        // free outptr
+        g_slist_foreach(outptr, (GFunc)g_free, NULL);
+        g_slist_free(outptr);
+        outptr = straight_list;
     } 
+
 
   add_save_point();
   annotate_undo();
@@ -1068,7 +1067,7 @@ void roundify(gboolean closed_path)
 /* Call the geometric shape recognizer */
 void shape_recognize(gboolean closed_path)
 {
-  /* Rectifier code */
+  /* Rectifier code only if the list is greater that 3 */
   if ( g_slist_length(data->coordlist)> 3)
     {
       if (data->rectify)
@@ -1370,7 +1369,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       int tollerance = data->cur_context->width;
       distance = get_distance(ev->x, ev->y, first_point->x, first_point->y);
  
-      /* If the distance between two point lesser that tollerance they are the same point for me */
+      /* If the distance between two point lesser than tollerance they are the same point for me */
       if (distance<=tollerance)
         {
           distance=0;

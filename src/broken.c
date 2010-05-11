@@ -64,7 +64,7 @@ gboolean is_similar(int x, int y, int pixel_tollerance)
 /* The point (x1,y2) caan be rounded to (x2,y2) if the distance is minor that the pixel_tollerance */
 gboolean is_similar_point(int x1, int y1, int x2, int y2, int pixel_tollerance)
 {
-  double distance = get_distance(x1, y1, x2, y2);
+  int distance = get_distance(x1, y1, x2, y2);
   if (distance < pixel_tollerance)
     {
       return TRUE;
@@ -258,26 +258,30 @@ gboolean found_min_and_max(GSList* list, gint* minx, gint* miny, gint* maxx, gin
 
 
 /* The path described in list is similar to a regular poligon */
-gboolean is_similar_to_a_regular_poligon(GSList* list, int pixel_tollerance)
+gboolean is_similar_to_a_regular_poligon(GSList* list)
 {
   if (!list)
     {
       return FALSE;
     }
   gint lenght = g_slist_length(list);
-  double old_distance = -1;
+  int old_distance = -1;
   int i = 0;
   AnnotateStrokeCoordinate* old_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
+              
   for (i=1; i<lenght; i++)
     {
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
-      double distance = get_distance(point->x, point->y, old_point->x, old_point->y);
+      int distance = get_distance(point->x, point->y, old_point->x, old_point->y);
       if (old_distance != -1)
         {
-          if (!(is_similar(distance, old_distance, pixel_tollerance)))
+          /* I have seen that a good compromise allow a 30% of error */
+          int threshold =  old_distance/3;
+          if (!(is_similar(distance, old_distance, threshold)))
             {
               return FALSE; 
             }
+          // average distance
           old_distance = (distance + old_distance)/2;
         }
       else
@@ -394,29 +398,100 @@ void puty(gpointer current, gpointer value)
 }
 
 
-void straighten(GSList** list)
+gfloat calculate_edge_degree(AnnotateStrokeCoordinate* pointA, AnnotateStrokeCoordinate* pointB)
+{
+  int deltax = abs(pointA->x-pointB->x);
+  int deltay = abs(pointA->y-pointB->y);
+  gfloat directionAB = atan2(deltay, deltax)/M_PI*180;
+  return directionAB;   
+}
+
+
+GSList* straighten(GSList* list)
 {  
-  gint lenght = g_slist_length(*list);
-  AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (*list, 0);
-  AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (*list, lenght-1);
-  int deltax = abs(first_point->x-last_point->x);
-  int deltay = abs(first_point->y-last_point->y);
-  gfloat direction = atan2(deltay, deltax)/M_PI*180;
-  int degree_threshold = 7;
+  GSList* listOut = NULL;
+  if (!list)
+    {
+      return listOut;
+    }
+  
+ 
+  gint lenght = g_slist_length(list);
+  
+  int degree_threshold = 12;
+
+  /* copy the first one point; it is a good point */
+  AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
+  AnnotateStrokeCoordinate* first_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+  first_point->x = inp_point->x;
+  first_point->y = inp_point->y;
+  first_point->width = inp_point->width;
+  listOut = g_slist_prepend (listOut, first_point); 
+ 
+  int i;
+  for (i=0; i<lenght-2; i++)
+    {
+      AnnotateStrokeCoordinate* pointA = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
+      AnnotateStrokeCoordinate* pointB = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i+1);
+      AnnotateStrokeCoordinate* pointC = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i+2);
+      gfloat directionAB = calculate_edge_degree(pointA, pointB);  
+      gfloat directionBC = calculate_edge_degree(pointB, pointC);  
+
+      gfloat delta_degree = abs(directionAB-directionBC);
+      if (delta_degree > degree_threshold)
+        {
+           //copy B it's a good point
+           AnnotateStrokeCoordinate* point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+           point->x = pointB->x;
+           point->y = pointB->y;
+           point->width = pointB->width;
+           listOut = g_slist_prepend (listOut, point); 
+        } 
+       /* else is three the difference degree is minor than the threshold I neglegt B */
+    }
+
+  /* Copy the last point; it is a good point */
+  AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, lenght-1);
+  
+  AnnotateStrokeCoordinate* last_out_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+  last_out_point->x = last_point->x;
+  last_out_point->y = last_point->y;
+  last_out_point->width = last_point->width;
+  listOut = g_slist_prepend (listOut, last_out_point);
+
+  /* I reverse the list to preserve the initial order */
+  listOut = g_slist_reverse(listOut);
+
+
+  lenght = g_slist_length(listOut);
+  
+  if (lenght!=2)  
+    {
+       return listOut;
+    }
+  
+  /* It is a segment! */   
+  gfloat direction = calculate_edge_degree(first_point, last_point);  
+
+  /* is it is closed to 0 degree I draw an horizontal line */
   if ((0-degree_threshold<=direction)&&(direction<=0+degree_threshold)) 
     {
        // y is the average
        int y = (first_point->y+last_point->y)/2;
        // put this y for each element in the list
-       g_slist_foreach(*list, (GFunc)puty, &y);
+       g_slist_foreach(listOut, (GFunc)puty, &y);
     } 
+  
+  /* is it is closed to 90 degree I draw a vertical line */
   if ((90-degree_threshold<=direction)&&(direction<=90+degree_threshold)) 
     {
        // x is the average
        int x = (first_point->x+last_point->x)/2;
        // put this x for each element in the list
-       g_slist_foreach(*list, (GFunc)putx, &x);
+       g_slist_foreach(listOut, (GFunc)putx, &x);
     } 
+
+ return listOut; 
 }
 
                    
@@ -438,8 +513,8 @@ GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, int pixel
 	  /* close path */
 	  if (rectify)
 	    {
-	      // is similar to regular a poligon
-	      if (is_similar_to_a_regular_poligon(listOut, pixel_tollerance * 2))
+	      // is similar to regular a poligon 
+	      if (is_similar_to_a_regular_poligon(listOut))
 		{
 		  listOut = extract_poligon(listOut);
 		} 
