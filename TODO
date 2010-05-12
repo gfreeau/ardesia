@@ -44,22 +44,6 @@
   - Add the option to stick all the window
   - Save page (background + annotation)
   - Pdf export
-
-- Wiimote whiteboard minimalistic transparent driver 
-  - wiimote calibration gui implementation
-  - wiimote whiteboard driver 
- 
-- Future Plan: The Whiteboard Toolbar
-  - ardesia [DONE] 
-  - Screenshot saver [DONE]
-  - Magnifier [DONE]
-  - Spotlighter [DONE]
-  - Curtain [DONE]
-  - Florence-Ramble Virtual keyboard [DONE]
-  - Recorder [DONE]
-  - Streamer [DONE]
-  - Printer support
-  - Mini video player with play-pause, backward and forward
   - Multi pointer support using the xinput2 libraries
 
 
