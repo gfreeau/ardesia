@@ -418,7 +418,7 @@ GSList* straighten(GSList* list)
  
   gint lenght = g_slist_length(list);
   
-  int degree_threshold = 12;
+  int degree_threshold = 15;
 
   /* copy the first one point; it is a good point */
   AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
@@ -508,49 +508,59 @@ GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, int pixel
  
   if (listOut)
     { 
-      if (close_path)
-	{
-	  /* close path */
-	  if (rectify)
-	    {
-	      // is similar to regular a poligon 
-	      if (is_similar_to_a_regular_poligon(listOut))
-		{
-		  listOut = extract_poligon(listOut);
-		} 
-	      else
-		{
-		  if (is_a_rectangle(listOut, pixel_tollerance))
-		    {
-		      /* is a rectangle */
-		      GSList* listOutN = extract_outbounded_rectangle(listOut);
-		      g_slist_foreach(listOut, (GFunc)g_free, NULL);
-		      g_slist_free(listOut);
-		      listOut = listOutN;
-		      return listOut;
-		    }
-		  else
-		    {
-		      return listOut;
-		    } 
-		} 
-	    }
-          // roundify
-	  else 
-	    {
-              /*  make the outbounded rectangle that will used to draw the ellipse */
-              int lenght = g_slist_length(listOut);
-              if (lenght>2)
-                {
-                  // minimum three point is required
-	          GSList* listOutN = extract_outbounded_rectangle(listOut);
-	          g_slist_foreach(listOut, (GFunc)g_free, NULL);
-	          g_slist_free(listOut);
-	          listOut = listOutN;
-                }
-	      return listOut;
-	    }  
-	}
+        if (rectify) 
+	  {
+         
+     
+            if (close_path)
+              {
+	        // is similar to regular a poligon 
+	        if (is_similar_to_a_regular_poligon(listOut))
+                  {
+		    listOut = extract_poligon(listOut);
+                  } 
+	        else
+	          {
+
+		     if (is_a_rectangle(listOut, pixel_tollerance))
+		       {
+		         /* is a rectangle */
+		         GSList* listOutN = extract_outbounded_rectangle(listOut);
+		         g_slist_foreach(listOut, (GFunc)g_free, NULL);
+		         g_slist_free(listOut);
+		         listOut = listOutN;
+		         return listOut;
+		       }
+	          }
+              }
+            else
+              {
+                // try to make straighten
+                GSList* straight_list = straighten(listOut);
+                // free outptr
+                g_slist_foreach(listOut, (GFunc)g_free, NULL);
+                g_slist_free(listOut);
+                listOut = straight_list;
+              }
+          } 
+        else       
+         {
+            if (close_path)
+              {
+                 // roundify
+                 /*  make the outbounded rectangle that will used to draw the ellipse */
+                 int lenght = g_slist_length(listOut);
+                 if (lenght>2)
+                   {
+                      // minimum three point is required
+	              GSList* listOutN = extract_outbounded_rectangle(listOut);
+	              g_slist_foreach(listOut, (GFunc)g_free, NULL);
+	              g_slist_free(listOut);
+	              listOut = listOutN;
+                    }
+                 return listOut;
+              }
+	  }  
     }
   return listOut;
 }

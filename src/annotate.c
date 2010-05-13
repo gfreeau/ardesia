@@ -984,17 +984,6 @@ void rectify(gboolean closed_path)
     {
       g_printerr("rectify\n");
     }
- 
-  if (!closed_path)
-    {
-        // try to make straighten
-        GSList* straight_list = straighten(outptr);
-        // free outptr
-        g_slist_foreach(outptr, (GFunc)g_free, NULL);
-        g_slist_free(outptr);
-        outptr = straight_list;
-    } 
-
 
   add_save_point();
   annotate_undo();
