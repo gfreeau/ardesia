@@ -153,7 +153,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, int pixel_
   int i = 0;
   AnnotateStrokeCoordinate* pointA = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, i);
   AnnotateStrokeCoordinate* pointB = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, i+1);
-  AnnotateStrokeCoordinate* pointC = NULL;
+  AnnotateStrokeCoordinate* pointC = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, lenght-1);
 
   int Ax = pointA->x;
   int Ay = pointA->y;
