@@ -18,10 +18,6 @@
   - Solve memory leaks
   - Profile the program
     to encrease the performance
-  - Undo-redo using svg file
-
-
-- Investigate about MacOsX porting
 
 
 - Windows porting
@@ -29,8 +25,9 @@
   - recording (using camit and ffmpeg2theora)
   - forwardind to icecast for streaming 
     (investigate about a oggfwd win32 port)
-  - Bug fix merge beetween text window and annotation
-    window in win32 porting
+
+
+- Investigate about MacOsX porting
 
 
 - Usability
@@ -42,8 +39,9 @@
 
 - Possible future features
   - Add the option to stick all the window
-  - Save page (background + annotation)
+  - Save page (raster background + svg annotation)
   - Pdf export
+  - Undo-redo using svg file
   - Multi pointer support using the xinput2 libraries
 
 
