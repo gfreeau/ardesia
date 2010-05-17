@@ -63,7 +63,6 @@ gboolean  quit(BarData *bar_data)
 {
   /* Disallocate all the BarData */
   
-  /*
   if (bar_data)
     {
       g_free(bar_data->color);
@@ -73,7 +72,6 @@ gboolean  quit(BarData *bar_data)
       }
       g_free(bar_data);
     }
-  */
   quit_recorder();
   destroy_background_window();
   annotate_quit();
@@ -164,11 +162,11 @@ void start_tool(BarData *bar_data)
 
 /* Called when push the quit button */
 G_MODULE_EXPORT gboolean
-on_quit                          (GtkWidget       *widget,
-                                  GdkEvent        *event,
-                                  gpointer         user_data)
+on_quit                          (GtkToolButton   *toolbutton,
+			         gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
+ 
   return quit(bar_data);
 }
 

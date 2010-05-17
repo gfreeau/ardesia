@@ -14,8 +14,9 @@
 
 
 - Refactoring
+  - Send the stream with ezstream
   - Better variables handling
-  - Solve memory leaks
+  - Solve  memory leaks
   - Profile the program
     to encrease the performance
 
@@ -23,8 +24,7 @@
 - Windows porting
   - use opaque color upon a (semi) transparent window
   - recording (using camit and ffmpeg2theora)
-  - forwardind to icecast for streaming 
-    (investigate about a oggfwd win32 port)
+  - forward the stream to icecast (using ezstream) 
 
 
 - Investigate about MacOsX porting
@@ -38,7 +38,6 @@
 
 
 - Possible future features
-  - Add the option to stick all the window
   - Save page (raster background + svg annotation)
   - Pdf export
   - Undo-redo using svg file

@@ -54,6 +54,7 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
   cairo_paint(cr);
   cairo_surface_write_to_png(surface, filename);
   cairo_destroy(cr);
+  cairo_surface_destroy(surface);
   return TRUE;
 }
 
@@ -62,19 +63,22 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
  * Start the dialog that ask to the user where save the image
  * containing the screenshot
  */
-void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char** workspace_dir)
+void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar** workspace_dir)
 {
   char* date = get_date();
   if (!(*workspace_dir))
     {
-      *workspace_dir = (char *) get_desktop_dir();
+      /* Initialize it to the desktop folder */
+      gchar* desktop_dir = (gchar *) get_desktop_dir();
+      *workspace_dir = g_malloc( strlen(desktop_dir)*sizeof(gchar));
+      strcpy(*workspace_dir, desktop_dir);
+      g_free(desktop_dir);
     }	
 
   gint height = gdk_screen_height ();
   gint width = gdk_screen_width ();
 
-  GdkWindow* root = gdk_get_default_root_window ();
-  GdkPixbuf* buf = gdk_pixbuf_get_from_drawable (NULL, root, NULL,
+  GdkPixbuf* buf = gdk_pixbuf_get_from_drawable (NULL, gdk_get_default_root_window (), NULL,
                                                  0, 0, 0, 0, width, height);
 
   
@@ -85,12 +89,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
   
-  gtk_window_set_modal(GTK_WINDOW(chooser), TRUE);
-  if (STICK)
-    {
-       /* with this apperar in all the workspaces */ 
-       gtk_window_stick(GTK_WINDOW(chooser));
-    } 
+  gtk_window_set_modal(GTK_WINDOW(chooser), TRUE); 
 
   /* preview of saving */
   GtkWidget*   preview = gtk_image_new ();
@@ -99,7 +98,6 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
   gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);   
   g_object_unref (previewPixbuf);
 
- 
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Select a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
   
@@ -131,11 +129,6 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, cha
 					       GTK_DIALOG_MODAL, 
                                                GTK_MESSAGE_WARNING,
                                                GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
-          if (STICK)
-          {
-             /* with this apperar in all the workspaces */ 
-             gtk_window_stick((GtkWindow*)msg_dialog);
-          } 
           
           int result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
           if (msg_dialog != NULL)

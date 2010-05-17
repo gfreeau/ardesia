@@ -32,7 +32,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">thin</property>
                 <property name="group">buttonMedium</property>
-                <signal name="toggled" handler="on_toolsThin_activate"/>
+                <signal name="clicked" handler="on_toolsThin_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -46,7 +46,7 @@
                 <property name="tooltip_text" translatable="yes">Medium</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">medium</property>
-                <signal name="toggled" handler="on_toolsMedium_activate"/>
+                <signal name="clicked" handler="on_toolsMedium_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -61,7 +61,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">thick</property>
                 <property name="group">buttonMedium</property>
-                <signal name="toggled" handler="on_toolsThick_activate"/>
+                <signal name="clicked" handler="on_toolsThick_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -102,7 +102,7 @@
                 <property name="tooltip_text" translatable="yes">Rectifier</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">rectifier</property>
-                <signal name="toggled" handler="on_toolsRectifier_activate"/>
+                <signal name="clicked" handler="on_toolsRectifier_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -116,7 +116,7 @@
                 <property name="tooltip_text" translatable="yes">Rounder</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">rounder</property>
-                <signal name="toggled" handler="on_toolsRounder_activate"/>
+                <signal name="clicked" handler="on_toolsRounder_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -130,7 +130,7 @@
                 <property name="tooltip_text" translatable="yes">Highlighter</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">highlighter</property>
-                <signal name="toggled" handler="on_toolsHighlighter_activate"/>
+                <signal name="clicked" handler="on_toolsHighlighter_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -158,7 +158,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">arrow</property>
                 <property name="group">buttonPencil</property>
-                <signal name="toggled" handler="on_toolsArrow_activate"/>
+                <signal name="clicked" handler="on_toolsArrow_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -173,7 +173,7 @@
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-italic</property>
                 <property name="group">buttonPencil</property>
-                <signal name="toggled" handler="on_toolsText_activate"/>
+                <signal name="clicked" handler="on_toolsText_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -187,7 +187,7 @@
                 <property name="tooltip_text" translatable="yes">Pencil</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">pencil</property>
-                <signal name="toggled" handler="on_toolsPencil_activate"/>
+                <signal name="clicked" handler="on_toolsPencil_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -202,7 +202,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">eraser</property>
                 <property name="group">buttonPencil</property>
-                <signal name="toggled" handler="on_toolsEraser_activate"/>
+                <signal name="clicked" handler="on_toolsEraser_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -230,7 +230,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">blue</property>
                 <property name="group">buttonRed</property>
-                <signal name="toggled" handler="on_colorBlue_activate"/>
+                <signal name="clicked" handler="on_colorBlue_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -245,7 +245,7 @@
                 <property name="use_underline">True</property>
                 <property name="icon_widget">lightgreen</property>
                 <property name="group">buttonRed</property>
-                <signal name="toggled" handler="on_colorLightGreen_activate"/>
+                <signal name="clicked" handler="on_colorLightGreen_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -260,7 +260,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">yellow</property>
                 <property name="group">buttonRed</property>
-                <signal name="toggled" handler="on_colorYellow_activate"/>
+                <signal name="clicked" handler="on_colorYellow_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -274,7 +274,7 @@
                 <property name="tooltip_text" translatable="yes">Red</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">red</property>
-                <signal name="toggled" handler="on_colorRed_activate"/>
+                <signal name="clicked" handler="on_colorRed_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -289,7 +289,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">white</property>
                 <property name="group">buttonRed</property>
-                <signal name="toggled" handler="on_colorWhite_activate"/>
+                <signal name="clicked" handler="on_colorWhite_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -303,7 +303,7 @@
                 <property name="tooltip_text" translatable="yes">Color Selection</property>
                 <property name="stock_id">gtk-select-color</property>
                 <property name="group">buttonRed</property>
-                <signal name="toggled" handler="on_buttonColor_activate"/>
+                <signal name="clicked" handler="on_buttonColor_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -357,7 +357,7 @@
                 <property name="tooltip_text" translatable="yes">Hide</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-find</property>
-                <signal name="toggled" handler="on_toolsVisible_activate"/>
+                <signal name="clicked" handler="on_toolsVisible_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -451,7 +451,7 @@
                 <property name="tooltip_text" translatable="yes">Record</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-media-record</property>
-                <signal name="toggled" handler="on_toolsRecorder_activate"/>
+                <signal name="clicked" handler="on_toolsRecorder_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>

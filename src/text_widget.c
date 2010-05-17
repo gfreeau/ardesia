@@ -97,11 +97,6 @@ void create_text_window(GtkWindow *parent)
   gtk_widget_set_usize (GTK_WIDGET(text_window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(text_window));
 
-  if (STICK)
-    {
-      gtk_window_stick(GTK_WINDOW(text_window));
-    }
-
   gtk_window_set_decorated(GTK_WINDOW(text_window), FALSE);
   gtk_widget_set_app_paintable(text_window, TRUE);
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(text_window), TRUE);

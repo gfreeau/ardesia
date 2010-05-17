@@ -560,7 +560,7 @@ void hide_cursor()
                                              size/2, size/2);    
   
   gdk_window_set_cursor(data->annotation_window->window, data->cursor);
-  gdk_display_sync(gdk_display_get_default());
+  gdk_display_sync(data->display);
   
   g_object_unref (pixmap);
   g_object_unref (mask);
@@ -637,7 +637,7 @@ void set_pen_cursor()
                                              size/2 + context_width/2, 5* size/2);
 
   gdk_window_set_cursor (data->annotation_window->window, data->cursor);
-  gdk_display_sync(gdk_display_get_default());
+  gdk_display_sync(data->display);
   g_object_unref (pixmap);
   g_object_unref (mask);
   g_free(foreground_color_p);
@@ -699,7 +699,7 @@ void set_eraser_cursor()
   data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask, foreground_color_p, background_color_p, size/2, size/2);
   
   gdk_window_set_cursor (data->annotation_window->window, data->cursor);
-  gdk_display_sync(gdk_display_get_default());
+  gdk_display_sync(data->display);
   g_object_unref (pixmap);
   g_object_unref (mask);
   g_free(foreground_color_p);
@@ -1471,13 +1471,14 @@ void annotate_quit()
   g_free(data->default_pen->fg_color);
   g_free(data->default_pen);
   g_free(data->default_eraser);
-  g_free (data);
 
   if (data->cursor)
     {
       gdk_cursor_unref(data->cursor);
       data->cursor=NULL;
     }
+  
+  g_free (data);
 }
 
 
@@ -1663,11 +1664,6 @@ void setup_app ()
 
   gtk_widget_set_usize(GTK_WIDGET (data->annotation_window), data->width, data->height);
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window)); 
-  
-  if (STICK)
-    {
-      gtk_window_stick(GTK_WINDOW(data->annotation_window));
-    }  
 	
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(data->annotation_window), TRUE);
 

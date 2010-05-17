@@ -43,9 +43,7 @@
 #  define N_(String) (String)
 #endif
 
-#define STICK FALSE
-						
-			
+
 extern GtkBuilder *gtkBuilder;
 
 #ifdef WIN32

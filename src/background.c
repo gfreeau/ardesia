@@ -286,11 +286,6 @@ GtkWidget* create_background_window(char* backgroundimage)
   
   gtk_window_maximize(GTK_WINDOW(background_data->background_window));
 
-  if (STICK)
-    {
-      gtk_window_stick(GTK_WINDOW(background_data->background_window));  
-    }
-
   gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0); 
 
   g_signal_connect (background_data->background_window, "expose_event",

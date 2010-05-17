@@ -183,10 +183,6 @@ void run_missing_composite_manager_dialog()
    GtkWidget *msg_dialog; 
    msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
                                         GTK_BUTTONS_OK, gettext("In order to run Ardesia you need to enable the Compiz composite manager"));
-   if (STICK)
-     {
-       gtk_window_stick((GtkWindow*)msg_dialog);
-     }
                  
    gtk_dialog_run(GTK_DIALOG(msg_dialog));
    

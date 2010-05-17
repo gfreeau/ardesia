@@ -191,11 +191,6 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   preferenceDialog = GTK_WIDGET(gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"preferences"));
   gtk_window_set_transient_for(GTK_WINDOW(preferenceDialog), parent);
   gtk_window_set_modal(GTK_WINDOW(preferenceDialog), TRUE);
-  
-  if (STICK)
-    {
-      gtk_window_stick((GtkWindow*)preferenceDialog);
-    }  
 
   GtkFileChooser* chooser = GTK_FILE_CHOOSER(gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder, "imageChooserButton"));
 
@@ -217,14 +212,15 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   gtk_builder_connect_signals (preference_data->preferenceDialogGtkBuilder, (gpointer) preference_data);
   GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"file"));
   GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"color"));
+  
   if (preference_data->background == 1)
-  {
-     gtk_toggle_button_set_active(colorToolButton,TRUE);
-  }
+    {
+      gtk_toggle_button_set_active(colorToolButton,TRUE);
+    }
   else if (preference_data->background == 2)
-  {
-     gtk_toggle_button_set_active(imageToolButton,TRUE);
-  }
+    {
+       gtk_toggle_button_set_active(imageToolButton,TRUE);
+    }
 
   gtk_dialog_run(GTK_DIALOG(preferenceDialog));
     
@@ -232,6 +228,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
     {
       gtk_widget_destroy(preferenceDialog);
     }
+
   g_object_unref (preference_data->preferenceDialogGtkBuilder);
   g_free(preference_data);
 }
