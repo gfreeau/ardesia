@@ -14,7 +14,6 @@
 
 
 - Refactoring
-  - Send the stream with ezstream
   - Better variables handling
   - Solve  memory leaks
   - Profile the program

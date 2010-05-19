@@ -1,15 +1,10 @@
-#These are the right variables 
-#supposing that the icecast server
-#is running in the local machine 
-#with the default conf file
-LOCATION="localhost"
-PORT="8000"
-PASSWORD="hackme"
-MOUNTPOINT="/ardesia.ogv"
 # Uncomment this to use the live screencast on icecast
 # To start the live stream successfully you must configure
-# the previous variables as you desire to point to the right
-# running icecast server
+# the configuration file ezstream_stdin_vorbis.xml
+# as you desire to point to the right running icecast server
+# The configuration file is setted to work properly
+# if it is used a localhost icecast server with the default 
+# configuration
 # Client side you must have the oggfwd installed
 ICECAST="FALSE";
 #ICECAST="TRUE";
@@ -29,7 +24,7 @@ then
   if [ "$ICECAST" = "TRUE" ]
   then
     echo Sending the streaming to icecast server $LOCATION 
-    cat $1 | oggfwd $LOCATION $PORT $PASSWORD $MOUNTPOINT & 
+    cat $1 | ezstream -c ezstream_stdin_vorbis.xml& 
     OGGFWDPID=$!
     echo $OGGFWDPID >> /tmp/oggfwd.pid
   fi

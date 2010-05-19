@@ -68,9 +68,8 @@ Usability:
   - the "cellwriter" handwriting recognizer
 - Using a horizontal and vertical layout
   (see the --gravity option) 
-- Use three line widthness buttons (thin, medium, thick);
-  this seems be more usable with the whiteboard than
-  the old slide 
+- Use a only one button to configure the line widthness (thin, medium, thick);
+  this seems compact and more usable with the whiteboard than the slide 
 - better shape recognizer
 - fast responsivity
 
