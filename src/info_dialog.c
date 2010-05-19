@@ -69,6 +69,7 @@ void start_info_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
     {
       gtk_widget_destroy(infoDialog);
     }
+
   g_object_unref (infoDialogGtkBuilder);
 }
 

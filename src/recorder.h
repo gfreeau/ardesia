@@ -28,7 +28,7 @@
  * This function take as input the recor toolbutton in ardesia bar
  * return true is the recorder is started
  */
-gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char** workspace_dir);
+gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar** workspace_dir);
 
 
 /* Quit to record */

@@ -25,4 +25,4 @@
  * Start the dialog that ask to the user where save the image
  * containing the screenshot
  */
-void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, char** workspace_dir);
+void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar** workspace_dir);

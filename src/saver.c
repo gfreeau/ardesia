@@ -65,12 +65,12 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
  */
 void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar** workspace_dir)
 {
-  char* date = get_date();
+  gchar* date = get_date();
   if (!(*workspace_dir))
     {
       /* Initialize it to the desktop folder */
       gchar* desktop_dir = (gchar *) get_desktop_dir();
-      *workspace_dir = g_malloc( strlen(desktop_dir)*sizeof(gchar));
+      *workspace_dir = (gchar*) g_malloc( (strlen(desktop_dir) + 1) * sizeof(gchar));
       strcpy(*workspace_dir, desktop_dir);
       g_free(desktop_dir);
     }	
@@ -93,16 +93,19 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gch
 
   /* preview of saving */
   GtkWidget*   preview = gtk_image_new ();
-  GdkPixbuf*   previewPixbuf = gdk_pixbuf_scale_simple(buf, 128, 128, GDK_INTERP_BILINEAR);
+  int preview_width = 128;
+  int preview_height = 128;
+  GdkPixbuf*   previewPixbuf = gdk_pixbuf_scale_simple(buf, preview_width, preview_height, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (preview), previewPixbuf);
   gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);   
   g_object_unref (previewPixbuf);
 
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Select a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
-  
-  gchar* filename =  malloc(256*sizeof(char));
-  sprintf(filename,"ardesia_%s", date);
+ 
+  gchar* start_string = "ardesia_"; 
+  gchar* filename = (gchar*) g_malloc((strlen(start_string) + strlen(date) + 1) * sizeof(gchar));
+  sprintf(filename,"%s%s", start_string, date);
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   gboolean screenshot = FALSE;
  

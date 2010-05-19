@@ -1468,7 +1468,6 @@ void annotate_quit()
   annotate_coord_list_free();
   annotate_savelist_free();
 
-  g_free(data->default_pen->fg_color);
   g_free(data->default_pen);
   g_free(data->default_eraser);
 

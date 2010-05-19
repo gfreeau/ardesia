@@ -75,7 +75,7 @@ gchar* start_color_selector_dialog(GtkToolButton *toolbutton, GtkWindow *parent,
       gtk_color_selection_set_previous_color(colorsel, gdkcolor);
       gtk_color_selection_set_has_palette(colorsel, TRUE);
 
-      gint result = gtk_dialog_run((GtkDialog *) colorDialog);
+      gint result = gtk_dialog_run(GTK_DIALOG(colorDialog));
 
       /* Wait for user to select OK or Cancel */
       switch (result)
@@ -85,10 +85,9 @@ gchar* start_color_selector_dialog(GtkToolButton *toolbutton, GtkWindow *parent,
             gtk_color_selection_set_has_palette(colorsel, TRUE);
             gtk_color_selection_get_current_color(colorsel, gdkcolor);
             ret_color = gdkcolor_to_rgba(gdkcolor);
-            g_free(gdkcolor);
             if (picked_color == NULL)
               {
-	        picked_color = g_malloc(strlen(ret_color));
+	        picked_color = g_malloc((strlen(ret_color) + 1) * sizeof(gchar));
               }
             strncpy(picked_color, ret_color, strlen(ret_color));
 	    break;
@@ -96,10 +95,14 @@ gchar* start_color_selector_dialog(GtkToolButton *toolbutton, GtkWindow *parent,
 	  default:
 	    break;
 	}
+
       if (colorDialog != NULL)
 	{
 	  gtk_widget_destroy(colorDialog);
 	}
+
+      g_free(gdkcolor);
+
     }
   return ret_color;
 }

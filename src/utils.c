@@ -109,10 +109,14 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 
   /* create a cursor out of the created pixmap */
   rgb_pixbuf = gdk_pixbuf_get_from_drawable(
-    NULL, rgb_pixmap, gdk_colormap_get_system(), 0, 0, 0, 0, width, height);
+                                            NULL, 
+                                            rgb_pixmap, 
+                                            gdk_colormap_get_system(),
+                                            0, 0, 0, 0,
+                                            width, 
+                                            height);
   gdk_pixmap_unref(rgb_pixmap);
-  rgba_pixbuf = gdk_pixbuf_add_alpha(
-    rgb_pixbuf, TRUE, trans->red, trans->green, trans->blue);
+  rgba_pixbuf = gdk_pixbuf_add_alpha(rgb_pixbuf, TRUE, trans->red, trans->green, trans->blue);
   gdk_pixbuf_unref(rgb_pixbuf);
   cursor = gdk_cursor_new_from_pixbuf(gdk_display_get_default(), rgba_pixbuf, x, y);
   gdk_pixbuf_unref(rgba_pixbuf);
@@ -223,7 +227,7 @@ gchar* get_date()
   time( &now );
   t = localtime( &now );
 
-  gchar* date = g_malloc(64 * sizeof(gchar));
+  gchar* date = g_malloc(19 * sizeof(gchar));
   sprintf(date, "%d-%d-%d_%d:%d:%d", t->tm_mday,t->tm_mon+1,t->tm_year+1900,t->tm_hour,t->tm_min,t->tm_sec);
   return date;
 }

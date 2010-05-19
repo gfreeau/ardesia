@@ -156,10 +156,7 @@ back_event_expose (GtkWidget *widget,
     }
   else if (background_data->background_color)
     {
-       if (background_data->background_color)
-         {
-            change_background_color(background_data->background_color);
-         }
+      change_background_color(background_data->background_color);
     }
   else
     {
@@ -246,9 +243,10 @@ void change_background_color (char* rgba)
 {
   g_free(background_data->background_image);
   background_data->background_image = NULL;
+  
   if (!(background_data->background_color))
     {
-       background_data->background_color = (char*) g_malloc( sizeof(char) * 9);
+       background_data->background_color = (gchar*) g_malloc( sizeof(gchar) * 9);
     }
  
   strcpy(background_data->background_color, rgba);
