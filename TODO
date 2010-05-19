@@ -22,8 +22,12 @@
 
 
 - Windows porting
-  - use opaque color upon a (semi) transparent window
-  - recording (using camit and ffmpeg2theora)
+  - fix the new bug introduced; I do not test all the committs
+    on windows
+  - draw with rgba color on the annotation transparent window
+  - be able to move the cursor event above and below 
+    the transparent annotation window
+  - recording (may be using camit and ffmpeg2theora)
   - forward the stream to icecast (using ezstream) 
 
 

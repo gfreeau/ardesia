@@ -35,7 +35,7 @@ then
   fi
 fi
 
-if [ "$2" = "stop" ]
+if [ "$1" = "stop" ]
 then
   RECORDPID=$(cat /tmp/recordmydesktop.pid)
   echo Stop the screencast killing recordmydesktop 

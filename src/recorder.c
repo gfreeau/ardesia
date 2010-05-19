@@ -44,14 +44,13 @@
 
 
 /* pid of the recording process */
-int          recorderpid = -1;
-gchar* filename = NULL;
+static int          recorderpid = -1;
 
 /* 
  * Create a annotate client process the annotate
  * that talk with the server process option is start or stop
  */
-int call_recorder(char* option)
+int call_recorder(char* filename, char* option)
 {
   #ifdef _WIN32
     //TODO: this feature is not yet implemented on win32
@@ -59,10 +58,18 @@ int call_recorder(char* option)
   #else
     char* argv[4];
     argv[0] = RECORDER_FILE;
-    argv[1] = filename;
-    argv[2] = option;
+    if (filename)
+    {
+      argv[1] = filename;
+      argv[2] = option;
+    }
+    else
+    {
+      argv[1] = option;
+      argv[2] = (char*) NULL ;
+    }
     argv[3] = (char*) NULL ;
-  
+      
     pid_t pid;
     pid = fork();
   
@@ -134,8 +141,7 @@ void quit_recorder()
       {
         kill(recorderpid,SIGTERM);
         recorderpid=-1;
-        call_recorder("stop");
-        g_free(filename);
+        call_recorder(NULL, "stop");
       }  
   #endif
 }
@@ -196,9 +202,6 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
     {
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
      
-      gchar* tmp = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
-      strcpy(*workspace_dir, tmp);
-      g_free(tmp);
       char* supported_extension = ".ogv";
       char* extension = strrchr(filename, '.');
       if ((extension==0) || (strcmp(extension, supported_extension) != 0))
@@ -233,8 +236,9 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
       recorderpid = check_recorder();
       if (recorderpid > 0)
         {
+          printf("filename %s\n", filename);
           status = TRUE;
-          recorderpid = call_recorder("start");
+          recorderpid = call_recorder(filename, "start");
         }
       else
        {
@@ -247,6 +251,7 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
    { 
      gtk_widget_destroy (chooser);
    } 
+  g_free(filename);
       
   g_free(date);
   return status;
