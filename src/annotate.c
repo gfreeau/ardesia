@@ -455,21 +455,6 @@ void annotate_activate_bar_input()
     /* This allows the mouse event to be passed to the window below when ungrab */
     gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);  
   #else
-    /* 
-        This apply a transparent shape mask above the ardesia bar;
-        this has been done because in WIN32 the gdk_window_input_shape_combine_mask is not correctly implemented 
-        in win32 if the pointer is above the bar the events will passed to the window below
-     */
-    cairo_set_source_rgb(data->shape_cr, 1, 1, 1);
-    cairo_paint(data->shape_cr);
-    cairo_stroke(data->shape_cr);
-    cairo_set_source_rgb(data->shape_cr, 0, 0, 0);
-    cairo_rectangle(data->shape_cr, 
-                    data->untogglexpos, data->untoggleypos, 
-                    data->untogglewidth, data->untoggleheight);
-    cairo_fill(data->shape_cr);
-    cairo_stroke(data->shape_cr);
-
     gdk_window_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);  
   #endif
 
@@ -749,8 +734,10 @@ void annotate_acquire_grab ()
 	   g_printerr("Acquire grab\n");
 	} 
       gtk_widget_grab_focus(data->annotation_window);
-      gtk_widget_input_shape_combine_mask(data->annotation_window, NULL, 0, 0); 
-      annotate_select_cursor();
+	  #ifndef _WIN32
+        gtk_widget_input_shape_combine_mask(data->annotation_window, NULL, 0, 0); 
+      #endif
+	  annotate_select_cursor();
       data->is_grabbed = TRUE;
 
     }
@@ -1148,9 +1135,13 @@ event_expose (GtkWidget *widget,
       clear_cairo_context(data->transparent_cr); 
     }
   restore_surface();
-  /* This allows the mouse event to be passed to the window below at the start of the tool */
-  gdk_window_input_shape_combine_mask (data->annotation_window->window, 
-                                       data->shape, 0, 0);
+  #ifndef _WIN32
+    /* This allows the mouse event to be passed to the window below at the start of the tool */
+    gdk_window_input_shape_combine_mask (data->annotation_window->window, 
+                                         data->shape, 0, 0);
+  #else										 
+    gdk_window_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);  
+  #endif
   return TRUE;
 }
 
@@ -1695,6 +1686,26 @@ void setup_app ()
 
   clear_cairo_context(data->shape_cr); 
 
+  #ifdef _WIN32
+      /* 
+        This build a transparent shape mask only above the ardesia bar;
+        will be applied to the window with gdk_window_shape_combine_mask 
+		all the time that we want allow the ardesia bar to listen the events 
+		REGARDS: This is a workaround to choose who has the input
+		might be used the gdk_window_input_shape_combine_mask but it does not
+		work on win32
+     */
+    cairo_set_source_rgb(data->shape_cr, 1, 1, 1);
+    cairo_paint(data->shape_cr);
+    cairo_stroke(data->shape_cr);
+    cairo_set_source_rgb(data->shape_cr, 0, 0, 0);
+    cairo_rectangle(data->shape_cr, 
+                    data->untogglexpos, data->untoggleypos, 
+                    data->untogglewidth, data->untoggleheight);
+    cairo_fill(data->shape_cr);
+    cairo_stroke(data->shape_cr);
+  #endif
+  
   /* connect the signals */
   annotate_connect_signals();
 
