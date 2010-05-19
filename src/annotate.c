@@ -734,10 +734,10 @@ void annotate_acquire_grab ()
 	   g_printerr("Acquire grab\n");
 	} 
       gtk_widget_grab_focus(data->annotation_window);
-	  #ifndef _WIN32
+      #ifndef _WIN32
         gtk_widget_input_shape_combine_mask(data->annotation_window, NULL, 0, 0); 
       #endif
-	  annotate_select_cursor();
+      annotate_select_cursor();
       data->is_grabbed = TRUE;
 
     }
