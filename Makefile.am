@@ -35,6 +35,9 @@ DISTCLEANFILES = intltool-extract \
 deb:
 	debuild -us -uc -b
 
+update-po:
+	(cd po; $(MAKE) update-po)
+
 clean:
 	@for i in $(SUBDIRS); do \
         echo "Clearing in $$i..."; \

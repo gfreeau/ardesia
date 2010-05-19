@@ -69,9 +69,8 @@ and selecting the "open with Ardesia" item
 
 Button explanation
 
-- Thin: it selects the thin thickness for the selected tool
-- Medium: it selects the medium thickness for the selected tool
-- Thick: it selects the medium thickness for the selected tool
+- Thickness: it selects the thin thickness for the selected tool;
+  pressing the button you can select a thin, medium and thick thickness
 - Filler: it fills the last closed path drawn with the selected color;
   this button can be pushed after a closed path sketch
 - Rectifier: it rectifies your sketch; 

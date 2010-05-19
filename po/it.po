@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-22 17:46+0200\n"
+"POT-Creation-Date: 2010-05-19 16:59+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
@@ -13,7 +13,7 @@ msgstr ""
 "X-Poedit-Country: ITALY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../src/main.c:181
+#: ../src/ardesia.c:185
 msgid "In order to run Ardesia you need to enable the Compiz composite manager"
 msgstr ""
 "Per far girare Ardesia è necessario abilitare il composite manager Compiz"
@@ -23,24 +23,24 @@ msgstr ""
 msgid "Changing color"
 msgstr "Cambia colore"
 
-#: ../src/recorder.c:150
+#: ../src/recorder.c:152
 msgid "To record with Ardesia you must install the recordmydesktop program"
 msgstr ""
 "Per registrare con Ardesia devi installare il programma recordmydesktop"
 
-#: ../src/recorder.c:183
+#: ../src/recorder.c:180
 msgid "Save video as ogv"
 msgstr "Salva il video nel formato ogv"
 
-#: ../src/recorder.c:193 ../src/saver.c:103
+#: ../src/recorder.c:186 ../src/saver.c:103
 msgid "Select a file"
 msgstr "Seleziona un file"
 
-#: ../src/recorder.c:223 ../src/saver.c:133
+#: ../src/recorder.c:218 ../src/saver.c:134
 msgid "File Exists. Overwrite"
 msgstr "Il file esiste. Sovrascrivilo"
 
-#: ../src/saver.c:81
+#: ../src/saver.c:85
 msgid "Save image"
 msgstr "Salva immagine"
 
@@ -53,126 +53,102 @@ msgid "Arrow"
 msgstr "Freccia"
 
 #: ../src/ardesia.glade.h:3
-msgid "Bidirectional Arrow"
-msgstr "Freccia bidirezonale"
-
-#: ../src/ardesia.glade.h:4
 msgid "Black"
 msgstr "Nero"
 
-#: ../src/ardesia.glade.h:5
-msgid "Blue"
-msgstr "Blu"
-
-#: ../src/ardesia.glade.h:6
+#: ../src/ardesia.glade.h:4
 msgid "Clear"
 msgstr "Pulisci"
 
-#: ../src/ardesia.glade.h:7
+#: ../src/ardesia.glade.h:5
 msgid "Color Selection"
 msgstr "Seleziona Colore"
 
-#: ../src/ardesia.glade.h:8
+#: ../src/ardesia.glade.h:6
 msgid "Eraser"
 msgstr "Cancellino"
 
-#: ../src/ardesia.glade.h:9
+#: ../src/ardesia.glade.h:7
 msgid "Filler"
 msgstr "Riempi"
 
-#: ../src/ardesia.glade.h:10
+#: ../src/ardesia.glade.h:8
 msgid "Green"
 msgstr "Verde"
 
-#: ../src/ardesia.glade.h:11
+#: ../src/ardesia.glade.h:9
 msgid "Hide"
 msgstr "Nascondi"
 
-#: ../src/ardesia.glade.h:12
+#: ../src/ardesia.glade.h:10
 msgid "Highlighter"
 msgstr "Evidenziatore"
 
-#: ../src/ardesia.glade.h:13
+#: ../src/ardesia.glade.h:11
 msgid "Info"
 msgstr "Info"
 
-#: ../src/ardesia.glade.h:14
+#: ../src/ardesia.glade.h:12
 msgid "Insert Text"
 msgstr "Inserisci testo"
 
-#: ../src/ardesia.glade.h:15
-msgid "Magenta"
-msgstr "Magenta"
-
-#: ../src/ardesia.glade.h:16
-msgid "Medium"
-msgstr "Medio"
-
-#: ../src/ardesia.glade.h:17
-msgid "Orange"
-msgstr "Arancione"
-
-#: ../src/ardesia.glade.h:18
+#: ../src/ardesia.glade.h:13
 msgid "Pencil"
 msgstr ""
 
-#: ../src/ardesia.glade.h:19
+#: ../src/ardesia.glade.h:14
 msgid "Preferences"
 msgstr "Preferenze"
 
-#: ../src/ardesia.glade.h:20
+#: ../src/ardesia.glade.h:15
 msgid "Quit"
 msgstr "Esci"
 
-#: ../src/ardesia.glade.h:21
+#: ../src/ardesia.glade.h:16
 msgid "Record"
 msgstr "Registra"
 
-#: ../src/ardesia.glade.h:22
+#: ../src/ardesia.glade.h:17
 msgid "Rectifier"
 msgstr "Rettifica"
 
-#: ../src/ardesia.glade.h:23
+#: ../src/ardesia.glade.h:18
 msgid "Red"
 msgstr "Rosso"
 
-#: ../src/ardesia.glade.h:24
+#: ../src/ardesia.glade.h:19
 msgid "Redo"
 msgstr "Ripristina"
 
-#: ../src/ardesia.glade.h:25
+#: ../src/ardesia.glade.h:20
 msgid "Rounder"
 msgstr "Approssima"
 
-#: ../src/ardesia.glade.h:26
+#: ../src/ardesia.glade.h:21
 msgid "Save"
 msgstr "Salva"
 
-#: ../src/ardesia.glade.h:27
-msgid "Thick"
-msgstr "Spesso"
+#: ../src/ardesia.glade.h:22
+msgid "Thickness"
+msgstr "Spessore"
 
-#: ../src/ardesia.glade.h:28
-msgid "Thin"
-msgstr "Sottile"
-
-#: ../src/ardesia.glade.h:29
+#: ../src/ardesia.glade.h:23
 msgid "Undo"
 msgstr "Annulla"
 
-#: ../src/ardesia.glade.h:30
+#: ../src/ardesia.glade.h:24
 msgid "Unlock"
 msgstr "Sblocca"
 
-#: ../src/ardesia.glade.h:31
+#: ../src/ardesia.glade.h:25
 msgid "White"
 msgstr "Bianco"
 
-#: ../src/ardesia.glade.h:32
+#: ../src/ardesia.glade.h:26
 msgid "Yellow"
 msgstr "Giallo"
 
-#: ../src/ardesia.glade.h:33
+#: ../src/ardesia.glade.h:27
 msgid "info"
 msgstr "info"
 
@@ -253,3 +229,21 @@ msgstr "immagine"
 #: ../src/preference_dialog.glade.h:5
 msgid "none"
 msgstr "nessuno"
+
+#~ msgid "Bidirectional Arrow"
+#~ msgstr "Freccia bidirezonale"
+
+#~ msgid "Blue"
+#~ msgstr "Blu"
+
+#~ msgid "Magenta"
+#~ msgstr "Magenta"
+
+#~ msgid "Medium"
+#~ msgstr "Medio"
+
+#~ msgid "Orange"
+#~ msgstr "Arancione"
+
+#~ msgid "Thin"
+#~ msgstr "Sottile"

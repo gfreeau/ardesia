@@ -319,32 +319,29 @@ on_toolsText_activate            (GtkToolButton   *toolbutton,
 
 
 G_MODULE_EXPORT void
-on_toolsThin_activate          (GtkToolButton   *toolbutton,
-                                  gpointer         user_data)
-{
-  BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = TRUE;
-  bar_data->thickness = 7;
-}
-
-
-G_MODULE_EXPORT void
-on_toolsMedium_activate          (GtkToolButton   *toolbutton,
-                                  gpointer         user_data)
-{
-  BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = TRUE;
-  bar_data->thickness = 14;
-}
-
-
-G_MODULE_EXPORT void
 on_toolsThick_activate          (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
   bar_data->grab = TRUE;
-  bar_data->thickness = 21;
+  if (bar_data->thickness==14)
+    {
+       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thick")));
+       // set thick icon
+       bar_data->thickness = 21;
+    }
+  else if (bar_data->thickness==21)
+    {
+       // set thin icon
+       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thin")));
+       bar_data->thickness = 7;
+    }
+  else if (bar_data->thickness==7)
+    {
+       // set medium icon
+       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"medium")));
+       bar_data->thickness = 14;
+    }
 }
 
 

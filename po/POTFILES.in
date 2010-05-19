@@ -1,6 +1,6 @@
 # List of source files containing translatable strings.
 
-src/main.c
+src/ardesia.c
 src/annotate.c
 src/background.c
 src/bezier_spline.c
