@@ -114,9 +114,6 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gch
 
       screenshot = TRUE;
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      char* tmp = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser));
-      strcpy(*workspace_dir, tmp);
-      free(tmp);
       char* supported_extension = ".png";
       char* extension = strrchr(filename, '.');
       if ((extension==0) || (strcmp(extension, supported_extension) != 0))
