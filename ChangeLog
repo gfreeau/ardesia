@@ -1,50 +1,88 @@
-2010-05-06 21:06  alpha@paranoici.org
-	* tags/0.3/ardesia/src/callbacks.c: 
-          - decrease alpha for the highlighter;
-            the text under the highlighter is
-            now more visible
+2010-05-21 12:18:36  alpha@paranoici.org
+
+	* trunk/ardesia/ardesia.c:
+          - Change the windows to stay always on the top
 
 
-2010-05-04 21:06  alpha@paranoici.org
+2010-05-20 01:15:36  alpha@paranoici.org
 
-	* tags/0.3/ardesia/src/annotate.c: 
-          - Add to take the focus before ungrab this prevent some deadlock
-
-
-2010-05-04 20:07  alpha@paranoici.org
-
-	* tags/0.3/ardesia/src/annotate.c: 
-          - Delete the shape recognition
-	    and arrow with eraser In the future I'll thing if it is the case
-	    to support the erasesing inside the select path but for the
-	    moment this feature is not available
+	* trunk/ardesia/NEWS,
+          trunk/ardesia/README,
+   	  trunk/ardesia/TODO,
+          trunk/ardesia/src/scripts/ezstream_stdin_ardesia.xml,
+          trunk/ardesia/src/scripts/recordmydesktop_screencast.sh:
+          - New streaming system using the cross plattform
+            ezstream instead of oggfwd
 
 
-2010-05-04 18:57  alpha@paranoici.org
+2010-05-19 17:52:42 alpha@paranoici.org
 
-	* tags/0.3/ardesia/src/background.c: 
-          - Ported by hand the fix for
-	    the background after reselect the tab in the taskbar In the past
-	    if you select as background a color then you put as background
-	    null, you repush the ardesia tab and the the tool show wrongly
-	    the old coloured background instead the transparent one
+	* trunk/ardesia/Makefile.am,
+          trunk/ardesia/Makefile.in,
+          trunk/ardesia/README,
+          trunk/ardesia/po/POTFILES.in,
+          trunk/ardesia/po/it.po,
+          trunk/ardesia/src/ardesia.glade,
+          trunk/ardesia/src/ardesia_horizontal.glade,
+          trunk/ardesia/src/callbacks.c:
+	  - New method to handle the tickness;
+            now you have only a button
+            repushing it you can select
+            thick, thin and medium thickness
+          - Update the italian translation file
 
 
-2010-05-04 18:47  alpha@paranoici.org
 
-	* tags/0.3, tags/0.3/ardesia: 
-          - Tagging 0.3 after a testing this
-	    will be released as the last version for ubuntu karmic in the
-	    trunk I'll develop I think that at september will be possible
-	    have the 1.0 stable for ubuntu lucid Stay tuned
+2010-05-09 11:15:38 alpha@paranoici.org
+
+	* trunk/ardesia/src/annotate.c,
+	  trunk/ardesia/src/broken.c,
+          trunk/ardesia/src/utils.c,
+          trunk/ardesia/src/utils.h:
+	  - Set a minimum distance from first and last point 
+	    to allow to draw the arrow
+
+
+2010-05-09 14:08:07 alpha@paranoici.org
+
+	* trunk/ardesia/src/annotate.c,
+	  trunk/ardesia/src/broken.c,
+	  trunk/ardesia/src/broken.h:
+	  - Refactored and fixed the shape recognizer 
+            using a tollerance depending on the pen thickness
+
+
+2010-05-09 09:53:42 alpha@paranoici.org
+
+	* trunk/ardesia/src/annotate.c,
+	  trunk/ardesia/src/broken.c:
+          - Adjust code avoiding append
+	    in the list but using
+            prepend this is more efficent
+
+
+
+2010-05-08 17:12  alpha@paranoici.org
+
+	* trunk/ardesia/src/Makefile.in,
+          trunk/ardesia/src/annotate.c:
+          - Avoid to grab the cursor in the annotation window
+            This might free the pointer when the annotation
+            widow loose the focus
+            Try to change focus with the alt tab or
+            changing the workspace with alt-ctrl + aroows
+            to test it
 
 
 2010-05-04 17:08  alpha@paranoici.org
 
-	* trunk/ardesia/src/Makefile.in, trunk/ardesia/src/annotate.c,
-	  trunk/ardesia/src/ardesia.c, trunk/ardesia/src/ardesia.glade,
+	* trunk/ardesia/src/Makefile.in, 
+          trunk/ardesia/src/annotate.c,
+	  trunk/ardesia/src/ardesia.c, 
+          trunk/ardesia/src/ardesia.glade,
 	  trunk/ardesia/src/ardesia_horizontal.glade,
-	  trunk/ardesia/src/background.c, trunk/ardesia/src/callbacks.c:
+	  trunk/ardesia/src/background.c, 
+          trunk/ardesia/src/callbacks.c:
 	  - First version compliant with ubuntu lucid that will become the
 	    more stable used operating system (I hope) - ubuntu karmik is
 	    not tested and supported; you must consider this operating
@@ -59,7 +97,8 @@
 
 2010-05-03 15:09  alpha@paranoici.org
 
-	* trunk/ardesia/src/callbacks.c, trunk/ardesia/src/recorder.c: 
+	* trunk/ardesia/src/callbacks.c, 
+          trunk/ardesia/src/recorder.c: 
           - Fix in the recorder
 
 
@@ -70,13 +109,15 @@
 
 2010-05-03 14:39  alpha@paranoici.org
 
-	* trunk/ardesia/src/annotate.c, trunk/ardesia/src/callbacks.c:
+	* trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/callbacks.c:
           - Fix some crash at the startup using unsetted tools
 
 
 2010-05-03 11:57  alpha@paranoici.org
 
-	* trunk/ardesia/src/annotate.c, trunk/ardesia/src/ardesia.glade,
+	* trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/ardesia.glade,
 	  trunk/ardesia/src/background.c,
 	  trunk/ardesia/src/preference_dialog.c,
 	  trunk/ardesia/src/text_widget.c: 
@@ -95,7 +136,8 @@
 
 2010-04-28 09:53  alpha@paranoici.org
 
-	* trunk/ardesia/src/annotate.c, trunk/ardesia/src/main.c: 
+	* trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/main.c: 
           - Review of the z-stack window Z-order I see that the set_keep_above
             has different behaviour unde linux and win7 and then I have decided
 	    to avoid to use it Now the Z order is fixed with the
@@ -116,15 +158,18 @@
 
 2010-04-26 23:45  alpha@paranoici.org
 
-	* trunk/ardesia/src/annotate.c, trunk/ardesia/src/callbacks.c,
-	  trunk/ardesia/src/text_widget.c, trunk/ardesia/src/utils.c,
+	* trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/callbacks.c,
+	  trunk/ardesia/src/text_widget.c, 
+          trunk/ardesia/src/utils.c,
 	  trunk/ardesia/src/utils.h: 
           - Fix cursor for text insertion
 
 
 2010-04-26 22:07  alpha@paranoici.org
 
-	* trunk/ardesia/TODO, trunk/ardesia/src/annotate.c,
+	* trunk/ardesia/TODO, 
+          trunk/ardesia/src/annotate.c,
 	  trunk/ardesia/src/utils.c: 
           - Fix the pointer icon for win32 (I'm using windows7) 
           - reimplemented gdk_cursor_new_from_pixmap (the
@@ -135,10 +180,13 @@
 
 2010-04-23 16:48  alpha@paranoici.org
 
-	* trunk/ardesia/src/annotate.c, trunk/ardesia/src/ardesia.glade,
+	* trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/ardesia.glade,
 	  trunk/ardesia/src/ardesia_horizontal.glade,
-	  trunk/ardesia/src/background.c, trunk/ardesia/src/callbacks.c,
-	  trunk/ardesia/src/main.c, trunk/ardesia/src/text_widget.c,
+	  trunk/ardesia/src/background.c,
+          trunk/ardesia/src/callbacks.c,
+	  trunk/ardesia/src/main.c, 
+          trunk/ardesia/src/text_widget.c,
 	  trunk/ardesia/src/utils.c: 
           - Fix the grab/ungrab after the
 	    background window fixed in below position I must add a
@@ -148,7 +196,8 @@
 
 2010-04-23 08:53  alpha@paranoici.org
 
-	* trunk/ardesia/README, trunk/ardesia/src/ardesia.glade,
+	* trunk/ardesia/README, 
+          trunk/ardesia/src/ardesia.glade,
 	  trunk/ardesia/src/ardesia_horizontal.glade,
 	  trunk/ardesia/src/main.c, trunk/ardesia/src/pixmaps/rounder.png:
 	  - Now the default is that ardesia is not decorated but I have add
@@ -168,16 +217,23 @@
 
 2010-04-22 16:31  alpha@paranoici.org
 
-	* trunk/ardesia/ChangeLog, trunk/ardesia/Makefile.in,
-	  trunk/ardesia/NEWS, trunk/ardesia/README, trunk/ardesia/TODO,
-	  trunk/ardesia/po/POTFILES.in, trunk/ardesia/po/it.po,
-	  trunk/ardesia/src/Makefile.am, trunk/ardesia/src/Makefile.in,
-	  trunk/ardesia/src/ardesia.glade, trunk/ardesia/src/ardesia.ui,
+	* trunk/ardesia/ChangeLog, 
+          trunk/ardesia/Makefile.in,
+	  trunk/ardesia/NEWS, 
+          trunk/ardesia/README, 
+          trunk/ardesia/TODO,
+	  trunk/ardesia/po/POTFILES.in, 
+          trunk/ardesia/po/it.po,
+	  trunk/ardesia/src/Makefile.am, 
+          trunk/ardesia/src/Makefile.in,
+	  trunk/ardesia/src/ardesia.glade, 
+          trunk/ardesia/src/ardesia.ui,
 	  trunk/ardesia/src/ardesia_horizontal.glade,
 	  trunk/ardesia/src/ardesia_horizontal.ui,
 	  trunk/ardesia/src/info_dialog.c,
 	  trunk/ardesia/src/info_dialog.glade,
-	  trunk/ardesia/src/info_dialog.ui, trunk/ardesia/src/main.c,
+	  trunk/ardesia/src/info_dialog.ui, 
+          trunk/ardesia/src/main.c,
 	  trunk/ardesia/src/preference_dialog.c,
 	  trunk/ardesia/src/preference_dialog.glade,
 	  trunk/ardesia/src/preference_dialog.ui: 
@@ -191,7 +247,8 @@
 
 2010-04-21 22:50  alpha@paranoici.org
 
-	* trunk/ardesia/src/Makefile.am, trunk/ardesia/src/Makefile.in,
+	* trunk/ardesia/src/Makefile.am, 
+          trunk/ardesia/src/Makefile.in,
 	  trunk/ardesia/src/ardesia.ui,
 	  trunk/ardesia/src/ardesia_horizontal.ui,
 	  trunk/ardesia/src/main.c: 
@@ -200,16 +257,20 @@
 
 2010-04-20 18:27  alpha@paranoici.org
 
-	* trunk/ardesia/NEWS, trunk/ardesia/TODO,
+	* trunk/ardesia/NEWS, 
+          trunk/ardesia/TODO,
 	  trunk/ardesia/src/ardesia.ui: 
           - Make the window resizable and decorated - Update readable files
 
 
 2010-04-20 17:44  alpha@paranoici.org
 
-	* trunk/ardesia/po/POTFILES.in, trunk/ardesia/po/it.po,
-	  trunk/ardesia/src/annotate.c, trunk/ardesia/src/ardesia.ui,
-	  trunk/ardesia/src/callbacks.c, trunk/ardesia/src/main.c,
+	* trunk/ardesia/po/POTFILES.in, 
+          trunk/ardesia/po/it.po,
+	  trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/ardesia.ui,
+	  trunk/ardesia/src/callbacks.c, 
+          trunk/ardesia/src/main.c,
 	  trunk/ardesia/src/pixmaps/medium.png,
 	  trunk/ardesia/src/pixmaps/thick.png,
 	  trunk/ardesia/src/pixmaps/thin.png: 
@@ -219,9 +280,12 @@
 
 
 2010-04-19 15:59  alpha@paranoici.org
-	* trunk/ardesia/src/annotate.c, trunk/ardesia/src/annotate.h,
-	  trunk/ardesia/src/background.c, trunk/ardesia/src/background.h,
-	  trunk/ardesia/src/callbacks.c, trunk/ardesia/src/main.c,
+	* trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/annotate.h,
+	  trunk/ardesia/src/background.c, 
+          trunk/ardesia/src/background.h,
+	  trunk/ardesia/src/callbacks.c, 
+          trunk/ardesia/src/main.c,
 	  trunk/ardesia/src/preference_dialog.c,
 	  trunk/ardesia/src/text_widget.c: 
           - New refactored background code to stay fix even after the window rescheduling
@@ -235,10 +299,13 @@
 
 2010-04-14 19:17  alpha@paranoici.org
 
-	* trunk/ardesia/src/annotate.c, trunk/ardesia/src/annotate.h,
-	  trunk/ardesia/src/ardesia.ui, trunk/ardesia/src/background.c,
+	* trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/annotate.h,
+	  trunk/ardesia/src/ardesia.ui, 
+          trunk/ardesia/src/background.c,
 	  trunk/ardesia/src/callbacks.c,
-	  trunk/ardesia/src/color_selector.c, trunk/ardesia/src/main.c:
+	  trunk/ardesia/src/color_selector.c, 
+          trunk/ardesia/src/main.c:
 	  - Experiment for the GDK_WINDOW_TYPE_HINT_DOCK Now the tool works
 	    with TOP_LEVEL windows except the bar I don't know why but if I
 	    use a TOPLEVEL intead of POPUP for the bar after the restack of
@@ -268,13 +335,18 @@
 
 2010-04-08 15:44  alpha@paranoici.org
 
-	* trunk/ardesia/TODO, trunk/ardesia/src/Makefile.am,
-	  trunk/ardesia/src/Makefile.in, trunk/ardesia/src/annotate.c,
+	* trunk/ardesia/TODO, 
+          trunk/ardesia/src/Makefile.am,
+	  trunk/ardesia/src/Makefile.in, 
+          trunk/ardesia/src/annotate.c,
 	  trunk/ardesia/src/background.c,
-	  trunk/ardesia/src/bezier_spline.c, trunk/ardesia/src/recorder.c,
-	  trunk/ardesia/src/saver.c, trunk/ardesia/src/scripts,
+	  trunk/ardesia/src/bezier_spline.c, 
+          trunk/ardesia/src/recorder.c,
+	  trunk/ardesia/src/saver.c, 
+          trunk/ardesia/src/scripts,
 	  trunk/ardesia/src/scripts/recordmydesktop_screencast.sh,
-	  trunk/ardesia/src/text_widget.c, trunk/ardesia/src/utils.c:
+	  trunk/ardesia/src/text_widget.c, 
+          trunk/ardesia/src/utils.c:
           - In order to have a live streaming supports 
             1) Install icecast server and configure it 
             2) Change the file recordmydesktop_screencast.sh to enable 
@@ -303,8 +375,10 @@
 
 2010-03-08 16:06  alpha@paranoici.org
 
-	* trunk/ardesia/src/annotate.c, trunk/ardesia/src/annotate.h,
-	  trunk/ardesia/src/callbacks.c, trunk/ardesia/src/text_widget.c:
+	* trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/annotate.h,
+	  trunk/ardesia/src/callbacks.c,
+          trunk/ardesia/src/text_widget.c:
 	  - The window for the text insertion now does not use masking
 	    shaping.
             I use now a toplevel maximized window instead of a
@@ -331,12 +405,17 @@
 
 2010-03-01 16:46  alpha@paranoici.org
 
-	* trunk/ardesia/src/Makefile.am, trunk/ardesia/src/Makefile.in,
-	  trunk/ardesia/src/annotate.c, trunk/ardesia/src/annotate.h,
-	  trunk/ardesia/src/ardesia.glade, trunk/ardesia/src/background.c,
-	  trunk/ardesia/src/callbacks.c, trunk/ardesia/src/recorder.c,
+	* trunk/ardesia/src/Makefile.am, 
+          trunk/ardesia/src/Makefile.in,
+	  trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/annotate.h,
+	  trunk/ardesia/src/ardesia.glade, 
+          trunk/ardesia/src/background.c,
+	  trunk/ardesia/src/callbacks.c, 
+          trunk/ardesia/src/recorder.c,
 	  trunk/ardesia/src/text_widget.c,
-	  trunk/ardesia/src/text_widget.h, trunk/ardesia/src/utils.c,
+	  trunk/ardesia/src/text_widget.h, 
+          trunk/ardesia/src/utils.c,
 	  trunk/ardesia/src/utils.h: 
           - New experimental code for the text
 	    insertion Now you must click on the icon then click on the
@@ -348,12 +427,16 @@
 
 2010-02-23 17:21  alpha@paranoici.org
 
-	* trunk/ardesia/src/annotate.c, trunk/ardesia/src/background.c,
-	  trunk/ardesia/src/background.h, trunk/ardesia/src/callbacks.c,
+	* trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/background.c,
+	  trunk/ardesia/src/background.h, 
+          trunk/ardesia/src/callbacks.c,
 	  trunk/ardesia/src/color_selector.c,
 	  trunk/ardesia/src/color_selector.h,
-	  trunk/ardesia/src/recorder.c, trunk/ardesia/src/recorder.h,
-	  trunk/ardesia/src/saver.c, trunk/ardesia/src/saver.h: 
+	  trunk/ardesia/src/recorder.c, 
+          trunk/ardesia/src/recorder.h,
+	  trunk/ardesia/src/saver.c,
+          trunk/ardesia/src/saver.h: 
           - Bug fix:
             - highlighter with color selected by the widget 
             - free of the redo save point after a new painting 
@@ -368,7 +451,10 @@
 
 2010-02-22 15:52  alpha@paranoici.org
 
-	* trunk/ChangeLog, trunk/NEWS, trunk/README, trunk/TODO,
+	* trunk/ChangeLog, 
+          trunk/NEWS, 
+          trunk/README, 
+          trunk/TODO,
 	  trunk/ardesia/src/main.c: 
           - Command line parsing using getopt 
           - updated readable file
@@ -376,7 +462,8 @@
 
 2010-02-22 13:36  alpha@paranoici.org
 
-	* trunk/ardesia/src/annotate.c, trunk/ardesia/src/annotate.h,
+	* trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/annotate.h,
 	  trunk/ardesia/src/main.c: 
           - Refactoring of commandline parsing waiting for getopt
 
@@ -395,8 +482,10 @@
 
 2010-02-21 16:39  alpha@paranoici.org
 
-	* trunk/ardesia/src/annotate.c, trunk/ardesia/src/annotate.h,
-	  trunk/ardesia/src/broken.c, trunk/ardesia/src/main.c: 
+	* trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/annotate.h,
+	  trunk/ardesia/src/broken.c, 
+          trunk/ardesia/src/main.c: 
           - Add logger use -v or --verbose to track the tool 
 
 
@@ -408,13 +497,16 @@
 
 2010-02-19 13:38  alpha@paranoici.org
 
-	* trunk/ardesia/src/callbacks.c, trunk/ardesia/src/recorder.c:
+	* trunk/ardesia/src/callbacks.c, 
+          trunk/ardesia/src/recorder.c:
 	  - Close issue 9
 
 
 2010-02-18 17:49  alpha@paranoici.org
 
-	* trunk/ardesia/src/annotate.c, trunk/po/it.gmo, trunk/po/it.po:
+	* trunk/ardesia/src/annotate.c, 
+          trunk/po/it.gmo, 
+          trunk/po/it.po:
 	  - Add a check in the draw point function; 
             this fix a sefault that occurred when the filler button is pushed
             at the starting of the tool 
@@ -422,10 +514,8 @@
 
 2010-02-15 15:51  alpha@paranoici.org
 
-	* branches/curtain/src/curtain.ui,
-	  branches/spotlighter/src/callbacks.c,
-	  branches/spotlighter/src/spotlighter.ui,
-	  trunk/ardesia/src/annotate.c, trunk/ardesia/src/callbacks.c:
+	* trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/callbacks.c:
 	  - Save point Memory enhanchment 
 
 
@@ -443,8 +533,10 @@
 
 2010-02-13 17:21  alpha@paranoici.org
 
-	* trunk/ardesia/src/annotate.c, trunk/ardesia/src/background.c,
-	  trunk/ardesia/src/recorder.c, trunk/po/Makefile,
+	* trunk/ardesia/src/annotate.c, 
+          trunk/ardesia/src/background.c,
+	  trunk/ardesia/src/recorder.c, 
+          trunk/po/Makefile,
 	  trunk/po/Makefile.in:
           - lighter recorder
 
@@ -471,8 +563,11 @@
 2010-02-08 21:06  alpha@paranoici.org
 
 	* trunk/ardesia/pixmaps/unlock.png,
-	  trunk/ardesia/src/ardesia.glade, trunk/ardesia/src/callbacks.c,
-	  trunk/po/ardesia.pot, trunk/po/it.gmo, trunk/po/it.po:
+	  trunk/ardesia/src/ardesia.glade, 
+          trunk/ardesia/src/callbacks.c,
+	  trunk/po/ardesia.pot, 
+          trunk/po/it.gmo, 
+          trunk/po/it.po:
           - Add icon to unlock the pointer this is useful using a tablet or a
 	    whiteboard, update linguas support
 

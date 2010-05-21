@@ -105,7 +105,7 @@ CommandLine *commandline;
  * Calculate the position where calculate_initial_position the main window 
  * the centered position upon the window manager bar
  */
-void calculate_position(GtkWidget *ardesiaBarWindow, int dwidth, int dheight, int *x, int *y, int wwidth, int wheight, int position)
+void calculate_position(GtkWidget *ardesia_bar_window, int dwidth, int dheight, int *x, int *y, int wwidth, int wheight, int position)
 {
   *y = ((dheight - wheight)/2); 
   /* vertical layout */
@@ -145,11 +145,11 @@ void calculate_position(GtkWidget *ardesiaBarWindow, int dwidth, int dheight, in
  * Here can be beatiful have a configuration file
  * where put the user can decide the position of the window
  */
-int calculate_initial_position(GtkWidget *ardesiaBarWindow, int *x, int *y, int wwidth, int wheight, int position)
+int calculate_initial_position(GtkWidget *ardesia_bar_window, int *x, int *y, int wwidth, int wheight, int position)
 {
   gint dwidth = gdk_screen_width();
   gint dheight = gdk_screen_height();
-  calculate_position(ardesiaBarWindow, dwidth, dheight, x, y, wwidth, wheight, position);
+  calculate_position(ardesia_bar_window, dwidth, dheight, x, y, wwidth, wheight, position);
   return 0; 
 }
 
@@ -314,7 +314,7 @@ BarData* init_bar_data()
 
 
 GtkWidget*
-create_window (GtkWidget *parent)
+create_bar_window (GtkWidget *parent)
 {
   GtkWidget *window;
   GError* error = NULL;
@@ -350,7 +350,7 @@ create_window (GtkWidget *parent)
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *ardesiaBarWindow ;
+  GtkWidget *ardesia_bar_window ;
 
   #ifdef ENABLE_NLS
     bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
@@ -365,11 +365,14 @@ main (int argc, char *argv[])
 
   commandline = parse_options(argc, argv);
 
-  GtkWidget* background_window = create_background_window(commandline->backgroundimage);  
+  GtkWidget* background_window = create_background_window(commandline->backgroundimage); 
+  gtk_window_set_keep_above(GTK_WINDOW(background_window), TRUE);
+  gtk_widget_show (background_window);
   set_background_window(background_window);
 
-  ardesiaBarWindow = create_window(background_window);
-  gtk_widget_show(ardesiaBarWindow);
+  ardesia_bar_window = create_bar_window(background_window);
+  gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
+  gtk_widget_show(ardesia_bar_window);
 
   /*
    * The following code create one of each component
@@ -378,17 +381,17 @@ main (int argc, char *argv[])
    */
   int width;
   int height;
-  gtk_window_get_size(GTK_WINDOW(ardesiaBarWindow) , &width, &height);
+  gtk_window_get_size(GTK_WINDOW(ardesia_bar_window) , &width, &height);
 
   int x, y;
 
 
   /* calculate_initial_position the window in the desired position */
-  if (calculate_initial_position(ardesiaBarWindow,&x,&y,width,height,commandline->position) < 0)
+  if (calculate_initial_position(ardesia_bar_window,&x,&y,width,height,commandline->position) < 0)
     {
       exit(0);
     }
-  gtk_window_move(GTK_WINDOW(ardesiaBarWindow),x,y);  
+  gtk_window_move(GTK_WINDOW(ardesia_bar_window),x,y);  
 
   
   /** Init annotate */
@@ -396,6 +399,7 @@ main (int argc, char *argv[])
 
   GtkWidget* annotation_window = get_annotation_window();  
   
+  gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
   gtk_widget_show (annotation_window);
   
 
