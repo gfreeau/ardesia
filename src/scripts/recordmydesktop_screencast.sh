@@ -5,7 +5,7 @@
 # The configuration file is setted to work properly
 # if it is used a localhost icecast server with the default 
 # configuration
-# Client side you must have the oggfwd installed
+# Client side you must have the ezstream installed
 ICECAST="FALSE";
 #ICECAST="TRUE";
 
@@ -19,29 +19,29 @@ then
   echo Start the screencast running recordmydesktop 
   recordmydesktop --quick-subsampling --on-the-fly-encoding -v_quality 10 -v_bitrate 50000 -s_quality 1 --fps 10 --freq 48000 --buffer-size 16384 -device plughw:0,0 --overwrite -o $1 &
   echo Running $COMMAND
-  RECORDPID=$!
-  echo $RECORDPID >> /tmp/recordmydesktop.pid
+  RECORDMYDESKTOP_PID=$!
+  echo $RECORDMYDESKTOP_PID >> /tmp/recordmydesktop.pid
   if [ "$ICECAST" = "TRUE" ]
   then
     echo Sending the streaming to icecast server $LOCATION 
     cat $1 | ezstream -c ezstream_stdin_vorbis.xml& 
-    OGGFWDPID=$!
-    echo $OGGFWDPID >> /tmp/oggfwd.pid
+    EZSTREAM_PID=$!
+    echo $EZSTREAM_PID >> /tmp/ezstream.pid
   fi
 fi
 
 if [ "$1" = "stop" ]
 then
-  RECORDPID=$(cat /tmp/recordmydesktop.pid)
+  RECORDMYDESKTOP_PID=$(cat /tmp/recordmydesktop.pid)
   echo Stop the screencast killing recordmydesktop 
-  kill -9 $RECORDPID 
+  kill -9 $RECORDMYDESKTOP_PID 
   rm /tmp/recordmydesktop.pid
   if [ "$ICECAST" = "TRUE" ]
   then
-    OGGFWDPID=$(cat  /tmp/oggfwd.pid)
+    EZSTREAM_PID=$(cat  /tmp/ezstream.pid)
     echo Stopping the streaming to icecast server $LOCATION 
-    kill -15 $OGGFWDPID
-    rm /tmp/oggfwd.pid
+    kill -15 $EZSTREAM_PID
+    rm /tmp/ezstream.pid
   fi
 fi
 
