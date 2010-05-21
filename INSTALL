@@ -32,7 +32,7 @@ The compilation requires the following packages:
 - libc6
 - libc6-dev
 
-If you are using ubuntu karmic you can simply run this command: 
+If you are using ubuntu lucid you can simply run this command: 
 
   # sudo apt-get install gcc make automake autoconf libtool libgtk2.0-dev \
     libatk1.0-dev libx11-dev libpng12-dev libglib2.0-dev libgconf2-dev \ 

@@ -17,6 +17,10 @@
  ardesia 0.3
 -------------
 
+Dependencies:
+- ezstream to forward the live screencast
+  to the icecast server
+
 Features:
 - update to gpl-3
 - using getopt; the Unix standard for the command line parsing

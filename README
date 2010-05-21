@@ -12,14 +12,23 @@
  Introduction
 --------------
 
-Ardesia is a small tool to make annotations sketching 
-on the screen.
+Ardesia enables you to make colored free-hand annotations on your computer screen, 
+record it and share on the network.
+
+This is especially useful when making presentations, to highlight things or 
+point out things of interest.
+
+The tool facilitates the online presentations and demos showing in real time 
+your computer screen to anyone in the network.
+
 
 Ardesia is XInput-Aware, so if you have a mouse, a graphic tablet, 
 a touch screen or a whiteboard, you can draw lines with 
 different strength. You can select color, erase things and draw arrows. 
+
 You can free-hand draw geometrical shapes using the shape recognizer, 
 insert text with the keyboard and highlight screen areas. 
+
 You can draw upon the desktop or select a coloured layer or an image 
 as a background.
 
@@ -54,6 +63,7 @@ To use the recording feature you must install the recordmydesktop
 package.
 If you don't use the keyboard, I suggest you to use the "onboard" virtual
 keyboard or the "cellwriter" handwriting recognizer.
+
 
 -------
  Usage
@@ -160,6 +170,7 @@ options:
 
 filename:	  		The file containig the image to be be used as background
 
+
 -----------------
  Troubleshooting
 -----------------
@@ -207,22 +218,23 @@ filename:	  		The file containig the image to be be used as background
       This computer must:
       - reach the icecast2 server
       - have ardesia installed
-      - have oggfwd installed (it is used to forward the stream to the server) 
+      - have ezstream installed (it is used to forward the stream to the server) 
     - Open the file $PREFIX/share/ardesia/scripts/recordmydesktop_screencast.sh
-      And configure theese variables:
-      - LOCATION="The_Public_name_of_your_icecast2_server"
-      - PORT="The_port_of_your_icecast2_server"
-      - PASSWORD="Your_password_To_access_to_the_icecast2_server"
-      - MOUNTPOINT="The_mountpoint_of_your_stream"
-      Uncomment the line
-      - ICECAST="TRUE";
-      To enable the streaming
+      And Uncomment the line
+        - ICECAST="TRUE";
+      To enable the streaming ezstream configuration file located on
+      $PREFIX/share/ardesia/scripts/ezstream_stdin_ardesia.xml
+      In this file you must configure properly:
+        - location
+        - port 
+        - password
+        - mountpoint
     - Open Ardesia
     - Push the record button
     - Select a name
     - Enjoy the stream
       at the uri 
-      http://The_Public_name_of_your_icecast2_server:The_port_of_your_icecast2_server/The_mountpoint_of_your_stream.ogv
+      http://location:port/mountpoint.ogv
     - Now you can put this link on a web page or publish it in an other way
     - For furthermore information about icecast2 server visit http://www.icecast.org/
 
