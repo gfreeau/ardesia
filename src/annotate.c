@@ -1652,7 +1652,7 @@ void setup_app ()
   data->annotation_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(get_bar_window()));
 
-  gtk_widget_set_usize(GTK_WIDGET (data->annotation_window), data->width, data->height);
+  gtk_widget_set_usize(data->annotation_window, data->width, data->height);
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window)); 
 	
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(data->annotation_window), TRUE);

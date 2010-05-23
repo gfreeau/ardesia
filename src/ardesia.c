@@ -149,6 +149,18 @@ int calculate_initial_position(GtkWidget *ardesia_bar_window, int *x, int *y, in
 {
   gint dwidth = gdk_screen_width();
   gint dheight = gdk_screen_height();
+  /* resize if larger that screen width */
+  if (wwidth>dwidth)
+    {
+       wwidth = dwidth;
+       gtk_window_resize(GTK_WINDOW(ardesia_bar_window), wwidth, wheight);       
+    }
+  /* resize if larger that screen height */
+  if (wheight>dheight)
+    {
+       wheight = dheight - 15;
+       gtk_widget_set_usize(ardesia_bar_window, wwidth, wheight);       
+    }
   calculate_position(ardesia_bar_window, dwidth, dheight, x, y, wwidth, wheight, position);
   return 0; 
 }
@@ -372,7 +384,6 @@ main (int argc, char *argv[])
 
   ardesia_bar_window = create_bar_window(background_window);
   gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
-  gtk_widget_show(ardesia_bar_window);
 
   /*
    * The following code create one of each component
@@ -392,6 +403,7 @@ main (int argc, char *argv[])
       exit(0);
     }
   gtk_window_move(GTK_WINDOW(ardesia_bar_window),x,y);  
+  gtk_widget_show(ardesia_bar_window);
 
   
   /** Init annotate */
