@@ -382,20 +382,24 @@ main (int argc, char *argv[])
   gtk_widget_show (background_window);
   set_background_window(background_window);
 
-  ardesia_bar_window = create_bar_window(background_window);
+  
+  /** Init annotate */
+  annotate_init(background_window, commandline->debug); 
+
+  GtkWidget* annotation_window = get_annotation_window();  
+  
+  gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
+  gtk_widget_show (annotation_window);
+  
+
+  ardesia_bar_window = create_bar_window(annotation_window);
   gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
 
-  /*
-   * The following code create one of each component
-   * (except popup menus), just so that you see something after building
-   * the project. Delete any components that you don't want shown initially.
-   */
   int width;
   int height;
   gtk_window_get_size(GTK_WINDOW(ardesia_bar_window) , &width, &height);
 
   int x, y;
-
 
   /* calculate_initial_position the window in the desired position */
   if (calculate_initial_position(ardesia_bar_window,&x,&y,width,height,commandline->position) < 0)
@@ -403,17 +407,8 @@ main (int argc, char *argv[])
       exit(0);
     }
   gtk_window_move(GTK_WINDOW(ardesia_bar_window),x,y);  
+  
   gtk_widget_show(ardesia_bar_window);
-
-  
-  /** Init annotate */
-  annotate_init(x, y, width, height, commandline->debug); 
-
-  GtkWidget* annotation_window = get_annotation_window();  
-  
-  gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
-  gtk_widget_show (annotation_window);
-  
 
   gtk_main();
   g_object_unref(gtkBuilder);	

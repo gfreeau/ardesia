@@ -32,7 +32,7 @@ typedef struct
 
 
 /* Initialize the annotation window */
-int annotate_init (int x, int y, int width, int height, gboolean debug);
+int annotate_init (GtkWidget* parent, gboolean debug);
 
 /* Get the annotation window */
 GtkWidget* get_annotation_window();

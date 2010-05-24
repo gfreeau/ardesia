@@ -108,12 +108,6 @@ typedef struct
 
   /* cairo context attached to the shape pixmap */
   cairo_t     *shape_cr;
-   
-  /* bar position */
-  int untogglexpos;
-  int untoggleypos;
-  int untogglewidth;
-  int untoggleheight;
 
   /* transparent pixmap */
   GdkPixmap *transparent_pixmap;
@@ -1647,10 +1641,10 @@ void annotate_clear_screen ()
 
 
 /* Setup the application */
-void setup_app ()
+void setup_app (GtkWidget* parent)
 { 
   data->annotation_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(get_bar_window()));
+  gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(parent));
 
   gtk_widget_set_usize(data->annotation_window, data->width, data->height);
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window)); 
@@ -1687,23 +1681,7 @@ void setup_app ()
   clear_cairo_context(data->shape_cr); 
 
   #ifdef _WIN32
-      /* 
-        This build a transparent shape mask only above the ardesia bar;
-        will be applied to the window with gdk_window_shape_combine_mask 
-		all the time that we want allow the ardesia bar to listen the events 
-		REGARDS: This is a workaround to choose who has the input
-		might be used the gdk_window_input_shape_combine_mask but it does not
-		work on win32
-     */
-    cairo_set_source_rgb(data->shape_cr, 1, 1, 1);
-    cairo_paint(data->shape_cr);
-    cairo_stroke(data->shape_cr);
-    cairo_set_source_rgb(data->shape_cr, 0, 0, 0);
-    cairo_rectangle(data->shape_cr, 
-                    data->untogglexpos, data->untoggleypos, 
-                    data->untogglewidth, data->untoggleheight);
-    cairo_fill(data->shape_cr);
-    cairo_stroke(data->shape_cr);
+      //TODO
   #endif
   
   /* connect the signals */
@@ -1718,7 +1696,7 @@ void setup_app ()
 
 
 /* Init the annotation */
-int annotate_init (int x, int y, int width, int height, gboolean debug)
+int annotate_init (GtkWidget* parent, gboolean debug)
 {
   data = g_malloc (sizeof(AnnotateData));
   data->annotation_cairo_context = NULL;
@@ -1730,12 +1708,6 @@ int annotate_init (int x, int y, int width, int height, gboolean debug)
   data->cursor = NULL;
  
   data->debug = debug;
-  
-  /* Untoggle zone is setted on ardesia zone */
-  data->untogglexpos = x;
-  data->untoggleypos = y;
-  data->untogglewidth = width;
-  data->untoggleheight = height;
   
   data->cursor_hidden = FALSE;
   data->is_grabbed = FALSE;
@@ -1749,7 +1721,7 @@ int annotate_init (int x, int y, int width, int height, gboolean debug)
   data->width = gdk_screen_get_width(data->screen);
   data->height = gdk_screen_get_height (data->screen);
   
-  setup_app();
+  setup_app(parent);
 
   return 0;
 }
