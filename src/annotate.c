@@ -167,7 +167,7 @@ AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
   context = g_malloc (sizeof (AnnotatePaintContext));
   context->type = type;
   context->width = width;
-  context->fg_color = "FF0000FF";
+  context->fg_color = NULL;
   return context;
 }
 
@@ -1685,6 +1685,7 @@ void setup_app (GtkWidget* parent)
   
   // initialize pen context
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN, 15);
+  data->default_pen->fg_color = "FF0000FF";
   data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER, 15);
   data->cur_context = data->default_pen;
 
