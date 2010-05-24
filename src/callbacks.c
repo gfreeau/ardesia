@@ -61,7 +61,6 @@
 /* Called when close the program */
 gboolean  quit(BarData *bar_data)
 {
-  destroy_background_window();
   annotate_quit();
   quit_recorder();
   /* Disallocate all the BarData */
@@ -171,9 +170,9 @@ G_MODULE_EXPORT gboolean
 on_quit                          (GtkToolButton   *toolbutton,
 			         gpointer         user_data)
 {
-  BarData *bar_data = (BarData*) user_data;
- 
-  return quit(bar_data);
+  /* destroy the backgound window this will call the destroy of all windows */
+  destroy_background_window();
+  return FALSE;
 }
 
 
