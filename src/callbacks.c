@@ -61,9 +61,9 @@
 /* Called when close the program */
 gboolean  quit(BarData *bar_data)
 {
-  quit_recorder();
   destroy_background_window();
   annotate_quit();
+  quit_recorder();
   /* Disallocate all the BarData */
   if (bar_data)
     {
@@ -221,7 +221,8 @@ on_winMain_delete_event          (GtkWidget       *widget,
                                   gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
-  return quit(bar_data);
+  quit(bar_data);
+  return FALSE; 
 }
 
 

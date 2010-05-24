@@ -13,7 +13,7 @@
     <property name="gravity">center</property>
     <property name="opacity">0.9</property>
     <property name="startup_id">Ardesia</property>
-    <signal name="destroy_event" handler="on_winMain_destroy_event"/>
+    <signal name="destroy" handler="on_winMain_destroy_event"/>
     <signal name="leave_notify_event" handler="on_winMain_leave_notify_event"/>
     <signal name="enter_notify_event" handler="on_winMain_enter_notify_event"/>
     <signal name="delete_event" handler="on_winMain_delete_event"/>
