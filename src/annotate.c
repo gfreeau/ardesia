@@ -1390,8 +1390,10 @@ cairo_t* get_annotation_cairo_context()
 /* Quit the annotation */
 void annotate_quit()
 {
-  /* ungrab all */
-  annotate_release_grab(); 
+  /* disconnect the signals */
+  g_signal_handlers_disconnect_by_func (data->annotation_window,
+					G_CALLBACK (event_expose), NULL);
+
   if (data->shape_cr)
     {  
       cairo_destroy(data->shape_cr);
@@ -1407,10 +1409,6 @@ void annotate_quit()
 	
   /* destroy cairo */  
   destroy_cairo();
-  
-  /* disconnect the signals */
-  g_signal_handlers_disconnect_by_func (data->annotation_window,
-					G_CALLBACK (event_expose), NULL);
   
   /* free all */
   if (data->annotation_window)
