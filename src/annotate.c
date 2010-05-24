@@ -77,7 +77,6 @@ typedef enum
 typedef struct
 {
   AnnotatePaintType type;
-  guint           width;
   gchar*          fg_color;
 } AnnotatePaintContext;
 
@@ -126,6 +125,8 @@ typedef struct
   AnnotatePaintContext *default_eraser;
   AnnotatePaintContext *cur_context;
 
+  int thickness; 
+
   /* list of the coodinates of the last line drawn */
   GSList       *coordlist;
 
@@ -166,7 +167,6 @@ AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
   AnnotatePaintContext *context;
   context = g_malloc (sizeof (AnnotatePaintContext));
   context->type = type;
-  context->width = width;
   context->fg_color = NULL;
   return context;
 }
@@ -186,7 +186,6 @@ void annotate_paint_context_print (gchar *name, AnnotatePaintContext *context)
       g_printerr ("UNKNOWN, "); break;
     }
 
-  g_printerr ("width: %3d, ", context->width);
   g_printerr ("color: %s\n", context->fg_color);
 }
 
@@ -289,7 +288,7 @@ gfloat annotate_get_arrow_direction()
 {
   GSList *outptr =   data->coordlist;   
   // make the standard deviation 
-  int tollerance = data->cur_context->width * 2;
+  int tollerance = data->thickness * 2;
   
   outptr = extract_relevant_points(outptr, FALSE, tollerance);   
   AnnotateStrokeCoordinate* point = NULL;
@@ -393,7 +392,7 @@ void configure_pen_options()
 {
   cairo_set_line_cap (data->annotation_cairo_context, CAIRO_LINE_CAP_ROUND);
   cairo_set_line_join(data->annotation_cairo_context, CAIRO_LINE_JOIN_ROUND); 
-  cairo_set_line_width(data->annotation_cairo_context, data->cur_context->width);
+  cairo_set_line_width(data->annotation_cairo_context, data->thickness);
   select_color();  
 }
 
@@ -454,9 +453,9 @@ void annotate_select_eraser()
 
 
 /* Configure the eraser */
-void annotate_configure_eraser(int width)
+void annotate_configure_eraser(int thickness)
 {
-  data->cur_context->width = (width * 2.5);	
+  data->thickness = (thickness * 2.5);	
 }
 
 
@@ -538,11 +537,11 @@ void hide_cursor()
 /* Create pixmap and mask for the pen cursor */
 void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
-  gint context_width = data->cur_context->width;
-  *pixmap = gdk_pixmap_new (NULL, size*3 + context_width, 
-                            size*3 + context_width, 1);
-  *mask =  gdk_pixmap_new (NULL, size*3 + context_width, 
-                           size*3 + context_width, 1);
+  gint thickness = data->thickness;
+  *pixmap = gdk_pixmap_new (NULL, size*3 + thickness, 
+                            size*3 + thickness, 1);
+  *mask =  gdk_pixmap_new (NULL, size*3 + thickness, 
+                           size*3 + thickness, 1);
   int circle_width = 2; 
 
   cairo_t *pen_cr = gdk_cairo_create(*pixmap);
@@ -569,13 +568,13 @@ void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
   cairo_set_operator(pen_shape_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(pen_shape_cr, circle_width);
   cairo_set_source_rgb(pen_shape_cr, 1, 1, 1);
-  cairo_arc(pen_shape_cr, 5* size/2 + context_width/2, size/2, 
+  cairo_arc(pen_shape_cr, 5* size/2 + thickness/2, size/2, 
             (size/2)-circle_width, M_PI * 5/4, M_PI/4);
-  cairo_arc(pen_shape_cr, size/2 + context_width/2, 5 * size/2,
+  cairo_arc(pen_shape_cr, size/2 + thickness/2, 5 * size/2,
             (size/2)-circle_width, M_PI/4, M_PI * 5/4); 
   cairo_fill(pen_shape_cr);
-  cairo_arc(pen_shape_cr, size/2 + context_width/2 , 5 * size/2,
-            context_width/2, 0, 2 * M_PI);
+  cairo_arc(pen_shape_cr, size/2 + thickness/2 , 5 * size/2,
+            thickness/2, 0, 2 * M_PI);
   cairo_stroke(pen_shape_cr);
   cairo_destroy(pen_shape_cr);
 }
@@ -595,10 +594,10 @@ void set_pen_cursor()
   GdkColor *background_color_p = rgb_to_gdkcolor("000000");
 
   GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color); 
-  gint context_width = data->cur_context->width;
+  gint thickness = data->thickness;
 
   data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask, foreground_color_p, background_color_p,
-                                             size/2 + context_width/2, 5* size/2);
+                                             size/2 + thickness/2, 5* size/2);
 
   gdk_window_set_cursor (data->annotation_window->window, data->cursor);
   gdk_display_sync(data->display);
@@ -652,7 +651,7 @@ void set_eraser_cursor()
       gdk_cursor_unref(data->cursor);
       data->cursor=NULL;
     }
-  gint size = data->cur_context->width;
+  gint size = data->thickness;
 
   GdkPixmap *pixmap, *mask;
   get_eraser_pixmaps(size, &pixmap, &mask); 
@@ -668,20 +667,6 @@ void set_eraser_cursor()
   g_object_unref (mask);
   g_free(foreground_color_p);
   g_free(background_color_p);
-}
-
-
-/* Select pen or eraser cursor */
-void annotate_select_cursor()
-{
-  if(data->cur_context && data->cur_context->type == ANNOTATE_ERASER)
-    {
-      set_eraser_cursor();
-    } 
-  else
-    {
-      set_pen_cursor();
-    } 
 }
 
 
@@ -730,7 +715,6 @@ void annotate_acquire_grab ()
 	   g_printerr("Acquire grab\n");
 	}
       annotate_acquire_input_grab();
-      annotate_select_cursor();
       data->is_grabbed = TRUE;
     }
 }
@@ -835,7 +819,7 @@ void annotate_draw_line (gint x2, gint y2, gboolean stroke)
 /* Draw an arrow using some polygons */
 void annotate_draw_arrow (int distance)
 {
-  int arrow_minimum_size = data->cur_context->width * 2;
+  int arrow_minimum_size = data->thickness * 2;
   if (distance < arrow_minimum_size)
     {  
       return;
@@ -860,7 +844,7 @@ void annotate_draw_arrow (int distance)
   int i = 0;
   AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, i);
 
-  int penwidth = data->cur_context->width;
+  int penwidth = data->thickness;
   
   double widthcos = penwidth * cos (direction);
   double widthsin = penwidth * sin (direction);
@@ -924,7 +908,7 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
 void draw_point(int x, int y)
 {
   cairo_arc (data->annotation_cairo_context, 
-             x, y, data->cur_context->width/2, 0, 2 * M_PI);
+             x, y, data->thickness/2, 0, 2 * M_PI);
   cairo_fill (data->annotation_cairo_context);
   cairo_move_to (data->annotation_cairo_context, x, y);
 }
@@ -956,7 +940,7 @@ void draw_point_list(GSList* outptr)
 /* Rectify the line or the shape*/
 void rectify(gboolean closed_path)
 {
-  int tollerance = data->cur_context->width;
+  int tollerance = data->thickness;
   GSList *outptr = broken(data->coordlist, closed_path, TRUE, tollerance);
 
   if (data->debug)
@@ -982,7 +966,7 @@ void rectify(gboolean closed_path)
 /* Roundify the line or the shape */
 void roundify(gboolean closed_path)
 {
-  int tollerance = data->cur_context->width * 2;
+  int tollerance = data->thickness * 2;
   GSList *outptr = broken(data->coordlist, closed_path, FALSE, tollerance);  
   gint lenght = g_slist_length(outptr);
 
@@ -1217,7 +1201,7 @@ paint (GtkWidget *win,
   reset_cairo();
   cairo_move_to(data->annotation_cairo_context,ev->x,ev->y);
  
-  annotate_coord_list_prepend (ev->x, ev->y, data->cur_context->width);
+  annotate_coord_list_prepend (ev->x, ev->y, data->thickness);
   return TRUE;
 }
 
@@ -1267,8 +1251,8 @@ paintto (GtkWidget *win,
   if (!(ev->device->source == GDK_SOURCE_MOUSE))
     {
       gint width = (CLAMP (pressure * pressure,0,1) *
-		    (double) data->cur_context->width);
-      if (width!=data->cur_context->width)
+		    (double) data->thickness);
+      if (width!=data->thickness)
         {
           
           cairo_set_line_width(data->annotation_cairo_context, width);
@@ -1276,7 +1260,7 @@ paintto (GtkWidget *win,
     }
   else
     {
-       selected_width = data->cur_context->width;
+       selected_width = data->thickness;
     }
   
   annotate_draw_line (ev->x, ev->y, TRUE);
@@ -1323,7 +1307,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
   if (!data->coordlist)
     {
       draw_point(ev->x, ev->y);  
-      annotate_coord_list_prepend (ev->x, ev->y, data->cur_context->width);
+      annotate_coord_list_prepend (ev->x, ev->y, data->thickness);
     }
   else
     { 
@@ -1331,7 +1315,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
       AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght-1);
        
       /* This is the tollerance to force to close the path in a magnetic way */
-      int tollerance = data->cur_context->width;
+      int tollerance = data->thickness;
       distance = get_distance(ev->x, ev->y, first_point->x, first_point->y);
  
       /* If the distance between two point lesser than tollerance they are the same point for me */
@@ -1339,12 +1323,12 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
         {
           distance=0;
 	  cairo_line_to(data->annotation_cairo_context, first_point->x, first_point->y);
-          annotate_coord_list_prepend (first_point->x, first_point->y, data->cur_context->width);
+          annotate_coord_list_prepend (first_point->x, first_point->y, data->thickness);
 	}
       else
         {
           cairo_line_to(data->annotation_cairo_context, ev->x, ev->y);
-          annotate_coord_list_prepend (ev->x, ev->y, data->cur_context->width);
+          annotate_coord_list_prepend (ev->x, ev->y, data->thickness);
         }
    
       if (!(data->cur_context->type == ANNOTATE_ERASER))
@@ -1481,7 +1465,7 @@ void annotate_set_rounder(gboolean roundify)
 /* Set width */
 void annotate_set_width(guint width)
 {
-  data->cur_context->width = width;
+  data->thickness = width;
 }
 
 
@@ -1496,7 +1480,14 @@ void annotate_set_arrow(gboolean arrow)
 void annotate_toggle_grab()
 { 
   annotate_select_pen();
+  set_pen_cursor();
   annotate_acquire_grab ();
+}
+
+
+void annotate_set_tickness(int thickness)
+{
+  data->thickness = thickness;
 }
 
 
@@ -1505,7 +1496,8 @@ void annotate_eraser_grab ()
 {
   /* Get the with message */
   annotate_select_eraser();
-  annotate_configure_eraser(data->cur_context->width);
+  annotate_configure_eraser(data->thickness);
+  set_eraser_cursor();
   annotate_acquire_grab();
 }
 
@@ -1668,6 +1660,7 @@ void setup_app (GtkWidget* parent)
 { 
   data->annotation_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(parent));
+  gtk_window_set_destroy_with_parent(GTK_WINDOW(data->annotation_window), TRUE);
 
   gtk_widget_set_usize(data->annotation_window, data->width, data->height);
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window)); 

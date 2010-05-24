@@ -61,8 +61,8 @@
 /* Called when close the program */
 gboolean  quit(BarData *bar_data)
 {
+  printf("Quit\n");
   /* Disallocate all the BarData */
-  
   if (bar_data)
     {
       g_free(bar_data->color);
@@ -104,9 +104,8 @@ void set_color(BarData *bar_data, char* selected_color)
 {
   bar_data->grab = TRUE;
   strcpy(bar_data->color, selected_color);
-  
   add_alpha(bar_data);
-  
+  annotate_set_color(bar_data->color);
 }
 
 
@@ -145,7 +144,6 @@ void start_tool(BarData *bar_data)
 	  }
       else 
 	  {
-            annotate_set_color(bar_data->color);
 	    if (bar_data->pencil)
 	      { 
 	        annotate(bar_data);
@@ -157,6 +155,16 @@ void start_tool(BarData *bar_data)
 	    bar_data->grab = FALSE;
 	  }
     }
+}
+
+
+/* Called when the windows is destroyed */
+G_MODULE_EXPORT void
+on_winMain_destroy_event (GtkWidget *widget, gpointer user_data)
+{
+  printf("Destroy\n");
+  BarData *bar_data = (BarData*) user_data;
+  quit(bar_data);
 }
 
 
@@ -214,6 +222,7 @@ on_winMain_delete_event          (GtkWidget       *widget,
                                   GdkEvent        *event,
                                   gpointer         user_data)
 {
+    printf("Delete\n");
   BarData *bar_data = (BarData*) user_data;
   return quit(bar_data);
 }
@@ -354,6 +363,7 @@ on_toolsPencil_activate          (GtkToolButton   *toolbutton,
   bar_data->text = FALSE;
   bar_data->pencil = TRUE;
   bar_data->arrow = FALSE;
+  set_color(bar_data, bar_data->color);
 }
 
 
@@ -569,13 +579,6 @@ on_colorWhite_activate           (GtkToolButton   *toolbutton,
 {
   BarData *bar_data = (BarData*) user_data;
   set_color(bar_data, "FFFFFF");
-}
-
-
-G_MODULE_EXPORT void
-destroy (GtkWidget *widget, gpointer data)
-{
-  gtk_main_quit ();
 }
 
 
