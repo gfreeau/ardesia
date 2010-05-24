@@ -61,7 +61,9 @@
 /* Called when close the program */
 gboolean  quit(BarData *bar_data)
 {
-  printf("Quit\n");
+  quit_recorder();
+  destroy_background_window();
+  annotate_quit();
   /* Disallocate all the BarData */
   if (bar_data)
     {
@@ -72,9 +74,6 @@ gboolean  quit(BarData *bar_data)
       }
       g_free(bar_data);
     }
-  quit_recorder();
-  destroy_background_window();
-  annotate_quit();
   if (gtkBuilder)
     {
       g_object_unref (gtkBuilder); 
@@ -162,7 +161,6 @@ void start_tool(BarData *bar_data)
 G_MODULE_EXPORT void
 on_winMain_destroy_event (GtkWidget *widget, gpointer user_data)
 {
-  printf("Destroy\n");
   BarData *bar_data = (BarData*) user_data;
   quit(bar_data);
 }
@@ -222,7 +220,6 @@ on_winMain_delete_event          (GtkWidget       *widget,
                                   GdkEvent        *event,
                                   gpointer         user_data)
 {
-    printf("Delete\n");
   BarData *bar_data = (BarData*) user_data;
   return quit(bar_data);
 }
