@@ -167,7 +167,7 @@ AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
   context = g_malloc (sizeof (AnnotatePaintContext));
   context->type = type;
   context->width = width;
-  context->fg_color = NULL;
+  context->fg_color = "FF0000FF";
   return context;
 }
 
@@ -440,21 +440,6 @@ void restore_surface()
 }
 
 
-/* This make the input mouse events active for the ardesia bar */
-void annotate_activate_bar_input()
-{
-  gdk_window_set_cursor (data->annotation_window->window, NULL);
-
-  #ifndef _WIN32
-    /* This allows the mouse event to be passed to the window below when ungrab */
-    gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);  
-  #else
-    gdk_window_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);  
-  #endif
-
-  gdk_flush();
-}
-
 
 /* Select the default eraser tool */
 void annotate_select_eraser()
@@ -718,6 +703,23 @@ void unhide_cursor()
 }
 
 
+void annotate_acquire_input_grab()
+{
+  gtk_widget_grab_focus(data->annotation_window);
+  #ifndef _WIN32
+    /* 
+     * LINUX 
+     * remove the input shape; all the input event will stay above the window
+     */
+    /* 
+     * MACOSX
+     * in mac this will do nothing 
+     */
+    gtk_widget_input_shape_combine_mask(data->annotation_window, NULL, 0, 0); 
+  #endif
+}
+
+
 /* Grab the cursor */
 void annotate_acquire_grab ()
 {
@@ -726,14 +728,10 @@ void annotate_acquire_grab ()
       if (data->debug)
         {
 	   g_printerr("Acquire grab\n");
-	} 
-      gtk_widget_grab_focus(data->annotation_window);
-      #ifndef _WIN32
-        gtk_widget_input_shape_combine_mask(data->annotation_window, NULL, 0, 0); 
-      #endif
+	}
+      annotate_acquire_input_grab();
       annotate_select_cursor();
       data->is_grabbed = TRUE;
-
     }
 }
 
@@ -1129,13 +1127,6 @@ event_expose (GtkWidget *widget,
       clear_cairo_context(data->transparent_cr); 
     }
   restore_surface();
-  #ifndef _WIN32
-    /* This allows the mouse event to be passed to the window below at the start of the tool */
-    gdk_window_input_shape_combine_mask (data->annotation_window->window, 
-                                         data->shape, 0, 0);
-  #else										 
-    gdk_window_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);  
-  #endif
   return TRUE;
 }
 
@@ -1519,6 +1510,38 @@ void annotate_eraser_grab ()
 }
 
 
+/* Release input grab; the input event will must listen below the window */
+void annotate_release_input_grab()
+{
+  gdk_window_set_cursor (data->annotation_window->window, NULL);
+  gdk_display_sync(data->display);
+  #ifndef _WIN32
+    /* 
+     * @TODO MACOSX 
+     * in macosx this will do nothing and then you will not able to click on the desktop,
+     * to fix this you must implement the shaping in the quartz gdkwindow or use some other native function
+     * to pass the events below the annotation transparent window
+     *
+     */
+    /*
+     * LINUX
+     * This allows the mouse event to be passed below the transparent annotation  window thanks to the xshape
+     * extension  
+     */
+    gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);
+  #else
+    /*
+     * @TODO WIN32
+     * in window implementation the  gdk_window_input_shape_combine_mask call the  gdk_window_shape_combine_mask
+     * that it is not the desired behaviour
+     * to fix this you must implement correctly the shaping in the win32 gdkwindow or use some other native function
+     * to pass the events below the annotation transparent window
+     *
+     */
+  #endif  
+}
+
+
 /* Release the pointer pointer */
 void annotate_release_grab ()
 {           
@@ -1528,7 +1551,7 @@ void annotate_release_grab ()
 	{
 	  g_printerr ("Release grab\n");
 	}   
-      annotate_activate_bar_input(); 
+      annotate_release_input_grab();
       gtk_window_present(GTK_WINDOW(get_bar_window()));
       data->is_grabbed=FALSE;
     }
@@ -1679,10 +1702,6 @@ void setup_app (GtkWidget* parent)
     }
 
   clear_cairo_context(data->shape_cr); 
-
-  #ifdef _WIN32
-      //TODO
-  #endif
   
   /* connect the signals */
   annotate_connect_signals();
@@ -1692,6 +1711,7 @@ void setup_app (GtkWidget* parent)
   gtk_widget_set_app_paintable(data->annotation_window, TRUE);
   gtk_widget_set_double_buffered(data->annotation_window, FALSE);
 
+  annotate_acquire_grab();
 }
 
 
