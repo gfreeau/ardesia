@@ -200,7 +200,7 @@
               <object class="GtkRadioToolButton" id="buttonBlue">
                   <property name="width_request">27</property>
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Black</property>
+                <property name="tooltip_text" translatable="yes">Blue</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">blue</property>
                 <property name="group">buttonRed</property>

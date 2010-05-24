@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-19 16:59+0200\n"
+"POT-Creation-Date: 2010-05-24 22:21+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
@@ -13,7 +13,7 @@ msgstr ""
 "X-Poedit-Country: ITALY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../src/ardesia.c:185
+#: ../src/ardesia.c:197
 msgid "In order to run Ardesia you need to enable the Compiz composite manager"
 msgstr ""
 "Per far girare Ardesia è necessario abilitare il composite manager Compiz"
@@ -23,20 +23,20 @@ msgstr ""
 msgid "Changing color"
 msgstr "Cambia colore"
 
-#: ../src/recorder.c:152
+#: ../src/recorder.c:158
 msgid "To record with Ardesia you must install the recordmydesktop program"
 msgstr ""
 "Per registrare con Ardesia devi installare il programma recordmydesktop"
 
-#: ../src/recorder.c:180
+#: ../src/recorder.c:186
 msgid "Save video as ogv"
 msgstr "Salva il video nel formato ogv"
 
-#: ../src/recorder.c:186 ../src/saver.c:103
+#: ../src/recorder.c:192 ../src/saver.c:103
 msgid "Select a file"
 msgstr "Seleziona un file"
 
-#: ../src/recorder.c:218 ../src/saver.c:134
+#: ../src/recorder.c:221 ../src/saver.c:131
 msgid "File Exists. Overwrite"
 msgstr "Il file esiste. Sovrascrivilo"
 
@@ -53,8 +53,8 @@ msgid "Arrow"
 msgstr "Freccia"
 
 #: ../src/ardesia.glade.h:3
-msgid "Black"
-msgstr "Nero"
+msgid "Blue"
+msgstr "Blu"
 
 #: ../src/ardesia.glade.h:4
 msgid "Clear"
@@ -94,7 +94,7 @@ msgstr "Inserisci testo"
 
 #: ../src/ardesia.glade.h:13
 msgid "Pencil"
-msgstr ""
+msgstr "Penna"
 
 #: ../src/ardesia.glade.h:14
 msgid "Preferences"
@@ -230,11 +230,11 @@ msgstr "immagine"
 msgid "none"
 msgstr "nessuno"
 
+#~ msgid "Black"
+#~ msgstr "Nero"
+
 #~ msgid "Bidirectional Arrow"
 #~ msgstr "Freccia bidirezonale"
-
-#~ msgid "Blue"
-#~ msgstr "Blu"
 
 #~ msgid "Magenta"
 #~ msgstr "Magenta"
