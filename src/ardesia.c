@@ -328,7 +328,7 @@ BarData* init_bar_data()
 GtkWidget*
 create_bar_window (GtkWidget *parent)
 {
-  GtkWidget *window;
+  GtkWidget *bar_window;
   GError* error = NULL;
 
   gtkBuilder = gtk_builder_new();
@@ -348,14 +348,14 @@ create_bar_window (GtkWidget *parent)
 
   /* This is important; connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(gtkBuilder, (gpointer) bar_data);
-  window = GTK_WIDGET (gtk_builder_get_object(gtkBuilder, "winMain"));
-  gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(get_background_window()));
+  bar_window = GTK_WIDGET (gtk_builder_get_object(gtkBuilder, "winMain"));
+  gtk_window_set_transient_for(GTK_WINDOW(bar_window), GTK_WINDOW(parent));
   if (commandline->decorated)
     {
-       gtk_window_set_decorated(GTK_WINDOW(window), TRUE);
+       gtk_window_set_decorated(GTK_WINDOW(bar_window), TRUE);
     }
 
-  return window;
+  return bar_window;
 }
 
 

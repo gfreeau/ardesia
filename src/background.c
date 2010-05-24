@@ -128,11 +128,7 @@ void clear_background_window()
   cairo_destroy(shape_cr);
 
   /* This allows the mouse event to be passed to the window below */
-  #ifdef _WIN32
-    gdk_window_shape_combine_mask (background_data->background_window->window,  
-                                   background_data->background_shape,
-                                   0, 0);
-  #else
+  #ifndef _WIN32
     gdk_window_input_shape_combine_mask (background_data->background_window->window,
                                          background_data->background_shape,
                                          0, 0);
@@ -171,11 +167,6 @@ void load_file()
 {
     if (background_data->back_cr)
     {
-      #ifdef _WIN32
-        gdk_window_shape_combine_mask (background_data->background_window->window,
-                                       NULL, 
-                                       0, 0);
-      #endif
       GdkPixbuf* pixbuf = load_png(background_data->background_image);   
       cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_SOURCE);
       gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 1);
@@ -183,11 +174,7 @@ void load_file()
       cairo_paint(background_data->back_cr);
       cairo_stroke(background_data->back_cr);   
       g_object_unref(G_OBJECT (pixbuf));
-      #ifdef _WIN32
-        gdk_window_shape_combine_mask (background_data->background_window->window,
-                                       NULL,
-                                       0, 0);
-      #else 
+      #ifndef _WIN32
         gdk_window_input_shape_combine_mask (background_data->background_window->window,
                                              NULL, 
                                              0, 0);
@@ -201,11 +188,6 @@ void load_color()
 {
   if (background_data->back_cr)
     {
-      #ifdef _WIN32
-        gdk_window_shape_combine_mask (background_data->background_window->window,
-                                       NULL, 
-                                       0, 0);
-      #endif
       cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_SOURCE);
       int r,g,b,a;
       sscanf(background_data->background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
@@ -213,11 +195,7 @@ void load_color()
       cairo_set_source_rgb(background_data->back_cr, (double) r/256, (double) g/256, (double) b/256);
       cairo_paint(background_data->back_cr);
       cairo_stroke(background_data->back_cr);
-      #ifdef _WIN32
-        gdk_window_shape_combine_mask (background_data->background_window->window,
-                                       NULL,
-                                       0, 0);
-      #else 
+      #ifndef _WIN32
          /* This deny the mouse event to be passed to the window below */
         gdk_window_input_shape_combine_mask (background_data->background_window->window,  
                                              NULL, 

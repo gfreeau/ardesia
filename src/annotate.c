@@ -1519,15 +1519,6 @@ void annotate_release_input_grab()
      * extension  
      */
     gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);
-  #else
-    /*
-     * @TODO WIN32
-     * in window implementation the  gdk_window_input_shape_combine_mask call the  gdk_window_shape_combine_mask
-     * that it is not the desired behaviour
-     * to fix this you must implement correctly the shaping in the win32 gdkwindow or use some other native function
-     * to pass the events below the annotation transparent window
-     *
-     */
   #endif  
 }
 
@@ -1542,7 +1533,7 @@ void annotate_release_grab ()
 	  g_printerr ("Release grab\n");
 	}   
       annotate_release_input_grab();
-      gtk_window_present(GTK_WINDOW(get_bar_window()));
+      gdk_window_raise(get_bar_window()->window);
       data->is_grabbed=FALSE;
     }
 }
@@ -1694,7 +1685,7 @@ void setup_app (GtkWidget* parent)
     }
 
   clear_cairo_context(data->shape_cr); 
-  
+
   /* connect the signals */
   annotate_connect_signals();
 
@@ -1703,7 +1694,7 @@ void setup_app (GtkWidget* parent)
   gtk_widget_set_app_paintable(data->annotation_window, TRUE);
   gtk_widget_set_double_buffered(data->annotation_window, FALSE);
 
-  annotate_acquire_grab();
+  annotate_toggle_grab();
 }
 
 
