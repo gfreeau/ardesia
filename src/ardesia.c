@@ -398,9 +398,7 @@ main (int argc, char *argv[])
   
   gtk_widget_show (annotation_window);
   
-
   ardesia_bar_window = create_bar_window(annotation_window);
-  gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
 
   int width;
   int height;
