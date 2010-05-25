@@ -85,7 +85,7 @@ int NORTH=3;
 int SOUTH=4;
 
 
-/* space from border in pixel */
+/* distance space from border to the ardesia bar in pixel unit */
 int SPACE_FROM_BORDER = 25;
 
 typedef struct
@@ -103,7 +103,11 @@ CommandLine *commandline;
  * Calculate the position where calculate_initial_position the main window 
  * the centered position upon the window manager bar
  */
-void calculate_position(GtkWidget *ardesia_bar_window, int dwidth, int dheight, int *x, int *y, int wwidth, int wheight, int position)
+void calculate_position(GtkWidget *ardesia_bar_window, 
+                        int dwidth, int dheight, 
+                        int *x, int *y, 
+                        int wwidth, int wheight,
+                        int position)
 {
   *y = ((dheight - wheight)/2); 
   /* vertical layout */
@@ -143,7 +147,10 @@ void calculate_position(GtkWidget *ardesia_bar_window, int dwidth, int dheight, 
  * Here can be beatiful have a configuration file
  * where put the user can decide the position of the window
  */
-int calculate_initial_position(GtkWidget *ardesia_bar_window, int *x, int *y, int wwidth, int wheight, int position)
+void calculate_initial_position(GtkWidget *ardesia_bar_window, 
+                                int *x, int *y, 
+                                int wwidth, int wheight, 
+                                int position)
 {
   gint dwidth = gdk_screen_width();
   gint dheight = gdk_screen_height();
@@ -160,7 +167,6 @@ int calculate_initial_position(GtkWidget *ardesia_bar_window, int *x, int *y, in
        gtk_widget_set_usize(ardesia_bar_window, wwidth, wheight);       
     }
   calculate_position(ardesia_bar_window, dwidth, dheight, x, y, wwidth, wheight, position);
-  return 0; 
 }
 
 
@@ -192,7 +198,9 @@ void run_missing_composite_manager_dialog()
 {
    GtkWidget *msg_dialog; 
    msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
-                                        GTK_BUTTONS_OK, gettext("In order to run Ardesia you need to enable the Compiz composite manager"));
+                                        GTK_BUTTONS_OK, 
+                                        gettext("In order to run Ardesia you need to enable the Compiz composite manager")
+                                       );
                  
    gtk_dialog_run(GTK_DIALOG(msg_dialog));
    
@@ -387,6 +395,17 @@ main (int argc, char *argv[])
   commandline = parse_options(argc, argv);
 
   GtkWidget* background_window = create_background_window(commandline->backgroundimage); 
+  
+  #ifdef linux
+    /* 
+     *  - on linux let visible the window even if you go in unlock mode
+     *    it works as always on the top directive
+     *  - on widows this broke the zeta order
+     *  - on MACOSX must be checked the behaviour
+     */
+    gtk_window_set_keep_above(GTK_WINDOW(background_window), TRUE);
+  #endif  
+
   gtk_widget_show (background_window);
   set_background_window(background_window);
 
@@ -395,10 +414,30 @@ main (int argc, char *argv[])
   annotate_init(background_window, commandline->debug); 
 
   GtkWidget* annotation_window = get_annotation_window();  
-  
+
+  #ifdef linux
+     /* 
+     *  - on linux let visible the window even if you go in unlock mode
+     *    it works as always on the top directive
+     *  - on widows this broke the zeta order
+     *  - on MACOSX must be checked the behaviour
+     */
+    gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
+  #endif
+
   gtk_widget_show (annotation_window);
   
   ardesia_bar_window = create_bar_window(annotation_window);
+
+  #ifdef linux
+     /* 
+     *  - on linux let visible the window even if you go in unlock mode
+     *    it works as always on the top directive
+     *  - on widows this broke the zeta order
+     *  - on MACOSX must be checked the behaviour
+     */
+    gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
+  #endif  
 
   int width;
   int height;
@@ -407,11 +446,12 @@ main (int argc, char *argv[])
   int x, y;
 
   /* calculate_initial_position the window in the desired position */
-  if (calculate_initial_position(ardesia_bar_window,&x,&y,width,height,commandline->position) < 0)
-    {
-      exit(0);
-    }
-  gtk_window_move(GTK_WINDOW(ardesia_bar_window),x,y);  
+  calculate_initial_position(ardesia_bar_window, 
+                             &x, &y, 
+                             width, height,
+                             commandline->position);
+
+  gtk_window_move(GTK_WINDOW(ardesia_bar_window), x, y);  
   
   gtk_widget_show(ardesia_bar_window);
 
