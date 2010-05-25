@@ -209,13 +209,14 @@ void run_missing_composite_manager_dialog()
 /* check if a composite manager is active */
 void set_the_best_colormap()
 {
- #ifndef _WIN32
+ /* In linux operating system you must have a composite manager */
+ #ifdef linux
     GdkDisplay *display = gdk_display_get_default ();
     GdkScreen   *screen = gdk_display_get_default_screen (display);
     gboolean composite = gdk_screen_is_composited (screen);
     if ((!composite)&&(compiz_check_enabled))
       {
-         /* composite manager must be enabled */
+         /* start the dialog that says to enable the composite manager */
          run_missing_composite_manager_dialog();
       }
     GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
@@ -313,7 +314,7 @@ BarData* init_bar_data()
   bar_data->color[8]=0;
   bar_data->annotation_is_visible = TRUE;
   bar_data->pencil = TRUE;
-  bar_data->grab = FALSE;
+  bar_data->grab = TRUE;
   bar_data->text = FALSE;
   bar_data->thickness = 14;
   bar_data->highlighter = FALSE;
