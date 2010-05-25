@@ -205,13 +205,12 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 }
 
 
-/* Set the eraser cursor */
+/* Set the text cursor */
 gboolean set_text_pointer(GtkWidget * window)
 {
   
   int height = max_font_height;
   int width = text_pen_width;
-
   
   GdkPixmap *pixmap = gdk_pixmap_new (NULL, width , height, 1);
   cairo_t *text_pointer_pcr = gdk_cairo_create(pixmap);
