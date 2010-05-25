@@ -279,17 +279,6 @@ void init(GtkWidget *win)
 }
 
 
-G_MODULE_EXPORT gboolean
-on_enter_notify(GtkWidget *widget, GdkEventExpose *event, gpointer data)
-{
-  if (text_window)
-    {
-       set_text_pointer(widget);
-    }
-  return TRUE;
-}
-
-
 /* The windows has been exposed */
 G_MODULE_EXPORT gboolean
 on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
@@ -317,6 +306,7 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
               cairo_text_extents (text_cr, "|" , &extents);
               max_font_height = extents.height;
             }
+          set_text_pointer(widget);
         }
     }
   return TRUE;
@@ -388,16 +378,15 @@ on_window_text_motion_notify_event (GtkWidget *win,
   int x,y;   
   x = ev->x;
   y = ev->y;   
-      
+
   if (inside_bar_window(x,y))
     /* point is in the ardesia bar */
     {
       /* the last point was outside the bar then ungrab */
       stop_text_widget();
-      return TRUE;
     }
 
-  return TRUE;;
+  return TRUE;
 }
 
 
@@ -415,7 +404,6 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
   g_signal_connect (G_OBJECT(text_window), "button_release_event", G_CALLBACK(release), NULL);
   g_signal_connect (G_OBJECT(text_window), "button_press_event", G_CALLBACK(press), NULL);
   g_signal_connect (G_OBJECT(text_window), "key_press_event", G_CALLBACK (key_press), NULL);
-  g_signal_connect (G_OBJECT(text_window), "enter_notify_event", G_CALLBACK (on_enter_notify), NULL);
 
   gtk_widget_show_all(text_window);
 }

@@ -209,7 +209,7 @@ on_winMain_enter_notify_event   (GtkWidget       *widget,
 				 GdkEvent        *event,
 			         gpointer         user_data)
 {
-  stop_text_widget();
+  
   return TRUE;
 }
 
