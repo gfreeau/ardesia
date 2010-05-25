@@ -76,8 +76,6 @@
   #define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia_horizontal.glade"
 #endif 
 
-gboolean compiz_check_enabled = TRUE;
-
 
 GtkBuilder *gtkBuilder;
 
@@ -206,25 +204,35 @@ void run_missing_composite_manager_dialog()
 }
 
 
+void check_composite_manager()
+{
+  gboolean composite = gdk_screen_is_composited (screen);
+  if (!composite)
+    {
+       /* start the dialog that says to enable the composite manager */
+       run_missing_composite_manager_dialog();
+    }
+}
+
+
 /* check if a composite manager is active */
 void set_the_best_colormap()
 {
- /* In linux operating system you must have a composite manager */
- #ifdef linux
+    
     GdkDisplay *display = gdk_display_get_default ();
     GdkScreen   *screen = gdk_display_get_default_screen (display);
-    gboolean composite = gdk_screen_is_composited (screen);
-    if ((!composite)&&(compiz_check_enabled))
-      {
-         /* start the dialog that says to enable the composite manager */
-         run_missing_composite_manager_dialog();
-      }
+    #ifdef __FreeBSD__
+       check_composite_manager();
+    #endif
+    /* In linux operating system you must have a composite manager */
+    #ifdef linux
+       check_composite_manager();
+    #endif
     GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
     if (colormap)
       {
         gtk_widget_set_default_colormap(colormap);
       }
-  #endif
 }
 
 

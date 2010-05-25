@@ -49,6 +49,14 @@
 #endif
 
 
+#ifdef _WIN32
+  #include <windows.h>
+  #define DIR_SEPARATOR '\\'
+#else
+  #define DIR_SEPARATOR '/'
+#endif
+
+
 const gchar* desktop_dir = NULL;
 
 
@@ -62,9 +70,12 @@ gboolean colors_too_similar(const GdkColor *colora, const GdkColor *colorb)
 	  abs(colora->blue - colorb->blue) < 256);
 }
 
-/* gdk_cursor_new_from_pixmap is broken on Windows.
-   this is a workaround using gdk_cursor_new_from_pixbuf. 
-   Thanks to Dirk Gerrits for this */
+
+/* 
+ * gdk_cursor_new_from_pixmap is broken on Windows.
+ * this is a workaround using gdk_cursor_new_from_pixbuf. 
+ *  Thanks to Dirk Gerrits for this contribution 
+ */
 GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 					    const GdkColor *fg, const GdkColor *bg,
 					    gint x, gint y)
@@ -233,22 +244,10 @@ gchar* get_date()
 }
 
 
-/* Get file separator depending on operating system */
-char get_file_separator()
-{
-  #ifdef _WIN32
-    return '\\';
-  #else
-    return '/';
-  #endif
-}
-
-
 /* Return if a file exists */
 gboolean file_exists(char* filename, char* desktop_dir)
 {
-  char file_separator = get_file_separator();
-  char* afterslash = strrchr(filename, file_separator);
+  char* afterslash = strrchr(filename, DIR_SEPARATOR);
 
   if (afterslash == 0)
     {
