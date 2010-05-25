@@ -204,7 +204,7 @@ void run_missing_composite_manager_dialog()
 }
 
 
-void check_composite_manager()
+void check_composite_manager(GdkScreen* screen)
 {
   gboolean composite = gdk_screen_is_composited (screen);
   if (!composite)
@@ -222,11 +222,11 @@ void set_the_best_colormap()
     GdkDisplay *display = gdk_display_get_default ();
     GdkScreen   *screen = gdk_display_get_default_screen (display);
     #ifdef __FreeBSD__
-       check_composite_manager();
+       check_composite_manager(screen);
     #endif
     /* In linux operating system you must have a composite manager */
     #ifdef linux
-       check_composite_manager();
+       check_composite_manager(screen);
     #endif
     GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
     if (colormap)

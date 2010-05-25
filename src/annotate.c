@@ -1660,6 +1660,7 @@ void setup_app (GtkWidget* parent)
 { 
   data->annotation_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(parent));
+
   gtk_window_set_destroy_with_parent(GTK_WINDOW(data->annotation_window), TRUE);
 
   gtk_widget_set_usize(data->annotation_window, data->width, data->height);
