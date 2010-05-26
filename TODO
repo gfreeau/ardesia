@@ -21,13 +21,16 @@
 
 
 - Windows porting
-  - fix the new bug introduced; I do not test all the committs
-    on windows
+  - fix the vertical bar on windows
+  - fix the merge beetween the text window and the annotation
+    window
   - draw with rgba color on the annotation transparent window
-  - be able to move the cursor event above and below 
-    the transparent annotation window
-  - recording (may be using camit and ffmpeg2theora)
-  - forward the stream to icecast (using ezstream) 
+  - implement the lock/unlock system;
+    must be found a way to drive the cursor event above and below 
+    the transparent annotation window on the request
+  - implement the recordmydesktop_screencast.bat
+    - recording (may be using camit and ffmpeg2theora)
+    - forward the stream to icecast (using ezstream) 
 
 
 - Investigate about MacOsX porting

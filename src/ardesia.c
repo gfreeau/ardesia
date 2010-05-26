@@ -247,7 +247,19 @@ void set_the_best_colormap()
 CommandLine* parse_options(int argc, char *argv[])
 {
   CommandLine* commandline = g_malloc(sizeof(CommandLine)); 
-  commandline->position = EAST;
+  
+  #ifdef _WIN32
+     /* 
+      * @FIXME The vertical layout is broken on windows;
+      * this is a workaround to avoid to show the bug,
+      * I put the gravity to south having an horizontal
+      * layout
+      */
+     commandline->position = SOUTH;
+  #else   
+     commandline->position = EAST;
+  #endif
+  
   commandline->debug = FALSE;
   commandline->backgroundimage = NULL;
   commandline->decorated=FALSE;
