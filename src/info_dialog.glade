@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkAboutDialog" id="aboutdialog">
     <property name="border_width">5</property>
     <property name="type_hint">normal</property>
@@ -32,11 +34,10 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
    </property>
     <property name="authors">  Copyright (C) 2009 Pilolli Pietro &lt;pilolli@fbk.eu&gt;</property>
-    <property name="logo">pixmaps/ardesiaGreat.png</property>
+    <property name="logo">pixmaps/ardesia_logo.png</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <placeholder/>
