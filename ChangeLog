@@ -1,3 +1,14 @@
+
+2010-05-24 15:20:39 alpha@paranoici.org
+
+	* trunk/ardesia/ardesia.c:
+        * /trunk/ardesia/src/annotate.c
+        * trunk/ardesia/src/annotate.h
+        * trunk/ardesia/src/ardesia.c
+        * trunk/ardesia/src/callbacks.c
+        - Put the bar on the top of annotation window
+
+
 2010-05-21 12:18:36  alpha@paranoici.org
 
 	* trunk/ardesia/ardesia.c:
