@@ -53,8 +53,12 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-#if defined(_WIN32)
+#ifdef _WIN32
   #include <gdkwin32.h>
+#else
+  #ifdef __APPLE__
+    #include <gdkquartz.h>
+  #endif
 #endif
 
 

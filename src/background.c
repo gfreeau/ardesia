@@ -37,11 +37,20 @@
 
 #include <cairo.h>
 
-#if defined(_WIN32)
-	#include <cairo-win32.h>
+
+#ifdef _WIN32
+  #include <cairo-win32.h>
+  #include <gdkwin32.h>
+  #include <winuser.h>  
 #else
-	#include <cairo-xlib.h>
+  #ifdef __APPLE__
+    #include <cairo-quartz.h>
+    #include <gdkquartz.h>
+  #else
+    #include <cairo-xlib.h>
+  #endif
 #endif
+
 
 typedef struct
 {

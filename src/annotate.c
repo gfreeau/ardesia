@@ -53,7 +53,12 @@
   #include <gdkwin32.h>
   #include <winuser.h>  
 #else
-  #include <cairo-xlib.h>
+  #ifdef __APPLE__
+    #include <cairo-quartz.h>
+    #include <gdkquartz.h>
+  #else
+    #include <cairo-xlib.h>
+  #endif
 #endif
 
 

@@ -40,12 +40,17 @@
 #include <gconf/gconf-client.h>
 
 
-#if defined(_WIN32)
+#ifdef _WIN32
   #include <cairo-win32.h>
   #include <gdkwin32.h>
+  #include <winuser.h>  
 #else
-  #include <cairo.h>
-  #include <cairo-xlib.h>
+  #ifdef __APPLE__
+    #include <cairo-quartz.h>
+    #include <gdkquartz.h>
+  #else
+    #include <cairo-xlib.h>
+  #endif
 #endif
 
 
