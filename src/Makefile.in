@@ -284,9 +284,7 @@ ardesia_SOURCES = \
 	ardesia.c \
         ardesia.h
 
-ardesia_LDFLAGS = \
-	-Wl,--export-dynamic
-
+@WITH_GNU_LD_TRUE@ardesia_LDFLAGS = -Wl,--export-dynamic
 ardesia_LDADD = $(ARDESIA_LIBS) $(GCONF_LIBS)
 EXTRA_DIST = $(ui_DATA)
 all: all-am

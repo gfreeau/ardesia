@@ -51,10 +51,9 @@ ardesia_SOURCES = \
 	ardesia.c \
         ardesia.h
 
-
-
-ardesia_LDFLAGS = \
-	-Wl,--export-dynamic
+if WITH_GNU_LD
+ardesia_LDFLAGS = -Wl,--export-dynamic
+endif
 
 ardesia_LDADD = $(ARDESIA_LIBS) $(GCONF_LIBS)
 

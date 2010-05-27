@@ -14,7 +14,6 @@ AC_HEADER_STDC
 
 
 
-
 dnl ***************************************************************************
 dnl Internatinalization
 dnl ***************************************************************************
@@ -27,6 +26,7 @@ IT_PROG_INTLTOOL([0.35.0])
 
 
 AM_PROG_LIBTOOL
+AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 
 pkg_modules="	gtk+-2.0 >= 2.12 
 		cairo
