@@ -68,7 +68,6 @@
 #include "background.h"
 
 #ifdef _WIN32
-  #include <gdkwin32.h>
   #define UI_FILE "ardesia.glade"
   #define UI_HOR_FILE "ardesia_horizontal.glade"
 #else

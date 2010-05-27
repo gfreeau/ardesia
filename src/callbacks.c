@@ -53,14 +53,6 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-#ifdef _WIN32
-  #include <gdkwin32.h>
-#else
-  #ifdef __APPLE__
-    #include <gdkquartz.h>
-  #endif
-#endif
-
 
 /* Called when close the program */
 gboolean  quit(BarData *bar_data)

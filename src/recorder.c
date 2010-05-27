@@ -32,13 +32,6 @@
 #include <string.h> 
 #include "utils.h"
 
-#ifdef _WIN32
-  #include <gdkwin32.h>
-#else
-  #ifdef __APPLE__
-    #include <gdkquartz.h>
-  #endif
-#endif
 
 #ifdef _WIN32
   #include <windows.h>

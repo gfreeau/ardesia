@@ -34,14 +34,6 @@
 #include "background.h"
 #include "utils.h"
 
-#ifdef _WIN32
-  #include <gdkwin32.h>
-#else
-  #ifdef __APPLE__
-    #include <gdkquartz.h>
-  #endif
-#endif
-
 
 /* old picked color in RGBA format */
 static gchar*       picked_color = NULL;

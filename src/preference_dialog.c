@@ -34,13 +34,6 @@
 #include "annotate.h"
 #include "utils.h"
 
-#ifdef _WIN32
-  #include <gdkwin32.h>
-#else
-  #ifdef __APPLE__
-    #include <gdkquartz.h>
-  #endif
-#endif
 
 #ifdef _WIN32
   #define PREFERENCE_UI_FILE "preference_dialog.glade"
@@ -49,6 +42,7 @@
   #define PREFERENCE_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/preference_dialog.glade"
   #define BACKGROUNDS_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/backgrounds"
 #endif 
+
 
 typedef struct
 {
