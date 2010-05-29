@@ -24,7 +24,8 @@
   - fix the vertical bar on windows
   - fix the merge beetween the text window and the annotation
     window
-  - draw with rgba color on the annotation transparent window
+  - use as annotation window an opaque window drawable 
+    with rgba color and sensitive to the mouse events
   - implement the lock/unlock system;
     must be found a way to drive the cursor event above and below 
     the transparent annotation window on the request
@@ -33,8 +34,8 @@
     - forward the stream to icecast (using ezstream) 
 
 
-- Investigate about MacOsX porting
-
+- MacOsX quartz/porting
+  - draw on transparent window
 
 - Usability
   - specify the default file name 
