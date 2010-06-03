@@ -152,6 +152,17 @@ void start_tool(BarData *bar_data)
 }
 
 
+G_MODULE_EXPORT gboolean 
+on_window_configure_event (GtkWidget *widget,
+			GdkEventExpose *event,
+		 	gpointer user_data)
+{
+  BarData *bar_data = (BarData*) user_data;
+  annotate_set_color(bar_data->color);
+  return TRUE;
+}
+
+
 /* Called when the windows is destroyed */
 G_MODULE_EXPORT void
 on_winMain_destroy_event (GtkWidget *widget, gpointer user_data)
