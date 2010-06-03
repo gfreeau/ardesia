@@ -288,6 +288,11 @@ void init(GtkWidget *win)
 G_MODULE_EXPORT gboolean
 on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
+  int is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
+  if (!is_fullscreen)
+    {
+      return TRUE;
+    }
   if (!display)
     {
       display = gdk_display_get_default ();

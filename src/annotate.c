@@ -1083,6 +1083,11 @@ event_expose (GtkWidget *widget,
               GdkEventExpose *event, 
               gpointer user_data)
 {
+  int is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
+  if (!is_fullscreen)
+    {
+      return TRUE;
+    }
   if (data->debug)
     {
       g_printerr("Expose event\n");

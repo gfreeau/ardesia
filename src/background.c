@@ -61,7 +61,9 @@ typedef struct
   GdkPixmap* background_shape; 
 }BackGroundData;
 
+
 static BackGroundData* background_data;
+
 
 /* Load the contents of the file image with name "filename" into the pixbuf */
 GdkPixbuf * load_png (char *filename)
@@ -148,6 +150,11 @@ back_event_expose (GtkWidget *widget,
               GdkEventExpose *event, 
               gpointer user_data)
 {
+  int is_maximized = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_MAXIMIZED;
+  if (!is_maximized)
+    {
+      return TRUE;
+    }
   if (!background_data->back_cr)
     {
        background_data->back_cr = gdk_cairo_create(widget->window); 
