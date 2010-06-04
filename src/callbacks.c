@@ -216,7 +216,11 @@ on_winMain_enter_notify_event   (GtkWidget       *widget,
 				 GdkEvent        *event,
 			         gpointer         user_data)
 {
-  
+  BarData *bar_data = (BarData*) user_data;
+  if (bar_data->text)
+    {
+      stop_text_widget();
+    }
   return TRUE;
 }
 

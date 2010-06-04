@@ -414,6 +414,10 @@ void reset_cairo()
 /* Paint the context over the annotation window */
 void merge_context(cairo_t * cr)
 {
+  if (data->debug)
+    {
+      g_printerr("Merge text window in the annotation window\n");
+    }
   reset_cairo();
  
   //This seems broken on windows

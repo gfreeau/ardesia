@@ -379,27 +379,6 @@ release (GtkWidget *win,
 }
 
 
-/* This shots when the ponter is moving */
-G_MODULE_EXPORT gboolean
-on_window_text_motion_notify_event (GtkWidget *win, 
-			            GdkEventMotion *ev, 
-			            gpointer user_data)
-{
-  int x,y;   
-  x = ev->x;
-  y = ev->y;   
-
-  if (inside_bar_window(x,y))
-    /* point is in the ardesia bar */
-    {
-      /* the last point was outside the bar then ungrab */
-      stop_text_widget();
-    }
-
-  return TRUE;
-}
-
-
 /* Start the widget for the text insertion */
 void start_text_widget(GtkWindow *parent, char* color, int tickness)
 {
@@ -410,7 +389,6 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
   gtk_widget_set_events (text_window, TEXT_MOUSE_EVENTS);
 
   g_signal_connect(G_OBJECT(text_window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
-  g_signal_connect (G_OBJECT(text_window), "motion_notify_event",G_CALLBACK (on_window_text_motion_notify_event), NULL);
   g_signal_connect (G_OBJECT(text_window), "button_release_event", G_CALLBACK(release), NULL);
   g_signal_connect (G_OBJECT(text_window), "button_press_event", G_CALLBACK(press), NULL);
   g_signal_connect (G_OBJECT(text_window), "key_press_event", G_CALLBACK (key_press), NULL);
