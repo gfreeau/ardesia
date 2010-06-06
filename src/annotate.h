@@ -79,6 +79,12 @@ void annotate_fill();
 /* Set arrow */
 void annotate_set_arrow(gboolean arrow);
 
+/* Set pen cursor */
+void annotate_set_pen_cursor();
+
+/* Set eraser cursor */
+void annotate_set_eraser_cursor();
+
 /* Start to paint */
 void annotate_toggle_grab();
 
