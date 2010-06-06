@@ -139,9 +139,8 @@ typedef struct
   /* list of the coodinates of the last line drawn */
   GSList       *coordlist;
 
-  /* tablet device */
+  /* input device */
   GdkDevice   *device;
-  guint        state;
 
   /* width of the screen */
   guint        width;
@@ -524,27 +523,29 @@ void annotate_release_pointer_grab()
    ungrab_pointer(data->display, data->annotation_window);
 }
 
+ void allocate_invisible_cursor()
+ {
+    int size = 1;
+  
+    GdkPixmap *pixmap, *mask;
+    get_invisible_pixmaps(size, &pixmap, &mask);
+  
+    GdkColor *background_color_p = rgb_to_gdkcolor("000000");
+    GdkColor *foreground_color_p = rgb_to_gdkcolor("FFFFFF");
+  
+    data->invisible_cursor = gdk_cursor_new_from_pixmap (pixmap, mask,
+                                                           foreground_color_p, background_color_p, 
+                                                           size/2, size/2);
+	g_object_unref (pixmap);
+    g_object_unref (mask);
+    g_free(foreground_color_p);
+    g_free(background_color_p);			
+ }
+
+ 
 /* Hide the cursor */
 void hide_cursor()
 {
-  if (!data->invisible_cursor)
-    {
-      int size = 1;
-  
-      GdkPixmap *pixmap, *mask;
-      get_invisible_pixmaps(size, &pixmap, &mask);
-  
-      GdkColor *background_color_p = rgb_to_gdkcolor("000000");
-      GdkColor *foreground_color_p = rgb_to_gdkcolor("FFFFFF");
-  
-      data->invisible_cursor = gdk_cursor_new_from_pixmap (pixmap, mask,
-                                                           foreground_color_p, background_color_p, 
-                                                           size/2, size/2);
-	  g_object_unref (pixmap);
-      g_object_unref (mask);
-      g_free(foreground_color_p);
-      g_free(background_color_p);					   
-    }
   #ifdef _WIN32
     annotate_release_pointer_grab();
   #endif 
@@ -833,7 +834,6 @@ void annotate_select_tool (GdkDevice *device, guint state)
       data->cur_context = data->default_pen;
     }
 
-  data->state = state;
   data->device = device;
 }
 
@@ -1189,7 +1189,6 @@ proximity_out (GtkWidget *win,
 {
   data->cur_context = data->default_pen;
 
-  data->state = 0;
   data->device = NULL;
   if (data->debug)
     {
@@ -1756,8 +1755,6 @@ void setup_app (GtkWidget* parent)
   data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER, 15);
   data->cur_context = data->default_pen;
 
-  data->state = 0;
-
   setup_input_devices();
   
   /* Initialize a transparent pixmap with depth 1 to be used as input shape */
@@ -1799,6 +1796,7 @@ void setup_app (GtkWidget* parent)
 int annotate_init (GtkWidget* parent, gboolean debug)
 {
   data = g_malloc (sizeof(AnnotateData));
+  
   data->annotation_cairo_context = NULL;
   data->coordlist = NULL;
   data->savelist = NULL;
@@ -1806,6 +1804,7 @@ int annotate_init (GtkWidget* parent, gboolean debug)
   data->transparent_cr = NULL;
   
   data->cursor = NULL;
+  allocate_invisible_cursor();
  
   data->debug = debug;
   
