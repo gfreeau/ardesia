@@ -21,17 +21,16 @@
 
 
 - Windows porting
-  - fix the vertical bar on windows
-  - fix the merge beetween the text window and the annotation
-    window
-  - use as annotation window an opaque window drawable 
-    with rgba color and sensitive to the mouse events
-  - implement the lock/unlock system;
-    must be found a way to drive the cursor event above and below 
+  Bug fix:
+    - fix the highlighter (seems that the colormap it is wrong)
+    - fix the merge beetween the text window and the annotation
+      window
+    - fix the cursor icon to change respect the ardesia bar options 
     the transparent annotation window on the request
-  - implement the recordmydesktop_screencast.bat
-    - recording (may be using camit and ffmpeg2theora)
-    - forward the stream to icecast (using ezstream) 
+  Issue:
+    - implement the recordmydesktop_screencast.bat
+      - recording (may be done using camit and ffmpeg2theora)
+      - forward the stream to icecast (using ezstream) 
 
 
 - MacOsX quartz/porting
