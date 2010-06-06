@@ -108,7 +108,7 @@ void ungrab_pointer(GdkDisplay* display, GtkWidget* win)
   gdk_error_trap_push ();
   gdk_display_pointer_ungrab (display, GDK_CURRENT_TIME);
   /* inherit cursor from root window */
-  gdk_window_set_cursor (win->window, NULL);
+  //gdk_window_set_cursor (win->window, NULL);
   gdk_flush ();
   if (gdk_error_trap_pop ())
     {

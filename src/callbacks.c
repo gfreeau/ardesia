@@ -100,6 +100,10 @@ void set_color(BarData *bar_data, char* selected_color)
   strcpy(bar_data->color, selected_color);
   add_alpha(bar_data);
   annotate_set_color(bar_data->color);
+  if ((bar_data->pencil)||(bar_data->arrow))
+    {
+	  annotate_set_pen_cursor();
+	}
 }
 
 
@@ -133,7 +137,7 @@ void start_tool(BarData *bar_data)
     {
       if (bar_data->text)
 	  {
-            annotate_release_grab();
+        annotate_release_grab();
 	    start_text_widget( GTK_WINDOW(get_annotation_window()), bar_data->color, bar_data->thickness);
 	  }
       else 
@@ -273,7 +277,7 @@ on_toolsRectifier_activate       (GtkToolButton   *toolbutton,
       GtkToggleToolButton* rounderToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonRounder"));
       if (gtk_toggle_tool_button_get_active(rounderToolButton))
         {
-	  gtk_toggle_tool_button_set_active(rounderToolButton, FALSE); 
+	      gtk_toggle_tool_button_set_active(rounderToolButton, FALSE); 
           bar_data->rounder = FALSE;
         }
       bar_data->rectifier = TRUE;
@@ -297,7 +301,7 @@ on_toolsRounder_activate         (GtkToolButton   *toolbutton,
       GtkToggleToolButton* rectifierToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonRectifier"));
       if (gtk_toggle_tool_button_get_active( rectifierToolButton))
         {
-	  gtk_toggle_tool_button_set_active( rectifierToolButton, FALSE); 
+	      gtk_toggle_tool_button_set_active( rectifierToolButton, FALSE); 
           bar_data->rectifier = FALSE;
         }
       bar_data->rounder = TRUE;
@@ -328,6 +332,7 @@ on_toolsArrow_activate           (GtkToolButton   *toolbutton,
   bar_data->text = FALSE;
   bar_data->pencil = TRUE;
   bar_data->arrow = TRUE;
+  annotate_set_pen_cursor();
 }
 
 
@@ -366,6 +371,14 @@ on_toolsThick_activate          (GtkToolButton   *toolbutton,
        gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"medium")));
        bar_data->thickness = 14;
     }
+  if ((bar_data->pencil)||(bar_data->arrow))
+    {
+      annotate_set_pen_cursor();
+	}
+  else
+    {
+	  annotate_set_eraser_cursor();
+	}
 }
 
 
@@ -379,6 +392,7 @@ on_toolsPencil_activate          (GtkToolButton   *toolbutton,
   bar_data->pencil = TRUE;
   bar_data->arrow = FALSE;
   set_color(bar_data, bar_data->color);
+  annotate_set_pen_cursor();
 }
 
 
@@ -391,6 +405,8 @@ on_toolsEraser_activate          (GtkToolButton   *toolbutton,
   bar_data->grab = TRUE;
   bar_data->pencil = FALSE;
   bar_data->arrow = FALSE;
+  
+  annotate_set_eraser_cursor();
 }
 
 

@@ -123,6 +123,9 @@ typedef struct
   /* mouse cursor */ 
   GdkCursor *cursor;
  
+  /* mouse invisible cursor */ 
+  GdkCursor *invisible_cursor;
+ 
   /* List of the savepoint */ 
   AnnotateSave *savelist;
 
@@ -524,39 +527,33 @@ void annotate_release_pointer_grab()
 /* Hide the cursor */
 void hide_cursor()
 {
+  if (!data->invisible_cursor)
+    {
+      int size = 1;
+  
+      GdkPixmap *pixmap, *mask;
+      get_invisible_pixmaps(size, &pixmap, &mask);
+  
+      GdkColor *background_color_p = rgb_to_gdkcolor("000000");
+      GdkColor *foreground_color_p = rgb_to_gdkcolor("FFFFFF");
+  
+      data->invisible_cursor = gdk_cursor_new_from_pixmap (pixmap, mask,
+                                                           foreground_color_p, background_color_p, 
+                                                           size/2, size/2);
+	  g_object_unref (pixmap);
+      g_object_unref (mask);
+      g_free(foreground_color_p);
+      g_free(background_color_p);					   
+    }
   #ifdef _WIN32
     annotate_release_pointer_grab();
-  #endif  
-  if (data->cursor)
-    {
-      gdk_cursor_unref (data->cursor);
-      data->cursor=NULL;
-    }
-  
-  int size = 1;
-  
-  GdkPixmap *pixmap, *mask;
-  get_invisible_pixmaps(size, &pixmap, &mask);
-  
-  GdkColor *background_color_p = rgb_to_gdkcolor("000000");
-  GdkColor *foreground_color_p = rgb_to_gdkcolor("FFFFFF");
-  
-  data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask,
-                                             foreground_color_p, background_color_p, 
-                                             size/2, size/2);    
-  
-  gdk_window_set_cursor(data->annotation_window->window, data->cursor);
+  #endif 
+  gdk_window_set_cursor(data->annotation_window->window, data->invisible_cursor);
   gdk_display_sync(data->display);
-  
-  g_object_unref (pixmap);
-  g_object_unref (mask);
-  g_free(foreground_color_p);
-  g_free(background_color_p);
-  
-  data->cursor_hidden = TRUE;
   #ifdef _WIN32
     annotate_acquire_pointer_grab();
-  #endif  
+  #endif 
+  data->cursor_hidden = TRUE;
 }
 
 
@@ -607,11 +604,8 @@ void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 
 
 /* Set the cursor patching the xpm with the selected color */
-void set_pen_cursor()
+void annotate_set_pen_cursor()
 {
-  #ifdef _WIN32
-    annotate_release_pointer_grab();
-  #endif  
   gint size=12;
   if (data->cursor)
     {
@@ -634,17 +628,12 @@ void set_pen_cursor()
   data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask, foreground_color_p, background_color_p,
                                              size/2 + thickness/2, 5* size/2);
 
-											
-  gdk_window_set_cursor (data->annotation_window->window, data->cursor);
-  gdk_display_sync(data->display);
   
   g_object_unref (pixmap);
   g_object_unref (mask);
   g_free(foreground_color_p);
   g_free(background_color_p);
-  #ifdef _WIN32
-    annotate_acquire_pointer_grab();
-  #endif  
+ 
 }
 
 
@@ -684,11 +673,8 @@ void get_eraser_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 
 
 /* Set the eraser cursor */
-void set_eraser_cursor()
-{ 
-  #ifdef _WIN32
-    annotate_release_pointer_grab();
-  #endif  
+void annotate_set_eraser_cursor()
+{   
   if (data->cursor)
     {
       gdk_cursor_unref(data->cursor);
@@ -703,39 +689,32 @@ void set_eraser_cursor()
   GdkColor *foreground_color_p = rgb_to_gdkcolor("FF0000");
  
   data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask, foreground_color_p, background_color_p, size/2, size/2);
-  
-  gdk_window_set_cursor (data->annotation_window->window, data->cursor);
-  gdk_display_sync(data->display);
+ 
   g_object_unref (pixmap);
   g_object_unref (mask);
   g_free(foreground_color_p);
   g_free(background_color_p);
-  #ifdef _WIN32
-    annotate_acquire_pointer_grab();
-  #endif  
 }
 
+void update_cursor()
+{
+  #ifdef _WIN32
+    annotate_release_pointer_grab();
+  #endif
+  gdk_window_set_cursor (data->annotation_window->window, data->cursor);
+  gdk_display_sync(data->display);
+  #ifdef _WIN32
+    annotate_acquire_pointer_grab();
+  #endif
+}
 
 /* Unhide the cursor */
 void unhide_cursor()
 {
   if (data->cursor_hidden)
     {
-	  #ifdef _WIN32
-        annotate_release_pointer_grab();
-      #endif  
-      if(data->cur_context && data->cur_context->type == ANNOTATE_ERASER)
-        {
-	       set_eraser_cursor();
-	    } 
-      else
-	    {
-	       set_pen_cursor();
-	    }
+	  update_cursor();
       data->cursor_hidden = FALSE;
-	  #ifdef _WIN32
-        annotate_acquire_pointer_grab();
-      #endif  
     }
 }
 
@@ -1531,6 +1510,12 @@ void annotate_quit()
       data->cursor=NULL;
     }
   
+  if (data->invisible_cursor)
+    {
+      gdk_cursor_unref(data->invisible_cursor);
+      data->invisible_cursor=NULL;
+    }
+  
   g_free (data);
 }
 
@@ -1575,7 +1560,7 @@ void annotate_toggle_grab()
 { 
   annotate_select_pen();
   annotate_acquire_grab ();
-  set_pen_cursor();
+  update_cursor();
 }
 
 
@@ -1592,7 +1577,7 @@ void annotate_eraser_grab ()
   annotate_select_eraser();
   annotate_configure_eraser(data->thickness);
   annotate_acquire_grab();
-  set_eraser_cursor();
+  update_cursor();
 }
 
 
@@ -1804,7 +1789,7 @@ void setup_app (GtkWidget* parent)
 			                          COLORREF crKey, BYTE bAlpha, DWORD dwFlags))
 	GetProcAddress(hInstance,"SetLayeredWindowAttributes");
         
-	setLayeredWindowAttributesProc(hwnd, RGB(0,0,0), 254, LWA_COLORKEY | LWA_ALPHA );
+	setLayeredWindowAttributesProc(hwnd, RGB(0,0,0), 0, LWA_COLORKEY );
         		
   #endif
 }
