@@ -117,18 +117,23 @@ void clear_background_window()
   background_data->background_color = NULL;
   g_free(background_data->background_image);
   background_data->background_image = NULL;
+  
   #ifdef _WIN32
-    gdk_window_shape_combine_mask (background_data->background_window->window,  background_data->background_shape, 0, 0);
+    /* 
+	 * I put the window opacity to 0.1 because 
+	 * if I set the annotation window to be fully transparent
+	 * will lost the focus even if it has grabbed the pointer 
+	 *
+	 */
+    gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0.1);
+  #else
+    gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0);
   #endif
-  cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_CLEAR);
-  gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0);
-  cairo_paint(background_data->back_cr);
-  cairo_stroke(background_data->back_cr); 
+  clear_cairo_context(background_data->back_cr);
   
   gint height;
   gint width;
   gdk_drawable_get_size(background_data->background_window->window, &width, &height);
-
 
   /* Make the trasparen pixmap to be used as mask */
   background_data->background_shape = gdk_pixmap_new (NULL, width, height, 1); 

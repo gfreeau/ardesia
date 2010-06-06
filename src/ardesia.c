@@ -247,18 +247,7 @@ CommandLine* parse_options(int argc, char *argv[])
 {
   CommandLine* commandline = g_malloc(sizeof(CommandLine)); 
   
-  #ifdef _WIN32
-     /* 
-      * @FIXME The vertical layout is broken on windows;
-      * this is a workaround to avoid to show the bug,
-      * I put the gravity to south having an horizontal
-      * layout
-      */
-     commandline->position = SOUTH;
-  #else   
-     commandline->position = EAST;
-  #endif
-  
+  commandline->position = EAST;
   commandline->debug = FALSE;
   commandline->backgroundimage = NULL;
   commandline->decorated=FALSE;
@@ -407,12 +396,13 @@ main (int argc, char *argv[])
 
   GtkWidget* background_window = create_background_window(commandline->backgroundimage); 
   
-  #ifdef linux
+  #ifndef _WIN32
     /* 
      *  - on linux let visible the window even if you go in unlock mode
      *    it works as always on the top directive
-     *  - on widows this broke the zeta order
-     *  - on MACOSX must be checked the behaviour
+     *  - on widows this broke the zeta order and then I avoid this
+     *  - on MACOSX must be checked the behaviour: I am optimistic
+	 *
      */
     gtk_window_set_keep_above(GTK_WINDOW(background_window), TRUE);
   #endif  
@@ -426,12 +416,12 @@ main (int argc, char *argv[])
 
   GtkWidget* annotation_window = get_annotation_window();  
 
-  #ifdef linux
+  #ifndef _WIN32
      /* 
      *  - on linux let visible the window even if you go in unlock mode
      *    it works as always on the top directive
-     *  - on widows this broke the zeta order
-     *  - on MACOSX must be checked the behaviour
+     *  - on widows this broke the zeta order and then I avoid this
+     *  - on MACOSX must be checked the behaviour: I am optimistic
      */
     gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
   #endif
@@ -440,12 +430,12 @@ main (int argc, char *argv[])
   
   ardesia_bar_window = create_bar_window(annotation_window);
 
-  #ifdef linux
+  #ifndef _WIN32
      /* 
      *  - on linux let visible the window even if you go in unlock mode
      *    it works as always on the top directive
-     *  - on widows this broke the zeta order
-     *  - on MACOSX must be checked the behaviour
+     *  - on widows this broke the zeta order and then I avoid this
+     *  - on MACOSX must be checked the behaviour: I am optimistic
      */
     gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
   #endif  

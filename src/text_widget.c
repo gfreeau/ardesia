@@ -40,7 +40,10 @@
 
 #ifdef _WIN32
   #include <cairo-win32.h>
+  #include <gdkwin32.h>
   #include <winuser.h>  
+  BOOL (WINAPI *setLayeredWindowAttributesTextProc) (HWND hwnd, COLORREF crKey,
+	BYTE bAlpha, DWORD dwFlags) = NULL;
 #else
   #ifdef __APPLE__
     #include <cairo-quartz.h>
@@ -106,14 +109,7 @@ void create_text_window(GtkWindow *parent)
   gtk_widget_set_app_paintable(text_window, TRUE);
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(text_window), TRUE);
 
-
-  #ifndef _WIN32 
-    gtk_window_set_opacity(GTK_WINDOW(text_window), 1); 
-  #else
-    // TODO In windows I am not able to use an rgba transparent  
-    // windows and then I use a sort of semi transparency
-    gtk_window_set_opacity(GTK_WINDOW(text_window), 0.5); 
-  #endif 
+  gtk_window_set_opacity(GTK_WINDOW(text_window), 1); 
  
   gtk_widget_set_double_buffered(text_window, FALSE);
 }
@@ -261,10 +257,11 @@ gboolean set_text_pointer(GtkWidget * window)
 
 
 /* Initialization routine */
-void init(GtkWidget *win)
+void init(GtkWidget *widget)
 {
-  text_cr = gdk_cairo_create(win->window);
-  
+  if (text_cr) return;
+  text_cr = gdk_cairo_create(widget->window);
+	  
   if (text_cr)
     {
       cairo_set_operator(text_cr,CAIRO_OPERATOR_CLEAR);
@@ -281,6 +278,7 @@ void init(GtkWidget *win)
   pos->x = 0;
   pos->y = 0;
   move_editor_cursor();
+  
 }
 
 
@@ -301,23 +299,18 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
     }
   if (widget)
     {
-      int width, height;
-      gtk_window_get_size(GTK_WINDOW(widget), &width, &height);
-      int x, y;
-      gtk_window_get_position(GTK_WINDOW(widget), &x, &y);
-      if (screen_width==width)
+      init(widget);
+      if (text_cr)
         {
-          init(widget);
-       
-          if (text_cr)
-            {
-              /* This is a trick we must found the maximum height and text_pen_width of the font */
-              cairo_set_font_size (text_cr, text_pen_width * 2);
-              cairo_text_extents (text_cr, "|" , &extents);
-              max_font_height = extents.height;
-            }
-          set_text_pointer(widget);
+           /* This is a trick we must found the maximum height and text_pen_width of the font */
+           cairo_set_font_size (text_cr, text_pen_width * 2);
+           cairo_text_extents (text_cr, "|" , &extents);
+           max_font_height = extents.height;
         }
+	  set_text_pointer(widget);
+	  #ifdef _WIN32
+	    grab_pointer(text_window, TEXT_MOUSE_EVENTS);
+      #endif
     }
   return TRUE;
 }
@@ -339,7 +332,11 @@ release (GtkWidget *win,
          GdkEventButton *ev, 
          gpointer user_data)
 {
-
+ 
+  #ifdef _WIN32
+    ungrab_pointer(display, text_window);
+  #endif
+  
   pos->x = ev->x;
   pos->y = ev->y;
   move_editor_cursor();
@@ -394,6 +391,18 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
   g_signal_connect (G_OBJECT(text_window), "key_press_event", G_CALLBACK (key_press), NULL);
 
   gtk_widget_show_all(text_window);
+  #ifdef _WIN32
+	 // I set to use the black as the transparent color of the window
+	 HWND hwnd = GDK_WINDOW_HWND(text_window->window);
+		
+	 HINSTANCE hInstance = LoadLibraryA("user32");		
+		
+	 setLayeredWindowAttributesTextProc = (BOOL (WINAPI*)(HWND hwnd,
+			COLORREF crKey, BYTE bAlpha, DWORD dwFlags))
+			GetProcAddress(hInstance,"SetLayeredWindowAttributes");
+        
+    setLayeredWindowAttributesTextProc(hwnd, RGB(0,0,0), 254, LWA_COLORKEY | LWA_ALPHA );	
+  #endif
 }
 
 

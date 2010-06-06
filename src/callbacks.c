@@ -216,6 +216,13 @@ on_winMain_enter_notify_event   (GtkWidget       *widget,
 				 GdkEvent        *event,
 			         gpointer         user_data)
 {
+  #ifdef _WIN32
+     /* This deny the mouse input go below the window */
+	 if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0)
+	 {
+       gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0.1);
+	 }
+  #endif	
   BarData *bar_data = (BarData*) user_data;
   if (bar_data->text)
     {
@@ -480,6 +487,13 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) user_data;
   bar_data->grab = FALSE;
   annotate_release_grab ();
+  #ifdef _WIN32
+	 if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0.1)
+	 {
+       /* This allow the mouse input go below the window */
+       gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
+	 }
+  #endif	 
 }
 
 

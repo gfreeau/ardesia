@@ -53,6 +53,8 @@ extern GtkBuilder *gtkBuilder;
 					    const GdkColor *fg, const GdkColor *bg,
 					    gint x, gint y);
   #define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
+  #define LWA_COLORKEY	0x00000001
+  #define LWA_ALPHA               0x00000002
 #endif
 						
 /* get bar window widget */

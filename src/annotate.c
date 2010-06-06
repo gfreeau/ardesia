@@ -50,7 +50,10 @@
 
 #ifdef _WIN32
   #include <cairo-win32.h>
-  #include <winuser.h>  
+  #include <gdkwin32.h>
+  BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF crKey,
+	BYTE bAlpha, DWORD dwFlags) = NULL;
+  #include <winuser.h> 
 #else
   #ifdef __APPLE__
     #include <cairo-quartz.h>
@@ -330,8 +333,8 @@ void select_color()
             {
               if (data->debug)
 	            { 
-	              g_printerr("Called select color but this is not allocated\n");
-                      g_printerr("I put the red one to recover to the problem\n");
+	               g_printerr("Called select color but this is not allocated\n");
+                   g_printerr("I put the red one to recover to the problem\n");
 	            }
               cairo_set_source_color_from_string(data->annotation_cairo_context, "FF0000FF");
             }
@@ -507,10 +510,23 @@ void get_invisible_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
   cairo_destroy(invisible_shape_cr); 
 }
 
+void annotate_acquire_pointer_grab()
+{
+   grab_pointer(data->annotation_window, ANNOTATE_MOUSE_EVENTS);
+}
+
+
+void annotate_release_pointer_grab()
+{
+   ungrab_pointer(data->display, data->annotation_window);
+}
 
 /* Hide the cursor */
 void hide_cursor()
 {
+  #ifdef _WIN32
+    annotate_release_pointer_grab();
+  #endif  
   if (data->cursor)
     {
       gdk_cursor_unref (data->cursor);
@@ -537,7 +553,10 @@ void hide_cursor()
   g_free(foreground_color_p);
   g_free(background_color_p);
   
-  data->cursor_hidden = TRUE; 
+  data->cursor_hidden = TRUE;
+  #ifdef _WIN32
+    annotate_acquire_pointer_grab();
+  #endif  
 }
 
 
@@ -590,6 +609,9 @@ void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 /* Set the cursor patching the xpm with the selected color */
 void set_pen_cursor()
 {
+  #ifdef _WIN32
+    annotate_release_pointer_grab();
+  #endif  
   gint size=12;
   if (data->cursor)
     {
@@ -600,18 +622,29 @@ void set_pen_cursor()
   get_pen_pixmaps(size, &pixmap, &mask); 
   GdkColor *background_color_p = rgb_to_gdkcolor("000000");
 
+  if (data->debug)
+    {
+      g_printerr("Set pen cursor %s\n", data->cur_context->fg_color);
+    }  
+
+  
   GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color); 
   gint thickness = data->thickness;
 
   data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask, foreground_color_p, background_color_p,
                                              size/2 + thickness/2, 5* size/2);
 
+											
   gdk_window_set_cursor (data->annotation_window->window, data->cursor);
   gdk_display_sync(data->display);
+  
   g_object_unref (pixmap);
   g_object_unref (mask);
   g_free(foreground_color_p);
   g_free(background_color_p);
+  #ifdef _WIN32
+    annotate_acquire_pointer_grab();
+  #endif  
 }
 
 
@@ -652,7 +685,10 @@ void get_eraser_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 
 /* Set the eraser cursor */
 void set_eraser_cursor()
-{
+{ 
+  #ifdef _WIN32
+    annotate_release_pointer_grab();
+  #endif  
   if (data->cursor)
     {
       gdk_cursor_unref(data->cursor);
@@ -674,6 +710,9 @@ void set_eraser_cursor()
   g_object_unref (mask);
   g_free(foreground_color_p);
   g_free(background_color_p);
+  #ifdef _WIN32
+    annotate_acquire_pointer_grab();
+  #endif  
 }
 
 
@@ -682,22 +721,34 @@ void unhide_cursor()
 {
   if (data->cursor_hidden)
     {
+	  #ifdef _WIN32
+        annotate_release_pointer_grab();
+      #endif  
       if(data->cur_context && data->cur_context->type == ANNOTATE_ERASER)
         {
-	  set_eraser_cursor();
-	} 
+	       set_eraser_cursor();
+	    } 
       else
-	{
-	  set_pen_cursor();
-	}
-      data->cursor_hidden = FALSE;  
+	    {
+	       set_pen_cursor();
+	    }
+      data->cursor_hidden = FALSE;
+	  #ifdef _WIN32
+        annotate_acquire_pointer_grab();
+      #endif  
     }
 }
 
 
 void annotate_acquire_input_grab()
 {
+  
+  #ifdef _WIN32
+    annotate_acquire_pointer_grab();
+  #endif
+ 
   gtk_widget_grab_focus(data->annotation_window);
+ 
   #ifndef _WIN32
     /* 
      * LINUX 
@@ -715,6 +766,7 @@ void annotate_acquire_input_grab()
 /* Grab the cursor */
 void annotate_acquire_grab ()
 {
+
   if  (!data->is_grabbed)
     {
       if (data->debug)
@@ -1099,13 +1151,15 @@ event_expose (GtkWidget *widget,
   if (!(data->annotation_cairo_context))
     {
 	  /* initialize a transparent window */
+	 
       data->annotation_cairo_context = gdk_cairo_create(data->annotation_window->window);
+	 
       if (cairo_status(data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
         {
           g_printerr ("Unable to allocate the annotation cairo context"); 
           exit(1);
         }     
-
+		
       annotate_clear_screen();
 
       annotate_set_width(14);
@@ -1185,15 +1239,25 @@ paint (GtkWidget *win,
        return TRUE;
     }
 
-  if (inside_bar_window(ev->x,ev->y))
+  unhide_cursor();
+  
+  int x,y;
+  #ifdef _WIN32
+    /* I do not know why but sometimes the event coord are wrong */
+    /* get cursor position */
+    gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
+  #else
+    x = ev->x;
+    y = ev->y;	
+  #endif
+  if (inside_bar_window(x, y))
     /* point is in the ardesia bar */
     {
       /* the last point was outside the bar then ungrab */
       annotate_release_grab ();
       return TRUE;
     }   
-
-  unhide_cursor();  
+  
   annotate_coord_list_free();
   /* only button1 allowed */
   if (!(ev->button==1))
@@ -1233,8 +1297,19 @@ paintto (GtkWidget *win,
        annotate_release_grab ();
        return TRUE;
     }
-
-  if (inside_bar_window(ev->x, ev->y))
+	
+  unhide_cursor();
+  
+  int x,y;
+  #ifdef _WIN32
+    /* I do not know why but sometimes the event coord are wrong */
+    /* get cursor position */
+    gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
+  #else
+    x = ev->x;
+    y = ev->y;	
+  #endif
+  if (inside_bar_window(x, y))
     /* point is in the ardesia bar */
     {
        if (data->debug)
@@ -1246,8 +1321,6 @@ paintto (GtkWidget *win,
       annotate_release_grab ();
       return TRUE;
     }
-
-  unhide_cursor();
 
   gdouble pressure = 0;
   GdkModifierType state = (GdkModifierType) ev->state;  
@@ -1303,7 +1376,16 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
        return TRUE;
     }
 
-  if (inside_bar_window(ev->x,ev->y))
+  int x,y;
+  #ifdef _WIN32
+    /* I do not know why but sometimes the event coord are wrong */
+    /* get cursor position */
+    gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
+  #else
+    x = ev->x;
+    y = ev->y;	
+  #endif
+  if (inside_bar_window(x, y))
     /* point is in the ardesia bar */
     {
       /* the last point was outside the bar then ungrab */
@@ -1492,8 +1574,8 @@ void annotate_set_arrow(gboolean arrow)
 void annotate_toggle_grab()
 { 
   annotate_select_pen();
-  set_pen_cursor();
   annotate_acquire_grab ();
+  set_pen_cursor();
 }
 
 
@@ -1509,8 +1591,8 @@ void annotate_eraser_grab ()
   /* Get the with message */
   annotate_select_eraser();
   annotate_configure_eraser(data->thickness);
-  set_eraser_cursor();
   annotate_acquire_grab();
+  set_eraser_cursor();
 }
 
 
@@ -1542,13 +1624,14 @@ void annotate_release_input_grab()
      * to pass the events below the annotation transparent window
      *
      */
+	 annotate_release_pointer_grab();
   #endif  
 }
 
 
 /* Release the pointer pointer */
 void annotate_release_grab ()
-{           
+{      
   if (data->is_grabbed)
     {
       if (data->debug)
@@ -1671,6 +1754,7 @@ void annotate_clear_screen ()
 void setup_app (GtkWidget* parent)
 { 
   data->annotation_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  
   gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(parent));
 
   gtk_window_set_destroy_with_parent(GTK_WINDOW(data->annotation_window), TRUE);
@@ -1679,15 +1763,7 @@ void setup_app (GtkWidget* parent)
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window)); 
 	
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(data->annotation_window), TRUE);
-
-  #ifndef _WIN32 
-    gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1); 
-  #else
-    // TODO In windows I am not able yet to use an rgba transparent  
-    // windows and then I use a sort of semi transparency 
-    gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 0.5); 
-  #endif  
- 
+  gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1); 
   
   // initialize pen context
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN, 15);
@@ -1718,6 +1794,19 @@ void setup_app (GtkWidget* parent)
   gtk_widget_set_app_paintable(data->annotation_window, TRUE);
   gtk_widget_set_double_buffered(data->annotation_window, FALSE);
 
+  #ifdef _WIN32
+	// I use a layered window that use the black as transparent color
+	HWND hwnd = GDK_WINDOW_HWND(data->annotation_window->window);
+    //SetWindowLongPtr(hwnd, GWL_EXSTYLE,  WS_EX_LAYERED| WS_EX_NOACTIVATE| WS_EX_TOOLWINDOW | WS_EX_NOPARENTNOTIFY);
+	HINSTANCE hInstance = LoadLibraryA("user32");		
+		
+	setLayeredWindowAttributesProc = (BOOL (WINAPI*)(HWND hwnd,
+			                          COLORREF crKey, BYTE bAlpha, DWORD dwFlags))
+	GetProcAddress(hInstance,"SetLayeredWindowAttributes");
+        
+	setLayeredWindowAttributesProc(hwnd, RGB(0,0,0), 254, LWA_COLORKEY | LWA_ALPHA );
+        		
+  #endif
 }
 
 
@@ -1735,7 +1824,7 @@ int annotate_init (GtkWidget* parent, gboolean debug)
  
   data->debug = debug;
   
-  data->cursor_hidden = FALSE;
+  data->cursor_hidden = TRUE;
   data->is_grabbed = FALSE;
   data->arrow = FALSE; 
   data->rectify = FALSE;
