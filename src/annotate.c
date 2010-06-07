@@ -427,7 +427,22 @@ void merge_context(cairo_t * cr)
   reset_cairo();
  
   cairo_surface_t* source_surface = cairo_get_target(cr);
-  cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_ADD);
+  #ifndef WIN32
+     /*
+      * The over operato might put the new layer on the top of the old one 
+      * overriding the intersections
+      * Seems that this operator does not work on windows
+      * in this operating system only the new layer remain after the merge
+      */
+     cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_OVER);
+  #else
+     /*
+      * @workaround to use in windows I use the add that put the new layer
+      * on the top of the old one but it does not conserve the color of
+      * the second layer but modify it respecting the firts layer
+      */
+     cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_ADD);
+  #endif
   cairo_set_source_surface (data->annotation_cairo_context,  source_surface, 0, 0);
   cairo_paint(data->annotation_cairo_context);
   cairo_stroke(data->annotation_cairo_context);

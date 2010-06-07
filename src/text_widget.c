@@ -259,24 +259,26 @@ gboolean set_text_pointer(GtkWidget * window)
 /* Initialization routine */
 void init(GtkWidget *widget)
 {
-  if (text_cr) return;
-  text_cr = gdk_cairo_create(widget->window);
-	  
-  if (text_cr)
+  if (!text_cr)
     {
-      cairo_set_operator(text_cr,CAIRO_OPERATOR_CLEAR);
-      cairo_paint(text_cr);
-      cairo_stroke(text_cr);   
-      cairo_set_line_cap (text_cr, CAIRO_LINE_CAP_ROUND);
-      cairo_set_line_join(text_cr, CAIRO_LINE_JOIN_ROUND); 
-      cairo_set_operator(text_cr, CAIRO_OPERATOR_SOURCE);
-      cairo_set_line_width(text_cr, text_pen_width);
-      cairo_set_source_color_from_string(text_cr, text_color);
-    }  
+      text_cr = gdk_cairo_create(widget->window);
+    }
+  cairo_set_operator(text_cr,CAIRO_OPERATOR_CLEAR);
+  cairo_paint(text_cr);
+  cairo_stroke(text_cr);   
+	  
+  cairo_set_line_cap (text_cr, CAIRO_LINE_CAP_ROUND);
+  cairo_set_line_join(text_cr, CAIRO_LINE_JOIN_ROUND); 
+  cairo_set_operator(text_cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_line_width(text_cr, text_pen_width);
+  cairo_set_source_color_from_string(text_cr, text_color);
 
-  pos = g_malloc (sizeof(Pos));
+  if (!pos)
+   {
+      pos = g_malloc (sizeof(Pos));
+   }
   pos->x = 0;
-  pos->y = 0;
+ pos->y = 0;
   move_editor_cursor();
   
 }
@@ -310,7 +312,7 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
 	  set_text_pointer(widget);
 	  #ifdef _WIN32
 	    grab_pointer(text_window, TEXT_MOUSE_EVENTS);
-      #endif
+          #endif
     }
   return TRUE;
 }
