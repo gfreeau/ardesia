@@ -120,11 +120,11 @@ void clear_background_window()
   
   #ifdef _WIN32
     /* 
-	 * I put the window opacity to 0.1 because 
-	 * if I set the annotation window to be fully transparent
-	 * will lost the focus even if it has grabbed the pointer 
-	 *
-	 */
+     * I put the window opacity to 0.1 because 
+     * if I set the annotation window to be fully transparent
+     * will lost the focus even if it has grabbed the pointer 
+     *
+     */
     gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0.1);
   #else
     gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0);
