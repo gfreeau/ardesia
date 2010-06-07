@@ -51,9 +51,9 @@
 #ifdef _WIN32
   #include <cairo-win32.h>
   #include <gdkwin32.h>
+  #include <winuser.h> 
   BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF crKey,
 	BYTE bAlpha, DWORD dwFlags) = NULL;
-  #include <winuser.h> 
 #else
   #ifdef __APPLE__
     #include <cairo-quartz.h>
@@ -336,7 +336,7 @@ void select_color()
               if (data->debug)
 	            { 
 	               g_printerr("Called select color but this is not allocated\n");
-                   g_printerr("I put the red one to recover to the problem\n");
+                       g_printerr("I put the red one to recover to the problem\n");
 	            }
               cairo_set_source_color_from_string(data->annotation_cairo_context, "FF0000FF");
             }
@@ -426,13 +426,13 @@ void merge_context(cairo_t * cr)
     }
   reset_cairo();
  
-  //This seems broken on windows
+  /* @TODO This seems broken on windows */
   cairo_surface_t* source_surface = cairo_get_target(cr);
   cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_OVER);
   cairo_set_source_surface (data->annotation_cairo_context,  source_surface, 0, 0);
   cairo_paint(data->annotation_cairo_context);
   cairo_stroke(data->annotation_cairo_context);
-  
+
   add_save_point();
 }
 
@@ -522,19 +522,19 @@ void annotate_release_pointer_grab()
 
  void allocate_invisible_cursor()
  {
-    int size = 1;
   
     GdkPixmap *pixmap, *mask;
-    get_invisible_pixmaps(size, &pixmap, &mask);
+    get_invisible_pixmaps(1, &pixmap, &mask);
   
     GdkColor *background_color_p = rgb_to_gdkcolor("000000");
     GdkColor *foreground_color_p = rgb_to_gdkcolor("FFFFFF");
   
     data->invisible_cursor = gdk_cursor_new_from_pixmap (pixmap, mask,
-                                                           foreground_color_p, background_color_p, 
-                                                           size/2, size/2);
-	g_object_unref (pixmap);
-    g_object_unref (mask);
+                                                         foreground_color_p,
+                                                         background_color_p, 
+                                                         0, 0);
+    g_object_unref(pixmap);
+    g_object_unref(mask);
     g_free(foreground_color_p);
     g_free(background_color_p);			
  }
@@ -558,11 +558,9 @@ void hide_cursor()
 /* Create pixmap and mask for the pen cursor */
 void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
-  gint thickness = data->thickness;
-  *pixmap = gdk_pixmap_new (NULL, size*3 + thickness, 
-                            size*3 + thickness, 1);
-  *mask =  gdk_pixmap_new (NULL, size*3 + thickness, 
-                           size*3 + thickness, 1);
+  gint side_lenght = size*3 + data->thickness;
+  *pixmap = gdk_pixmap_new (NULL, side_lenght, side_lenght, 1);
+  *mask =  gdk_pixmap_new (NULL, side_lenght, side_lenght, 1);
   int circle_width = 2; 
 
   cairo_t *pen_cr = gdk_cairo_create(*pixmap);
@@ -591,13 +589,13 @@ void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
   cairo_set_operator(pen_shape_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(pen_shape_cr, circle_width);
   cairo_set_source_rgb(pen_shape_cr, 1, 1, 1);
-  cairo_arc(pen_shape_cr, 5* size/2 + thickness/2, size/2, 
+  cairo_arc(pen_shape_cr, 5* size/2 + data->thickness/2, size/2, 
             (size/2)-circle_width, M_PI * 5/4, M_PI/4);
-  cairo_arc(pen_shape_cr, size/2 + thickness/2, 5 * size/2,
+  cairo_arc(pen_shape_cr, size/2 + data->thickness/2, 5 * size/2,
             (size/2)-circle_width, M_PI/4, M_PI * 5/4); 
   cairo_fill(pen_shape_cr);
-  cairo_arc(pen_shape_cr, size/2 + thickness/2 , 5 * size/2,
-            thickness/2, 0, 2 * M_PI);
+  cairo_arc(pen_shape_cr, size/2 + data->thickness/2 , 5 * size/2,
+            data->thickness/2, 0, 2 * M_PI);
   cairo_stroke(pen_shape_cr);
   cairo_destroy(pen_shape_cr);
 }
@@ -625,7 +623,9 @@ void annotate_set_pen_cursor()
   GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color); 
   gint thickness = data->thickness;
 
-  data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask, foreground_color_p, background_color_p,
+  data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask, 
+                                             foreground_color_p, 
+                                             background_color_p,
                                              size/2 + thickness/2, 5* size/2);
 
   
@@ -690,7 +690,10 @@ void annotate_set_eraser_cursor()
   GdkColor *background_color_p = rgb_to_gdkcolor("000000");
   GdkColor *foreground_color_p = rgb_to_gdkcolor("FF0000");
  
-  data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask, foreground_color_p, background_color_p, size/2, size/2);
+  data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask,
+                                             foreground_color_p, 
+                                             background_color_p, 
+                                             size/2, size/2);
  
   g_object_unref (pixmap);
   g_object_unref (mask);
@@ -715,7 +718,7 @@ void unhide_cursor()
 {
   if (data->cursor_hidden)
     {
-	  update_cursor();
+      update_cursor();
       data->cursor_hidden = FALSE;
     }
 }
@@ -1610,7 +1613,7 @@ void annotate_release_input_grab()
      * to pass the events below the annotation transparent window
      *
      */
-	 annotate_release_pointer_grab();
+     annotate_release_pointer_grab();
   #endif  
 }
 
@@ -1641,16 +1644,16 @@ void annotate_fill()
   if (data->coordlist)
     {
       if (!(data->roundify)&&(!(data->rectify)))
-	  {
-	     draw_point_list(data->coordlist);     
-	     cairo_close_path(data->annotation_cairo_context);      
-	  }
+	{
+	   draw_point_list(data->coordlist);     
+	   cairo_close_path(data->annotation_cairo_context);      
+	}
       select_color();
       cairo_fill(data->annotation_cairo_context);
       cairo_stroke(data->annotation_cairo_context);
       if (data->debug)
         {
-          g_printerr("Fill\n");
+           g_printerr("Fill\n");
         }
       add_save_point();
     }

@@ -87,9 +87,6 @@ int get_distance(int x1, int y1, int x2, int y2);
 /* Clear cairo context */
 void clear_cairo_context(cairo_t* cr);
 
-/* Transparent rectangle to allow to see the bar and pass the event below */
-void make_hole(GtkWidget *widget, cairo_t * cr);
-
 
 /*
  * This is function return if the point (x,y) in inside the ardesia bar window
@@ -114,11 +111,7 @@ gboolean file_exists(char* filename, char* desktop_dir);
 
 /*
  * Get the desktop folder;
- * Now this function use gconf to found the folder,
- * this means that this rutine works properly only
- * with the gnome desktop environment
- * We can investigate how-to do this
- * in a desktop environment independant way
+ * this function use gconf to found the folder
  */
 const gchar* get_desktop_dir (void);
 

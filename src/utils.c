@@ -327,11 +327,7 @@ gboolean file_exists(char* filename, char* desktop_dir)
 
 /*
  * Get the desktop folder;
- * Now this function use gconf to found the folder,
- * this means that this rutine works properly only
- * with the gnome desktop environment
- * We can investigate how-to do this
- * in a desktop environment independant way
+ * this function use gconf to found the folder
  */
 const gchar* get_desktop_dir (void)
 {
@@ -341,8 +337,8 @@ const gchar* get_desktop_dir (void)
 
   gconf_client = gconf_client_get_default ();
 
-  /* in windows gconf daemon is surely not running */
-  #ifndef _WIN32
+  /* gconf daemon can run on linux */
+  #ifdef linux
     desktop_is_home_dir = gconf_client_get_bool (gconf_client,
                                                  "/apps/nautilus/preferences/desktop_is_home_dir",
                                                  NULL);

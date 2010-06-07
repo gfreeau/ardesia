@@ -191,7 +191,6 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, int pixel_
        
        if (fabs(h) >= pixel_tollerance)
          {
-           
             // add  a point with the B coordinates
             AnnotateStrokeCoordinate* new_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
             new_point->x = Bx;
