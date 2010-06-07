@@ -23,8 +23,6 @@
 - Windows porting
   Bug fix:
     - fix the highlighter (seems that the colormap it is wrong)
-    - fix the merge beetween the text window and the annotation
-      window
     - fix the cursor icon to change respect the ardesia bar options 
     the transparent annotation window on the request
   Issue:
