@@ -294,7 +294,7 @@ void annotate_savelist_free()
 /* Calculate the direction in radiants */
 gfloat annotate_get_arrow_direction()
 {
-  GSList *outptr =   data->coordlist;   
+  GSList *outptr = data->coordlist;   
   // make the standard deviation 
   int tollerance = data->thickness * 2;
   
@@ -1123,8 +1123,7 @@ event_expose (GtkWidget *widget,
     }
   if (!(data->annotation_cairo_context))
     {
-	  /* initialize a transparent window */
-	 
+      /* initialize a transparent window */	 
       data->annotation_cairo_context = gdk_cairo_create(data->annotation_window->window);
 	 
       if (cairo_status(data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
@@ -1203,6 +1202,7 @@ paint (GtkWidget *win,
        GdkEventButton *ev, 
        gpointer user_data)
 { 
+  annotate_coord_list_free();
   if (!ev)
     {
        g_printerr("Device '%s': Invalid event; I ungrab all\n",
@@ -1230,7 +1230,6 @@ paint (GtkWidget *win,
       return TRUE;
     }   
   
-  annotate_coord_list_free();
   /* only button1 allowed */
   if (!(ev->button==1))
     {
@@ -1477,7 +1476,20 @@ void annotate_quit()
 	
   /* destroy cairo */  
   destroy_cairo();
+
+  /* destroy cursors */  
+  if (data->cursor)
+    {
+      gdk_cursor_unref(data->cursor);
+      data->cursor=NULL;
+    }
   
+  if (data->invisible_cursor)
+    {
+      gdk_cursor_unref(data->invisible_cursor);
+      data->invisible_cursor=NULL;
+    }
+
   /* free all */
   if (data->annotation_window)
     {
@@ -1496,19 +1508,7 @@ void annotate_quit()
 
   g_free(data->default_pen);
   g_free(data->default_eraser);
-
-  if (data->cursor)
-    {
-      gdk_cursor_unref(data->cursor);
-      data->cursor=NULL;
-    }
-  
-  if (data->invisible_cursor)
-    {
-      gdk_cursor_unref(data->invisible_cursor);
-      data->invisible_cursor=NULL;
-    }
-  
+ 
   g_free (data);
 }
 

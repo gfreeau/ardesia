@@ -161,7 +161,7 @@ on_window_configure_event (GtkWidget *widget,
 		 	gpointer user_data)
 {
   BarData *bar_data = (BarData*) user_data;
-  annotate_set_color(bar_data->color);
+  annotate(bar_data);
   return TRUE;
 }
 
