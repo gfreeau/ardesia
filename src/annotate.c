@@ -382,6 +382,7 @@ void add_save_point ()
        if (data->debug)
          { 
            g_printerr ("Unable to allocate the cairo context for the surface to be restored\n"); 
+           annotate_quit(); 
            exit(1);
          }
     }
@@ -484,6 +485,7 @@ void get_invisible_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
        if (data->debug)
          { 
             g_printerr ("Unable to allocate the cairo context to hide the cursor"); 
+            annotate_quit(); 
             exit(1);
          }
     }
@@ -498,6 +500,7 @@ void get_invisible_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
        if (data->debug)
          { 
            g_printerr ("Unable to allocate the cairo context for the surface to be restored\n"); 
+           annotate_quit(); 
            exit(1);
          }
     }
@@ -566,6 +569,7 @@ void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
   if (cairo_status(pen_cr) != CAIRO_STATUS_SUCCESS)
     {
        g_printerr ("Unable to allocate the pen cursor cairo context"); 
+       annotate_quit(); 
        exit(1);
     }
 
@@ -579,6 +583,7 @@ void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
   if (cairo_status(pen_shape_cr) != CAIRO_STATUS_SUCCESS)
     {
        g_printerr ("Unable to allocate the pen shape cursor cairo context"); 
+       annotate_quit(); 
        exit(1);
     }
 
@@ -642,6 +647,7 @@ void get_eraser_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
   if (cairo_status(eraser_cr) != CAIRO_STATUS_SUCCESS)
     {
        g_printerr ("Unable to allocate the eraser cursor cairo context"); 
+       annotate_quit();
        exit(1);
     }
 
@@ -654,6 +660,7 @@ void get_eraser_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
   if (cairo_status(eraser_shape_cr) != CAIRO_STATUS_SUCCESS)
     {
        g_printerr ("Unable to allocate the eraser shape cursor cairo context"); 
+       annotate_quit(); 
        exit(1);
     }
 
@@ -1129,6 +1136,7 @@ event_expose (GtkWidget *widget,
       if (cairo_status(data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
         {
           g_printerr ("Unable to allocate the annotation cairo context"); 
+          annotate_quit(); 
           exit(1);
         }     
 		
@@ -1145,6 +1153,7 @@ event_expose (GtkWidget *widget,
       if (cairo_status(data->transparent_cr) != CAIRO_STATUS_SUCCESS)
         {
           g_printerr ("Unable to allocate the transparent cairo context"); 
+          annotate_quit(); 
           exit(1);
         }
 
@@ -1755,7 +1764,8 @@ void setup_app (GtkWidget* parent)
   data->shape_cr = gdk_cairo_create(data->shape);
   if (cairo_status(data->shape_cr) != CAIRO_STATUS_SUCCESS)
     {
-       g_printerr ("Unable to allocate the shape cairo context"); 
+       g_printerr ("Unable to allocate the shape cairo context");
+       annotate_quit(); 
        exit(1);
     }
 
@@ -1770,16 +1780,16 @@ void setup_app (GtkWidget* parent)
   gtk_widget_set_double_buffered(data->annotation_window, FALSE);
 
   #ifdef _WIN32
-	// I use a layered window that use the black as transparent color
-	HWND hwnd = GDK_WINDOW_HWND(data->annotation_window->window);
-    //SetWindowLongPtr(hwnd, GWL_EXSTYLE,  WS_EX_LAYERED| WS_EX_NOACTIVATE| WS_EX_TOOLWINDOW | WS_EX_NOPARENTNOTIFY);
-	HINSTANCE hInstance = LoadLibraryA("user32");		
+    // I use a layered window that use the black as transparent color
+    HWND hwnd = GDK_WINDOW_HWND(data->annotation_window->window);
+    //SetWindowLongPtr(hwnd, GWL_EXSTYLE,  WS_EX_LAYERED| WS_EX_TOOLWINDOW | WS_EX_NOPARENTNOTIFY);
+    HINSTANCE hInstance = LoadLibraryA("user32");		
 		
-	setLayeredWindowAttributesProc = (BOOL (WINAPI*)(HWND hwnd,
-			                          COLORREF crKey, BYTE bAlpha, DWORD dwFlags))
-	GetProcAddress(hInstance,"SetLayeredWindowAttributes");
+    setLayeredWindowAttributesProc = (BOOL (WINAPI*)(HWND hwnd,
+			              COLORREF crKey, BYTE bAlpha, DWORD dwFlags))
+    GetProcAddress(hInstance,"SetLayeredWindowAttributes");
         
-	setLayeredWindowAttributesProc(hwnd, RGB(0,0,0), 0, LWA_COLORKEY );
+    setLayeredWindowAttributesProc(hwnd, RGB(0,0,0), 0, LWA_COLORKEY );
         		
   #endif
 }

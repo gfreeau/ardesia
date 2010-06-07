@@ -157,11 +157,14 @@ void start_tool(BarData *bar_data)
 
 G_MODULE_EXPORT gboolean 
 on_window_configure_event (GtkWidget *widget,
-			GdkEventExpose *event,
+			GdkEvent *event,
 		 	gpointer user_data)
 {
   BarData *bar_data = (BarData*) user_data;
-  annotate(bar_data);
+  if (bar_data->grab)
+    {
+      annotate(bar_data);
+    }
   return TRUE;
 }
 
@@ -493,11 +496,11 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
   bar_data->grab = FALSE;
   annotate_release_grab ();
   #ifdef _WIN32
-	 if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0.1)
-	 {
-       /* This allow the mouse input go below the window */
-       gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
-	 }
+    if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0.1)
+      {
+         /* This allow the mouse input go below the window */
+         gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
+      }
   #endif	 
 }
 
