@@ -464,12 +464,6 @@ void annotate_select_eraser()
 }
 
 
-/* Configure the eraser */
-void annotate_configure_eraser(int thickness)
-{
-  data->thickness = (thickness * 2.5);	
-}
-
 
 /* Select the default pen tool */
 void annotate_select_pen()
@@ -1574,7 +1568,6 @@ void annotate_eraser_grab ()
 {
   /* Get the with message */
   annotate_select_eraser();
-  annotate_configure_eraser(data->thickness);
   annotate_acquire_grab();
   update_cursor();
 }
