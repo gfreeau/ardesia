@@ -566,7 +566,7 @@ on_colorBlue_activate            (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
-  set_color(bar_data, "3333CC");
+  set_color(bar_data, "0000FF");
 }
 
 
@@ -581,15 +581,6 @@ on_colorRed_activate             (GtkToolButton   *toolbutton,
 
 G_MODULE_EXPORT void
 on_colorGreen_activate           (GtkToolButton   *toolbutton,
-                                  gpointer         user_data)
-{
-  BarData *bar_data = (BarData*) user_data;
-  set_color(bar_data, "008000");
-}
-
-
-G_MODULE_EXPORT void
-on_colorLightGreen_activate      (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;

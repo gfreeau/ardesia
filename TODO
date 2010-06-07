@@ -15,7 +15,6 @@
 
 - Refactoring
   - Better variables handling
-  - Solve  memory leaks
   - Profile the program
     to encrease the performance
 
@@ -24,7 +23,6 @@
   Bug fix:
     - fix the highlighter (seems that the colormap it is wrong)
     - fix the cursor icon to change respect the ardesia bar options 
-    the transparent annotation window on the request
   Issue:
     - implement the recordmydesktop_screencast.bat
       - recording (may be done using camit and ffmpeg2theora)
