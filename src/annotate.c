@@ -427,11 +427,7 @@ void merge_context(cairo_t * cr)
   reset_cairo();
  
   cairo_surface_t* source_surface = cairo_get_target(cr);
-  #ifdef _WIN32
-    cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_ADD);
-  #else
-    cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_OVER);
-  #endif
+  cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_ADD);
   cairo_set_source_surface (data->annotation_cairo_context,  source_surface, 0, 0);
   cairo_paint(data->annotation_cairo_context);
   cairo_stroke(data->annotation_cairo_context);

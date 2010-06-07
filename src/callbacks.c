@@ -163,7 +163,10 @@ on_window_configure_event (GtkWidget *widget,
   BarData *bar_data = (BarData*) user_data;
   if (bar_data->grab)
     {
-      annotate(bar_data);
+      if (!(bar_data->text))
+      { 
+        annotate(bar_data);
+      }
     }
   return TRUE;
 }
