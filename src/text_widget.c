@@ -263,10 +263,8 @@ void init(GtkWidget *widget)
     {
       text_cr = gdk_cairo_create(widget->window);
     }
-  cairo_set_operator(text_cr,CAIRO_OPERATOR_CLEAR);
-  cairo_paint(text_cr);
-  cairo_stroke(text_cr);   
-	  
+
+  clear_cairo_context(text_cr);
   cairo_set_line_cap (text_cr, CAIRO_LINE_CAP_ROUND);
   cairo_set_line_join(text_cr, CAIRO_LINE_JOIN_ROUND); 
   cairo_set_operator(text_cr, CAIRO_OPERATOR_SOURCE);
@@ -278,7 +276,7 @@ void init(GtkWidget *widget)
       pos = g_malloc (sizeof(Pos));
    }
   pos->x = 0;
- pos->y = 0;
+  pos->y = 0;
   move_editor_cursor();
   
 }
