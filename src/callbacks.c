@@ -96,7 +96,6 @@ void add_alpha(BarData *bar_data)
 /* free color */
 void set_color(BarData *bar_data, char* selected_color)
 {
-  bar_data->grab = TRUE;
   strcpy(bar_data->color, selected_color);
   add_alpha(bar_data);
   annotate_set_color(bar_data->color);
@@ -160,7 +159,6 @@ void start_tool(BarData *bar_data)
 	    {
 	      erase(bar_data);
 	    }   
-	  bar_data->grab = FALSE;
 	}
     }
 }
@@ -230,13 +228,6 @@ on_winMain_enter_notify_event   (GtkWidget       *widget,
 				 GdkEvent        *event,
 			         gpointer         user_data)
 {
-  #ifdef _WIN32
-    /* This deny the mouse input go below the window */
-    if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0)
-      {
-        gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0.1);
-      }
-  #endif	
   BarData *bar_data = (BarData*) user_data;
   if (bar_data->text)
     {
@@ -262,7 +253,6 @@ on_toolsHighlighter_activate     (GtkToolButton   *toolbutton,
 				  gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
       bar_data->highlighter = TRUE;
@@ -280,7 +270,6 @@ on_toolsRectifier_activate       (GtkToolButton   *toolbutton,
 				  gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
       /* if rounder is active release it */
@@ -304,7 +293,6 @@ on_toolsRounder_activate         (GtkToolButton   *toolbutton,
 				  gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = TRUE;
   if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
     {
       /* if rectifier is active release it */
@@ -328,8 +316,6 @@ G_MODULE_EXPORT void
 on_toolsFiller_activate          (GtkToolButton   *toolbutton,
 				  gpointer         user_data)
 {
-  BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = TRUE;
   annotate_fill();
 }
 
@@ -339,7 +325,6 @@ on_toolsArrow_activate           (GtkToolButton   *toolbutton,
 				  gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = TRUE;
   bar_data->text = FALSE;
   bar_data->pencil = TRUE;
   bar_data->arrow = TRUE;
@@ -351,7 +336,6 @@ on_toolsText_activate            (GtkToolButton   *toolbutton,
 		                  gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = TRUE;
   bar_data->text = TRUE;
   bar_data->arrow = FALSE;
 }
@@ -362,7 +346,6 @@ on_toolsThick_activate          (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = TRUE;
   if (bar_data->thickness==14)
     {
        gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thick")));
@@ -389,7 +372,6 @@ on_toolsPencil_activate          (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = TRUE;
   bar_data->text = FALSE;
   bar_data->pencil = TRUE;
   bar_data->arrow = FALSE;
@@ -403,7 +385,6 @@ on_toolsEraser_activate          (GtkToolButton   *toolbutton,
 {
   BarData *bar_data = (BarData*) user_data;
   bar_data->text = FALSE;
-  bar_data->grab = TRUE;
   bar_data->pencil = FALSE;
   bar_data->arrow = FALSE;
   
@@ -418,18 +399,16 @@ on_toolsVisible_activate         (GtkToolButton   *toolbutton,
   if (bar_data->annotation_is_visible)
     {
       annotate_hide_annotation();
-      bar_data->grab = FALSE;
       bar_data->annotation_is_visible=FALSE;
       /* set tooltip to unhide */
-      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Unhide");
+      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Unhide"));
     }
   else
     {
       annotate_show_annotation();
       bar_data->annotation_is_visible=TRUE;
-      bar_data->grab = TRUE;
       /* set tooltip to hide */
-      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton,"Hide");
+      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Hide"));
     }
 }
 
@@ -460,7 +439,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
     {
       quit_recorder();
       /* set stop tooltip */ 
-      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, "Record");
+      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Record"));
       /* put icon to record */
       gtk_tool_button_set_stock_id (toolbutton, "gtk-media-record");
     }
@@ -473,7 +452,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
       if (status)
         {
           /* set stop tooltip */ 
-          gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, "Stop");
+          gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Stop"));
           /* put icon to stop */
           gtk_tool_button_set_stock_id (toolbutton, "gtk-media-stop");
         }
@@ -501,15 +480,36 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
 				  gpointer         user_data)
 {
   BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = FALSE;
-  annotate_release_grab ();
-  #ifdef _WIN32
-    if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0.1)
-      {
-         /* This allow the mouse input go below the window */
-         gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
-      }
-  #endif	 
+  if (bar_data->grab == FALSE)
+    {
+      bar_data->grab = TRUE;
+      #ifdef _WIN32
+        /* This deny the mouse input go below the window */
+        if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0)
+          {
+            gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0.1);
+          }
+      #endif	
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"unlock")));
+      /* set tooltip to unhide */
+      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Unlock"));
+    }
+  else
+    {
+      /* grab enabled */
+      bar_data->grab = FALSE;
+      annotate_release_grab ();
+      #ifdef _WIN32
+        if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0.1)
+          {
+            /* This allow the mouse input go below the window */
+            gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
+          }
+      #endif	 
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"lock")));
+      /* set tooltip to hide */
+      gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Lock"));
+    }  
 }
 
 
@@ -517,8 +517,6 @@ G_MODULE_EXPORT void
 on_buttonUndo_activate           (GtkToolButton   *toolbutton,
 			          gpointer         user_data)
 {
-  BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = TRUE;
   annotate_undo();
 }
 
@@ -527,8 +525,6 @@ G_MODULE_EXPORT void
 on_buttonRedo_activate           (GtkToolButton   *toolbutton,
 			          gpointer         user_data)
 {
-  BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = TRUE;
   annotate_redo();
 }
 
@@ -537,8 +533,6 @@ G_MODULE_EXPORT void
 on_buttonClear_activate          (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
 {
-  BarData *bar_data = (BarData*) user_data;
-  bar_data->grab = TRUE;
   annotate_clear_screen (); 
 }
 

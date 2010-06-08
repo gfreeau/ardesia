@@ -299,8 +299,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="buttonUnlock">
-                <property name="width_request">27</property>
+              <object class="GtkToggleToolButton" id="buttonUnlock">
+                <property name="height_request">27</property>
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Unlock</property>
                 <property name="use_underline">True</property>
@@ -534,5 +534,9 @@
   <object class="GtkImage" id="unlock">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/unlock.png</property>
+  </object>
+  <object class="GtkImage" id="lock">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/lock.png</property>
   </object>
 </interface>
