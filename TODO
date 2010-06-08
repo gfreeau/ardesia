@@ -15,7 +15,8 @@
 
 - Refactoring
   - Better variables handling
-  - Profile the program
+    and smart memory policies
+  - Profile the program 
     to encrease the performance
 
 
@@ -31,12 +32,6 @@
 
 - MacOsX quartz/porting
   - draw on transparent window
-
-- Usability
-  - specify the default file name 
-    and the default folder name used for the sceenshot 
-  - specify the default file name 
-    and the default folder name used for the screencast
 
 
 - Possible future features
