@@ -103,8 +103,7 @@ void set_color(BarData *bar_data, char* selected_color)
 }
 
 
-/* Start to annotate calling annotate */
-void annotate(BarData *bar_data)
+void set_options(BarData* bar_data)
 {
   annotate_set_rectifier(bar_data->rectifier);
   
@@ -113,9 +112,22 @@ void annotate(BarData *bar_data)
   annotate_set_width(bar_data->thickness);
   
   annotate_set_arrow(bar_data->arrow);
-  
-  annotate_set_pen_cursor();
-  
+ 
+  if ((bar_data->pencil)||(bar_data->arrow))
+    {  
+       annotate_set_pen_cursor();
+    }
+  else
+    {
+       annotate_set_width((bar_data->thickness)*2.5); 
+       annotate_set_eraser_cursor();
+    }
+}
+
+/* Start to annotate calling annotate */
+void annotate(BarData *bar_data)
+{
+  set_options(bar_data);
   annotate_toggle_grab();
 }
 
@@ -123,8 +135,7 @@ void annotate(BarData *bar_data)
 /* Start to erase calling annotate */
 void erase(BarData *bar_data)
 {
-  annotate_set_width((bar_data->thickness)*2.5); 
-  annotate_set_eraser_cursor();
+  set_options(bar_data);
   annotate_eraser_grab();
 }
 
@@ -161,13 +172,7 @@ on_window_configure_event (GtkWidget *widget,
 		 	gpointer user_data)
 {
   BarData *bar_data = (BarData*) user_data;
-  if (bar_data->grab)
-    {
-      if (!(bar_data->text))
-      { 
-        annotate(bar_data);
-      }
-    }
+  set_options(bar_data);
   return TRUE;
 }
 
