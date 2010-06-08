@@ -304,7 +304,7 @@
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Unlock</property>
                 <property name="use_underline">True</property>
-                <property name="label_widget">unlock</property>
+                <property name="label_widget">lock</property>
                 <signal name="clicked" handler="on_buttonUnlock_activate"/>
               </object>
               <packing>

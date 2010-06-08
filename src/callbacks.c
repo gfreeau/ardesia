@@ -490,7 +490,7 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
             gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0.1);
           }
       #endif	
-      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"unlock")));
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"lock")));
       /* set tooltip to unhide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Unlock"));
     }
@@ -506,7 +506,7 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
             gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
           }
       #endif	 
-      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"lock")));
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"unlock")));
       /* set tooltip to hide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Lock"));
     }  
