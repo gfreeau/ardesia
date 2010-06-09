@@ -22,8 +22,10 @@
 
 - Windows porting
   Bug fix:
-    - fix the highlighter (seems that the colormap it is wrong)
-    - fix the cursor icon to change respect the ardesia bar options 
+    - fix the highlighter; seems that the colormap used is the RGB24,
+      instead of the ARGB32, it is not clear if it is possible without
+      patching the gtk or cairo 
+    - fix the cursor icon to change respect the ardesia bar options
   Issue:
     - implement the recordmydesktop_screencast.bat
       - recording (may be done using camit and ffmpeg2theora)
