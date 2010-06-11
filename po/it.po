@@ -40,7 +40,7 @@ msgstr "Ferma"
 #. set tooltip to unhide
 #: ../src/callbacks.c:494
 msgid "Lock"
-msgstr "Sblocca"
+msgstr "Blocca"
 
 #. set tooltip to hide
 #: ../src/callbacks.c:508 ../src/ardesia.glade.h:24
