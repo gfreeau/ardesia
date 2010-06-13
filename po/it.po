@@ -20,7 +20,7 @@ msgstr "Per far girare Ardesia è necessario abilitare il composite manager Comp
 #. set tooltip to unhide
 #: ../src/callbacks.c:404
 msgid "Unhide"
-msgstr "Nascondi"
+msgstr "Mostra"
 
 #. set tooltip to hide
 #: ../src/callbacks.c:411 ../src/ardesia.glade.h:9

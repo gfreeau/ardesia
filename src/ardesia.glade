@@ -331,7 +331,7 @@
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Hide</property>
                 <property name="use_underline">True</property>
-                <property name="stock_id">gtk-find</property>
+                <property name="label_widget">hide</property>
                 <signal name="clicked" handler="on_toolsVisible_activate"/>
               </object>
               <packing>
@@ -538,5 +538,13 @@
   <object class="GtkImage" id="lock">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/lock.png</property>
+  </object>
+  <object class="GtkImage" id="hide">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/hide.png</property>
+  </object>
+  <object class="GtkImage" id="unhide">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/unhide.png</property>
   </object>
 </interface>

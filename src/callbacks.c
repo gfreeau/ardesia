@@ -400,6 +400,8 @@ on_toolsVisible_activate         (GtkToolButton   *toolbutton,
     {
       annotate_hide_annotation();
       bar_data->annotation_is_visible=FALSE;
+      /* put icon to unhide */
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"unhide")));
       /* set tooltip to unhide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Unhide"));
     }
@@ -407,6 +409,8 @@ on_toolsVisible_activate         (GtkToolButton   *toolbutton,
     {
       annotate_show_annotation();
       bar_data->annotation_is_visible=TRUE;
+      /* put icon to hide */
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"hide")));
       /* set tooltip to hide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Hide"));
     }
