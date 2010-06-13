@@ -1,11 +1,47 @@
 
+2010-06-08 20:08:47 alpha@paranoici.org
+   
+       * trunk/ardesia/po/it.po,
+       * trunk/ardesia/src/ardesia.glade,
+       * trunk/ardesia/src/ardesia_horizontal.glade,
+       * trunk/ardesia/src/callbacks.c,
+       * trunk/ardesia/src/pixmaps/hide.png,
+       * trunk/ardesia/src/pixmaps/unhide.png:
+       - Revisited code for hide/unhide
+       - New eye icon
+       - Fix italian translation
+
+
+2010-06-08 20:08:47 alpha@paranoici.org
+   
+       * trunk/ardesia/po/it.po,
+       * trunk/ardesia/src/ardesia.glade,
+       * trunk/ardesia/src/ardesia.h,
+       * trunk/ardesia/src/ardesia_horizontal.glade,
+       * trunk/ardesia/src/callbacks.c,
+       * trunk/yardesia/src/pixmaps/lock.png:
+       - New lock/unlock system with new icons;
+         If unlock the mouse input go below
+         If lock the mouse input go above
+
+
+
+2010-05-25 00:12:39 alpha@paranoici.org
+   
+       * trunk/ardesia/src/ardesia.glade,
+       * trunk/ardesia/src/ardesia_horizontal.glade,
+       * trunk/ardesia/src/callbacks.c:
+       - Fix the quit of the program using the right click and close
+         on the taskbar
+
+
 2010-05-24 15:20:39 alpha@paranoici.org
 
-	* trunk/ardesia/ardesia.c:
-        * /trunk/ardesia/src/annotate.c
-        * trunk/ardesia/src/annotate.h
-        * trunk/ardesia/src/ardesia.c
-        * trunk/ardesia/src/callbacks.c
+	* trunk/ardesia/ardesia.c,
+        * trunk/ardesia/src/annotate.c,
+        * trunk/ardesia/src/annotate.h,
+        * trunk/ardesia/src/ardesia.c,
+        * trunk/ardesia/src/callbacks.c:
         - Put the bar on the top of annotation window
 
 
