@@ -17,8 +17,6 @@
   - Better variables handling
     and smart memory policies
   - Profile the program 
-    to encrease the performance
-
 
 - Windows porting
   Bug fix:

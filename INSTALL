@@ -59,12 +59,13 @@ The creation of the packgage requires the following
 packages:
 
 - devscripts
+  # sudo apt-get install devscripts
 
 To build the deb package run:
 
   # make deb
 
-the deb file ../ardesia_xxx-debian-x_arch.deb
+the deb file ../ardesia_xxx-ubuntu-x_arch.deb
 will be created
 
 
