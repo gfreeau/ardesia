@@ -1444,6 +1444,19 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
 }
 
 
+void annotate_disconnect_signals()
+{
+  g_signal_handlers_disconnect_by_func (data->annotation_window,
+					G_CALLBACK (event_expose), NULL);
+  g_signal_handlers_disconnect_by_func (data->annotation_window, 
+		    			G_CALLBACK(paint), NULL);
+  g_signal_handlers_disconnect_by_func (data->annotation_window, G_CALLBACK (paintto), NULL);
+  g_signal_handlers_disconnect_by_func (data->annotation_window, G_CALLBACK (paintend), NULL);
+  g_signal_handlers_disconnect_by_func (data->annotation_window, G_CALLBACK (proximity_in), NULL);
+  g_signal_handlers_disconnect_by_func(data->annotation_window, G_CALLBACK (proximity_out), NULL);
+}
+
+
 /* Connect the window to the callback signals */
 void annotate_connect_signals()
 { 
@@ -1484,9 +1497,10 @@ cairo_t* get_annotation_cairo_context()
 void annotate_quit()
 {
   /* disconnect the signals */
-  g_signal_handlers_disconnect_by_func (data->annotation_window,
-					G_CALLBACK (event_expose), NULL);
+  annotate_disconnect_signals();
 
+/* connect the signals */
+  annotate_connect_signals();
   if (data->shape_cr)
     {  
       cairo_destroy(data->shape_cr);
@@ -1688,6 +1702,9 @@ void annotate_hide_annotation ()
                      0, 0,
                      0, 0,
                      data->width, data->height);
+  
+  /* disconnect the signals */
+  annotate_disconnect_signals();
 }
 
 
@@ -1698,6 +1715,8 @@ void annotate_show_annotation ()
     {
       g_printerr("Show annotations\n");
     }
+  /* connect the signals */
+  annotate_connect_signals();  
   restore_surface();
 }
 
