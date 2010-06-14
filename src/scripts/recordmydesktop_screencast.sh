@@ -17,7 +17,7 @@ then
   fi
   #This start the recording on file
   echo Start the screencast running recordmydesktop 
-  recordmydesktop --quick-subsampling --on-the-fly-encoding --v_quality 10 --v_bitrate 50000 --s_quality 1 --fps 10 --freq 48000 --buffer-size 16384 --device plughw:0,0 --overwrite -o $1 &
+  recordmydesktop --quick-subsampling --on-the-fly-encoding --v_quality 1 --s_quality 1 --fps 10 --freq 22050 --buffer-size 16384 --device plughw:0,0 --overwrite -o $1 &
   echo Running $COMMAND
   RECORDMYDESKTOP_PID=$!
   echo $RECORDMYDESKTOP_PID >> /tmp/recordmydesktop.pid
