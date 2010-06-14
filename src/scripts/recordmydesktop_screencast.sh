@@ -34,7 +34,7 @@ if [ "$1" = "stop" ]
 then
   RECORDMYDESKTOP_PID=$(cat /tmp/recordmydesktop.pid)
   echo Stop the screencast killing recordmydesktop 
-  kill -9 $RECORDMYDESKTOP_PID 
+  kill -2 $RECORDMYDESKTOP_PID 
   rm /tmp/recordmydesktop.pid
   if [ "$ICECAST" = "TRUE" ]
   then
