@@ -150,6 +150,7 @@ void clear_background_window()
 }
 
 
+/* Expose event in background window occurs */
 G_MODULE_EXPORT gboolean
 back_event_expose (GtkWidget *widget, 
               GdkEventExpose *event, 

@@ -54,7 +54,6 @@
 
 
 #define TEXT_MOUSE_EVENTS        ( GDK_POINTER_MOTION_MASK |	\
-				   GDK_BUTTON_PRESS_MASK   |    \
 				   GDK_BUTTON_RELEASE_MASK      \
 				 )
 
@@ -73,27 +72,26 @@ typedef struct
   int y;
 } Pos;
 
-
-
-Pos* pos = NULL;
+GtkWidget* text_window = NULL;
+cairo_t *text_cr = NULL;
 
 GdkDisplay* display = NULL;
 GdkScreen* screen = NULL;
 int screen_width;
 
+Pos* pos = NULL;
+
+GSList *letterlist = NULL; 
 int text_pen_width = 16;
-char* text_color = NULL;
-
-GtkWidget* text_window = NULL;
-GdkCursor* text_cursor;
-
-cairo_t *text_cr = NULL;
-cairo_text_extents_t extents;
 
 int max_font_height;
 
-GSList *letterlist = NULL; 
 
+char* text_color = NULL;
+
+GdkCursor* text_cursor;
+
+cairo_text_extents_t extents;
 
 
 /* Creation of the text window */
@@ -139,6 +137,7 @@ void delete_character()
                       charInfo->y + charInfo->y_bearing, 
                       screen_width, 
                       max_font_height + text_pen_width + 3);
+
       cairo_fill(text_cr);
       cairo_stroke(text_cr);
       cairo_set_operator (text_cr, CAIRO_OPERATOR_SOURCE);
@@ -316,16 +315,6 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
 }
 
 
-/* This is called when the button is pushed */
-G_MODULE_EXPORT gboolean
-press (GtkWidget *win,
-         GdkEventButton *ev, 
-         gpointer user_data)
-{     
-  return TRUE;
-}
-
-
 /* This is called when the button is lease */
 G_MODULE_EXPORT gboolean
 release (GtkWidget *win,
@@ -343,7 +332,6 @@ release (GtkWidget *win,
     
   gdk_window_set_cursor (text_window->window, NULL);
   
-
   #ifdef _WIN32  
     /*
         TODO try a way to pass the mouse input below the window
@@ -387,19 +375,18 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
 
   g_signal_connect(G_OBJECT(text_window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
   g_signal_connect (G_OBJECT(text_window), "button_release_event", G_CALLBACK(release), NULL);
-  g_signal_connect (G_OBJECT(text_window), "button_press_event", G_CALLBACK(press), NULL);
   g_signal_connect (G_OBJECT(text_window), "key_press_event", G_CALLBACK (key_press), NULL);
 
   gtk_widget_show_all(text_window);
   #ifdef _WIN32
-	 // I set to use the black as the transparent color of the window
-	 HWND hwnd = GDK_WINDOW_HWND(text_window->window);
+    // I set to use the black as the transparent color of the window
+    HWND hwnd = GDK_WINDOW_HWND(text_window->window);
 		
-	 HINSTANCE hInstance = LoadLibraryA("user32");		
+    HINSTANCE hInstance = LoadLibraryA("user32");		
 		
-	 setLayeredWindowAttributesTextProc = (BOOL (WINAPI*)(HWND hwnd,
-			COLORREF crKey, BYTE bAlpha, DWORD dwFlags))
-			GetProcAddress(hInstance,"SetLayeredWindowAttributes");
+    setLayeredWindowAttributesTextProc = (BOOL (WINAPI*)(HWND hwnd,
+			                  COLORREF crKey, BYTE bAlpha, DWORD dwFlags))
+			                  GetProcAddress(hInstance,"SetLayeredWindowAttributes");
         
     setLayeredWindowAttributesTextProc(hwnd, RGB(0,0,0), 254, LWA_COLORKEY | LWA_ALPHA );	
   #endif

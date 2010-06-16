@@ -214,7 +214,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   gtk_file_chooser_set_preview_widget (chooser, preference_data->preview);
  
   GtkWidget* color_button = GTK_WIDGET(gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"backgroundColorButton"));
-  gtk_color_button_set_use_alpha      (GTK_COLOR_BUTTON(color_button), TRUE);
+  gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON(color_button), TRUE);
  
   /* Connect all signals by reflection */
   gtk_builder_connect_signals (preference_data->preferenceDialogGtkBuilder, (gpointer) preference_data);

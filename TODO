@@ -12,7 +12,6 @@
 - Documentation
   - Make video tutorial
 
-
 - Refactoring
   - Better variables handling
     and smart memory policies
@@ -21,16 +20,13 @@
 - Windows porting
   Bug fix:
     - fix the cursor icon to change respect the ardesia bar options 
-    - fix the highlighter (seems that the colormap it is wrong)
+    - fix the highlighter (seems that the gtk/cairo colormap it is not ARGB)
   Issue:
     - implement the recordmydesktop_screencast.bat
       - recording (may be done using camit and ffmpeg2theora)
       - forward the stream to icecast (using ezstream) 
 
-
 - MacOsX quartz/porting
-  - draw on transparent window
-
 
 - Possible future features
   - Save page (raster background + svg annotation)

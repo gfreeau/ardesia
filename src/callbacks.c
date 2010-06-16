@@ -102,6 +102,7 @@ void set_color(BarData *bar_data, char* selected_color)
 }
 
 
+/* Pass the options to annotate */
 void set_options(BarData* bar_data)
 {
   annotate_set_rectifier(bar_data->rectifier);
@@ -164,6 +165,7 @@ void start_tool(BarData *bar_data)
 }
 
 
+/* Configure evennts occurs */
 G_MODULE_EXPORT gboolean 
 on_window_configure_event (GtkWidget *widget,
 			GdkEvent *event,
@@ -237,6 +239,7 @@ on_winMain_enter_notify_event   (GtkWidget       *widget,
 }
 
 
+/* Delete event occurs and then I quit the program */
 G_MODULE_EXPORT gboolean
 on_winMain_delete_event          (GtkWidget       *widget,
                                   GdkEvent        *event,
@@ -248,6 +251,7 @@ on_winMain_delete_event          (GtkWidget       *widget,
 }
 
 
+/* Push highlighter button */
 G_MODULE_EXPORT void
 on_toolsHighlighter_activate     (GtkToolButton   *toolbutton,
 				  gpointer         user_data)
@@ -265,6 +269,7 @@ on_toolsHighlighter_activate     (GtkToolButton   *toolbutton,
 }
 
 
+/* Push rectifier button */
 G_MODULE_EXPORT void
 on_toolsRectifier_activate       (GtkToolButton   *toolbutton,
 				  gpointer         user_data)
@@ -288,6 +293,7 @@ on_toolsRectifier_activate       (GtkToolButton   *toolbutton,
 }
 
 
+/* Push rounder button */
 G_MODULE_EXPORT void
 on_toolsRounder_activate         (GtkToolButton   *toolbutton,
 				  gpointer         user_data)
@@ -312,6 +318,7 @@ on_toolsRounder_activate         (GtkToolButton   *toolbutton,
 }
 
 
+/* Push filler button */
 G_MODULE_EXPORT void
 on_toolsFiller_activate          (GtkToolButton   *toolbutton,
 				  gpointer         user_data)
@@ -320,6 +327,7 @@ on_toolsFiller_activate          (GtkToolButton   *toolbutton,
 }
 
 
+/* Push arrow button */
 G_MODULE_EXPORT void
 on_toolsArrow_activate           (GtkToolButton   *toolbutton,
 				  gpointer         user_data)
@@ -331,6 +339,7 @@ on_toolsArrow_activate           (GtkToolButton   *toolbutton,
 }
 
 
+/* Push text button */
 G_MODULE_EXPORT void
 on_toolsText_activate            (GtkToolButton   *toolbutton,
 		                  gpointer         user_data)
@@ -341,6 +350,7 @@ on_toolsText_activate            (GtkToolButton   *toolbutton,
 }
 
 
+/* Push thickness button */
 G_MODULE_EXPORT void
 on_toolsThick_activate          (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
@@ -367,6 +377,7 @@ on_toolsThick_activate          (GtkToolButton   *toolbutton,
 }
 
 
+/* Push pencil button */
 G_MODULE_EXPORT void
 on_toolsPencil_activate          (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
@@ -379,6 +390,7 @@ on_toolsPencil_activate          (GtkToolButton   *toolbutton,
 }
 
 
+/* Push eraser button */
 G_MODULE_EXPORT void
 on_toolsEraser_activate          (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
@@ -391,6 +403,7 @@ on_toolsEraser_activate          (GtkToolButton   *toolbutton,
 }
 
 
+/* Push hide/unhide button */
 G_MODULE_EXPORT void
 on_toolsVisible_activate         (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
@@ -417,6 +430,7 @@ on_toolsVisible_activate         (GtkToolButton   *toolbutton,
 }
 
 
+/* Push save (screenshoot) button */
 G_MODULE_EXPORT void
 on_toolsScreenShot_activate	 (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
@@ -430,6 +444,7 @@ on_toolsScreenShot_activate	 (GtkToolButton   *toolbutton,
 }
 
 
+/* Push recorder button */
 G_MODULE_EXPORT void
 on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
@@ -466,6 +481,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
 }
 
 
+/* Push preference button */
 G_MODULE_EXPORT void
 on_toolsPreferences_activate	 (GtkToolButton   *toolbutton,
 			          gpointer         user_data)
@@ -479,6 +495,7 @@ on_toolsPreferences_activate	 (GtkToolButton   *toolbutton,
 }
 
 
+/* Push lock/unlock button */
 G_MODULE_EXPORT void
 on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
 				  gpointer         user_data)
@@ -517,6 +534,7 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
 }
 
 
+/* Push undo button */
 G_MODULE_EXPORT void
 on_buttonUndo_activate           (GtkToolButton   *toolbutton,
 			          gpointer         user_data)
@@ -525,6 +543,7 @@ on_buttonUndo_activate           (GtkToolButton   *toolbutton,
 }
 
 
+/* Push redo button */
 G_MODULE_EXPORT void
 on_buttonRedo_activate           (GtkToolButton   *toolbutton,
 			          gpointer         user_data)
@@ -533,6 +552,7 @@ on_buttonRedo_activate           (GtkToolButton   *toolbutton,
 }
 
 
+/* Push clear button */
 G_MODULE_EXPORT void
 on_buttonClear_activate          (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
@@ -541,6 +561,7 @@ on_buttonClear_activate          (GtkToolButton   *toolbutton,
 }
 
 
+/* Push color selector button */
 G_MODULE_EXPORT void
 on_buttonColor_activate	         (GtkToggleToolButton   *toolbutton,
 			          gpointer         user_data)
@@ -564,6 +585,7 @@ on_buttonColor_activate	         (GtkToggleToolButton   *toolbutton,
 }
 
 
+/* Push blue color button */
 G_MODULE_EXPORT void
 on_colorBlue_activate            (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
@@ -573,6 +595,7 @@ on_colorBlue_activate            (GtkToolButton   *toolbutton,
 }
 
 
+/* Push red color button */
 G_MODULE_EXPORT void
 on_colorRed_activate             (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
@@ -582,6 +605,7 @@ on_colorRed_activate             (GtkToolButton   *toolbutton,
 }
 
 
+/* Push green color button */
 G_MODULE_EXPORT void
 on_colorGreen_activate           (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
@@ -591,6 +615,7 @@ on_colorGreen_activate           (GtkToolButton   *toolbutton,
 }
 
 
+/* Push yellow color button */
 G_MODULE_EXPORT void
 on_colorYellow_activate          (GtkToolButton   *toolbutton,
                                   gpointer         user_data)
@@ -600,6 +625,7 @@ on_colorYellow_activate          (GtkToolButton   *toolbutton,
 }
 
 
+/* Push white color button */
 G_MODULE_EXPORT void
 on_colorWhite_activate           (GtkToolButton   *toolbutton,
 	       			  gpointer         user_data)
