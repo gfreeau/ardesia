@@ -247,7 +247,7 @@ GtkWidget* create_background_window(char* backgroundimage)
 
   background_data->background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   
-  gtk_window_set_title(GTK_WINDOW(background_data->background_window), "Ardesia");
+  gtk_window_set_title(GTK_WINDOW(background_data->background_window), PROGRAM_NAME);
 
   gtk_window_set_decorated(GTK_WINDOW(background_data->background_window), FALSE);
   

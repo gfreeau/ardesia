@@ -27,7 +27,7 @@
 #include <broken.h>
 
 
-/* number x is roundable to y */
+/* Number x is roundable to y */
 gboolean is_similar(int x, int y, int pixel_tollerance)
 {
   int delta = abs(x-y); 

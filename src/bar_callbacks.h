@@ -21,18 +21,10 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-#include <string.h> 
-#include <math.h>
-#include <fcntl.h>
-#include <errno.h>
-
-#include <sys/stat.h>
 
 #include <gtk/gtk.h>
 
+#define OPAQUE "FF"
+#define SEMI_OPAQUE "66" 
 
 void destroy (GtkWidget *widget, gpointer data);

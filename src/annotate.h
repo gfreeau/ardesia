@@ -22,24 +22,14 @@
  */
 
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <math.h>
-
-#include <sys/types.h>
-
 #include <glib.h>
+
 #include <gdk/gdkinput.h>
 #include <gdk/gdkkeysyms.h>
+
 #include <gtk/gtk.h>
 
 #include <cairo.h>
-
 
 #ifdef _WIN32
   #include <cairo-win32.h>
@@ -62,7 +52,6 @@
                                    GDK_BUTTON_PRESS_MASK   |    \
                                    GDK_BUTTON_RELEASE_MASK      \
                                  )
-
 
 /* Enumeration containing tools */
 typedef enum
@@ -168,16 +157,19 @@ typedef struct
 
 
 /* Initialize the annotation window */
-int annotate_init (GtkWidget* parent, gboolean debug);
+int annotate_init(GtkWidget* parent, gboolean debug);
 
 /* Get the annotation window */
 GtkWidget* get_annotation_window();
 
 /* Hide the annotations */
-void annotate_hide_annotation ();
+void annotate_hide_annotation();
 
 /* Show the annotations */
-void annotate_show_annotation ();
+void annotate_show_annotation();
+
+/* Draw the last save point on the window restoring the surface */
+void annotate_restore_surface();
 
 /* Get cairo context that contains the annotations */
 cairo_t* get_annotation_cairo_context();
@@ -187,6 +179,9 @@ cairo_t* get_annotation_cairo_background_context();
 
 /* Set the cairo context that contains the background */
 void set_annotation_cairo_background_context(cairo_t* background_cr);
+
+/* Free the list of the painted point */
+void annotate_coord_list_free ();
 
 /* Undo to the last save point */
 void annotate_undo();
@@ -200,8 +195,8 @@ void annotate_quit();
 /* Set the pen color */
 void annotate_set_color(gchar* color);
 
-/* Set line width */
-void annotate_set_width(guint width);
+/* Set the line thickness */
+void annotate_set_thickness(int thickness);
 
 /* Set rectifier */
 void annotate_set_rectifier(gboolean rectify);
@@ -238,5 +233,39 @@ void annotate_clear_screen();
 
 /* Paint the context over the annotation window */
 void merge_context(cairo_t * cr);
+
+/* Set a new cairo path with the new options */
+void reset_cairo();
+
+/* Hide the cursor */
+void hide_cursor();
+
+/* Unhide the cursor */
+void unhide_cursor();
+
+/* Add to the list of the painted point the point (x,y) storing the width */
+void annotate_coord_list_prepend (gint x, gint y, gint width);
+
+/* Draw line from the last point drawn to (x2,y2) */
+void annotate_draw_line (gint x2, gint y2, gboolean stroke);
+
+/* Draw a poin in x,y respecting the context */
+void annotate_draw_point(int x, int y);
+
+/* Draw an arrow using some polygons */
+void annotate_draw_arrow (int distance);
+
+/* Call the geometric shape recognizer */
+void shape_recognize(gboolean closed_path);
+
+/* Add a save point for the undo/redo */
+void add_save_point();
+
+/* Select eraser, pen or other tool for tablet */
+void annotate_select_tool (GdkDevice *device, guint state);
+
+
+
+
 
 

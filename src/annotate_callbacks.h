@@ -21,41 +21,50 @@
  *
  */
 
-
-#include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gdk/gdkinput.h>
 
 #include <gtk/gtk.h>
 
 
-typedef struct
-{
-  gchar* background_color; 
-  gchar* background_image; 
-  GtkWidget* background_window;
-  /* cairo context to draw on the background window*/
-  cairo_t *back_cr;
-  /* used for input shape mask */
-  GdkPixmap* background_shape; 
-}BackGroundData;
+/* Expose event: this occurs when the windows is show */
+G_MODULE_EXPORT gboolean
+event_expose (GtkWidget *widget, 
+              GdkEventExpose *event, 
+              gpointer func_data);
 
 
-/* Create the background window */
-GtkWidget* create_background_window();
+/* This is called when the button is pushed */
+G_MODULE_EXPORT gboolean
+paint (GtkWidget *win,
+       GdkEventButton *ev, 
+       gpointer func_data);
 
-/* Change the background image */
-void change_background_image(char *backgroundimage);
 
-/* Change the background color */
-void change_background_color(char *rgba);
+/* This shots when the ponter is moving */
+G_MODULE_EXPORT gboolean
+paintto (GtkWidget *win, 
+         GdkEventMotion *ev, 
+         gpointer func_data);
 
-/* Clear the background */
-void clear_background_window();
 
-/** Destroy background window */
-void destroy_background_window();
+/* This shots when the button is realeased */
+G_MODULE_EXPORT gboolean
+paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data);
 
-/* Get the background window */
-GtkWidget* get_background_window();
 
-/* Set the background window */
-void set_background_window(GtkWidget* widget);
+/* Device touch */
+G_MODULE_EXPORT gboolean
+proximity_in (GtkWidget *win,
+              GdkEventProximity *ev, 
+              gpointer func_data);
+
+
+/* Device lease */
+G_MODULE_EXPORT gboolean
+proximity_out (GtkWidget *win, 
+               GdkEventProximity *ev,
+               gpointer func_data);
+
+
+
+

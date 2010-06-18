@@ -24,10 +24,6 @@
 /** Widget for text insertion */
 
 #include <ctype.h>
-#include <glib.h>
-
-#include <gdk/gdkinput.h>
-#include <gdk/gdkkeysyms.h>
 
 #include <gtk/gtk.h>
 

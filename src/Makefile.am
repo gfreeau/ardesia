@@ -24,8 +24,10 @@ AM_CFLAGS =\
 bin_PROGRAMS = ardesia
 
 ardesia_SOURCES = \
-	callbacks.c \
-	callbacks.h \
+	bar_callbacks.c \
+	bar_callbacks.h \
+	annotate_callbacks.c \
+	annotate_callbacks.h \
 	background.c \
 	background.h \
         broken.c \

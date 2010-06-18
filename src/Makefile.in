@@ -48,7 +48,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(uidir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_ardesia_OBJECTS = callbacks.$(OBJEXT) background.$(OBJEXT) \
+am_ardesia_OBJECTS = bar_callbacks.$(OBJEXT) \
+	annotate_callbacks.$(OBJEXT) background.$(OBJEXT) \
 	broken.$(OBJEXT) bezier_spline.$(OBJEXT) annotate.$(OBJEXT) \
 	utils.$(OBJEXT) saver.$(OBJEXT) color_selector.$(OBJEXT) \
 	preference_dialog.$(OBJEXT) text_widget.$(OBJEXT) \
@@ -257,8 +258,10 @@ AM_CFLAGS = \
 	 -g -L$(libdir)
 
 ardesia_SOURCES = \
-	callbacks.c \
-	callbacks.h \
+	bar_callbacks.c \
+	bar_callbacks.h \
+	annotate_callbacks.c \
+	annotate_callbacks.h \
 	background.c \
 	background.h \
         broken.c \
@@ -375,11 +378,12 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/annotate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/annotate_callbacks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ardesia.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/background.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bar_callbacks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bezier_spline.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/broken.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/callbacks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/color_selector.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/info_dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/preference_dialog.Po@am__quote@

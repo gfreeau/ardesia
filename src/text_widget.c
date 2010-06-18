@@ -67,8 +67,6 @@ void create_text_window(GtkWindow *parent)
   gtk_widget_set_app_paintable(text_window, TRUE);
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(text_window), TRUE);
 
-  gtk_window_set_opacity(GTK_WINDOW(text_window), 1); 
- 
   gtk_widget_set_double_buffered(text_window, FALSE);
 }
 

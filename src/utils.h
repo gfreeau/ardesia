@@ -43,16 +43,19 @@
 #  define N_(String) (String)
 #endif
 
-#include <glib.h>
-#include <time.h>
-#include <math.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
-#include <string.h> 
-#include <fcntl.h>
-#include <sys/stat.h>
 #include <errno.h>
+
+#include <string.h>
+
+#include <math.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+
+
+
 
 #include <gdk/gdk.h>
 
@@ -85,17 +88,29 @@ extern GtkBuilder *gtkBuilder;
 
 
 #ifdef WIN32
-  /* gdk_cursor_new_from_pixmap is broken on Windows.
-     this is a workaround using gdk_cursor_new_from_pixbuf. */
+  /* 
+   * gdk_cursor_new_from_pixmap is broken on Windows.
+   * this is a workaround using gdk_cursor_new_from_pixbuf. 
+   */
   GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 					    const GdkColor *fg, const GdkColor *bg,
 					    gint x, gint y);
   #define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
   /* Define other symbols needed to create the transparent layered window */
   #define LWA_COLORKEY	0x00000001
-  #define LWA_ALPHA               0x00000002
+  #define LWA_ALPHA     0x00000002
 #endif
-						
+		
+#define PROGRAM_NAME "Ardesia"
+
+#define BLACK "000000"
+#define WHITE "FFFFFF"
+#define RED   "FF0000"
+#define YELLOW "FFFF00"
+#define GREEN "00FF00"
+#define BLUE "0000FF"
+
+				
 /* get bar window widget */
 GtkWidget* get_bar_window();
 

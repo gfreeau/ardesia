@@ -25,6 +25,7 @@
 #endif
 
 #include <annotate.h>
+#include <annotate_callbacks.h>
 #include <utils.h>
 #include <broken.h>
 #include <background.h>
@@ -32,7 +33,41 @@
 
 
 static AnnotateData* data;
- 
+
+/* Set color */
+void annotate_set_color(gchar* color)
+{
+  data->cur_context->fg_color = color;
+}
+
+
+/* Set rectifier */
+void annotate_set_rectifier(gboolean rectify)
+{
+  data->rectify = rectify;
+}
+
+
+/* Set rectifier */
+void annotate_set_rounder(gboolean roundify)
+{
+  data->roundify = roundify;
+}
+
+
+/* Set arrow */
+void annotate_set_arrow(gboolean arrow)
+{
+  data->arrow = arrow;
+}
+
+
+/* Set the line thickness */
+void annotate_set_thickness(int thickness)
+{
+  data->thickness = thickness;
+}
+
 
 /* Create a new paint context */
 AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
@@ -161,8 +196,10 @@ void annotate_savelist_free()
 gfloat annotate_get_arrow_direction()
 {
   GSList *outptr = data->coordlist;   
+  int delta = 2;
+
   // make the standard deviation 
-  int tollerance = data->thickness * 2;
+  int tollerance = data->thickness * delta;
   
   outptr = extract_relevant_points(outptr, FALSE, tollerance);   
   AnnotateStrokeCoordinate* point = NULL;
@@ -188,6 +225,7 @@ void select_color()
     {
       if (!(data->cur_context->type == ANNOTATE_ERASER))
         {
+          // pen or arrow tool
           if (data->debug)
 	    { 
 	      g_printerr("Select color %s\n", data->cur_context->fg_color);
@@ -209,6 +247,7 @@ void select_color()
         }
       else
         {
+          // it is the eraser tool
           if (data->debug)
 	    { 
 	      g_printerr("Select cairo clear operator for erase\n");
@@ -219,8 +258,8 @@ void select_color()
 }
 
 
-/* Add a save point */
-void add_save_point ()
+/* Add a save point for the undo/redo */
+void add_save_point()
 {
   AnnotateSave *save = g_malloc(sizeof(AnnotateSave));
   save->previous  = NULL;
@@ -272,7 +311,7 @@ void configure_pen_options()
 }
 
 
-/* Destroy old cairo context, allocate a new pixmap and configure the new cairo context */
+/* Set a new cairo path with the new options */
 void reset_cairo()
 {
   if (data->annotation_cairo_context)
@@ -318,7 +357,7 @@ void merge_context(cairo_t * cr)
 
 
 /* Draw the last save point on the window restoring the surface */
-void restore_surface()
+void annotate_restore_surface()
 {
   if (data->annotation_cairo_context)
     {
@@ -345,12 +384,45 @@ void annotate_select_eraser()
 }
 
 
-
 /* Select the default pen tool */
 void annotate_select_pen()
 {
   AnnotatePaintContext *pen = data->default_pen;
   data->cur_context = pen;
+}
+
+
+/* Update the cursor icon */
+void update_cursor()
+{
+  #ifdef _WIN32
+    annotate_release_pointer_grab();
+  #endif
+  gdk_window_set_cursor (data->annotation_window->window, data->cursor);
+  gdk_display_sync(data->display);
+  #ifdef _WIN32
+    annotate_acquire_pointer_grab();
+  #endif
+}
+
+
+/* Unhide the cursor */
+void unhide_cursor()
+{
+  if (data->cursor_hidden)
+    {
+      update_cursor();
+      data->cursor_hidden = FALSE;
+    }
+}
+
+
+/* Start to paint */
+void annotate_toggle_grab()
+{ 
+  annotate_select_pen();
+  annotate_acquire_grab ();
+  update_cursor();
 }
 
 
@@ -389,35 +461,39 @@ void get_invisible_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
   cairo_destroy(invisible_shape_cr); 
 }
 
+
+/* Acquire the grab pointer */
 void annotate_acquire_pointer_grab()
 {
    grab_pointer(data->annotation_window, ANNOTATE_MOUSE_EVENTS);
 }
 
 
+/* Release the grab pointer */
 void annotate_release_pointer_grab()
 {
    ungrab_pointer(data->display, data->annotation_window);
 }
 
- void allocate_invisible_cursor()
- {
+
+/* Allocate a invisible cursor that can be used to hide the pointer */
+void allocate_invisible_cursor()
+{
+   GdkPixmap *pixmap, *mask;
+   get_invisible_pixmaps(1, &pixmap, &mask);
   
-    GdkPixmap *pixmap, *mask;
-    get_invisible_pixmaps(1, &pixmap, &mask);
+   GdkColor *background_color_p = rgb_to_gdkcolor(BLACK);
+   GdkColor *foreground_color_p = rgb_to_gdkcolor(WHITE);
   
-    GdkColor *background_color_p = rgb_to_gdkcolor("000000");
-    GdkColor *foreground_color_p = rgb_to_gdkcolor("FFFFFF");
-  
-    data->invisible_cursor = gdk_cursor_new_from_pixmap (pixmap, mask,
+   data->invisible_cursor = gdk_cursor_new_from_pixmap (pixmap, mask,
                                                          foreground_color_p,
                                                          background_color_p, 
                                                          0, 0);
-    g_object_unref(pixmap);
-    g_object_unref(mask);
-    g_free(foreground_color_p);
-    g_free(background_color_p);			
- }
+   g_object_unref(pixmap);
+   g_object_unref(mask);
+   g_free(foreground_color_p);
+   g_free(background_color_p);			
+}
 
  
 /* Hide the cursor */
@@ -438,7 +514,7 @@ void hide_cursor()
 /* Create pixmap and mask for the pen cursor */
 void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
-  gint side_lenght = size*3 + data->thickness;
+  gint side_lenght = (size*3) + data->thickness;
   *pixmap = gdk_pixmap_new (NULL, side_lenght, side_lenght, 1);
   *mask =  gdk_pixmap_new (NULL, side_lenght, side_lenght, 1);
   int circle_width = 2; 
@@ -492,7 +568,7 @@ void annotate_set_pen_cursor()
     }
   GdkPixmap *pixmap, *mask;
   get_pen_pixmaps(size, &pixmap, &mask); 
-  GdkColor *background_color_p = rgb_to_gdkcolor("000000");
+  GdkColor *background_color_p = rgb_to_gdkcolor(BLACK);
 
   if (data->debug)
     {
@@ -567,8 +643,8 @@ void annotate_set_eraser_cursor()
   GdkPixmap *pixmap, *mask;
   get_eraser_pixmaps(size, &pixmap, &mask); 
   
-  GdkColor *background_color_p = rgb_to_gdkcolor("000000");
-  GdkColor *foreground_color_p = rgb_to_gdkcolor("FF0000");
+  GdkColor *background_color_p = rgb_to_gdkcolor(BLACK);
+  GdkColor *foreground_color_p = rgb_to_gdkcolor(RED);
  
   data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask,
                                              foreground_color_p, 
@@ -581,32 +657,10 @@ void annotate_set_eraser_cursor()
   g_free(background_color_p);
 }
 
-void update_cursor()
-{
-  #ifdef _WIN32
-    annotate_release_pointer_grab();
-  #endif
-  gdk_window_set_cursor (data->annotation_window->window, data->cursor);
-  gdk_display_sync(data->display);
-  #ifdef _WIN32
-    annotate_acquire_pointer_grab();
-  #endif
-}
 
-/* Unhide the cursor */
-void unhide_cursor()
-{
-  if (data->cursor_hidden)
-    {
-      update_cursor();
-      data->cursor_hidden = FALSE;
-    }
-}
-
-
+/* Take the input mouse focus */
 void annotate_acquire_input_grab()
 {
-  
   #ifdef _WIN32
     annotate_acquire_pointer_grab();
   #endif
@@ -630,7 +684,6 @@ void annotate_acquire_input_grab()
 /* Grab the cursor */
 void annotate_acquire_grab ()
 {
-
   if  (!data->is_grabbed)
     {
       if (data->debug)
@@ -827,7 +880,7 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
 
 
 /* Draw a poin in x,y respecting the context */
-void draw_point(int x, int y)
+void annotate_draw_point(int x, int y)
 {
   cairo_arc (data->annotation_cairo_context, 
              x, y, data->thickness/2, 0, 2 * M_PI);
@@ -837,7 +890,7 @@ void draw_point(int x, int y)
 
 
 /** Draw the point list */
-void draw_point_list(GSList* outptr)
+void annotate_draw_point_list(GSList* outptr)
 {
   if (outptr)
     {
@@ -877,7 +930,7 @@ void rectify(gboolean closed_path)
        
   annotate_coord_list_free();
   data->coordlist = outptr;
-  draw_point_list(outptr);     
+  annotate_draw_point_list(outptr);     
   if (closed_path)
     {
       cairo_close_path(data->annotation_cairo_context);   
@@ -907,13 +960,13 @@ void roundify(gboolean closed_path)
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
       gint lastx = out_point->x; 
       gint lasty = out_point->y;
-      draw_point(lastx, lasty);
+      annotate_draw_point(lastx, lasty);
       return;
     }
   if (lenght==2)
     {
       /* It is a rect line */
-      draw_point_list(outptr);
+      annotate_draw_point_list(outptr);
       return; 
     }
   if (closed_path)
@@ -991,335 +1044,17 @@ void setup_input_devices ()
 }
 
 
-/*
- * Functions for handling various (GTK+)-Events
- */
-
-
-/* Expose event: this occurs when the windows is show */
-G_MODULE_EXPORT gboolean
-event_expose (GtkWidget *widget, 
-              GdkEventExpose *event, 
-              gpointer user_data)
-{
-  int is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
-  if (!is_fullscreen)
-    {
-      return TRUE;
-    }
-  if (data->debug)
-    {
-      g_printerr("Expose event\n");
-    }
-  if (!(data->annotation_cairo_context))
-    {
-      /* initialize a transparent window */	 
-      data->annotation_cairo_context = gdk_cairo_create(data->annotation_window->window);
-	 
-      if (cairo_status(data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
-        {
-          g_printerr ("Unable to allocate the annotation cairo context"); 
-          annotate_quit(); 
-          exit(1);
-        }     
-		
-      annotate_clear_screen();
-
-      annotate_set_width(14);
-      annotate_toggle_grab();		 
-      data->transparent_pixmap = gdk_pixmap_new (data->annotation_window->window,
-                                                 data->width,
-					         data->height, 
-                                                 -1);
-
-      data->transparent_cr = gdk_cairo_create(data->transparent_pixmap);
-      if (cairo_status(data->transparent_cr) != CAIRO_STATUS_SUCCESS)
-        {
-          g_printerr ("Unable to allocate the transparent cairo context"); 
-          annotate_quit(); 
-          exit(1);
-        }
-
-      clear_cairo_context(data->transparent_cr); 
-    }
-  restore_surface();
-  return TRUE;
-}
-
-
-/* Device touch */
-G_MODULE_EXPORT gboolean
-proximity_in (GtkWidget *win,
-              GdkEventProximity *ev, 
-              gpointer user_data)
-{
-  gint x, y;
-  GdkModifierType state;
-
-  gdk_window_get_pointer (data->annotation_window->window, &x, &y, &state);
-  annotate_select_tool (ev->device, state);
-  if (data->debug)
-    {
-      g_printerr("Proximity in device %s\n", ev->device->name);
-    }
-  return TRUE;
-}
-
-
-/* Device lease */
-G_MODULE_EXPORT gboolean
-proximity_out (GtkWidget *win, 
-               GdkEventProximity *ev,
-               gpointer user_data)
-{
-  data->cur_context = data->default_pen;
-
-  data->device = NULL;
-  if (data->debug)
-    {
-      g_printerr("Proximity out device %s\n", ev->device->name);
-    }
-  return FALSE;
-}
-
-
-/*
- * Event-Handlers to perform the drawing
- */
-
-
-/* This is called when the button is pushed */
-G_MODULE_EXPORT gboolean
-paint (GtkWidget *win,
-       GdkEventButton *ev, 
-       gpointer user_data)
-{ 
-  annotate_coord_list_free();
-  if (!ev)
-    {
-       g_printerr("Device '%s': Invalid event; I ungrab all\n",
-		   ev->device->name);
-       annotate_release_grab ();
-       return TRUE;
-    }
-
-  unhide_cursor();
-  
-  int x,y;
-  #ifdef _WIN32
-    /* I do not know why but sometimes the event coord are wrong */
-    /* get cursor position */
-    gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
-  #else
-    x = ev->x;
-    y = ev->y;	
-  #endif
-  if (inside_bar_window(x, y))
-    /* point is in the ardesia bar */
-    {
-      /* the last point was outside the bar then ungrab */
-      annotate_release_grab ();
-      return TRUE;
-    }   
-  
-  /* only button1 allowed */
-  if (!(ev->button==1))
-    {
-     if (data->debug)
-       {    
-         g_printerr("Device '%s': Invalid pressure event\n",
-		     ev->device->name);
-       }
-      return TRUE;
-    }  
-
-  if (data->debug)
-    {    
-      g_printerr("Device '%s': Button %i Down at (x,y)=(%.2f : %.2f)\n",
-		  ev->device->name, ev->button, ev->x, ev->y);
-    }
-
-  reset_cairo();
-  cairo_move_to(data->annotation_cairo_context,ev->x,ev->y);
- 
-  annotate_coord_list_prepend (ev->x, ev->y, data->thickness);
-  return TRUE;
-}
-
-
-/* This shots when the ponter is moving */
-G_MODULE_EXPORT gboolean
-paintto (GtkWidget *win, 
-         GdkEventMotion *ev, 
-         gpointer user_data)
-{
-  if (!ev)
-    {
-       g_printerr("Device '%s': Invalid event; I ungrab all\n",
-		 ev->device->name);
-       annotate_release_grab ();
-       return TRUE;
-    }
-	
-  unhide_cursor();
-  
-  int x,y;
-  #ifdef _WIN32
-    /* I do not know why but sometimes the event coord are wrong */
-    /* get cursor position */
-    gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
-  #else
-    x = ev->x;
-    y = ev->y;	
-  #endif
-  if (inside_bar_window(x, y))
-    /* point is in the ardesia bar */
-    {
-       if (data->debug)
-         {    
-           g_printerr("Device '%s': Move on the bar then ungrab\n",
-	              ev->device->name);
-         }
-      /* the last point was outside the bar then ungrab */
-      annotate_release_grab ();
-      return TRUE;
-    }
-
-  gdouble pressure = 0;
-  GdkModifierType state = (GdkModifierType) ev->state;  
-  gint selected_width = 0;
-  /* only button1 allowed */
-  if (state & GDK_BUTTON1_MASK)
-    {
-      pressure=0.5;
-    }
-  else
-    {
-      /* the button is not pressed */
-      return TRUE;
-    }
-  if (!(ev->device->source == GDK_SOURCE_MOUSE))
-    {
-      gint width = (CLAMP (pressure * pressure,0,1) *
-		    (double) data->thickness);
-      if (width!=data->thickness)
-        {
-          
-          cairo_set_line_width(data->annotation_cairo_context, width);
-        }
-    }
-  else
-    {
-       selected_width = data->thickness;
-    }
-  
-  annotate_draw_line (ev->x, ev->y, TRUE);
-   
-  annotate_coord_list_prepend (ev->x, ev->y, selected_width);
-
-  return TRUE;
-}
-
-
-/* This shots when the button is realeased */
-G_MODULE_EXPORT gboolean
-paintend (GtkWidget *win, GdkEventButton *ev, gpointer user_data)
-{
-  if (data->debug)
-    {
-      g_printerr("Device '%s': Button %i Up at (x,y)=(%.2f : %.2f)\n",
-		 ev->device->name, ev->button, ev->x, ev->y);
-    }
-
-  if (!ev)
-    {
-       g_printerr("Device '%s': Invalid event; I ungrab all\n",
-		 ev->device->name);
-       annotate_release_grab ();
-       return TRUE;
-    }
-
-  int x,y;
-  #ifdef _WIN32
-    /* I do not know why but sometimes the event coord are wrong */
-    /* get cursor position */
-    gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
-  #else
-    x = ev->x;
-    y = ev->y;	
-  #endif
-  if (inside_bar_window(x, y))
-    /* point is in the ardesia bar */
-    {
-      /* the last point was outside the bar then ungrab */
-      annotate_release_grab ();
-      return TRUE;
-    }
-
-  /* only button1 allowed */
-  if (!(ev->button==1))
-    {
-      return TRUE;
-    }  
-
-  int distance = -1;
-  if (!data->coordlist)
-    {
-      draw_point(ev->x, ev->y);  
-      annotate_coord_list_prepend (ev->x, ev->y, data->thickness);
-    }
-  else
-    { 
-      gint lenght = g_slist_length(data->coordlist);
-      AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght-1);
-       
-      /* This is the tollerance to force to close the path in a magnetic way */
-      int tollerance = data->thickness;
-      distance = get_distance(ev->x, ev->y, first_point->x, first_point->y);
- 
-      /* If the distance between two point lesser than tollerance they are the same point for me */
-      if (distance<=tollerance)
-        {
-          distance=0;
-	  cairo_line_to(data->annotation_cairo_context, first_point->x, first_point->y);
-          annotate_coord_list_prepend (first_point->x, first_point->y, data->thickness);
-	}
-      else
-        {
-          cairo_line_to(data->annotation_cairo_context, ev->x, ev->y);
-          annotate_coord_list_prepend (ev->x, ev->y, data->thickness);
-        }
-   
-      if (!(data->cur_context->type == ANNOTATE_ERASER))
-        { 
-          gboolean closed_path = (distance == 0) ; 
-          shape_recognize(closed_path);
-          /* If is selected an arrowtype the draw the arrow */
-          if (data->arrow)
-            {
-	      /* print arrow at the end of the line */
-	      annotate_draw_arrow (distance);
-	    }
-         }
-    }
-  cairo_stroke_preserve(data->annotation_cairo_context);
-  add_save_point();
-  hide_cursor();  
- 
-  return TRUE;
-}
-
-
+/* Disconnect all the callback signals */
 void annotate_disconnect_signals()
 {
   g_signal_handlers_disconnect_by_func (data->annotation_window,
-					G_CALLBACK (event_expose), NULL);
+					G_CALLBACK (event_expose), (gpointer) data);
   g_signal_handlers_disconnect_by_func (data->annotation_window, 
-		    			G_CALLBACK(paint), NULL);
-  g_signal_handlers_disconnect_by_func (data->annotation_window, G_CALLBACK (paintto), NULL);
-  g_signal_handlers_disconnect_by_func (data->annotation_window, G_CALLBACK (paintend), NULL);
-  g_signal_handlers_disconnect_by_func (data->annotation_window, G_CALLBACK (proximity_in), NULL);
-  g_signal_handlers_disconnect_by_func(data->annotation_window, G_CALLBACK (proximity_out), NULL);
+		    			G_CALLBACK(paint), (gpointer) data);
+  g_signal_handlers_disconnect_by_func (data->annotation_window, G_CALLBACK (paintto), (gpointer) data);
+  g_signal_handlers_disconnect_by_func (data->annotation_window, G_CALLBACK (paintend), (gpointer) data);
+  g_signal_handlers_disconnect_by_func (data->annotation_window, G_CALLBACK (proximity_in), (gpointer) data);
+  g_signal_handlers_disconnect_by_func(data->annotation_window, G_CALLBACK (proximity_out), (gpointer) data);
 }
 
 
@@ -1327,22 +1062,19 @@ void annotate_disconnect_signals()
 void annotate_connect_signals()
 { 
   g_signal_connect (data->annotation_window, "expose_event",
-		    G_CALLBACK (event_expose), NULL);
+		    G_CALLBACK (event_expose), (gpointer) data);
   g_signal_connect (data->annotation_window, "button_press_event", 
-		    G_CALLBACK(paint), NULL);
+		    G_CALLBACK(paint), (gpointer) data);
   g_signal_connect (data->annotation_window, "motion_notify_event",
-		    G_CALLBACK (paintto), NULL);
+		    G_CALLBACK (paintto), (gpointer) data);
   g_signal_connect (data->annotation_window, "button_release_event",
-		    G_CALLBACK (paintend), NULL);
+		    G_CALLBACK (paintend), (gpointer) data);
   g_signal_connect (data->annotation_window, "proximity_in_event",
-		    G_CALLBACK (proximity_in), NULL);
+		    G_CALLBACK (proximity_in), (gpointer) data);
   g_signal_connect (data->annotation_window, "proximity_out_event",
-		    G_CALLBACK (proximity_out), NULL);
+		    G_CALLBACK (proximity_out), (gpointer) data);
   gtk_widget_set_events (data->annotation_window, ANNOTATE_MOUSE_EVENTS);
 }
-
-
-/* Called by the ardesia bar callbacks */
 
 
 /* Get the annotation window */
@@ -1362,7 +1094,7 @@ cairo_t* get_annotation_cairo_context()
 /* Quit the annotation */
 void annotate_quit()
 {
-  /* disconnect the signals */
+  /* disconnect all the signals */
   annotate_disconnect_signals();
 
 /* connect the signals */
@@ -1416,56 +1148,6 @@ void annotate_quit()
   g_free(data->default_eraser);
  
   g_free (data);
-}
-
-
-/* Set color */
-void annotate_set_color(gchar* color)
-{
-  data->cur_context->fg_color = color;
-}
-
-
-/* Set rectifier */
-void annotate_set_rectifier(gboolean rectify)
-{
-  data->rectify = rectify;
-}
-
-
-/* Set rectifier */
-void annotate_set_rounder(gboolean roundify)
-{
-  data->roundify = roundify;
-}
-
-
-/* Set width */
-void annotate_set_width(guint width)
-{
-  data->thickness = width;
-}
-
-
-/* Set arrow */
-void annotate_set_arrow(gboolean arrow)
-{
-  data->arrow = arrow;
-}
-
-
-/* Start to paint */
-void annotate_toggle_grab()
-{ 
-  annotate_select_pen();
-  annotate_acquire_grab ();
-  update_cursor();
-}
-
-
-void annotate_set_tickness(int thickness)
-{
-  data->thickness = thickness;
 }
 
 
@@ -1528,7 +1210,7 @@ void annotate_release_grab ()
 }
 
 
-/* fill the last shape if it is a close path */
+/* Fill the last shape if it is a close path */
 void annotate_fill()
 {
   if (data->debug)
@@ -1539,7 +1221,7 @@ void annotate_fill()
     {
       if (!(data->roundify)&&(!(data->rectify)))
 	{
-	   draw_point_list(data->coordlist);     
+	   annotate_draw_point_list(data->coordlist);     
 	   cairo_close_path(data->annotation_cairo_context);      
 	}
       select_color();
@@ -1569,7 +1251,7 @@ void annotate_hide_annotation ()
                      0, 0,
                      data->width, data->height);
   
-  /* disconnect the signals */
+  /* disconnect all the signals to avoid to print on the transparent window; this is a status similar to a ghost window */
   annotate_disconnect_signals();
 }
 
@@ -1581,9 +1263,9 @@ void annotate_show_annotation ()
     {
       g_printerr("Show annotations\n");
     }
-  /* connect the signals */
+  /* reconnect the signals to make the transparent window paintable */
   annotate_connect_signals();  
-  restore_surface();
+  annotate_restore_surface();
 }
 
 
@@ -1599,7 +1281,7 @@ void annotate_undo()
       if (data->savelist->previous)
         {
           data->savelist = data->savelist->previous;
-          restore_surface(); 
+          annotate_restore_surface(); 
         }
     }
 }
@@ -1617,7 +1299,7 @@ void annotate_redo()
       if (data->savelist->next)
         {
           data->savelist = data->savelist->next;
-          restore_surface(); 
+          annotate_restore_surface(); 
         }
     }
 }
@@ -1630,10 +1312,9 @@ void annotate_clear_screen ()
     {
       g_printerr("Clear screen\n");
     }
-  reset_cairo();
 
+  reset_cairo();
   clear_cairo_context(data->annotation_cairo_context);
-  
   add_save_point();
 }
 
@@ -1651,12 +1332,11 @@ void setup_app (GtkWidget* parent)
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window)); 
 	
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(data->annotation_window), TRUE);
-  gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1); 
   
   // initialize pen context
-  data->default_pen = annotate_paint_context_new (ANNOTATE_PEN, 15);
-  data->default_pen->fg_color = "FF0000FF";
-  data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER, 15);
+  data->default_pen = annotate_paint_context_new (ANNOTATE_PEN, data->thickness);
+  
+  data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER, data->thickness);
   data->cur_context = data->default_pen;
 
   setup_input_devices();
@@ -1690,9 +1370,8 @@ void setup_app (GtkWidget* parent)
     setLayeredWindowAttributesProc = (BOOL (WINAPI*)(HWND hwnd,
 			              COLORREF crKey, BYTE bAlpha, DWORD dwFlags))
     GetProcAddress(hInstance,"SetLayeredWindowAttributes");
-        
-    setLayeredWindowAttributesProc(hwnd, RGB(0,0,0), 0, LWA_COLORKEY );
-        		
+    /* the black is the transparent color */
+    setLayeredWindowAttributesProc(hwnd, RGB(0,0,0), 0, LWA_COLORKEY );       		
   #endif
 }
 

@@ -25,7 +25,7 @@
 #include <utils.h>
 #include <annotate.h>
 #include <background.h>
-#include <callbacks.h>
+#include <bar_callbacks.h>
 
 
 GtkBuilder *gtkBuilder;

@@ -21,40 +21,12 @@
  *
  */
 
-
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <config.h>
-#include <errno.h>
-#include <time.h>
-#include <math.h>
-#include <fcntl.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#include <getopt.h>
 #include <glib.h>
 
+#include <getopt.h>
+
 #include <gdk/gdk.h>
-
 #include <gtk/gtk.h>
-
-#include <gconf/gconf-client.h>
-
-
-#ifdef _WIN32
-  #include <cairo-win32.h>
-  #include <winuser.h>  
-#else
-  #ifdef __APPLE__
-    #include <cairo-quartz.h>
-  #else
-    #include <cairo-xlib.h>
-  #endif
-#endif
 
 
 #ifdef _WIN32

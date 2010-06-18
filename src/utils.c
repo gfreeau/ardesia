@@ -314,10 +314,12 @@ const gchar* get_desktop_dir (void)
 
   if (desktop_is_home_dir)
     {
+      /* ask to gconfd */
       desktop_dir = g_get_home_dir ();
     }
   else
     {
+      /* taken by gconf variable */
       desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
     }
 
