@@ -21,6 +21,22 @@
  *
  */
 
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h> 
+
+#include <gtk/gtk.h>
+
+
+#ifdef _WIN32
+  #define INFO_UI_FILE "info_dialog.glade"
+#else
+  #define INFO_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/info_dialog.glade"
+#endif
+
+
 /*
  * Start the dialog that give 
  * to the user the program'info

@@ -22,6 +22,14 @@
  */
 
 
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h> 
+
+#include <gtk/gtk.h>
+
+
 /*
  * Start the dialog that ask to the user where save the image
  * containing the screenshot

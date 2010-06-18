@@ -25,21 +25,9 @@
   #include <config.h>
 #endif
 
-#include <gtk/gtk.h>
-#include "stdlib.h"
-#include "unistd.h"
-#include "stdio.h"
-#include <string.h> 
-
-#include "utils.h"
-
-
-#ifdef _WIN32
-  #define INFO_UI_FILE "info_dialog.glade"
-#else
-  #define INFO_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/info_dialog.glade"
-#endif 
-
+#include <info_dialog.h>
+#include <utils.h>
+ 
 
 /*
  * Start the dialog that give 

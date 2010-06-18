@@ -25,33 +25,18 @@
   #include <config.h>
 #endif
 
-#include "ardesia.h"
-#include "callbacks.h"
-
-
-#include <gtk/gtk.h>
-
-#include "recorder.h"
-#include "saver.h"
-#include "color_selector.h"
-#include "preference_dialog.h"
-#include "info_dialog.h"
-#include "text_widget.h"
-
-#include "annotate.h"
-
-#include "stdlib.h"
-#include "unistd.h"
-#include "stdio.h"
-#include <string.h> 
-
-#include <math.h>
+#include <callbacks.h>
 #include <utils.h>
+#include <ardesia.h>
+#include <annotate.h>
 #include <background.h>
+#include <color_selector.h>
+#include <preference_dialog.h>
+#include <info_dialog.h>
+#include <text_widget.h>
+#include <recorder.h>
+#include <saver.h>
 
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <errno.h>
 
 
 /* Called when close the program */

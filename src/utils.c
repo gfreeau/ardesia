@@ -25,42 +25,10 @@
   #include <config.h>
 #endif
 
-#include "time.h"
-#include <math.h>
-#include "stdlib.h"
-#include "unistd.h"
-#include "stdio.h"
-#include <string.h> 
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <errno.h>
-#include <gdk/gdk.h>
-#include <gtk/gtk.h>
 #include <utils.h>
-#include <gconf/gconf-client.h>
-
-
-#ifdef _WIN32
-  #include <cairo-win32.h>
-  #include <winuser.h>  
-#else
-  #ifdef __APPLE__
-    #include <cairo-quartz.h>
-  #else
-    #include <cairo-xlib.h>
-  #endif
-#endif
-
-
-#ifdef _WIN32
-  #include <windows.h>
-  #define DIR_SEPARATOR '\\'
-#else
-  #define DIR_SEPARATOR '/'
-#endif
-
 
 const gchar* desktop_dir = NULL;
+
 
 /* Grab pointer */
 void grab_pointer(GtkWidget *win, GdkEventMask eventmask)

@@ -21,6 +21,18 @@
  *
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#include <string.h> 
+#include <math.h>
+#include <fcntl.h>
+#include <errno.h>
+
+#include <sys/stat.h>
+
 #include <gtk/gtk.h>
+
 
 void destroy (GtkWidget *widget, gpointer data);

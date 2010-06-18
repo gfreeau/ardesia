@@ -21,82 +21,17 @@
  *
  */
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdio.h>
 #include <ardesia.h>
-
-#include <config.h>
-
-#include <gtk/gtk.h>
-#include "stdlib.h"
-
-
-/*
- * Standard gettext macros.
- */
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define textdomain(String) (String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory) (Domain)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
-
-
-
-#include "callbacks.h"
-#include "annotate.h"
-#include "stdlib.h"
-#include "string.h"
-#include "unistd.h"
-#include "getopt.h"
-#include "utils.h"
-#include "background.h"
-
-#ifdef _WIN32
-  #define UI_FILE "ardesia.glade"
-  #define UI_HOR_FILE "ardesia_horizontal.glade"
-#else
-  #define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.glade"
-  #define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia_horizontal.glade"
-#endif 
+#include <utils.h>
+#include <annotate.h>
+#include <background.h>
+#include <callbacks.h>
 
 
 GtkBuilder *gtkBuilder;
 
-int EAST=1;
-int WEST=2;
-int NORTH=3;
-int SOUTH=4;
-
-
-/* distance space from border to the ardesia bar in pixel unit */
-int SPACE_FROM_BORDER = 25;
-
-typedef struct
-{
-  char* backgroundimage;
-  gboolean debug;
-  gboolean decorated;
-  int position;
-} CommandLine;
-
-
 CommandLine *commandline;
+
 
 /* 
  * Calculate the position where calculate_initial_position the main window 

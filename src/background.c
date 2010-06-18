@@ -24,42 +24,12 @@
 /* This is the file whith the code to handle images */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+  #include <config.h>
 #endif
 
-#include <string.h>
-#include <gtk/gtk.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <background.h>
-#include <annotate.h>
-#include <stdlib.h> 
 #include <utils.h> 
-
-#include <cairo.h>
-
-
-#ifdef _WIN32
-  #include <cairo-win32.h>
-  #include <winuser.h>  
-#else
-  #ifdef __APPLE__
-    #include <cairo-quartz.h>
-  #else
-    #include <cairo-xlib.h>
-  #endif
-#endif
-
-
-typedef struct
-{
-  gchar* background_color; 
-  gchar* background_image; 
-  GtkWidget* background_window;
-  /* cairo context to draw on the background window*/
-  cairo_t *back_cr;
-  /* used for input shape mask */
-  GdkPixmap* background_shape; 
-}BackGroundData;
+#include <annotate.h>
 
 
 static BackGroundData* background_data;

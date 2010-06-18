@@ -43,8 +43,46 @@
 #  define N_(String) (String)
 #endif
 
+#include <glib.h>
+#include <time.h>
+#include <math.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h> 
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <errno.h>
+
+#include <gdk/gdk.h>
+
+#include <gtk/gtk.h>
+
+#include <gconf/gconf-client.h>
+
+
+#ifdef _WIN32
+  #include <cairo-win32.h>
+  #include <winuser.h>  
+#else
+  #ifdef __APPLE__
+    #include <cairo-quartz.h>
+  #else
+    #include <cairo-xlib.h>
+  #endif
+#endif
+
+
+#ifdef _WIN32
+  #include <windows.h>
+  #define DIR_SEPARATOR '\\'
+#else
+  #define DIR_SEPARATOR '/'
+#endif
+
 
 extern GtkBuilder *gtkBuilder;
+
 
 #ifdef WIN32
   /* gdk_cursor_new_from_pixmap is broken on Windows.
@@ -53,6 +91,7 @@ extern GtkBuilder *gtkBuilder;
 					    const GdkColor *fg, const GdkColor *bg,
 					    gint x, gint y);
   #define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
+  /* Define other symbols needed to create the transparent layered window */
   #define LWA_COLORKEY	0x00000001
   #define LWA_ALPHA               0x00000002
 #endif

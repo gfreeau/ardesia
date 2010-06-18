@@ -25,24 +25,8 @@
   #include <config.h>
 #endif
 
-#include <gtk/gtk.h>
-#include "stdlib.h"
-#include "unistd.h"
-#include "stdio.h"
-#include <string.h> 
-#include "utils.h"
-
-
-#ifdef _WIN32
-  #include <windows.h>
-#else
-  #include <sys/wait.h>
-#endif
-
-
-#ifndef _WIN32
-  #define RECORDER_FILE PACKAGE_DATA_DIR"/ardesia/scripts/recordmydesktop_screencast.sh"
-#endif 
+#include <recorder.h>
+#include <utils.h>
 
 
 /* pid of the recording process */

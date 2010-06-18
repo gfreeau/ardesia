@@ -22,31 +22,9 @@
  */
 
 
-
-#include <math.h>
-#include <glib.h>
-
-#include <glib.h>
-#include <gdk/gdkinput.h>
-#include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
-
-
-#include <errno.h>
-#include <fcntl.h>
-#include <string.h>
-#include <unistd.h>
-#include <math.h>
-#include <stdlib.h>
-#include <ctype.h>
-
-#include <sys/types.h>
-#include <stdio.h>
-#include <string.h>
 #include <utils.h>
 #include <annotate.h>
 #include <broken.h>
-
 
 
 /* number x is roundable to y */

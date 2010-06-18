@@ -21,5 +21,28 @@
  *
  */
 
+
+#include <stdlib.h>
+#include <math.h>
+
+#include <gsl/gsl_linalg.h>
+
+#include <gtk/gtk.h>
+
+#include <cairo.h>
+
+
+#ifdef _WIN32
+  #include <cairo-win32.h>
+  #include <winuser.h>  
+#else
+  #ifdef __APPLE__
+    #include <cairo-quartz.h>
+  #else
+    #include <cairo-xlib.h>
+  #endif
+#endif
+
+
 /* Spline the lines */
 void spline (cairo_t *cr, GSList *list);

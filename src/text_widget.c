@@ -27,50 +27,10 @@
   #include <config.h>
 #endif
 
-#include <glib.h>
-#include <gdk/gdkinput.h>
-#include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
-#include <ctype.h>
 #include <text_widget.h>
 #include <utils.h>
 #include <annotate.h>
 
-#include <cairo.h>
-
-#ifdef _WIN32
-  #include <cairo-win32.h>
-  #include <gdkwin32.h>
-  #include <winuser.h>  
-  BOOL (WINAPI *setLayeredWindowAttributesTextProc) (HWND hwnd, COLORREF crKey,
-	BYTE bAlpha, DWORD dwFlags) = NULL;
-#else
-  #ifdef __APPLE__
-    #include <cairo-quartz.h>
-  #else
-    #include <cairo-xlib.h>
-  #endif
-#endif
-
-
-#define TEXT_MOUSE_EVENTS        ( GDK_POINTER_MOTION_MASK |	\
-				   GDK_BUTTON_RELEASE_MASK      \
-				 )
-
-typedef struct
-{
-  int x;
-  int y;
-  int x_bearing;
-  int y_bearing;
-} CharInfo;
-
-
-typedef struct
-{
-  int x;
-  int y;
-} Pos;
 
 GtkWidget* text_window = NULL;
 cairo_t *text_cr = NULL;

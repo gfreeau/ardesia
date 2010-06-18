@@ -25,25 +25,8 @@
   #include <config.h>
 #endif
 
-#include <gtk/gtk.h>
-#include "stdlib.h"
-#include "unistd.h"
-#include "stdio.h"
-#include <string.h> 
-#include "utils.h"
-
-#include <cairo.h>
-
-#ifdef _WIN32
-  #include <cairo-win32.h>
-  #include <winuser.h>  
-#else
-  #ifdef __APPLE__
-    #include <cairo-quartz.h>
-  #else
-    #include <cairo-xlib.h>
-  #endif
-#endif
+#include <saver.h>
+#include <utils.h>
 
 
 /* Save the contents of the pixbuf in the file with name filename */

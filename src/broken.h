@@ -21,15 +21,35 @@
  *
  */
 
+
+#include <math.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+#include <sys/types.h>
+
+#include <glib.h>
+
+#include <gdk/gdkinput.h>
+#include <gdk/gdkkeysyms.h>
+
+#include <gtk/gtk.h>
+
+
 #ifndef BROKEN_FILE
-    #define BROKEN_FILE
+  #define BROKEN_FILE
 
-    /* Return a subpath of listInp containg only the meaningful points using the standard deviation */
-    GSList* extract_relevant_points(GSList *listInp, gboolean rectify, int pixel_tollerance);
+  /* Return a subpath of listInp containg only the meaningful points using the standard deviation */
+  GSList* extract_relevant_points(GSList *listInp, gboolean rectify, int pixel_tollerance);
 
-    /* Straight the line */
-    GSList* straighten(GSList* list);
+  /* Straight the line */
+  GSList* straighten(GSList* list);
         
-    GSList*    broken( GSList* inp, gboolean close_path, gboolean rectify, int pixel_tollerance);
+  GSList*    broken( GSList* inp, gboolean close_path, gboolean rectify, int pixel_tollerance);
 
 #endif

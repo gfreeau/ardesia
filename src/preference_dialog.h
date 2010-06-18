@@ -21,6 +21,35 @@
  *
  */
 
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h> 
+
+#include <gtk/gtk.h>
+
+#ifdef _WIN32
+  #define PREFERENCE_UI_FILE "preference_dialog.glade"
+  #define BACKGROUNDS_FOLDER "backgrounds"
+#else
+  #define PREFERENCE_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/preference_dialog.glade"
+  #define BACKGROUNDS_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/backgrounds"
+#endif 
+
+
+typedef struct
+{
+  /* Preference dialog */
+  GtkBuilder*  preferenceDialogGtkBuilder;
+
+  /* 0 no background, 1 background color, 2 png background, */
+  int 	     background;
+
+  /* preview of background file */
+  GtkWidget*   preview;
+}PreferenceData;
+
 /*
  * Start the dialog that ask to the user
  * the background setting

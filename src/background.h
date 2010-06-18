@@ -21,6 +21,40 @@
  *
  */
 
+
+#include <string.h>
+#include <stdlib.h> 
+
+#include <gdk-pixbuf/gdk-pixbuf.h>
+
+#include <gtk/gtk.h>
+
+#include <cairo.h>
+
+
+#ifdef _WIN32
+  #include <cairo-win32.h>
+  #include <winuser.h>  
+#else
+  #ifdef __APPLE__
+    #include <cairo-quartz.h>
+  #else
+    #include <cairo-xlib.h>
+  #endif
+#endif
+
+
+typedef struct
+{
+  gchar* background_color; 
+  gchar* background_image; 
+  GtkWidget* background_window;
+  /* cairo context to draw on the background window*/
+  cairo_t *back_cr;
+  /* used for input shape mask */
+  GdkPixmap* background_shape; 
+}BackGroundData;
+
 /* Create the background window */
 GtkWidget* create_background_window();
 

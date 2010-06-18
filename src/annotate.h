@@ -22,6 +22,142 @@
  */
 
 
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <math.h>
+
+#include <sys/types.h>
+
+#include <glib.h>
+#include <gdk/gdkinput.h>
+#include <gdk/gdkkeysyms.h>
+#include <gtk/gtk.h>
+
+#include <cairo.h>
+
+
+#ifdef _WIN32
+  #include <cairo-win32.h>
+  #include <gdkwin32.h>
+  #include <winuser.h> 
+  BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF crKey,
+	BYTE bAlpha, DWORD dwFlags) = NULL;
+#else
+  #ifdef __APPLE__
+    #include <cairo-quartz.h>
+  #else
+    #include <cairo-xlib.h>
+  #endif
+#endif
+
+
+#define ANNOTATE_MOUSE_EVENTS    ( GDK_PROXIMITY_IN_MASK   |    \
+                                   GDK_PROXIMITY_OUT_MASK  |    \
+                                   GDK_POINTER_MOTION_MASK |    \
+                                   GDK_BUTTON_PRESS_MASK   |    \
+                                   GDK_BUTTON_RELEASE_MASK      \
+                                 )
+
+
+/* Enumeration containing tools */
+typedef enum
+  {
+    ANNOTATE_PEN,
+    ANNOTATE_ERASER,
+  } AnnotatePaintType;
+
+
+/* Paint context */
+typedef struct
+{
+  AnnotatePaintType type;
+  gchar*          fg_color;
+} AnnotatePaintContext;
+
+
+/* Struct to store the save point */
+typedef struct _AnnotateSave
+{
+  cairo_surface_t *surface;
+  struct _AnnotateSave *next;
+  struct _AnnotateSave *previous;
+} AnnotateSave;
+
+
+/* Annotation data used by the callsbacks */
+typedef struct
+{
+  GdkScreen   *screen;
+  GdkDisplay  *display;
+  
+  /* the annotation window */   
+  GtkWidget *annotation_window;
+
+  /* cairo context attached to the window */
+  cairo_t *annotation_cairo_context;
+
+  /* the shape pixmap used as mask */   
+  GdkPixmap   *shape;
+
+  /* cairo context attached to the shape pixmap */
+  cairo_t     *shape_cr;
+
+  /* transparent pixmap */
+  GdkPixmap *transparent_pixmap;
+
+  /* transparent cairo context */
+  cairo_t *transparent_cr;
+ 
+  /* mouse cursor */ 
+  GdkCursor *cursor;
+ 
+  /* mouse invisible cursor */ 
+  GdkCursor *invisible_cursor;
+ 
+  /* List of the savepoint */ 
+  AnnotateSave *savelist;
+
+  /* Paint context */ 
+  AnnotatePaintContext *default_pen;
+  AnnotatePaintContext *default_eraser;
+  AnnotatePaintContext *cur_context;
+
+  int thickness; 
+
+  /* list of the coodinates of the last line drawn */
+  GSList       *coordlist;
+
+  /* input device */
+  GdkDevice   *device;
+
+  /* width of the screen */
+  guint        width;
+  guint        height;
+ 
+  /* post draw operation */ 
+  gboolean     rectify;
+  gboolean     roundify;
+
+  /* arrow */
+  gboolean     arrow;
+  
+  /* is the cursor grabbed */
+  gboolean     is_grabbed;
+  
+  /* is the cursor hidden */
+  gboolean     cursor_hidden;
+  
+  /* is the debug enabled */
+  gboolean     debug;
+
+} AnnotateData;
+
+
 /* Struct to store the painted point */
 typedef struct
 {

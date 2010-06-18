@@ -21,6 +21,29 @@
  *
  */
 
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h> 
+
+#include <gtk/gtk.h>
+
+#include <cairo.h>
+
+
+#ifdef _WIN32
+  #include <cairo-win32.h>
+  #include <winuser.h>  
+#else
+  #ifdef __APPLE__
+    #include <cairo-quartz.h>
+  #else
+    #include <cairo-xlib.h>
+  #endif
+#endif
+
+
 /*
  * Start the dialog that ask to the user where save the image
  * containing the screenshot

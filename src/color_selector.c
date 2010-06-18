@@ -23,16 +23,12 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+  #include <config.h>
 #endif
 
-#include <gtk/gtk.h>
-#include "stdlib.h"
-#include "unistd.h"
-#include "stdio.h"
-#include <string.h> 
-#include "background.h"
-#include "utils.h"
+#include <color_selector.h>
+#include <utils.h>
+#include <background.h>
 
 
 /* old picked color in RGBA format */
