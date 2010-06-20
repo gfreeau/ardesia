@@ -1,3 +1,46 @@
+2010-06-18 16:08:38 alpha@paranoici.org
+   
+       * trunk/ardesia/po/it.po,
+       * trunk/ardesia/src/Makefile.am,
+       * trunk/ardesia/src/Makefile.in,
+       * trunk/ardesia/src/annotate.c.
+       * trunk/ardesia/src/annotate.h,
+       * trunk/ardesia/src/annotate_callbacks.c,
+       * trunk/ardesia/src/annotate_callbacks.h,
+       * trunk/ardesia/src/ardesia.c,
+       * trunk/ardesia/src/ardesia.h,
+       * trunk/ardesia/src/background.c,
+       * trunk/ardesia/src/background.h,
+       * trunk/ardesia/src/bar_callbacks.c,
+       * trunk/ardesia/src/bar_callbacks.h,
+       * trunk/ardesia/src/broken.c,
+       * trunk/ardesia/src/broken.h,
+       * trunk/ardesia/src/callbacks.c,
+       * trunk/ardesia/src/callbacks.h,
+       * trunk/ardesia/src/color_selector.h,
+       * trunk/ardesia/src/info_dialog.h,
+       * trunk/ardesia/src/preference_dialog.h,
+       * trunk/ardesia/src/recorder.h,
+       * trunk/ardesia/src/saver.h,
+       * trunk/ardesia/src/text_widget.c,
+       * trunk/ardesia/src/text_widget.h,
+       * trunk/ardesia/src/utils.c,
+       * trunk/ardesia/src/utils.h:
+       - Code refactoring
+       - Fix bug using the highlighter such as first option
+         (this is select but it used opaque color wrongly)
+       - Fix a segmentation fault that occurred when you push 
+         this tool sequence:
+         - pen 
+         - eraser
+         - arrow
+      - New Ardesia icon 
+
+2010-06-14 17:14:32 alpha@paranoici.org
+   
+       * trunk/ardesia/src/scripts/recordmydesktop_screencast.sh:
+       - Adjusted recorder to the new recordmydesktop commandline 
+
 
 2010-06-08 20:08:47 alpha@paranoici.org
    
