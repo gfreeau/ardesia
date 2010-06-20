@@ -14,8 +14,6 @@
 
 - Refactoring
   - Better variables handling
-    and smart memory policies
-  - Profile the program 
 
 - Windows porting
   Bug fix:
@@ -29,10 +27,9 @@
 - MacOsX quartz/porting
 
 - Possible future features
+  - Multi pointer support using the xinput2 libraries
   - Save page (raster background + svg annotation)
   - Pdf export
-  - Undo-redo using svg file
-  - Multi pointer support using the xinput2 libraries
 
 
 ===
