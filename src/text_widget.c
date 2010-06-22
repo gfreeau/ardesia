@@ -69,7 +69,8 @@ void create_text_window(GtkWindow *parent)
   gtk_window_set_decorated(GTK_WINDOW(text_window), FALSE);
   gtk_widget_set_app_paintable(text_window, TRUE);
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(text_window), TRUE);
-
+  gtk_window_set_opacity(GTK_WINDOW(text_window), 1); 
+  
   gtk_widget_set_double_buffered(text_window, FALSE);
 }
 
@@ -341,7 +342,7 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
   gtk_widget_show_all(text_window);
   #ifdef _WIN32 
     // I use a layered window that use the black as transparent color
-    setLayeredGdkWindowAttributes(text_window->window, RGB(0,0,0), 254, LWA_COLORKEY | LWA_ALPHA );	
+    setLayeredGdkWindowAttributes(text_window->window, RGB(0,0,0), 0, LWA_COLORKEY);	
   #endif
 }
 

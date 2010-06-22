@@ -31,7 +31,7 @@
 #include <background.h>
 #include <bezier_spline.h>
 
-#ifdef WIN32
+#ifdef _WIN32
   #include <windows_utils.h>
 #endif
 
@@ -335,7 +335,7 @@ void merge_context(cairo_t * cr)
   reset_cairo();
  
   cairo_surface_t* source_surface = cairo_get_target(cr);
-  #ifndef WIN32
+  #ifndef _WIN32
      /*
       * The over operato might put the new layer on the top of the old one 
       * overriding the intersections
@@ -1339,7 +1339,8 @@ void setup_app (GtkWidget* parent)
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window)); 
 	
   gtk_window_set_skip_taskbar_hint(GTK_WINDOW(data->annotation_window), TRUE);
-  
+  gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1); 
+   
   // initialize pen context
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN, data->thickness);
   
@@ -1370,7 +1371,7 @@ void setup_app (GtkWidget* parent)
 
   #ifdef _WIN32
     // I use a layered window that use the black as transparent color
-    setLayeredGdkWindowAttributes(data->annotation_window->window, RGB(0,0,0), 0, LWA_COLORKEY );       		
+    setLayeredGdkWindowAttributes(data->annotation_window->window, RGB(0,0,0), 0, LWA_COLORKEY );	
   #endif
 }
 

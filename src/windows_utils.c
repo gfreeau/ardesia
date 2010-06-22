@@ -97,7 +97,6 @@ void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF crKey, BYTE b
 			                  GetProcAddress(hInstance,"SetLayeredWindowAttributes");
 
     setLayeredWindowAttributesProc(hwnd, crKey, bAlpha, dwFlags);
-
 }
 
 
