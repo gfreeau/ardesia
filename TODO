@@ -18,7 +18,7 @@
 - Windows porting
   Bug fix:
     - fix the cursor icon to change respect the ardesia bar options 
-    - fix the highlighter (seems that the gtk/cairo colormap it is not ARGB)
+    - fix the highlighter (the windows gtk does not support the RGBA colormap)
   Issue:
     - implement the recordmydesktop_screencast.bat
       - recording (may be done using camit and ffmpeg2theora)
