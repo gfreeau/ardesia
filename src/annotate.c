@@ -348,6 +348,8 @@ void merge_context(cairo_t * cr)
       * @workaround to use it in windows I use the add that put the new layer
       * on the top of the old one but it does not preserve the color of
       * the second layer but modify it respecting the firts layer
+      * Seems that the CAIRO_OPERATOR_OVER does not work because in the
+      * gtk cairo implementation the RGBA colormap is not supported
       */
      cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_ADD);
   #endif
@@ -1368,11 +1370,7 @@ void setup_app (GtkWidget* parent)
 
   #ifdef _WIN32
     // I use a layered window that use the black as transparent color
-    HWND hwnd = GDK_WINDOW_HWND(data->annotation_window->window);
-    //SetWindowLongPtr(hwnd, GWL_EXSTYLE,  WS_EX_LAYERED| WS_EX_TOOLWINDOW | WS_EX_NOPARENTNOTIFY);
- 
-    /* the black is the transparent color */
-    setLayeredWindowAttributes(hwnd, RGB(0,0,0), 0, LWA_COLORKEY );       		
+    setLayeredGdkWindowAttributes(data->annotation_window->window, RGB(0,0,0), 0, LWA_COLORKEY );       		
   #endif
 }
 

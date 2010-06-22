@@ -339,10 +339,9 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
   g_signal_connect (G_OBJECT(text_window), "key_press_event", G_CALLBACK (key_press), NULL);
 
   gtk_widget_show_all(text_window);
-  #ifdef _WIN32
-    // I set to use the black as the transparent color of the window
-    HWND hwnd = GDK_WINDOW_HWND(text_window->window);     
-    setLayeredWindowAttributes(hwnd, RGB(0,0,0), 254, LWA_COLORKEY | LWA_ALPHA );	
+  #ifdef _WIN32 
+    // I use a layered window that use the black as transparent color
+    setLayeredGdkWindowAttributes(text_window->window, RGB(0,0,0), 254, LWA_COLORKEY | LWA_ALPHA );	
   #endif
 }
 

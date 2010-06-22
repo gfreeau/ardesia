@@ -27,7 +27,8 @@
   #include <winuser.h>    
 
   #include <gdk/gdk.h>
-
+  #include <gdkwin32.h>
+  #include <winuser.h>  
   #include <gtk/gtk.h>
 
   /* Ungrab pointer */
@@ -37,7 +38,8 @@
   /* Grab pointer */
   void grab_pointer(GtkWidget *win, GdkEventMask eventmask);
 
-  void setLayeredWindowAttributes(HWND hwnd, COLORREF crKey, BYTE bAlpha, DWORD dwFlags);
+  /* Set layered window atrributes to a gdk window */
+  void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF crKey, BYTE bAlpha, DWORD dwFlags);
 
   /* 
    * gdk_cursor_new_from_pixmap is broken on Windows.

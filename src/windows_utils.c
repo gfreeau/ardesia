@@ -84,8 +84,12 @@ void ungrab_pointer(GdkDisplay* display, GtkWidget* win)
     }
 }
 
-void setLayeredWindowAttributes(HWND hwnd, COLORREF crKey, BYTE bAlpha, DWORD dwFlags)
+
+/* This is to access throught the user32 windows dll to the setLayeredWindowAttributes */
+void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF crKey, BYTE bAlpha, DWORD dwFlags)
 {
+    HWND hwnd = GDK_WINDOW_HWND(gdk_window);
+    //SetWindowLongPtr(hwnd, GWL_EXSTYLE,  WS_EX_LAYERED| WS_EX_TOOLWINDOW | WS_EX_NOPARENTNOTIFY);
     HINSTANCE hInstance = LoadLibraryA("user32");		
 
     setLayeredWindowAttributesProc = (BOOL (WINAPI*)(HWND hwnd,
@@ -95,6 +99,7 @@ void setLayeredWindowAttributes(HWND hwnd, COLORREF crKey, BYTE bAlpha, DWORD dw
     setLayeredWindowAttributesProc(hwnd, crKey, bAlpha, dwFlags);
 
 }
+
 
 /* Is the two color similar */
 gboolean colors_too_similar(const GdkColor *colora, const GdkColor *colorb)
