@@ -68,11 +68,11 @@ void add_alpha(BarData *bar_data)
 {
   if (bar_data->highlighter)
     {
-      strncpy(&bar_data->color[6], SEMI_OPAQUE, 2);
+      strncpy(&bar_data->color[6], SEMI_OPAQUE_ALPHA, 2);
     }
   else
     {
-      strncpy(&bar_data->color[6], OPAQUE, 2);
+      strncpy(&bar_data->color[6], OPAQUE_ALPHA, 2);
     }
   bar_data->color[8]=0;
 }

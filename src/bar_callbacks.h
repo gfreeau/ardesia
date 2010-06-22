@@ -24,7 +24,7 @@
 
 #include <gtk/gtk.h>
 
-#define OPAQUE "FF"
-#define SEMI_OPAQUE "66" 
+#define OPAQUE_ALPHA "FF"
+#define SEMI_OPAQUE_ALPHA "66"
 
 void destroy (GtkWidget *widget, gpointer data);
