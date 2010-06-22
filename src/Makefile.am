@@ -38,6 +38,8 @@ ardesia_SOURCES = \
 	annotate.h \
         utils.c \
 	utils.h \
+        windows_utils.c \
+	windows_utils.h \
         saver.c \
 	saver.h \
         color_selector.c \

@@ -165,7 +165,7 @@ on_window_configure_event (GtkWidget *widget,
 }
 
 
-/* Called when the windows is destroyed */
+/* Called when the main window is destroyed */
 G_MODULE_EXPORT void
 on_winMain_destroy_event (GtkWidget *widget, gpointer func_data)
 {

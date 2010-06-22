@@ -35,8 +35,6 @@
   #include <cairo-win32.h>
   #include <gdkwin32.h>
   #include <winuser.h> 
-  BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF crKey,
-	BYTE bAlpha, DWORD dwFlags) = NULL;
 #else
   #ifdef __APPLE__
     #include <cairo-quartz.h>

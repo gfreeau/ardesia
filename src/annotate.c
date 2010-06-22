@@ -31,6 +31,9 @@
 #include <background.h>
 #include <bezier_spline.h>
 
+#ifdef WIN32
+  #include <windows_utils.h>
+#endif
 
 static AnnotateData* data;
 
@@ -342,8 +345,8 @@ void merge_context(cairo_t * cr)
      cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_OVER);
   #else
      /*
-      * @workaround to use in windows I use the add that put the new layer
-      * on the top of the old one but it does not conserve the color of
+      * @workaround to use it in windows I use the add that put the new layer
+      * on the top of the old one but it does not preserve the color of
       * the second layer but modify it respecting the firts layer
       */
      cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_ADD);
@@ -390,6 +393,22 @@ void annotate_select_pen()
   AnnotatePaintContext *pen = data->default_pen;
   data->cur_context = pen;
 }
+
+
+#ifdef _WIN32
+/* Acquire the grab pointer */
+void annotate_acquire_pointer_grab()
+{
+   grab_pointer(data->annotation_window, ANNOTATE_MOUSE_EVENTS);
+}
+
+
+/* Release the grab pointer */
+void annotate_release_pointer_grab()
+{
+   ungrab_pointer(data->display, data->annotation_window);
+}
+#endif
 
 
 /* Update the cursor icon */
@@ -459,20 +478,6 @@ void get_invisible_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
   clear_cairo_context(invisible_shape_cr);
   cairo_stroke(invisible_shape_cr);
   cairo_destroy(invisible_shape_cr); 
-}
-
-
-/* Acquire the grab pointer */
-void annotate_acquire_pointer_grab()
-{
-   grab_pointer(data->annotation_window, ANNOTATE_MOUSE_EVENTS);
-}
-
-
-/* Release the grab pointer */
-void annotate_release_pointer_grab()
-{
-   ungrab_pointer(data->display, data->annotation_window);
 }
 
 
@@ -1365,13 +1370,9 @@ void setup_app (GtkWidget* parent)
     // I use a layered window that use the black as transparent color
     HWND hwnd = GDK_WINDOW_HWND(data->annotation_window->window);
     //SetWindowLongPtr(hwnd, GWL_EXSTYLE,  WS_EX_LAYERED| WS_EX_TOOLWINDOW | WS_EX_NOPARENTNOTIFY);
-    HINSTANCE hInstance = LoadLibraryA("user32");		
-		
-    setLayeredWindowAttributesProc = (BOOL (WINAPI*)(HWND hwnd,
-			              COLORREF crKey, BYTE bAlpha, DWORD dwFlags))
-    GetProcAddress(hInstance,"SetLayeredWindowAttributes");
+ 
     /* the black is the transparent color */
-    setLayeredWindowAttributesProc(hwnd, RGB(0,0,0), 0, LWA_COLORKEY );       		
+    setLayeredWindowAttributes(hwnd, RGB(0,0,0), 0, LWA_COLORKEY );       		
   #endif
 }
 

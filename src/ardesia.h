@@ -29,14 +29,6 @@
 #include <gtk/gtk.h>
 
 
-#ifdef _WIN32
-  #include <windows.h>
-  #define DIR_SEPARATOR '\\'
-#else
-  #define DIR_SEPARATOR '/'
-#endif
-
-
 #define EAST 1
 #define WEST 2
 #define NORTH 3

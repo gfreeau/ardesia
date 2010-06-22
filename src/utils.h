@@ -54,9 +54,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-
-
-
 #include <gdk/gdk.h>
 
 #include <gtk/gtk.h>
@@ -66,7 +63,6 @@
 
 #ifdef _WIN32
   #include <cairo-win32.h>
-  #include <winuser.h>  
 #else
   #ifdef __APPLE__
     #include <cairo-quartz.h>
@@ -77,7 +73,6 @@
 
 
 #ifdef _WIN32
-  #include <windows.h>
   #define DIR_SEPARATOR '\\'
 #else
   #define DIR_SEPARATOR '/'
@@ -86,20 +81,6 @@
 
 extern GtkBuilder *gtkBuilder;
 
-
-#ifdef WIN32
-  /* 
-   * gdk_cursor_new_from_pixmap is broken on Windows.
-   * this is a workaround using gdk_cursor_new_from_pixbuf. 
-   */
-  GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
-					    const GdkColor *fg, const GdkColor *bg,
-					    gint x, gint y);
-  #define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
-  /* Define other symbols needed to create the transparent layered window */
-  #define LWA_COLORKEY	0x00000001
-  #define LWA_ALPHA     0x00000002
-#endif
 		
 #define PROGRAM_NAME "Ardesia"
 
@@ -113,14 +94,6 @@ extern GtkBuilder *gtkBuilder;
 				
 /* get bar window widget */
 GtkWidget* get_bar_window();
-
-
-/* Ungrab pointer */
-void ungrab_pointer(GdkDisplay* display, GtkWidget *win);
-
-
-/* Grab pointer */
-void grab_pointer(GtkWidget *win, GdkEventMask eventmask);
 
 
 /* Take a GdkColor and return the RGB string */
@@ -137,6 +110,7 @@ void  cairo_set_transparent_color(cairo_t * cr);
 
 /** Distance beetween two points using the Pitagora theorem */
 int get_distance(int x1, int y1, int x2, int y2);
+
 
 /* Clear cairo context */
 void clear_cairo_context(cairo_t* cr);

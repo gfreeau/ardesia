@@ -21,50 +21,33 @@
  *
  */
 
-/** Widget for text insertion */
 
-#include <ctype.h>
+#ifdef WIN32
+  #include <windows.h>
+  #include <winuser.h>    
 
-#include <gtk/gtk.h>
+  #include <gdk/gdk.h>
 
-#include <cairo.h>
+  #include <gtk/gtk.h>
+
+  /* Ungrab pointer */
+  void ungrab_pointer(GdkDisplay* display, GtkWidget *win);
 
 
-#ifdef _WIN32
-  #include <cairo-win32.h>
-  #include <gdkwin32.h>
-  #include <winuser.h>  
-#else
-  #ifdef __APPLE__
-    #include <cairo-quartz.h>
-  #else
-    #include <cairo-xlib.h>
-  #endif
+  /* Grab pointer */
+  void grab_pointer(GtkWidget *win, GdkEventMask eventmask);
+
+  void setLayeredWindowAttributes(HWND hwnd, COLORREF crKey, BYTE bAlpha, DWORD dwFlags);
+
+  /* 
+   * gdk_cursor_new_from_pixmap is broken on Windows.
+   * this is a workaround using gdk_cursor_new_from_pixbuf. 
+   */
+  GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
+					    const GdkColor *fg, const GdkColor *bg,
+					    gint x, gint y);
+  #define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
+  /* Define other symbols needed to create the transparent layered window */
+  #define LWA_COLORKEY	0x00000001
+  #define LWA_ALPHA     0x00000002
 #endif
-
-
-#define TEXT_MOUSE_EVENTS        ( GDK_POINTER_MOTION_MASK |	\
-				   GDK_BUTTON_RELEASE_MASK      \
-				 )
-
-typedef struct
-{
-  int x;
-  int y;
-  int x_bearing;
-  int y_bearing;
-} CharInfo;
-
-
-typedef struct
-{
-  int x;
-  int y;
-} Pos;
-
-
-/* Start text widget */
-void start_text_widget(GtkWindow *parent, char* color, int tickness);
-
-/* Stop text widget */
-void stop_text_widget();

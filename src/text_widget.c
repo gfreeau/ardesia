@@ -21,7 +21,7 @@
  *
  */
 
-/** Widget for text insertion */
+/* Widget for text insertion */
 
 #ifdef HAVE_CONFIG_H
   #include <config.h>
@@ -31,6 +31,9 @@
 #include <utils.h>
 #include <annotate.h>
 
+#ifdef WIN32
+  #include <windows_utils.h>
+#endif
 
 GtkWidget* text_window = NULL;
 cairo_t *text_cr = NULL;
@@ -338,15 +341,8 @@ void start_text_widget(GtkWindow *parent, char* color, int tickness)
   gtk_widget_show_all(text_window);
   #ifdef _WIN32
     // I set to use the black as the transparent color of the window
-    HWND hwnd = GDK_WINDOW_HWND(text_window->window);
-		
-    HINSTANCE hInstance = LoadLibraryA("user32");		
-		
-    setLayeredWindowAttributesTextProc = (BOOL (WINAPI*)(HWND hwnd,
-			                  COLORREF crKey, BYTE bAlpha, DWORD dwFlags))
-			                  GetProcAddress(hInstance,"SetLayeredWindowAttributes");
-        
-    setLayeredWindowAttributesTextProc(hwnd, RGB(0,0,0), 254, LWA_COLORKEY | LWA_ALPHA );	
+    HWND hwnd = GDK_WINDOW_HWND(text_window->window);     
+    setLayeredWindowAttributes(hwnd, RGB(0,0,0), 254, LWA_COLORKEY | LWA_ALPHA );	
   #endif
 }
 
