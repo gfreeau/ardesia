@@ -88,7 +88,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gch
   gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);   
   g_object_unref (previewPixbuf);
 
-  gtk_window_set_title (GTK_WINDOW (chooser), gettext("Select a file"));
+  gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
  
   gchar* start_string = "ardesia_"; 

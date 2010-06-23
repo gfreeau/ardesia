@@ -175,7 +175,7 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
 						    NULL);
 
 
-  gtk_window_set_title (GTK_WINDOW (chooser), gettext("Select a file"));
+  gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
   
   gchar* start_string = "ardesia_"; 

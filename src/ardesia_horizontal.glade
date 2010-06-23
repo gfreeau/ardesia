@@ -275,7 +275,7 @@
               <object class="GtkRadioToolButton" id="buttonColor">
                 <property name="width_request">27</property>
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Color Selection</property>
+                <property name="tooltip_text" translatable="yes">Color Chooser</property>
                 <property name="stock_id">gtk-select-color</property>
                 <property name="group">buttonRed</property>
                 <signal name="clicked" handler="on_buttonColor_activate"/>
