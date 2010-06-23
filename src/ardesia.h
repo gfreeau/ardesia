@@ -41,8 +41,8 @@
 
 
 #ifdef _WIN32
-  #define UI_FILE "ardesia.glade"
-  #define UI_HOR_FILE "ardesia_horizontal.glade"
+  #define UI_FILE "..\\share\\ardesia\\ui\\ardesia.glade"
+  #define UI_HOR_FILE "..\\share\\ardesia\\ui\\ardesia_horizontal.glade"
 #else
   #define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.glade"
   #define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia_horizontal.glade"

@@ -25,8 +25,8 @@
 #include <gtk/gtk.h>
 
 #ifdef _WIN32
-  #define PREFERENCE_UI_FILE "preference_dialog.glade"
-  #define BACKGROUNDS_FOLDER "backgrounds"
+  #define PREFERENCE_UI_FILE "..\\share\\ardesia\\ui\\preference_dialog.glade"
+  #define BACKGROUNDS_FOLDER "..\\share\\ardesia\\ui\\backgrounds"
 #else
   #define PREFERENCE_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/preference_dialog.glade"
   #define BACKGROUNDS_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/backgrounds"
