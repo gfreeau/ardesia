@@ -15,11 +15,16 @@
 - Refactoring
   - Better variables handling
 
+- Language support
+  - Add spanish language support
+
 - Windows porting
   Bug fix:
     - fix the cursor icon to change respect the ardesia bar options 
     - fix the highlighter (the windows gtk does not support the RGBA colormap)
   Issue:
+    - avoid opening a console window
+    - default name in the save and record wizard
     - implement the recordmydesktop_screencast.bat
       - recording (may be done using camit and ffmpeg2theora)
       - forward the stream to icecast (using ezstream) 
