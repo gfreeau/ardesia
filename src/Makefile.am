@@ -56,7 +56,7 @@ ardesia_SOURCES = \
         ardesia.h
 
 if ENABLE_STATIC
-ardesia_LDFLAGS = -static-libtool-libs
+ardesia_LDFLAGS = -Wl, -all-static
 else
 if WITH_GNU_LD
 ardesia_LDFLAGS = -Wl,--export-dynamic

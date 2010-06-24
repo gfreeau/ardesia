@@ -27,6 +27,7 @@ IT_PROG_INTLTOOL([0.35.0])
 # libraries are dynamic by default. User can override by passing 
 # the flag --enable-static
 AC_DISABLE_STATIC
+
 AM_PROG_LIBTOOL
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 
@@ -36,11 +37,24 @@ AM_CONDITIONAL(ENABLE_STATIC, test "$enable_static" = "yes")
 
 pkg_modules="	gtk+-2.0 >= 2.12 
 		cairo
-                gsl
-                gconf-2.0 >= 2.0.0"
+                gsl"
 
 
 PKG_CHECK_MODULES(ARDESIA, [$pkg_modules])
+
+case "$host" in
+  *-*-mingw*|*-*-cygwin*)
+    platform_win32=yes
+    ;;
+  *)
+    platform_win32=no
+    ;;
+esac
+
+if test "$platform_win32" = no; then
+  PKG_CHECK_MODULES(GCONF, [gconf-2.0 >= 2.0.0])
+fi
+
 
 
 AC_OUTPUT([

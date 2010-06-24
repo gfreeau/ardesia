@@ -28,6 +28,16 @@
 BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF crKey,
 	BYTE bAlpha, DWORD dwFlags) = NULL;
 
+	
+/* Get the desktop dir of the current user */
+char* win_get_desktop_dir()
+{
+   char desktop_folder[MAX_PATH];
+   SHGetFolderPath( 0, CSIDL_DESKTOPDIRECTORY, NULL, 0, desktop_folder);
+   return strdup(desktop_folder);
+}  
+	
+	
 /* Grab pointer */
 void grab_pointer(GtkWidget *win, GdkEventMask eventmask)
 {

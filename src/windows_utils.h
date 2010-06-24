@@ -23,14 +23,25 @@
 
 
 #ifdef _WIN32
+
   #include <windows.h>
   #include <winuser.h>    
+  #include <windows.h>
+  #include "shlwapi.h"
+  #include "shlobj.h"
 
   #include <gdk/gdk.h>
   #include <gdkwin32.h>
   #include <winuser.h>  
   #include <gtk/gtk.h>
+  
+  /* Define other symbols needed to create the transparent layered window */
+  #define LWA_COLORKEY	0x00000001
+  #define LWA_ALPHA     0x00000002
 
+  /* Get the desktop dir of the current user */
+  char* win_get_desktop_dir();  
+  
   /* Ungrab pointer */
   void ungrab_pointer(GdkDisplay* display, GtkWidget *win);
 
@@ -38,9 +49,11 @@
   /* Grab pointer */
   void grab_pointer(GtkWidget *win, GdkEventMask eventmask);
 
+  
   /* Set layered window atrributes to a gdk window */
   void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF crKey, BYTE bAlpha, DWORD dwFlags);
 
+  
   /* 
    * gdk_cursor_new_from_pixmap is broken on Windows.
    * this is a workaround using gdk_cursor_new_from_pixbuf. 
@@ -48,8 +61,9 @@
   GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 					    const GdkColor *fg, const GdkColor *bg,
 					    gint x, gint y);
+						
+						
+  /* Override with the fixed version */						
   #define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
-  /* Define other symbols needed to create the transparent layered window */
-  #define LWA_COLORKEY	0x00000001
-  #define LWA_ALPHA     0x00000002
+
 #endif

@@ -58,8 +58,10 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gch
     {
       /* Initialize it to the desktop folder */
       gchar* desktop_dir = (gchar *) get_desktop_dir();
-      *workspace_dir = (gchar*) g_malloc( (strlen(desktop_dir) + 1) * sizeof(gchar));
+	  int lenght = strlen(desktop_dir);
+      *workspace_dir = (gchar*) g_malloc( ( lenght + 1) * sizeof(gchar));
       strcpy(*workspace_dir, desktop_dir);
+	  
       g_free(desktop_dir);
     }	
 

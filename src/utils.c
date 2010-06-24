@@ -159,12 +159,8 @@ gboolean file_exists(char* filename, char* desktop_dir)
   return TRUE;
 }
 
-
-/*
- * Get the desktop folder;
- * this function use gconf to found the folder
- */
-const gchar* get_desktop_dir (void)
+#ifndef _WIN32
+const gchar* gconf_get_desktop_dir()
 {
   const gchar* desktop_dir = NULL;
   GConfClient *gconf_client = NULL;
@@ -191,7 +187,22 @@ const gchar* get_desktop_dir (void)
     }
 
   g_object_unref (gconf_client);
+}
+#endif
 
+
+/*
+ * Get the desktop folder;
+ * this function use gconf to found the folder
+ */
+const gchar* get_desktop_dir (void)
+{
+  #ifndef _WIN32
+    desktop_dir = gconf_get_desktop_dir();
+  #else
+    // WIN32
+    desktop_dir = win_get_desktop_dir();   
+  #endif
   return desktop_dir;
 }
 
