@@ -27,7 +27,7 @@ IT_PROG_INTLTOOL([0.35.0])
 
 AM_PROG_LIBTOOL
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
-AM_CONDITIONAL(ENABLE_STATIC, test "$enable_stattic" = "yes")
+AM_CONDITIONAL(ENABLE_STATIC, test "$enable_static" = "yes")
 
 pkg_modules="	gtk+-2.0 >= 2.12 
 		cairo
