@@ -24,10 +24,15 @@ AM_GLIB_GNU_GETTEXT
 IT_PROG_INTLTOOL([0.35.0])
 
 
-
+# libraries are dynamic by default. User can override by passing 
+# the flag --enable-static
+AC_DISABLE_STATIC
 AM_PROG_LIBTOOL
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
+
+##see if there is the static linking option ##
 AM_CONDITIONAL(ENABLE_STATIC, test "$enable_static" = "yes")
+	
 
 pkg_modules="	gtk+-2.0 >= 2.12 
 		cairo
