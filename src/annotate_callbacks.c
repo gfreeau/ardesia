@@ -97,12 +97,9 @@ paint (GtkWidget *win,
        GdkEventButton *ev, 
        gpointer func_data)
 { 
+
   AnnotateData *data = (AnnotateData *) func_data;
-  if (data->are_annotations_hidden)
-    {
-      return TRUE;
-    }
-  annotate_coord_list_free();
+ 
   if (!ev)
     {
        g_printerr("Device '%s': Invalid event; I ungrab all\n",
@@ -111,8 +108,6 @@ paint (GtkWidget *win,
        return TRUE;
     }
 
-  unhide_cursor();
-  
   int x,y;
   #ifdef _WIN32
     /* I do not know why but sometimes the event coord are wrong */
@@ -129,6 +124,14 @@ paint (GtkWidget *win,
       annotate_release_grab ();
       return TRUE;
     }   
+	
+  if (data->are_annotations_hidden)
+    {
+      return TRUE;
+    }
+  annotate_coord_list_free();
+ 
+  unhide_cursor();
   
   /* only button1 allowed */
   if (!(ev->button==1))
@@ -162,10 +165,7 @@ paintto (GtkWidget *win,
          gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
-   if (data->are_annotations_hidden)
-    {
-      return TRUE;
-    }
+  
   if (!ev)
     {
        g_printerr("Device '%s': Invalid event; I ungrab all\n",
@@ -173,8 +173,6 @@ paintto (GtkWidget *win,
        annotate_release_grab ();
        return TRUE;
     }
-	
-  unhide_cursor();
   
   int x,y;
   #ifdef _WIN32
@@ -197,6 +195,13 @@ paintto (GtkWidget *win,
       annotate_release_grab ();
       return TRUE;
     }
+  
+  if (data->are_annotations_hidden)
+    {
+      return TRUE;
+    }
+	
+  unhide_cursor();
 
   gdouble pressure = 1;
   GdkModifierType state = (GdkModifierType) ev->state;  
@@ -233,16 +238,7 @@ G_MODULE_EXPORT gboolean
 paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
-  if (data->are_annotations_hidden)
-    {
-      return TRUE;
-    }
-  if (data->debug)
-    {
-      g_printerr("Device '%s': Button %i Up at (x,y)=(%.2f : %.2f)\n",
-		 ev->device->name, ev->button, ev->x, ev->y);
-    }
-
+  
   if (!ev)
     {
        g_printerr("Device '%s': Invalid event; I ungrab all\n",
@@ -250,7 +246,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
        annotate_release_grab ();
        return TRUE;
     }
-
+  
   int x,y;
   #ifdef _WIN32
     /* I do not know why but sometimes the event coord are wrong */
@@ -266,6 +262,17 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
       /* the last point was outside the bar then ungrab */
       annotate_release_grab ();
       return TRUE;
+    }
+  
+  if (data->are_annotations_hidden)
+    {
+      return TRUE;
+    }
+	
+  if (data->debug)
+    {
+      g_printerr("Device '%s': Button %i Up at (x,y)=(%.2f : %.2f)\n",
+		 ev->device->name, ev->button, ev->x, ev->y);
     }
 
   /* only button1 allowed */

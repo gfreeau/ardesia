@@ -41,7 +41,6 @@
 
 #ifdef _WIN32
   #include <cairo-win32.h>
-  #include <windows_utils.h>
 #else
   #ifdef __APPLE__
     #include <cairo-quartz.h>
