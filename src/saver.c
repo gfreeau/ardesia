@@ -54,6 +54,7 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
 void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar** workspace_dir)
 {
   gchar* date = get_date();
+
   if (!(*workspace_dir))
     {
       /* Initialize it to the desktop folder */
@@ -80,23 +81,26 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gch
 						    NULL);
   
   gtk_window_set_modal(GTK_WINDOW(chooser), TRUE); 
-
+  gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file")); 
+  
   /* preview of saving */
   GtkWidget*   preview = gtk_image_new ();
   int preview_width = 128;
   int preview_height = 128;
   GdkPixbuf*   previewPixbuf = gdk_pixbuf_scale_simple(buf, preview_width, preview_height, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (preview), previewPixbuf);
+  
   gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);   
   g_object_unref (previewPixbuf);
 
-  gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
  
   gchar* start_string = "ardesia_"; 
   gchar* filename = (gchar*) g_malloc((strlen(start_string) + strlen(date) + 1) * sizeof(gchar));
   sprintf(filename,"%s%s", start_string, date);
+  
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
+  
   gboolean screenshot = FALSE;
  
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)

@@ -132,8 +132,14 @@ gchar* get_date()
   time( &now );
   t = localtime( &now );
 
-  gchar* date = g_malloc(19 * sizeof(gchar));
-  sprintf(date, "%d-%d-%d_%d:%d:%d", t->tm_mday,t->tm_mon+1,t->tm_year+1900,t->tm_hour,t->tm_min,t->tm_sec);
+  gchar* date = g_malloc(16 * sizeof(gchar));
+  char* hour_min_sep = ":";
+  #ifdef _WIN32
+    /* : is avoided in file name and the I use the . */
+	hour_min_sep = ".";
+  #endif
+  
+  sprintf(date, "%d-%d-%d_%d%s%d", t->tm_mday, t->tm_mon+1,t->tm_year+1900, t->tm_hour, hour_min_sep, t->tm_min);
   return date;
 }
 
