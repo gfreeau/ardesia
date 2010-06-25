@@ -59,7 +59,7 @@ ardesia_SOURCES = \
 ardesia_LDFLAGS = 
 
 if ENABLE_STATIC
-ardesia_LDFLAGS += -Wl,-all-static
+ardesia_LDFLAGS += -all-static -Wl,-static
 else
 if WITH_GNU_LD
 ardesia_LDFLAGS += -Wl,--export-dynamic
