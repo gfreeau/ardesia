@@ -166,33 +166,9 @@ gboolean file_exists(char* filename, char* desktop_dir)
 }
 
 #ifndef _WIN32
-const gchar* gconf_get_desktop_dir()
+const gchar* glib_get_desktop_dir()
 {
-  const gchar* desktop_dir = NULL;
-  GConfClient *gconf_client = NULL;
-  gboolean desktop_is_home_dir = FALSE;
-
-  gconf_client = gconf_client_get_default ();
-
-  /* gconf daemon can run on linux */
-  #ifdef linux
-    desktop_is_home_dir = gconf_client_get_bool (gconf_client,
-                                                 "/apps/nautilus/preferences/desktop_is_home_dir",
-                                                 NULL);
-  #endif
-
-  if (desktop_is_home_dir)
-    {
-      /* ask to gconfd */
-      desktop_dir = g_get_home_dir ();
-    }
-  else
-    {
-      /* taken by gconf variable */
-      desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
-    }
-
-  g_object_unref (gconf_client);
+  return g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
 }
 #endif
 
@@ -204,7 +180,7 @@ const gchar* gconf_get_desktop_dir()
 const gchar* get_desktop_dir (void)
 {
   #ifndef _WIN32
-    desktop_dir = gconf_get_desktop_dir();
+    desktop_dir = glib_get_desktop_dir();
   #else
     // WIN32
     desktop_dir = win_get_desktop_dir();   

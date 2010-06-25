@@ -36,6 +36,9 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = ardesia$(EXEEXT)
+@ENABLE_STATIC_TRUE@am__append_1 = -Wl,-all-static
+@ENABLE_STATIC_FALSE@@WITH_GNU_LD_TRUE@am__append_2 = -Wl,--export-dynamic
+@PLATFORM_WIN32_TRUE@am__append_3 = -mwindows
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -57,7 +60,7 @@ am_ardesia_OBJECTS = bar_callbacks.$(OBJEXT) \
 	ardesia.$(OBJEXT)
 ardesia_OBJECTS = $(am_ardesia_OBJECTS)
 am__DEPENDENCIES_1 =
-ardesia_DEPENDENCIES = $(am__DEPENDENCIES_1)
+ardesia_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 ardesia_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(ardesia_LDFLAGS) \
 	$(LDFLAGS) -o $@
@@ -130,6 +133,8 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
+GCONF_CFLAGS = @GCONF_CFLAGS@
+GCONF_LIBS = @GCONF_LIBS@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
@@ -290,8 +295,7 @@ ardesia_SOURCES = \
 	ardesia.c \
         ardesia.h
 
-@ENABLE_STATIC_FALSE@@WITH_GNU_LD_TRUE@ardesia_LDFLAGS = -Wl,--export-dynamic
-@ENABLE_STATIC_TRUE@ardesia_LDFLAGS = -static-libtool-libs
+ardesia_LDFLAGS = $(am__append_1) $(am__append_2) $(am__append_3)
 ardesia_LDADD = $(ARDESIA_LIBS) $(GCONF_LIBS)
 EXTRA_DIST = $(ui_DATA)
 all: all-am

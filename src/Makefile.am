@@ -56,13 +56,13 @@ ardesia_SOURCES = \
         ardesia.h
 
 
-ardesia_LDFLAGS = -Wl
+ardesia_LDFLAGS = 
 
 if ENABLE_STATIC
-ardesia_LDFLAGS += -all-static
+ardesia_LDFLAGS += -Wl,-all-static
 else
 if WITH_GNU_LD
-ardesia_LDFLAGS += --export-dynamic
+ardesia_LDFLAGS += -Wl,--export-dynamic
 endif
 endif
 
