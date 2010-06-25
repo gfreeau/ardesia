@@ -51,14 +51,15 @@
 
 typedef struct
 {
-  char* backgroundimage;
-  gboolean debug;
-  gboolean decorated;
-  int position;
+   char* backgroundimage;
+   gboolean debug;
+   gboolean decorated;
+   int position;
 } CommandLine;
 
- typedef struct
- {
+
+typedef struct
+{
    /* annotation is visible */
    gboolean annotation_is_visible;
 
@@ -92,7 +93,7 @@ typedef struct
    /* Default folder where store images and videos */
    char* workspace_dir;
    
- }BarData;
+}BarData;
  
  
  

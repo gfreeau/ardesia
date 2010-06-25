@@ -37,6 +37,10 @@ event_expose (GtkWidget *widget,
               gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
+  if (data->are_annotations_hidden)
+    {
+      return TRUE;
+    }
   int is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
   if (!is_fullscreen)
     {
@@ -94,6 +98,10 @@ paint (GtkWidget *win,
        gpointer func_data)
 { 
   AnnotateData *data = (AnnotateData *) func_data;
+  if (data->are_annotations_hidden)
+    {
+      return TRUE;
+    }
   annotate_coord_list_free();
   if (!ev)
     {
@@ -154,6 +162,10 @@ paintto (GtkWidget *win,
          gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
+   if (data->are_annotations_hidden)
+    {
+      return TRUE;
+    }
   if (!ev)
     {
        g_printerr("Device '%s': Invalid event; I ungrab all\n",
@@ -221,6 +233,10 @@ G_MODULE_EXPORT gboolean
 paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
+  if (data->are_annotations_hidden)
+    {
+      return TRUE;
+    }
   if (data->debug)
     {
       g_printerr("Device '%s': Button %i Up at (x,y)=(%.2f : %.2f)\n",
@@ -313,6 +329,10 @@ proximity_in (GtkWidget *win,
               gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
+  if (data->are_annotations_hidden)
+    {
+      return TRUE;
+    }
   gint x, y;
   GdkModifierType state;
 
@@ -333,6 +353,10 @@ proximity_out (GtkWidget *win,
                gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
+  if (data->are_annotations_hidden)
+    {
+      return TRUE;
+    }
   data->cur_context = data->default_pen;
 
   data->device = NULL;

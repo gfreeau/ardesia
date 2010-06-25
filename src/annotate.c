@@ -430,10 +430,10 @@ void update_cursor()
 /* Unhide the cursor */
 void unhide_cursor()
 {
-  if (data->cursor_hidden)
+  if (data->is_cursor_hidden)
     {
       update_cursor();
-      data->cursor_hidden = FALSE;
+      data->is_cursor_hidden = FALSE;
     }
 }
 
@@ -514,7 +514,7 @@ void hide_cursor()
   #ifdef _WIN32
     annotate_acquire_pointer_grab();
   #endif 
-  data->cursor_hidden = TRUE;
+  data->is_cursor_hidden = TRUE;
 }
 
 
@@ -1258,9 +1258,7 @@ void annotate_hide_annotation ()
                      0, 0,
                      data->width, data->height);
   
-  /* disconnect all the signals to avoid to print on the transparent window; this is a status similar to a ghost window */
-  annotate_disconnect_signals();
-  
+  data->are_annotations_hidden = TRUE;
 }
 
 
@@ -1272,7 +1270,7 @@ void annotate_show_annotation ()
       g_printerr("Show annotations\n");
     }
   /* reconnect the signals to make the transparent window paintable */
-  annotate_connect_signals();  
+  data->are_annotations_hidden = FALSE;  
   annotate_restore_surface();
 }
 
@@ -1393,12 +1391,13 @@ int annotate_init (GtkWidget* parent, gboolean debug)
  
   data->debug = debug;
   
-  data->cursor_hidden = TRUE;
+  data->is_cursor_hidden = TRUE;
   data->is_grabbed = FALSE;
   data->arrow = FALSE; 
   data->rectify = FALSE;
   data->roundify = FALSE;
-  
+  data->are_annotations_hidden = FALSE; 
+ 
   data->display = gdk_display_get_default();
   data->screen = gdk_display_get_default_screen(data->display);
 

@@ -137,7 +137,10 @@ typedef struct
   gboolean     is_grabbed;
   
   /* is the cursor hidden */
-  gboolean     cursor_hidden;
+  gboolean     is_cursor_hidden;
+
+  /* is the annotation window hidden */
+  gboolean are_annotations_hidden;
   
   /* is the debug enabled */
   gboolean     debug;
