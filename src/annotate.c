@@ -1260,7 +1260,7 @@ void annotate_hide_annotation ()
   
   /* disconnect all the signals to avoid to print on the transparent window; this is a status similar to a ghost window */
   annotate_disconnect_signals();
-  gtk_widget_grab_focus(get_bar_window());
+  
 }
 
 

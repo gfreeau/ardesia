@@ -165,26 +165,13 @@ gboolean file_exists(char* filename, char* desktop_dir)
   return TRUE;
 }
 
-#ifndef _WIN32
-const gchar* glib_get_desktop_dir()
-{
-  return g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
-}
-#endif
-
 
 /*
  * Get the desktop folder
  */
 const gchar* get_desktop_dir (void)
 {
-  #ifndef _WIN32
-    desktop_dir = glib_get_desktop_dir();
-  #else
-    // WIN32
-    desktop_dir = win_get_desktop_dir();   
-  #endif
-  return desktop_dir;
+  return g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);;
 }
 
 

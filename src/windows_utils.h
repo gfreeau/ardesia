@@ -26,13 +26,9 @@
 
   #include <windows.h>
   #include <winuser.h>    
-  #include <windows.h>
-  #include "shlwapi.h"
-  #include "shlobj.h"
 
   #include <gdk/gdk.h>
   #include <gdkwin32.h>
-  #include <winuser.h>  
   #include <gtk/gtk.h>
   
   /* Define other symbols needed to create the transparent layered window */
