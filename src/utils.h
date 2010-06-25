@@ -43,7 +43,6 @@
   #include <cairo-win32.h>
   #include <windows_utils.h>
 #else
-  #include <gconf/gconf-client.h>
   #ifdef __APPLE__
     #include <cairo-quartz.h>
   #else

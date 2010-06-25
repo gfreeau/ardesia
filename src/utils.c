@@ -174,8 +174,7 @@ const gchar* glib_get_desktop_dir()
 
 
 /*
- * Get the desktop folder;
- * this function use gconf to found the folder
+ * Get the desktop folder
  */
 const gchar* get_desktop_dir (void)
 {

@@ -53,13 +53,6 @@ pkg_modules="	gtk+-2.0 >= 2.12
 
 PKG_CHECK_MODULES(ARDESIA, [$pkg_modules])
 
-
-dnl Check gconf only for not windows platform
-if test "$platform_win32" = no; then
-  PKG_CHECK_MODULES(GCONF, [gconf-2.0 >= 2.0.0])
-fi
-
-
 AC_OUTPUT([
 Makefile
 src/Makefile
