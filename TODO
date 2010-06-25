@@ -9,23 +9,24 @@
 ======================================
 
 
-- Documentation
-  - Make video tutorial
+- Video tutorial
 
 - Refactoring
-  - Better variables handling
 
 - Windows porting
   Bug fix:
+    - Investigate to see if exists a workaround to avoid 
+      or minimize the balck borders around the annotation lines
     - Add Language support for windows
-    - fix the highlighter (the windows gtk does not support the RGBA colormap)
+    - fix the highlighter 
+      (the windows gtk does not support the RGBA colormap)
   Issue:
     - default name in the save and record wizard
     - implement the recordmydesktop_screencast.bat
       - recording (may be done using camit and ffmpeg2theora)
       - forward the stream to icecast (using ezstream) 
 
-- MacOsX quartz/porting
+- MacOsX-quartz porting
 
 - Possible future features
   - Multi pointer support using the xinput2 libraries
