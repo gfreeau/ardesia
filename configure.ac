@@ -15,7 +15,7 @@ AC_HEADER_STDC
 
 
 dnl ***************************************************************************
-dnl Internatinalization
+dnl Internationalization
 dnl ***************************************************************************
 GETTEXT_PACKAGE=ardesia
 AC_SUBST(GETTEXT_PACKAGE)
@@ -24,23 +24,11 @@ AM_GLIB_GNU_GETTEXT
 IT_PROG_INTLTOOL([0.35.0])
 
 
-# libraries are dynamic by default. User can override by passing 
-# the flag --enable-static
+dnl Libraries are dynamic by default.
+dnl User can override by passing the flag --enable-static
 AC_DISABLE_STATIC
 
 AM_PROG_LIBTOOL
-AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
-
-##see if there is the static linking option ##
-AM_CONDITIONAL(ENABLE_STATIC, test "$enable_static" = "yes")
-	
-
-pkg_modules="	gtk+-2.0 >= 2.12 
-		cairo
-                gsl"
-
-
-PKG_CHECK_MODULES(ARDESIA, [$pkg_modules])
 
 case "$host" in
   *-*-mingw*|*-*-cygwin*)
@@ -51,10 +39,25 @@ case "$host" in
     ;;
 esac
 
+AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
+AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = yes)
+
+dnl See if there is the static linking option
+AM_CONDITIONAL(ENABLE_STATIC, test "$enable_static" = "yes")
+	
+
+dnl Check modules
+pkg_modules="	gtk+-2.0 >= 2.12 
+		cairo
+                gsl"
+
+PKG_CHECK_MODULES(ARDESIA, [$pkg_modules])
+
+
+dnl Check gconf only for not windows platform
 if test "$platform_win32" = no; then
   PKG_CHECK_MODULES(GCONF, [gconf-2.0 >= 2.0.0])
 fi
-
 
 
 AC_OUTPUT([

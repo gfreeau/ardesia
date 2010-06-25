@@ -55,13 +55,21 @@ ardesia_SOURCES = \
 	ardesia.c \
         ardesia.h
 
+
+ardesia_LDFLAGS = -Wl
+
 if ENABLE_STATIC
-ardesia_LDFLAGS = -Wl, -all-static
+ardesia_LDFLAGS += -all-static
 else
 if WITH_GNU_LD
-ardesia_LDFLAGS = -Wl,--export-dynamic
+ardesia_LDFLAGS += --export-dynamic
 endif
 endif
+
+if PLATFORM_WIN32
+ardesia_LDFLAGS += -mwindows
+endif
+
 
 ardesia_LDADD = $(ARDESIA_LIBS) $(GCONF_LIBS)
 

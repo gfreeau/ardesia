@@ -20,10 +20,10 @@
 
 - Windows porting
   Bug fix:
+    - solve lost focus after hide button pushing
     - fix the cursor icon to change respect the ardesia bar options 
     - fix the highlighter (the windows gtk does not support the RGBA colormap)
   Issue:
-    - avoid opening a console window
     - default name in the save and record wizard
     - implement the recordmydesktop_screencast.bat
       - recording (may be done using camit and ffmpeg2theora)
