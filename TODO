@@ -18,8 +18,7 @@
     - Investigate to see if exists a workaround to avoid 
       or minimize the balck borders around the annotation lines
     - Add Language support for windows
-    - fix the highlighter 
-      (the windows gtk does not support the RGBA colormap)
+    - fix the highlighter (using the right colormap) 
   Issue:
     - default name in the save and record wizard
     - implement the recordmydesktop_screencast.bat
