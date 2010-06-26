@@ -14,11 +14,11 @@
 - Refactoring
 
 - Windows porting
+  Feature:
+    - support of ARGB32 colormap on cairo window surface;
+      this will fix the highlighter  
   Bug fix:
-    - Investigate to see if exists a workaround to avoid 
-      or minimize the balck borders around the annotation lines
     - Add Language support for windows
-    - fix the highlighter (using the right colormap) 
   Issue:
     - default name in the save and record wizard
     - implement the recordmydesktop_screencast.bat
