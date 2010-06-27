@@ -46,7 +46,7 @@ If you are using ubuntu lucid you can simply run this command:
 
 You can compile the tool in the standard way:
 
-  # ./configure
+  # ./autogen.sh
   # make
   # sudo make install
 
