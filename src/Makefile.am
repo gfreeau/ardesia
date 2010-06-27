@@ -61,11 +61,14 @@ ardesia_LDFLAGS =
 if ENABLE_STATIC
 ardesia_LDFLAGS += -all-static -Wl,-static
 else
+if !PLATFORM_WIN32
 if WITH_GNU_LD
 ardesia_LDFLAGS += -Wl,--export-dynamic
 endif
 endif
+endif
 
+#This create a windows executable instead an msdos ones
 if PLATFORM_WIN32
 ardesia_LDFLAGS += -mwindows
 endif
