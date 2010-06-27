@@ -45,6 +45,7 @@
 				   GDK_BUTTON_RELEASE_MASK      \
 				 )
 
+
 typedef struct
 {
   int x;
@@ -64,5 +65,8 @@ typedef struct
 /* Start text widget */
 void start_text_widget(GtkWindow *parent, char* color, int tickness);
 
+
 /* Stop text widget */
 void stop_text_widget();
+
+

@@ -52,3 +52,5 @@ void quit_recorder();
 
 /* Return if the recording is active */
 gboolean is_recording();
+
+

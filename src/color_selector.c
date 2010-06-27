@@ -99,3 +99,5 @@ gchar* start_color_selector_dialog(GtkToolButton *toolbutton, GtkWindow *parent,
     }
   return ret_color;
 }
+
+

@@ -21,6 +21,7 @@
  *
  */
 
+
 #include <bezier_spline.h>
 #include <annotate.h>
 
@@ -107,7 +108,7 @@ void spline (cairo_t *cr, GSList *list)
   // solve for bx
   x  = gsl_vector_calloc(2*(N-1));
   gsl_linalg_LU_solve( m, perm, bx, x ); 
-  // copy solution (FIXME: should be avoided!)
+  // copy solution (@FIXME: should be avoided!)
   for ( i = 0; i < N-1; i++ )
     {
       P[i][0] = gsl_vector_get(x, i);
@@ -118,7 +119,7 @@ void spline (cairo_t *cr, GSList *list)
   // solve for by
   x  = gsl_vector_calloc(2*(N-1));
   gsl_linalg_LU_solve( m, perm, by, x ); 
-  // copy solution (FIXME: should be avoided!)
+  // copy solution (@FIXME: should be avoided!)
   for ( i = 0; i < N-1; i++ )
     {
       P[i][1] = gsl_vector_get(x, i);

@@ -23,6 +23,7 @@
 
 /* Widget for text insertion */
 
+
 #ifdef HAVE_CONFIG_H
   #include <config.h>
 #endif
@@ -378,4 +379,5 @@ void stop_text_widget()
       pos = NULL;
     }
 }
+
 

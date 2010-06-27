@@ -359,6 +359,7 @@ GSList*  extract_outbounded_rectangle(GSList* listIn)
 }
 
 
+/* Set x-axis of the point */
 void putx(gpointer current, gpointer value)
 {
   AnnotateStrokeCoordinate* currentpoint = ( AnnotateStrokeCoordinate* ) current;
@@ -367,6 +368,7 @@ void putx(gpointer current, gpointer value)
 }
 
 
+/* Set y-axis of the point */
 void puty(gpointer current, gpointer value)
 {
   AnnotateStrokeCoordinate* currentpoint = ( AnnotateStrokeCoordinate* ) current;
@@ -375,6 +377,7 @@ void puty(gpointer current, gpointer value)
 }
 
 
+/* Return the degree of the rect beetween two point respect the axis */
 gfloat calculate_edge_degree(AnnotateStrokeCoordinate* pointA, AnnotateStrokeCoordinate* pointB)
 {
   int deltax = abs(pointA->x-pointB->x);
@@ -384,6 +387,7 @@ gfloat calculate_edge_degree(AnnotateStrokeCoordinate* pointA, AnnotateStrokeCoo
 }
 
 
+/* Straight the line */
 GSList* straighten(GSList* list)
 {  
   GSList* listOut = NULL;
@@ -472,7 +476,7 @@ GSList* straighten(GSList* list)
 }
 
                    
-/* Take a list of point and return magically the new path */
+/* Take a list of point and return magically the new recognized path */
 GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, int pixel_tollerance)
 {
   if (!listInp)
@@ -541,3 +545,5 @@ GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, int pixel
     }
   return listOut;
 }
+
+

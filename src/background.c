@@ -66,15 +66,18 @@ void destroy_background_window()
    {
       g_object_unref(background_data->background_shape);
    }
+
   if (background_data->background_window != NULL)
    { 
       /* destroy brutally the background window */
       gtk_widget_destroy(background_data->background_window);
    }
+
   if (background_data->back_cr)
     {
       cairo_destroy(background_data->back_cr);
     }
+
   g_free(background_data->background_color);
   g_free(background_data);
 }
@@ -99,6 +102,7 @@ void clear_background_window()
   #else
     gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0);
   #endif
+
   clear_cairo_context(background_data->back_cr);
   
   gint height;
@@ -148,6 +152,7 @@ back_event_expose (GtkWidget *widget,
     {
        clear_background_window();    
     }
+
   return TRUE;
 }
 
@@ -185,8 +190,9 @@ void load_color()
       cairo_set_source_rgb(background_data->back_cr, (double) r/256, (double) g/256, (double) b/256);
       cairo_paint(background_data->back_cr);
       cairo_stroke(background_data->back_cr);
+      
       #ifndef _WIN32
-         /* This deny the mouse event to be passed to the window below */
+         /* @HACK This deny the mouse event to be passed to the window below */
         gdk_window_input_shape_combine_mask (background_data->background_window->window,  
                                              NULL, 
                                              0, 0);
@@ -266,4 +272,5 @@ GtkWidget* create_background_window(char* backgroundimage)
 
   return  background_data->background_window;
 }
+
 

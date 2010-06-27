@@ -21,6 +21,7 @@
  *
  */
 
+
 #ifdef HAVE_CONFIG_H
   #include <config.h>
 #endif
@@ -149,3 +150,5 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gch
   g_free(filename);
   g_object_unref (buf);
 }
+
+

@@ -21,6 +21,7 @@
  *
  */
 
+
 #include <glib.h>
 
 #include <getopt.h>
@@ -94,6 +95,5 @@ typedef struct
    char* workspace_dir;
    
 }BarData;
- 
- 
+
  

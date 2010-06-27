@@ -88,18 +88,22 @@ void calculate_initial_position(GtkWidget *ardesia_bar_window,
 {
   gint dwidth = gdk_screen_width();
   gint dheight = gdk_screen_height();
+
   /* resize if larger that screen width */
   if (wwidth>dwidth)
     {
        wwidth = dwidth;
        gtk_window_resize(GTK_WINDOW(ardesia_bar_window), wwidth, wheight);       
     }
+
   /* resize if larger that screen height */
   if (wheight>dheight)
     {
-       wheight = dheight - 15;
+       int tollerance = 15;
+       wheight = dheight - tollerance;
        gtk_widget_set_usize(ardesia_bar_window, wwidth, wheight);       
     }
+
   calculate_position(ardesia_bar_window, dwidth, dheight, x, y, wwidth, wheight, position);
 }
 
@@ -128,6 +132,7 @@ void print_help()
 }
 
 
+/* This call the dialog that inform the user to enable compiz */
 void run_missing_composite_manager_dialog()
 {
    GtkWidget *msg_dialog; 
@@ -146,6 +151,7 @@ void run_missing_composite_manager_dialog()
 }
 
 
+/* Check if a composite manager is active */
 void check_composite_manager(GdkScreen* screen)
 {
   gboolean composite = gdk_screen_is_composited (screen);
@@ -157,19 +163,22 @@ void check_composite_manager(GdkScreen* screen)
 }
 
 
-/* check if a composite manager is active */
+/* Set the best colormap available on the system */
 void set_the_best_colormap()
 {
-    
     GdkDisplay *display = gdk_display_get_default ();
     GdkScreen   *screen = gdk_display_get_default_screen (display);
+
+    /* In FreeBSD operating system you might have a composite manager */
     #ifdef __FreeBSD__
        check_composite_manager(screen);
     #endif
+
     /* In linux operating system you must have a composite manager */
     #ifdef linux
        check_composite_manager(screen);
     #endif
+
     GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
     if (colormap)
       {
@@ -178,6 +187,7 @@ void set_the_best_colormap()
 }
 
 
+/* Parse the command line in the standar getopt way */
 CommandLine* parse_options(int argc, char *argv[])
 {
   CommandLine* commandline = g_malloc(sizeof(CommandLine)); 
@@ -257,6 +267,7 @@ CommandLine* parse_options(int argc, char *argv[])
 }
 
 
+/* Allocate and initializate the bar data structure */
 BarData* init_bar_data()
 {
   BarData *bar_data = (BarData *) g_malloc(sizeof(BarData));
@@ -277,6 +288,7 @@ BarData* init_bar_data()
 }
 
 
+/* Create the ardesia bar window */
 GtkWidget*
 create_bar_window (GtkWidget *parent)
 {
@@ -290,6 +302,7 @@ create_bar_window (GtkWidget *parent)
       file = UI_HOR_FILE;
     }
 
+  /* load the gtkbuilder file with the definition of the ardesia bar gui */
   if (!gtk_builder_add_from_file (gtkBuilder, file, &error))
     {
       g_warning ("Couldn't load builder file: %s", error->message);
@@ -311,6 +324,7 @@ create_bar_window (GtkWidget *parent)
 }
 
 
+/* This is the starting point */
 int
 main (int argc, char *argv[])
 {
@@ -355,7 +369,7 @@ main (int argc, char *argv[])
      /* 
      *  - on linux let visible the window even if you go in unlock mode
      *    it works as always on the top directive
-     *  - on widows this broke the zeta order and then I avoid this
+     *  - on widows this break the zeta order and then I avoid this
      *  - on MACOSX must be checked the behaviour: I am optimistic
      */
     gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
@@ -369,7 +383,7 @@ main (int argc, char *argv[])
      /* 
      *  - on linux let visible the window even if you go in unlock mode
      *    it works as always on the top directive
-     *  - on widows this broke the zeta order and then I avoid this
+     *  - on widows this break the zeta order and then I avoid this
      *  - on MACOSX must be checked the behaviour: I am optimistic
      */
     gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
@@ -395,3 +409,5 @@ main (int argc, char *argv[])
   g_object_unref(gtkBuilder);	
   return 0;
 }
+
+

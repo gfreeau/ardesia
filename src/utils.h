@@ -22,7 +22,6 @@
  */
 
 
-
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
@@ -49,7 +48,9 @@
   #endif
 #endif
 
+
 #include <config.h>
+
 
 /*
  * Standard gettext macros.
@@ -86,6 +87,7 @@ extern GtkBuilder *gtkBuilder;
 		
 #define PROGRAM_NAME "Ardesia"
 
+/* Color definition in RGB */
 #define BLACK "000000"
 #define WHITE "FFFFFF"
 #define RED   "FF0000"

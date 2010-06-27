@@ -31,6 +31,7 @@
 
 #include <cairo.h>
 
+
 #ifdef _WIN32
   #include <cairo-win32.h>
   #include <gdkwin32.h>
@@ -264,9 +265,5 @@ void add_save_point();
 
 /* Select eraser, pen or other tool for tablet */
 void annotate_select_tool (GdkDevice *device, guint state);
-
-
-
-
 
 

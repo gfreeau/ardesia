@@ -31,3 +31,5 @@
  * it return the selected color
  */
 gchar* start_color_selector_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar* color);
+
+

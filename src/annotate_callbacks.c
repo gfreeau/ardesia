@@ -41,30 +41,34 @@ event_expose (GtkWidget *widget,
     {
       return TRUE;
     }
+
   int is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
   if (!is_fullscreen)
     {
       return TRUE;
     }
+
   if (data->debug)
     {
       g_printerr("Expose event\n");
     }
+
   if (!(data->annotation_cairo_context))
     {
       /* initialize a transparent window */	 
-    
-	  #ifdef _WIN32
-	    HDC hdc = GetDC (GDK_WINDOW_HWND (data->annotation_window->window));
+      #ifdef _WIN32
+        HDC hdc = GetDC (GDK_WINDOW_HWND (data->annotation_window->window));
         /* This creare a surface with RGB24 colormap */
-		cairo_surface_t* surface = cairo_win32_surface_create(hdc);
-		/* @TODO Try to hack the code to create a ARGB32 colormap tou support the alpha channel and fix the highlighter feature */
-	    //cairo_surface_t* surface = cairo_win32_surface_create_with_ddb(hdc, CAIRO_FORMAT_ARGB32, data->width, data->height);
-	     data->annotation_cairo_context = cairo_create(surface); 
-	  #else
-	     data->annotation_cairo_context = gdk_cairo_create(data->annotation_window->window);  
-	  #endif
-	 
+	cairo_surface_t* surface = cairo_win32_surface_create(hdc);
+	/* 
+         * @TODO Try to hack the cairo_win32_surface_create code to create a ARGB32 colormap to support the alpha channel
+         *  in this way will fix the highlighter feature 
+         */
+	//cairo_surface_t* surface = cairo_win32_surface_create_with_ddb(hdc, CAIRO_FORMAT_ARGB32, data->width, data->height);
+	data->annotation_cairo_context = cairo_create(surface); 
+      #else
+	data->annotation_cairo_context = gdk_cairo_create(data->annotation_window->window);  
+      #endif 
       if (cairo_status(data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
         {
           g_printerr ("Unable to allocate the annotation cairo context"); 

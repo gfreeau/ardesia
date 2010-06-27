@@ -46,3 +46,5 @@
 
 /* Spline the lines */
 void spline (cairo_t *cr, GSList *list);
+
+

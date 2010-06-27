@@ -44,3 +44,5 @@
  * containing the screenshot
  */
 void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar** workspace_dir);
+
+

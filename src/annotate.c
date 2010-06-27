@@ -239,12 +239,12 @@ void select_color()
               cairo_set_source_color_from_string(data->annotation_cairo_context, data->cur_context->fg_color);
             }
           else
-            {
+            { 
               if (data->debug)
-	            { 
-	               g_printerr("Called select color but this is not allocated\n");
-                       g_printerr("I put the red one to recover to the problem\n");
-	            }
+	        { 
+	          g_printerr("Called select color but this is not allocated\n");
+                  g_printerr("I put the red one to recover to the problem\n");
+	        }
               cairo_set_source_color_from_string(data->annotation_cairo_context, "FF0000FF");
             }
         }
@@ -282,9 +282,11 @@ void add_save_point()
     {
       annotate_save->surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, data->width, data->height); 
     }
+
   cairo_surface_t* saved_surface = annotate_save->surface;
   cairo_surface_t* source_surface = cairo_get_target(data->annotation_cairo_context);
   cairo_t *cr = cairo_create (saved_surface);
+
   if (cairo_status(cr) != CAIRO_STATUS_SUCCESS)
     {
        if (data->debug)
@@ -294,9 +296,11 @@ void add_save_point()
            exit(1);
          }
     }
+
   cairo_set_source_surface (cr, source_surface, 0, 0);
   cairo_paint(cr);
   cairo_destroy(cr);
+
   if (data->debug)
     { 
       g_printerr("Add save point\n");
@@ -337,7 +341,7 @@ void merge_context(cairo_t * cr)
   cairo_surface_t* source_surface = cairo_get_target(cr);
   #ifndef _WIN32
      /*
-      * The over operato might put the new layer on the top of the old one 
+      * The over operator might put the new layer on the top of the old one 
       * overriding the intersections
       * Seems that this operator does not work on windows
       * in this operating system only the new layer remain after the merge
@@ -349,7 +353,7 @@ void merge_context(cairo_t * cr)
       * on the top of the old one but it does not preserve the color of
       * the second layer but modify it respecting the firts layer
       * Seems that the CAIRO_OPERATOR_OVER does not work because in the
-      * gtk cairo implementation the RGBA colormap is not supported
+      * gtk cairo implementation the ARGB32 format is not supported
       */
      cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_ADD);
   #endif
@@ -398,18 +402,20 @@ void annotate_select_pen()
 
 
 #ifdef _WIN32
-/* Acquire the grab pointer */
-void annotate_acquire_pointer_grab()
-{
-   grab_pointer(data->annotation_window, ANNOTATE_MOUSE_EVENTS);
-}
+  
+  /* Acquire the grab pointer */
+  void annotate_acquire_pointer_grab()
+    {
+      grab_pointer(data->annotation_window, ANNOTATE_MOUSE_EVENTS);
+    }
 
 
-/* Release the grab pointer */
-void annotate_release_pointer_grab()
-{
-   ungrab_pointer(data->display, data->annotation_window);
-}
+  /* Release the grab pointer */
+  void annotate_release_pointer_grab()
+    {
+      ungrab_pointer(data->display, data->annotation_window);
+    }
+
 #endif
 
 
@@ -419,8 +425,10 @@ void update_cursor()
   #ifdef _WIN32
     annotate_release_pointer_grab();
   #endif
+
   gdk_window_set_cursor (data->annotation_window->window, data->cursor);
   gdk_display_sync(data->display);
+
   #ifdef _WIN32
     annotate_acquire_pointer_grab();
   #endif
@@ -508,12 +516,15 @@ void hide_cursor()
 {
   #ifdef _WIN32
     annotate_release_pointer_grab();
-  #endif 
+  #endif
+ 
   gdk_window_set_cursor(data->annotation_window->window, data->invisible_cursor);
   gdk_display_sync(data->display);
+
   #ifdef _WIN32
     annotate_acquire_pointer_grab();
-  #endif 
+  #endif
+ 
   data->is_cursor_hidden = TRUE;
 }
 
@@ -548,6 +559,7 @@ void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
        exit(1);
     }
 
+  /* Draw the pen cursor by code */
   clear_cairo_context(pen_shape_cr);
   cairo_set_operator(pen_shape_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(pen_shape_cr, circle_width);
@@ -568,11 +580,13 @@ void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 void annotate_set_pen_cursor()
 {
   gint size=12;
+
   if (data->cursor)
     {
       gdk_cursor_unref(data->cursor);
       data->cursor=NULL;
     }
+
   GdkPixmap *pixmap, *mask;
   get_pen_pixmaps(size, &pixmap, &mask); 
   GdkColor *background_color_p = rgb_to_gdkcolor(BLACK);
@@ -590,22 +604,21 @@ void annotate_set_pen_cursor()
                                              foreground_color_p, 
                                              background_color_p,
                                              size/2 + thickness/2, 5* size/2);
-
   
   g_object_unref (pixmap);
   g_object_unref (mask);
   g_free(foreground_color_p);
-  g_free(background_color_p);
- 
+  g_free(background_color_p); 
 }
 
 
 /* Create pixmap and mask for the eraser cursor */
 void get_eraser_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
+  int circle_width = 2; 
   *pixmap = gdk_pixmap_new (NULL, size, size, 1);
   *mask =  gdk_pixmap_new (NULL, size, size, 1);
-  int circle_width = 2; 
+ 
   cairo_t *eraser_cr = gdk_cairo_create(*pixmap);
   if (cairo_status(eraser_cr) != CAIRO_STATUS_SUCCESS)
     {
@@ -627,6 +640,7 @@ void get_eraser_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
        exit(1);
     }
 
+  /* paint the eraser circle by code */
   clear_cairo_context(eraser_shape_cr);
   cairo_set_operator(eraser_shape_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(eraser_shape_cr, circle_width);
@@ -672,6 +686,7 @@ void annotate_acquire_input_grab()
     annotate_acquire_pointer_grab();
   #endif
  
+  /* the fos is mine */
   gtk_widget_grab_focus(data->annotation_window);
  
   #ifndef _WIN32
@@ -707,16 +722,18 @@ void annotate_acquire_grab ()
 void destroy_cairo()
 {
   int refcount = cairo_get_reference_count(data->annotation_cairo_context);
+  
   int i = 0;
   for  (i=0; i<refcount; i++)
     {
       cairo_destroy(data->annotation_cairo_context);
     }
+
   data->annotation_cairo_context = NULL;
 }
 
 
-/* Select eraser, pen or other tool for tablet */
+/* Select eraser, pen or other tool for tablet; code inherited by gromit */
 void annotate_select_tool (GdkDevice *device, guint state)
 {
   guint buttons = 0, modifier = 0, len = 0;
@@ -850,10 +867,12 @@ void annotate_draw_arrow (int distance)
   cairo_stroke(data->annotation_cairo_context); 
   cairo_save(data->annotation_cairo_context);
 
+  /* init cairo properties */
   cairo_set_line_join(data->annotation_cairo_context, CAIRO_LINE_JOIN_MITER); 
   cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(data->annotation_cairo_context, penwidth);
 
+  /* draw the arrow */
   cairo_move_to(data->annotation_cairo_context, arrowhead2x, arrowhead2y); 
   cairo_line_to(data->annotation_cairo_context, arrowhead1x, arrowhead1y);
   cairo_line_to(data->annotation_cairo_context, arrowhead0x, arrowhead0y);
@@ -878,7 +897,10 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
     {
       g_printerr("Draw ellipse\n");
     }
+
   cairo_save(data->annotation_cairo_context);
+
+  /* the ellipse is done as a 360 degree arc translated */
   cairo_translate (data->annotation_cairo_context, x + width / 2., y + height / 2.);
   cairo_scale (data->annotation_cairo_context, width / 2., height / 2.);
   cairo_arc (data->annotation_cairo_context, 0., 0., 1., 0., 2 * M_PI);
@@ -909,7 +931,7 @@ void annotate_draw_point_list(GSList* outptr)
 	  out_point = (AnnotateStrokeCoordinate*)outptr->data;
 	  gint curx = out_point->x; 
 	  gint cury = out_point->y;
-	  // draw line
+	  // draw line beetween the two points
 	  annotate_draw_line (curx, cury, FALSE);
 	  lastx = curx;
 	  lasty = cury;
@@ -919,7 +941,7 @@ void annotate_draw_point_list(GSList* outptr)
 }
 
 
-/* Rectify the line or the shape*/
+/* Rectify the line or the shape */
 void rectify(gboolean closed_path)
 {
   int tollerance = data->thickness;
@@ -1104,16 +1126,19 @@ void annotate_quit()
   /* disconnect all the signals */
   annotate_disconnect_signals();
 
-/* connect the signals */
+  /* connect the signals */
   annotate_connect_signals();
+  
   if (data->shape_cr)
     {  
       cairo_destroy(data->shape_cr);
     }
+
   if (data->shape)
     {  
       g_object_unref(data->shape);
     }
+
   if (data->transparent_cr)
     {
       cairo_destroy(data->transparent_cr);
@@ -1161,7 +1186,6 @@ void annotate_quit()
 /* Start to erase */
 void annotate_eraser_grab ()
 {
-  /* Get the with message */
   annotate_select_eraser();
   annotate_acquire_grab();
   update_cursor();
@@ -1379,28 +1403,29 @@ void setup_app (GtkWidget* parent)
 int annotate_init (GtkWidget* parent, gboolean debug)
 {
   data = g_malloc (sizeof(AnnotateData));
-  
+ 
+  /* init the data structure */ 
   data->annotation_cairo_context = NULL;
   data->coordlist = NULL;
   data->savelist = NULL;
   data->transparent_pixmap = NULL;
   data->transparent_cr = NULL;
-  
   data->cursor = NULL;
-  allocate_invisible_cursor();
- 
-  data->debug = debug;
-  
-  data->is_cursor_hidden = TRUE;
+
   data->is_grabbed = FALSE;
   data->arrow = FALSE; 
   data->rectify = FALSE;
   data->roundify = FALSE;
   data->are_annotations_hidden = FALSE; 
- 
+
+  data->is_cursor_hidden = TRUE;
+
+  data->debug = debug;
+
+  allocate_invisible_cursor();
+  
   data->display = gdk_display_get_default();
   data->screen = gdk_display_get_default_screen(data->display);
-
   data->width = gdk_screen_get_width(data->screen);
   data->height = gdk_screen_get_height (data->screen);
   
@@ -1408,3 +1433,5 @@ int annotate_init (GtkWidget* parent, gboolean debug)
 
   return 0;
 }
+
+

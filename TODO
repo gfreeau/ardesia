@@ -14,16 +14,13 @@
 - Refactoring
 
 - Windows porting
-  Feature:
-    - support of ARGB32 colormap on cairo window surface;
-      this will fix the highlighter  
   Bug fix:
+    - The code has no highlighter support because the 
+      ARGB32 support in cairo is not yet available 
+  Missing Issue:
     - Add Language support for windows
-  Issue:
-    - default name in the save and record wizard
-    - implement the recordmydesktop_screencast.bat
-      - recording (may be done using camit and ffmpeg2theora)
-      - forward the stream to icecast (using ezstream) 
+    - recording (may be done using camit and ffmpeg2theora)
+    - forward the stream to icecast (using ezstream) 
 
 - MacOsX-quartz porting
 

@@ -21,6 +21,7 @@
  *
  */
 
+
 #ifdef HAVE_CONFIG_H
   #include <config.h>
 #endif
@@ -178,6 +179,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
 
   gtk_file_chooser_set_current_folder(chooser, BACKGROUNDS_FOLDER);
  
+  /* Put the file filter for the supported formats */
   GtkFileFilter *filter = gtk_file_filter_new ();
   gtk_file_filter_set_name (filter, "PNG and JPEG");
   gtk_file_filter_add_mime_type (filter, "image/jpeg");

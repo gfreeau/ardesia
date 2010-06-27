@@ -21,6 +21,7 @@
  *
  */
 
+
 #include <windows_utils.h>
 
 #ifdef _WIN32
@@ -113,7 +114,7 @@ gboolean colors_too_similar(const GdkColor *colora, const GdkColor *colorb)
 /* 
  * gdk_cursor_new_from_pixmap is broken on Windows.
  * this is a workaround using gdk_cursor_new_from_pixbuf. 
- *  Thanks to Dirk Gerrits for this contribution 
+ * Thanks to Dirk Gerrits for this contribution 
  */
 GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 					    const GdkColor *fg, const GdkColor *bg,
@@ -174,4 +175,5 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
   return cursor;
 }
 #endif
+
 

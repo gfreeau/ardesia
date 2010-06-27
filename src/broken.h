@@ -33,7 +33,10 @@
 
   /* Straight the line */
   GSList* straighten(GSList* list);
-        
+
+  /* Take a list of point and return magically the new recognized path */        
   GSList*    broken( GSList* inp, gboolean close_path, gboolean rectify, int pixel_tollerance);
 
 #endif
+
+

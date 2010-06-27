@@ -24,6 +24,7 @@
 
 #include <gtk/gtk.h>
 
+
 #ifdef _WIN32
   #define PREFERENCE_UI_FILE "..\\share\\ardesia\\ui\\preference_dialog.glade"
   #define BACKGROUNDS_FOLDER "..\\share\\ardesia\\ui\\backgrounds"
@@ -45,8 +46,11 @@ typedef struct
   GtkWidget*   preview;
 }PreferenceData;
 
+
 /*
  * Start the dialog that ask to the user
  * the background setting
  */
 void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent);
+
+

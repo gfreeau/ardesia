@@ -59,3 +59,5 @@ GtkWidget* get_background_window();
 
 /* Set the background window */
 void set_background_window(GtkWidget* widget);
+
+

@@ -21,6 +21,7 @@
  *
  */
 
+
 #ifdef HAVE_CONFIG_H
   #include <config.h>
 #endif
@@ -242,3 +243,5 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
   g_free(date);
   return status;
 } 
+
+

@@ -21,9 +21,11 @@
  *
  */
 
+
 #ifdef HAVE_CONFIG_H
   #include <config.h>
 #endif
+
 
 #include <bar_callbacks.h>
 #include <utils.h>
@@ -37,13 +39,16 @@
 #include <recorder.h>
 #include <saver.h>
 
+
 static int thick_step = 7;
+
 
 /* Called when close the program */
 gboolean  quit(BarData *bar_data)
 {
   annotate_quit();
   quit_recorder();
+
   /* Disallocate all the BarData */
   if (bar_data)
     {
@@ -54,10 +59,12 @@ gboolean  quit(BarData *bar_data)
       }
       g_free(bar_data);
     }
+
   if (gtkBuilder)
     {
       g_object_unref (gtkBuilder); 
     }
+
   gtk_main_quit();
   exit(0);
 }
@@ -402,7 +409,7 @@ on_toolsVisible_activate         (GtkToolButton   *toolbutton,
   if (bar_data->annotation_is_visible)
     {
       annotate_hide_annotation();
-      bar_data->annotation_is_visible=FALSE;
+      bar_data->annotation_is_visible = FALSE;
       /* put icon to unhide */
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"unhide")));
       /* set tooltip to unhide */
@@ -411,7 +418,7 @@ on_toolsVisible_activate         (GtkToolButton   *toolbutton,
   else
     {
       annotate_show_annotation();
-      bar_data->annotation_is_visible=TRUE;
+      bar_data->annotation_is_visible = TRUE;
       /* put icon to hide */
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"hide")));
       /* set tooltip to hide */

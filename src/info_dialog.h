@@ -37,3 +37,5 @@
  * to the user the program'info
  */
 void start_info_dialog(GtkToolButton   *toolbutton, GtkWindow *parent);
+
+
