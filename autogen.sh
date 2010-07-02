@@ -48,8 +48,16 @@ fi
   }
 }
 
+# On MAC OS X, GNU libtool is named 'glibtool':
+if [ `(uname -s) 2>/dev/null` == 'Darwin' ]
+then
+  LIBTOOL_BIN="glibtool"
+else
+  LIBTOOL_BIN="libtool"
+fi
+
 (grep "^AM_PROG_LIBTOOL" $srcdir/configure.ac >/dev/null) && {
-  (libtool --version) < /dev/null > /dev/null 2>&1 || {
+  ("$LIBTOOL_BIN" --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`libtool' installed."
     echo "You can get it from: ftp://ftp.gnu.org/pub/gnu/"
@@ -131,7 +139,7 @@ do
       if grep "^AM_PROG_LIBTOOL" configure.ac >/dev/null; then
 	if test -z "$NO_LIBTOOLIZE" ; then 
 	  echo "Running libtoolize..."
-	  libtoolize --force --copy
+	  "$LIBTOOL_BIN"ize --force --copy
 	fi
       fi
       echo "Running aclocal $aclocalinclude ..."

@@ -29,63 +29,6 @@
 BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF crKey,
 	BYTE bAlpha, DWORD dwFlags) = NULL;
 	
-	
-/* Grab pointer */
-void grab_pointer(GtkWidget *win, GdkEventMask eventmask)
-{
-  GdkGrabStatus result;
-  gdk_error_trap_push(); 
-  //gtk_widget_input_shape_combine_mask(win, NULL, 0, 0);   
-  result = gdk_pointer_grab (win->window, FALSE,
-			     eventmask, 0,
-			     NULL,
-			     GDK_CURRENT_TIME); 
-
-  gdk_flush ();
-  if (gdk_error_trap_pop ())
-    {
-      g_printerr("Grab pointer error\n");
-    }
-   
-  switch (result)
-    {
-    case GDK_GRAB_SUCCESS:
-      break;
-    case GDK_GRAB_ALREADY_GRABBED:
-      g_printerr ("Grab Pointer failed: AlreadyGrabbed\n");
-      break;
-    case GDK_GRAB_INVALID_TIME:
-      g_printerr ("Grab Pointer failed: GrabInvalidTime\n");
-      break;
-    case GDK_GRAB_NOT_VIEWABLE:
-      g_printerr ("Grab Pointer failed: GrabNotViewable\n");
-      break;
-    case GDK_GRAB_FROZEN:
-      g_printerr ("Grab Pointer failed: GrabFrozen\n");
-      break;
-    default:
-      g_printerr ("Grab Pointer failed: Unknown error\n");
-    }       
-
-}
-
-
-/* Ungrab pointer */
-void ungrab_pointer(GdkDisplay* display, GtkWidget* win)
-{
-  gdk_error_trap_push ();
-  gdk_display_pointer_ungrab (display, GDK_CURRENT_TIME);
-  /* inherit cursor from root window */
-  //gdk_window_set_cursor (win->window, NULL);
-  gdk_flush ();
-  if (gdk_error_trap_pop ())
-    {
-      /* this probably means the device table is outdated, 
-	 e.g. this device doesn't exist anymore */
-      g_printerr("Ungrab pointer device error\n");
-    }
-}
-
 
 /* This is to access throught the user32 windows dll to the setLayeredWindowAttributes */
 void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF crKey, BYTE bAlpha, DWORD dwFlags)

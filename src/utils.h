@@ -95,6 +95,14 @@ extern GtkBuilder *gtkBuilder;
 #define GREEN "00FF00"
 #define BLUE "0000FF"
 
+
+/* Ungrab pointer */
+void ungrab_pointer(GdkDisplay* display, GtkWidget *win);
+
+
+/* Grab pointer */
+void grab_pointer(GtkWidget *win, GdkEventMask eventmask);
+  
 				
 /* get bar window widget */
 GtkWidget* get_bar_window();

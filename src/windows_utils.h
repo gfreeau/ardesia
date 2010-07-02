@@ -37,13 +37,6 @@
 
   /* Get the desktop dir of the current user */
   char* win_get_desktop_dir();  
-  
-  /* Ungrab pointer */
-  void ungrab_pointer(GdkDisplay* display, GtkWidget *win);
-
-
-  /* Grab pointer */
-  void grab_pointer(GtkWidget *win, GdkEventMask eventmask);
 
   
   /* Set layered window atrributes to a gdk window */
