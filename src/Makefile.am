@@ -11,9 +11,14 @@ ui_DATA = ardesia.glade \
 	preference_dialog.glade \
 	info_dialog.glade
 
-AM_CPPFLAGS = \
-	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
-	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
+
+if !PLATFORM_WIN32
+        AM_CPPFLAGS = -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" 
+else
+        AM_CPPFLAGS = -DPACKAGE_LOCALE_DIR=\""../$(DATADIRNAME)/locale"\" 
+endif
+
+AM_CPPFLAGS += -DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
 	$(ARDESIA_CFLAGS) $(GCONF_CFLAGS)
 

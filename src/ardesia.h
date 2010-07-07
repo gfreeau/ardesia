@@ -21,13 +21,22 @@
  *
  */
 
-
+#include <locale.h>
 #include <glib.h>
 
 #include <getopt.h>
 
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
+
+
+#ifdef _WIN32
+  #define UI_FILE "..\\share\\ardesia\\ui\\ardesia.glade"
+  #define UI_HOR_FILE "..\\share\\ardesia\\ui\\ardesia_horizontal.glade"
+#else
+  #define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.glade"
+  #define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia_horizontal.glade"
+#endif  
 
 
 #define EAST 1
@@ -39,15 +48,6 @@
 #define SPACE_FROM_BORDER 25
 
 #define COLORSIZE 9
-
-
-#ifdef _WIN32
-  #define UI_FILE "..\\share\\ardesia\\ui\\ardesia.glade"
-  #define UI_HOR_FILE "..\\share\\ardesia\\ui\\ardesia_horizontal.glade"
-#else
-  #define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.glade"
-  #define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia_horizontal.glade"
-#endif  
 
 
 typedef struct

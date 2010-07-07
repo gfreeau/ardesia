@@ -18,7 +18,6 @@
     - The code has no highlighter support because the 
       ARGB32 support in cairo is not yet available 
   Missing Issue:
-    - Add Language support for windows
     - recording (may be done using camit and ffmpeg2theora)
     - forward the stream to icecast (using ezstream) 
 

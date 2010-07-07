@@ -155,7 +155,7 @@ void cairo_set_source_color_from_string( cairo_t * cr, char* color)
    {
      int r,g,b,a;
      sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-     cairo_set_source_rgba (cr, (double) r/256, (double) g/256, (double) b/256, (double) a/256);
+     cairo_set_source_rgba (cr, (double) r/255, (double) g/255, (double) b/255, (double) a/255);
    }
 }
 
