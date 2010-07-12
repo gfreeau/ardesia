@@ -18,7 +18,9 @@
     - The code has no highlighter support because the 
       ARGB32 support in cairo is not yet available 
   Missing Issue:
-    - recording (may be done using camit and ffmpeg2theora)
+    - recording 
+      (might be done using camit and ffmpeg2theora or 
+       developing a theora screencaster )
     - forward the stream to icecast (using ezstream) 
 
 - MacOsX-quartz porting
