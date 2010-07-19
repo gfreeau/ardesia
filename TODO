@@ -29,7 +29,8 @@
   - Multi pointer support using the xinput2 libraries
   - Save page (raster background + svg annotation)
   - Pdf export
-
+  - commit the created artifact on a repository
+  - send an email with the created artifact
 
 ===
 EOF
