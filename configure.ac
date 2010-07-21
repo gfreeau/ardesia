@@ -4,6 +4,7 @@ dnl Created by Anjuta application wizard.
 AC_INIT(ardesia, 0.3)
 
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h])
 AM_MAINTAINER_MODE
 
