@@ -15,6 +15,7 @@
 
 - Windows porting
   Bug fix:
+    - Mouse cursor color is not synchronized
     - The code has no highlighter support because the 
       ARGB32 support in cairo is not yet available 
   Missing Issue:
