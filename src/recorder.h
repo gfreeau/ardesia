@@ -33,7 +33,7 @@
 
 
 #ifndef _WIN32
-  #define RECORDER_FILE PACKAGE_DATA_DIR"/ardesia/scripts/recordmydesktop_screencast.sh"
+  #define RECORDER_FILE PACKAGE_DATA_DIR"/ardesia/scripts/screencast.sh"
 #endif 
 
 

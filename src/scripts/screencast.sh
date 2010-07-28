@@ -1,3 +1,10 @@
+RECORDER_PROGRAM=recordmydesktop
+RECORDER_PROGRAM_OPTIONS="--quick-subsampling --on-the-fly-encoding --v_quality 1 --s_quality 1 --fps 10 --freq 22050 --buffer-size 16384 --device plughw:0,0 --overwrite -o $1"
+
+#RECORDER_PROGRAM=cvlc
+#RECORDER_PROGRAM_OPTIONS="screen:// --screen-fps=12 --sout "#transcode{venc=theora,quality:10,scale=0.75,fps=12}:duplicate{dst=std{access=file,mux=ogg,dst=$1}}}"" 
+
+
 # Uncomment this to use the live screencast on icecast
 # To start the live stream successfully you must configure
 # the configuration file ezstream_stdin_vorbis.xml
@@ -9,6 +16,8 @@
 ICECAST="FALSE";
 #ICECAST="TRUE";
 
+RECORDER_PID_FILE=/tmp/recorder.pid
+
 if [ "$2" = "start" ]
 then
   if [ "$ICECAST" = "TRUE" ]
@@ -16,11 +25,12 @@ then
     mkfifo $1
   fi
   #This start the recording on file
-  echo Start the screencast running recordmydesktop 
-  recordmydesktop --quick-subsampling --on-the-fly-encoding --v_quality 1 --s_quality 1 --fps 10 --freq 22050 --buffer-size 16384 --device plughw:0,0 --overwrite -o $1 &
+  echo Start the screencast running $RECORDER_PROGRAM
+  echo Whit arguments $RECORDER_PROGRAM_OPTIONS
+  $RECORDER_PROGRAM $RECORDER_PROGRAM_OPTIONS &
   echo Running $COMMAND
-  RECORDMYDESKTOP_PID=$!
-  echo $RECORDMYDESKTOP_PID >> /tmp/recordmydesktop.pid
+  RECORDER_PID=$!
+  echo $RECORDER_PID >> $RECORDER_PID_FILE
   if [ "$ICECAST" = "TRUE" ]
   then
     echo Sending the streaming to icecast server $LOCATION 
@@ -32,10 +42,10 @@ fi
 
 if [ "$1" = "stop" ]
 then
-  RECORDMYDESKTOP_PID=$(cat /tmp/recordmydesktop.pid)
-  echo Stop the screencast killing recordmydesktop 
-  kill -2 $RECORDMYDESKTOP_PID 
-  rm /tmp/recordmydesktop.pid
+  RECORDER_PID=$(cat $RECORDER_PID_FILE)
+  echo Stop the screencast killing $RECORDER_PROGRAM 
+  kill -2 $RECORDER_PID 
+  rm $RECORDER_PID_FILE
   if [ "$ICECAST" = "TRUE" ]
   then
     EZSTREAM_PID=$(cat  /tmp/ezstream.pid)
