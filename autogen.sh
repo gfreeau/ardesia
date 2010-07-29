@@ -49,12 +49,15 @@ fi
 }
 
 # On MAC OS X, GNU libtool is named 'glibtool':
-if [ `(uname -s) 2>/dev/null` == 'Darwin' ]
-then
+case `uname -s` in 
+'Darwin')
   LIBTOOL_BIN="glibtool"
-else
+  ;;
+*)
   LIBTOOL_BIN="libtool"
-fi
+  ;;
+esac
+  LIBTOOL_BIN="libtool"
 
 (grep "^AM_PROG_LIBTOOL" $srcdir/configure.ac >/dev/null) && {
   ("$LIBTOOL_BIN" --version) < /dev/null > /dev/null 2>&1 || {
