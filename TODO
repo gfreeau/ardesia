@@ -10,6 +10,7 @@
 
 
 - Video tutorial
+- Open IRC channel
 
 - Refactoring
 
@@ -19,19 +20,21 @@
     - The code has no highlighter support because the 
       ARGB32 support in cairo is not yet available 
   Missing Issue:
-    - recording 
-      (might be done using camit and ffmpeg2theora or 
-       developing a theora screencaster )
+    - recording (might be done with vlc)
     - forward the stream to icecast (using ezstream) 
 
 - MacOsX-quartz porting
 
 - Possible future features
+  - move, resize, select, fill
+  - commit the created artifact on a repository
+    - ftp
+    - google service 
+    - dropbox
+  - send an email with the created artifact
   - Multi pointer support using the xinput2 libraries
   - Save page (raster background + svg annotation)
   - Pdf export
-  - commit the created artifact on a repository
-  - send an email with the created artifact
 
 ===
 EOF
