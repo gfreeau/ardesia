@@ -20,8 +20,8 @@
     - The code has no highlighter support because the 
       ARGB32 support in cairo is not yet available 
   Missing Issue:
-    - recording (might be done with vlc)
-    - forward the stream to icecast (using ezstream) 
+    - theora screencat recorder (may be with vlc)
+    - forward the theora stream to icecast (using ezstream) 
 
 - MacOsX-quartz porting
 
