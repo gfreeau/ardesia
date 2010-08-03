@@ -47,8 +47,8 @@ int call_recorder(char* filename, char* option)
     argv[0] = RECORDER_FILE;
     if (filename)
     {
-      argv[1] = filename;
-      argv[2] = option;
+      argv[1] = option;
+      argv[2] = filename;
     }
     else
     {
