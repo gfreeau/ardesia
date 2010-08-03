@@ -35,7 +35,7 @@ then
   if [ "$ICECAST" = "TRUE" ]
   then
     sleep 3
-    echo Sending the streaming to icecast server $LOCATION 
+    echo Sending $2 stream to icecast server $LOCATION 
     cat $2 | ezstream -c $SCRIPT_FOLDER/ezstream_stdin_ardesia.xml& 
     EZSTREAM_PID=$!
     echo $EZSTREAM_PID >> /tmp/ezstream.pid
