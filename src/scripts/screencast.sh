@@ -16,11 +16,12 @@ RECORDER_PROGRAM_OPTIONS="--quick-subsampling --on-the-fly-encoding --v_quality 
 ICECAST="FALSE"
 #ICECAST="TRUE"
 
+STREAMER_COMMAND=ezstream
+STREAMER_OPTIONS="-vv -c $SCRIPT_FOLDER/ezstream_stdin_ardesia.xml"
+
 SCRIPT_FOLDER=`dirname "$0"`
 RECORDER_PID_FILE=/tmp/recorder.pid
 STREAMER_PID_FILE=/tmp/ezstream.pid
-STREAMER_COMMAND=ezstream
-STREAMER_OPTIONS="-vv -c $SCRIPT_FOLDER/ezstream_stdin_ardesia.xml"
 
 
 if [ "$1" = "start" ]
