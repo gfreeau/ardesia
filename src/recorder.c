@@ -41,10 +41,9 @@ int call_recorder(char* filename, char* option)
 {
   #ifdef _WIN32
     //TODO: this feature must be implemented better on win32
-    char* command = malloc((strlen(RECORDER_FILE)+strlen(option)+ strlen(filename)+1)* sizeof(char *));
-    sprintf(command,"%s %s %s", RECORDER_FILE, option, filename);
-    system(command);
-    return 1;
+    const char* argv[4] = {RECORDER_FILE, option, filename, (char*) 0};
+    int pid = _spawnvp(0, RECORDER_FILE, argv);
+    return pid;
   #else
     char* argv[4];
     argv[0] = RECORDER_FILE;
@@ -105,23 +104,19 @@ int check_recorder()
 /* Return if the recording is active */
 gboolean is_recording()
 {
-  #ifdef _WIN32
-    //TODO: this feature is not yet implemented on win32
-    return FALSE;
-  #else
-    if (recorderpid == -1)
+  if (recorderpid == -1)
     {
       return FALSE;
     }
-    return TRUE;
-  #endif
+  return TRUE;
 }
 
 /* Quit to record */
 void quit_recorder()
 {
   #ifdef _WIN32
-    //TODO
+    CloseHandle(recorderpid);
+    call_recorder(NULL, "stop");
   #else
     if(is_recording())
       {
