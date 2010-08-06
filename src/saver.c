@@ -115,7 +115,6 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gch
         {
           filename = (gchar *) realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar)); 
           (void) strcat((gchar *)filename, supported_extension);
-          free(extension);
         }           
       if (file_exists(filename,(char *) workspace_dir))
         {
