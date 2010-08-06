@@ -40,8 +40,11 @@ static int          recorderpid = -1;
 int call_recorder(char* filename, char* option)
 {
   #ifdef _WIN32
-    //TODO: this feature is not yet implemented on win32
-    return -1;
+    //TODO: this feature must be implemented better on win32
+    char* command = malloc((strlen(RECORDER_FILE)+strlen(option)+ strlen(filename)+1)* sizeof(char *));
+    sprintf(command,"%s %s %s", RECORDER_FILE, option, filename);
+    system(command);
+    return 1;
   #else
     char* argv[4];
     argv[0] = RECORDER_FILE;
@@ -49,11 +52,6 @@ int call_recorder(char* filename, char* option)
     {
       argv[1] = option;
       argv[2] = filename;
-    }
-    else
-    {
-      argv[1] = option;
-      argv[2] = (char*) NULL ;
     }
     argv[3] = (char*) NULL ;
       
@@ -80,7 +78,7 @@ int check_recorder()
 {
   #ifdef _WIN32
     //TODO: this feature is not yet implemented on win32
-    return -1;
+    return 1;
   #else
     char* argv[3];
     argv[0] = "recordmydesktop";
