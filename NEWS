@@ -14,6 +14,14 @@
 =================
 
 -------------
+ ardesia 0.4
+-------------
+
+Dependencies:
+- icecast to record and forward the live screencast
+  to the icecast server
+
+-------------
  ardesia 0.3
 -------------
 

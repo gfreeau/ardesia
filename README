@@ -116,11 +116,12 @@ Button explanation
   to sketch
 - Save: it saves in a picture file you desktop screenshot
 - Record: it records your desktop;
-  it uses the recordmydesktop tool,
+  it uses the vlc tool,
   if do you want allow anyone to see your work 
   you can forward the stream to an icecast server
   (please see the instruction inside the file located 
-   on $(prefix)/share/ardesia/scripts/recordmydesktop_screencast.sh).
+   on $(prefix)/share/ardesia/scripts/screencast.sh or
+   if you use windows on bin\screencast.bat).
   After a correct configuration when you push the record the streaming will start
 - Info: It shows the info about the tool
 - Quit: It allows to quit the program
@@ -199,11 +200,11 @@ filename:	  		The file containig the image to be be used as background
 - Ardesia is not able to record my desktop
   - verify that you audio driver works fine, recording some speach
     with an other program
-  - install the recordmydesktop package (it's required)
+  - install the vlc package (it's required)
+    http://www.videolan.org/vlc/
   - if you have other problems try to customize the 
-    $PREFIX/share/ardesia/scripts/recordmydesktop_screencast.sh
-  - For the recordmydesktop comnfiguration please visit
-    http://recordmydesktop.sourceforge.net/about.php
+    $PREFIX/share/ardesia/scripts/screencast.sh
+    or bin\screencast.bat if you use windows
 
 - I have read that with Ardesia I can put my presentation on the web.
   How I can do this?

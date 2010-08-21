@@ -16,11 +16,10 @@
 
 - Windows porting
   Bug fix:
+    - fix the start and stop screencast recorder 
     - The code has no highlighter support because the 
       ARGB32 support in cairo is not yet available 
     - Mouse cursor color is not synchronized
-  Missing Issue:
-    - screencast recorder and streaming to icecast with vlc
 
 - MacOsX-quartz porting
 

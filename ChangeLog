@@ -1,3 +1,8 @@
+2010-08-21 16:08:38 alpha@paranoici.org
+       * trunk/ardesia/src/scripts/screencast.sh,
+       * trunk/ardesia/src/scripts/screencast.bat:
+       - Use vlc for record and stream the livecast to the icecast server
+
 2010-06-18 16:08:38 alpha@paranoici.org
    
        * trunk/ardesia/po/it.po,
