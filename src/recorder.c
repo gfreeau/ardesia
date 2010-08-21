@@ -80,8 +80,7 @@ int check_recorder()
     return 1;
   #else
     char* argv[3];
-    argv[0] = "recordmydesktop";
-    //argv[0] = "cvlc";
+    argv[0] = "cvlc";
     argv[1] = "--version";
     argv[2] = (char*) NULL ;
   
@@ -136,8 +135,7 @@ void missing_recorder_program_dialog(GtkWindow* parent_window)
   miss_dialog = gtk_message_dialog_new (parent_window, GTK_DIALOG_MODAL, 
                                         GTK_MESSAGE_ERROR,
                                         GTK_BUTTONS_OK, 
-                                        gettext("To record with Ardesia you must install the recordmydesktop program"));
-                                        //gettext("To record with Ardesia you must install the vlc program"));
+                                        gettext("To record with Ardesia you must install the vlc program"));
   gtk_window_set_modal(GTK_WINDOW(miss_dialog), TRUE);
  
   gtk_dialog_run(GTK_DIALOG(miss_dialog));

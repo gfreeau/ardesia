@@ -59,10 +59,10 @@ Please read the INSTALL file located on the current folder
 ----------------------
 
 In order to run Ardesia you need to enable the Compiz composite manager.
-To use the recording feature you must install the recordmydesktop 
-package.
-If you don't use the keyboard, I suggest you to use the "onboard" virtual
-keyboard or the "cellwriter" handwriting recognizer.
+To use the recording feature you must install the vlc multimedia player 
+and streamer.
+If you don't use the keyboard, I suggest you to use the "florence-ramble"
+virtual keyboard or the "cellwriter" handwriting recognizer.
 
 
 -------
@@ -218,23 +218,20 @@ filename:	  		The file containig the image to be be used as background
       This computer must:
       - reach the icecast2 server
       - have ardesia installed
-      - have ezstream installed (it is used to forward the stream to the server) 
-    - Open the file $PREFIX/share/ardesia/scripts/recordmydesktop_screencast.sh
-      And Uncomment the line
+    - Open the file $PREFIX/share/ardesia/scripts/screencast.sh
+      - Uncomment the line
         - ICECAST="TRUE";
-      To enable the streaming ezstream configuration file located on
-      $PREFIX/share/ardesia/scripts/ezstream_stdin_ardesia.xml
-      In this file you must configure properly:
-        - location
-        - port 
-        - password
-        - mountpoint
+      - Set these variable   
+        - ICECAST_PASSWORD
+        - ICECAST_ADDRESS
+        - ICECAST_PORT 
+        - ICECAST_MOUNTPOINT
     - Open Ardesia
     - Push the record button
     - Select a name
     - Enjoy the stream
       at the uri 
-      http://location:port/mountpoint.ogv
+      http://ICECAST_LOCATION:ICECAST_PORT/ICECAST_MOUNTPOINT.ogg
     - Now you can put this link on a web page or publish it in an other way
     - For furthermore information about icecast2 server visit http://www.icecast.org/
 

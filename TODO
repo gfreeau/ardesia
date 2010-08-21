@@ -13,33 +13,27 @@
 - Open IRC channel
 
 - Refactoring
-  
-- Bug fix:
-  - forwarding the theora stream to icecast if the file
-    is not continuosly fill the ezstream will exit 
 
 - Windows porting
   Bug fix:
-    - Mouse cursor color is not synchronized
     - The code has no highlighter support because the 
       ARGB32 support in cairo is not yet available 
+    - Mouse cursor color is not synchronized
   Missing Issue:
-    - Integrate in the code the call to the theora 
-      screencast recorder (implemented with vlc)
+    - screencast recorder and streaming to icecast with vlc
 
 - MacOsX-quartz porting
 
 - Possible future features
   - move, resize, select, fill
+  - Multi pointer support using the xinput2 libraries
   - Save page (raster background + svg annotation)
-  - commit the created artifact on a repository
+  - Pdf export
+  - put artifact on a repository
     - ftp
     - google service 
     - dropbox
     - email
-  - Multi page
-  - Pdf export
-  - Multi pointer support using the xinput2 libraries
 
 ===
 EOF

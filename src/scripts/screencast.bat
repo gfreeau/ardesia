@@ -15,7 +15,7 @@ rem This is the location of the vlc executable
 set RECORDER_LOCATION="C:\Program Files (x86)\VideoLAN\VLC"
 
 set RECORDER_PROGRAM=vlc.exe
-set RECORDER_PROGRAM_OPTIONS=-vvv -I dummy screen:// --screen-fps=12 --sout "#transcode{venc=theora,quality:10,scale=0.75,fps=12}:duplicate{dst=std{access=file,mux=ogg,dst=%2}}}"
+set RECORDER_PROGRAM_OPTIONS=-vvv -I dummy screen:// --screen-fps=12 --sout "#transcode{venc=theora,quality:10,scale=0.75,fps=12}:duplicate{dst=std{access=file,mux=ogg,dst=%2}}"
 set STREAMER_COMMAND=ezstream.exe
 set STREAMER_OPTIONS=-v -c ezstream_stdin_ardesia.xml 
 

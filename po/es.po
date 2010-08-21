@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-23 18:30+0200\n"
+"POT-Creation-Date: 2010-08-20 13:16+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
@@ -13,39 +13,39 @@ msgstr ""
 "X-Poedit-Country: ITALY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../src/ardesia.c:136
+#: ../src/ardesia.c:141
 msgid "In order to run Ardesia you need to enable the Compiz composite manager"
 msgstr ""
 "Para ejecutar Ardesia necesita habilitar el administrador de Compiz "
 "compuestos"
 
 #. set tooltip to unhide
-#: ../src/bar_callbacks.c:409
+#: ../src/bar_callbacks.c:416
 msgid "Unhide"
 msgstr "Mostrar"
 
 #. set tooltip to hide
-#: ../src/bar_callbacks.c:418 ../src/ardesia.glade.h:9
+#: ../src/bar_callbacks.c:425 ../src/ardesia.glade.h:9
 msgid "Hide"
 msgstr "Ocultar"
 
 #. set stop tooltip
-#: ../src/bar_callbacks.c:451 ../src/ardesia.glade.h:16
+#: ../src/bar_callbacks.c:458 ../src/ardesia.glade.h:16
 msgid "Record"
 msgstr "Grabar"
 
 #. set stop tooltip
-#: ../src/bar_callbacks.c:464
+#: ../src/bar_callbacks.c:471
 msgid "Stop"
 msgstr "Detener"
 
 #. set tooltip to unhide
-#: ../src/bar_callbacks.c:506 ../src/ardesia.glade.h:24
+#: ../src/bar_callbacks.c:513 ../src/ardesia.glade.h:24
 msgid "Unlock"
 msgstr "Desbloquear"
 
 #. set tooltip to hide
-#: ../src/bar_callbacks.c:522
+#: ../src/bar_callbacks.c:529
 msgid "Lock"
 msgstr "Bloquear"
 
@@ -54,23 +54,23 @@ msgstr "Bloquear"
 msgid "Changing color"
 msgstr "Cambiar el color"
 
-#: ../src/recorder.c:144
-msgid "To record with Ardesia you must install the recordmydesktop program"
-msgstr "Para grabar con Ardesia debe instalar el programa recordmydesktop"
+#: ../src/recorder.c:145
+msgid "To record with Ardesia you must install the vlc program"
+msgstr "Para grabar con Ardesia debe instalar el programa vlc"
 
-#: ../src/recorder.c:172
+#: ../src/recorder.c:173
 msgid "Save video as ogv"
 msgstr "Guardar el vídeo como ogv"
 
-#: ../src/recorder.c:178 ../src/saver.c:91
+#: ../src/recorder.c:179 ../src/saver.c:85
 msgid "Choose a file"
 msgstr "Elegir un archivo"
 
-#: ../src/recorder.c:207 ../src/saver.c:119
+#: ../src/recorder.c:208 ../src/saver.c:126
 msgid "File Exists. Overwrite"
 msgstr "El archivo existe. Sobrescribir"
 
-#: ../src/saver.c:73
+#: ../src/saver.c:77
 msgid "Save image"
 msgstr "Guardar imagen"
 
