@@ -37,7 +37,7 @@ static GPid recorderpid = -1;
  * Create a annotate client process the annotate
  * that talk with the server process option is start or stop
  */
-int call_recorder(char* filename, char* option)
+GPid call_recorder(char* filename, char* option)
 {
     gchar* argv[4] = {RECORDER_FILE, option, filename, (char*) 0};
     GPid pid;
@@ -61,10 +61,7 @@ int check_recorder()
     //TODO: this feature is not yet implemented on win32
     return 1;
   #else
-    char* argv[3];
-    argv[0] = "cvlc";
-    argv[1] = "--version";
-    argv[2] = (char*) NULL ;
+    gchar* argv[3] = {"vlc", "--version", (char*) 0};
   
     pid_t pid;
     pid = fork();
