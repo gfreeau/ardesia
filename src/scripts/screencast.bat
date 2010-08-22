@@ -8,18 +8,14 @@ rem if it is used a localhost icecast server with the default
 rem configuration
 rem Client side you must have the ezstream installed
 
-set ICECAST=FALSE
-rem set ICECAST=TRUE
+rem set ICECAST=FALSE
+set ICECAST=TRUE
 
 rem You must configure the right password; I put the default one
 set ICECAST_PASSWORD=hackme
 set ICECAST_ADDRESS=127.0.0.1
 set ICECAST_PORT=8000
 set ICECAST_MOUNTPOINT=ardesia.ogg
-
-rem This is the location of the vlc executable
-set RECORDER_LOCATION="C:\Program Files (x86)\VideoLAN\VLC"
-
 
 set RECORDER_PROGRAM=vlc.exe
 set RECORDER_PROGRAM_OPTIONS=-vvv -I dummy screen:// --screen-fps=12 --sout "#transcode{venc=theora,quality:10,scale=0.75,fps=12}:duplicate{dst=std{access=file,mux=ogg,dst=%2}}"
@@ -36,14 +32,14 @@ rem if not icecast then only record the screencast
 echo Start the screencast running %RECORDER_PROGRAM%
 echo With arguments %RECORDER_PROGRAM_OPTIONS%
 rem exec recorder
-start /B cmd /c "%RECORDER_LOCATION%\%RECORDER_PROGRAM% %RECORDER_PROGRAM_OPTIONS%"
+start /B cmd /c "%RECORDER_PROGRAM% %RECORDER_PROGRAM_OPTIONS%"
 goto end
 
 :icecast_start
 echo Start the screencast running %RECORDER_PROGRAM%
 echo With arguments %RECORDER_AND_FORWARD_PROGRAM_OPTIONS%
 rem exec recorder
-start /B cmd /c "%RECORDER_LOCATION%\%RECORDER_PROGRAM% %RECORDER_AND_FORWARD_PROGRAM_OPTIONS%"
+start /B cmd /c "%RECORDER_PROGRAM% %RECORDER_AND_FORWARD_PROGRAM_OPTIONS%"
 goto end
 
 :stop

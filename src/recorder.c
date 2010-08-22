@@ -31,7 +31,7 @@
 
 
 /* pid of the recording process */
-static GPid recorderpid = -1;
+static GPid recorderpid = (GPid) 0;
 
 /* 
  * Create a annotate client process the annotate
@@ -39,46 +39,40 @@ static GPid recorderpid = -1;
  */
 GPid call_recorder(char* filename, char* option)
 {
-    gchar* argv[4] = {RECORDER_FILE, option, filename, (char*) 0};
-    GPid pid = -1;
-    g_spawn_async (NULL /*working_directory*/,
-                     argv,
-                     NULL /*envp*/,
-                     G_SPAWN_SEARCH_PATH,
-                     NULL /*child_setup*/,
-                     NULL /*user_data*/,
-                     &pid /*child_pid*/,
-                     NULL /*error*/);
+  gchar* argv[4] = {RECORDER_FILE, option, filename, (char*) 0};
+  GPid pid = (GPid) 0;
+  g_spawn_async (NULL /*working_directory*/,
+                 argv,
+                 NULL /*envp*/,
+                 G_SPAWN_SEARCH_PATH,
+                 NULL /*child_setup*/,
+                 NULL /*user_data*/,
+                 &pid /*child_pid*/,
+                 NULL /*error*/);
     
-    return pid;
+  return pid;
 }
 
 
 gboolean check_recorder()
 {
-  #ifdef _WIN32
-    //TODO: this feature is not yet implemented on win32
-    return 1;
-  #else
-    gchar* argv[3] = {"vlc", "--version", (char*) 0};
+  gchar* argv[3] = {"vlc", "--version", (char*) 0};
   
-    return g_spawn_async (NULL /*working_directory*/,
-                     argv,
-                     NULL /*envp*/,
-                     G_SPAWN_SEARCH_PATH,
-                     NULL /*child_setup*/,
-                     NULL /*user_data*/,
-                     NULL /*child_pid*/,
-                     NULL /*error*/);
-    
-  #endif
+  return g_spawn_async (NULL /*working_directory*/,
+                        argv,
+                        NULL /*envp*/,
+                        G_SPAWN_SEARCH_PATH,
+                        NULL /*child_setup*/,
+                        NULL /*user_data*/,
+                        NULL /*child_pid*/,
+                        NULL /*error*/);
 }
 
 
 /* Return if the recording is active */
 gboolean is_recording()
 {
-  if (recorderpid == -1)
+  if (!recorderpid)
     {
       return FALSE;
     }
@@ -94,7 +88,7 @@ void quit_recorder()
     g_spawn_close_pid(recorderpid);
     recorderpid = call_recorder(NULL, "stop");
     g_spawn_close_pid(recorderpid);
-    recorderpid=-1;
+    recorderpid= (GPid) 0;
   }  
 }
 
@@ -107,7 +101,7 @@ void missing_recorder_program_dialog(GtkWindow* parent_window)
   miss_dialog = gtk_message_dialog_new (parent_window, GTK_DIALOG_MODAL, 
                                         GTK_MESSAGE_ERROR,
                                         GTK_BUTTONS_OK, 
-                                        gettext("To record with Ardesia you must install the vlc program"));
+                                        gettext("To record with Ardesia you must install the vlc program and add it to the PATH environment variable"));
   gtk_window_set_modal(GTK_WINDOW(miss_dialog), TRUE);
  
   gtk_dialog_run(GTK_DIALOG(miss_dialog));
