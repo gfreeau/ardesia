@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-20 13:16+0200\n"
+"POT-Creation-Date: 2010-08-22 14:57+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
@@ -53,19 +53,21 @@ msgstr "Blocca"
 msgid "Changing color"
 msgstr "Cambia colore"
 
-#: ../src/recorder.c:145
-msgid "To record with Ardesia you must install the vlc program"
-msgstr "Per registrare con Ardesia devi installare il programma vlc"
+#: ../src/recorder.c:104
+msgid ""
+"To record with Ardesia you must install the vlc program and add it to the "
+"PATH environment variable"
+msgstr "Per registrare con Ardesia devi installare il programma vlc e aggiungerlo alla variabile d'ambiente PATH"
 
-#: ../src/recorder.c:173
+#: ../src/recorder.c:132
 msgid "Save video as ogv"
 msgstr "Salva il video nel formato ogv"
 
-#: ../src/recorder.c:179 ../src/saver.c:85
+#: ../src/recorder.c:138 ../src/saver.c:85
 msgid "Choose a file"
 msgstr "Scegli un file"
 
-#: ../src/recorder.c:208 ../src/saver.c:126
+#: ../src/recorder.c:166 ../src/saver.c:125
 msgid "File Exists. Overwrite"
 msgstr "Il file esiste. Sovrascrivilo"
 
