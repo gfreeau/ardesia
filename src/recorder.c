@@ -40,7 +40,7 @@ static GPid recorderpid = -1;
 GPid call_recorder(char* filename, char* option)
 {
     gchar* argv[4] = {RECORDER_FILE, option, filename, (char*) 0};
-    GPid pid;
+    GPid pid = -1;
     g_spawn_async (NULL /*working_directory*/,
                      argv,
                      NULL /*envp*/,
@@ -54,7 +54,7 @@ GPid call_recorder(char* filename, char* option)
 }
 
 
-int check_recorder()
+gboolean check_recorder()
 {
   #ifdef _WIN32
     //TODO: this feature is not yet implemented on win32
@@ -62,18 +62,15 @@ int check_recorder()
   #else
     gchar* argv[3] = {"vlc", "--version", (char*) 0};
   
-    pid_t pid;
-    pid = fork();
-    int status;
-    wait(&status);
-    if (pid == 0)
-      {
-        if (execvp(argv[0], argv) < 0)
-          {
-            return -1;
-          }
-      }
-    return pid;
+    return g_spawn_async (NULL /*working_directory*/,
+                     argv,
+                     NULL /*envp*/,
+                     G_SPAWN_SEARCH_PATH,
+                     NULL /*child_setup*/,
+                     NULL /*user_data*/,
+                     NULL /*child_pid*/,
+                     NULL /*error*/);
+    
   #endif
 }
 
@@ -87,6 +84,7 @@ gboolean is_recording()
     }
   return TRUE;
 }
+
 
 /* Quit to record */
 void quit_recorder()
@@ -186,8 +184,7 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
 	      return status; 
 	    } 
 	}
-      recorderpid = check_recorder();
-      if (recorderpid > 0)
+      if (check_recorder())
         {
           printf("filename %s\n", filename);
           status = TRUE;
