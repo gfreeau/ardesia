@@ -31,7 +31,7 @@
 
 
 /* pid of the recording process */
-static int          recorderpid = -1;
+static GPid recorderpid = -1;
 
 /* 
  * Create a annotate client process the annotate
@@ -39,11 +39,8 @@ static int          recorderpid = -1;
  */
 int call_recorder(char* filename, char* option)
 {
-  #ifdef _WIN32
-    //TODO: this feature must be implemented better on win32
-	#
-	const char* argv[4] = {RECORDER_FILE, option, filename, (char*) 0};
-	GPid pid;
+    gchar* argv[4] = {RECORDER_FILE, option, filename, (char*) 0};
+    GPid pid;
     g_spawn_async (NULL /*working_directory*/,
                      argv,
                      NULL /*envp*/,
@@ -55,32 +52,6 @@ int call_recorder(char* filename, char* option)
     
     //int pid = _spawnvp(P_DETACH, RECORDER_FILE, argv);
     return pid;
-  #else
-    char* argv[4];
-    argv[0] = RECORDER_FILE;
-    if (filename)
-    {
-      argv[1] = option;
-      argv[2] = filename;
-    }
-    argv[3] = (char*) NULL ;
-      
-    pid_t pid;
-    pid = fork();
-  
-    if (pid < 0)
-      {
-        return -1;
-      }
-    if (pid == 0)
-      {
-        if (execvp(argv[0], argv) < 0)
-          {
-            return -1;
-          }
-      }
-    return pid;
-  #endif
 }
 
 
@@ -126,14 +97,9 @@ void quit_recorder()
 {
   if(is_recording())
   {
-  #ifdef _WIN32
     g_spawn_close_pid(recorderpid);
     recorderpid = call_recorder(NULL, "stop");
-	g_spawn_close_pid(recorderpid);
-  #else
-    kill(recorderpid,SIGTERM);
-    call_recorder(NULL, "stop");
-  #endif
+    g_spawn_close_pid(recorderpid);
     recorderpid=-1;
   }  
 }
