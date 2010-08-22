@@ -50,7 +50,6 @@ GPid call_recorder(char* filename, char* option)
                      &pid /*child_pid*/,
                      NULL /*error*/);
     
-    //int pid = _spawnvp(P_DETACH, RECORDER_FILE, argv);
     return pid;
 }
 
