@@ -41,8 +41,19 @@ int call_recorder(char* filename, char* option)
 {
   #ifdef _WIN32
     //TODO: this feature must be implemented better on win32
-    const char* argv[6] = {"start", "/MIN", RECORDER_FILE, option, filename, (char*) 0};
-    int pid = _spawnvp(P_NOWAIT, RECORDER_FILE, argv);
+	#
+	const char* argv[4] = {RECORDER_FILE, option, filename, (char*) 0};
+	GPid pid;
+    g_spawn_async (NULL /*working_directory*/,
+                     argv,
+                     NULL /*envp*/,
+                     G_SPAWN_SEARCH_PATH,
+                     NULL /*child_setup*/,
+                     NULL /*user_data*/,
+                     &pid /*child_pid*/,
+                     NULL /*error*/);
+    
+    //int pid = _spawnvp(P_DETACH, RECORDER_FILE, argv);
     return pid;
   #else
     char* argv[4];
@@ -116,8 +127,9 @@ void quit_recorder()
   if(is_recording())
   {
   #ifdef _WIN32
-    //CloseHandle(recorderpid);
-    call_recorder(NULL, "stop");
+    g_spawn_close_pid(recorderpid);
+    recorderpid = call_recorder(NULL, "stop");
+	g_spawn_close_pid(recorderpid);
   #else
     kill(recorderpid,SIGTERM);
     call_recorder(NULL, "stop");
