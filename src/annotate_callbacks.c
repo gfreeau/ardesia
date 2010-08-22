@@ -63,7 +63,8 @@ event_expose (GtkWidget *widget,
 	 * to support the alpha channel and the highlighter we need the surface in ARGBA32 format  
          */
 	cairo_surface_t* surface = cairo_win32_surface_create(hdc);
-	//cairo_surface_t* surface = _cairo_win32_surface_create_for_dc (hdc, CAIRO_FORMAT_ARGB32, data->width, data->height);
+	/* Patching cairo add the cairo_win32_surface_create_for_dc could fix */
+	//cairo_surface_t* surface = cairo_win32_surface_create_for_dc (hdc, CAIRO_FORMAT_ARGB32, data->width, data->height);
 	data->annotation_cairo_context = cairo_create(surface);
       #else
 	data->annotation_cairo_context = gdk_cairo_create(data->annotation_window->window);  
