@@ -19,7 +19,6 @@
     - fix the start and stop screencast recorder 
     - The code has no highlighter support because the 
       ARGB32 support in cairo is not yet available 
-    - Mouse cursor color is not synchronized
 
 - MacOsX-quartz porting
 
