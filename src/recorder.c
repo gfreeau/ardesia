@@ -31,7 +31,8 @@
 
 
 /* pid of the recording process */
-static GPid recorderpid = (GPid) 0;
+static GPid recorderpid;
+static gboolean is_active = FALSE;
 
 /* 
  * Create a annotate client process the annotate
@@ -41,6 +42,7 @@ GPid call_recorder(char* filename, char* option)
 {
   gchar* argv[4] = {RECORDER_FILE, option, filename, (char*) 0};
   GPid pid = (GPid) 0;
+  if (
   g_spawn_async (NULL /*working_directory*/,
                  argv,
                  NULL /*envp*/,
@@ -48,8 +50,10 @@ GPid call_recorder(char* filename, char* option)
                  NULL /*child_setup*/,
                  NULL /*user_data*/,
                  &pid /*child_pid*/,
-                 NULL /*error*/);
-    
+                 NULL /*error*/))
+	{
+        is_active = TRUE;	   
+	}
   return pid;
 }
 
@@ -72,11 +76,7 @@ gboolean check_recorder()
 /* Return if the recording is active */
 gboolean is_recording()
 {
-  if (!recorderpid)
-    {
-      return FALSE;
-    }
-  return TRUE;
+  return is_active;
 }
 
 
@@ -88,7 +88,7 @@ void quit_recorder()
     g_spawn_close_pid(recorderpid);
     recorderpid = call_recorder(NULL, "stop");
     g_spawn_close_pid(recorderpid);
-    recorderpid= (GPid) 0;
+    is_active = FALSE;
   }  
 }
 
