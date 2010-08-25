@@ -514,17 +514,8 @@ void allocate_invisible_cursor()
 /* Hide the cursor */
 void hide_cursor()
 {
-  #ifdef _WIN32
-    annotate_release_pointer_grab();
-  #endif
- 
   gdk_window_set_cursor(data->annotation_window->window, data->invisible_cursor);
   gdk_display_sync(data->display);
-
-  #ifdef _WIN32
-    annotate_acquire_pointer_grab();
-  #endif
- 
   data->is_cursor_hidden = TRUE;
 }
 
@@ -686,7 +677,7 @@ void annotate_acquire_input_grab()
     annotate_acquire_pointer_grab();
   #endif
  
-  /* the fos is mine */
+  /* the focus is mine */
   gtk_widget_grab_focus(data->annotation_window);
  
   #ifndef _WIN32
