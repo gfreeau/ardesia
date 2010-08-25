@@ -35,7 +35,7 @@
 static BackGroundData* background_data;
 
 
-/* Load the contents of the file image with name "filename" into the pixbuf */
+/* Load the "filename" file content into the pixbuf */
 GdkPixbuf * load_png (char *filename)
 {
   GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
@@ -93,15 +93,16 @@ void clear_background_window()
   
   #ifdef _WIN32
     /* 
-     * I put the window opacity to 0.1 because 
+     * @HACK I put the window opacity to 0.1 because 
      * if I set the annotation window to be fully transparent
      * will lost the focus even if it has grabbed the pointer 
-     *
+     * 
      */
     gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0.1);
   #else
     gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0);
   #endif
+  /* @TODO do it in a better way */
 
   clear_cairo_context(background_data->back_cr);
   
@@ -109,7 +110,7 @@ void clear_background_window()
   gint width;
   gdk_drawable_get_size(background_data->background_window->window, &width, &height);
 
-  /* Make the trasparen pixmap to be used as mask */
+  /* Instantiate a trasparent pixmap to be used as mask */
   background_data->background_shape = gdk_pixmap_new (NULL, width, height, 1); 
   cairo_t* shape_cr = gdk_cairo_create(background_data->background_shape);
   clear_cairo_context(shape_cr); 
@@ -197,6 +198,7 @@ void load_color()
                                              NULL, 
                                              0, 0);
       #endif
+      /* @TODO do it in a better way */
     }  
 }
 

@@ -116,8 +116,8 @@ void delete_character()
 G_MODULE_EXPORT gboolean
 key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
 {
-  if ((event->keyval == GDK_BackSpace)
-      || (event->keyval == GDK_Delete))
+  if ((event->keyval == GDK_BackSpace) ||
+      (event->keyval == GDK_Delete))
     {
       // undo
       delete_character();
@@ -139,6 +139,7 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     {
       stop_text_widget();
     } 
+  /* is the character printable? */
   else if (isprint(event->keyval))
     {
       /* The character is printable */

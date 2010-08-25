@@ -160,7 +160,7 @@ void start_tool(BarData *bar_data)
 }
 
 
-/* Configure evennts occurs */
+/* Configure events occurs */
 G_MODULE_EXPORT gboolean 
 on_window_configure_event (GtkWidget *widget,
 			GdkEvent *event,
@@ -502,11 +502,12 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
     {
       bar_data->grab = TRUE;
       #ifdef _WIN32
-        /* This deny the mouse input go below the window */
+        /* @HACK This deny the mouse input go below the window */
         if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0)
           {
             gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0.1);
           }
+	/* @TODO do it in a better way */
       #endif	
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"lock")));
       /* set tooltip to unhide */
@@ -520,8 +521,9 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
       #ifdef _WIN32
         if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0.1)
           {
-            /* This allow the mouse input go below the window */
+            /* @HACK This allow the mouse input go below the window */
             gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
+	    /* @TODO do it in a better way */
           }
       #endif	 
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"unlock")));
@@ -570,7 +572,7 @@ on_buttonColor_activate	         (GtkToggleToolButton   *toolbutton,
   bar_data->pencil = TRUE;
   char* new_color = start_color_selector_dialog(GTK_TOOL_BUTTON(toolbutton), GTK_WINDOW(get_bar_window()), bar_data->color);
 
-  //if valid color
+  /* if it is a valid color */
   if (new_color)
     { 
       set_color(bar_data, new_color);

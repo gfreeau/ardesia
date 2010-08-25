@@ -30,11 +30,10 @@ BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF crKey,
 	BYTE bAlpha, DWORD dwFlags) = NULL;
 	
 
-/* This is to access throught the user32 windows dll to the setLayeredWindowAttributes */
+/* This is needed to wrap the setLayeredWindowAttributes throught the windows user32 dll */
 void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF crKey, BYTE bAlpha, DWORD dwFlags)
 {
     HWND hwnd = GDK_WINDOW_HWND(gdk_window);
-    //SetWindowLongPtr(hwnd, GWL_EXSTYLE,  WS_EX_LAYERED| WS_EX_TOOLWINDOW | WS_EX_NOPARENTNOTIFY);
     HINSTANCE hInstance = LoadLibraryA("user32");		
 
     setLayeredWindowAttributesProc = (BOOL (WINAPI*)(HWND hwnd,
@@ -77,12 +76,15 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
      8-bit/sample. */
   GdkColor candidates[3] = {{0,65535,0,0}, {0,0,65535,0}, {0,0,0,65535}};
   GdkColor *trans = &candidates[0];
-  if (colors_too_similar(trans, fg) || colors_too_similar(trans, bg)) {
-    trans = &candidates[1];
-    if (colors_too_similar(trans, fg) || colors_too_similar(trans, bg)) {
-      trans = &candidates[2];
+  if (colors_too_similar(trans, fg) || colors_too_similar(trans, bg)) 
+    {
+      trans = &candidates[1];
+      if (colors_too_similar(trans, fg) || colors_too_similar(trans, bg))
+        {
+          trans = &candidates[2];
+        }
     }
-  } /* trans is now guaranteed to be unique from fg and bg */
+  /* trans is now guaranteed to be unique from fg and bg */
 
   /* create an empty pixmap to hold the cursor image */
   gdk_drawable_get_size(source, &width, &height);

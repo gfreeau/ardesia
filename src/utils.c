@@ -36,8 +36,7 @@ const gchar* desktop_dir = NULL;
 void grab_pointer(GtkWidget *win, GdkEventMask eventmask)
 {
   GdkGrabStatus result;
-  gdk_error_trap_push(); 
-  //gtk_widget_input_shape_combine_mask(win, NULL, 0, 0);   
+  gdk_error_trap_push();    
   result = gdk_pointer_grab (win->window, FALSE,
 			     eventmask, 0,
 			     NULL,
@@ -77,13 +76,12 @@ void ungrab_pointer(GdkDisplay* display, GtkWidget* win)
 {
   gdk_error_trap_push ();
   gdk_display_pointer_ungrab (display, GDK_CURRENT_TIME);
-  /* inherit cursor from root window */
-  //gdk_window_set_cursor (win->window, NULL);
   gdk_flush ();
   if (gdk_error_trap_pop ())
     {
       /* this probably means the device table is outdated, 
-	 e.g. this device doesn't exist anymore */
+	 e.g. this device doesn't exist anymore 
+       */
       g_printerr("Ungrab pointer device error\n");
     }
 }
@@ -96,19 +94,20 @@ GtkWidget* get_bar_window()
 }
 
 
-/** Distance beetween two points using the Pitagora theorem */
+/** Get the distance beetween two points */
 int get_distance(int x1, int y1, int x2, int y2)
 {
   if ((x1==x2) && (y1==y2))
     {
       return 0;
     }
+  /* apply the Pitagora theorem to calculate the distance */
   int ret = (sqrt(pow(x1-x2,2) + pow(y1-y2,2)));
   return ret; 
 }
 
 
-/* Take a GdkColor and return the RGBA string */
+/* Take a GdkColor and return the corrispondent RGBA string */
 gchar* gdkcolor_to_rgba(GdkColor* gdkcolor)
 {
   gchar* ret= g_malloc(9 * sizeof(gchar));;
@@ -120,7 +119,7 @@ gchar* gdkcolor_to_rgba(GdkColor* gdkcolor)
 
 /*
  * Take an rgb or a rgba string and return the pointer to the allocated GdkColor 
- * neglecting the alpha channel
+ * neglecting the alpha channel; the gtkColor doesn't support the rgba color
  */
 GdkColor* rgb_to_gdkcolor(char* rgb)
 {
@@ -170,7 +169,6 @@ gboolean inside_bar_window(int xp, int yp)
   gtk_window_get_position(bar, &x, &y);
   gtk_window_get_size(bar, &width, &height);   
   
-  /* rectangle that contains the panel */
   if ((yp>=y)&&(yp<y+height))
     {
       if ((xp>=x)&&(xp<x+width))
@@ -193,8 +191,8 @@ gchar* get_date()
   gchar* date = g_malloc(16 * sizeof(gchar));
   char* hour_min_sep = ":";
   #ifdef _WIN32
-    /* : is avoided in file name and the I use the . */
-	hour_min_sep = ".";
+    /* The ":" character on windows is avoided in file name and then I use the "." character instead */
+    hour_min_sep = ".";
   #endif
   
   sprintf(date, "%d-%d-%d_%d%s%d", t->tm_mday, t->tm_mon+1,t->tm_year+1900, t->tm_hour, hour_min_sep, t->tm_min);
@@ -213,13 +211,17 @@ gboolean file_exists(char* filename, char* desktop_dir)
       filename = strcat(filename,desktop_dir);
     }
   struct stat statbuf;
-  if(stat(filename, &statbuf) < 0) {
-    if(errno == ENOENT) {
-      return FALSE;
-    } else {
-      exit(0);
+  if(stat(filename, &statbuf) < 0) 
+    {
+      if(errno == ENOENT) 
+	{
+          return FALSE;
+        } 
+      else 
+	{
+          exit(0);
+        }
     }
-  }
   return TRUE;
 }
 
