@@ -32,14 +32,14 @@ rem if not icecast then only record the screencast
 echo Start the screencast running %RECORDER_PROGRAM%
 echo With arguments %RECORDER_PROGRAM_OPTIONS%
 rem exec recorder
-start /B cmd /c "%RECORDER_PROGRAM% %RECORDER_PROGRAM_OPTIONS%"
+start %RECORDER_PROGRAM% %RECORDER_PROGRAM_OPTIONS%
 goto end
 
 :icecast_start
 echo Start the screencast running %RECORDER_PROGRAM%
 echo With arguments %RECORDER_AND_FORWARD_PROGRAM_OPTIONS%
 rem exec recorder
-start /B cmd /c "%RECORDER_PROGRAM% %RECORDER_AND_FORWARD_PROGRAM_OPTIONS%"
+start %RECORDER_PROGRAM% %RECORDER_AND_FORWARD_PROGRAM_OPTIONS%
 goto end
 
 :stop
