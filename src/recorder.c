@@ -60,7 +60,7 @@ GPid call_recorder(char* filename, char* option)
 /* Is the recorder available */
 gboolean is_recorder_available()
 {
-  gchar* argv[3] = {"vlc", "--version", (char*) 0};
+  gchar* argv[5] = {"vlc", "-I", "dummy", "--dummy-quiet", (char*) 0};
   
   return g_spawn_async (NULL /*working_directory*/,
                         argv,
