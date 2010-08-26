@@ -15,23 +15,22 @@
 - Refactoring
 
 - Windows porting
-  Bug fix:
-    - fix the start and stop screencast recorder 
-    - The code has no highlighter support because the 
-      ARGB32 support in cairo is not yet available 
+  - Fix: the highlighte; this doesn't work because
+    the  ARGB32 support in cairo is not yet available 
 
 - MacOsX-quartz porting
 
-- Possible future features
-  - move, resize, select, fill
-  - Multi pointer support using the xinput2 libraries
-  - Save page (raster background + svg annotation)
+- Possible future features:
+  - Screencast recorder using vlclib insted of 
+    spawn the vlc process 
+  - import images (galleries with images, sticky notes)
+  - select, move, resize, fill objects
   - Pdf export
-  - put artifact on a repository
+  - put the pdf online
     - ftp
-    - google service 
-    - dropbox
     - email
+    - dropbox
+  - Multi pointer support using the xinput2 libraries
 
 ===
 EOF
