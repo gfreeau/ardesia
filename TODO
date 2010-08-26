@@ -13,16 +13,14 @@
 - Open IRC channel
 
 - Refactoring
-  - create a make release target
-    that build the binary and source package
   - better variable handling
   - Screencast recorder using vlclib insted spawn the vlc process 
 
 - Windows porting
   - Fix the highlighter; this doesn't work because
     the  ARGB32 support in cairo is not yet available 
-  - Create a make install target
-  - Create an installer
+  - Adjust the make install target
+  - Create a binary installer
 
 - MacOsX-quartz porting
 

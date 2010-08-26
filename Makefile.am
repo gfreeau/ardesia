@@ -11,6 +11,8 @@ ardesiadoc_DATA = \
 	INSTALL\
 	NEWS
 
+autogen_FILE = autogen.sh
+
 desktopdir = $(datadir)/applications
 desktop_in_files = applications/ardesia.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
@@ -24,7 +26,9 @@ INTLTOOL_FILES = intltool-extract.in \
 	intltool-update.in
 
 EXTRA_DIST = $(ardesiadoc_DATA) \
-	$(INTLTOOL_FILES)
+	$(INTLTOOL_FILES) $(autogen_FILE) \
+	src/scripts src/pixmaps src/backgrounds\
+	pixmaps debian applications
 
 DISTCLEANFILES = intltool-extract \
 	intltool-merge \
@@ -33,6 +37,7 @@ DISTCLEANFILES = intltool-extract \
 
 deb:
 	debuild -us -uc -b
+	mv ../ardesia_*.deb .
 
 update-po:
 	(cd po; $(MAKE) update-po)

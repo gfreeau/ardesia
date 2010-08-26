@@ -18,7 +18,7 @@ endif
 
 AM_CPPFLAGS += -DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
-	$(ARDESIA_CFLAGS) $(GCONF_CFLAGS)
+	$(ARDESIA_CFLAGS) 
 
 AM_CFLAGS =\
 	 -Wall\
@@ -77,7 +77,7 @@ ardesia_LDFLAGS += -mwindows
 endif
 
 
-ardesia_LDADD = $(ARDESIA_LIBS) $(GCONF_LIBS)
+ardesia_LDADD = $(ARDESIA_LIBS)
 
 EXTRA_DIST = $(ui_DATA)
 
