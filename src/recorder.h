@@ -56,3 +56,9 @@ void quit_recorder();
 gboolean is_recording();
 
 
+/* Is the recorder available */
+gboolean is_recorder_available();
+
+/* Missing program dialog */
+void visualize_missing_recorder_program_dialog(GtkWindow* parent_window);
+

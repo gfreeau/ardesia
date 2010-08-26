@@ -446,11 +446,22 @@ G_MODULE_EXPORT void
 on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
 { 
-  BarData *bar_data = (BarData*) func_data;
-
+  /* Release grab */
+  annotate_release_grab ();
+  
+  BarData *bar_data = (BarData*) func_data;	
   gboolean grab_value = bar_data->grab;
-
   bar_data->grab = FALSE;
+  
+  if (!is_recorder_available())	
+	{
+		visualize_missing_recorder_program_dialog(GTK_WINDOW(get_bar_window()));
+        gtk_widget_hide(GTK_WIDGET(toolbutton));
+        bar_data->grab = grab_value;
+        start_tool(bar_data);		
+		return;
+	}
+	
   if(is_recording())
     {
       quit_recorder();
@@ -460,9 +471,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
       gtk_tool_button_set_stock_id (toolbutton, "gtk-media-record");
     }
   else
-    {      
-      /* Release grab */
-      annotate_release_grab ();
+    { 
       /* the recording is not active */ 
       gboolean status = start_save_video_dialog(toolbutton, GTK_WINDOW(get_bar_window()), &bar_data->workspace_dir);
       if (status)

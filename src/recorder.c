@@ -57,8 +57,8 @@ GPid call_recorder(char* filename, char* option)
   return pid;
 }
 
-
-gboolean check_recorder()
+/* Is the recorder available */
+gboolean is_recorder_available()
 {
   gchar* argv[3] = {"vlc", "--version", (char*) 0};
   
@@ -94,7 +94,7 @@ void quit_recorder()
 
 
 /* Missing program dialog */
-void missing_recorder_program_dialog(GtkWindow* parent_window)
+void visualize_missing_recorder_program_dialog(GtkWindow* parent_window)
 {
   GtkWidget *miss_dialog;
   
@@ -178,18 +178,8 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
 	      return status; 
 	    } 
 	}
-      if (check_recorder())
-        {
-          printf("filename %s\n", filename);
-          status = TRUE;
-          recorderpid = call_recorder(filename, "start");
-        }
-      else
-       {
-         status = FALSE;
-         missing_recorder_program_dialog(parent); 
-         gtk_widget_hide(GTK_WIDGET(toolbutton));
-       }
+	 recorderpid = call_recorder(filename, "start");
+	 status = (recorderpid > 0);
     }
   if (chooser)
    { 
