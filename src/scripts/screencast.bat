@@ -8,8 +8,8 @@ rem if it is used a localhost icecast server with the default
 rem configuration
 rem Client side you must have the ezstream installed
 
-rem set ICECAST=FALSE
-set ICECAST=TRUE
+set ICECAST=FALSE
+rem set ICECAST=TRUE
 
 rem You must configure the right password; I put the default one
 set ICECAST_PASSWORD=hackme
@@ -18,8 +18,8 @@ set ICECAST_PORT=8000
 set ICECAST_MOUNTPOINT=ardesia.ogg
 
 set RECORDER_PROGRAM=vlc.exe
-set RECORDER_PROGRAM_OPTIONS=-vvv -I dummy screen:// --screen-fps=12 --sout "#transcode{venc=theora,quality:10,scale=0.75,fps=12}:duplicate{dst=std{access=file,mux=ogg,dst=%2}}"
-set RECORDER_AND_FORWARD_PROGRAM_OPTIONS=-vvv -I dummy screen:// --screen-fps=12 --sout "#transcode{venc=theora,quality:10,scale=0.75,fps=12}:duplicate{dst=std{access=shout,mux=ogg,dst=source:%ICECAST_PASSWORD%@%ICECAST_ADDRESS%:%ICECAST_PORT%/%ICECAST_MOUNTPOINT%},dst=std{access=file,mux=ogg,dst=%2}}"
+set RECORDER_PROGRAM_OPTIONS=-vvv -I dummy --dummy-quiet screen:// --screen-fps=12 --sout "#transcode{venc=theora,quality:10,scale=0.75,fps=12}:duplicate{dst=std{access=file,mux=ogg,dst=%2}}"
+set RECORDER_AND_FORWARD_PROGRAM_OPTIONS=-vvv -I dummy --dummy-quiet screen:// --screen-fps=12 --sout "#transcode{venc=theora,quality:10,scale=0.75,fps=12}:duplicate{dst=std{access=shout,mux=ogg,dst=source:%ICECAST_PASSWORD%@%ICECAST_ADDRESS%:%ICECAST_PORT%/%ICECAST_MOUNTPOINT%},dst=std{access=file,mux=ogg,dst=%2}}"
 
 if ""%1"" == ""start"" goto start
 
