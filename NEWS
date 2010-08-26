@@ -18,8 +18,27 @@
 -------------
 
 Dependencies:
-- icecast to record and forward the live screencast
-  to the icecast server
+- removed the gconf dependency
+- removed the ezstream dependency
+- require vlc to record and forward the
+  live screencast to the icecast server
+
+Usability:
+- added Spanish translation
+- added French translation
+
+Features:
+- implemented recorder and stream forwarder 
+  for Linux and Windows
+
+Bug Fix:
+- Fix the file name suggestion in the 
+  record and save wizard on windows
+- Solve the bug in the hide/show button
+  on windows
+- Fix the color of the pen cursor synchronization
+  on windows
+
 
 -------------
  ardesia 0.3

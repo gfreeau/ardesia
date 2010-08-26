@@ -1,11 +1,11 @@
-========================================================
-   ##    #####   #####   ######   ####      #      ##
-  #  #   #    #  #    #  #       #          #     #  #
- #    #  #    #  #    #  #####    ####      #    #    #
- ######  #####   #    #  #            #     #    ######
- #    #  #   #   #    #  #       #    #     #    #    #
- #    #  #    #  #####   ######   ####      #    #    #
-========================================================
+=================================================================
+       ##     #####    #####    ######   ####    #     ##
+      #  #    #    #   #    #   #       #        #    #  #
+     #    #   #    #   #    #   #####    ####    #   #    #
+     ######   #####    #    #   #            #   #   ######    
+     #    #   #   #    #    #   #       #    #   #   #    #
+     #    #   #    #   #####    ######   ####    #   #    #    
+=================================================================
 
 
 --------------
@@ -20,7 +20,6 @@ point out things of interest.
 
 The tool facilitates the online presentations and demos showing in real time 
 your computer screen to anyone in the network.
-
 
 Ardesia is XInput-Aware, so if you have a mouse, a graphic tablet, 
 a touch screen or a whiteboard, you can draw lines with 
@@ -43,15 +42,15 @@ please read the NEWS file located in the current folder.
  License
 ---------
 
-This Program is distributed under the Gnu General Public License. See
-the file COPYING for details.
+This Program is distributed under the Gnu General Public License.
+See the file COPYING for details.
 
 
 --------------
  Installation
 --------------
 
-Please read the INSTALL file located on the current folder
+Please read the INSTALL file located on the current folder.
 
 
 ----------------------
@@ -61,8 +60,18 @@ Please read the INSTALL file located on the current folder
 In order to run Ardesia you need to enable the Compiz composite manager.
 To use the recording feature you must install the vlc multimedia player 
 and streamer.
-If you don't use the keyboard, I suggest you to use the "florence-ramble"
-virtual keyboard or the "cellwriter" handwriting recognizer.
+
+If you use Ubuntu you can install it with the command:
+
+sudo apt-get install vlc
+
+If you use an other Linux distro please use your package manager
+
+If you use windows please install download the vlc installer
+from http://www.videolan.org/vlc/
+
+If you need a virtual keyboard, I suggest you to use the "florence-ramble"
+or the "cellwriter" handwriting recognizer.
 
 
 -------
@@ -202,13 +211,14 @@ filename:	  		The file containig the image to be be used as background
     with an other program
   - install the vlc package (it's required)
     http://www.videolan.org/vlc/
+  - if you use windows add the vlc folder to the PATH environment variable
   - if you have other problems try to customize the 
     $PREFIX/share/ardesia/scripts/screencast.sh
-    or bin\screencast.bat if you use windows
+    or share\ardesia\scripts\screencast.bat if you use windows
 
 - I have read that with Ardesia I can put my presentation on the web.
   How I can do this?
-  - Ardesia supports the live screencast streaminf 
+  - Ardesia supports the live screencast streaming 
     only after that you have configured the file
     properly
     In order to make a presentation you must have:
@@ -220,6 +230,7 @@ filename:	  		The file containig the image to be be used as background
       - reach the icecast2 server
       - have ardesia installed
     - Open the file $PREFIX/share/ardesia/scripts/screencast.sh
+      or share\ardesia\scripts\screencast.bat if you use windows
       - Uncomment the line
         - ICECAST="TRUE";
       - Set these variable   
@@ -234,7 +245,8 @@ filename:	  		The file containig the image to be be used as background
       at the uri 
       http://ICECAST_LOCATION:ICECAST_PORT/ICECAST_MOUNTPOINT.ogg
     - Now you can put this link on a web page or publish it in an other way
-    - For furthermore information about icecast2 server visit http://www.icecast.org/
+    - For furthermore information about icecast2 server please 
+      visit http://www.icecast.org/
 
 
 -------
