@@ -45,12 +45,12 @@
 #endif
 
 
-#define ANNOTATE_MOUSE_EVENTS    ( GDK_PROXIMITY_IN_MASK   |    \
-                                   GDK_PROXIMITY_OUT_MASK  |    \
-                                   GDK_POINTER_MOTION_MASK |    \
-                                   GDK_BUTTON_PRESS_MASK   |    \
-                                   GDK_BUTTON_RELEASE_MASK      \
-                                 )
+#ifdef _WIN32
+  #define ANNOTATION_UI_FILE "..\\share\\ardesia\\ui\\annotation.glade"
+#else
+  #define ANNOTATION_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/annotation.glade"
+#endif 
+
 
 /* Enumeration containing tools */
 typedef enum
@@ -80,6 +80,7 @@ typedef struct _AnnotateSave
 /* Annotation data used by the callsbacks */
 typedef struct
 {
+  GtkBuilder *annotationWindowGtkBuilder;
   GdkScreen   *screen;
   GdkDisplay  *display;
   
@@ -114,8 +115,9 @@ typedef struct
   AnnotatePaintContext *default_pen;
   AnnotatePaintContext *default_eraser;
   AnnotatePaintContext *cur_context;
+  AnnotatePaintType old_paint_type;
 
-  int thickness; 
+  double thickness; 
 
   /* list of the coodinates of the last line drawn */
   GSList       *coordlist;
@@ -155,6 +157,7 @@ typedef struct
   gint x;
   gint y;
   gint width;
+  gdouble pressure;
 } AnnotateStrokeCoordinate;
 
 
@@ -197,8 +200,14 @@ void annotate_quit();
 /* Set the pen color */
 void annotate_set_color(gchar* color);
 
+/* Modify color according to the pressure */
+void modify_color(AnnotateData* data, gdouble pressure);
+
 /* Set the line thickness */
-void annotate_set_thickness(int thickness);
+void annotate_set_thickness(double thickness);
+
+/* Get the line thickness */
+double annotate_get_thickness();
 
 /* Set rectifier */
 void annotate_set_rectifier(gboolean rectify);
@@ -245,8 +254,8 @@ void hide_cursor();
 /* Unhide the cursor */
 void unhide_cursor();
 
-/* Add to the list of the painted point the point (x,y) storing the width */
-void annotate_coord_list_prepend (gint x, gint y, gint width);
+/* Add to the list of the painted point the point (x,y) storing the line width and the pressure */
+void annotate_coord_list_prepend (gint x, gint y, gint width, gdouble pressure);
 
 /* Draw line from the last point drawn to (x2,y2) */
 void annotate_draw_line (gint x2, gint y2, gboolean stroke);
@@ -257,13 +266,18 @@ void annotate_draw_point(int x, int y);
 /* Draw an arrow using some polygons */
 void annotate_draw_arrow (int distance);
 
+/* Select eraser, pen or other tool for tablet; code inherited by gromit */
+void annotate_select_tool (AnnotateData* data, GdkDevice *device, guint state);
+
+/* Select the default pen tool */
+void annotate_select_pen();
+
+/* Select the default eraser tool */
+void annotate_select_eraser();
+
 /* Call the geometric shape recognizer */
 void shape_recognize(gboolean closed_path);
 
 /* Add a save point for the undo/redo */
 void add_save_point();
-
-/* Select eraser, pen or other tool for tablet */
-void annotate_select_tool (GdkDevice *device, guint state);
-
 

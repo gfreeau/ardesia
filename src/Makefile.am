@@ -7,6 +7,7 @@ uibackgroundsdir = $(uidir)/backgrounds
 ui_DATA = ardesia.glade \
 	ardesia_horizontal.glade \
 	preference_dialog.glade \
+	annotation.glade \
 	info_dialog.glade
 
 

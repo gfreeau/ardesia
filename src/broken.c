@@ -135,16 +135,23 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, int pixel_
 
   int Ax = pointA->x;
   int Ay = pointA->y;
+  int Awidth = pointA->width;
+  gdouble Apressure = pointA->pressure;
   int Bx = pointB->x;
   int By = pointB->y;
+  int Bwidth = pointB->width;
+  gdouble Bpressure = pointB->pressure;
   int Cx = pointB->x;
   int Cy = pointB->y;
+  int Cwidth = pointB->width;
+  gdouble Cpressure = pointB->pressure;
 
   // add a point with the coordinates of pointA
   AnnotateStrokeCoordinate* first_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
   first_point->x = Ax;
   first_point->y = Ay;
-  first_point->width = pointA->width;
+  first_point->width = Awidth;
+  first_point->pressure = Apressure;
   listOut = g_slist_prepend (listOut, first_point);
 
   double area = 0.;
@@ -157,6 +164,8 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, int pixel_
        pointC = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, i);
        Cx = pointC->x;
        Cy = pointC->y;
+       Cwidth = pointC->width;
+       Cpressure = pointC->pressure;
 
        X1 = Bx - Ax;
        Y1 = By - Ay;
@@ -173,15 +182,20 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, int pixel_
             AnnotateStrokeCoordinate* new_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
             new_point->x = Bx;
             new_point->y = By;
-            new_point->width = pointB->width;
+            new_point->width = Bwidth;
+            new_point->pressure = Bpressure;
             listOut = g_slist_prepend (listOut, new_point);
             area = 0.0;
             Ax = Bx;
             Ay = By;
+            Awidth = Bwidth;
+            Apressure = Bpressure;
          } 
        // put to B the C coordinates
        Bx = Cx;
        By = Cy;
+       Bwidth = Cwidth;
+       Bpressure = Cpressure;
     }
   
   if (!close_path)
@@ -190,7 +204,8 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, int pixel_
       AnnotateStrokeCoordinate* last_point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
       last_point->x = Cx;
       last_point->y = Cy;
-      last_point->width = pointC->width;
+      last_point->width = Cwidth;
+      last_point->pressure = Cpressure;
       listOut = g_slist_prepend (listOut, last_point); 
     }
 
@@ -201,7 +216,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, int pixel_
 
 
 /* Take the list and the rurn the minx miny maxx and maxy points */
-gboolean found_min_and_max(GSList* list, gint* minx, gint* miny, gint* maxx, gint* maxy, gint* total_width)
+gboolean found_min_and_max(GSList* list, gint* minx, gint* miny, gint* maxx, gint* maxy, gdouble* total_pressure)
 {
   if (!list)
     {
@@ -218,7 +233,7 @@ gboolean found_min_and_max(GSList* list, gint* minx, gint* miny, gint* maxx, gin
   *miny = out_point->y;
   *maxx = out_point->x;
   *maxy = out_point->y;
-  *total_width = out_point->width;
+  *total_pressure = out_point->pressure;
   
   while (list)
     {
@@ -227,7 +242,7 @@ gboolean found_min_and_max(GSList* list, gint* minx, gint* miny, gint* maxx, gin
       *miny = MIN(*miny, cur_point->y);
       *maxx = MAX(*maxx, cur_point->x);
       *maxy = MAX(*maxy, cur_point->y);
-      *total_width = *total_width + cur_point->width;
+      *total_pressure = *total_pressure + cur_point->pressure;
       list = list->next; 
     }   
   return TRUE;
@@ -284,8 +299,8 @@ GSList* extract_poligon(GSList* listIn)
   gint miny;
   gint maxx;
   gint maxy;
-  gint total_width;
-  gboolean status = found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_width);
+  gdouble total_pressure;
+  gboolean status = found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_pressure);
   if (!status)
     {
       return NULL;
@@ -299,6 +314,7 @@ GSList* extract_poligon(GSList* listIn)
   angle_off += angle_step/2;
   double x1, y1;
   int i;
+  gdouble medium_pressure = total_pressure/lenght;
   for (i=0; i<lenght; i++)
     {
       x1 = radius * cos(angle_off) + cx;
@@ -306,6 +322,7 @@ GSList* extract_poligon(GSList* listIn)
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, i);
       point->x = x1;
       point->y = y1;
+      point->pressure = medium_pressure;
       angle_off += angle_step;
     }
   return listIn;  
@@ -323,37 +340,44 @@ GSList*  extract_outbounded_rectangle(GSList* listIn)
   gint miny;
   gint maxx;
   gint maxy;
-  gint total_width;
+  gdouble total_pressure = 1.0;
   gint lenght = g_slist_length(listIn);
-  gboolean status = found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_width);
+  gboolean status = found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_pressure);
   if (!status)
     {
       return NULL;
     }
   GSList* listOut = NULL;
-  gint media_width = total_width/lenght; 
+  gdouble media_pressure = total_pressure/lenght; 
+  AnnotateStrokeCoordinate* pointF = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, 0);
+  gint width = pointF->width;
+
   AnnotateStrokeCoordinate* point0 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
   point0->x = minx;
   point0->y = miny;
-  point0->width = media_width;
+  point0->width = width;
+  point0->pressure = media_pressure;
   listOut = g_slist_prepend (listOut, point0);
                        
   AnnotateStrokeCoordinate* point1 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
   point1->x = maxx;
   point1->y = miny;
-  point1->width = media_width;
+  point1->width = width;
+  point1->pressure = media_pressure;
   listOut = g_slist_prepend (listOut, point1);
 
   AnnotateStrokeCoordinate* point2 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
   point2->x = maxx;
   point2->y = maxy;
-  point2->width = media_width;
+  point2->width = width;
+  point2->pressure = media_pressure;
   listOut = g_slist_prepend (listOut, point2);
 
   AnnotateStrokeCoordinate* point3 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
   point3->x = minx;
   point3->y = maxy;
-  point3->width = media_width;
+  point3->width = width;
+  point3->pressure = media_pressure;
   listOut = g_slist_prepend (listOut, point3);
   return listOut;
 }
@@ -407,6 +431,7 @@ GSList* straighten(GSList* list)
   first_point->x = inp_point->x;
   first_point->y = inp_point->y;
   first_point->width = inp_point->width;
+  first_point->pressure = inp_point->pressure;
   listOut = g_slist_prepend (listOut, first_point); 
  
   int i;
@@ -426,6 +451,7 @@ GSList* straighten(GSList* list)
            point->x = pointB->x;
            point->y = pointB->y;
            point->width = pointB->width;
+           point->pressure = pointB->pressure;
            listOut = g_slist_prepend (listOut, point); 
         } 
        /* else is three the difference degree is minor than the threshold I neglegt B */
@@ -438,6 +464,7 @@ GSList* straighten(GSList* list)
   last_out_point->x = last_point->x;
   last_out_point->y = last_point->y;
   last_out_point->width = last_point->width;
+  last_out_point->pressure = last_point->pressure;
   listOut = g_slist_prepend (listOut, last_out_point);
 
   /* I reverse the list to preserve the initial order */

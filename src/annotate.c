@@ -66,15 +66,25 @@ void annotate_set_arrow(gboolean arrow)
 
 
 /* Set the line thickness */
-void annotate_set_thickness(int thickness)
+void annotate_set_thickness(double thickness)
 {
   data->thickness = thickness;
 }
 
 
+/* Get the line thickness */
+double annotate_get_thickness()
+{
+  if (data->cur_context->type != ANNOTATE_ERASER)
+    {
+       return data->thickness; 
+    }
+  return data->thickness*2.5; 
+}
+
+
 /* Create a new paint context */
-AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type,
-                                                   guint width)
+AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type)
 {
   AnnotatePaintContext *context;
   context = g_malloc (sizeof (AnnotatePaintContext));
@@ -110,13 +120,14 @@ void annotate_paint_context_free (AnnotatePaintContext *context)
 
 
 /* Add to the list of the painted point the point (x,y) storing the width */
-void annotate_coord_list_prepend (gint x, gint y, gint width)
+void annotate_coord_list_prepend (gint x, gint y, gint width, gdouble pressure)
 {
   AnnotateStrokeCoordinate *point;
   point = g_malloc (sizeof (AnnotateStrokeCoordinate));
   point->x = x;
   point->y = y;
   point->width = width;
+  point->pressure = pressure;
   data->coordlist = g_slist_prepend (data->coordlist, point);
 }
 
@@ -192,6 +203,28 @@ void annotate_savelist_free()
   /* annotate_save point to the first save point */
   data->savelist = annotate_save;
   annotate_redolist_free();
+}
+
+
+/* Modify color according to the pressure */
+void modify_color(AnnotateData* data, gdouble pressure)
+{
+      /* pressure is value from 0 to 1 */
+      if ((pressure>0)&&(pressure<1))
+        {
+          /* this is a number from 0 to 1 to subtract to the RGBA */
+          int r,g,b,a;
+          sscanf (data->cur_context->fg_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+          gdouble old_pressure = pressure;
+          if (data->coordlist)
+            { 
+               AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, 0);
+               old_pressure = last_point->pressure;      
+            }
+          gdouble contrast = 96;
+          gdouble corrective = (1-( 2 * pressure + old_pressure)/3) * contrast;
+          cairo_set_source_rgba (data->annotation_cairo_context, (r + corrective)/255, (g + corrective)/255, (b+corrective)/255, (double) a/255);
+        }
 }
 
 
@@ -313,7 +346,7 @@ void configure_pen_options()
 {
   cairo_set_line_cap (data->annotation_cairo_context, CAIRO_LINE_CAP_ROUND);
   cairo_set_line_join(data->annotation_cairo_context, CAIRO_LINE_JOIN_ROUND); 
-  cairo_set_line_width(data->annotation_cairo_context, data->thickness);
+  cairo_set_line_width(data->annotation_cairo_context, annotate_get_thickness());
   select_color();  
 }
 
@@ -380,6 +413,18 @@ void annotate_restore_surface()
 }
 
 
+/* Select the default pen tool */
+void annotate_select_pen()
+{
+  if (data->debug)
+    {
+      g_printerr("Select pen\n");
+    }
+  data->cur_context = data->default_pen;
+  data->old_paint_type = ANNOTATE_PEN;
+  annotate_set_pen_cursor();
+}
+
 
 /* Select the default eraser tool */
 void annotate_select_eraser()
@@ -387,17 +432,10 @@ void annotate_select_eraser()
   if (data->debug)
     {
       g_printerr("Select eraser\n");
-    }
-  AnnotatePaintContext *eraser = data->default_eraser;
-  data->cur_context = eraser;
-}
-
-
-/* Select the default pen tool */
-void annotate_select_pen()
-{
-  AnnotatePaintContext *pen = data->default_pen;
-  data->cur_context = pen;
+    } 
+  data->cur_context = data->default_eraser;
+  data->old_paint_type = ANNOTATE_ERASER;
+  annotate_set_eraser_cursor();
 }
 
 
@@ -422,6 +460,10 @@ void annotate_select_pen()
 /* Update the cursor icon */
 void update_cursor()
 {
+  if (!data->annotation_window)
+    {
+       return;
+    }
   #ifdef _WIN32
     annotate_release_pointer_grab();
   #endif
@@ -443,15 +485,6 @@ void unhide_cursor()
       update_cursor();
       data->is_cursor_hidden = FALSE;
     }
-}
-
-
-/* Start to paint */
-void annotate_toggle_grab()
-{ 
-  annotate_select_pen();
-  annotate_acquire_grab ();
-  update_cursor();
 }
 
 
@@ -600,6 +633,7 @@ void annotate_set_pen_cursor()
   g_object_unref (mask);
   g_free(foreground_color_p);
   g_free(background_color_p); 
+  update_cursor();
 }
 
 
@@ -650,7 +684,7 @@ void annotate_set_eraser_cursor()
       gdk_cursor_unref(data->cursor);
       data->cursor=NULL;
     }
-  gint size = data->thickness;
+  gint size = annotate_get_thickness();
 
   GdkPixmap *pixmap, *mask;
   get_eraser_pixmaps(size, &pixmap, &mask); 
@@ -667,6 +701,7 @@ void annotate_set_eraser_cursor()
   g_object_unref (mask);
   g_free(foreground_color_p);
   g_free(background_color_p);
+  update_cursor();
 }
 
 
@@ -721,72 +756,6 @@ void destroy_cairo()
     }
 
   data->annotation_cairo_context = NULL;
-}
-
-
-/* Select eraser, pen or other tool for tablet; code inherited by gromit */
-void annotate_select_tool (GdkDevice *device, guint state)
-{
-  guint buttons = 0, modifier = 0, len = 0;
-  guint req_buttons = 0, req_modifier = 0;
-  guint i, j, success = 0;
-  AnnotatePaintContext *context = NULL;
-  gchar *name;
- 
-  if (device)
-    {
-      len = strlen (device->name);
-      name = g_strndup (device->name, len + 3);
-      
-      /* Extract Button/Modifiers from state (see GdkModifierType) */
-      req_buttons = (state >> 8) & 31;
-
-      req_modifier = (state >> 1) & 7;
-      if (state & GDK_SHIFT_MASK) req_modifier |= 1;
-
-      name [len] = 124;
-      name [len+3] = 0;
-  
-      /*  0, 1, 3, 7, 15, 31 */
-      context = NULL;
-      i=-1;
-      do
-        {
-          i++;
-          buttons = req_buttons & ((1 << i)-1);
-          j=-1;
-          do
-            {
-              j++;
-              modifier = req_modifier & ((1 << j)-1);
-              name [len+1] = buttons + 64;
-              name [len+2] = modifier + 48;
-            }
-          while (j<=3 && req_modifier >= (1 << j));
-        }
-      while (i<=5 && req_buttons >= (1 << i));
-
-      g_free (name);
-
-      if (!success)
-        {
-          if (device->source == GDK_SOURCE_ERASER)
-            {
-              data->cur_context = data->default_eraser;
-            }
-          else
-            {
-              data->cur_context = data->default_pen;
-	    }
-        }
-    }
-  else
-    {
-      g_printerr("Attempt to select nonexistent device!\n");
-      data->cur_context = data->default_pen;
-    }
-
-  data->device = device;
 }
 
 
@@ -899,13 +868,11 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
 }
 
 
-/* Draw a poin in x,y respecting the context */
+/* Draw a point in x,y respecting the context */
 void annotate_draw_point(int x, int y)
 {
-  cairo_arc (data->annotation_cairo_context, 
-             x, y, data->thickness/2, 0, 2 * M_PI);
-  cairo_fill (data->annotation_cairo_context);
   cairo_move_to (data->annotation_cairo_context, x, y);
+  cairo_line_to (data->annotation_cairo_context, x, y);
 }
 
 
@@ -950,6 +917,10 @@ void rectify(gboolean closed_path)
        
   annotate_coord_list_free();
   data->coordlist = outptr;
+
+  gint lenght = g_slist_length(outptr);
+  AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght/2);
+  modify_color(data, point->pressure); 
   annotate_draw_point_list(outptr);     
   if (closed_path)
     {
@@ -973,6 +944,8 @@ void roundify(gboolean closed_path)
      
   annotate_coord_list_free();
   data->coordlist = outptr;
+  AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght/2);
+  modify_color(data, point->pressure); 
   
   if (lenght==1)
     {
@@ -1049,12 +1022,11 @@ void setup_input_devices ()
       if (strstr (device->name, "raser") ||
           strstr (device->name, "RASER"))
         {
-	      gdk_device_set_source (device, GDK_SOURCE_ERASER);
+	  gdk_device_set_source (device, GDK_SOURCE_ERASER);
         }
 
-      /* Dont touch devices with two or more axis - GDK apparently
-       * gets confused...  */
-      if (device->num_axes > 2)
+      /* Dont touch devices with lesser than two axis */
+      if (device->num_axes >= 2)
         {
           g_printerr ("Enabling No. %p: \"%s\" (Type: %d)\n",
                       device, device->name, device->source);
@@ -1064,36 +1036,69 @@ void setup_input_devices ()
 }
 
 
-/* Disconnect all the callback signals */
-void annotate_disconnect_signals()
+/* Select eraser, pen or other tool for tablet; code inherited by gromit */
+void annotate_select_tool (AnnotateData* data, GdkDevice *device, guint state)
 {
-  g_signal_handlers_disconnect_by_func (data->annotation_window,
-					G_CALLBACK (event_expose), (gpointer) data);
-  g_signal_handlers_disconnect_by_func (data->annotation_window, 
-		    			G_CALLBACK(paint), (gpointer) data);
-  g_signal_handlers_disconnect_by_func (data->annotation_window, G_CALLBACK (paintto), (gpointer) data);
-  g_signal_handlers_disconnect_by_func (data->annotation_window, G_CALLBACK (paintend), (gpointer) data);
-  g_signal_handlers_disconnect_by_func (data->annotation_window, G_CALLBACK (proximity_in), (gpointer) data);
-  g_signal_handlers_disconnect_by_func(data->annotation_window, G_CALLBACK (proximity_out), (gpointer) data);
-}
+  guint buttons = 0, modifier = 0, len = 0;
+  guint req_buttons = 0, req_modifier = 0;
+  guint i, j, success = 0;
+  AnnotatePaintContext *context = NULL;
+  gchar *name;
+ 
+  if (device)
+    {
+      len = strlen (device->name);
+      name = g_strndup (device->name, len + 3);
+      
+      /* Extract Button/Modifiers from state (see GdkModifierType) */
+      req_buttons = (state >> 8) & 31;
 
+      req_modifier = (state >> 1) & 7;
+      if (state & GDK_SHIFT_MASK) req_modifier |= 1;
 
-/* Connect the window to the callback signals */
-void annotate_connect_signals()
-{ 
-  g_signal_connect (data->annotation_window, "expose_event",
-		    G_CALLBACK (event_expose), (gpointer) data);
-  g_signal_connect (data->annotation_window, "button_press_event", 
-		    G_CALLBACK(paint), (gpointer) data);
-  g_signal_connect (data->annotation_window, "motion_notify_event",
-		    G_CALLBACK (paintto), (gpointer) data);
-  g_signal_connect (data->annotation_window, "button_release_event",
-		    G_CALLBACK (paintend), (gpointer) data);
-  g_signal_connect (data->annotation_window, "proximity_in_event",
-		    G_CALLBACK (proximity_in), (gpointer) data);
-  g_signal_connect (data->annotation_window, "proximity_out_event",
-		    G_CALLBACK (proximity_out), (gpointer) data);
-  gtk_widget_set_events (data->annotation_window, ANNOTATE_MOUSE_EVENTS);
+      name [len] = 124;
+      name [len+3] = 0;
+  
+      /*  0, 1, 3, 7, 15, 31 */
+      context = NULL;
+      i=-1;
+      do
+        {
+          i++;
+          buttons = req_buttons & ((1 << i)-1);
+          j=-1;
+          do
+            {
+              j++;
+              modifier = req_modifier & ((1 << j)-1);
+              name [len+1] = buttons + 64;
+              name [len+2] = modifier + 48;
+            }
+          while (j<=3 && req_modifier >= (1 << j));
+        }
+      while (i<=5 && req_buttons >= (1 << i));
+
+      g_free (name);
+
+      if (!success)
+        {
+          if (device->source == GDK_SOURCE_ERASER)
+            {
+              annotate_select_eraser();
+            }
+          else
+            {
+              annotate_select_pen();
+	    }
+        }
+    }
+  else
+    {
+      g_printerr("Attempt to select nonexistent device!\n");
+      data->cur_context = data->default_pen;
+    }
+  
+  data->device = device;
 }
 
 
@@ -1114,12 +1119,10 @@ cairo_t* get_annotation_cairo_context()
 /* Quit the annotation */
 void annotate_quit()
 {
-  /* disconnect all the signals */
-  annotate_disconnect_signals();
+  gtk_widget_destroy(data->annotation_window);
+  /* unref gtkbuilder */
+  g_object_unref (data->annotationWindowGtkBuilder);
 
-  /* connect the signals */
-  annotate_connect_signals();
-  
   if (data->shape_cr)
     {  
       cairo_destroy(data->shape_cr);
@@ -1171,15 +1174,6 @@ void annotate_quit()
   g_free(data->default_eraser);
  
   g_free (data);
-}
-
-
-/* Start to erase */
-void annotate_eraser_grab ()
-{
-  annotate_select_eraser();
-  annotate_acquire_grab();
-  update_cursor();
 }
 
 
@@ -1284,7 +1278,6 @@ void annotate_show_annotation ()
     {
       g_printerr("Show annotations\n");
     }
-  /* reconnect the signals to make the transparent window paintable */
   data->are_annotations_hidden = FALSE;  
   annotate_restore_surface();
 }
@@ -1340,26 +1333,36 @@ void annotate_clear_screen ()
 }
 
 
+GtkWidget* create_annotation_window()
+{
+  /* Initialize the main window */
+  data->annotationWindowGtkBuilder = gtk_builder_new();
+
+  /* Load the gtk builder file created with glade */
+  gtk_builder_add_from_file(data->annotationWindowGtkBuilder, ANNOTATION_UI_FILE, NULL);
+ 
+  GtkWidget* widget = GTK_WIDGET(gtk_builder_get_object(data->annotationWindowGtkBuilder,"annotationWindow")); 
+   
+  return widget;
+}
+
+
 /* Setup the application */
 void setup_app (GtkWidget* parent)
-{ 
-  data->annotation_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  
+{
+  data->annotation_window = create_annotation_window();
+   
   gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(parent));
-
-  gtk_window_set_destroy_with_parent(GTK_WINDOW(data->annotation_window), TRUE);
 
   gtk_widget_set_usize(data->annotation_window, data->width, data->height);
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window)); 
-	
-  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(data->annotation_window), TRUE);
-  gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1); 
-   
+
   // initialize pen context
-  data->default_pen = annotate_paint_context_new (ANNOTATE_PEN, data->thickness);
+  data->default_pen = annotate_paint_context_new (ANNOTATE_PEN);
   
-  data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER, data->thickness);
+  data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER);
   data->cur_context = data->default_pen;
+  data->old_paint_type = ANNOTATE_PEN;
 
   setup_input_devices();
   
@@ -1375,14 +1378,9 @@ void setup_app (GtkWidget* parent)
 
   clear_cairo_context(data->shape_cr); 
   
-  /* connect the signals */
-  annotate_connect_signals();
-
-  gtk_widget_show_all(data->annotation_window);
+  /* This is important; connect all the callback from gtkbuilder xml file */
+  gtk_builder_connect_signals(data->annotationWindowGtkBuilder, (gpointer) data);  
  
-  gtk_widget_set_app_paintable(data->annotation_window, TRUE);
-  gtk_widget_set_double_buffered(data->annotation_window, FALSE);
-
   #ifdef _WIN32
     // I use a layered window that use the black as transparent color
     setLayeredGdkWindowAttributes(data->annotation_window->window, RGB(0,0,0), 0, LWA_COLORKEY );	

@@ -108,29 +108,12 @@ void set_options(BarData* bar_data)
  
   if ((bar_data->pencil)||(bar_data->arrow))
     {  
-       annotate_set_pen_cursor();
+       annotate_select_pen();
     }
   else
     {
-       annotate_set_thickness((bar_data->thickness)*2.5); 
-       annotate_set_eraser_cursor();
+       annotate_select_eraser();
     }
-}
-
-
-/* Start to annotate calling annotate */
-void annotate(BarData *bar_data)
-{
-  set_options(bar_data);
-  annotate_toggle_grab();
-}
-
-
-/* Start to erase calling annotate */
-void erase(BarData *bar_data)
-{
-  set_options(bar_data);
-  annotate_eraser_grab();
 }
 
 
@@ -147,14 +130,8 @@ void start_tool(BarData *bar_data)
 	}
       else 
 	{
-	  if (bar_data->pencil)
-	    { 
-	      annotate(bar_data);
-	    }
-	  else
-	    {
-	      erase(bar_data);
-	    }   
+          set_options(bar_data);
+          annotate_acquire_grab();
 	}
     }
 }
