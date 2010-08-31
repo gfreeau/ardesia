@@ -1010,17 +1010,16 @@ void shape_recognize(gboolean closed_path)
 /* Setup input device */
 void setup_input_devices ()
 {
-  GList     *tmp_list;
+  GList     *devices, *d;
 
-  for (tmp_list = gdk_display_list_devices (data->display);
-       tmp_list;
-       tmp_list = tmp_list->next)
+  devices = gdk_display_list_devices (data->display);
+  for (d = devices; d; d = d->next)
     {
-      GdkDevice *device = (GdkDevice *) tmp_list->data;
+      GdkDevice *device = (GdkDevice *) d->data;
 
       /* Guess "Eraser"-Type devices */
-      if (strstr (device->name, "raser") ||
-          strstr (device->name, "RASER"))
+      if (strstr (gdk_device_get_name(device), "raser") || 
+          strstr (gdk_device_get_name(device), "RASER"))
         {
 	  gdk_device_set_source (device, GDK_SOURCE_ERASER);
         }
@@ -1028,7 +1027,7 @@ void setup_input_devices ()
       /* Dont touch devices with lesser than two axis */
       if (device->num_axes >= 2)
         {
-          g_printerr ("Enabling No. %p: \"%s\" (Type: %d)\n",
+          g_printerr ("Enabled Device. %p: \"%s\" (Type: %d)\n",
                       device, device->name, device->source);
           gdk_device_set_mode (device, GDK_MODE_SCREEN);
         }
