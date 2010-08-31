@@ -66,7 +66,7 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
   GdkGC *gc;
   GdkPixbuf *rgb_pixbuf, *rgba_pixbuf;
   GdkCursor *cursor;
-  int width, height;
+  gint width, height;
 
   /* HACK!  It seems impossible to work with RGBA pixmaps directly in
      GDK-Win32.  Instead we pick some third color, different from fg

@@ -95,14 +95,14 @@ GtkWidget* get_bar_window()
 
 
 /** Get the distance beetween two points */
-int get_distance(int x1, int y1, int x2, int y2)
+gint get_distance(gint x1, gint y1, gint x2, gint y2)
 {
   if ((x1==x2) && (y1==y2))
     {
       return 0;
     }
   /* apply the Pitagora theorem to calculate the distance */
-  int ret = (sqrt(pow(x1-x2,2) + pow(y1-y2,2)));
+  gint ret = (sqrt(pow(x1-x2,2) + pow(y1-y2,2)));
   return ret; 
 }
 
@@ -121,7 +121,7 @@ gchar* gdkcolor_to_rgba(GdkColor* gdkcolor)
  * Take an rgb or a rgba string and return the pointer to the allocated GdkColor 
  * neglecting the alpha channel; the gtkColor doesn't support the rgba color
  */
-GdkColor* rgb_to_gdkcolor(char* rgb)
+GdkColor* rgb_to_gdkcolor(gchar* rgb)
 {
   GdkColor* gdkcolor = g_malloc(sizeof(GdkColor));
   gchar *ccolor = g_malloc(8 * sizeof (gchar));
@@ -148,13 +148,13 @@ void clear_cairo_context(cairo_t* cr)
 
 
 /* Set the cairo surface color to the RGBA string */
-void cairo_set_source_color_from_string( cairo_t * cr, char* color)
+void cairo_set_source_color_from_string( cairo_t * cr, gchar* color)
 {
  if (cr)
    {
-     int r,g,b,a;
+     gint r,g,b,a;
      sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-     cairo_set_source_rgba (cr, (double) r/255, (double) g/255, (double) b/255, (double) a/255);
+     cairo_set_source_rgba (cr, (gdouble) r/255, (gdouble) g/255, (gdouble) b/255, (gdouble) a/255);
    }
 }
 
@@ -162,9 +162,9 @@ void cairo_set_source_color_from_string( cairo_t * cr, char* color)
 /*
  * This is function return if the point (x,y) in inside the ardesia bar window
  */
-gboolean inside_bar_window(int xp, int yp)
+gboolean inside_bar_window(gint xp, gint yp)
 {
-  int x, y, width, height;
+  gint x, y, width, height;
   GtkWindow* bar = GTK_WINDOW(get_bar_window());
   gtk_window_get_position(bar, &x, &y);
   gtk_window_get_size(bar, &width, &height);   
@@ -189,7 +189,7 @@ gchar* get_date()
   t = localtime( &now );
 
   gchar* date = g_malloc(16 * sizeof(gchar));
-  char* hour_min_sep = ":";
+  gchar* hour_min_sep = ":";
   #ifdef _WIN32
     /* The ":" character on windows is avoided in file name and then I use the "." character instead */
     hour_min_sep = ".";
@@ -201,9 +201,9 @@ gchar* get_date()
 
 
 /* Return if a file exists */
-gboolean file_exists(char* filename, char* desktop_dir)
+gboolean file_exists(gchar* filename, gchar* desktop_dir)
 {
-  char* afterslash = strrchr(filename, DIR_SEPARATOR);
+  gchar* afterslash = strrchr(filename, DIR_SEPARATOR);
 
   if (afterslash == 0)
     {

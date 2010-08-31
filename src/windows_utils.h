@@ -36,7 +36,7 @@
   #define LWA_ALPHA     0x00000002
 
   /* Get the desktop dir of the current user */
-  char* win_get_desktop_dir();  
+  gchar* win_get_desktop_dir();  
 
   
   /* Set layered window atrributes to a gdk window */

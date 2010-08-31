@@ -43,10 +43,10 @@ typedef struct
 GtkWidget* create_background_window();
 
 /* Change the background image */
-void change_background_image(char *backgroundimage);
+void change_background_image(gchar *backgroundimage);
 
 /* Change the background color */
-void change_background_color(char *rgba);
+void change_background_color(gchar *rgba);
 
 /* Clear the background */
 void clear_background_window();

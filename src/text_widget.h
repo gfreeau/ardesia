@@ -48,22 +48,22 @@
 
 typedef struct
 {
-  int x;
-  int y;
-  int x_bearing;
-  int y_bearing;
+  gint x;
+  gint y;
+  gint x_bearing;
+  gint y_bearing;
 } CharInfo;
 
 
 typedef struct
 {
-  int x;
-  int y;
+  gint x;
+  gint y;
 } Pos;
 
 
 /* Start text widget */
-void start_text_widget(GtkWindow *parent, char* color, int tickness);
+void start_text_widget(GtkWindow *parent, gchar* color, gint tickness);
 
 
 /* Stop text widget */

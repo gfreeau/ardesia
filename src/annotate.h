@@ -117,7 +117,7 @@ typedef struct
   AnnotatePaintContext *cur_context;
   AnnotatePaintType old_paint_type;
 
-  double thickness; 
+  gdouble thickness; 
 
   /* list of the coodinates of the last line drawn */
   GSList       *coordlist;
@@ -162,7 +162,7 @@ typedef struct
 
 
 /* Initialize the annotation window */
-int annotate_init(GtkWidget* parent, gboolean debug);
+gint annotate_init(GtkWidget* parent, gboolean debug);
 
 /* Get the annotation window */
 GtkWidget* get_annotation_window();
@@ -204,10 +204,10 @@ void annotate_set_color(gchar* color);
 void modify_color(AnnotateData* data, gdouble pressure);
 
 /* Set the line thickness */
-void annotate_set_thickness(double thickness);
+void annotate_set_thickness(gdouble thickness);
 
 /* Get the line thickness */
-double annotate_get_thickness();
+gdouble annotate_get_thickness();
 
 /* Set rectifier */
 void annotate_set_rectifier(gboolean rectify);
@@ -261,10 +261,10 @@ void annotate_coord_list_prepend (gint x, gint y, gint width, gdouble pressure);
 void annotate_draw_line (gint x2, gint y2, gboolean stroke);
 
 /* Draw a poin in x,y respecting the context */
-void annotate_draw_point(int x, int y);
+void annotate_draw_point(gint x, gint y);
 
 /* Draw an arrow using some polygons */
-void annotate_draw_arrow (int distance);
+void annotate_draw_arrow (gint distance);
 
 /* Select eraser, pen or other tool for tablet; code inherited by gromit */
 void annotate_select_tool (AnnotateData* data, GdkDevice *device, guint state);

@@ -38,9 +38,9 @@ static gboolean is_active = FALSE;
  * Create a annotate client process the annotate
  * that talk with the server process option is start or stop
  */
-GPid call_recorder(char* filename, char* option)
+GPid call_recorder(gchar* filename, gchar* option)
 {
-  gchar* argv[4] = {RECORDER_FILE, option, filename, (char*) 0};
+  gchar* argv[4] = {RECORDER_FILE, option, filename, (gchar*) 0};
   GPid pid = (GPid) 0;
   if (
   g_spawn_async (NULL /*working_directory*/,
@@ -60,7 +60,7 @@ GPid call_recorder(char* filename, char* option)
 /* Is the recorder available */
 gboolean is_recorder_available()
 {
-  gchar* argv[5] = {"vlc", "-I", "dummy", "--dummy-quiet", (char*) 0};
+  gchar* argv[5] = {"vlc", "-I", "dummy", "--dummy-quiet", (gchar*) 0};
   
   return g_spawn_async (NULL /*working_directory*/,
                         argv,
@@ -148,15 +148,15 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
     {
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
      
-      char* supported_extension = ".ogv";
-      char* extension = strrchr(filename, '.');
+      gchar* supported_extension = ".ogv";
+      gchar* extension = strrchr(filename, '.');
       if ((extension==0) || (strcmp(extension, supported_extension) != 0))
 	{
 	  filename = (gchar *) g_realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar));
 	  (void) strcat((gchar *)filename, supported_extension);
 	}
  
-      if (file_exists(filename, (char *) workspace_dir))
+      if (file_exists(filename, (gchar *) workspace_dir))
 	{
 	  GtkWidget *msg_dialog; 
                    

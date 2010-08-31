@@ -50,7 +50,7 @@ event_expose (GtkWidget *widget,
       return TRUE;
     }
 
-  int is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
+  gint is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
   if (!is_fullscreen)
     {
       return TRUE;
@@ -130,7 +130,7 @@ paint (GtkWidget *win,
        return TRUE;
     }
 
-  int x,y;
+  gint x,y;
   #ifdef _WIN32
     /* I do not know why but sometimes the event coord are wrong */
     /* get cursor position */
@@ -208,7 +208,7 @@ paintto (GtkWidget *win,
        return TRUE;
     }
   
-  int x,y;
+  gint x,y;
   #ifdef _WIN32
     /* I do not know why but sometimes the event coord are wrong */
     /* get cursor position */
@@ -291,7 +291,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
        return TRUE;
     }
   
-  int x,y;
+  gint x,y;
   #ifdef _WIN32
     /* I do not know why but sometimes the event coord are wrong */
     /* get cursor position */
@@ -325,7 +325,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
       return TRUE;
     }  
 
-  int distance = -1;
+  gint distance = -1;
   
   if (g_slist_length(data->coordlist)>2)
     { 
@@ -333,7 +333,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
       AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght-1);
        
       /* This is the tollerance to force to close the path in a magnetic way */
-      int tollerance = data->thickness;
+      gint tollerance = data->thickness;
       distance = get_distance(x, y, first_point->x, first_point->y);
  
       AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, 0);

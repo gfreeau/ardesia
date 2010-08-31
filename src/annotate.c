@@ -35,7 +35,9 @@
   #include <windows_utils.h>
 #endif
 
+
 static AnnotateData* data;
+
 
 /* Set color */
 void annotate_set_color(gchar* color)
@@ -66,14 +68,14 @@ void annotate_set_arrow(gboolean arrow)
 
 
 /* Set the line thickness */
-void annotate_set_thickness(double thickness)
+void annotate_set_thickness(gdouble thickness)
 {
   data->thickness = thickness;
 }
 
 
 /* Get the line thickness */
-double annotate_get_thickness()
+gdouble annotate_get_thickness()
 {
   if (data->cur_context->type != ANNOTATE_ERASER)
     {
@@ -84,18 +86,18 @@ double annotate_get_thickness()
 
 
 /* Create a new paint context */
-AnnotatePaintContext * annotate_paint_context_new (AnnotatePaintType type)
+AnnotatePaintContext * annotate_paint_context_new(AnnotatePaintType type)
 {
   AnnotatePaintContext *context;
-  context = g_malloc (sizeof (AnnotatePaintContext));
+  context = g_malloc (sizeof(AnnotatePaintContext));
   context->type = type;
   context->fg_color = NULL;
   return context;
 }
 
 
-/* Print paint context informations */
-void annotate_paint_context_print (gchar *name, AnnotatePaintContext *context)
+/* Prgint paint context informations */
+void annotate_paint_context_print(gchar *name, AnnotatePaintContext *context)
 {
   g_printerr ("Tool name: \"%-20s\": ", name);
   switch (context->type)
@@ -213,7 +215,7 @@ void modify_color(AnnotateData* data, gdouble pressure)
       if ((pressure>0)&&(pressure<1))
         {
           /* this is a number from 0 to 1 to subtract to the RGBA */
-          int r,g,b,a;
+          gint r,g,b,a;
           sscanf (data->cur_context->fg_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
           gdouble old_pressure = pressure;
           if (data->coordlist)
@@ -223,7 +225,7 @@ void modify_color(AnnotateData* data, gdouble pressure)
             }
           gdouble contrast = 96;
           gdouble corrective = (1-( 3 * pressure + old_pressure)/4) * contrast;
-          cairo_set_source_rgba (data->annotation_cairo_context, (r + corrective)/255, (g + corrective)/255, (b+corrective)/255, (double) a/255);
+          cairo_set_source_rgba (data->annotation_cairo_context, (r + corrective)/255, (g + corrective)/255, (b+corrective)/255, (gdouble) a/255);
         }
 }
 
@@ -232,10 +234,10 @@ void modify_color(AnnotateData* data, gdouble pressure)
 gfloat annotate_get_arrow_direction()
 {
   GSList *outptr = data->coordlist;   
-  int delta = 2;
+  gint delta = 2;
 
   // make the standard deviation 
-  int tollerance = data->thickness * delta;
+  gint tollerance = data->thickness * delta;
   
   outptr = extract_relevant_points(outptr, FALSE, tollerance);   
   AnnotateStrokeCoordinate* point = NULL;
@@ -362,7 +364,7 @@ void reset_cairo()
 }
 
 
-/* Paint the context over the annotation window */
+/* paint the context over the annotation window */
 void merge_context(cairo_t * cr)
 {
   if (data->debug)
@@ -449,7 +451,7 @@ void annotate_select_eraser()
 
 
   /* Release the grab pointer */
-  void annotate_release_pointer_grab()
+  void annotate_release_pognter_grab()
     {
       ungrab_pointer(data->display, data->annotation_window);
     }
@@ -489,7 +491,7 @@ void unhide_cursor()
 
 
 /* Create pixmap and mask for the invisible cursor */
-void get_invisible_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
+void get_invisible_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
   *pixmap = gdk_pixmap_new (NULL, size, size, 1);
   *mask =  gdk_pixmap_new (NULL, size, size, 1); 
@@ -554,12 +556,12 @@ void hide_cursor()
 
 
 /* Create pixmap and mask for the pen cursor */
-void get_pen_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
+void get_pen_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
   gint side_lenght = (size*3) + data->thickness;
   *pixmap = gdk_pixmap_new (NULL, side_lenght, side_lenght, 1);
   *mask =  gdk_pixmap_new (NULL, side_lenght, side_lenght, 1);
-  int circle_width = 2; 
+  gint circle_width = 2; 
 
   cairo_t *pen_cr = gdk_cairo_create(*pixmap);
   if (cairo_status(pen_cr) != CAIRO_STATUS_SUCCESS)
@@ -638,9 +640,9 @@ void annotate_set_pen_cursor()
 
 
 /* Create pixmap and mask for the eraser cursor */
-void get_eraser_pixmaps(int size, GdkPixmap** pixmap, GdkPixmap** mask)
+void get_eraser_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
-  int circle_width = 2; 
+  gint circle_width = 2; 
   *pixmap = gdk_pixmap_new (NULL, size, size, 1);
   *mask =  gdk_pixmap_new (NULL, size, size, 1);
  
@@ -747,9 +749,9 @@ void annotate_acquire_grab ()
 /* Destroy cairo context */
 void destroy_cairo()
 {
-  int refcount = cairo_get_reference_count(data->annotation_cairo_context);
+  gint refcount = cairo_get_reference_count(data->annotation_cairo_context);
   
-  int i = 0;
+  gint i = 0;
   for  (i=0; i<refcount; i++)
     {
       cairo_destroy(data->annotation_cairo_context);
@@ -776,9 +778,9 @@ void annotate_draw_line (gint x2, gint y2, gboolean stroke)
 
 
 /* Draw an arrow using some polygons */
-void annotate_draw_arrow (int distance)
+void annotate_draw_arrow (gint distance)
 {
-  int arrow_minimum_size = data->thickness * 2;
+  gint arrow_minimum_size = data->thickness * 2;
   if (distance < arrow_minimum_size)
     {  
       return;
@@ -800,29 +802,29 @@ void annotate_draw_arrow (int distance)
       g_printerr("Arrow direction %f\n", direction/M_PI*180);
     }
 	
-  int i = 0;
+  gint i = 0;
   AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, i);
 
-  int penwidth = data->thickness;
+  gint penwidth = data->thickness;
   
-  double widthcos = penwidth * cos (direction);
-  double widthsin = penwidth * sin (direction);
+  gdouble widthcos = penwidth * cos (direction);
+  gdouble widthsin = penwidth * sin (direction);
 
   /* Vertex of the arrow */
-  double arrowhead0x = point->x + widthcos;
-  double arrowhead0y = point->y + widthsin;
+  gdouble arrowhead0x = point->x + widthcos;
+  gdouble arrowhead0y = point->y + widthsin;
 
   /* left point */
-  double arrowhead1x = point->x - widthcos + widthsin ;
-  double arrowhead1y = point->y -  widthcos - widthsin ;
+  gdouble arrowhead1x = point->x - widthcos + widthsin ;
+  gdouble arrowhead1y = point->y -  widthcos - widthsin ;
 
   /* origin */
-  double arrowhead2x = point->x - 0.8 * widthcos ;
-  double arrowhead2y = point->y - 0.8 * widthsin ;
+  gdouble arrowhead2x = point->x - 0.8 * widthcos ;
+  gdouble arrowhead2y = point->y - 0.8 * widthsin ;
 
   /* right point */
-  double arrowhead3x = point->x - widthcos - widthsin ;
-  double arrowhead3y = point->y +  widthcos - widthsin ;
+  gdouble arrowhead3x = point->x - widthcos - widthsin ;
+  gdouble arrowhead3y = point->y +  widthcos - widthsin ;
 
   cairo_stroke(data->annotation_cairo_context); 
   cairo_save(data->annotation_cairo_context);
@@ -869,7 +871,7 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
 
 
 /* Draw a point in x,y respecting the context */
-void annotate_draw_point(int x, int y)
+void annotate_draw_point(gint x, gint y)
 {
   cairo_move_to (data->annotation_cairo_context, x, y);
   cairo_line_to (data->annotation_cairo_context, x, y);
@@ -902,7 +904,7 @@ void annotate_draw_point_list(GSList* outptr)
 /* Rectify the line or the shape */
 void rectify(gboolean closed_path)
 {
-  int tollerance = data->thickness;
+  gint tollerance = data->thickness;
   GSList *outptr = broken(data->coordlist, closed_path, TRUE, tollerance);
 
   if (data->debug)
@@ -932,7 +934,7 @@ void rectify(gboolean closed_path)
 /* Roundify the line or the shape */
 void roundify(gboolean closed_path)
 {
-  int tollerance = data->thickness * 2;
+  gint tollerance = data->thickness * 2;
   GSList *outptr = broken(data->coordlist, closed_path, FALSE, tollerance);  
   gint lenght = g_slist_length(outptr);
 
@@ -1018,8 +1020,8 @@ void setup_input_devices ()
       GdkDevice *device = (GdkDevice *) d->data;
 
       /* Guess "Eraser"-Type devices */
-      if (strstr (gdk_device_get_name(device), "raser") || 
-          strstr (gdk_device_get_name(device), "RASER"))
+      if (strstr (device->name, "raser") || 
+          strstr (device->name, "RASER"))
         {
 	  gdk_device_set_source (device, GDK_SOURCE_ERASER);
         }
@@ -1035,7 +1037,7 @@ void setup_input_devices ()
 }
 
 
-/* Select eraser, pen or other tool for tablet; code inherited by gromit */
+/* Select eraser, pen or other tool for tablet; code inherited by gromit*/
 void annotate_select_tool (AnnotateData* data, GdkDevice *device, guint state)
 {
   guint buttons = 0, modifier = 0, len = 0;
@@ -1388,7 +1390,7 @@ void setup_app (GtkWidget* parent)
 
 
 /* Init the annotation */
-int annotate_init (GtkWidget* parent, gboolean debug)
+gint annotate_init (GtkWidget* parent, gboolean debug)
 {
   data = g_malloc (sizeof(AnnotateData));
  

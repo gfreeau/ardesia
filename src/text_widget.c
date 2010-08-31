@@ -41,17 +41,17 @@ cairo_t *text_cr = NULL;
 
 GdkDisplay* display = NULL;
 GdkScreen* screen = NULL;
-int screen_width;
+gint screen_width;
 
 Pos* pos = NULL;
 
 GSList *letterlist = NULL; 
-int text_pen_width = 16;
+gint text_pen_width = 16;
 
-int max_font_height;
+gint max_font_height;
 
 
-char* text_color = NULL;
+gchar* text_color = NULL;
 
 GdkCursor* text_cursor;
 
@@ -143,7 +143,7 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   else if (isprint(event->keyval))
     {
       /* The character is printable */
-      char *utf8 = g_malloc(2 * sizeof(char)) ;
+      gchar *utf8 = g_malloc(2 * sizeof(gchar)) ;
       sprintf(utf8,"%c", event->keyval);
       
       CharInfo *charInfo = g_malloc(sizeof (CharInfo));
@@ -173,8 +173,8 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 gboolean set_text_pointer(GtkWidget * window)
 {
   
-  int height = max_font_height;
-  int width = text_pen_width;
+  gint height = max_font_height;
+  gint width = text_pen_width;
   
   GdkPixmap *pixmap = gdk_pixmap_new (NULL, width , height, 1);
   cairo_t *text_pointer_pcr = gdk_cairo_create(pixmap);
@@ -249,7 +249,7 @@ void init(GtkWidget *widget)
 G_MODULE_EXPORT gboolean
 on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-  int is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
+  gint is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
   if (!is_fullscreen)
     {
       return TRUE;
@@ -306,7 +306,7 @@ release (GtkWidget *win,
         Apply a transparent window with the gdk_window_input_shape_combine_mask
         to pass the mouse events below the text window  
      */
-    int width, height;
+    gint width, height;
     gtk_window_get_size(GTK_WINDOW(win), &width, &height);
       
     /* Initialize a transparent pixmap with depth 1 to be used as input shape */
@@ -329,7 +329,7 @@ release (GtkWidget *win,
 
 
 /* Start the widget for the text insertion */
-void start_text_widget(GtkWindow *parent, char* color, int tickness)
+void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 {
   text_pen_width = tickness;
   text_color = color;

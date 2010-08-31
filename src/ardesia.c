@@ -38,10 +38,10 @@ CommandLine *commandline;
  * the centered position upon the window manager bar
  */
 void calculate_position(GtkWidget *ardesia_bar_window, 
-                        int dwidth, int dheight, 
-                        int *x, int *y, 
-                        int wwidth, int wheight,
-                        int position)
+                        gint dwidth, gint dheight, 
+                        gint *x, gint *y, 
+                        gint wwidth, gint wheight,
+                        gint position)
 {
   *y = ((dheight - wheight)/2); 
   /* vertical layout */
@@ -82,9 +82,9 @@ void calculate_position(GtkWidget *ardesia_bar_window,
  * where put the user can decide the position of the window
  */
 void calculate_initial_position(GtkWidget *ardesia_bar_window, 
-                                int *x, int *y, 
-                                int wwidth, int wheight, 
-                                int position)
+                                gint *x, gint *y, 
+                                gint wwidth, gint wheight, 
+                                gint position)
 {
   gint dwidth = gdk_screen_width();
   gint dheight = gdk_screen_height();
@@ -99,7 +99,7 @@ void calculate_initial_position(GtkWidget *ardesia_bar_window,
   /* resize if larger that screen height */
   if (wheight>dheight)
     {
-       int tollerance = 15;
+       gint tollerance = 15;
        wheight = dheight - tollerance;
        gtk_widget_set_usize(ardesia_bar_window, wwidth, wheight);       
     }
@@ -108,12 +108,12 @@ void calculate_initial_position(GtkWidget *ardesia_bar_window,
 }
 
 
-/* Print command line help */
+/* Prgint command line help */
 void print_help()
 {
-  char* version = "0.4";
-  char* year = "2009-2010";
-  char* author = "Pietro Pilolli";
+  gchar* version = "0.4";
+  gchar* year = "2009-2010";
+  gchar* author = "Pietro Pilolli";
   printf("Usage: ardesia [options] [filename]\n\n");
   printf("options:\n");
   printf("  --verbose ,\t-v\t\tEnable verbose mode to see the logs\n");
@@ -188,7 +188,7 @@ void set_the_best_colormap()
 
 
 /* Parse the command line in the standar getopt way */
-CommandLine* parse_options(int argc, char *argv[])
+CommandLine* parse_options(gint argc, char *argv[])
 {
   CommandLine* commandline = g_malloc(sizeof(CommandLine)); 
   
@@ -200,7 +200,7 @@ CommandLine* parse_options(int argc, char *argv[])
   /* getopt_long stores the option index here. */
   while (1)
     {
-      int c;
+      gint c;
       static struct option long_options[] =
 	{
 	  /* These options set a flag. */
@@ -213,7 +213,7 @@ CommandLine* parse_options(int argc, char *argv[])
 	  {0, 0, 0, 0}
 	};
 
-      int option_index = 0;
+      gint option_index = 0;
       c = getopt_long(argc, argv, "hdvg:",
 		      long_options, &option_index);
      
@@ -296,7 +296,7 @@ create_bar_window (GtkWidget *parent)
   GError* error = NULL;
 
   gtkBuilder = gtk_builder_new();
-  char* file = UI_FILE;
+  gchar* file = UI_FILE;
   if (commandline->position>2)
     {
       file = UI_HOR_FILE;
@@ -324,9 +324,9 @@ create_bar_window (GtkWidget *parent)
 }
 
 
-/* This is the starting point */
+/* This is the starting pogint */
 int
-main (int argc, char *argv[])
+main (gint argc, char *argv[])
 {
   GtkWidget *ardesia_bar_window ;
 
@@ -389,11 +389,11 @@ main (int argc, char *argv[])
     gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
   #endif  
 
-  int width;
-  int height;
+  gint width;
+  gint height;
   gtk_window_get_size(GTK_WINDOW(ardesia_bar_window) , &width, &height);
 
-  int x, y;
+  gint x, y;
 
   /* calculate_initial_position the window in the desired position */
   calculate_initial_position(ardesia_bar_window, 

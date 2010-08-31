@@ -40,7 +40,7 @@
 #include <saver.h>
 
 
-static int thick_step = 7;
+static gint thick_step = 7;
 
 
 /* Called when close the program */
@@ -86,7 +86,7 @@ void add_alpha(BarData *bar_data)
 
 
 /* free color */
-void set_color(BarData *bar_data, char* selected_color)
+void set_color(BarData *bar_data, gchar* selected_color)
 {
   strncpy(bar_data->color, selected_color, 6);
   annotate_set_color(bar_data->color);
@@ -556,7 +556,7 @@ on_buttonColor_activate	         (GtkToggleToolButton   *toolbutton,
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
   bar_data->pencil = TRUE;
-  char* new_color = start_color_selector_dialog(GTK_TOOL_BUTTON(toolbutton), GTK_WINDOW(get_bar_window()), bar_data->color);
+  gchar* new_color = start_color_selector_dialog(GTK_TOOL_BUTTON(toolbutton), GTK_WINDOW(get_bar_window()), bar_data->color);
 
   /* if it is a valid color */
   if (new_color)

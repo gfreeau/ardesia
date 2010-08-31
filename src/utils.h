@@ -113,7 +113,7 @@ gchar* gdkcolor_to_rgba(GdkColor* gdkcolor);
 
 
 /* Set the cairo surface color to the RGBA string */
-void cairo_set_source_color_from_string( cairo_t * cr, char* color);
+void cairo_set_source_color_from_string( cairo_t * cr, gchar* color);
 
 
 /* Set the cairo surface color to transparent */
@@ -121,7 +121,7 @@ void  cairo_set_transparent_color(cairo_t * cr);
 
 
 /** Distance beetween two points using the Pitagora theorem */
-int get_distance(int x1, int y1, int x2, int y2);
+gint get_distance(gint x1, gint y1, gint x2, gint y2);
 
 
 /* Clear cairo context */
@@ -131,14 +131,14 @@ void clear_cairo_context(cairo_t* cr);
 /*
  * This is function return if the point (x,y) in inside the ardesia bar window
  */
-gboolean inside_bar_window(int xp, int yp);
+gboolean inside_bar_window(gint xp, gint yp);
 
 
 /*
  * Take an rgb or a rgba string and return the pointer to the allocated GdkColor 
  * neglecting the alpha channel
  */
-GdkColor* rgb_to_gdkcolor(char* rgb);
+GdkColor* rgb_to_gdkcolor(gchar* rgb);
 
 
 /* Get the current date and format in a printable format */
@@ -146,7 +146,7 @@ gchar* get_date();
 
 
 /* Return if a file exists */
-gboolean file_exists(char* filename, char* desktop_dir);
+gboolean file_exists(gchar* filename, gchar* desktop_dir);
 
 
 /*

@@ -52,10 +52,10 @@
 
 typedef struct
 {
-   char* backgroundimage;
+   gchar* backgroundimage;
    gboolean debug;
    gboolean decorated;
-   int position;
+   gint position;
 } CommandLine;
 
 
@@ -77,7 +77,7 @@ typedef struct
    gchar* color;
 
    /* selected line width */
-   int thickness;
+   gint thickness;
 
    /* highlighter flag */
    gboolean highlighter;
@@ -92,7 +92,7 @@ typedef struct
    gboolean arrow;
 
    /* Default folder where store images and videos */
-   char* workspace_dir;
+   gchar* workspace_dir;
    
 }BarData;
 

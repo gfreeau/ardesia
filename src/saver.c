@@ -31,10 +31,10 @@
 
 
 /* Save the contents of the pixbuf in the file with name filename */
-gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
+gboolean save_png (GdkPixbuf *pixbuf,const gchar *filename)
 {
-  int width = gdk_pixbuf_get_width (pixbuf);
-  int height = gdk_pixbuf_get_height (pixbuf);
+  gint width = gdk_pixbuf_get_width (pixbuf);
+  gint height = gdk_pixbuf_get_height (pixbuf);
 
   cairo_surface_t *surface;
   surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
@@ -52,7 +52,7 @@ gboolean save_png (GdkPixbuf *pixbuf,const char *filename)
  * Start the dialog that ask to the user where save the image
  * containing the screenshot
  */
-void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar** workspace_dir)
+void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar** workspace_dir)
 {
   gchar* date = get_date();
 
@@ -60,7 +60,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gch
     {
       /* Initialize it to the desktop folder */
       gchar* desktop_dir = (gchar *) get_desktop_dir();
-	  int lenght = strlen(desktop_dir);
+      gint lenght = strlen(desktop_dir);
       *workspace_dir = (gchar*) g_malloc( ( lenght + 1) * sizeof(gchar));
       strcpy(*workspace_dir, desktop_dir);
 	  
@@ -86,8 +86,8 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gch
   
   /* preview of saving */
   GtkWidget*   preview = gtk_image_new ();
-  int preview_width = 128;
-  int preview_height = 128;
+  gint preview_width = 128;
+  gint preview_height = 128;
   GdkPixbuf*   previewPixbuf = gdk_pixbuf_scale_simple(buf, preview_width, preview_height, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (preview), previewPixbuf);
   
@@ -109,14 +109,14 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gch
 
       screenshot = TRUE;
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      char* supported_extension = ".png";
-      char* extension = strrchr(filename, '.');
+      gchar* supported_extension = ".png";
+      gchar* extension = strrchr(filename, '.');
       if ((extension==0) || (strcmp(extension, supported_extension) != 0))
         {
           filename = (gchar *) realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar)); 
           (void) strcat((gchar *)filename, supported_extension);
         }           
-      if (file_exists(filename,(char *) workspace_dir))
+      if (file_exists(filename,(gchar *) workspace_dir))
         {
 	  GtkWidget *msg_dialog; 
 	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), 
@@ -124,7 +124,7 @@ void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gch
                                                GTK_MESSAGE_WARNING,
                                                GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
           
-          int result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
+          gint result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
           if (msg_dialog != NULL)
             { 
 	      gtk_widget_destroy(msg_dialog);

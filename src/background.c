@@ -36,7 +36,7 @@ static BackGroundData* background_data;
 
 
 /* Load the "filename" file content into the pixbuf */
-GdkPixbuf * load_png (char *filename)
+GdkPixbuf * load_png (gchar *filename)
 {
   GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
   GdkPixbuf *scaled = NULL;
@@ -131,7 +131,7 @@ back_event_expose (GtkWidget *widget,
               GdkEventExpose *event, 
               gpointer user_data)
 {
-  int is_maximized = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_MAXIMIZED;
+  gint is_maximized = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_MAXIMIZED;
   if (!is_maximized)
     {
       return TRUE;
@@ -185,10 +185,10 @@ void load_color()
   if (background_data->back_cr)
     {
       cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_SOURCE);
-      int r,g,b,a;
+      gint r,g,b,a;
       sscanf(background_data->background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-      gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), (double) a/256);
-      cairo_set_source_rgb(background_data->back_cr, (double) r/256, (double) g/256, (double) b/256);
+      gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), (gdouble) a/256);
+      cairo_set_source_rgb(background_data->back_cr, (gdouble) r/256, (gdouble) g/256, (gdouble) b/256);
       cairo_paint(background_data->back_cr);
       cairo_stroke(background_data->back_cr);
       
@@ -204,7 +204,7 @@ void load_color()
 
 
 /* Change the background image of ardesia  */
-void change_background_image (char *name)
+void change_background_image (gchar *name)
 {
    g_free(background_data->background_color);
    background_data->background_color = NULL;
@@ -215,7 +215,7 @@ void change_background_image (char *name)
 
 
 /* Change the background color of ardesia  */
-void change_background_color (char* rgba)
+void change_background_color (gchar* rgba)
 {
   g_free(background_data->background_image);
   background_data->background_image = NULL;
@@ -245,7 +245,7 @@ void set_background_window(GtkWidget* widget)
 
 
 /* Create the background window */
-GtkWidget* create_background_window(char* backgroundimage)
+GtkWidget* create_background_window(gchar* backgroundimage)
 {
   background_data = g_malloc(sizeof(BackGroundData));
   background_data->background_color = NULL; 

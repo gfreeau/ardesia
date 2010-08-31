@@ -31,7 +31,7 @@ void spline (cairo_t *cr, GSList *list)
 {
   gint i;
   guint N = g_slist_length(list);
-  double X[N][2]; 
+  gdouble X[N][2]; 
   for  (i=0; i<N; i++)
     {
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i); 
@@ -40,7 +40,7 @@ void spline (cairo_t *cr, GSList *list)
     }
 
   // Pi, Qi are control points for curve (Xi, Xi+1)
-  double P[N-1][2], Q[N-1][2];
+  gdouble P[N-1][2], Q[N-1][2];
 
   /*****************************************************************************
   
@@ -62,7 +62,7 @@ void spline (cairo_t *cr, GSList *list)
        Pi, Qi and Xi are (x,y) pairs!
   
   *****************************************************************************/
-  int s, eq = 0;
+  gint s, eq = 0;
   gsl_matrix *m;
   gsl_vector *bx, *by, *x;
   gsl_permutation *perm;

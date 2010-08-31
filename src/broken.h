@@ -29,13 +29,13 @@
   #define BROKEN_FILE
 
   /* Return a subpath of listInp containg only the meaningful points using the standard deviation */
-  GSList* extract_relevant_points(GSList *listInp, gboolean rectify, int pixel_tollerance);
+  GSList* extract_relevant_points(GSList *listInp, gboolean rectify, gint pixel_tollerance);
 
   /* Straight the line */
   GSList* straighten(GSList* list);
 
   /* Take a list of point and return magically the new recognized path */        
-  GSList*    broken( GSList* inp, gboolean close_path, gboolean rectify, int pixel_tollerance);
+  GSList*    broken( GSList* inp, gboolean close_path, gboolean rectify, gint pixel_tollerance);
 
 #endif
 

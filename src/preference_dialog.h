@@ -40,7 +40,7 @@ typedef struct
   GtkBuilder*  preferenceDialogGtkBuilder;
 
   /* 0 no background, 1 background color, 2 png background, */
-  int 	     background;
+  gint 	     background;
 
   /* preview of background file */
   GtkWidget*   preview;
