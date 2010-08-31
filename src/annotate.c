@@ -222,7 +222,7 @@ void modify_color(AnnotateData* data, gdouble pressure)
                old_pressure = last_point->pressure;      
             }
           gdouble contrast = 96;
-          gdouble corrective = (1-( 2 * pressure + old_pressure)/3) * contrast;
+          gdouble corrective = (1-( 3 * pressure + old_pressure)/4) * contrast;
           cairo_set_source_rgba (data->annotation_cairo_context, (r + corrective)/255, (g + corrective)/255, (b+corrective)/255, (double) a/255);
         }
 }
