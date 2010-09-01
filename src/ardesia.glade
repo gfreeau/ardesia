@@ -3,7 +3,7 @@
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="height_request">700</property>
+    <property name="height_request">730</property>
     <property name="events">GDK_LEAVE_NOTIFY_MASK</property>
     <property name="title" translatable="yes">Ardesia</property>
     <property name="destroy_with_parent">True</property>
@@ -420,6 +420,20 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToolButton" id="buttonAddPdf">
+                <property name="height_request">27</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Add page to pdf</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">addpdf</property>
+                <signal name="clicked" handler="on_toolsAddPdf_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToggleToolButton" id="buttonRecorder">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
@@ -546,5 +560,9 @@
   <object class="GtkImage" id="unhide">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/unhide.png</property>
+  </object>
+  <object class="GtkImage" id="addpdf">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/add-pdf.png</property>
   </object>
 </interface>

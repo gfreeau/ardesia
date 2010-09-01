@@ -26,11 +26,13 @@
 
 - Possible future features:
   - Pdf export
-  - import images (galleries with images, sticky notes)
-  - select, move, resize, fill objects
-  - put the pdf online
+  - put the artifact online
     - email
     - ftp
+  - import images (galleries with images, sticky notes)
+  - Crop, move, zoom and rotate
+  - selection tools
+  - configuration file and settings 
   - Multi pointer support using the xinput2 libraries
 
 ===

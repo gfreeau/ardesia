@@ -418,6 +418,14 @@ on_toolsScreenShot_activate	 (GtkToolButton   *toolbutton,
 }
 
 
+/* Add page to pdf */
+G_MODULE_EXPORT void
+on_toolsAddPdf_activate	 (GtkToolButton   *toolbutton,
+                          gpointer         func_data)
+{
+}
+
+
 /* Push recorder button */
 G_MODULE_EXPORT void
 on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
