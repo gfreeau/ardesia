@@ -29,9 +29,8 @@
   - import images (galleries with images, sticky notes)
   - select, move, resize, fill objects
   - put the pdf online
-    - ftp
     - email
-    - dropbox
+    - ftp
   - Multi pointer support using the xinput2 libraries
 
 ===
