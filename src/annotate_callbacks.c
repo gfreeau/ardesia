@@ -63,6 +63,7 @@ event_expose (GtkWidget *widget,
 
   if (!(data->annotation_cairo_context))
     {
+
       /* initialize a transparent window */	  
       #ifdef _WIN32
 	/* The hdc has depth 32 and the technology is DT_RASDISPLAY */

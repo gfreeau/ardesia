@@ -1362,8 +1362,6 @@ void setup_app (GtkWidget* parent)
   data->annotation_window = create_annotation_window();
    
   gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(parent));
-
-  gtk_window_set_destroy_with_parent(GTK_WINDOW(data->annotation_window), TRUE);
   
   gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1);
 
@@ -1371,7 +1369,9 @@ void setup_app (GtkWidget* parent)
   gtk_builder_connect_signals(data->annotationWindowGtkBuilder, (gpointer) data); 
   
   gtk_widget_set_usize(data->annotation_window, data->width, data->height);
-  gtk_window_fullscreen(GTK_WINDOW(data->annotation_window)); 
+  
+  /* This might generate an exposure */
+  gtk_window_fullscreen(GTK_WINDOW(data->annotation_window));
   
   /* Initialize a transparent pixmap with depth 1 to be used as input shape */
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
@@ -1382,7 +1382,6 @@ void setup_app (GtkWidget* parent)
        annotate_quit(); 
        exit(1);
     }
-
   clear_cairo_context(data->shape_cr);  
  
   #ifdef _WIN32
