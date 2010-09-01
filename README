@@ -31,6 +31,10 @@ insert text with the keyboard and highlight screen areas.
 You can draw upon the desktop or select a coloured layer or an image 
 as a background.
 
+Ardesia is pressure sensitive, if you are using properly configured
+your devices you can draw lines with varying width. 
+It is possible to erase something with the other end of the (Wacom) pen.
+
 Ardesia has been designed with the Glade/GtkBuilder tool
 and it use to draw the cairo graphics library.
 
