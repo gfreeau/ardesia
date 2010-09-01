@@ -446,12 +446,11 @@ void annotate_select_eraser()
   /* Acquire the grab pointer */
   void annotate_acquire_pointer_grab()
     {
-      grab_pointer(data->annotation_window, ANNOTATE_MOUSE_EVENTS);
+      grab_pointer(data->annotation_window, GDK_BUTTON_PRESS_MASK );
     }
 
-
   /* Release the grab pointer */
-  void annotate_release_pognter_grab()
+  void annotate_release_pointer_grab()
     {
       ungrab_pointer(data->display, data->annotation_window);
     }
@@ -1351,21 +1350,28 @@ GtkWidget* create_annotation_window()
 /* Setup the application */
 void setup_app (GtkWidget* parent)
 {
+  /* initialize pen context */
+  data->default_pen = annotate_paint_context_new (ANNOTATE_PEN);
+  data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER);
+  data->cur_context = data->default_pen;
+  data->old_paint_type = ANNOTATE_PEN;
+  
+  setup_input_devices();
+  
+  /* create annotation window */
   data->annotation_window = create_annotation_window();
    
   gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(parent));
 
+  gtk_window_set_destroy_with_parent(GTK_WINDOW(data->annotation_window), TRUE);
+  
+  gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1);
+
+  /* This is important; connect all the callback from gtkbuilder xml file */
+  gtk_builder_connect_signals(data->annotationWindowGtkBuilder, (gpointer) data); 
+  
   gtk_widget_set_usize(data->annotation_window, data->width, data->height);
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window)); 
-
-  // initialize pen context
-  data->default_pen = annotate_paint_context_new (ANNOTATE_PEN);
-  
-  data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER);
-  data->cur_context = data->default_pen;
-  data->old_paint_type = ANNOTATE_PEN;
-
-  setup_input_devices();
   
   /* Initialize a transparent pixmap with depth 1 to be used as input shape */
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
@@ -1377,10 +1383,7 @@ void setup_app (GtkWidget* parent)
        exit(1);
     }
 
-  clear_cairo_context(data->shape_cr); 
-  
-  /* This is important; connect all the callback from gtkbuilder xml file */
-  gtk_builder_connect_signals(data->annotationWindowGtkBuilder, (gpointer) data);  
+  clear_cairo_context(data->shape_cr);  
  
   #ifdef _WIN32
     // I use a layered window that use the black as transparent color
