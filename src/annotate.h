@@ -30,6 +30,7 @@
 #include <gtk/gtk.h>
 
 #include <cairo.h>
+#include <cairo-pdf.h>
 
 
 #ifdef _WIN32
@@ -101,7 +102,13 @@ typedef struct
 
   /* transparent cairo context */
   cairo_t *transparent_cr;
- 
+
+  /* context used for the pdf export */
+  cairo_t * pdf_cr;
+  
+  /* the temporanery default pdf file name */
+  gchar *pdf_filename;  
+
   /* mouse cursor */ 
   GdkCursor *cursor;
  
@@ -281,3 +288,5 @@ void shape_recognize(gboolean closed_path);
 /* Add a save point for the undo/redo */
 void add_save_point();
 
+/* save the current context in pdf */
+void annotate_save_pdf();

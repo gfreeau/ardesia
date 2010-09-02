@@ -423,6 +423,7 @@ G_MODULE_EXPORT void
 on_toolsAddPdf_activate	 (GtkToolButton   *toolbutton,
                           gpointer         func_data)
 {
+ annotate_save_pdf();
 }
 
 

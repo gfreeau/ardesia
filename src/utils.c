@@ -208,7 +208,7 @@ gboolean file_exists(gchar* filename, gchar* desktop_dir)
   if (afterslash == 0)
     {
       /* relative path */
-      filename = strcat(filename,desktop_dir);
+      filename = strcat(filename, desktop_dir);
     }
   struct stat statbuf;
   if(stat(filename, &statbuf) < 0) 

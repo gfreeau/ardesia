@@ -41,10 +41,23 @@ gboolean save_png (GdkPixbuf *pixbuf,const gchar *filename)
   cairo_t *cr = cairo_create(surface);
   gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
   cairo_paint(cr);
+  
+  /* write in png */
   cairo_surface_write_to_png(surface, filename);
   cairo_destroy(cr);
   cairo_surface_destroy(surface);
   return TRUE;
+}
+
+
+/* Grab the screenshoot and put it in the GdkPixbuf */
+GdkPixbuf* grab_screenshot()
+{
+  gint height = gdk_screen_height ();
+  gint width = gdk_screen_width ();
+
+  return gdk_pixbuf_get_from_drawable (NULL, gdk_get_default_root_window (), NULL,
+                                       0, 0, 0, 0, width, height);
 }
 
 
@@ -54,7 +67,6 @@ gboolean save_png (GdkPixbuf *pixbuf,const gchar *filename)
  */
 void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar** workspace_dir)
 {
-  gchar* date = get_date();
 
   if (!(*workspace_dir))
     {
@@ -67,12 +79,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
       g_free(desktop_dir);
     }	
 
-  gint height = gdk_screen_height ();
-  gint width = gdk_screen_width ();
-
-  GdkPixbuf* buf = gdk_pixbuf_get_from_drawable (NULL, gdk_get_default_root_window (), NULL,
-                                                 0, 0, 0, 0, width, height);
-
+  GdkPixbuf* buf = grab_screenshot(); 
   
   GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext("Save image"), 
  						    parent, 
@@ -96,7 +103,8 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
 
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
  
-  gchar* start_string = "ardesia_"; 
+  gchar* start_string = "ardesia_";
+  gchar* date = get_date(); 
   gchar* filename = (gchar*) g_malloc((strlen(start_string) + strlen(date) + 1) * sizeof(gchar));
   sprintf(filename,"%s%s", start_string, date);
   

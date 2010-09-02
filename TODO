@@ -25,7 +25,7 @@
 - MacOsX-quartz porting
 
 - Possible future features:
-  - Pdf export
+  - Pdf export file chooser
   - put the artifact online
     - email
     - ftp
