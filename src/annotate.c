@@ -94,34 +94,6 @@ AnnotatePaintContext * annotate_paint_context_new(AnnotatePaintType type)
   context->fg_color = NULL;
   return context;
 }
-
-
-/* save the current context in pdf */
-void annotate_save_pdf()
-{
-  if (data->pdf_cr == NULL)
-    {
-       /* create the pdf default name */
-       gchar* start_string = "ardesia_";
-       gchar* date = get_date();
-       gchar* extension = ".pdf"; 
-       gchar* desktop_dir = (gchar*) get_desktop_dir();
-       data->pdf_filename = (gchar*) g_malloc((strlen(desktop_dir) + 1 + strlen(start_string) + strlen(date) +  strlen(extension) + 1) * sizeof(gchar));
-       sprintf(data->pdf_filename,"%s%c%s%s%s", desktop_dir, DIR_SEPARATOR, start_string, date, extension);
-       /* create the cairo surface for pdf */
-       cairo_surface_t* pdf_surface = cairo_pdf_surface_create(data->pdf_filename, data->width, data-> height);
-       data->pdf_cr = cairo_create(pdf_surface);
-    }
-    cairo_t* back_cr = gdk_cairo_create(gdk_get_default_root_window());
-    cairo_surface_t* back_surface = cairo_get_target(back_cr);
-    /* the surface contains the window contents */
-    cairo_set_source_surface(data->pdf_cr, back_surface, 0, 0);
-    cairo_paint(data->pdf_cr);
-    cairo_copy_page(data->pdf_cr);
-    cairo_show_page(data->pdf_cr);
-    cairo_surface_flush(cairo_get_target(data->annotation_cairo_context));
-    cairo_destroy(back_cr);
-}
    
 
 /* Prgint paint context informations */
@@ -1147,16 +1119,7 @@ cairo_t* get_annotation_cairo_context()
 /* Quit the annotation */
 void annotate_quit()
 {
-  if (data->pdf_cr)
-    {
-       /* start the widget to ask the file name where save the pdf */
 
-       /* if the name is different from the default one then move the file in the new location */
-
-       cairo_surface_destroy(cairo_get_target(data->pdf_cr));
-       cairo_destroy(data->pdf_cr);
-       g_free(data->pdf_filename);
-    }
   gtk_widget_destroy(data->annotation_window);
   /* unref gtkbuilder */
   g_object_unref (data->annotationWindowGtkBuilder);
@@ -1441,8 +1404,6 @@ gint annotate_init (GtkWidget* parent, gboolean debug)
   data->transparent_pixmap = NULL;
   data->transparent_cr = NULL;
   data->cursor = NULL;
-  data->pdf_cr = NULL;
-  data->pdf_filename = NULL;
 
   data->is_grabbed = FALSE;
   data->arrow = FALSE; 

@@ -21,31 +21,21 @@
  *
  */
 
+#include <glib.h>
 
 #include <gtk/gtk.h>
 
 #include <cairo.h>
+#include <cairo-pdf.h>
 
+typedef struct
+{
+  /* context used for the pdf export */
+  cairo_t * cr;
+}PdfData;
 
-#ifdef _WIN32
-  #include <cairo-win32.h>
-  #include <winuser.h>  
-#else
-  #ifdef __APPLE__
-    #include <cairo-quartz.h>
-  #else
-    #include <cairo-xlib.h>
-  #endif
-#endif
+/* Add the screenshot to pdf */
+void add_pdf_page(GtkWindow *parent, gchar** workspace_dir);
 
-
-/* Grab the screenshoot and put it in the GdkPixbuf */
-GdkPixbuf* grab_screenshot();
-
-/*
- * Start the dialog that ask to the user where save the image
- * containing the screenshot
- */
-void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent, gchar** workspace_dir);
-
-
+/* Quit the pdf saver */
+void quit_pdf_saver();

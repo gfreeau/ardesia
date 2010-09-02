@@ -38,6 +38,7 @@
 #include <text_widget.h>
 #include <recorder.h>
 #include <saver.h>
+#include <pdf_saver.h>
 
 
 static gint thick_step = 7;
@@ -46,6 +47,7 @@ static gint thick_step = 7;
 /* Called when close the program */
 gboolean  quit(BarData *bar_data)
 {
+  quit_pdf_saver();
   annotate_quit();
   quit_recorder();
 
@@ -423,7 +425,8 @@ G_MODULE_EXPORT void
 on_toolsAddPdf_activate	 (GtkToolButton   *toolbutton,
                           gpointer         func_data)
 {
- annotate_save_pdf();
+  BarData *bar_data = (BarData*) func_data;
+  add_pdf_page(GTK_WINDOW(get_bar_window()), &bar_data->workspace_dir);
 }
 
 

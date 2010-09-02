@@ -38,6 +38,8 @@ ardesia_SOURCES = \
 	broken.h \
         bezier_spline.c \
 	bezier_spline.h \
+        pdf_saver.c \
+	pdf_saver.h \
         annotate.c \
 	annotate.h \
         utils.c \
