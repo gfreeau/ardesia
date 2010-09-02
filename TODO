@@ -17,6 +17,8 @@
   - Screencast recorder using vlclib insted spawn the vlc process 
 
 - Windows porting
+  - Fix the build system
+  - Test the new features
   - Fix the highlighter; this doesn't work because
     the  ARGB32 support in cairo is not yet available 
   - Adjust the make install target
