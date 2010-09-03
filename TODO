@@ -17,17 +17,16 @@
   - Screencast recorder using vlclib insted spawn the vlc process 
 
 - Windows porting
-  - Fix the build system
-  - Test the new features
+  - Fix the build system make (and install target)
+  - Create a binary installer
   - Fix the highlighter; this doesn't work because
     the  ARGB32 support in cairo is not yet available 
-  - Adjust the make install target
-  - Create a binary installer
 
 - MacOsX-quartz porting
 
 - Possible future features:
-  - Pdf export file chooser
+  - Pdf export that each time that you add a page
+    create a working pdf
   - put the artifact online
     - email
     - ftp

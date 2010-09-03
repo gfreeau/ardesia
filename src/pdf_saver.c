@@ -166,7 +166,6 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
   cairo_set_source_surface(pdf_data->cr, back_surface, 0, 0);
   cairo_paint(pdf_data->cr);
   cairo_copy_page(pdf_data->cr);
-  cairo_show_page(pdf_data->cr);
   cairo_surface_flush(cairo_get_target(pdf_data->cr));
 
   cairo_surface_destroy(back_surface);
