@@ -28,7 +28,7 @@
 static PdfData *pdf_data;
 
 
-gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, gchar** filename, GdkPixbuf *pixbuf)
+gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pixbuf)
 {
    gboolean ret = TRUE;
    if (!(*workspace_dir))
@@ -66,24 +66,24 @@ gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, gchar**
    gchar* start_string = "ardesia_";
    gchar* date = get_date(); 
    
-   *filename = (gchar*) g_malloc((strlen(start_string) + strlen(date) + 1) * sizeof(gchar));
-   sprintf(*filename,"%s%s", start_string, date);
+   pdf_data->filename = (gchar*) g_malloc((strlen(start_string) + strlen(date) + 1) * sizeof(gchar));
+   sprintf(pdf_data->filename,"%s%s", start_string, date);
    g_free(date);
 
-   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), *filename);
+   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), pdf_data->filename);
 
    if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
 
-      *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
+      pdf_data->filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
       gchar* supported_extension = ".pdf";
-      gchar* extension = strrchr(*filename, '.');
+      gchar* extension = strrchr(pdf_data->filename, '.');
       if ((extension==0) || (strcmp(extension, supported_extension) != 0))
         {
-          *filename = (gchar *) realloc(*filename,  (strlen(*filename) + strlen(supported_extension) + 1) * sizeof(gchar)); 
-          (void) strcat((gchar *)*filename, supported_extension);
+          pdf_data->filename = (gchar *) realloc(pdf_data->filename,  (strlen(pdf_data->filename) + strlen(supported_extension) + 1) * sizeof(gchar)); 
+          (void) strcat((gchar *)pdf_data->filename, supported_extension);
         }           
-      if (file_exists(*filename,(gchar *) workspace_dir))
+      if (file_exists(pdf_data->filename,(gchar *) workspace_dir))
         {
 	  GtkWidget *msg_dialog; 
 	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), 
@@ -114,26 +114,18 @@ gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, gchar**
 
 /* Initialize the pdf saver */
 gboolean init_pdf_saver(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pixbuf)
-{
-   gchar* filename;
+{  
+   pdf_data = (PdfData *) g_malloc(sizeof(PdfData));   
+   pdf_data->pixbuflist = NULL;
    
    /* start the widget to ask the file name where save the pdf */       
-   gboolean ret = start_save_pdf_dialog(parent, workspace_dir, &filename, pixbuf);
+   gboolean ret = start_save_pdf_dialog(parent, workspace_dir, pixbuf);
 
    if (!ret)
      {
         
         return FALSE;
      }
-
-   pdf_data = (PdfData *) g_malloc(sizeof(PdfData));   
-   
-   /* create the cairo surface for pdf */
-   gint height = gdk_screen_height ();
-   gint width = gdk_screen_width ();
-   cairo_surface_t* pdf_surface = cairo_pdf_surface_create(filename, width, height);
-   g_free(filename);
-   pdf_data->cr = cairo_create(pdf_surface);
     
    return TRUE;
 }
@@ -142,45 +134,56 @@ gboolean init_pdf_saver(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pix
 /* Add the screenshot to pdf */
 void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
 {
-  GdkPixbuf* pixbuf = grab_screenshot();
-  if (pdf_data == NULL)
-    {
-       if (!init_pdf_saver(parent, workspace_dir, pixbuf))
-         {  
-            g_object_unref (pixbuf);
-            return;
-         }
-    }
+   GdkPixbuf* pixbuf = grab_screenshot();
+   if (pdf_data == NULL)
+     {
+        if (!init_pdf_saver(parent, workspace_dir, pixbuf))
+          {  
+             g_object_unref (pixbuf);
+             return;
+          }
+      }
+  
+   pdf_data->pixbuflist = g_slist_prepend(pdf_data->pixbuflist, pixbuf);  
 
-  /* The surface must load the pixbuf contents */
-  gint width = gdk_pixbuf_get_width (pixbuf);
-  gint height = gdk_pixbuf_get_height (pixbuf);
+  
+   gint i;
+  
+   gint height = gdk_screen_height ();
+   gint width = gdk_screen_width ();
+   
+   /* create the cairo surface for pdf */
+   cairo_surface_t* pdf_surface = cairo_pdf_surface_create(pdf_data->filename, width, height);
+   cairo_t* pdf_cr = cairo_create(pdf_surface);
 
-  cairo_surface_t *back_surface;
-  back_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
-  cairo_t *back_cr = cairo_create(back_surface);
-  gdk_cairo_set_source_pixbuf(pdf_data->cr, pixbuf, 0, 0);
-  cairo_paint(pdf_data->cr);
+   gint lenght = g_slist_length(pdf_data->pixbuflist);
 
-  /* add the back_surface */
-  cairo_set_source_surface(pdf_data->cr, back_surface, 0, 0);
-  cairo_paint(pdf_data->cr);
-  cairo_copy_page(pdf_data->cr);
-  cairo_surface_flush(cairo_get_target(pdf_data->cr));
+   for (i=lenght-1; i>0; i--)
+     {
+        GdkPixbuf* current_pixbuf = (GdkPixbuf*) g_slist_nth_data (pdf_data->pixbuflist, i);
+  
+        gdk_cairo_set_source_pixbuf(pdf_cr, current_pixbuf, 0, 0);
+        cairo_paint(pdf_cr);
 
-  cairo_surface_destroy(back_surface);
-  cairo_destroy(back_cr);
-  g_object_unref (pixbuf);
+        cairo_copy_page(pdf_cr);
+        cairo_surface_flush(cairo_get_target(pdf_cr));  
+     }
+ 
+   /* destroy */
+   cairo_surface_destroy(cairo_get_target(pdf_cr));
+   cairo_destroy(pdf_cr);
 }
 
 
 /* Quit the pdf saver */
 void quit_pdf_saver()
 {
-  if (pdf_data->cr)
-    {
-       cairo_surface_destroy(cairo_get_target(pdf_data->cr));
-       cairo_destroy(pdf_data->cr);
-    }
+   if (pdf_data)
+     {
+        /* free the list and all the pixbuf inside it */
+        g_slist_foreach(pdf_data->pixbuflist, (GFunc)g_object_unref, NULL);
+        g_slist_free(pdf_data->pixbuflist);
+        g_free(pdf_data);
+     }
 }
 

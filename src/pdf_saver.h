@@ -30,8 +30,8 @@
 
 typedef struct
 {
-  /* context used for the pdf export */
-  cairo_t * cr;
+  GSList* pixbuflist;
+  gchar*  filename;
 }PdfData;
 
 /* Add the screenshot to pdf */
