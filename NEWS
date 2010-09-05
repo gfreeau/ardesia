@@ -30,7 +30,7 @@ Usability:
 Features:
 - Implemented cross plattform recorder and stream forwarder 
 - Added the pen pressure support  for the drawing tablet
-- Added the eraser support for the drawing tablet
+- Added the eraser support for the drawing tablet on Linux
 - Export as pdf
 
 
