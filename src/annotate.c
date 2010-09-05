@@ -446,7 +446,7 @@ void annotate_select_eraser()
   /* Acquire the grab pointer */
   void annotate_acquire_pointer_grab()
     {
-      grab_pointer(data->annotation_window, GDK_BUTTON_PRESS_MASK );
+      grab_pointer(data->annotation_window, ANNOTATE_MOUSE_EVENTS);
     }
 
   /* Release the grab pointer */
@@ -1365,15 +1365,12 @@ void setup_app (GtkWidget* parent)
   gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(parent));
   
   gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1);
+  
+  gtk_widget_set_usize(data->annotation_window, data->width, data->height);
 
   /* This is important; connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(data->annotationWindowGtkBuilder, (gpointer) data); 
-  
-  gtk_widget_set_usize(data->annotation_window, data->width, data->height);
-  
-  /* This might generate an exposure */
-  gtk_window_fullscreen(GTK_WINDOW(data->annotation_window));
-  
+   
   /* Initialize a transparent pixmap with depth 1 to be used as input shape */
   data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
   data->shape_cr = gdk_cairo_create(data->shape);
@@ -1385,7 +1382,14 @@ void setup_app (GtkWidget* parent)
     }
   clear_cairo_context(data->shape_cr);  
  
+  /* This might generate an exposure */
+  gtk_window_fullscreen(GTK_WINDOW(data->annotation_window));
+ 
+  gtk_widget_show_all(data->annotation_window);
+  
   #ifdef _WIN32
+    /* with some gtk version the double buffered property in the glade file is not recognized */
+    gtk_widget_set_double_buffered(data->annotation_window, FALSE); 
     // I use a layered window that use the black as transparent color
     setLayeredGdkWindowAttributes(data->annotation_window->window, RGB(0,0,0), 0, LWA_COLORKEY );	
   #endif

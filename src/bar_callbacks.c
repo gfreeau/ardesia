@@ -426,7 +426,11 @@ on_toolsAddPdf_activate	 (GtkToolButton   *toolbutton,
                           gpointer         func_data)
 {
   BarData *bar_data = (BarData*) func_data;
+  gboolean grab_value = bar_data->grab;
+  bar_data->grab = FALSE;
   add_pdf_page(GTK_WINDOW(get_bar_window()), &bar_data->workspace_dir);
+  bar_data->grab = grab_value;
+  start_tool(bar_data);
 }
 
 
