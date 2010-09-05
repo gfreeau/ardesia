@@ -1,3 +1,46 @@
+2010-09-05 20:28  alpha@paranoici.org
+        * trunk/ardesia/src/annotate.c,
+        * trunk/ardesia/src/annotate.h,
+        * trunk/ardesia/src/bar_callbacks.c:
+       - Fix for windows pdf export and drawing tablet
+         support
+
+
+2010-09-02 00:37  alpha@paranoici.org
+        * trunk/ardesia/src/Makefile.am
+        * trunk/ardesia/src/annotate.c
+        * trunk/ardesia/src/annotate.h
+        * trunk/ardesia/src/bar_callbacks.c
+        * trunk/ardesia/src/pdf_saver.c
+        * trunk/ardesia/src/pdf_saver.h
+        * trunk/ardesia/src/saver.h
+        * trunk/ardesia/src/Makefile.am:
+        - Pdf export implementation tested on Ubuntu
+
+
+2010-08-27 00:37  alpha@paranoici.org
+        * trunk/ardesia/src/annotate.c,
+        * trunk/ardesia/src/annotate.h,
+        * trunk/ardesia/src/annotate_callbacks.c,
+        * trunk/ardesia/src/bar_callbacks.c,
+        * trunk/ardesia/src/broken.c,
+        * trunk/ardesia/src/Makefile.am:
+        - Pen pressure support for the device that support it
+        - Eraser with the back pen tip on graphic table
+        - Annotation window is created with glade
+        These feature are tested with a Wacom Bamboo Pen & Touch (CTH-460) 
+        graphic tablet on Ubuntu 9.10 (karmic) 
+
+
+2010-08-27 01:36  alpha@paranoici.org
+        * trunk/ardesia/Makefile.am,
+        * trunk/ardesia/src/Makefile.am:
+        - make deb: create the deb in the ardesia folder
+          calling lintiant and moving the file
+        - make dist: create the source code tarball in the 
+          ardesia folder  
+
+
 2010-08-26 13:17  alpha@paranoici.org
 	* trunk/ardesia/src/scripts/screencast.bat, 
 	* trunk/ardesia/src/recorder.c:
