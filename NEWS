@@ -28,8 +28,11 @@ Usability:
 - added French translation
 
 Features:
-- implemented recorder and stream forwarder 
-  for Linux and Windows
+- Implemented cross plattform recorder and stream forwarder 
+- Added the pen pressure support  for the drawing tablet
+- Added the eraser support for the drawing tablet
+- Export as pdf
+
 
 Bug Fix:
 - Fix the file name suggestion in the 
