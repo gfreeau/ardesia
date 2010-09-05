@@ -423,7 +423,7 @@
               <object class="GtkToolButton" id="buttonAddPdf">
                 <property name="width_request">27</property>
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Add page to pdf</property>
+                <property name="tooltip_text" translatable="yes">Add to pdf</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">addpdf</property>
                 <signal name="clicked" handler="on_toolsAddPdf_activate"/>
