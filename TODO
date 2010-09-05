@@ -18,6 +18,8 @@
   - Screencast recorder using vlclib insted spawn the vlc process 
 
 - Windows porting
+  - Investigate why the proximity_in and proximity_out
+    events don't arrive to Ardesia on win32
   - Fix the build system (install target)
   - Create a binary installer
   - Fix the highlighter; this doesn't work because

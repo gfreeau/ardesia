@@ -49,9 +49,7 @@
   #define ANNOTATION_UI_FILE "..\\share\\ardesia\\ui\\annotation.glade"
   
   /* User for brab the pointer on win32*/
-  #define ANNOTATE_MOUSE_EVENTS    ( GDK_PROXIMITY_IN_MASK   |    \
-                                     GDK_PROXIMITY_OUT_MASK  |    \
-                                     GDK_POINTER_MOTION_MASK |    \
+  #define ANNOTATE_MOUSE_EVENTS    ( GDK_POINTER_MOTION_MASK |    \
                                      GDK_BUTTON_PRESS_MASK   |    \
                                      GDK_BUTTON_RELEASE_MASK      \
                                    )
