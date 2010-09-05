@@ -35,6 +35,8 @@ case "$host" in
     ;;
 esac
 
+AM_PROG_LIBTOOL
+
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = yes)
 AM_CONDITIONAL(ENABLE_STATIC, test "$enable_static" = "yes")
