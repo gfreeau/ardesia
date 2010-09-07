@@ -15,7 +15,7 @@
 
 - Refactoring
   - better variable handling
-  - Screencast recorder using vlclib insted spawn the vlc process 
+  - Screencast recorder using vlclib insted spawn the vlc process
 
 - Windows porting
   - Investigate why the proximity_in and proximity_out
@@ -27,13 +27,15 @@
 
 - MacOsX-quartz porting
 
-- Possible future features:
+- Candidate features:
+  - Import/Export pdf using poppler 
+  - import images (galleries with images, sticky notes)
+  - Lazo selection tool
+  - move, copy, paste
+  - zoom and rotate
   - put the artifact online
     - email
     - ftp
-  - import images (galleries with images, sticky notes)
-  - Crop, move, zoom and rotate
-  - selection tools
   - configuration file and settings 
   - Multi pointer support using the xinput2 libraries
 
