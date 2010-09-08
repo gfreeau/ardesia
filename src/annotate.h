@@ -163,8 +163,8 @@ typedef struct
 /* Struct to store the painted point */
 typedef struct
 {
-  gint x;
-  gint y;
+  gdouble x;
+  gdouble y;
   gint width;
   gdouble pressure;
 } AnnotateStrokeCoordinate;
@@ -264,13 +264,13 @@ void hide_cursor();
 void unhide_cursor();
 
 /* Add to the list of the painted point the point (x,y) storing the line width and the pressure */
-void annotate_coord_list_prepend (gint x, gint y, gint width, gdouble pressure);
+void annotate_coord_list_prepend (gdouble x, gdouble y, gint width, gdouble pressure);
 
 /* Draw line from the last point drawn to (x2,y2) */
-void annotate_draw_line (gint x2, gint y2, gboolean stroke);
+void annotate_draw_line (gdouble x2, gdouble y2, gboolean stroke);
 
 /* Draw a poin in x,y respecting the context */
-void annotate_draw_point(gint x, gint y);
+void annotate_draw_point(gdouble x, gdouble y);
 
 /* Draw an arrow using some polygons */
 void annotate_draw_arrow (gint distance);

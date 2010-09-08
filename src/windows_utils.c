@@ -68,7 +68,7 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
   GdkCursor *cursor;
   gint width, height;
 
-  /* HACK!  It seems impossible to work with RGBA pixmaps directly in
+  /* @HACK  It seems impossible to work with RGBA pixmaps directly in
      GDK-Win32.  Instead we pick some third color, different from fg
      and bg, and use that as the '<b style="color: black; background-color: rgb(255, 153, 153);">transparent</b> color'.  We do this using
      colors_too_similar (see above) because two colors could be

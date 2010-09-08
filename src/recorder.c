@@ -134,7 +134,6 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
 
-
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
   
@@ -164,7 +163,7 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
 					       GTK_DIALOG_MODAL, 
                                                GTK_MESSAGE_WARNING,  
                                                GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
-	     
+		
           gint result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
           if (msg_dialog != NULL)
             {

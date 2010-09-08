@@ -28,9 +28,9 @@
 
 
 /* Number x is roundable to y */
-gboolean is_similar(gint x, gint y, gint pixel_tollerance)
+gboolean is_similar(gdouble x, gdouble y, gint pixel_tollerance)
 {
-  gint delta = abs(x-y); 
+  gdouble delta = abs(x-y); 
   if (delta <= pixel_tollerance) 
     {
       return TRUE;
@@ -40,7 +40,7 @@ gboolean is_similar(gint x, gint y, gint pixel_tollerance)
 
 
 /* The point (x1,y2) caan be rounded to (x2,y2) if the distance is minor that the pixel_tollerance */
-gboolean is_similar_point(gint x1, gint y1, gint x2, gint y2, gint pixel_tollerance)
+gboolean is_similar_point(gdouble x1, gdouble y1, gdouble x2, gdouble y2, gint pixel_tollerance)
 {
   gint distance = get_distance(x1, y1, x2, y2);
   if (distance < pixel_tollerance)
@@ -55,7 +55,7 @@ gboolean is_similar_point(gint x1, gint y1, gint x2, gint y2, gint pixel_tollera
 
 
 /* The list contain a point roundable to x y */
-gboolean contain_similar_point(gint x, gint y, GSList* list, gint pixel_tollerance)
+gboolean contain_similar_point(gdouble x, gdouble y, GSList* list, gint pixel_tollerance)
 {
   if (!list)
     {
@@ -144,16 +144,16 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
   AnnotateStrokeCoordinate* pointB = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, i+1);
   AnnotateStrokeCoordinate* pointC = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, lenght-1);
 
-  gint Ax = pointA->x;
-  gint Ay = pointA->y;
+  gdouble Ax = pointA->x;
+  gdouble Ay = pointA->y;
   gint Awidth = pointA->width;
   gdouble Apressure = pointA->pressure;
-  gint Bx = pointB->x;
-  gint By = pointB->y;
+  gdouble Bx = pointB->x;
+  gdouble By = pointB->y;
   gint Bwidth = pointB->width;
   gdouble Bpressure = pointB->pressure;
-  gint Cx = pointB->x;
-  gint Cy = pointB->y;
+  gdouble Cx = pointB->x;
+  gdouble Cy = pointB->y;
   gint Cwidth = pointB->width;
   gdouble Cpressure = pointB->pressure;
 
@@ -165,7 +165,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
   gdouble area = 0.;
   gdouble h = 0;
   
-  gint X1, Y1, X2, Y2;
+  gdouble X1, Y1, X2, Y2;
 
   for (i = i+2; i<lenght; i++)
     {
@@ -182,7 +182,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
     
        area += (gdouble) (X1 * Y2 - X2 * Y1);
     
-       h = (2*area)/sqrt(X2*X2 + Y2*Y2);    
+       h = (2*area)/sqrtf(X2*X2 + Y2*Y2);    
        
        if (fabs(h) >= pixel_tollerance)
          {
@@ -216,7 +216,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
 
 
 /* Take the list and the rurn the minx miny maxx and maxy points */
-gboolean found_min_and_max(GSList* list, gint* minx, gint* miny, gint* maxx, gint* maxy, gdouble* total_pressure)
+gboolean found_min_and_max(GSList* list, gdouble* minx, gdouble* miny, gdouble* maxx, gdouble* maxy, gdouble* total_pressure)
 {
   if (!list)
     {
@@ -257,14 +257,14 @@ gboolean is_similar_to_a_regular_poligon(GSList* list)
       return FALSE;
     }
   gint lenght = g_slist_length(list);
-  gint old_distance = -1;
+  gdouble old_distance = -1;
   gint i = 0;
   AnnotateStrokeCoordinate* old_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
               
   for (i=1; i<lenght; i++)
     {
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
-      gint distance = get_distance(point->x, point->y, old_point->x, old_point->y);
+      gdouble distance = get_distance(point->x, point->y, old_point->x, old_point->y);
       if (old_distance != -1)
         {
           /* I have seen that a good compromise allow a 30% of error */
@@ -293,12 +293,12 @@ GSList* extract_poligon(GSList* listIn)
     {
       return NULL;
     }
-  gint cx, cy;
-  gint radius;
-  gint minx;
-  gint miny;
-  gint maxx;
-  gint maxy;
+  gdouble cx, cy;
+  gdouble radius;
+  gdouble minx;
+  gdouble miny;
+  gdouble maxx;
+  gdouble maxy;
   gdouble total_pressure;
   gboolean status = found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_pressure);
   if (!status)
@@ -336,10 +336,10 @@ GSList*  extract_outbounded_rectangle(GSList* listIn)
     {
       return NULL;
     }
-  gint minx;
-  gint miny;
-  gint maxx;
-  gint maxy;
+  gdouble minx;
+  gdouble miny;
+  gdouble maxx;
+  gdouble maxy;
   gdouble total_pressure = 1.0;
   gint lenght = g_slist_length(listIn);
   gboolean status = found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_pressure);
@@ -372,7 +372,7 @@ GSList*  extract_outbounded_rectangle(GSList* listIn)
 void putx(gpointer current, gpointer value)
 {
   AnnotateStrokeCoordinate* currentpoint = ( AnnotateStrokeCoordinate* ) current;
-  gint* valuex = ( gint* ) value;
+  gdouble* valuex = ( gdouble* ) value;
   currentpoint->x = *valuex;
 }
 
@@ -381,7 +381,7 @@ void putx(gpointer current, gpointer value)
 void puty(gpointer current, gpointer value)
 {
   AnnotateStrokeCoordinate* currentpoint = ( AnnotateStrokeCoordinate* ) current;
-  gint* valuey = ( gint* ) value;
+  gdouble* valuey = ( gdouble* ) value;
   currentpoint->y = *valuey;
 }
 
@@ -389,8 +389,8 @@ void puty(gpointer current, gpointer value)
 /* Return the degree of the rect beetween two point respect the axis */
 gfloat calculate_edge_degree(AnnotateStrokeCoordinate* pointA, AnnotateStrokeCoordinate* pointB)
 {
-  gint deltax = abs(pointA->x-pointB->x);
-  gint deltay = abs(pointA->y-pointB->y);
+  gdouble deltax = abs(pointA->x-pointB->x);
+  gdouble deltay = abs(pointA->y-pointB->y);
   gfloat directionAB = atan2(deltay, deltax)/M_PI*180;
   return directionAB;   
 }
@@ -458,7 +458,7 @@ GSList* straighten(GSList* list)
   if ((0-degree_threshold<=direction)&&(direction<=0+degree_threshold)) 
     {
        // y is the average
-       gint y = (first_point->y+last_point->y)/2;
+       gdouble y = (first_point->y+last_point->y)/2;
        // put this y for each element in the list
        g_slist_foreach(listOut, (GFunc)puty, &y);
     } 
@@ -467,7 +467,7 @@ GSList* straighten(GSList* list)
   if ((90-degree_threshold<=direction)&&(direction<=90+degree_threshold)) 
     {
        // x is the average
-       gint x = (first_point->x+last_point->x)/2;
+       gdouble x = (first_point->x+last_point->x)/2;
        // put this x for each element in the list
        g_slist_foreach(listOut, (GFunc)putx, &x);
     } 

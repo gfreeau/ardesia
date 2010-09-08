@@ -504,12 +504,14 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
     {
       bar_data->grab = TRUE;
       #ifdef _WIN32
-        /* @HACK This deny the mouse input go below the window */
+        /* 
+		 * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
+	     * @TODO remove the opacity hack when will be solved the next todo 
+		 */
         if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0)
           {
-            gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0.1);
+            gtk_window_set_opacity(GTK_WINDOW(get_background_window()), BACKGROUND_OPACITY);
           }
-	/* @TODO do it in a better way */
       #endif	
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"lock")));
       /* set tooltip to unhide */
@@ -521,11 +523,16 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
       bar_data->grab = FALSE;
       annotate_release_grab ();
       #ifdef _WIN32
-        if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0.1)
+        if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))!=0)
           {
-            /* @HACK This allow the mouse input go below the window */
-            gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
-	    /* @TODO do it in a better way */
+            /* 
+			 * @HACK This allow the mouse input go below the window putting the opacity to 0 
+			 * if will be found a better way to see to the window to be transparent
+			 * the the pointer input can be removed the previous hack 
+			 *
+			 * @TODO transparent window to the pointer input in a better way 
+			 */
+             gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
           }
       #endif	 
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"unlock")));

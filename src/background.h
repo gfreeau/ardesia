@@ -26,6 +26,7 @@
 
 #include <gtk/gtk.h>
 
+#define BACKGROUND_OPACITY 0.01
 
 typedef struct
 {

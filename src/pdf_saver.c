@@ -48,7 +48,8 @@ gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixb
 						     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 				                     GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						     NULL);
-   gtk_window_set_modal(GTK_WINDOW(chooser), TRUE); 
+   gtk_window_set_modal(GTK_WINDOW(chooser), TRUE);
+   
    gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file")); 
  
    /* preview of saving */
@@ -90,7 +91,7 @@ gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixb
 					       GTK_DIALOG_MODAL, 
                                                GTK_MESSAGE_WARNING,
                                                GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
-          
+	  
           gint result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
           if (msg_dialog != NULL)
             { 

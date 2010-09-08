@@ -95,14 +95,14 @@ GtkWidget* get_bar_window()
 
 
 /** Get the distance beetween two points */
-gint get_distance(gint x1, gint y1, gint x2, gint y2)
+gdouble get_distance(gdouble x1, gdouble y1, gdouble x2, gdouble y2)
 {
   if ((x1==x2) && (y1==y2))
     {
       return 0;
     }
   /* apply the Pitagora theorem to calculate the distance */
-  gint ret = (sqrt(pow(x1-x2,2) + pow(y1-y2,2)));
+  gdouble ret = (sqrtf(powf(x1-x2,2) + powf(y1-y2,2)));
   return ret; 
 }
 
@@ -162,7 +162,7 @@ void cairo_set_source_color_from_string( cairo_t * cr, gchar* color)
 /*
  * This is function return if the point (x,y) in inside the ardesia bar window
  */
-gboolean inside_bar_window(gint xp, gint yp)
+gboolean inside_bar_window(gdouble xp, gdouble yp)
 {
   gint x, y, width, height;
   GtkWindow* bar = GTK_WINDOW(get_bar_window());

@@ -68,9 +68,11 @@ event_expose (GtkWidget *widget,
       #ifdef _WIN32
 	/* The hdc has depth 32 and the technology is DT_RASDISPLAY */
         HDC hdc = GetDC (GDK_WINDOW_HWND (data->annotation_window->window));
-	/* @TODO In the documentation is written that the resulting surface is in RGB24 format;
-	 * to support the alpha channel and the highlighter we need the surface in ARGBA32 format  
-         */
+	/* 
+	 * @TODO Use an HDC that support the ARGBA32 format to support the alpha channel and the highlighter
+	 * In the documentation is written that the now the resulting surface is in RGB24 format
+     * 
+	 */
 	cairo_surface_t* surface = cairo_win32_surface_create(hdc);
 	/* Patching cairo adding the cairo_win32_surface_create_for_dc function could fix */
 	//cairo_surface_t* surface = cairo_win32_surface_create_for_dc (hdc, CAIRO_FORMAT_ARGB32, data->width, data->height);
@@ -131,23 +133,13 @@ paint (GtkWidget *win,
        return TRUE;
     }
 
-  gint x,y;
-  #ifdef _WIN32
-    /* I do not know why but sometimes the event coord are wrong */
-    /* get cursor position */
-    gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
-  #else
-    x = ev->x;
-    y = ev->y;	
-  #endif
-
   if (data->debug)
     {    
-      g_printerr("Device '%s': Button %i Down at (x,y)=(%d : %d)\n",
-		  ev->device->name, ev->button, x, y);
+      g_printerr("Device '%s': Button %i Down at (x,y)=(%f : %f)\n",
+		  ev->device->name, ev->button, ev->x, ev->y);
     }
 
-  if (inside_bar_window(x, y))
+  if (inside_bar_window(ev->x, ev->y))
     /* point is in the ardesia bar */
     {
       /* the last point was outside the bar then ungrab */
@@ -186,9 +178,9 @@ paint (GtkWidget *win,
          }
        modify_color(data, pressure) ;
     }
-  annotate_draw_point(x, y);  
+  annotate_draw_point(ev->x, ev->y);  
  
-  annotate_coord_list_prepend (x, y, annotate_get_thickness(), pressure);
+  annotate_coord_list_prepend (ev->x, ev->y, annotate_get_thickness(), pressure);
   return TRUE;
 }
 
@@ -209,16 +201,7 @@ paintto (GtkWidget *win,
        return TRUE;
     }
   
-  gint x,y;
-  #ifdef _WIN32
-    /* I do not know why but sometimes the event coord are wrong */
-    /* get cursor position */
-    gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
-  #else
-    x = ev->x;
-    y = ev->y;	
-  #endif
-  if (inside_bar_window(x, y))
+  if (inside_bar_window(ev->x, ev->y))
     /* point is in the ardesia bar */
     {
        if (data->debug)
@@ -259,7 +242,7 @@ paintto (GtkWidget *win,
       if (data->coordlist)
           {
              AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, 0);
-             if ((first_point->x==x)&&(first_point->y==y))
+             if ((first_point->x==ev->x)&&(first_point->y==ev->y))
                {
                  if (pressure<first_point->pressure)
                    {
@@ -270,9 +253,9 @@ paintto (GtkWidget *win,
           }
     }
 
-  annotate_draw_line (x, y, TRUE);
+  annotate_draw_line (ev->x, ev->y, TRUE);
    
-  annotate_coord_list_prepend (x, y, selected_width, pressure);
+  annotate_coord_list_prepend (ev->x, ev->y, selected_width, pressure);
 
   return TRUE;
 }
@@ -292,22 +275,13 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
        return TRUE;
     }
   
-  gint x,y;
-  #ifdef _WIN32
-    /* I do not know why but sometimes the event coord are wrong */
-    /* get cursor position */
-    gdk_display_get_pointer (data->display, NULL, &x, &y, NULL);
-  #else
-    x = ev->x;
-    y = ev->y;	
-  #endif
   if (data->debug)
     {
       g_printerr("Device '%s': Button %i Up at (x,y)=(%.2f : %.2f)\n",
 		 ev->device->name, ev->button, ev->x, ev->y);
     }
 
-  if (inside_bar_window(x, y))
+  if (inside_bar_window(ev->x, ev->y))
     /* point is in the ardesia bar */
     {
       /* the last point was outside the bar then ungrab */
@@ -335,7 +309,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
        
       /* This is the tollerance to force to close the path in a magnetic way */
       gint tollerance = data->thickness;
-      distance = get_distance(x, y, first_point->x, first_point->y);
+      distance = get_distance(ev->x, ev->y, first_point->x, first_point->y);
  
       AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, 0);
       gdouble pressure = last_point->pressure;      
@@ -349,8 +323,8 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
 	}
       else
         {
-          cairo_line_to(data->annotation_cairo_context, x, y);
-          annotate_coord_list_prepend (x, y, data->thickness, pressure);
+          cairo_line_to(data->annotation_cairo_context, ev->x, ev->y);
+          annotate_coord_list_prepend (ev->x, ev->y, data->thickness, pressure);
         }
    
       if (!(data->cur_context->type == ANNOTATE_ERASER))

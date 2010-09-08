@@ -173,7 +173,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   preferenceDialog = GTK_WIDGET(gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"preferences"));
   gtk_window_set_transient_for(GTK_WINDOW(preferenceDialog), parent);
   gtk_window_set_modal(GTK_WINDOW(preferenceDialog), TRUE);
-
+   
   GObject* imgObj = gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder, "imageChooserButton");
   GtkFileChooser* chooser = GTK_FILE_CHOOSER(imgObj);
 
@@ -194,8 +194,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
  
   /* Connect all signals by reflection */
   gtk_builder_connect_signals (preference_data->preferenceDialogGtkBuilder, (gpointer) preference_data);
-  
-  
+   
   if (preference_data->background == 1)
     {
       GObject * colorObj = gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"color");
@@ -210,7 +209,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
     }
 
   gtk_dialog_run(GTK_DIALOG(preferenceDialog));
-    
+  
   if (preferenceDialog != NULL)
     {
       gtk_widget_destroy(preferenceDialog);

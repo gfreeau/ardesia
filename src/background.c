@@ -91,18 +91,13 @@ void clear_background_window()
   g_free(background_data->background_image);
   background_data->background_image = NULL;
   
-  #ifdef _WIN32
-    /* 
-     * @HACK I put the window opacity to 0.1 because 
-     * if I set the annotation window to be fully transparent
-     * will lost the focus even if it has grabbed the pointer 
-     * 
-     */
-    gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0.1);
-  #else
-    gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0);
-  #endif
-  /* @TODO do it in a better way */
+   /* 
+    * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
+    * I avoid a complete transparent window because in some operating system this would become
+    * transparent to the pointer input also
+	*
+    */
+  gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), BACKGROUND_OPACITY);
 
   clear_cairo_context(background_data->back_cr);
   
@@ -187,18 +182,22 @@ void load_color()
       cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_SOURCE);
       gint r,g,b,a;
       sscanf(background_data->background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+	  /*
+       * @TODO implement with a full opaque windows and use cairo_set_source_rgba function to paint
+	   * I set the opacity with alpha and I use cairo_set_source_rgb to workaround the problem on windows with rgba 
+	   *
+	   */
       gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), (gdouble) a/256);
       cairo_set_source_rgb(background_data->back_cr, (gdouble) r/256, (gdouble) g/256, (gdouble) b/256);
       cairo_paint(background_data->back_cr);
       cairo_stroke(background_data->back_cr);
       
       #ifndef _WIN32
-         /* @HACK This deny the mouse event to be passed to the window below */
         gdk_window_input_shape_combine_mask (background_data->background_window->window,  
                                              NULL, 
                                              0, 0);
       #endif
-      /* @TODO do it in a better way */
+      
     }  
 }
 

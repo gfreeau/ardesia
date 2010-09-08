@@ -122,7 +122,7 @@ void annotate_paint_context_free (AnnotatePaintContext *context)
 
 
 /* Add to the list of the painted point the point (x,y) storing the width */
-void annotate_coord_list_prepend (gint x, gint y, gint width, gdouble pressure)
+void annotate_coord_list_prepend (gdouble x, gdouble y, gint width, gdouble pressure)
 {
   AnnotateStrokeCoordinate *point;
   point = g_malloc (sizeof (AnnotateStrokeCoordinate));
@@ -380,15 +380,20 @@ void merge_context(cairo_t * cr)
       * overriding the intersections
       * Seems that this operator does not work on windows
       * in this operating system only the new layer remain after the merge
+	  *
       */
      cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_OVER);
   #else
      /*
-      * @workaround to use it in windows I use the add that put the new layer
-      * on the top of the old one but it does not preserve the color of
+      * @WORKAROUND using CAIRO_OPERATOR_ADD instead of CAIRO_OPERATOR_OVER 
+	  * I do this to use the text widget in windows 
+	  * I use the CAIRO_OPERATOR_ADD that put the new layer
+      * on the top of the old; this function does not preserve the color of
       * the second layer but modify it respecting the firts layer
+	  *
       * Seems that the CAIRO_OPERATOR_OVER does not work because in the
       * gtk cairo implementation the ARGB32 format is not supported
+	  *
       */
      cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_ADD);
   #endif
@@ -761,7 +766,7 @@ void destroy_cairo()
 
 
 /* Draw line from the last point drawn to (x2,y2) */
-void annotate_draw_line (gint x2, gint y2, gboolean stroke)
+void annotate_draw_line (gdouble x2, gdouble y2, gboolean stroke)
 {
   if (!stroke)
     {
@@ -870,7 +875,7 @@ void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
 
 
 /* Draw a point in x,y respecting the context */
-void annotate_draw_point(gint x, gint y)
+void annotate_draw_point(gdouble x, gdouble y)
 {
   cairo_move_to (data->annotation_cairo_context, x, y);
   cairo_line_to (data->annotation_cairo_context, x, y);
@@ -883,17 +888,13 @@ void annotate_draw_point_list(GSList* outptr)
   if (outptr)
     {
       AnnotateStrokeCoordinate* out_point;
-      gint lastx; 
-      gint lasty;
       while (outptr)
         {
 	  out_point = (AnnotateStrokeCoordinate*)outptr->data;
-	  gint curx = out_point->x; 
-	  gint cury = out_point->y;
+	  gdouble curx = out_point->x; 
+	  gdouble cury = out_point->y;
 	  // draw line beetween the two points
 	  annotate_draw_line (curx, cury, FALSE);
-	  lastx = curx;
-	  lasty = cury;
 	  outptr = outptr->next;   
 	}
     }
@@ -952,8 +953,8 @@ void roundify(gboolean closed_path)
     {
       /* It is a point */ 
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
-      gint lastx = out_point->x; 
-      gint lasty = out_point->y;
+      gdouble lastx = out_point->x; 
+      gdouble lasty = out_point->y;
       annotate_draw_point(lastx, lasty);
       return;
     }
@@ -967,13 +968,13 @@ void roundify(gboolean closed_path)
     {
       // It's an ellipse draw it with the outbounded rectangle in the outptr list
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
-      gint lastx = out_point->x; 
-      gint lasty = out_point->y;
+      gdouble lastx = out_point->x; 
+      gdouble lasty = out_point->y;
       AnnotateStrokeCoordinate* point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 2);
       if (point3)
         { 
-          gint curx = point3->x; 
-          gint cury = point3->y;
+          gdouble curx = point3->x; 
+          gdouble cury = point3->y;
 	  cairo_draw_ellipse(lastx, lasty, curx-lastx, cury-lasty);          
         }
     }
@@ -1185,25 +1186,18 @@ void annotate_release_input_grab()
   gdk_display_sync(data->display);
   #ifndef _WIN32
     /* 
-     * @TODO MACOSX 
-     * in macosx this will do nothing and then you will not able to click on the desktop,
-     * to fix this you must implement the shaping in the quartz gdkwindow or use some other native function
-     * to pass the events below the annotation transparent window
-     *
+     * @TODO implement correctly gdk_window_input_shape_combine_mask in the quartz gdkwindow or use an equivalent native function
+     * the current implementation in macosx this doesn't do nothing
      */
     /*
-     * LINUX
-     * This allows the mouse event to be passed below the transparent annotation  window thanks to the xshape
-     * extension  
+     * This allows the mouse event to be passed below the transparent annotation; at the moment this call works only on Linux  
      */
     gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);
   #else
     /*
-     * @TODO WIN32
-     * in window implementation the  gdk_window_input_shape_combine_mask call the  gdk_window_shape_combine_mask
-     * that it is not the desired behaviour
-     * to fix this you must implement correctly the shaping in the win32 gdkwindow or use some other native function
-     * to pass the events below the annotation transparent window
+     * @TODO WIN32 implement correctly gdk_window_input_shape_combine_mask in the win32 gdkwindow or use an equivalent native function
+     * now in the gtk implementation the gdk_window_input_shape_combine_mask call the gdk_window_shape_combine_mask
+	 * that is not the desired behaviour
      *
      */
      annotate_release_pointer_grab();

@@ -120,8 +120,8 @@ void cairo_set_source_color_from_string( cairo_t * cr, gchar* color);
 void  cairo_set_transparent_color(cairo_t * cr);
 
 
-/** Distance beetween two points using the Pitagora theorem */
-gint get_distance(gint x1, gint y1, gint x2, gint y2);
+/* Distance beetween two points using the Pitagora theorem */
+gdouble get_distance(gdouble x1, gdouble y1, gdouble x2, gdouble y2);
 
 
 /* Clear cairo context */
@@ -131,7 +131,7 @@ void clear_cairo_context(cairo_t* cr);
 /*
  * This is function return if the point (x,y) in inside the ardesia bar window
  */
-gboolean inside_bar_window(gint xp, gint yp);
+gboolean inside_bar_window(gdouble xp, gdouble yp);
 
 
 /*

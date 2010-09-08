@@ -131,7 +131,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
 					       GTK_DIALOG_MODAL, 
                                                GTK_MESSAGE_WARNING,
                                                GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
-          
+	  
           gint result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
           if (msg_dialog != NULL)
             { 

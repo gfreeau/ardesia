@@ -32,7 +32,7 @@
 #include <utils.h>
 #include <annotate.h>
 
-#ifdef WIN32
+#ifdef _WIN32
   #include <windows_utils.h>
 #endif
 
@@ -298,13 +298,15 @@ release (GtkWidget *win,
   
   #ifdef _WIN32  
     /*
-        TODO try a way to pass the mouse input below the window
-        the gdk_window_input_shape_combine_mask is not correctly implemented
+     *  @TODO the gdk_window_input_shape_combine_mask is not implemented
+	 *	try a way to pass the mouse input below the window
+     *  
      */
   #else
     /*
-        Apply a transparent window with the gdk_window_input_shape_combine_mask
-        to pass the mouse events below the text window  
+     *  Apply a transparent window with the gdk_window_input_shape_combine_mask
+     *  to pass the mouse events below the text window
+     *	 
      */
     gint width, height;
     gtk_window_get_size(GTK_WINDOW(win), &width, &height);
