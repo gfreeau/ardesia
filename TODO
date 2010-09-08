@@ -22,9 +22,8 @@
 
 - Windows porting
   - Fix the build system (install target)
-  - Create a binary installer
-  - Investigate why the proximity_in and proximity_out
-    events don't arrive to Ardesia on win32
+  - Create a binary installer similar to he gimp windows 
+    installer http://gimp-win.sourceforge.net/
   - Fix the highlighter; this doesn't work because
     the  ARGB32 support in cairo is not yet available 
 

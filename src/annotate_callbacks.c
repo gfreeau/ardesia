@@ -353,6 +353,7 @@ proximity_in (GtkWidget *win,
               GdkEventProximity *ev, 
               gpointer func_data)
 {
+  /* @TODO this message don't arrive on windows */
   AnnotateData *data = (AnnotateData *) func_data;
   if (data->debug)
     {
@@ -386,6 +387,7 @@ proximity_out (GtkWidget *win,
                GdkEventProximity *ev,
                gpointer func_data)
 {
+  /* @TODO this message don't arrive on windows */
   AnnotateData *data = (AnnotateData *) func_data;
   if (data->debug)
     {
