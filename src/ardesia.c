@@ -111,7 +111,7 @@ void calculate_initial_position(GtkWidget *ardesia_bar_window,
 /* Prgint command line help */
 void print_help()
 {
-  gchar* version = "0.4";
+  gchar* version = "0.5";
   gchar* year = "2009-2010";
   gchar* author = "Pietro Pilolli";
   printf("Usage: ardesia [options] [filename]\n\n");

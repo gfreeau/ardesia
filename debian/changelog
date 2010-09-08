@@ -1,5 +1,5 @@
-ardesia (0.4-ubuntu-1) stable; urgency=low
+ardesia (0.5-ubuntu-1) stable; urgency=low
 
-  * First cross-plattform stable release
+  * First bug-fixing release
 
- -- root <pilolli@fbk.eu>  Mon, 27 Jul 2009 23:58:49 +0200
+ -- root <pilolli@fbk.eu>  Mon, 27 Jul 2010 23:58:49 +0200
