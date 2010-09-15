@@ -21,10 +21,10 @@
  *
  */
 
+/* All this file will be build only on windows */
+#ifdef _WIN32
 
 #include <windows_utils.h>
-
-#ifdef _WIN32
   
 BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF crKey,
 	BYTE bAlpha, DWORD dwFlags) = NULL;
@@ -119,6 +119,7 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 
   return cursor;
 }
+
 #endif
 
 

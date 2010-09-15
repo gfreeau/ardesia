@@ -361,7 +361,7 @@ void stop_text_widget()
           g_slist_foreach(letterlist, (GFunc)g_free, NULL);
           g_slist_free(letterlist);
           letterlist = NULL;
-          merge_context(text_cr);
+          annotate_push_context(text_cr);
         } 
       cairo_destroy(text_cr);     
       text_cr = NULL;

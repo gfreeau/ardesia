@@ -24,11 +24,10 @@
 
 #include <gtk/gtk.h>
 
-
+/* full opaque alpha */
 #define OPAQUE_ALPHA "FF"
+
+/* semi opaque (and then semi transparent) alpha */
 #define SEMI_OPAQUE_ALPHA "66"
-
-
-void destroy (GtkWidget *widget, gpointer data);
 
 

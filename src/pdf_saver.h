@@ -30,7 +30,9 @@
 
 typedef struct
 {
+  /* the list of the pixbuf of all pdf pages */
   GSList* pixbuflist;
+  /* the filename where store the pdf */
   gchar*  filename;
 }PdfData;
 

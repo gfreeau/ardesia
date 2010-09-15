@@ -32,7 +32,11 @@
 
 /* pid of the recording process */
 static GPid recorderpid;
+
+/* is the recorder active */
 static gboolean is_active = FALSE;
+
+
 
 /* 
  * Create a annotate client process the annotate
@@ -56,6 +60,7 @@ GPid call_recorder(gchar* filename, gchar* option)
 	}
   return pid;
 }
+
 
 /* Is the recorder available */
 gboolean is_recorder_available()

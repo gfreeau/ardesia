@@ -96,7 +96,7 @@ AnnotatePaintContext * annotate_paint_context_new(AnnotatePaintType type)
 }
    
 
-/* Prgint paint context informations */
+/* Print paint context informations */
 void annotate_paint_context_print(gchar *name, AnnotatePaintContext *context)
 {
   g_printerr ("Tool name: \"%-20s\": ", name);
@@ -209,7 +209,7 @@ void annotate_savelist_free()
 
 
 /* Modify color according to the pressure */
-void modify_color(AnnotateData* data, gdouble pressure)
+void annotate_modify_color(AnnotateData* data, gdouble pressure)
 {
       /* pressure is value from 0 to 1 */
       if ((pressure>0)&&(pressure<1))
@@ -223,6 +223,7 @@ void modify_color(AnnotateData* data, gdouble pressure)
                AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, 0);
                old_pressure = last_point->pressure;      
             }
+          /* if you put an highter value you will have more contrast beetween the lighter and darker color depending on pressure */
           gdouble contrast = 96;
           gdouble corrective = (1-( 3 * pressure + old_pressure)/4) * contrast;
           cairo_set_source_rgba (data->annotation_cairo_context, (r + corrective)/255, (g + corrective)/255, (b+corrective)/255, (gdouble) a/255);
@@ -296,8 +297,11 @@ void select_color()
 }
 
 
-/* Add a save point for the undo/redo */
-void add_save_point()
+/* 
+ * Add a save point for the undo/redo; 
+ * this code must be called at the end of each painting action
+ */
+void annotate_add_save_point()
 {
   AnnotateSave *save = g_malloc(sizeof(AnnotateSave));
   save->previous  = NULL;
@@ -354,7 +358,7 @@ void configure_pen_options()
 
 
 /* Set a new cairo path with the new options */
-void reset_cairo()
+void annotate_reset_cairo()
 {
   if (data->annotation_cairo_context)
     {
@@ -364,44 +368,46 @@ void reset_cairo()
 }
 
 
-/* paint the context over the annotation window */
-void merge_context(cairo_t * cr)
+/* Paint the context over the annotation window */
+void annotate_push_context(cairo_t * cr)
 {
   if (data->debug)
     {
       g_printerr("Merge text window in the annotation window\n");
     }
-  reset_cairo();
- 
+
+  annotate_reset_cairo(); 
   cairo_surface_t* source_surface = cairo_get_target(cr);
+
   #ifndef _WIN32
      /*
       * The over operator might put the new layer on the top of the old one 
       * overriding the intersections
       * Seems that this operator does not work on windows
       * in this operating system only the new layer remain after the merge
-	  *
+      *
       */
      cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_OVER);
   #else
      /*
       * @WORKAROUND using CAIRO_OPERATOR_ADD instead of CAIRO_OPERATOR_OVER 
-	  * I do this to use the text widget in windows 
-	  * I use the CAIRO_OPERATOR_ADD that put the new layer
+      * I do this to use the text widget in windows 
+      * I use the CAIRO_OPERATOR_ADD that put the new layer
       * on the top of the old; this function does not preserve the color of
       * the second layer but modify it respecting the firts layer
-	  *
+      *
       * Seems that the CAIRO_OPERATOR_OVER does not work because in the
       * gtk cairo implementation the ARGB32 format is not supported
-	  *
+      *
       */
      cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_ADD);
   #endif
+
   cairo_set_source_surface (data->annotation_cairo_context,  source_surface, 0, 0);
   cairo_paint(data->annotation_cairo_context);
   cairo_stroke(data->annotation_cairo_context);
 
-  add_save_point();
+  annotate_add_save_point();
 }
 
 
@@ -484,7 +490,7 @@ void update_cursor()
 
 
 /* Unhide the cursor */
-void unhide_cursor()
+void annotate_unhide_cursor()
 {
   if (data->is_cursor_hidden)
     {
@@ -551,7 +557,7 @@ void allocate_invisible_cursor()
 
  
 /* Hide the cursor */
-void hide_cursor()
+void annotate_hide_cursor()
 {
   gdk_window_set_cursor(data->annotation_window->window, data->invisible_cursor);
   gdk_display_sync(data->display);
@@ -857,7 +863,7 @@ void annotate_draw_arrow (gint distance)
 
 
 /* This draw an ellipse taking the top left edge coordinates the width and the eight of the bounded rectangle */
-void cairo_draw_ellipse(gint x, gint y, gint width, gint height)
+void annotate_draw_ellipse(gint x, gint y, gint width, gint height)
 {
   if (data->debug)
     {
@@ -912,17 +918,17 @@ void rectify(gboolean closed_path)
       g_printerr("rectify\n");
     }
 
-  add_save_point();
+  annotate_add_save_point();
   annotate_undo();
   annotate_redolist_free();
-  reset_cairo();
+  annotate_reset_cairo();
        
   annotate_coord_list_free();
   data->coordlist = outptr;
 
   gint lenght = g_slist_length(outptr);
   AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght/2);
-  modify_color(data, point->pressure); 
+  annotate_modify_color(data, point->pressure); 
   annotate_draw_point_list(outptr);     
   if (closed_path)
     {
@@ -939,15 +945,15 @@ void roundify(gboolean closed_path)
   gint lenght = g_slist_length(outptr);
 
   /* Delete the last path drawn */
-  add_save_point();
+  annotate_add_save_point();
   annotate_undo();
   annotate_redolist_free();
-  reset_cairo();
+  annotate_reset_cairo();
      
   annotate_coord_list_free();
   data->coordlist = outptr;
   AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght/2);
-  modify_color(data, point->pressure); 
+  annotate_modify_color(data, point->pressure); 
   
   if (lenght==1)
     {
@@ -975,7 +981,7 @@ void roundify(gboolean closed_path)
         { 
           gdouble curx = point3->x; 
           gdouble cury = point3->y;
-	  cairo_draw_ellipse(lastx, lasty, curx-lastx, cury-lasty);          
+	  annotate_draw_ellipse(lastx, lasty, curx-lastx, cury-lasty);          
         }
     }
   else
@@ -987,7 +993,7 @@ void roundify(gboolean closed_path)
 
 
 /* Call the geometric shape recognizer */
-void shape_recognize(gboolean closed_path)
+void annotate_shape_recognize(gboolean closed_path)
 {
   /* Rectifier code only if the list is greater that 3 */
   if ( g_slist_length(data->coordlist)> 3)
@@ -1242,7 +1248,7 @@ void annotate_fill()
         {
            g_printerr("Fill\n");
         }
-      add_save_point();
+      annotate_add_save_point();
     }
 }
 
@@ -1322,9 +1328,9 @@ void annotate_clear_screen ()
       g_printerr("Clear screen\n");
     }
 
-  reset_cairo();
+  annotate_reset_cairo();
   clear_cairo_context(data->annotation_cairo_context);
-  add_save_point();
+  annotate_add_save_point();
 }
 
 

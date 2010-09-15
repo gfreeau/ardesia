@@ -82,7 +82,7 @@
 #endif
 
 
-extern GtkBuilder *gtkBuilder;
+GtkBuilder *gtkBuilder;
 
 		
 #define PROGRAM_NAME "Ardesia"

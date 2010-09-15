@@ -25,9 +25,11 @@
 #include <utils.h>
 #include <saver.h>
 
+
 static PdfData *pdf_data;
 
 
+/* Start the dialog that ask the filename where is being exported the pdf */
 gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pixbuf)
 {
    gboolean ret = TRUE;

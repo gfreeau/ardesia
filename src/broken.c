@@ -148,10 +148,12 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
   gdouble Ay = pointA->y;
   gint Awidth = pointA->width;
   gdouble Apressure = pointA->pressure;
+
   gdouble Bx = pointB->x;
   gdouble By = pointB->y;
   gint Bwidth = pointB->width;
   gdouble Bpressure = pointB->pressure;
+
   gdouble Cx = pointB->x;
   gdouble Cy = pointB->y;
   gint Cwidth = pointB->width;
@@ -431,7 +433,7 @@ GSList* straighten(GSList* list)
            AnnotateStrokeCoordinate* point =  allocate_point(pointB->x, pointB->y, pointB->width, pointB->pressure);
            listOut = g_slist_prepend (listOut, point); 
         } 
-       /* else is three the difference degree is minor than the threshold I neglegt B */
+      /* else is three the difference degree is minor than the threshold I neglegt B */
     }
 
   /* Copy the last point; it is a good point */

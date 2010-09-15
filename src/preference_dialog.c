@@ -177,6 +177,7 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   GObject* imgObj = gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder, "imageChooserButton");
   GtkFileChooser* chooser = GTK_FILE_CHOOSER(imgObj);
 
+
   gtk_file_chooser_set_current_folder(chooser, BACKGROUNDS_FOLDER);
  
   /* Put the file filter for the supported formats */

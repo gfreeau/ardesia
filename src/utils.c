@@ -29,8 +29,6 @@
 #include <utils.h>
 
 
-const gchar* desktop_dir = NULL;
-
 	
 /* Grab pointer */
 void grab_pointer(GtkWidget *win, GdkEventMask eventmask)

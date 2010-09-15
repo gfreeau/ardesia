@@ -176,23 +176,26 @@ gint annotate_init(GtkWidget* parent, gboolean debug);
 /* Get the annotation window */
 GtkWidget* get_annotation_window();
 
+/* Get cairo context that contains the annotations */
+cairo_t* get_annotation_cairo_context();
+
+/* Set the cairo context that contains the background */
+void set_annotation_cairo_background_context(cairo_t* background_cr);
+
+/* Draw the last save point on the window restoring the surface */
+void annotate_restore_surface();
+
+/* Get the cairo context that contains the background */
+cairo_t* get_annotation_cairo_background_context();
+
 /* Hide the annotations */
 void annotate_hide_annotation();
 
 /* Show the annotations */
 void annotate_show_annotation();
 
-/* Draw the last save point on the window restoring the surface */
-void annotate_restore_surface();
-
-/* Get cairo context that contains the annotations */
-cairo_t* get_annotation_cairo_context();
-
-/* Get the cairo context that contains the background */
-cairo_t* get_annotation_cairo_background_context();
-
-/* Set the cairo context that contains the background */
-void set_annotation_cairo_background_context(cairo_t* background_cr);
+/* Paint the context over the annotation window */
+void annotate_push_context(cairo_t * cr);
 
 /* Free the list of the painted point */
 void annotate_coord_list_free ();
@@ -210,7 +213,7 @@ void annotate_quit();
 void annotate_set_color(gchar* color);
 
 /* Modify color according to the pressure */
-void modify_color(AnnotateData* data, gdouble pressure);
+void annotate_modify_color(AnnotateData* data, gdouble pressure);
 
 /* Set the line thickness */
 void annotate_set_thickness(gdouble thickness);
@@ -251,17 +254,14 @@ void annotate_acquire_grab();
 /* Clear the annotations windows */
 void annotate_clear_screen();
 
-/* Paint the context over the annotation window */
-void merge_context(cairo_t * cr);
-
 /* Set a new cairo path with the new options */
-void reset_cairo();
+void annotate_reset_cairo();
 
 /* Hide the cursor */
-void hide_cursor();
+void annotate_hide_cursor();
 
 /* Unhide the cursor */
-void unhide_cursor();
+void annotate_unhide_cursor();
 
 /* Add to the list of the painted point the point (x,y) storing the line width and the pressure */
 void annotate_coord_list_prepend (gdouble x, gdouble y, gint width, gdouble pressure);
@@ -285,10 +285,7 @@ void annotate_select_pen();
 void annotate_select_eraser();
 
 /* Call the geometric shape recognizer */
-void shape_recognize(gboolean closed_path);
+void annotate_shape_recognize(gboolean closed_path);
 
 /* Add a save point for the undo/redo */
-void add_save_point();
-
-/* save the current context in pdf */
-void annotate_save_pdf();
+void annotate_add_save_point();

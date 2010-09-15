@@ -61,23 +61,11 @@ typedef struct
 
 typedef struct
 {
-   /* annotation is visible */
-   gboolean annotation_is_visible;
+   /* Is the text tool enabled */
+   gboolean text;
 
    /* pencil is selected */
    gboolean pencil;
-
-   /* grab when leave */
-   gboolean grab;
-
-   /* Is the text inserction enabled */
-   gboolean text;
-
-   /* selected color in RGBA format */
-   gchar* color;
-
-   /* selected line width */
-   gint thickness;
 
    /* highlighter flag */
    gboolean highlighter;
@@ -90,6 +78,18 @@ typedef struct
 
    /* arrow flag */
    gboolean arrow;
+
+   /* selected color in RGBA format */
+   gchar* color;
+
+   /* selected line thickness */
+   gint thickness;
+
+   /* annotation is visible */
+   gboolean annotation_is_visible;
+
+   /* grab when leave */
+   gboolean grab;
 
    /* Default folder where store images and videos */
    gchar* workspace_dir;

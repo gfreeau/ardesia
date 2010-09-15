@@ -28,10 +28,6 @@
 #include <bar_callbacks.h>
 
 
-GtkBuilder *gtkBuilder;
-
-CommandLine *commandline;
-
 
 /* 
  * Calculate the position where calculate_initial_position the main window 
@@ -138,7 +134,7 @@ void run_missing_composite_manager_dialog()
    GtkWidget *msg_dialog; 
    msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
                                         GTK_BUTTONS_OK, 
-                                        gettext("In order to run Ardesia you need to enable the Compiz composite manager")
+                                        gettext("In order to run Ardesia you need to enable the Compiz or Kwin composite manager")
                                        );
                  
    gtk_dialog_run(GTK_DIALOG(msg_dialog));
@@ -290,7 +286,7 @@ BarData* init_bar_data()
 
 /* Create the ardesia bar window */
 GtkWidget*
-create_bar_window (GtkWidget *parent)
+create_bar_window (CommandLine *commandline, GtkWidget *parent)
 {
   GtkWidget *bar_window;
   GError* error = NULL;
@@ -341,7 +337,8 @@ main (gint argc, char *argv[])
 
   set_the_best_colormap();
 
-  commandline = parse_options(argc, argv);
+  
+  CommandLine *commandline = parse_options(argc, argv);
 
   GtkWidget* background_window = create_background_window(commandline->backgroundimage); 
   
@@ -377,7 +374,7 @@ main (gint argc, char *argv[])
 
   gtk_widget_show (annotation_window);
   
-  ardesia_bar_window = create_bar_window(annotation_window);
+  ardesia_bar_window = create_bar_window(commandline, annotation_window);
 
   #ifndef _WIN32
      /* 
@@ -402,11 +399,11 @@ main (gint argc, char *argv[])
                              commandline->position);
 
   gtk_window_move(GTK_WINDOW(ardesia_bar_window), x, y);  
-  
+
+  g_free(commandline);
   gtk_widget_show(ardesia_bar_window);
 
   gtk_main();
-  g_object_unref(gtkBuilder);	
   return 0;
 }
 

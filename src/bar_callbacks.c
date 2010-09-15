@@ -41,6 +41,7 @@
 #include <pdf_saver.h>
 
 
+/* The thick step define the minimum thick the you have 2*thick and 3*thick lines */
 static gint thick_step = 7;
 
 
@@ -66,7 +67,6 @@ gboolean  quit(BarData *bar_data)
     {
       g_object_unref (gtkBuilder); 
     }
-
   gtk_main_quit();
   exit(0);
 }
@@ -505,9 +505,9 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
       bar_data->grab = TRUE;
       #ifdef _WIN32
         /* 
-		 * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
-	     * @TODO remove the opacity hack when will be solved the next todo 
-		 */
+         * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
+	 * @TODO remove the opacity hack when will be solved the next todo 
+         */
         if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0)
           {
             gtk_window_set_opacity(GTK_WINDOW(get_background_window()), BACKGROUND_OPACITY);
@@ -526,12 +526,12 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
         if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))!=0)
           {
             /* 
-			 * @HACK This allow the mouse input go below the window putting the opacity to 0 
-			 * if will be found a better way to see to the window to be transparent
-			 * the the pointer input can be removed the previous hack 
-			 *
-			 * @TODO transparent window to the pointer input in a better way 
-			 */
+	     * @HACK This allow the mouse input go below the window putting the opacity to 0 
+	     * if will be found a better way to see to the window to be transparent
+	     * the the pointer input can be removed the previous hack 
+	     *
+	     * @TODO transparent window to the pointer input in a better way 
+	     */
              gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
           }
       #endif	 

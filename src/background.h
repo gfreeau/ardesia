@@ -30,12 +30,15 @@
 
 typedef struct
 {
+  /* background color selected */
   gchar* background_color; 
+  /* background image selected */
   gchar* background_image; 
+  /* the background widget that represent the full window*/
   GtkWidget* background_window;
   /* cairo context to draw on the background window*/
   cairo_t *back_cr;
-  /* used for input shape mask */
+  /* used by the input shape mask */
   GdkPixmap* background_shape; 
 }BackGroundData;
 

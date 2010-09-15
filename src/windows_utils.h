@@ -30,13 +30,11 @@
   #include <gdk/gdk.h>
   #include <gdkwin32.h>
   #include <gtk/gtk.h>
+
+
   
   /* Define other symbols needed to create the transparent layered window */
   #define LWA_COLORKEY	0x00000001
-  #define LWA_ALPHA     0x00000002
-
-  /* Get the desktop dir of the current user */
-  gchar* win_get_desktop_dir();  
 
   
   /* Set layered window atrributes to a gdk window */
@@ -52,7 +50,7 @@
 					    gint x, gint y);
 						
 						
-  /* Override with the fixed version */						
+  /* Override the with the gdk_cursor_new_from_pixmap with the fixed version */						
   #define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
 
 #endif

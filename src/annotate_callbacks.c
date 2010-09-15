@@ -30,6 +30,8 @@
 #include <utils.h>
 
 
+
+/* Return the pressure passing the event */
 gdouble get_pressure(GdkEvent* ev)
 {
       gdouble pressure = 1.0;
@@ -153,7 +155,7 @@ paint (GtkWidget *win,
     }
   annotate_coord_list_free();
  
-  unhide_cursor();
+  annotate_unhide_cursor();
  
   /* only button1 allowed */
   if (!(ev->button==1))
@@ -166,7 +168,7 @@ paint (GtkWidget *win,
       return TRUE;
     }  
 
-  reset_cairo();
+  annotate_reset_cairo();
 
   gdouble pressure = 1.0; 
   if ((ev->device->source != GDK_SOURCE_MOUSE) && (!(data->cur_context->type == ANNOTATE_ERASER)))
@@ -176,7 +178,7 @@ paint (GtkWidget *win,
          {
             return TRUE;
          }
-       modify_color(data, pressure) ;
+       annotate_modify_color(data, pressure) ;
     }
   annotate_draw_point(ev->x, ev->y);  
  
@@ -219,7 +221,7 @@ paintto (GtkWidget *win,
       return TRUE;
     }
 
-  unhide_cursor();
+  annotate_unhide_cursor();
  
   GdkModifierType state = (GdkModifierType) ev->state;  
   gint selected_width = 0;
@@ -246,9 +248,10 @@ paintto (GtkWidget *win,
                {
                  if (pressure<first_point->pressure)
                    {
+                     /* jump the point you are uprising the hand */
                      return TRUE;
                    }
-                 modify_color(data, pressure) ;
+                 annotate_modify_color(data, pressure) ;
                }
           }
     }
@@ -330,7 +333,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
       if (!(data->cur_context->type == ANNOTATE_ERASER))
         { 
           gboolean closed_path = (distance == 0) ; 
-          shape_recognize(closed_path);
+          annotate_shape_recognize(closed_path);
           /* If is selected an arrowtype the draw the arrow */
           if (data->arrow)
             {
@@ -340,8 +343,8 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
          }
     }
   cairo_stroke_preserve(data->annotation_cairo_context);
-  add_save_point();
-  hide_cursor();  
+  annotate_add_save_point();
+  annotate_hide_cursor();  
  
   return TRUE;
 }
@@ -353,7 +356,11 @@ proximity_in (GtkWidget *win,
               GdkEventProximity *ev, 
               gpointer func_data)
 {
-  /* @TODO this message don't arrive on windows */
+  /*
+   * @TODO this message don't arrive on windows; why? 
+   * it is a driver problem, gtk or what
+   *
+   */
   AnnotateData *data = (AnnotateData *) func_data;
   if (data->debug)
     {
@@ -387,7 +394,11 @@ proximity_out (GtkWidget *win,
                GdkEventProximity *ev,
                gpointer func_data)
 {
-  /* @TODO this message don't arrive on windows */
+  /*
+   * @TODO this message don't arrive on windows; why? 
+   * it is a driver problem, gtk or what
+   *
+   */
   AnnotateData *data = (AnnotateData *) func_data;
   if (data->debug)
     {
