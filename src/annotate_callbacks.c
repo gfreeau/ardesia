@@ -73,7 +73,7 @@ event_expose (GtkWidget *widget,
 	/* 
 	 * @TODO Use an HDC that support the ARGBA32 format to support the alpha channel and the highlighter
 	 * In the documentation is written that the now the resulting surface is in RGB24 format
-     * 
+         * 
 	 */
 	cairo_surface_t* surface = cairo_win32_surface_create(hdc);
 	/* Patching cairo adding the cairo_win32_surface_create_for_dc function could fix */

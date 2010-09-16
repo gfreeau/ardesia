@@ -36,52 +36,34 @@
   #include <windows_utils.h>
 #endif
 
-GtkWidget* text_window = NULL;
-cairo_t *text_cr = NULL;
 
-GdkDisplay* display = NULL;
-GdkScreen* screen = NULL;
-gint screen_width;
-
-Pos* pos = NULL;
-
-GSList *letterlist = NULL; 
-gint text_pen_width = 16;
-
-gint max_font_height;
-
-
-gchar* text_color = NULL;
-
-GdkCursor* text_cursor;
-
-cairo_text_extents_t extents;
+static TextData* text_data;
 
 
 /* Creation of the text window */
 void create_text_window(GtkWindow *parent)
 {
-  text_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_transient_for(GTK_WINDOW(text_window), parent);
+  text_data->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_transient_for(GTK_WINDOW(text_data->window), parent);
 
-  gtk_widget_set_usize (GTK_WIDGET(text_window), gdk_screen_width(), gdk_screen_height());
-  gtk_window_fullscreen(GTK_WINDOW(text_window));
+  gtk_widget_set_usize (GTK_WIDGET(text_data->window), gdk_screen_width(), gdk_screen_height());
+  gtk_window_fullscreen(GTK_WINDOW(text_data->window));
 
-  gtk_window_set_decorated(GTK_WINDOW(text_window), FALSE);
-  gtk_widget_set_app_paintable(text_window, TRUE);
-  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(text_window), TRUE);
-  gtk_window_set_opacity(GTK_WINDOW(text_window), 1); 
+  gtk_window_set_decorated(GTK_WINDOW(text_data->window), FALSE);
+  gtk_widget_set_app_paintable(text_data->window, TRUE);
+  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(text_data->window), TRUE);
+  gtk_window_set_opacity(GTK_WINDOW(text_data->window), 1); 
   
-  gtk_widget_set_double_buffered(text_window, FALSE);
+  gtk_widget_set_double_buffered(text_data->window, FALSE);
 }
 
 
 /* Move the pen cursor */
 void move_editor_cursor()
 {
-  if (text_cr)
+  if (text_data->cr)
     {
-       cairo_move_to(text_cr, pos->x, pos->y);
+       cairo_move_to(text_data->cr, text_data->pos->x, text_data->pos->y);
     }
 }
 
@@ -89,25 +71,25 @@ void move_editor_cursor()
 /** Delete the last character printed */
 void delete_character()
 {
-  CharInfo *charInfo = (CharInfo *) g_slist_nth_data (letterlist, 0);
+  CharInfo *charInfo = (CharInfo *) g_slist_nth_data (text_data->letterlist, 0);
 
   if (charInfo)
     {  
 
-      cairo_set_operator (text_cr, CAIRO_OPERATOR_CLEAR);
+      cairo_set_operator (text_data->cr, CAIRO_OPERATOR_CLEAR);
  
-      cairo_rectangle(text_cr, charInfo->x + charInfo->x_bearing, 
+      cairo_rectangle(text_data->cr, charInfo->x + charInfo->x_bearing, 
                       charInfo->y + charInfo->y_bearing, 
-                      screen_width, 
-                      max_font_height + text_pen_width + 3);
+                      gdk_screen_width(), 
+                      text_data->max_font_height + text_data->pen_width + 3);
 
-      cairo_fill(text_cr);
-      cairo_stroke(text_cr);
-      cairo_set_operator (text_cr, CAIRO_OPERATOR_SOURCE);
-      pos->x = charInfo->x;
-      pos->y = charInfo->y;
+      cairo_fill(text_data->cr);
+      cairo_stroke(text_data->cr);
+      cairo_set_operator (text_data->cr, CAIRO_OPERATOR_SOURCE);
+      text_data->pos->x = charInfo->x;
+      text_data->pos->y = charInfo->y;
       move_editor_cursor();
-      letterlist = g_slist_remove(letterlist,charInfo); 
+      text_data->letterlist = g_slist_remove(text_data->letterlist,charInfo); 
     }
 }
 
@@ -124,10 +106,10 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       return FALSE;
     }
   /* is finished the line */
-  if ((pos->x + extents.x_advance >= screen_width))
+  if ((text_data->pos->x + text_data->extents.x_advance >= gdk_screen_width()))
     {
-      pos->x = 0;
-      pos->y +=  max_font_height;
+      text_data->pos->x = 0;
+      text_data->pos->y +=  text_data->max_font_height;
 
       /* go to the new line */
       move_editor_cursor();  
@@ -147,20 +129,20 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       sprintf(utf8,"%c", event->keyval);
       
       CharInfo *charInfo = g_malloc(sizeof (CharInfo));
-      charInfo->x = pos->x;
-      charInfo->y = pos->y; 
+      charInfo->x = text_data->pos->x;
+      charInfo->y = text_data->pos->y; 
       
-      cairo_text_extents (text_cr, utf8, &extents);
-      cairo_show_text (text_cr, utf8); 
-      cairo_stroke(text_cr);
+      cairo_text_extents (text_data->cr, utf8, &text_data->extents);
+      cairo_show_text (text_data->cr, utf8); 
+      cairo_stroke(text_data->cr);
  
-      charInfo->x_bearing = extents.x_bearing;
-      charInfo->y_bearing = extents.y_bearing;
+      charInfo->x_bearing = text_data->extents.x_bearing;
+      charInfo->y_bearing = text_data->extents.y_bearing;
      
-      letterlist = g_slist_prepend (letterlist, charInfo);
+      text_data->letterlist = g_slist_prepend (text_data->letterlist, charInfo);
       
       /* move cursor to the x step */
-      pos->x +=  extents.x_advance;
+      text_data->pos->x +=  text_data->extents.x_advance;
       move_editor_cursor();  
       
       g_free(utf8);
@@ -173,8 +155,8 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 gboolean set_text_pointer(GtkWidget * window)
 {
   
-  gint height = max_font_height;
-  gint width = text_pen_width;
+  gint height = text_data->max_font_height;
+  gint width = text_data->pen_width;
   
   GdkPixmap *pixmap = gdk_pixmap_new (NULL, width , height, 1);
   cairo_t *text_pointer_pcr = gdk_cairo_create(pixmap);
@@ -194,21 +176,21 @@ gboolean set_text_pointer(GtkWidget * window)
        cairo_set_line_cap (text_pointer_cr, CAIRO_LINE_CAP_ROUND);
        cairo_set_line_join(text_pointer_cr, CAIRO_LINE_JOIN_ROUND); 
        cairo_set_operator(text_pointer_cr, CAIRO_OPERATOR_SOURCE);
-       cairo_set_line_width(text_pointer_cr, text_pen_width);
+       cairo_set_line_width(text_pointer_cr, text_data->pen_width);
        cairo_rectangle(text_pointer_cr, 0, 0, 5, height);  
        cairo_stroke(text_pointer_cr);
        cairo_destroy(text_pointer_cr);
     } 
  
   GdkColor *background_color_p = rgb_to_gdkcolor("000000");
-  GdkColor *foreground_color_p = rgb_to_gdkcolor(text_color);
-  if (text_cursor)
+  GdkColor *foreground_color_p = rgb_to_gdkcolor(text_data->color);
+  if (text_data->cursor)
     {
-      gdk_cursor_unref(text_cursor);
+      gdk_cursor_unref(text_data->cursor);
     }
   
-  text_cursor = gdk_cursor_new_from_pixmap (pixmap, bitmap, foreground_color_p, background_color_p, 1, height-1);
-  gdk_window_set_cursor (text_window->window, text_cursor);
+  text_data->cursor = gdk_cursor_new_from_pixmap (pixmap, bitmap, foreground_color_p, background_color_p, 1, height-1);
+  gdk_window_set_cursor (text_data->window->window, text_data->cursor);
   gdk_flush ();
   g_object_unref (pixmap);
   g_object_unref (bitmap);
@@ -222,24 +204,24 @@ gboolean set_text_pointer(GtkWidget * window)
 /* Initialization routine */
 void init(GtkWidget *widget)
 {
-  if (!text_cr)
+  if (!text_data->cr)
     {
-      text_cr = gdk_cairo_create(widget->window);
+     text_data->cr = gdk_cairo_create(widget->window);
     }
 
-  clear_cairo_context(text_cr);
-  cairo_set_line_cap (text_cr, CAIRO_LINE_CAP_ROUND);
-  cairo_set_line_join(text_cr, CAIRO_LINE_JOIN_ROUND); 
-  cairo_set_operator(text_cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_line_width(text_cr, text_pen_width);
-  cairo_set_source_color_from_string(text_cr, text_color);
+  clear_cairo_context(text_data->cr);
+  cairo_set_line_cap (text_data->cr, CAIRO_LINE_CAP_ROUND);
+  cairo_set_line_join(text_data->cr, CAIRO_LINE_JOIN_ROUND); 
+  cairo_set_operator(text_data->cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_line_width(text_data->cr, text_data->pen_width);
+  cairo_set_source_color_from_string(text_data->cr, text_data->color);
 
-  if (!pos)
+  if (!text_data->pos)
    {
-      pos = g_malloc (sizeof(Pos));
+     text_data->pos = g_malloc (sizeof(Pos));
    }
-  pos->x = 0;
-  pos->y = 0;
+  text_data->pos->x = 0;
+  text_data->pos->y = 0;
   move_editor_cursor();
   
 }
@@ -254,25 +236,19 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
     {
       return TRUE;
     }
-  if (!display)
-    {
-      display = gdk_display_get_default ();
-      screen = gdk_display_get_default_screen (display);
-      screen_width = gdk_screen_get_width (screen);
-    }
   if (widget)
     {
       init(widget);
-      if (text_cr)
+      if (text_data->cr)
         {
            /* This is a trick we must found the maximum height and text_pen_width of the font */
-           cairo_set_font_size (text_cr, text_pen_width * 2);
-           cairo_text_extents (text_cr, "|" , &extents);
-           max_font_height = extents.height;
+           cairo_set_font_size (text_data->cr, text_data->pen_width * 2);
+           cairo_text_extents (text_data->cr, "|" , &text_data->extents);
+           text_data->max_font_height = text_data->extents.height;
         }
 	  set_text_pointer(widget);
 	  #ifdef _WIN32
-	    grab_pointer(text_window, TEXT_MOUSE_EVENTS);
+	    grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
           #endif
     }
   return TRUE;
@@ -287,19 +263,19 @@ release (GtkWidget *win,
 {
  
   #ifdef _WIN32
-    ungrab_pointer(display, text_window);
+    ungrab_pointer(display,text_data->window);
   #endif
   
-  pos->x = ev->x;
-  pos->y = ev->y;
+  text_data->pos->x = ev->x;
+  text_data->pos->y = ev->y;
   move_editor_cursor();
     
-  gdk_window_set_cursor (text_window->window, NULL);
+  gdk_window_set_cursor (text_data->window->window, NULL);
   
   #ifdef _WIN32  
     /*
      *  @TODO the gdk_window_input_shape_combine_mask is not implemented
-	 *	try a way to pass the mouse input below the window
+     *	try a way to pass the mouse input below the window
      *  
      */
   #else
@@ -317,7 +293,7 @@ release (GtkWidget *win,
     clear_cairo_context(shape_cr); 
           
     /* This allows the mouse event to be passed to the window below when ungrab */
-    gdk_window_input_shape_combine_mask (text_window->window, shape, 0, 0);  
+    gdk_window_input_shape_combine_mask (text_data->window->window, shape, 0, 0);  
 
     gdk_flush();
 
@@ -333,20 +309,31 @@ release (GtkWidget *win,
 /* Start the widget for the text insertion */
 void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 {
-  text_pen_width = tickness;
-  text_color = color;
+  text_data = g_malloc(sizeof(TextData));
+
+  text_data->window = NULL;
+  text_data->cr = NULL;
+
+  text_data->pos = NULL;
+
+  text_data->letterlist = NULL; 
+  text_data->cursor = NULL;
+  
+  text_data->color =  color;
+  text_data->pen_width = tickness;
+
   create_text_window(parent);
       
-  gtk_widget_set_events (text_window, TEXT_MOUSE_EVENTS);
+  gtk_widget_set_events (text_data->window, TEXT_MOUSE_EVENTS);
 
-  g_signal_connect(G_OBJECT(text_window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
-  g_signal_connect (G_OBJECT(text_window), "button_release_event", G_CALLBACK(release), NULL);
-  g_signal_connect (G_OBJECT(text_window), "key_press_event", G_CALLBACK (key_press), NULL);
+  g_signal_connect(G_OBJECT(text_data->window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
+  g_signal_connect (G_OBJECT(text_data->window), "button_release_event", G_CALLBACK(release), NULL);
+  g_signal_connect (G_OBJECT(text_data->window), "key_press_event", G_CALLBACK (key_press), NULL);
 
-  gtk_widget_show_all(text_window);
+  gtk_widget_show_all(text_data->window);
   #ifdef _WIN32 
     // I use a layered window that use the black as transparent color
-    setLayeredGdkWindowAttributes(text_window->window, RGB(0,0,0), 0, LWA_COLORKEY);	
+    setLayeredGdkWindowAttributes(text_data->window->window, RGB(0,0,0), 0, LWA_COLORKEY);	
   #endif
 }
 
@@ -354,33 +341,30 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 /* Stop the text insertion widget */
 void stop_text_widget()
 {
-  if (text_cr)
+  if (text_data->cr)
     {
-      if (letterlist)
+      if (text_data->letterlist)
         {
-          g_slist_foreach(letterlist, (GFunc)g_free, NULL);
-          g_slist_free(letterlist);
-          letterlist = NULL;
-          annotate_push_context(text_cr);
+          annotate_push_context(text_data->cr);
+          g_slist_foreach(text_data->letterlist, (GFunc)g_free, NULL);
+          g_slist_free(text_data->letterlist);
         } 
-      cairo_destroy(text_cr);     
-      text_cr = NULL;
+      cairo_destroy(text_data->cr);     
     }
-  if (text_window)
+  if (text_data->window)
     {
-      gtk_widget_destroy(text_window);
-      text_window= NULL;
+      gtk_widget_destroy(text_data->window);
     }
-  if (text_cursor)
+  if (text_data->cursor)
     {
-      gdk_cursor_unref(text_cursor);
-      text_cursor = NULL;
+      gdk_cursor_unref(text_data->cursor);
     }
-  if (pos)
+  if (text_data->pos)
     {
-      g_free(pos);
-      pos = NULL;
+      g_free(text_data->pos);
     }
+  g_free(text_data);
+  text_data = NULL;
 }
 
 

@@ -46,6 +46,7 @@
 				 )
 
 
+
 typedef struct
 {
   gint x;
@@ -60,6 +61,20 @@ typedef struct
   gint x;
   gint y;
 } Pos;
+
+
+typedef struct
+{
+  GtkWidget* window;
+  cairo_t *cr;
+  Pos* pos;
+  GSList *letterlist; 
+  gchar* color;
+  gint pen_width;
+  gint max_font_height;
+  GdkCursor* cursor;
+  cairo_text_extents_t extents;
+}TextData;
 
 
 /* Start text widget */

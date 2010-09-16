@@ -41,9 +41,6 @@
 #include <pdf_saver.h>
 
 
-/* The thick step define the minimum thick the you have 2*thick and 3*thick lines */
-static gint thick_step = 7;
-
 
 /* Called when close the program */
 gboolean  quit(BarData *bar_data)
@@ -332,23 +329,23 @@ on_toolsThick_activate          (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
 {
   BarData *bar_data = (BarData*) func_data;
-  if (bar_data->thickness== thick_step*2)
+  if (bar_data->thickness== THICK_STEP*2)
     {
        gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thick")));
        // set thick icon
-       bar_data->thickness = thick_step*3;
+       bar_data->thickness = THICK_STEP*3;
     }
-  else if (bar_data->thickness==thick_step*3)
+  else if (bar_data->thickness==THICK_STEP*3)
     {
        // set thin icon
        gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thin")));
-       bar_data->thickness = thick_step;
+       bar_data->thickness = THICK_STEP;
     }
-  else if (bar_data->thickness==thick_step)
+  else if (bar_data->thickness==THICK_STEP)
     {
        // set medium icon
        gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"medium")));
-       bar_data->thickness = thick_step*2;
+       bar_data->thickness = THICK_STEP*2;
     }
 }
 

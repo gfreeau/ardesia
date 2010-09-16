@@ -30,4 +30,6 @@
 /* semi opaque (and then semi transparent) alpha */
 #define SEMI_OPAQUE_ALPHA "66"
 
+/* The thick step define the minimum thick the you have 2*thick and 3*thick lines */
+#define THICK_STEP 7
 
