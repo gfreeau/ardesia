@@ -54,7 +54,7 @@ gboolean colors_too_similar(const GdkColor *colora, const GdkColor *colorb)
 
 
 /* 
- * gdk_cursor_new_from_pixmap is broken on Windows.
+ * The function gdk_cursor_new_from_pixmap is broken on Windows.
  * this is a workaround using gdk_cursor_new_from_pixbuf. 
  * Thanks to Dirk Gerrits for this contribution 
  */
@@ -68,12 +68,15 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
   GdkCursor *cursor;
   gint width, height;
 
-  /* @HACK  It seems impossible to work with RGBA pixmaps directly in
-     GDK-Win32.  Instead we pick some third color, different from fg
-     and bg, and use that as the '<b style="color: black; background-color: rgb(255, 153, 153);">transparent</b> color'.  We do this using
-     colors_too_similar (see above) because two colors could be
-     unequal in GdkColor's 16-bit/sample, but equal in GdkPixbuf's
-     8-bit/sample. */
+  /*
+   * @HACK  It seems impossible to work with RGBA pixmaps directly in
+   * GDK-Win32.  Instead we pick some third color, different from fg
+   * and bg, and use that as the '<b style="color: black; background-color: rgb(255, 153, 153);">transparent</b> color'.  We do this using
+   * colors_too_similar (see above) because two colors could be
+   * unequal in GdkColor's 16-bit/sample, but equal in GdkPixbuf's
+   * 8-bit/sample. 
+   *
+   */
   GdkColor candidates[3] = {{0,65535,0,0}, {0,0,65535,0}, {0,0,0,65535}};
   GdkColor *trans = &candidates[0];
   if (colors_too_similar(trans, fg) || colors_too_similar(trans, bg)) 

@@ -129,10 +129,6 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
   gboolean status = FALSE;
    
   gchar* date = get_date();
-  if (!(*workspace_dir))
-    {
-      *workspace_dir = (gchar *) get_desktop_dir();
-    }	
 
   GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext("Save video as ogv"), parent, GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -150,6 +146,10 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
   
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
+      /* store the folder location this will be proposed the next time */
+      g_free(*workspace_dir);
+      *workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser)); 
+
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
      
       gchar* supported_extension = ".ogv";
@@ -160,7 +160,7 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
 	  (void) strcat((gchar *)filename, supported_extension);
 	}
  
-      if (file_exists(filename, (gchar *) workspace_dir))
+      if (file_exists(filename, *workspace_dir))
 	{
 	  GtkWidget *msg_dialog; 
                    

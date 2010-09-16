@@ -68,17 +68,6 @@ GdkPixbuf* grab_screenshot()
 void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar** workspace_dir)
 {
 
-  if (!(*workspace_dir))
-    {
-      /* Initialize it to the desktop folder */
-      gchar* desktop_dir = (gchar *) get_desktop_dir();
-      gint lenght = strlen(desktop_dir);
-      *workspace_dir = (gchar*) g_malloc( ( lenght + 1) * sizeof(gchar));
-      strcpy(*workspace_dir, desktop_dir);
-	  
-      g_free(desktop_dir);
-    }	
-
   GdkPixbuf* buf = grab_screenshot(); 
   
   GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext("Save image"), 
@@ -102,7 +91,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
   g_object_unref (previewPixbuf);
 
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
- 
+
   gchar* start_string = "ardesia_";
   gchar* date = get_date(); 
   gchar* filename = (gchar*) g_malloc((strlen(start_string) + strlen(date) + 1) * sizeof(gchar));
@@ -113,10 +102,14 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
   gboolean screenshot = FALSE;
  
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
-    {
+    {   
+      /* store the folder location this will be proposed the next time */
+      g_free(*workspace_dir);
+      *workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser)); 
+
+      filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
 
       screenshot = TRUE;
-      filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
       gchar* supported_extension = ".png";
       gchar* extension = strrchr(filename, '.');
       if ((extension==0) || (strcmp(extension, supported_extension) != 0))
@@ -124,7 +117,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
           filename = (gchar *) realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar)); 
           (void) strcat((gchar *)filename, supported_extension);
         }           
-      if (file_exists(filename,(gchar *) workspace_dir))
+      if (file_exists(filename, *workspace_dir))
         {
 	  GtkWidget *msg_dialog; 
 	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), 

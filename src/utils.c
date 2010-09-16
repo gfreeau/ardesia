@@ -229,7 +229,7 @@ gboolean file_exists(gchar* filename, gchar* desktop_dir)
  */
 const gchar* get_desktop_dir (void)
 {
-  return g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);;
+  return g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
 }
 
 

@@ -279,7 +279,13 @@ BarData* init_bar_data()
   bar_data->rectifier = FALSE;
   bar_data->rounder = FALSE;
   bar_data->arrow = FALSE;
-  bar_data->workspace_dir = NULL;
+
+  /* The workspace dir is set to the desktop dir */
+  const gchar* desktop_dir = get_desktop_dir();
+  gint lenght = strlen(desktop_dir);
+  bar_data->workspace_dir = (gchar*) g_malloc( (lenght + 1) * sizeof(gchar));
+  strcpy(bar_data->workspace_dir, desktop_dir);
+
   return bar_data;
 }
 

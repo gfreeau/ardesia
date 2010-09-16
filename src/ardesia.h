@@ -91,7 +91,7 @@ typedef struct
    /* grab when leave */
    gboolean grab;
 
-   /* Default folder where store images and videos */
+   /* Default folder where store artifacts */
    gchar* workspace_dir;
    
 }BarData;

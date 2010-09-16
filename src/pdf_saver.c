@@ -33,17 +33,7 @@ static PdfData *pdf_data;
 gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pixbuf)
 {
    gboolean ret = TRUE;
-   if (!(*workspace_dir))
-    {
-      /* Initialize it to the desktop folder */
-      gchar* desktop_dir = (gchar *) get_desktop_dir();
-      gint lenght = strlen(desktop_dir);
-      *workspace_dir = (gchar*) g_malloc( ( lenght + 1) * sizeof(gchar));
-      strcpy(*workspace_dir, desktop_dir);
-      g_free(desktop_dir);
-    }	
    
-
    GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext("Export as pdf"), 
  						     parent, 
 						     GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -77,6 +67,9 @@ gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixb
 
    if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
+      /* store the folder location this will be proposed the next time */
+      g_free(*workspace_dir);
+      *workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser)); 
 
       pdf_data->filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
       gchar* supported_extension = ".pdf";
@@ -86,7 +79,7 @@ gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixb
           pdf_data->filename = (gchar *) realloc(pdf_data->filename,  (strlen(pdf_data->filename) + strlen(supported_extension) + 1) * sizeof(gchar)); 
           (void) strcat((gchar *)pdf_data->filename, supported_extension);
         }           
-      if (file_exists(pdf_data->filename,(gchar *) workspace_dir))
+      if (file_exists(pdf_data->filename, *workspace_dir))
         {
 	  GtkWidget *msg_dialog; 
 	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), 
