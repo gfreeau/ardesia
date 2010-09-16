@@ -148,9 +148,6 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
       }
   
    pdf_data->pixbuflist = g_slist_prepend(pdf_data->pixbuflist, pixbuf);  
-
-  
-   gint i;
   
    gint height = gdk_screen_height ();
    gint width = gdk_screen_width ();
@@ -160,7 +157,8 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
    cairo_t* pdf_cr = cairo_create(pdf_surface);
 
    gint lenght = g_slist_length(pdf_data->pixbuflist);
-
+   
+   gint i;
    for (i=lenght-1; i>=0; i--)
      {
         GdkPixbuf* current_pixbuf = (GdkPixbuf*) g_slist_nth_data (pdf_data->pixbuflist, i);
@@ -169,6 +167,7 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
         cairo_paint(pdf_cr);
         cairo_show_page(pdf_cr);
      }
+
    cairo_surface_flush(pdf_surface);  
    /* destroy */
    cairo_surface_destroy(pdf_surface);

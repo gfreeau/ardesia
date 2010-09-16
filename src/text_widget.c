@@ -105,8 +105,10 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       delete_character();
       return FALSE;
     }
-  /* is finished the line */
-  if ((text_data->pos->x + text_data->extents.x_advance >= gdk_screen_width()))
+  /* is finished the line or the letter is near to the bar window */
+  if ((text_data->pos->x + text_data->extents.x_advance >= gdk_screen_width())
+      ||(inside_bar_window(text_data->pos->x + text_data->extents.x_advance, text_data->pos->y-text_data->max_font_height/2))
+     )
     {
       text_data->pos->x = 0;
       text_data->pos->y +=  text_data->max_font_height;

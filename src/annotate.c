@@ -1334,6 +1334,7 @@ void annotate_clear_screen ()
 }
 
 
+/* Create the annotation window */
 GtkWidget* create_annotation_window()
 {
   /* Initialize the main window */
