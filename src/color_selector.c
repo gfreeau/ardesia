@@ -58,11 +58,11 @@ gchar* start_color_selector_dialog(GtkToolButton *toolbutton, GtkWindow *parent,
       GdkColor* gdkcolor;
       if (picked_color != NULL)
         {
-	  gdkcolor = rgb_to_gdkcolor(picked_color);
+	  gdkcolor = rgba_to_gdkcolor(picked_color);
         }
       else
         {
-	  gdkcolor = rgb_to_gdkcolor(color);
+	  gdkcolor = rgba_to_gdkcolor(color);
         }
 
       gtk_color_selection_set_current_color(colorsel, gdkcolor);
@@ -78,12 +78,12 @@ gchar* start_color_selector_dialog(GtkToolButton *toolbutton, GtkWindow *parent,
 	    colorsel = GTK_COLOR_SELECTION((GTK_COLOR_SELECTION_DIALOG (colorDialog))->colorsel);
             gtk_color_selection_set_has_palette(colorsel, TRUE);
             gtk_color_selection_get_current_color(colorsel, gdkcolor);
-            ret_color = gdkcolor_to_rgba(gdkcolor);
+            ret_color = gdkcolor_to_rgb(gdkcolor);
             if (picked_color)
               {
                 g_free(picked_color);
               }
-            picked_color = g_strdup_printf("%s", ret_color);
+            picked_color = g_strdup_printf("%s%s", ret_color, "FF");
 	    break;
 
 	  default:

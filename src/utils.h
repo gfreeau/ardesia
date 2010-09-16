@@ -102,7 +102,7 @@ GtkWidget* get_bar_window();
 
 
 /* Take a GdkColor and return the RGB string */
-gchar* gdkcolor_to_rgba(GdkColor* gdkcolor);
+gchar* gdkcolor_to_rgb(GdkColor* gdkcolor);
 
 
 /* Set the cairo surface color to the RGBA string */
@@ -128,10 +128,10 @@ gboolean inside_bar_window(gdouble xp, gdouble yp);
 
 
 /*
- * Take an rgb or a rgba string and return the pointer to the allocated GdkColor 
+ * Take a rgba string and return the pointer to the allocated GdkColor 
  * neglecting the alpha channel
  */
-GdkColor* rgb_to_gdkcolor(gchar* rgb);
+GdkColor* rgba_to_gdkcolor(gchar* rgb);
 
 
 /* 

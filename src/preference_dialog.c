@@ -76,14 +76,14 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer data)
       GdkColor* gdkcolor = g_malloc (sizeof (GdkColor)); 
       gtk_color_button_get_color(backgroundColorButton,gdkcolor);
 
-      gchar* rgb = gdkcolor_to_rgba(gdkcolor);
+      gchar* rgb = gdkcolor_to_rgb(gdkcolor);
 
       gchar* a = g_strdup_printf("%02x", gtk_color_button_get_alpha (backgroundColorButton)/257);
-      strncpy(&rgb[6], a, 2);
-
-      change_background_color(rgb);
+      gchar* rgba = g_strdup_printf("%s%s", rgb, a);
+      change_background_color(rgba);
       g_free(a);
       g_free(rgb);
+      g_free(rgba);
       g_free(gdkcolor);
       preferenceData->background = 1;  
     }

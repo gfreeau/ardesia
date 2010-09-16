@@ -179,8 +179,8 @@ gboolean set_text_pointer(GtkWidget * window)
        cairo_destroy(text_pointer_cr);
     } 
  
-  GdkColor *background_color_p = rgb_to_gdkcolor("000000");
-  GdkColor *foreground_color_p = rgb_to_gdkcolor(text_data->color);
+  GdkColor *background_color_p = rgba_to_gdkcolor(BLACK);
+  GdkColor *foreground_color_p = rgba_to_gdkcolor(text_data->color);
   
   GdkCursor* cursor = gdk_cursor_new_from_pixmap (pixmap, bitmap, foreground_color_p, background_color_p, 1, height-1);
   gdk_window_set_cursor (text_data->window->window, cursor);

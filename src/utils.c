@@ -100,17 +100,15 @@ gdouble get_distance(gdouble x1, gdouble y1, gdouble x2, gdouble y2)
       return 0;
     }
   /* apply the Pitagora theorem to calculate the distance */
-  gdouble ret = (sqrtf(powf(x1-x2,2) + powf(y1-y2,2)));
-  return ret; 
+  return (sqrtf(powf(x1-x2,2) + powf(y1-y2,2)));
 }
 
 
 /* Take a GdkColor and return the corrispondent RGBA string */
-gchar* gdkcolor_to_rgba(GdkColor* gdkcolor)
+gchar* gdkcolor_to_rgb(GdkColor* gdkcolor)
 {
-  /* transform in the  RGBA format e.g. FF0000FF */ 
-  gchar* ret = g_strdup_printf("%02x%02x%02xFF", gdkcolor->red/257, gdkcolor->green/257, gdkcolor->blue/257);
-  return ret;
+  /* transform in the  RGB format e.g. FF0000 */ 
+  return g_strdup_printf("%02x%02x%02x", gdkcolor->red/257, gdkcolor->green/257, gdkcolor->blue/257);
 }
 
 
@@ -118,15 +116,14 @@ gchar* gdkcolor_to_rgba(GdkColor* gdkcolor)
  * Take an rgb or a rgba string and return the pointer to the allocated GdkColor 
  * neglecting the alpha channel; the gtkColor doesn't support the rgba color
  */
-GdkColor* rgb_to_gdkcolor(gchar* rgb)
+GdkColor* rgba_to_gdkcolor(gchar* rgba)
 {
   GdkColor* gdkcolor = g_malloc(sizeof(GdkColor));
-  gchar *ccolor = g_malloc(8 * sizeof (gchar));
-  ccolor[0]='#';
-  strncpy(&ccolor[1], rgb, 6);
-  ccolor[7]=0;
-  gdk_color_parse (ccolor, gdkcolor);
-  g_free(ccolor);
+  gchar *rgb = g_strndup(rgba, 6);
+  gchar *color = g_strdup_printf("%s%s", "#", rgb);
+  gdk_color_parse (color, gdkcolor);
+  g_free(color);
+  g_free(rgb);
   return gdkcolor;
 }
 

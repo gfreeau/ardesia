@@ -542,8 +542,8 @@ void allocate_invisible_cursor()
    GdkPixmap *pixmap, *mask;
    get_invisible_pixmaps(1, &pixmap, &mask);
   
-   GdkColor *background_color_p = rgb_to_gdkcolor(BLACK);
-   GdkColor *foreground_color_p = rgb_to_gdkcolor(WHITE);
+   GdkColor *background_color_p = rgba_to_gdkcolor(BLACK);
+   GdkColor *foreground_color_p = rgba_to_gdkcolor(WHITE);
   
    data->invisible_cursor = gdk_cursor_new_from_pixmap (pixmap, mask,
                                                          foreground_color_p,
@@ -625,7 +625,7 @@ void annotate_set_pen_cursor()
 
   GdkPixmap *pixmap, *mask;
   get_pen_pixmaps(size, &pixmap, &mask); 
-  GdkColor *background_color_p = rgb_to_gdkcolor(BLACK);
+  GdkColor *background_color_p = rgba_to_gdkcolor(BLACK);
 
   if (data->debug)
     {
@@ -633,7 +633,7 @@ void annotate_set_pen_cursor()
     }  
 
   
-  GdkColor *foreground_color_p = rgb_to_gdkcolor(data->cur_context->fg_color); 
+  GdkColor *foreground_color_p = rgba_to_gdkcolor(data->cur_context->fg_color); 
   gint thickness = data->thickness;
 
   data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask, 
@@ -701,8 +701,8 @@ void annotate_set_eraser_cursor()
   GdkPixmap *pixmap, *mask;
   get_eraser_pixmaps(size, &pixmap, &mask); 
   
-  GdkColor *background_color_p = rgb_to_gdkcolor(BLACK);
-  GdkColor *foreground_color_p = rgb_to_gdkcolor(RED);
+  GdkColor *background_color_p = rgba_to_gdkcolor(BLACK);
+  GdkColor *foreground_color_p = rgba_to_gdkcolor(RED);
  
   data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask,
                                              foreground_color_p, 
