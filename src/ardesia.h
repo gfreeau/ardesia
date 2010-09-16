@@ -48,8 +48,6 @@
 /* distance space from border to the ardesia bar in pixel unit */
 #define SPACE_FROM_BORDER 25
 
-#define COLORSIZE 9
-
 
 typedef struct
 {

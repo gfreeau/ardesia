@@ -80,7 +80,6 @@ void add_alpha(BarData *bar_data)
     {
       strncpy(&bar_data->color[6], OPAQUE_ALPHA, 2);
     }
-  bar_data->color[8]=0;
 }
 
 
