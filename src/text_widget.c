@@ -106,8 +106,11 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       return FALSE;
     }
   /* is finished the line or the letter is near to the bar window */
-  if ((text_data->pos->x + text_data->extents.x_advance >= gdk_screen_width())
-      ||(inside_bar_window(text_data->pos->x + text_data->extents.x_advance, text_data->pos->y-text_data->max_font_height/2))
+  if ((text_data->pos->x + text_data->extents.x_advance >= gdk_screen_width()) ||
+     (inside_bar_window(text_data->pos->x + text_data->extents.x_advance, text_data->pos->y-text_data->max_font_height/2)) ||
+     (event->keyval == GDK_Return) ||
+     (event->keyval == GDK_ISO_Enter) || 	
+     (event->keyval == GDK_KP_Enter)
      )
     {
       text_data->pos->x = 0;
@@ -116,13 +119,6 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       /* go to the new line */
       move_editor_cursor();  
     }
-  /* is pressed enter */
-  else if ((event->keyval == GDK_Return) ||
-	   (event->keyval == GDK_ISO_Enter) || 	
-	   (event->keyval == GDK_KP_Enter))
-    {
-      stop_text_widget();
-    } 
   /* is the character printable? */
   else if (isprint(event->keyval))
     {
