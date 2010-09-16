@@ -75,13 +75,6 @@
 #endif
 
 
-#ifdef _WIN32
-  #define DIR_SEPARATOR '\\'
-#else
-  #define DIR_SEPARATOR '/'
-#endif
-
-
 GtkBuilder *gtkBuilder;
 
 		
@@ -141,12 +134,22 @@ gboolean inside_bar_window(gdouble xp, gdouble yp);
 GdkColor* rgb_to_gdkcolor(gchar* rgb);
 
 
-/* Get the current date and format in a printable format */
+/* 
+ * Get default name return a name containing the tool name and the current date; 
+ * the returned value must be free with the g_free 
+ */
+gchar * get_default_name();
+
+
+/* 
+ * Get the current date and format in a printable format; 
+ * the returned value must be free with the g_free 
+ */
 gchar* get_date();
 
 
 /* Return if a file exists */
-gboolean file_exists(gchar* filename, gchar* desktop_dir);
+gboolean file_exists(gchar* filename);
 
 
 /*

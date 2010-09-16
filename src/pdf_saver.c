@@ -56,14 +56,9 @@ gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixb
 
    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
    
-   gchar* start_string = "ardesia_";
-   gchar* date = get_date(); 
-   
-   pdf_data->filename = (gchar*) g_malloc((strlen(start_string) + strlen(date) + 1) * sizeof(gchar));
-   sprintf(pdf_data->filename,"%s%s", start_string, date);
-   g_free(date);
+   gchar* filename = get_default_name();
 
-   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), pdf_data->filename);
+   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
 
    if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
@@ -71,15 +66,22 @@ gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixb
       g_free(*workspace_dir);
       *workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser)); 
 
-      pdf_data->filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
       gchar* supported_extension = ".pdf";
-      gchar* extension = strrchr(pdf_data->filename, '.');
-      if ((extension==0) || (strcmp(extension, supported_extension) != 0))
+      g_free(filename);
+      filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
+
+      gchar* extension = strrchr(filename, '.');
+      if ((extension==0) || (g_strcmp0(extension, supported_extension) != 0))
         {
-          pdf_data->filename = (gchar *) realloc(pdf_data->filename,  (strlen(pdf_data->filename) + strlen(supported_extension) + 1) * sizeof(gchar)); 
-          (void) strcat((gchar *)pdf_data->filename, supported_extension);
-        }           
-      if (file_exists(pdf_data->filename, *workspace_dir))
+          pdf_data->filename = g_strdup_printf("%s%s",filename,supported_extension);
+        }      
+      else
+        {
+          pdf_data->filename = g_strdup_printf("%s",filename);
+        }
+      g_free(filename);     
+
+      if (file_exists(pdf_data->filename))
         {
 	  GtkWidget *msg_dialog; 
 	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), 

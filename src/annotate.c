@@ -1015,6 +1015,18 @@ void annotate_shape_recognize(gboolean closed_path)
  */
 
 
+/* Is the device the "Eraser"-Type device */
+gboolean is_eraser(GdkDevice *device)
+{
+  if (strstr (device->name, "raser") || 
+      strstr (device->name, "RASER"))
+    {
+       return TRUE;
+    }
+  return FALSE;
+}
+
+
 /* Setup input device */
 void setup_input_devices ()
 {
@@ -1026,8 +1038,7 @@ void setup_input_devices ()
       GdkDevice *device = (GdkDevice *) d->data;
 
       /* Guess "Eraser"-Type devices */
-      if (strstr (device->name, "raser") || 
-          strstr (device->name, "RASER"))
+      if (is_eraser(device))
         {
 	  gdk_device_set_source (device, GDK_SOURCE_ERASER);
         }
@@ -1043,7 +1054,7 @@ void setup_input_devices ()
 }
 
 
-/* Select eraser, pen or other tool for tablet; code inherited by gromit*/
+/* Select eraser, pen or other tool for tablet; code inherited by gromit */
 void annotate_select_tool (AnnotateData* data, GdkDevice *device, guint state)
 {
   guint buttons = 0, modifier = 0, len = 0;

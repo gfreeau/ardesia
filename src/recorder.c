@@ -56,7 +56,7 @@ GPid call_recorder(gchar* filename, gchar* option)
                  &pid /*child_pid*/,
                  NULL /*error*/))
 	{
-        is_active = TRUE;	   
+           is_active = TRUE;	   
 	}
   return pid;
 }
@@ -127,8 +127,6 @@ void visualize_missing_recorder_program_dialog(GtkWindow* parent_window)
 gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar **workspace_dir)
 {
   gboolean status = FALSE;
-   
-  gchar* date = get_date();
 
   GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext("Save video as ogv"), parent, GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -138,10 +136,8 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file"));
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
   
-  gchar* start_string = "ardesia_"; 
-  gchar* filename =  (gchar*) g_malloc((strlen(start_string) + strlen(date) + 1) * sizeof(gchar));
-  sprintf(filename,"%s%s", start_string, date);
-  
+  gchar* filename = get_default_name();
+
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
@@ -153,14 +149,24 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
      
       gchar* supported_extension = ".ogv";
+
+      g_free(filename);
+      filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
+      gchar* filenamecopy = g_strdup_printf("%s",filename); 
       gchar* extension = strrchr(filename, '.');
-      if ((extension==0) || (strcmp(extension, supported_extension) != 0))
-	{
-	  filename = (gchar *) g_realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar));
-	  (void) strcat((gchar *)filename, supported_extension);
-	}
+      
+      if ((extension==0) || (g_strcmp0(extension, supported_extension) != 0))
+        {
+          filenamecopy = g_strdup_printf("%s%s",filename,supported_extension);
+        }      
+      else
+        {
+          filenamecopy = g_strdup_printf("%s",filename);
+        }
+      g_free(filename);   
+      filename = filenamecopy;  
  
-      if (file_exists(filename, *workspace_dir))
+      if (file_exists(filename))
 	{
 	  GtkWidget *msg_dialog; 
                    
@@ -177,7 +183,6 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
 	  if ( result  == GTK_RESPONSE_NO)
 	    { 
 	      g_free(filename);
-              g_free(date);
               gtk_widget_destroy (chooser);
 	      return status; 
 	    } 
@@ -190,8 +195,6 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
      gtk_widget_destroy (chooser);
    } 
   g_free(filename);
-      
-  g_free(date);
   return status;
 } 
 

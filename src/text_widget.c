@@ -123,8 +123,7 @@ key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   else if (isprint(event->keyval))
     {
       /* The character is printable */
-      gchar *utf8 = g_malloc(2 * sizeof(gchar)) ;
-      sprintf(utf8,"%c", event->keyval);
+      gchar *utf8 = g_strdup_printf("%c", event->keyval);
       
       CharInfo *charInfo = g_malloc(sizeof (CharInfo));
       charInfo->x = text_data->pos->x;

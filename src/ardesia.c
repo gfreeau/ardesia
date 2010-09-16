@@ -110,20 +110,20 @@ void print_help()
   gchar* version = "0.5";
   gchar* year = "2009-2010";
   gchar* author = "Pietro Pilolli";
-  printf("Usage: ardesia [options] [filename]\n\n");
-  printf("options:\n");
-  printf("  --verbose ,\t-v\t\tEnable verbose mode to see the logs\n");
-  printf("  --decorate,\t-d\t\tDecorate the window with the borders\n");
-  printf("  --gravity ,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
-  printf("  \t\t\t\teast [default]\n");
-  printf("  \t\t\t\twest\n");
-  printf("  \t\t\t\tnorth\n");
-  printf("  \t\t\t\tsouth\n");
-  printf("  --help    ,\t-h\t\tShows the help screen\n");
-  printf("\n");
-  printf("filename:\t  \t\tThe file containig the image to be be used as background\n");
-  printf("\n");
-  printf("Ardesia %s (C) %s %s\n", version, year, author);
+  g_printf("Usage: ardesia [options] [filename]\n\n");
+  g_printf("options:\n");
+  g_printf("  --verbose ,\t-v\t\tEnable verbose mode to see the logs\n");
+  g_printf("  --decorate,\t-d\t\tDecorate the window with the borders\n");
+  g_printf("  --gravity ,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
+  g_printf("  \t\t\t\teast [default]\n");
+  g_printf("  \t\t\t\twest\n");
+  g_printf("  \t\t\t\tnorth\n");
+  g_printf("  \t\t\t\tsouth\n");
+  g_printf("  --help    ,\t-h\t\tShows the help screen\n");
+  g_printf("\n");
+  g_printf("filename:\t  \t\tThe file containig the image to be be used as background\n");
+  g_printf("\n");
+  g_printf("Ardesia %s (C) %s %s\n", version, year, author);
   exit(1);
 }
 
@@ -229,19 +229,19 @@ CommandLine* parse_options(gint argc, char *argv[])
 	  commandline->debug=TRUE;
 	  break;
 	case 'g':
-	  if (strcmp (optarg, "east") == 0)
+	  if (g_strcmp0 (optarg, "east") == 0)
 	    {
 	      commandline->position = EAST;
 	    }
-	  else if (strcmp(optarg, "west") == 0)
+	  else if (g_strcmp0(optarg, "west") == 0)
 	    {
 	      commandline->position = WEST;
 	    }
-          else if (strcmp(optarg, "north") == 0)
+          else if (g_strcmp0(optarg, "north") == 0)
 	    {
 	      commandline->position = NORTH;
 	    }
-          else if (strcmp(optarg, "south") == 0)
+          else if (g_strcmp0(optarg, "south") == 0)
 	    {
 	      commandline->position = SOUTH;
 	    }
@@ -268,8 +268,7 @@ BarData* init_bar_data()
 {
   BarData *bar_data = (BarData *) g_malloc(sizeof(BarData));
   bar_data->color = g_malloc(COLORSIZE * sizeof (gchar));
-  strcpy(bar_data->color, "FF0000FF");
-  bar_data->color[8]=0;
+  bar_data->color = g_strdup_printf("%s", "FF0000FF");
   bar_data->annotation_is_visible = TRUE;
   bar_data->pencil = TRUE;
   bar_data->grab = TRUE;
@@ -281,10 +280,7 @@ BarData* init_bar_data()
   bar_data->arrow = FALSE;
 
   /* The workspace dir is set to the desktop dir */
-  const gchar* desktop_dir = get_desktop_dir();
-  gint lenght = strlen(desktop_dir);
-  bar_data->workspace_dir = (gchar*) g_malloc( (lenght + 1) * sizeof(gchar));
-  strcpy(bar_data->workspace_dir, desktop_dir);
+  bar_data->workspace_dir = g_strdup_printf("%s", get_desktop_dir());
 
   return bar_data;
 }

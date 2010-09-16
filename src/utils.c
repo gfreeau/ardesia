@@ -108,9 +108,8 @@ gdouble get_distance(gdouble x1, gdouble y1, gdouble x2, gdouble y2)
 /* Take a GdkColor and return the corrispondent RGBA string */
 gchar* gdkcolor_to_rgba(GdkColor* gdkcolor)
 {
-  gchar* ret= g_malloc(9 * sizeof(gchar));;
   /* transform in the  RGBA format e.g. FF0000FF */ 
-  sprintf(ret,"%02x%02x%02xFF", gdkcolor->red/257, gdkcolor->green/257, gdkcolor->blue/257);
+  gchar* ret = g_strdup_printf("%02x%02x%02xFF", gdkcolor->red/257, gdkcolor->green/257, gdkcolor->blue/257);
   return ret;
 }
 
@@ -178,7 +177,10 @@ gboolean inside_bar_window(gdouble xp, gdouble yp)
 }
 
 
-/* Get the current date and format in a printable format */
+/* 
+ * Get the current date and format in a printable format; 
+ * the returned value must be free with the g_free 
+ */
 gchar* get_date()
 {
   struct tm* t;
@@ -186,41 +188,34 @@ gchar* get_date()
   time( &now );
   t = localtime( &now );
 
-  gchar* date = g_malloc(16 * sizeof(gchar));
   gchar* hour_min_sep = ":";
   #ifdef _WIN32
     /* The ":" character on windows is avoided in file name and then I use the "." character instead */
     hour_min_sep = ".";
   #endif
-  
-  sprintf(date, "%d-%d-%d_%d%s%d", t->tm_mday, t->tm_mon+1,t->tm_year+1900, t->tm_hour, hour_min_sep, t->tm_min);
+  gchar* date = g_strdup_printf("%d-%d-%d_%d%s%d", t->tm_mday, t->tm_mon+1,t->tm_year+1900, t->tm_hour, hour_min_sep, t->tm_min);
   return date;
 }
 
 
 /* Return if a file exists */
-gboolean file_exists(gchar* filename, gchar* desktop_dir)
+gboolean file_exists(gchar* filename)
 {
-  gchar* afterslash = strrchr(filename, DIR_SEPARATOR);
+  return g_file_test(filename, G_FILE_TEST_EXISTS);
+}
 
-  if (afterslash == 0)
-    {
-      /* relative path */
-      filename = strcat(filename, desktop_dir);
-    }
-  struct stat statbuf;
-  if(stat(filename, &statbuf) < 0) 
-    {
-      if(errno == ENOENT) 
-	{
-          return FALSE;
-        } 
-      else 
-	{
-          exit(0);
-        }
-    }
-  return TRUE;
+
+/* 
+ * Get default name return a name containing the tool name and the current date; 
+ * the returned value must be free with the g_free 
+ */
+gchar * get_default_name()
+{
+  gchar* start_string = "ardesia_";
+  gchar* date = get_date(); 
+  gchar* filename = g_strdup_printf("%s%s", start_string, date);
+  g_free(date); 
+  return filename;
 }
 
 

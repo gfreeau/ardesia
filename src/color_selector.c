@@ -79,11 +79,11 @@ gchar* start_color_selector_dialog(GtkToolButton *toolbutton, GtkWindow *parent,
             gtk_color_selection_set_has_palette(colorsel, TRUE);
             gtk_color_selection_get_current_color(colorsel, gdkcolor);
             ret_color = gdkcolor_to_rgba(gdkcolor);
-            if (picked_color == NULL)
+            if (picked_color)
               {
-	        picked_color = g_malloc((strlen(ret_color) + 1) * sizeof(gchar));
+                g_free(picked_color);
               }
-            strncpy(picked_color, ret_color, strlen(ret_color));
+            picked_color = g_strdup_printf("%s", ret_color);
 	    break;
 
 	  default:

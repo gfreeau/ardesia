@@ -92,10 +92,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
 
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
 
-  gchar* start_string = "ardesia_";
-  gchar* date = get_date(); 
-  gchar* filename = (gchar*) g_malloc((strlen(start_string) + strlen(date) + 1) * sizeof(gchar));
-  sprintf(filename,"%s%s", start_string, date);
+  gchar* filename = get_default_name();
   
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   
@@ -107,17 +104,25 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
       g_free(*workspace_dir);
       *workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser)); 
 
+      g_free(filename);
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
+      gchar* filenamecopy = g_strdup_printf("%s",filename); 
 
       screenshot = TRUE;
       gchar* supported_extension = ".png";
       gchar* extension = strrchr(filename, '.');
-      if ((extension==0) || (strcmp(extension, supported_extension) != 0))
+        if ((extension==0) || (g_strcmp0(extension, supported_extension) != 0))
         {
-          filename = (gchar *) realloc(filename,  (strlen(filename) + strlen(supported_extension) + 1) * sizeof(gchar)); 
-          (void) strcat((gchar *)filename, supported_extension);
-        }           
-      if (file_exists(filename, *workspace_dir))
+          filenamecopy = g_strdup_printf("%s%s",filename,supported_extension);
+        }      
+      else
+        {
+          filenamecopy = g_strdup_printf("%s",filename);
+        }
+      g_free(filename);   
+      filename = filenamecopy; 
+     
+      if (file_exists(filename))
         {
 	  GtkWidget *msg_dialog; 
 	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW(chooser), 
@@ -146,7 +151,6 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
       /* store the pixbuf grabbed on file */
       save_png (buf, filename);
     }
-  g_free(date);
   g_free(filename);
   g_object_unref (buf);
 }

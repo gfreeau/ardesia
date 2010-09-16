@@ -51,6 +51,7 @@ GdkPixbuf * load_png (gchar *filename)
     }
   else
     {
+      /* @TODO Handle this in a visual way or avoid this */
       fprintf (stderr, "couldn't load the file %s as background\n", filename);
       exit(0);
     }
@@ -182,11 +183,11 @@ void load_color()
       cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_SOURCE);
       gint r,g,b,a;
       sscanf(background_data->background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-	  /*
+      /*
        * @TODO implement with a full opaque windows and use cairo_set_source_rgba function to paint
-	   * I set the opacity with alpha and I use cairo_set_source_rgb to workaround the problem on windows with rgba 
-	   *
-	   */
+       * I set the opacity with alpha and I use cairo_set_source_rgb to workaround the problem on windows with rgba 
+       *
+       d*/
       gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), (gdouble) a/256);
       cairo_set_source_rgb(background_data->back_cr, (gdouble) r/256, (gdouble) g/256, (gdouble) b/256);
       cairo_paint(background_data->back_cr);
@@ -205,8 +206,11 @@ void load_color()
 /* Change the background image of ardesia  */
 void change_background_image (gchar *name)
 {
-   g_free(background_data->background_color);
-   background_data->background_color = NULL;
+   if (background_data->background_color)
+     {
+        g_free(background_data->background_color);
+        background_data->background_color = NULL;
+     }
 
    background_data->background_image = name;
    load_file();
@@ -216,15 +220,18 @@ void change_background_image (gchar *name)
 /* Change the background color of ardesia  */
 void change_background_color (gchar* rgba)
 {
-  g_free(background_data->background_image);
-  background_data->background_image = NULL;
-  
-  if (!(background_data->background_color))
+  if (background_data->background_image)
+     {
+        g_free(background_data->background_image);
+        background_data->background_image = NULL;
+     }  
+
+  if (background_data->background_color)
     {
-       background_data->background_color = (gchar*) g_malloc( sizeof(gchar) * 9);
+        g_free(background_data->background_color);
     }
- 
-  strcpy(background_data->background_color, rgba);
+
+  background_data->background_color = g_strdup_printf("%s", rgba);
   load_color();  
 }
 
