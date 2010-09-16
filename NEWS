@@ -13,6 +13,19 @@
   RELEASE NOTES
 =================
 
+
+-------------
+ ardesia 0.5
+-------------
+
+Dependencies:
+- gtk 2.16.6 included inside 
+  the windows package
+
+Usability:
+- performance improvement
+- added French translation
+
 -------------
  ardesia 0.4
 -------------
@@ -25,7 +38,6 @@ Dependencies:
 
 Usability:
 - added Spanish translation
-- added French translation
 
 Features:
 - Implemented cross plattform recorder and stream forwarder 

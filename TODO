@@ -21,8 +21,7 @@
   - Investigate about the status
 
 - Windows porting
-  - Fix the build system (install target)
-  - Create a binary installer similar to he gimp windows 
+  - Create a binary installer similar to the gimp windows 
     installer http://gimp-win.sourceforge.net/
   - Fix the highlighter; this doesn't work because
     the  ARGB32 support in cairo is not yet available 

@@ -257,7 +257,7 @@ release (GtkWidget *win,
 {
  
   #ifdef _WIN32
-    ungrab_pointer(display,text_data->window);
+    ungrab_pointer(gdk_display_get_default(), text_data->window);
   #endif
   
   text_data->pos->x = ev->x;

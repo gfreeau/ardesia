@@ -145,6 +145,9 @@ Button explanation
   you can select the background color or the background image
   to sketch
 - Save: it saves in a picture file you desktop screenshot
+- Export as pdf: it export as pdf; the first time you must
+  select a file name, then each time that you will click 
+  on the icon you will add a pdf page with your screen content
 - Record: it records your desktop;
   it uses the vlc tool,
   if do you want allow anyone to see your work 
