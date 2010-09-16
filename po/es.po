@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-05 14:41+0200\n"
+"POT-Creation-Date: 2010-09-16 10:20+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
@@ -13,10 +13,13 @@ msgstr ""
 "X-Poedit-Country: ITALY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../src/ardesia.c:141
-msgid "In order to run Ardesia you need to enable the Compiz composite manager"
+#: ../src/ardesia.c:137
+#, fuzzy
+msgid ""
+"In order to run Ardesia you need to enable the Compiz or Kwin composite "
+"manager"
 msgstr ""
-"Para ejecutar Ardesia necesita habilitar el administrador de Compiz "
+"Para ejecutar Ardesia necesita habilitar el administrador de Compiz o KWin"
 "compuestos"
 
 #. set tooltip to unhide
@@ -30,22 +33,22 @@ msgid "Hide"
 msgstr "Ocultar"
 
 #. set stop tooltip
-#: ../src/bar_callbacks.c:458 ../src/ardesia.glade.h:17
+#: ../src/bar_callbacks.c:462 ../src/ardesia.glade.h:17
 msgid "Record"
 msgstr "Grabar"
 
 #. set stop tooltip
-#: ../src/bar_callbacks.c:469
+#: ../src/bar_callbacks.c:473
 msgid "Stop"
 msgstr "Detener"
 
 #. set tooltip to unhide
-#: ../src/bar_callbacks.c:512 ../src/ardesia.glade.h:25
+#: ../src/bar_callbacks.c:518 ../src/ardesia.glade.h:25
 msgid "Unlock"
 msgstr "Desbloquear"
 
 #. set tooltip to hide
-#: ../src/bar_callbacks.c:529
+#: ../src/bar_callbacks.c:540
 msgid "Lock"
 msgstr "Bloquear"
 
@@ -54,22 +57,21 @@ msgstr "Bloquear"
 msgid "Changing color"
 msgstr "Cambiar el color"
 
-#: ../src/recorder.c:104
-
+#: ../src/recorder.c:109
 msgid ""
 "To record with Ardesia you must install the vlc program and add it to the "
 "PATH environment variable"
 msgstr "Para grabar con Ardesia debe instalar el programa vlc y anadir al path"
 
-#: ../src/recorder.c:132
+#: ../src/recorder.c:137
 msgid "Save video as ogv"
 msgstr "Guardar el vídeo como ogv"
 
-#: ../src/recorder.c:138 ../src/saver.c:92
+#: ../src/recorder.c:142 ../src/saver.c:92
 msgid "Choose a file"
 msgstr "Elegir un archivo"
 
-#: ../src/recorder.c:166 ../src/saver.c:133
+#: ../src/recorder.c:170 ../src/saver.c:133
 msgid "File Exists. Overwrite"
 msgstr "El archivo existe. Sobrescribir"
 
