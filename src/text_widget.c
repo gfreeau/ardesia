@@ -184,14 +184,11 @@ gboolean set_text_pointer(GtkWidget * window)
  
   GdkColor *background_color_p = rgb_to_gdkcolor("000000");
   GdkColor *foreground_color_p = rgb_to_gdkcolor(text_data->color);
-  if (text_data->cursor)
-    {
-      gdk_cursor_unref(text_data->cursor);
-    }
   
-  text_data->cursor = gdk_cursor_new_from_pixmap (pixmap, bitmap, foreground_color_p, background_color_p, 1, height-1);
-  gdk_window_set_cursor (text_data->window->window, text_data->cursor);
+  GdkCursor* cursor = gdk_cursor_new_from_pixmap (pixmap, bitmap, foreground_color_p, background_color_p, 1, height-1);
+  gdk_window_set_cursor (text_data->window->window, cursor);
   gdk_flush ();
+  gdk_cursor_unref(cursor);
   g_object_unref (pixmap);
   g_object_unref (bitmap);
   g_free(foreground_color_p);
@@ -317,7 +314,6 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
   text_data->pos = NULL;
 
   text_data->letterlist = NULL; 
-  text_data->cursor = NULL;
   
   text_data->color =  color;
   text_data->pen_width = tickness;
@@ -354,10 +350,6 @@ void stop_text_widget()
   if (text_data->window)
     {
       gtk_widget_destroy(text_data->window);
-    }
-  if (text_data->cursor)
-    {
-      gdk_cursor_unref(text_data->cursor);
     }
   if (text_data->pos)
     {

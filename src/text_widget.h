@@ -72,7 +72,6 @@ typedef struct
   gchar* color;
   gint pen_width;
   gint max_font_height;
-  GdkCursor* cursor;
   cairo_text_extents_t extents;
 }TextData;
 
