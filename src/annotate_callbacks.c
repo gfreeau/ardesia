@@ -55,6 +55,7 @@ event_expose (GtkWidget *widget,
   gint is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
   if (!is_fullscreen)
     {
+      
       return TRUE;
     }
 

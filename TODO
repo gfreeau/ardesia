@@ -9,9 +9,9 @@
 ======================================
 
 
+- French translation
 - Video tutorial
 - Open IRC channel
-- French translation
 
 - Refactoring
   - better variable handling
@@ -27,16 +27,17 @@
     the  ARGB32 support in cairo is not yet available 
 
 - Candidate features:
-  - image import (galleries with images, sticky notes)
-  - pdf import using poppler 
-  - Lazo selection tool
-  - move, copy, paste
   - put the artifact online
     - email
-    - ftp
+    - facebook
+  - define a configuration file and settings 
+  - image import (galleries with images, sticky notes)
+  - Lazo selection tool
+  - move, copy, paste
   - zoom and rotate
-  - configuration file and settings 
+  - pdf import using libpoppler 
   - Multi pointer support using the xinput2 libraries
+  - audio support
 
 ===
 EOF

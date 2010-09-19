@@ -12,50 +12,45 @@
  Introduction
 --------------
 
-Ardesia is a painting software that help you to make colored free-hand annotations 
-with digital ink everywhere, record it and share on the network. 
-It is easy to use and impressively fast and reactive. 
-You can draw upon the desktop or import an image and annotate it and redistribute 
-your work to the world. 
-Probably Ardesia will become your preferred free digital sketchpad, 
-let create quick sketch and artwork.
+Ardesia is the free digital sketchpad software that help you to make colored free-hand 
+annotations with digital ink everywhere, record it and share on the network.
+It is easy to use and impressively  fast and reactive. 
+You can draw upon the desktop or import an image and annotate it and redistribute your work 
+to the world. Let's create quick sketch and artwork. 
 
 Thanks to Ardesia you are free to open any application and fix your ideas and comments 
 as if you wrote on a classic chalkboard. 
-Tradition and innovation are living together in simplicity thanks to a natural 
-user interface that reproduce the natural feeling of the free hand painting. 
-
+Tradition and innovation are living together in simplicity thanks to a natural user interface 
+that reproduce the natural feeling of the free hand painting. 
 Reduce the traditional whiteboard and paper usage; Ardesia is smooth and fuzzy!
 
-You can use the tool to make effective on-screen presentation, highlight things 
-or point out things of interest. 
-The tool facilitates the online presentations and demos showing in real time 
-your computer screen to anyone in the network.
+You can use the tool to make effective on-screen presentation, highlight things or 
+point out things of interest. 
+The tool facilitates the online presentations and demos showing in real time your computer screen
+to anyone in the network.
 
-You can use this tool to enhance your lessons or courses working with your 
-preferred applications and your preferred operating system.
+You can use this tool to enhance your lessons or courses working with your preferred applications 
+and your preferred operating system.
 
 Create nice tutorial and demos saving the desktop images with your free hand annotations.
 
-Ardesia includes a sketchpad software that allow to free-hand draw geometrical shapes 
-using the shape recognizer.
+Ardesia includes a sketchpad software that allow to free-hand draw geometrical shapes using 
+the shape recognizer. 
 
-Ardesia respects the interoperability standards it import and export artifact 
-using common file open formats.
-Ardesia works with all the pointing device; you can use a mouse, a touch screen, 
-a drawing tablet, a cheap&professional wiimote whiteboard or a commercial whiteboard 
-or any other devices supported by your operating system. 
-
+Ardesia respects the interoperability standards it import and export artifact using 
+common file open formats. 
+Ardesia works with all the pointing device; you can use a mouse, a touch screen, a drawing tablet,
+a cheap&professional wiimote whiteboard or a commercial whiteboard or any other devices supported 
+by your operating system.
 
 Ardesia is pressure sensitive, if you are using properly configured your devices you can 
 draw lines with varying width. 
 It is possible to erase something with the other end of the (Wacom) pen.
 
 Ardesia has been designed with the Glade/GtkBuilder tool
-and it use to draw the cairo graphics library.
+and it uses to draw the cairo graphics library.
 
-For more info about annotate and the new feature,
-please read the NEWS file located in the current folder.
+For more info about annotate and the new feature, please read the NEWS file located in the current folder.
 
 
 ---------
@@ -214,8 +209,9 @@ filename:	  		The file containig the image to be be used as background
     - intel graphics card might work with the free driver
     - nvidia graphics driver you must install the proprietary driver
     - ati you must install the propietary driver
-  - go in the Gnome panel in System/Preference/Appereance and put 
+  - if you are using Gnome go in the panel under System/Preference/Appereance and put 
     the visuals effect to normal
+  - if you are using kde enable the kwin composite manager
 
 - Ardesia bar is not full visible, it is greater than my desktop
   - try to put the bar in orizontal position with the gravity option

@@ -177,10 +177,10 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   
   #ifdef _WIN32
     /* 
-	 * In Windows the parent bar go above the dialog;
+     * In Windows the parent bar go above the dialog;
      * to avoid this behaviour I put the parent keep above to false
      */
-	gtk_window_set_keep_above(GTK_WINDOW(parent), FALSE);
+    gtk_window_set_keep_above(GTK_WINDOW(parent), FALSE);
   #endif 
    
   GObject* imgObj = gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder, "imageChooserButton");
@@ -229,8 +229,8 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   g_free(preference_data);
 
   #ifdef _WIN32
-     /* 
-	 * Reput the keep above flag at the parent window bar
+    /* 
+     * Reput the keep above flag at the parent window bar
      */
     gtk_window_set_keep_above(GTK_WINDOW(parent), TRUE);
   #endif   
