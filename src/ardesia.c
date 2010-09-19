@@ -321,7 +321,7 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
 }
 
 
-/* This is the starting pogint */
+/* This is the starting point */
 int
 main (gint argc, char *argv[])
 {
@@ -343,16 +343,8 @@ main (gint argc, char *argv[])
 
   GtkWidget* background_window = create_background_window(commandline->backgroundimage); 
   
-  #ifndef _WIN32
-    /* 
-     *  - on linux let visible the window even if you go in unlock mode
-     *    it works as always on the top directive
-     *  - on widows this broke the zeta order and then I avoid this
-     *  - on MACOSX must be checked the behaviour: I am optimistic
-	 *
-     */
-    gtk_window_set_keep_above(GTK_WINDOW(background_window), TRUE);
-  #endif  
+ 
+  gtk_window_set_keep_above(GTK_WINDOW(background_window), TRUE); 
 
   gtk_widget_show (background_window);
   set_background_window(background_window);
@@ -363,29 +355,14 @@ main (gint argc, char *argv[])
 
   GtkWidget* annotation_window = get_annotation_window();  
 
-  #ifndef _WIN32
-     /* 
-     *  - on linux let visible the window even if you go in unlock mode
-     *    it works as always on the top directive
-     *  - on widows this break the zeta order and then I avoid this
-     *  - on MACOSX must be checked the behaviour: I am optimistic
-     */
-    gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
-  #endif
+  gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
 
   gtk_widget_show (annotation_window);
   
   ardesia_bar_window = create_bar_window(commandline, annotation_window);
 
-  #ifndef _WIN32
-     /* 
-     *  - on linux let visible the window even if you go in unlock mode
-     *    it works as always on the top directive
-     *  - on widows this break the zeta order and then I avoid this
-     *  - on MACOSX must be checked the behaviour: I am optimistic
-     */
-    gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
-  #endif  
+ 
+  gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
 
   gint width;
   gint height;

@@ -174,6 +174,14 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   preferenceDialog = GTK_WIDGET(gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"preferences"));
   gtk_window_set_transient_for(GTK_WINDOW(preferenceDialog), parent);
   gtk_window_set_modal(GTK_WINDOW(preferenceDialog), TRUE);
+  
+  #ifdef _WIN32
+    /* 
+	 * In Windows the parent bar go above the dialog;
+     * to avoid this behaviour I put the parent keep above to false
+     */
+	gtk_window_set_keep_above(GTK_WINDOW(parent), FALSE);
+  #endif 
    
   GObject* imgObj = gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder, "imageChooserButton");
   GtkFileChooser* chooser = GTK_FILE_CHOOSER(imgObj);
@@ -219,6 +227,13 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
 
   g_object_unref (preference_data->preferenceDialogGtkBuilder);
   g_free(preference_data);
+
+  #ifdef _WIN32
+     /* 
+	 * Reput the keep above flag at the parent window bar
+     */
+    gtk_window_set_keep_above(GTK_WINDOW(parent), TRUE);
+  #endif   
 }
 
 
