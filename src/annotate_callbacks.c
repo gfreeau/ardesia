@@ -142,6 +142,7 @@ paint (GtkWidget *win,
 		  ev->device->name, ev->button, ev->x, ev->y);
     }
 
+  #ifndef _WIN32
   if (inside_bar_window(ev->x, ev->y))
     /* point is in the ardesia bar */
     {
@@ -149,6 +150,7 @@ paint (GtkWidget *win,
       annotate_release_grab ();
       return TRUE;
     }   
+  #endif
 	
   if (data->are_annotations_hidden)
     {
@@ -204,6 +206,7 @@ paintto (GtkWidget *win,
        return TRUE;
     }
   
+  #ifndef _WIN32
   if (inside_bar_window(ev->x, ev->y))
     /* point is in the ardesia bar */
     {
@@ -212,10 +215,11 @@ paintto (GtkWidget *win,
            g_printerr("Device '%s': Move on the bar then ungrab\n",
 	              ev->device->name);
          }
-      /* the last point was outside the bar then ungrab */
-      annotate_release_grab ();
-      return TRUE;
+       /* the last point was outside the bar then ungrab */
+       annotate_release_grab ();
+       return TRUE;
     }
+  #endif
   
   if (data->are_annotations_hidden)
     {
@@ -285,6 +289,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
 		 ev->device->name, ev->button, ev->x, ev->y);
     }
 
+  #ifndef _WIN32
   if (inside_bar_window(ev->x, ev->y))
     /* point is in the ardesia bar */
     {
@@ -292,7 +297,8 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
       annotate_release_grab ();
       return TRUE;
     }
-  
+  #endif 
+ 
   if (data->are_annotations_hidden)
     {
       return TRUE;
