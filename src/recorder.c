@@ -153,9 +153,8 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
       g_free(filename);
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
       gchar* filenamecopy = g_strdup_printf("%s",filename); 
-      gchar* extension = strrchr(filename, '.');
       
-      if ((extension==0) || (g_strcmp0(extension, supported_extension) != 0))
+      if (g_str_has_suffix(filename, supported_extension))
         {
           filenamecopy = g_strdup_printf("%s%s",filename,supported_extension);
         }      

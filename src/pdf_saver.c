@@ -70,8 +70,7 @@ gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixb
       g_free(filename);
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
 
-      gchar* extension = strrchr(filename, '.');
-      if ((extension==0) || (g_strcmp0(extension, supported_extension) != 0))
+      if (g_str_has_suffix(filename, supported_extension))
         {
           pdf_data->filename = g_strdup_printf("%s%s",filename,supported_extension);
         }      

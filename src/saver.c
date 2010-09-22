@@ -110,8 +110,8 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
 
       screenshot = TRUE;
       gchar* supported_extension = ".png";
-      gchar* extension = strrchr(filename, '.');
-        if ((extension==0) || (g_strcmp0(extension, supported_extension) != 0))
+      
+      if (g_str_has_suffix(filename, supported_extension))
         {
           filenamecopy = g_strdup_printf("%s%s",filename,supported_extension);
         }      
