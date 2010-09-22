@@ -1046,9 +1046,12 @@ void setup_input_devices ()
       /* Dont touch devices with lesser than two axis */
       if (device->num_axes >= 2)
         {
-          g_printerr ("Enabled Device. %p: \"%s\" (Type: %d)\n",
+           if (device->source!=GDK_SOURCE_MOUSE)
+           { 
+              g_printerr ("Enabled Device. %p: \"%s\" (Type: %d)\n",
                       device, device->name, device->source);
-          gdk_device_set_mode (device, GDK_MODE_SCREEN);
+              gdk_device_set_mode (device, GDK_MODE_SCREEN);
+           }
         }
     }
 }
@@ -1214,7 +1217,7 @@ void annotate_release_input_grab()
     /*
      * @TODO WIN32 implement correctly gdk_window_input_shape_combine_mask in the win32 gdkwindow or use an equivalent native function
      * now in the gtk implementation the gdk_window_input_shape_combine_mask call the gdk_window_shape_combine_mask
-	 * that is not the desired behaviour
+     * that is not the desired behaviour
      *
      */
      annotate_release_pointer_grab();

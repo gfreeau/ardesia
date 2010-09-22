@@ -7,7 +7,6 @@
     <property name="destroy_with_parent">True</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="events">GDK_EXPOSURE_MASK | GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_PROXIMITY_IN_MASK | GDK_PROXIMITY_OUT_MASK</property>
-    <!-- comment this line to use it with wiimote -->
     <property name="extension_events">cursor</property>
     <property name="app_paintable">True</property>
     <property name="double_buffered">False</property>
