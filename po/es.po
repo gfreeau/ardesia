@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-16 10:20+0200\n"
+"POT-Creation-Date: 2010-09-22 11:37+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
@@ -14,41 +14,37 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: ../src/ardesia.c:137
-#, fuzzy
-msgid ""
-"In order to run Ardesia you need to enable the Compiz or Kwin composite "
-"manager"
+msgid "In order to run Ardesia you need to enable a composite manager"
 msgstr ""
-"Para ejecutar Ardesia necesita habilitar el administrador de Compiz o KWin"
-"compuestos"
+"Para ejecutar Ardesia necesita habilitar el administrador compuestos"
 
 #. set tooltip to unhide
-#: ../src/bar_callbacks.c:395
+#: ../src/bar_callbacks.c:391
 msgid "Unhide"
 msgstr "Mostrar"
 
 #. set tooltip to hide
-#: ../src/bar_callbacks.c:404 ../src/ardesia.glade.h:10
+#: ../src/bar_callbacks.c:400 ../src/ardesia.glade.h:10
 msgid "Hide"
 msgstr "Ocultar"
 
 #. set stop tooltip
-#: ../src/bar_callbacks.c:462 ../src/ardesia.glade.h:17
+#: ../src/bar_callbacks.c:458 ../src/ardesia.glade.h:17
 msgid "Record"
 msgstr "Grabar"
 
 #. set stop tooltip
-#: ../src/bar_callbacks.c:473
+#: ../src/bar_callbacks.c:469
 msgid "Stop"
 msgstr "Detener"
 
 #. set tooltip to unhide
-#: ../src/bar_callbacks.c:518 ../src/ardesia.glade.h:25
+#: ../src/bar_callbacks.c:514 ../src/ardesia.glade.h:25
 msgid "Unlock"
 msgstr "Desbloquear"
 
 #. set tooltip to hide
-#: ../src/bar_callbacks.c:540
+#: ../src/bar_callbacks.c:536
 msgid "Lock"
 msgstr "Bloquear"
 
@@ -63,19 +59,19 @@ msgid ""
 "PATH environment variable"
 msgstr "Para grabar con Ardesia debe instalar el programa vlc y anadir al path"
 
-#: ../src/recorder.c:137
+#: ../src/recorder.c:131
 msgid "Save video as ogv"
 msgstr "Guardar el vídeo como ogv"
 
-#: ../src/recorder.c:142 ../src/saver.c:92
+#: ../src/recorder.c:136 ../src/saver.c:81
 msgid "Choose a file"
 msgstr "Elegir un archivo"
 
-#: ../src/recorder.c:170 ../src/saver.c:133
+#: ../src/recorder.c:176 ../src/saver.c:131
 msgid "File Exists. Overwrite"
 msgstr "El archivo existe. Sobrescribir"
 
-#: ../src/saver.c:84
+#: ../src/saver.c:73
 msgid "Save image"
 msgstr "Guardar imagen"
 
