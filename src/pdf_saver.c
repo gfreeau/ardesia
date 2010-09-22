@@ -115,6 +115,7 @@ gboolean init_pdf_saver(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pix
 {  
    pdf_data = (PdfData *) g_malloc(sizeof(PdfData));   
    pdf_data->pixbuflist = NULL;
+   pdf_data->tid = -1;
    
    /* start the widget to ask the file name where save the pdf */       
    gboolean ret = start_save_pdf_dialog(parent, workspace_dir, pixbuf);
@@ -129,21 +130,15 @@ gboolean init_pdf_saver(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pix
 }
 
 
-/* Add the screenshot to pdf */
-void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
+void *pdf_save(void *arg)
 {
-   GdkPixbuf* pixbuf = grab_screenshot();
-   if (pdf_data == NULL)
+   /* begin critical section */
+   /* wait if there is a pending thread */
+   if (pdf_data->tid!=-1)
      {
-        if (!init_pdf_saver(parent, workspace_dir, pixbuf))
-          {  
-             g_object_unref (pixbuf);
-             return;
-          }
-      }
-  
-   pdf_data->pixbuflist = g_slist_prepend(pdf_data->pixbuflist, pixbuf);  
-  
+       pthread_join(pdf_data->tid, NULL);
+     }
+   
    gint height = gdk_screen_height ();
    gint width = gdk_screen_width ();
    
@@ -167,6 +162,30 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
    /* destroy */
    cairo_surface_destroy(pdf_surface);
    cairo_destroy(pdf_cr);
+   pdf_data->tid = -1;
+   pthread_exit(NULL);
+   /* end critical section */
+}
+
+
+/* Add the screenshot to pdf */
+void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
+{
+   GdkPixbuf* pixbuf = grab_screenshot();
+   if (pdf_data == NULL)
+     {
+        if (!init_pdf_saver(parent, workspace_dir, pixbuf))
+          {  
+             g_object_unref (pixbuf);
+             return;
+          }
+      }
+  
+   pdf_data->pixbuflist = g_slist_prepend(pdf_data->pixbuflist, pixbuf);  
+  
+   // start save thread
+   pthread_create(&pdf_data->tid, NULL, pdf_save, (void *) NULL);
+
 }
 
 
@@ -175,6 +194,11 @@ void quit_pdf_saver()
 {
    if (pdf_data)
      {
+        // wait if there is a pending thread
+        if (pdf_data->tid!=-1)
+          {
+             pthread_join(pdf_data->tid, NULL);
+          }
         /* free the list and all the pixbuf inside it */
         g_slist_foreach(pdf_data->pixbuflist, (GFunc)g_object_unref, NULL);
         g_slist_free(pdf_data->pixbuflist);

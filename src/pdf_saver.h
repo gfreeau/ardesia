@@ -28,8 +28,13 @@
 #include <cairo.h>
 #include <cairo-pdf.h>
 
+#include <pthread.h>
+
 typedef struct
 {
+  /* id of the current pdf save thread */
+  pthread_t tid;  
+
   /* the list of the pixbuf of all pdf pages */
   GSList* pixbuflist;
   /* the filename where store the pdf */
