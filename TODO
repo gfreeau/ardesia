@@ -23,10 +23,10 @@
   - Create a binary installer similar to the gimp windows 
     installer http://gimp-win.sourceforge.net/
   - Fix the highlighter; this doesn't work because
-    the  ARGB32 support in cairo is not yet available 
+    seems that the ARGB32 support in cairo is not yet available 
 
 - Candidate features:
-  - put the artifact online
+  - deploy the artifact online
     - email
     - facebook
   - define a configuration file and settings 
@@ -35,7 +35,7 @@
   - move, copy, paste
   - zoom and rotate
   - pdf import using libpoppler 
-  - Multi pointer support using the xinput2 libraries
+  - Multi pointer support using the xinput2 library
   - audio support
 
 ===
