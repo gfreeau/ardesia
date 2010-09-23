@@ -14,7 +14,6 @@
 - Open IRC channel
 
 - Refactoring
-  - better variable handling
   - Screencast recorder using vlclib insted spawn the vlc process
 
 - MacOsX-quartz porting
