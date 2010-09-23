@@ -26,6 +26,7 @@
 #include <saver.h>
 
 
+/* internal structure allocated once */
 static PdfData *pdf_data;
 
 
@@ -114,7 +115,7 @@ gboolean init_pdf_saver(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pix
 {  
    pdf_data = (PdfData *) g_malloc(sizeof(PdfData));   
    pdf_data->pixbuflist = NULL;
-   pdf_data->tid = -1;
+   pdf_data->thread = NULL;
    
    /* start the widget to ask the file name where save the pdf */       
    gboolean ret = start_save_pdf_dialog(parent, workspace_dir, pixbuf);
@@ -130,14 +131,7 @@ gboolean init_pdf_saver(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pix
 
 
 void *pdf_save(void *arg)
-{
-   /* begin critical section */
-   /* wait if there is a pending thread */
-   if (pdf_data->tid!=-1)
-     {
-       pthread_join(pdf_data->tid, NULL);
-     }
-   
+{   
    gint height = gdk_screen_height ();
    gint width = gdk_screen_width ();
    
@@ -161,9 +155,18 @@ void *pdf_save(void *arg)
    /* destroy */
    cairo_surface_destroy(pdf_surface);
    cairo_destroy(pdf_cr);
-   pdf_data->tid = -1;
-   pthread_exit(NULL);
-   /* end critical section */
+   return (void *) NULL;
+}
+
+
+/* wait if there is a pending thread */
+void wait_for_pdf_save_pending_thread()
+{
+   if (pdf_data->thread)
+     {
+       g_thread_join(pdf_data->thread);
+       pdf_data->thread = NULL;
+     }
 }
 
 
@@ -182,8 +185,23 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
   
    pdf_data->pixbuflist = g_slist_prepend(pdf_data->pixbuflist, pixbuf);  
   
+   if( !g_thread_supported() )
+	  {
+	     g_thread_init(NULL);
+	     gdk_threads_init();                   // Called to initialize internal mutex "gdk_threads_mutex".
+	     printf("g_thread supported\n");
+	  }
+
+
+   wait_for_pdf_save_pending_thread();
+
    // start save thread
-   pthread_create(&pdf_data->tid, NULL, pdf_save, (void *) NULL);
+   GError           *err = NULL ;
+   if( (pdf_data->thread = g_thread_create((GThreadFunc) pdf_save, (void *) NULL, TRUE, &err)) == NULL)
+     {
+	     printf("Thread create failed: %s!!\n", err->message );
+	     g_error_free ( err ) ;
+     }   
 
 }
 
@@ -193,11 +211,8 @@ void quit_pdf_saver()
 {
    if (pdf_data)
      {
-        // wait if there is a pending thread
-        if (pdf_data->tid!=-1)
-          {
-             pthread_join(pdf_data->tid, NULL);
-          }
+        wait_for_pdf_save_pending_thread();
+
         /* free the list and all the pixbuf inside it */
         g_slist_foreach(pdf_data->pixbuflist, (GFunc)g_object_unref, NULL);
         g_slist_free(pdf_data->pixbuflist);
