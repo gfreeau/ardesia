@@ -142,7 +142,7 @@ paint (GtkWidget *win,
 		  ev->device->name, ev->button, ev->x, ev->y);
     }
 
-  #ifndef _WIN32
+  #ifdef _WIN32
   if (inside_bar_window(ev->x, ev->y))
     /* point is in the ardesia bar */
     {
@@ -206,7 +206,7 @@ paintto (GtkWidget *win,
        return TRUE;
     }
   
-  #ifndef _WIN32
+  #ifdef _WIN32
   if (inside_bar_window(ev->x, ev->y))
     /* point is in the ardesia bar */
     {
@@ -289,7 +289,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
 		 ev->device->name, ev->button, ev->x, ev->y);
     }
 
-  #ifndef _WIN32
+  #ifdef _WIN32
   if (inside_bar_window(ev->x, ev->y))
     /* point is in the ardesia bar */
     {
