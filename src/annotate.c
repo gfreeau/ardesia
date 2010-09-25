@@ -240,7 +240,11 @@ gfloat annotate_get_arrow_direction()
   // make the standard deviation 
   gint tollerance = data->thickness * delta;
   
-  outptr = extract_relevant_points(outptr, FALSE, tollerance);   
+  if (g_slist_length(outptr)>=3)
+    {
+       outptr = extract_relevant_points(outptr, FALSE, tollerance);   
+    }  
+
   AnnotateStrokeCoordinate* point = NULL;
   AnnotateStrokeCoordinate* oldpoint = NULL;
   oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 1);
@@ -996,7 +1000,7 @@ void roundify(gboolean closed_path)
 void annotate_shape_recognize(gboolean closed_path)
 {
   /* Rectifier code only if the list is greater that 3 */
-  if ( g_slist_length(data->coordlist)> 3)
+  if ( g_slist_length(data->coordlist)>3)
     {
       if (data->rectify)
         {
