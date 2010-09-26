@@ -226,12 +226,11 @@ void change_background_color (gchar* rgba)
         background_data->background_image = NULL;
      }  
 
-  if (background_data->background_color)
+  if (!(background_data->background_color))
     {
-        g_free(background_data->background_color);
+      background_data->background_color = g_strdup_printf("%s", rgba);
     }
 
-  background_data->background_color = g_strdup_printf("%s", rgba);
   load_color();  
 }
 
