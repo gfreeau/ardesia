@@ -284,6 +284,7 @@ gboolean is_similar_to_a_regular_poligon(GSList* list)
   return TRUE;
 }
 
+
 /* The path described in list is similar to an ellipse,  unbounded_rect is the outbounded rectangle to the eclipse */
 gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gint pixel_tollerance)
 {
@@ -301,32 +302,38 @@ gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gint pix
   gdouble b = (point3->y-point1->y)/2;
   gdouble originx = point1->x + a;
   gdouble originy = point1->y + b;
-  printf("%f,%f %f,%f\n", point1->x, point1->y, point3->x, point3->y);
-  printf("a %f  b %f\n", a, b);
   gdouble c = 0.0;
-  AnnotateStrokeCoordinate* f1 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
-  AnnotateStrokeCoordinate* f2 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+  gdouble f1x;
+  gdouble f1y;
+  gdouble f2x;
+  gdouble f2y;
+
   gdouble aq = powf(a,2);
   gdouble bq = powf(b,2);
+  
   if (aq>bq)
     {
        c = sqrtf(aq-bq);
-       f1->x = originx-c;
-       f1->y = originy;
-       f2->x = originx+c;
-       f2->y = originy;
+       // F1(x0-c,y0)
+       f1x = originx-c;
+       f1y = originy;
+       // F2(x0+c,y0)
+       f2x = originx+c;
+       f2y = originy;
     }
   else
     {
       c = sqrtf(bq-aq);
-      f1->x = originx;
-      f1->y = originy-c;
-      f2->x = originx;
-      f2->y = originy+c;
+      // F1(x0, y0-c)
+      f1x = originx;
+      f1y = originy-c;
+      // F2(x0, y0+c)
+      f2x = originx;
+      f2y = originy+c;
     }
 
-  gdouble distancep1f1 = get_distance(point1->x, point1->y, f1->x, f1->y);
-  gdouble distancep1f2 = get_distance(point1->x, point1->y, f2->x, f2->y);
+  gdouble distancep1f1 = get_distance(point1->x, point1->y, f1x, f1y);
+  gdouble distancep1f2 = get_distance(point1->x, point1->y, f2x, f2y);
   gdouble sump1 = distancep1f1 + distancep1f2;
 
   /* In the ellipse the sum of the distance(p,f1)+distance(p,f2) must be constant */
@@ -335,15 +342,15 @@ gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gint pix
   for (i=0; i<lenght; i++)
     {
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
-      gdouble distancef1 = get_distance(point->x, point->y, f1->x, f1->y);
-      gdouble distancef2 = get_distance(point->x, point->y, f2->x, f2->y);
+      gdouble distancef1 = get_distance(point->x, point->y, f1x, f1y);
+      gdouble distancef2 = get_distance(point->x, point->y, f2x, f2y);
       gdouble sum = distancef1 + distancef2;
        if (abs(sum-sump1 )>pixel_tollerance)
         {  
+           // the sum is so different from the right one; this is not an ellipse 
            return FALSE;
         }
     }
-
   return TRUE;
 }
 
