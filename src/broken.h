@@ -34,6 +34,9 @@
   /* Straight the line */
   GSList* straighten(GSList* list);
 
+  /* Return the outbounded rectangle outside the path described to listIn */
+  GSList*  extract_outbounded_rectangle(GSList* listIn);
+
   /* The path described in list is similar to an ellipse,  unbounded_rect is the outbounded rectangle to the eclipse */
   gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gint pixel_tollerance); 
 
