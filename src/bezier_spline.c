@@ -29,6 +29,7 @@
 /* Spline the lines with a bezier curves */
 void spline (cairo_t *cr, GSList *list)
 {
+
   gint i;
   guint N = g_slist_length(list);
   gdouble X[N][2]; 
@@ -38,6 +39,7 @@ void spline (cairo_t *cr, GSList *list)
       X[i][0] = point->x;
       X[i][1] = point->y;
     }
+
 
   // Pi, Qi are control points for curve (Xi, Xi+1)
   gdouble P[N-1][2], Q[N-1][2];
@@ -125,6 +127,7 @@ void spline (cairo_t *cr, GSList *list)
       P[i][1] = gsl_vector_get(x, i);
       Q[i][1] = gsl_vector_get(x, i+(N-1));
     }
+  
   gsl_vector_free(x);
 
 
@@ -149,8 +152,8 @@ void spline (cairo_t *cr, GSList *list)
       //        printf("%d: Bx'(0) = %lf\n", i+1, -3*X[i][0]+3*P[i][0]);
       //        printf("%d: Bx'(1) = %lf\n", i+1, -3*Q[i][0]+3*X[i+1][0]);
 
-      cairo_move_to(cr,
-		    X[i][0], X[i][1]);
+      //cairo_move_to(cr,
+//		    X[i][0], X[i][1]);
 
       cairo_curve_to(cr,
 		     P[i][0], P[i][1],

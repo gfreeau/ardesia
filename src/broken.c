@@ -204,12 +204,9 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
        Bpressure = Cpressure;
     }
   
-  if (!close_path)
-    {
-      /* Add the last point with the coordinates */
-      AnnotateStrokeCoordinate* last_point =  allocate_point(Cx, Cy, Cwidth, Cpressure);
-      listOut = g_slist_prepend (listOut, last_point); 
-    }
+  /* Add the last point with the coordinates */
+  AnnotateStrokeCoordinate* last_point =  allocate_point(Cx, Cy, Cwidth, Cpressure);
+  listOut = g_slist_prepend (listOut, last_point); 
 
   /* I reverse the list to preserve the initial order */
   listOut = g_slist_reverse(listOut);
@@ -284,6 +281,69 @@ gboolean is_similar_to_a_regular_poligon(GSList* list)
         }
       old_point = point;
     }
+  return TRUE;
+}
+
+/* The path described in list is similar to an ellipse,  unbounded_rect is the outbounded rectangle to the eclipse */
+gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gint pixel_tollerance)
+{
+   if (!list)
+    {
+      return FALSE;
+    }
+  gint lenght = g_slist_length(list);
+   
+
+  AnnotateStrokeCoordinate* point1 = (AnnotateStrokeCoordinate*) g_slist_nth_data (unbounded_rect, 2);
+  AnnotateStrokeCoordinate* point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (unbounded_rect, 0);
+
+  gdouble a = (point3->x-point1->x)/2;
+  gdouble b = (point3->y-point1->y)/2;
+  gdouble originx = point1->x + a;
+  gdouble originy = point1->y + b;
+  printf("%f,%f %f,%f\n", point1->x, point1->y, point3->x, point3->y);
+  printf("a %f  b %f\n", a, b);
+  gdouble c = 0.0;
+  AnnotateStrokeCoordinate* f1 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+  AnnotateStrokeCoordinate* f2 =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+  gdouble aq = powf(a,2);
+  gdouble bq = powf(b,2);
+  if (aq>bq)
+    {
+       c = sqrtf(aq-bq);
+       f1->x = originx-c;
+       f1->y = originy;
+       f2->x = originx+c;
+       f2->y = originy;
+    }
+  else
+    {
+      c = sqrtf(bq-aq);
+      f1->x = originx;
+      f1->y = originy-c;
+      f2->x = originx;
+      f2->y = originy+c;
+    }
+
+  gdouble distancep1f1 = get_distance(point1->x, point1->y, f1->x, f1->y);
+  gdouble distancep1f2 = get_distance(point1->x, point1->y, f2->x, f2->y);
+  gdouble sump1 = distancep1f1 + distancep1f2;
+
+  /* In the ellipse the sum of the distance(p,f1)+distance(p,f2) must be constant */
+  gint i=0;   
+
+  for (i=0; i<lenght; i++)
+    {
+      AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
+      gdouble distancef1 = get_distance(point->x, point->y, f1->x, f1->y);
+      gdouble distancef2 = get_distance(point->x, point->y, f2->x, f2->y);
+      gdouble sum = distancef1 + distancef2;
+       if (abs(sum-sump1 )>pixel_tollerance)
+        {  
+           return FALSE;
+        }
+    }
+
   return TRUE;
 }
 
@@ -477,6 +537,7 @@ GSList* straighten(GSList* list)
  return listOut; 
 }
 
+
                    
 /* Take a list of point and return magically the new recognized path */
 GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, gint pixel_tollerance)
@@ -528,21 +589,9 @@ GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, gint pixe
           } 
         else       
          {
-            if (close_path)
-              {
-                 // roundify
-                 /*  make the outbounded rectangle that will used to draw the ellipse */
-                 gint lenght = g_slist_length(listOut);
-                 if (lenght>2)
-                   {
-                      // minimum three point is required
-	              GSList* listOutN = extract_outbounded_rectangle(listOut);
-	              g_slist_foreach(listOut, (GFunc)g_free, NULL);
-	              g_slist_free(listOut);
-	              listOut = listOutN;
-                    }
+
                  return listOut;
-              }
+             
 	  }  
     }
   return listOut;

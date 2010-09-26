@@ -945,7 +945,7 @@ void rectify(gboolean closed_path)
 void roundify(gboolean closed_path)
 {
   gint tollerance = data->thickness * 2;
-  GSList *outptr = broken(data->coordlist, closed_path, FALSE, tollerance);  
+  GSList *outptr = extract_relevant_points(data->coordlist, closed_path, tollerance);  
   gint lenght = g_slist_length(outptr);
 
   /* Delete the last path drawn */
@@ -974,24 +974,28 @@ void roundify(gboolean closed_path)
       annotate_draw_point_list(outptr);
       return; 
     }
-  if (closed_path)
+  
+  GSList* listOutN = extract_outbounded_rectangle(outptr);
+  if ((closed_path) && (is_similar_to_an_ellipse(outptr, listOutN, tollerance*2)))
     {
-      // It's an ellipse draw it with the outbounded rectangle in the outptr list
-      AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
+      // It could be an ellipse draw it with the outbounded rectangle in the outptr list
+      AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)listOutN->data;
       gdouble lastx = out_point->x; 
       gdouble lasty = out_point->y;
-      AnnotateStrokeCoordinate* point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 2);
+      AnnotateStrokeCoordinate* point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (listOutN, 2);
       if (point3)
         { 
           gdouble curx = point3->x; 
           gdouble cury = point3->y;
 	  annotate_draw_ellipse(lastx, lasty, curx-lastx, cury-lasty);          
         }
-    }
+      g_slist_foreach(listOutN, (GFunc)g_free, NULL);
+      g_slist_free(listOutN);
+    }   
   else
     {
-      // It's a not closed line use Bezier splines to smooth it
-      spline(data->annotation_cairo_context, outptr);
+       // It's a not closed line use Bezier splines to smooth it
+       spline(data->annotation_cairo_context, outptr);
     }
 }
 
