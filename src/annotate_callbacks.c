@@ -350,7 +350,9 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
          }
     }
   cairo_stroke_preserve(data->annotation_cairo_context);
+  
   annotate_add_save_point();
+   
   annotate_hide_cursor();  
  
   return TRUE;

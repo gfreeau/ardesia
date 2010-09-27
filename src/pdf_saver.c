@@ -116,6 +116,7 @@ gboolean init_pdf_saver(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pix
    pdf_data = (PdfData *) g_malloc(sizeof(PdfData));   
    pdf_data->pixbuflist = NULL;
    pdf_data->thread = NULL;
+   pdf_data->filename = NULL;
    
    /* start the widget to ask the file name where save the pdf */       
    gboolean ret = start_save_pdf_dialog(parent, workspace_dir, pixbuf);
@@ -212,6 +213,7 @@ void quit_pdf_saver()
    if (pdf_data)
      {
         wait_for_pdf_save_pending_thread();
+        g_free(pdf_data->filename);
 
         /* free the list and all the pixbuf inside it */
         g_slist_foreach(pdf_data->pixbuflist, (GFunc)g_object_unref, NULL);

@@ -596,10 +596,8 @@ GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, gint pixe
           } 
         else       
          {
-
-                 return listOut;
-             
-	  }  
+            return listOut;    
+	 }  
     }
   return listOut;
 }

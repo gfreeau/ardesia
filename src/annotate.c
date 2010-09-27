@@ -251,8 +251,6 @@ gfloat annotate_get_arrow_direction()
   point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 0);
   // calculate the tan beetween the last two point 
   gfloat ret = atan2 (point->y-oldpoint->y, point->x-oldpoint->x);
-  g_slist_foreach(outptr, (GFunc)g_free, NULL);
-  g_slist_free(outptr); 
   return ret;
 }
 
@@ -410,8 +408,6 @@ void annotate_push_context(cairo_t * cr)
   cairo_set_source_surface (data->annotation_cairo_context,  source_surface, 0, 0);
   cairo_paint(data->annotation_cairo_context);
   cairo_stroke(data->annotation_cairo_context);
-
-  annotate_add_save_point();
 }
 
 
@@ -937,7 +933,7 @@ void rectify(gboolean closed_path)
   if (closed_path)
     {
       cairo_close_path(data->annotation_cairo_context);   
-    }
+    } 
 }
 
 
@@ -989,14 +985,17 @@ void roundify(gboolean closed_path)
           gdouble cury = point3->y;
 	  annotate_draw_ellipse(lastx, lasty, curx-lastx, cury-lasty);          
         }
-      g_slist_foreach(listOutN, (GFunc)g_free, NULL);
-      g_slist_free(listOutN);
     }   
   else
     {
        // It's a not closed line use Bezier splines to smooth it
        spline(data->annotation_cairo_context, outptr);
     }
+  
+  /* disallocate the outbounded rectangle */
+  g_slist_foreach(listOutN, (GFunc)g_free, NULL);
+  g_slist_free(listOutN);
+
 }
 
 
