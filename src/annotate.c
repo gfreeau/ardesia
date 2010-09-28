@@ -299,7 +299,7 @@ void select_color()
 void annotate_add_save_point()
 {
   AnnotateSave *save = g_malloc(sizeof(AnnotateSave));
-  /*  TODO in savepoint filename must be a file in tmp folder with format ardesia_date.png */
+  /*  the filename is put in tmp folder with format ardesia_date.png */
   const gchar* tmpdir = g_get_tmp_dir();
   gchar* filename = get_default_name();
 
@@ -398,20 +398,28 @@ void annotate_restore_surface()
     {
       gint i = data->current_save_index;
       AnnotateSave* savepoint = (AnnotateSave*) g_slist_nth_data (data->savelist, i);
-      if (!savepoint) return;
-      cairo_new_path(data->annotation_cairo_context);
-      gchar* filename = savepoint->filename;
-
-     if (data->debug)
-      {
-        g_printerr("Load file %s\n", filename);
-      }
-      // load the file in the annotation surface
-      GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
-      cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
-      gdk_cairo_set_source_pixbuf(data->annotation_cairo_context, pixbuf, 0.0, 0.0);
-      cairo_paint(data->annotation_cairo_context);
-      g_object_unref (pixbuf);
+      if (!savepoint)
+         { 
+            return;
+         }
+ 
+      if (savepoint->filename)
+         {
+           if (data->debug)
+             {
+               g_printerr("Load file %s\n", savepoint->filename);
+             }
+           // load the file in the annotation surface
+           GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (savepoint->filename, NULL);
+           if (pixbuf)
+             {
+               cairo_new_path(data->annotation_cairo_context);
+               cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
+               gdk_cairo_set_source_pixbuf(data->annotation_cairo_context, pixbuf, 0.0, 0.0);
+               cairo_paint(data->annotation_cairo_context);
+               g_object_unref (pixbuf);
+             }
+         }
     }
 }
 
