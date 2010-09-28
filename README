@@ -14,19 +14,19 @@
 
 Ardesia is the free digital sketchpad software that help you to make colored free-hand 
 annotations with digital ink everywhere, record it and share on the network.
-It is easy to use and impressively  fast and reactive. 
+It is easy to use and impressively fast and reactive. 
 You can draw upon the desktop or import an image and annotate it and redistribute your work 
-to the world. Let's create quick sketch and artwork. 
+to the world.
+Let's create quick sketch and artwork.
 
-Thanks to Ardesia you are free to open any application and fix your ideas and comments 
-as if you wrote on a classic chalkboard. 
-Tradition and innovation are living together in simplicity thanks to a natural user interface 
-that reproduce the natural feeling of the free hand painting. 
+Thanks to Ardesia you are free to open any application and fix your ideas and comments as
+if you wrote on a classic chalkboard. Tradition and innovation are living together in simplicity
+thanks to a natural user interface that reproduce the natural feeling of the free hand painting.
 Reduce the traditional whiteboard and paper usage; Ardesia is smooth and fuzzy!
 
-You can use the tool to make effective on-screen presentation, highlight things or 
-point out things of interest. 
-The tool facilitates the online presentations and demos showing in real time your computer screen
+You can use the tool to make effective on-screen presentation, highlight things or point out
+things of interest. 
+The tool facilitates the online presentations and demos showing in real time your computer screen 
 to anyone in the network.
 
 You can use this tool to enhance your lessons or courses working with your preferred applications 
@@ -34,14 +34,14 @@ and your preferred operating system.
 
 Create nice tutorial and demos saving the desktop images with your free hand annotations.
 
-Ardesia includes a sketchpad software that allow to free-hand draw geometrical shapes using 
-the shape recognizer. 
+Ardesia includes a sketchpad software that allow to free-hand draw geometrical shapes using the 
+shape recognizer.
 
-Ardesia respects the interoperability standards it import and export artifact using 
-common file open formats. 
+Ardesia respects the interoperability standards, it imports and exports artifact using common 
+file open formats. 
 Ardesia works with all the pointing device; you can use a mouse, a touch screen, a drawing tablet,
-a cheap&professional wiimote whiteboard or a commercial whiteboard or any other devices supported 
-by your operating system.
+a cheap&professional wiimote whiteboard or a commercial whiteboard,interactive projector 
+and any other devices supported by your operating system. 
 
 Ardesia is pressure sensitive, if you are using properly configured your devices you can 
 draw lines with varying width. 
@@ -57,7 +57,7 @@ For more info about annotate and the new feature, please read the NEWS file loca
  License
 ---------
 
-This Program is distributed under the Gnu General Public License.
+This Program is distributed under the Gnu General Public License version 3.
 See the file COPYING for details.
 
 
@@ -72,13 +72,13 @@ Please read the INSTALL file located on the current folder.
  Runtime Requirements
 ----------------------
 
-If you are free and you are running on Linux to run Ardesia you need 
-to enable the Compiz composite manager.
+In order to run Ardesia on Linux you need to run a composite manager such as
+compiz or kwin.
 
 To use the recording feature you must install the vlc multimedia player 
 and streamer.
 
-If you use Ubuntu you can install it with the command:
+If you use Ubuntu you can install vlc with this command:
 
 sudo apt-get install vlc
 

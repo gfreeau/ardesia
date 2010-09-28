@@ -98,8 +98,11 @@ event_expose (GtkWidget *widget,
                                                  data->width,
 					         data->height, 
                                                  -1);
-
-      data->transparent_cr = gdk_cairo_create(data->transparent_pixmap);
+      if (!data->transparent_cr)
+        {
+           data->transparent_cr = gdk_cairo_create(data->transparent_pixmap);
+           clear_cairo_context(data->transparent_cr); 
+        }
       if (cairo_status(data->transparent_cr) != CAIRO_STATUS_SUCCESS)
         {
           g_printerr ("Unable to allocate the transparent cairo context"); 
@@ -107,7 +110,6 @@ event_expose (GtkWidget *widget,
           exit(1);
         }
 
-      clear_cairo_context(data->transparent_cr); 
     }
   annotate_restore_surface();
   return TRUE;

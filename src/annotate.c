@@ -205,6 +205,12 @@ void annotate_savelist_free()
   /* annotate_save point to the first save point */
   data->savelist = annotate_save;
   annotate_redolist_free();
+  if (data->savelist->surface)
+    {
+       cairo_surface_destroy(data->savelist->surface);
+    } 
+  g_free(data->savelist);
+  data->savelist=NULL;
 }
 
 
@@ -239,18 +245,26 @@ gfloat annotate_get_arrow_direction()
 
   // make the standard deviation 
   gint tollerance = data->thickness * delta;
-  
-  if (g_slist_length(outptr)>=3)
-    {
-       outptr = extract_relevant_points(outptr, FALSE, tollerance);   
-    }  
+  gfloat ret;  
 
   AnnotateStrokeCoordinate* point = NULL;
   AnnotateStrokeCoordinate* oldpoint = NULL;
-  oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 1);
-  point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 0);
-  // calculate the tan beetween the last two point 
-  gfloat ret = atan2 (point->y-oldpoint->y, point->x-oldpoint->x);
+  if (g_slist_length(outptr)>=3)
+    {
+       GSList *redoutptr = extract_relevant_points(outptr, FALSE, tollerance);
+       oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (redoutptr, 1);
+       point = (AnnotateStrokeCoordinate*) g_slist_nth_data (redoutptr, 0);
+       ret = atan2 (point->y-oldpoint->y, point->x-oldpoint->x);
+       g_slist_foreach(redoutptr, (GFunc)g_free, NULL);
+       g_slist_free(redoutptr);
+    }  
+  else
+    {
+       oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 1);
+       point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 0);
+       // calculate the tan beetween the last two point 
+       ret = atan2 (point->y-oldpoint->y, point->x-oldpoint->x);
+    }
   return ret;
 }
 
@@ -620,7 +634,6 @@ void annotate_set_pen_cursor()
   if (data->cursor)
     {
       gdk_cursor_unref(data->cursor);
-      data->cursor=NULL;
     }
 
   GdkPixmap *pixmap, *mask;
@@ -694,7 +707,6 @@ void annotate_set_eraser_cursor()
   if (data->cursor)
     {
       gdk_cursor_unref(data->cursor);
-      data->cursor=NULL;
     }
   gint size = annotate_get_thickness();
 
@@ -766,8 +778,6 @@ void destroy_cairo()
     {
       cairo_destroy(data->annotation_cairo_context);
     }
-
-  data->annotation_cairo_context = NULL;
 }
 
 
