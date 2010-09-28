@@ -303,8 +303,7 @@ void annotate_add_save_point()
   const gchar* tmpdir = g_get_tmp_dir();
   gchar* filename = get_default_name();
 
-  gchar *file_separator = "/";
-  save->filename  = g_strdup_printf("%s%s%s.png",tmpdir, file_separator, filename); ;
+  save->filename  = g_strdup_printf("%s%s%s.png",tmpdir, G_DIR_SEPARATOR_S, filename);
   g_free(filename);
 
   annotate_redolist_free();
