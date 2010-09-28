@@ -135,7 +135,7 @@ void annotate_coord_list_prepend (gdouble x, gdouble y, gint width, gdouble pres
 
 
 /* Free the list of the painted point */
-void annotate_coord_list_free ()
+void annotate_coord_list_free()
 {
   if (data->coordlist)
     {
@@ -148,69 +148,48 @@ void annotate_coord_list_free ()
 
 
 /* Free the list of the  savepoint for the redo */
-void annotate_redolist_free ()
+void annotate_redolist_free()
 {
-  if (data->savelist)
+  gint i = data->current_save_index;
+  GSList *stop_list = g_slist_nth (data->savelist,i);
+  
+  while (data->savelist!=stop_list)
     {
-      if (data->savelist->next)
+      AnnotateSave* savepoint = (AnnotateSave*) g_slist_nth_data (data->savelist, 0);
+      if (savepoint)
         {
-          AnnotateSave* annotate_save = data->savelist->next;
-          /* delete all the savepoint after the current pointed */
-          while(annotate_save)
-            {
-              if (annotate_save->next)
-                {
-                  annotate_save =  annotate_save->next; 
-                  if (annotate_save->previous)
-                    {
-                      if (annotate_save->previous->surface)
-                        {
-                          cairo_surface_destroy(annotate_save->previous->surface);
-                        } 
-                      g_free(annotate_save->previous);
-                    }
-                }
-              else
-                {
-                  if (annotate_save->surface)
-                    {
-                      cairo_surface_destroy(annotate_save->surface);
-                    } 
-                  g_free(annotate_save);
-                  break;
-                }
-            }
-          data->savelist->next=NULL;
+          if (data->debug)
+	    { 
+	      g_printerr("Remove %s\n", savepoint->filename);
+	    }
+          g_remove(savepoint->filename);
+          g_free(savepoint->filename);
+          data->savelist = g_slist_remove(data->savelist, savepoint);
+          g_free(savepoint);
         }
     }
 }
 
 
-/* Free the list of the savepoint  */
+/* Free the list of all the savepoint*/
 void annotate_savelist_free()
 {
-  AnnotateSave* annotate_save = data->savelist;
-
-  while (annotate_save)
+  while (data->savelist!=NULL)
     {
-      if (annotate_save->previous)
-	{
-	  annotate_save =  annotate_save->previous;
-	}
-      else
-	{
-	  break;
-	} 
+      AnnotateSave* savepoint = (AnnotateSave*) g_slist_nth_data (data->savelist, 0);
+       if (savepoint)
+        {
+          if (data->debug)
+	    { 
+	      g_printerr("Remove %s\n", savepoint->filename);
+	    }
+          g_remove(savepoint->filename);
+          g_free(savepoint->filename);
+          data->savelist = g_slist_remove(data->savelist, savepoint);
+          g_free(savepoint);
+        }
     }
-  /* annotate_save point to the first save point */
-  data->savelist = annotate_save;
-  annotate_redolist_free();
-  if (data->savelist->surface)
-    {
-       cairo_surface_destroy(data->savelist->surface);
-    } 
-  g_free(data->savelist);
-  data->savelist=NULL;
+   
 }
 
 
@@ -320,45 +299,33 @@ void select_color()
 void annotate_add_save_point()
 {
   AnnotateSave *save = g_malloc(sizeof(AnnotateSave));
-  save->previous  = NULL;
-  save->next  = NULL;
-  save->surface  = NULL;
+  /*  TODO in savepoint filename must be a file in tmp folder with format ardesia_date.png */
+  const gchar* tmpdir = g_get_tmp_dir();
+  gchar* filename = get_default_name();
 
-  if (data->savelist != NULL)
-    {
-      annotate_redolist_free ();
-      data->savelist->next=save;
-      save->previous=data->savelist;
-    }
-  data->savelist=save;
+  gchar *file_separator = "/";
+  save->filename  = g_strdup_printf("%s%s%s.png",tmpdir, file_separator, filename); ;
+  g_free(filename);
 
-  AnnotateSave* annotate_save = data->savelist;
-  if (!(annotate_save->surface))
-    {
-      annotate_save->surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, data->width, data->height); 
-    }
+  annotate_redolist_free();
 
-  cairo_surface_t* saved_surface = annotate_save->surface;
+  data->savelist = g_slist_prepend (data->savelist, save);
+  data->current_save_index = 0;
+   
+  /* Load the file and fill the data->annotation_cairo_context */
+  cairo_surface_t* saved_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, data->width, data->height); 
   cairo_surface_t* source_surface = cairo_get_target(data->annotation_cairo_context);
   cairo_t *cr = cairo_create (saved_surface);
-
-  if (cairo_status(cr) != CAIRO_STATUS_SUCCESS)
-    {
-       if (data->debug)
-         { 
-           g_printerr ("Unable to allocate the cairo context for the surface to be restored\n"); 
-           annotate_quit(); 
-           exit(1);
-         }
-    }
-
   cairo_set_source_surface (cr, source_surface, 0, 0);
   cairo_paint(cr);
+  cairo_surface_write_to_png (saved_surface, save->filename);
+  cairo_surface_destroy(saved_surface); 
   cairo_destroy(cr);
 
   if (data->debug)
     { 
-      g_printerr("Add save point\n");
+      g_printerr("Add save point in file %s\n", save->filename);
+      g_printerr("%d savepoint",g_slist_length(data->savelist));
     }
 }
 
@@ -430,12 +397,22 @@ void annotate_restore_surface()
 {
   if (data->annotation_cairo_context)
     {
-      AnnotateSave* annotate_save = data->savelist;
+      gint i = data->current_save_index;
+      AnnotateSave* savepoint = (AnnotateSave*) g_slist_nth_data (data->savelist, i);
+      if (!savepoint) return;
       cairo_new_path(data->annotation_cairo_context);
-      cairo_surface_t* saved_surface = annotate_save->surface;
+      gchar* filename = savepoint->filename;
+
+     if (data->debug)
+      {
+        g_printerr("Load file %s\n", filename);
+      }
+      // load the file in the annotation surface
+      GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
       cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
-      cairo_set_source_surface (data->annotation_cairo_context, saved_surface, 0, 0);
+      gdk_cairo_set_source_pixbuf(data->annotation_cairo_context, pixbuf, 0.0, 0.0);
       cairo_paint(data->annotation_cairo_context);
+      g_object_unref (pixbuf);
     }
 }
 
@@ -1184,26 +1161,22 @@ void annotate_quit()
   if (data->cursor)
     {
       gdk_cursor_unref(data->cursor);
-      data->cursor=NULL;
     }
   
   if (data->invisible_cursor)
     {
       gdk_cursor_unref(data->invisible_cursor);
-      data->invisible_cursor=NULL;
     }
 
   /* free all */
   if (data->annotation_window)
     {
       gtk_widget_destroy(data->annotation_window); 
-      data->annotation_window = NULL;
     }
   
   if (data->transparent_pixmap)
     {
       g_object_unref(data->transparent_pixmap);
-      data->transparent_pixmap = NULL;
     }
 
   annotate_coord_list_free();
@@ -1318,16 +1291,16 @@ void annotate_show_annotation ()
 /* Undo to the last save point */
 void annotate_undo()
 {
-  if (data->debug)
-    {
-      g_printerr("Undo\n");
-    }
   if (data->savelist)
     {
-      if (data->savelist->previous)
+      if (data->current_save_index!=g_slist_length(data->savelist)-1)
         {
-          data->savelist = data->savelist->previous;
-          annotate_restore_surface(); 
+           if (data->debug)
+             {
+                g_printerr("Undo\n");
+             }
+           data->current_save_index = data->current_save_index + 1;
+           annotate_restore_surface();
         }
     }
 }
@@ -1336,16 +1309,16 @@ void annotate_undo()
 /* Redo to the last save point */
 void annotate_redo()
 {
-  if (data->debug)
-    {
-      g_printerr("Redo\n");
-    }
   if (data->savelist)
     {
-      if (data->savelist->next)
+     if (data->current_save_index!=0)
         {
-          data->savelist = data->savelist->next;
-          annotate_restore_surface(); 
+           if (data->debug)
+             {
+                g_printerr("Redo\n");
+             }
+           data->current_save_index = data->current_save_index - 1;
+           annotate_restore_surface();
         }
     }
 }
@@ -1437,6 +1410,7 @@ gint annotate_init (GtkWidget* parent, gboolean debug)
   data->annotation_cairo_context = NULL;
   data->coordlist = NULL;
   data->savelist = NULL;
+  data->current_save_index = 0;
   data->transparent_pixmap = NULL;
   data->transparent_cr = NULL;
   data->cursor = NULL;

@@ -23,6 +23,7 @@
 
 
 #include <glib.h>
+#include <glib/gstdio.h>
 
 #include <gdk/gdkinput.h>
 #include <gdk/gdkkeysyms.h>
@@ -80,9 +81,7 @@ typedef struct
 /* Struct to store the save point */
 typedef struct _AnnotateSave
 {
-  cairo_surface_t *surface;
-  struct _AnnotateSave *next;
-  struct _AnnotateSave *previous;
+  gchar* filename;
 } AnnotateSave;
 
 
@@ -118,7 +117,10 @@ typedef struct
   GdkCursor *invisible_cursor;
  
   /* List of the savepoint */ 
-  AnnotateSave *savelist;
+  GSList  *savelist;
+  
+  /* the index of the position in the savelist of the current picture */
+  gint    current_save_index;
 
   /* Paint context */ 
   AnnotatePaintContext *default_pen;

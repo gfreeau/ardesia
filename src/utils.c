@@ -190,7 +190,7 @@ gchar* get_date()
     /* The ":" character on windows is avoided in file name and then I use the "." character instead */
     hour_min_sep = ".";
   #endif
-  gchar* date = g_strdup_printf("%d-%d-%d_%d%s%d", t->tm_mday, t->tm_mon+1,t->tm_year+1900, t->tm_hour, hour_min_sep, t->tm_min);
+  gchar* date = g_strdup_printf("%d-%d-%d_%d%s%d-%d", t->tm_mday, t->tm_mon+1,t->tm_year+1900, t->tm_hour, hour_min_sep, t->tm_min, t->tm_sec);
   return date;
 }
 
