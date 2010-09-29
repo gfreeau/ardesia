@@ -134,6 +134,10 @@ gboolean inside_bar_window(gdouble xp, gdouble yp);
 GdkColor* rgba_to_gdkcolor(gchar* rgb);
 
 
+/* Save the contents of the pixbuf in the file with name filename */
+gboolean save_png (GdkPixbuf *pixbuf,const gchar *filename);
+
+
 /* 
  * Get default name return a name containing the tool name and the current date; 
  * the returned value must be free with the g_free 

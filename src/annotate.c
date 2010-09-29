@@ -189,7 +189,6 @@ void annotate_savelist_free()
           g_free(savepoint);
         }
     }
-   
 }
 
 
@@ -303,7 +302,7 @@ void annotate_add_save_point()
   const gchar* tmpdir = g_get_tmp_dir();
   gchar* filename = get_default_name();
 
-  save->filename  = g_strdup_printf("%s%s%s.png",tmpdir, G_DIR_SEPARATOR_S, filename);
+  save->filename  = g_strdup_printf("%s%s%s_vellum.png",tmpdir, G_DIR_SEPARATOR_S, filename);
   g_free(filename);
 
   annotate_redolist_free();
@@ -311,7 +310,7 @@ void annotate_add_save_point()
   data->savelist = g_slist_prepend (data->savelist, save);
   data->current_save_index = 0;
    
-  /* Load the file and fill the data->annotation_cairo_context */
+  /* Load a surface with the data->annotation_cairo_context content and write the file */
   cairo_surface_t* saved_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, data->width, data->height); 
   cairo_surface_t* source_surface = cairo_get_target(data->annotation_cairo_context);
   cairo_t *cr = cairo_create (saved_surface);
@@ -479,7 +478,6 @@ void update_cursor()
   #endif
 
   gdk_window_set_cursor (data->annotation_window->window, data->cursor);
-  gdk_display_sync(data->display);
 
   #ifdef _WIN32
     annotate_acquire_pointer_grab();
@@ -558,7 +556,6 @@ void allocate_invisible_cursor()
 void annotate_hide_cursor()
 {
   gdk_window_set_cursor(data->annotation_window->window, data->invisible_cursor);
-  gdk_display_sync(data->display);
   data->is_cursor_hidden = TRUE;
 }
 
@@ -1201,7 +1198,6 @@ void annotate_quit()
 void annotate_release_input_grab()
 {
   gdk_window_set_cursor (data->annotation_window->window, NULL);
-  gdk_display_sync(data->display);
   #ifndef _WIN32
     /* 
      * @TODO implement correctly gdk_window_input_shape_combine_mask in the quartz gdkwindow or use an equivalent native function

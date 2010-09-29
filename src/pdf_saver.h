@@ -21,7 +21,9 @@
  *
  */
 
+
 #include <glib.h>
+#include <glib/gstdio.h>
 
 #include <gtk/gtk.h>
 
@@ -33,9 +35,10 @@ typedef struct
   /* the current pdf save thread */
   GThread  * thread;  
 
-  /* the list of the pixbuf of all pdf pages */
-  GSList* pixbuflist;
-  /* the filename where store the pdf */
+  /* the list contains the file name of all the input pdf pages saved */
+  GSList* input_filelist;
+
+  /* the file name where store the pdf */
   gchar*  filename;
 }PdfData;
 

@@ -30,25 +30,6 @@
 #include <utils.h>
 
 
-/* Save the contents of the pixbuf in the file with name filename */
-gboolean save_png (GdkPixbuf *pixbuf,const gchar *filename)
-{
-  gint width = gdk_pixbuf_get_width (pixbuf);
-  gint height = gdk_pixbuf_get_height (pixbuf);
-
-  cairo_surface_t *surface;
-  surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
-  cairo_t *cr = cairo_create(surface);
-  gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
-  cairo_paint(cr);
-  
-  /* write in png */
-  cairo_surface_write_to_png(surface, filename);
-  cairo_destroy(cr);
-  cairo_surface_destroy(surface);
-  return TRUE;
-}
-
 
 /* Grab the screenshoot and put it in the GdkPixbuf */
 GdkPixbuf* grab_screenshot()
