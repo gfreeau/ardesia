@@ -8,6 +8,7 @@ ui_DATA = ardesia.glade \
 	ardesia_horizontal.glade \
 	preference_dialog.glade \
 	annotation.glade \
+	background.glade \
 	info_dialog.glade
 
 

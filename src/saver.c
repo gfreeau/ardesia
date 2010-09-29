@@ -56,7 +56,8 @@ GdkPixbuf* grab_screenshot()
   gint height = gdk_screen_height ();
   gint width = gdk_screen_width ();
 
-  return gdk_pixbuf_get_from_drawable (NULL, gdk_get_default_root_window (), NULL,
+  GdkWindow *root_window = gdk_get_default_root_window();
+  return gdk_pixbuf_get_from_drawable (NULL, root_window, NULL,
                                        0, 0, 0, 0, width, height);
 }
 

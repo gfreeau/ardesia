@@ -1193,6 +1193,7 @@ void annotate_quit()
   g_free(data->default_eraser);
  
   g_free (data);
+
 }
 
 

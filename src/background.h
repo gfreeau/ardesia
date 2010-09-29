@@ -28,8 +28,19 @@
 
 #define BACKGROUND_OPACITY 0.01
 
+#ifdef _WIN32
+  
+  #define BACKGROUND_UI_FILE "..\\share\\ardesia\\ui\\background.glade"
+
+#else
+  #define BACKGROUND_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/background.glade"
+#endif 
+
 typedef struct
 {
+  /* Gtkbuilder for background window */
+  GtkBuilder *backgroundWindowGtkBuilder;
+
   /* background color selected */
   gchar* background_color; 
   /* background image selected */

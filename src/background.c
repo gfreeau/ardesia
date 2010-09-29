@@ -80,6 +80,8 @@ void destroy_background_window()
     }
 
   g_free(background_data->background_color);
+  /* unref gtkbuilder */
+  g_object_unref (background_data->backgroundWindowGtkBuilder);
   g_free(background_data);
 }
 
@@ -127,8 +129,8 @@ back_event_expose (GtkWidget *widget,
               GdkEventExpose *event, 
               gpointer user_data)
 {
-  gint is_maximized = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_MAXIMIZED;
-  if (!is_maximized)
+  gint is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
+  if (!is_fullscreen)
     {
       return TRUE;
     }
@@ -257,25 +259,31 @@ GtkWidget* create_background_window(gchar* backgroundimage)
   background_data->background_image = NULL; 
   background_data->back_cr = NULL;
   background_data->background_shape = NULL; 
-
-  background_data->background_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  background_data->background_image = NULL;
   
-  gtk_window_set_title(GTK_WINDOW(background_data->background_window), PROGRAM_NAME);
+  if (backgroundimage) 
+    {
+       background_data->background_image = g_strdup_printf("%s", backgroundimage); 
+    } 
 
-  gtk_window_set_decorated(GTK_WINDOW(background_data->background_window), FALSE);
-  
-  gtk_window_maximize(GTK_WINDOW(background_data->background_window));
+  /* Initialize the main window */
+  background_data->backgroundWindowGtkBuilder = gtk_builder_new();
 
-  gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0); 
+  /* Load the gtk builder file created with glade */
+  gtk_builder_add_from_file(background_data->backgroundWindowGtkBuilder, BACKGROUND_UI_FILE, NULL);
+ 
+  background_data->background_window = GTK_WIDGET(gtk_builder_get_object(background_data->backgroundWindowGtkBuilder,"backgroundWindow")); 
+  gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0);
 
-  g_signal_connect (background_data->background_window, "expose_event",
-		    G_CALLBACK (back_event_expose), NULL);
+  gtk_widget_set_usize(background_data->background_window, gdk_screen_width(), gdk_screen_height());
+
+  /* This is important; connect all the callback from gtkbuilder xml file */
+  gtk_builder_connect_signals(background_data->backgroundWindowGtkBuilder, (gpointer) NULL);
+
+  /* This might generate an exposure */
+  gtk_window_fullscreen(GTK_WINDOW(background_data->background_window));
 
   gtk_widget_show_all(background_data->background_window);
-  
-  gtk_widget_set_app_paintable(background_data->background_window, TRUE);
-
-  gtk_widget_set_double_buffered(background_data->background_window, FALSE);
 
   return  background_data->background_window;
 }

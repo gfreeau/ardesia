@@ -88,6 +88,7 @@ typedef struct _AnnotateSave
 /* Annotation data used by the callsbacks */
 typedef struct
 {
+  /* Gtkbuilder for annotation window */
   GtkBuilder *annotationWindowGtkBuilder;
   GdkScreen   *screen;
   GdkDisplay  *display;
