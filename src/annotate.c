@@ -195,23 +195,23 @@ void annotate_savelist_free()
 /* Modify color according to the pressure */
 void annotate_modify_color(AnnotateData* data, gdouble pressure)
 {
-      /* pressure is value from 0 to 1 */
-      if ((pressure>0)&&(pressure<1))
-        {
-          /* this is a number from 0 to 1 to subtract to the RGBA */
-          gint r,g,b,a;
-          sscanf (data->cur_context->fg_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-          gdouble old_pressure = pressure;
-          if (data->coordlist)
-            { 
-               AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, 0);
-               old_pressure = last_point->pressure;      
-            }
-          /* if you put an highter value you will have more contrast beetween the lighter and darker color depending on pressure */
-          gdouble contrast = 96;
-          gdouble corrective = (1-( 3 * pressure + old_pressure)/4) * contrast;
-          cairo_set_source_rgba (data->annotation_cairo_context, (r + corrective)/255, (g + corrective)/255, (b+corrective)/255, (gdouble) a/255);
-        }
+  if (pressure>1)
+    {
+       pressure=1;
+    }
+  /* pressure value is from 0 to 1 and it modify the RGBA gradient */
+  gint r,g,b,a;
+  sscanf (data->cur_context->fg_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+  gdouble old_pressure = pressure;
+  if (data->coordlist)
+    { 
+       AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, 0);
+       old_pressure = last_point->pressure;      
+    }
+  /* if you put an highter value yo will have more contrast beetween the lighter and darker color depending on pressure */
+  gdouble contrast = 96;
+  gdouble corrective = (1-( 3 * pressure + old_pressure)/4) * contrast;
+  cairo_set_source_rgba (data->annotation_cairo_context, (r + corrective)/255, (g + corrective)/255, (b+corrective)/255, (gdouble) a/255);
 }
 
 
@@ -890,6 +890,9 @@ void annotate_draw_point_list(GSList* outptr)
 	  out_point = (AnnotateStrokeCoordinate*)outptr->data;
 	  gdouble curx = out_point->x; 
 	  gdouble cury = out_point->y;
+
+          annotate_modify_color(data, out_point->pressure); 
+
 	  // draw line beetween the two points
 	  annotate_draw_line (curx, cury, FALSE);
 	  outptr = outptr->next;   
@@ -917,9 +920,6 @@ void rectify(gboolean closed_path)
   annotate_coord_list_free();
   data->coordlist = outptr;
 
-  gint lenght = g_slist_length(outptr);
-  AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght/2);
-  annotate_modify_color(data, point->pressure); 
   annotate_draw_point_list(outptr);     
   if (closed_path)
     {

@@ -251,15 +251,15 @@ paintto (GtkWidget *win,
       if (data->coordlist)
           {
              AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, 0);
-             if ((first_point->x==ev->x)&&(first_point->y==ev->y))
+             if (get_distance(first_point->x, first_point->y, ev->x, ev->y)<5)
                {
                  if (pressure<first_point->pressure)
                    {
                      /* jump the point you are uprising the hand */
                      return TRUE;
                    }
-                 annotate_modify_color(data, pressure) ;
                }
+            annotate_modify_color(data, pressure);
           }
     }
 

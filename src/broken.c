@@ -560,9 +560,7 @@ GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, gint pixe
   if (listOut)
     { 
         if (rectify) 
-	  {
-         
-     
+	  {     
             if (close_path)
               {
 	        // is similar to regular a poligon 
