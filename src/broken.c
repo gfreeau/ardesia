@@ -110,11 +110,12 @@ gboolean is_a_rectangle(GSList* list, gint pixel_tollerance)
     {
       return FALSE; 
     }
-  // is a rectangle
+  // it is a rectangle
   return TRUE;
 }
 
 
+/* Allocate a new stroke coordinate by values */
 AnnotateStrokeCoordinate * allocate_point(gint x, gint y, gint width, gdouble pressure)
 {
    AnnotateStrokeCoordinate* point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
@@ -123,6 +124,22 @@ AnnotateStrokeCoordinate * allocate_point(gint x, gint y, gint width, gdouble pr
    point->width = width;
    point->pressure = pressure;
    return point;
+}
+
+
+/* Calculate the media of the point pression */
+gdouble calculate_medium_pression(GSList *list)
+{
+  gint i = 0;
+  gdouble total_pressure = 0;
+  while (list)
+    {
+      AnnotateStrokeCoordinate* cur_point = (AnnotateStrokeCoordinate*)list->data;
+      total_pressure = total_pressure + cur_point->pressure;
+      i = i +1;
+      list=list->next;
+    }
+  return total_pressure/i;
 }
 
 
@@ -144,23 +161,25 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
   AnnotateStrokeCoordinate* pointB = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, i+1);
   AnnotateStrokeCoordinate* pointC = (AnnotateStrokeCoordinate*) g_slist_nth_data (listInp, lenght-1);
 
+  gdouble pressure = calculate_medium_pression(listInp);
+
   gdouble Ax = pointA->x;
   gdouble Ay = pointA->y;
   gint Awidth = pointA->width;
-  gdouble Apressure = pointA->pressure;
+  gdouble Apressure = pressure;
 
   gdouble Bx = pointB->x;
   gdouble By = pointB->y;
   gint Bwidth = pointB->width;
-  gdouble Bpressure = pointB->pressure;
+  gdouble Bpressure = pressure;
 
   gdouble Cx = pointB->x;
   gdouble Cy = pointB->y;
   gint Cwidth = pointB->width;
-  gdouble Cpressure = pointB->pressure;
+  gdouble Cpressure = pressure;
 
 
-  AnnotateStrokeCoordinate* first_point =  allocate_point(Ax, Ay, Awidth, Apressure);
+  AnnotateStrokeCoordinate* first_point =  allocate_point(Ax, Ay, Awidth, pressure);
   // add a point with the coordinates of pointA
   listOut = g_slist_prepend (listOut, first_point);
 
@@ -175,7 +194,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
        Cx = pointC->x;
        Cy = pointC->y;
        Cwidth = pointC->width;
-       Cpressure = pointC->pressure;
+       Cpressure = pressure;
 
        X1 = Bx - Ax;
        Y1 = By - Ay;
@@ -189,23 +208,23 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
        if (fabs(h) >= pixel_tollerance)
          {
             // add  a point with the B coordinates
-            AnnotateStrokeCoordinate* new_point =  allocate_point(Bx, By, Bwidth, Bpressure);
+            AnnotateStrokeCoordinate* new_point =  allocate_point(Bx, By, Bwidth, pressure);
             listOut = g_slist_prepend (listOut, new_point);
             area = 0.0;
             Ax = Bx;
             Ay = By;
             Awidth = Bwidth;
-            Apressure = Bpressure;
+            Apressure = pressure;
          } 
        // put to B the C coordinates
        Bx = Cx;
        By = Cy;
        Bwidth = Cwidth;
-       Bpressure = Cpressure;
+       Bpressure = pressure;
     }
   
   /* Add the last point with the coordinates */
-  AnnotateStrokeCoordinate* last_point =  allocate_point(Cx, Cy, Cwidth, Cpressure);
+  AnnotateStrokeCoordinate* last_point =  allocate_point(Cx, Cy, Cwidth, pressure);
   listOut = g_slist_prepend (listOut, last_point); 
 
   /* I reverse the list to preserve the initial order */

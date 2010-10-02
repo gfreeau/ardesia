@@ -52,7 +52,7 @@ GdkPixbuf * load_png (gchar *filename)
   else
     {
       /* @TODO Handle this in a visual way or avoid this */
-      fprintf (stderr, "couldn't load the file %s as background\n", filename);
+      g_printerr("Couldn't load the file %s as background\n", filename);
       exit(0);
     }
   pixbuf = scaled;

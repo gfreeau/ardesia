@@ -891,6 +891,7 @@ void annotate_draw_point_list(GSList* outptr)
 	  gdouble curx = out_point->x; 
 	  gdouble cury = out_point->y;
 
+          printf("pressure %f\n", out_point->pressure);
           annotate_modify_color(data, out_point->pressure); 
 
 	  // draw line beetween the two points

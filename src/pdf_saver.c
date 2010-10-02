@@ -200,7 +200,7 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
 	     g_thread_init(NULL);
 	     gdk_threads_init();                  
              // Called to initialize internal mutex "gdk_threads_mutex".
-	     printf("g_thread supported\n");
+	     g_printerr("g_thread supported\n");
 	  }
         if (!init_pdf_saver(parent, workspace_dir, pixbuf))
           {  
@@ -219,7 +219,7 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
    GError           *err = NULL ;
    if( (pdf_data->thread = g_thread_create((GThreadFunc) pdf_save, (void *) NULL, TRUE, &err)) == NULL)
      {
-	     printf("Thread create failed: %s!!\n", err->message );
+	     g_printerr("Thread create failed: %s!!\n", err->message );
 	     g_error_free ( err ) ;
      }   
 
