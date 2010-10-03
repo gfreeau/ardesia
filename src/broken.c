@@ -166,18 +166,14 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
   gdouble Ax = pointA->x;
   gdouble Ay = pointA->y;
   gint Awidth = pointA->width;
-  gdouble Apressure = pressure;
 
   gdouble Bx = pointB->x;
   gdouble By = pointB->y;
   gint Bwidth = pointB->width;
-  gdouble Bpressure = pressure;
 
   gdouble Cx = pointB->x;
   gdouble Cy = pointB->y;
   gint Cwidth = pointB->width;
-  gdouble Cpressure = pressure;
-
 
   AnnotateStrokeCoordinate* first_point =  allocate_point(Ax, Ay, Awidth, pressure);
   // add a point with the coordinates of pointA
@@ -194,8 +190,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
        Cx = pointC->x;
        Cy = pointC->y;
        Cwidth = pointC->width;
-       Cpressure = pressure;
-
+       
        X1 = Bx - Ax;
        Y1 = By - Ay;
        X2 = Cx - Ax;
@@ -214,13 +209,11 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
             Ax = Bx;
             Ay = By;
             Awidth = Bwidth;
-            Apressure = pressure;
          } 
        // put to B the C coordinates
        Bx = Cx;
        By = Cy;
        Bwidth = Cwidth;
-       Bpressure = pressure;
     }
   
   /* Add the last point with the coordinates */

@@ -195,9 +195,13 @@ void annotate_savelist_free()
 /* Modify color according to the pressure */
 void annotate_modify_color(AnnotateData* data, gdouble pressure)
 {
-  if (pressure>1)
+  if (pressure>=1)
     {
-       pressure=1;
+      cairo_set_source_color_from_string(data->annotation_cairo_context, data->cur_context->fg_color);
+    }
+  if (pressure <= 0.1)
+    {
+      pressure = 0.1;
     }
   /* pressure value is from 0 to 1 and it modify the RGBA gradient */
   gint r,g,b,a;
@@ -872,8 +876,9 @@ void annotate_draw_ellipse(gint x, gint y, gint width, gint height)
 
 
 /* Draw a point in x,y respecting the context */
-void annotate_draw_point(gdouble x, gdouble y)
+void annotate_draw_point(gdouble x, gdouble y, gdouble pressure)
 {
+  annotate_modify_color(data, pressure); 
   cairo_move_to (data->annotation_cairo_context, x, y);
   cairo_line_to (data->annotation_cairo_context, x, y);
 }
@@ -890,10 +895,7 @@ void annotate_draw_point_list(GSList* outptr)
 	  out_point = (AnnotateStrokeCoordinate*)outptr->data;
 	  gdouble curx = out_point->x; 
 	  gdouble cury = out_point->y;
-
-          printf("pressure %f\n", out_point->pressure);
           annotate_modify_color(data, out_point->pressure); 
-
 	  // draw line beetween the two points
 	  annotate_draw_line (curx, cury, FALSE);
 	  outptr = outptr->next;   
@@ -951,9 +953,7 @@ void roundify(gboolean closed_path)
     {
       /* It is a point */ 
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)outptr->data;
-      gdouble lastx = out_point->x; 
-      gdouble lasty = out_point->y;
-      annotate_draw_point(lastx, lasty);
+      annotate_draw_point(out_point->x, out_point->y, out_point->pressure);
       return;
     }
   if (lenght==2)
@@ -964,7 +964,7 @@ void roundify(gboolean closed_path)
     }
   
   GSList* listOutN = extract_outbounded_rectangle(outptr);
-  if ((closed_path) && (is_similar_to_an_ellipse(outptr, listOutN, tollerance*2)))
+  if ((closed_path) && (is_similar_to_an_ellipse(outptr, listOutN, tollerance * 2)))
     {
       // It could be an ellipse draw it with the outbounded rectangle in the outptr list
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)listOutN->data;

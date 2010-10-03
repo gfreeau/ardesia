@@ -183,9 +183,8 @@ paint (GtkWidget *win,
          {
             return TRUE;
          }
-       annotate_modify_color(data, pressure) ;
     }
-  annotate_draw_point(ev->x, ev->y);  
+  annotate_draw_point(ev->x, ev->y, pressure);  
  
   annotate_coord_list_prepend (ev->x, ev->y, annotate_get_thickness(), pressure);
   return TRUE;

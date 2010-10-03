@@ -273,7 +273,7 @@ void annotate_coord_list_prepend (gdouble x, gdouble y, gint width, gdouble pres
 void annotate_draw_line (gdouble x2, gdouble y2, gboolean stroke);
 
 /* Draw a poin in x,y respecting the context */
-void annotate_draw_point(gdouble x, gdouble y);
+void annotate_draw_point(gdouble x, gdouble y, gdouble pressure);
 
 /* Draw an arrow using some polygons */
 void annotate_draw_arrow (gint distance);
