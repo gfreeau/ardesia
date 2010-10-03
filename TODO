@@ -15,7 +15,7 @@
 
 - Refactoring
   - Screencast recorder using vlclib insted spawn the vlc process
-  - Savepoint done with svg files
+  - Savepoint stored and loaded with svg files
 
 - MacOsX-quartz porting
   - Investigate about the status
