@@ -1,178 +1,139 @@
-2010-09-05 20:28  alpha@paranoici.org
-        * trunk/ardesia/src/annotate.c,
-        * trunk/ardesia/src/annotate.h,
-        * trunk/ardesia/src/bar_callbacks.c:
-       - Fix for windows pdf export and drawing tablet
-         support
+2010-10-03 17:00  alpha@paranoici.org
+	* trunk/ardesia/src/annotate.c, 
+        * trunk/ardesia/src/broken.c:
+	- Enanchement in the ellipse recognition code
 
 
-2010-09-02 00:37  alpha@paranoici.org
-        * trunk/ardesia/src/Makefile.am
-        * trunk/ardesia/src/annotate.c
-        * trunk/ardesia/src/annotate.h
-        * trunk/ardesia/src/bar_callbacks.c
-        * trunk/ardesia/src/pdf_saver.c
-        * trunk/ardesia/src/pdf_saver.h
-        * trunk/ardesia/src/saver.h
-        * trunk/ardesia/src/Makefile.am:
-        - Pdf export implementation tested on Ubuntu
+2010-10-02 16:49  alpha@paranoici.org
+	* trunk/ardesia/src/annotate.c,
+        * trunk/ardesia/src/background.c,
+	* trunk/ardesia/src/broken.c, 
+        * trunk/ardesia/src/pdf_saver.c:
+	- Fix the pressure when the rectifier modifier
+          is enabled
 
 
-2010-08-27 00:37  alpha@paranoici.org
-        * trunk/ardesia/src/annotate.c,
-        * trunk/ardesia/src/annotate.h,
-        * trunk/ardesia/src/annotate_callbacks.c,
-        * trunk/ardesia/src/bar_callbacks.c,
-        * trunk/ardesia/src/broken.c,
-        * trunk/ardesia/src/Makefile.am:
-        - Pen pressure support for the device that support it
-        - Eraser with the back pen tip on graphic table
-        - Annotation window is created with glade
-        These feature are tested with a Wacom Bamboo Pen & Touch (CTH-460) 
-        graphic tablet on Ubuntu 9.10 (karmic) 
+2010-10-02 16:00  alpha@paranoici.org
+	* trunk/ardesia/src/scripts/screencast.sh: 
+        - Fix the screencast script to save the audio 
+          from the alsa pulse device on Linux
 
 
-2010-08-27 01:36  alpha@paranoici.org
-        * trunk/ardesia/Makefile.am,
-        * trunk/ardesia/src/Makefile.am:
-        - make deb: create the deb in the ardesia folder
-          calling lintiant and moving the file
-        - make dist: create the source code tarball in the 
-          ardesia folder  
-
-
-2010-08-26 13:17  alpha@paranoici.org
-	* trunk/ardesia/src/scripts/screencast.bat, 
-	* trunk/ardesia/src/recorder.c:
-        - Fix the batch script to avoid the consolle opening on windows
-        - Fix the vlc check to avoid to open consolle
-        - Use --dummy-quiet to avoid the consolle opening in windows during the recording
-
-
-2010-08-26 12:04  alpha@paranoici.org
-	* trunk/ardesia/src/bar_callbacks.c,
+2010-09-30 00:33  alpha@paranoici.org
+	* trunk/ardesia/src/pdf_saver.c, 
         * trunk/ardesia/src/recorder.c,
-	* trunk/ardesia/src/recorder.h: 
-        - The recorder check now start when you push the record button 
-          before asking the file location when put the record file
+	* trunk/ardesia/src/saver.c: 
+        - Fix bug that cause the saving of the
+	  exported file without extension
 
 
-2010-08-22 11:48  alpha@paranoici.org
-	* trunk/ardesia/README, 
-        * trunk/ardesia/TODO,
-	* trunk/ardesia/po/es.po,
-        * trunk/ardesia/po/it.po,
-	* trunk/ardesia/src/recorder.c,
-	* trunk/ardesia/src/scripts/ezstream_stdin_ardesia.xml,
-	* trunk/ardesia/src/scripts/screencast.bat,
-	* trunk/ardesia/src/scripts/screencast.sh: 
-        - Cross plattform recorder with vlc
-
-
-2010-08-03 17:55  alpha@paranoici.org
-	* trunk/ardesia/src/scripts/screencast.bat,
-	* trunk/ardesia/src/scripts/screencast.sh: 
-        - Add Recorder script for windows
-
-
-2010-07-21 17:08  alpha@paranoici.org
-	* trunk/ardesia/configure.ac:
-        - Modernize the build system
-
-
-2010-07-07 20:08  alpha@paranoici.org
-	* trunk/ardesia/TODO, trunk/ardesia/src/Makefile.am,
+2010-09-29 23:50  alpha@paranoici.org
+	* trunk/ardesia/src/annotate.c,
 	* trunk/ardesia/src/annotate_callbacks.c,
-	* trunk/ardesia/src/ardesia.c,
-        * trunk/ardesia/src/ardesia.h,
-	* trunk/ardesia/src/utils.c: 
-        - Fix a little wrong error in conversion from RGBA color 
-          into the cairo parameters 
-        - Add the language support in windows: 
-          now ardesia can speak italian, english and spanish 
+	* trunk/ardesia/src/broken.c: 
+        - adjustment in pressure support
 
 
-2010-07-02 16:22  alpha@paranoici.org
-	* trunk/ardesia/autogen.sh,
- 	* trunk/ardesia/src/annotate_callbacks.c,
-	* trunk/ardesia/src/utils.c,
-        * trunk/ardesia/src/utils.h,
-	* trunk/ardesia/src/windows_utils.c,
-	* trunk/ardesia/src/windows_utils.h:
-        - Autogen fix for Macosx
-
-
-2010-06-25 19:32  alpha@paranoici.org
-	* trunk/ardesia/TODO,
-        * trunk/ardesia/src/annotate_callbacks.c,
-	* trunk/ardesia/src/utils.h: 
-        - Solve the show/hide bug under windows
-	- The cursor color bug on window has been fixed
-
-
-2010-06-25 18:24  alpha@paranoici.org
+2010-09-29 17:15  alpha@paranoici.org
 	* trunk/ardesia/src/annotate.c, 
-        * trunk/ardesia/src/utils.c,
-	* trunk/ardesia/src/windows_utils.c,
-	* trunk/ardesia/src/windows_utils.h: 
-        - Delete the gconf dependencies using glib functions instead
-        - Using glib to get the desktop folder location
+        * trunk/ardesia/src/pdf_saver.c,
+	* trunk/ardesia/src/pdf_saver.h,
+        * trunk/ardesia/src/saver.c,
+	* trunk/ardesia/src/utils.c, 
+        * trunk/ardesia/src/utils.h:
+	- Pdf export now use temp file decreasing the memory usage
 
 
-2010-06-25 16:37  alpha@paranoici.org
-	* trunk/ardesia/TODO, 
-        * trunk/ardesia/configure.ac,
-	* trunk/ardesia/src/Makefile.am:
-        - Add -mwindows in windows link option to avoid the dos console opening
+2010-09-29 15:39  alpha@paranoici.org
+	* trunk/ardesia/src/Makefile.am,
+        * trunk/ardesia/src/annotate.c,
+	* trunk/ardesia/src/annotate.h, 
+        * trunk/ardesia/src/background.c,
+	* trunk/ardesia/src/background.glade,
+	* trunk/ardesia/src/background.h, 
+        * trunk/ardesia/src/saver.c:
+        - refactoring the background window code using glade
+        - fix the opening of an image file as background 
+          with the "open with ardesia" directive on a image file 
 
 
-2010-06-25 14:45  alpha@paranoici.org
-	* trunk/ardesia/src/saver.c,
-        * trunk/ardesia/src/utils.c, 
-        * trunk/ardesia/src/recorder.c: 
-        - Fix the file suggestion in windows recorder and saver dialog;
-          this was caused by the ":" character that is denied in windows 
-          file name. Now on windows I use the "." character instead
-
-
-2010-06-23 20:02  alpha@paranoici.org
-	* trunk/ardesia/src/ardesia.h, trunk/ardesia/src/info_dialog.h,
-	* trunk/ardesia/src/preference_dialog.h:
-        - Putting the files in a unix style also in win32 as gimp does
-
-
-2010-06-23 16:26  alpha@paranoici.org
-	* trunk/ardesia/po/LINGUAS, trunk/ardesia/po/POTFILES.in,
-	* trunk/ardesia/po/es.po, trunk/ardesia/po/it.po,
-	* trunk/ardesia/src/ardesia.glade,
-	* trunk/ardesia/src/ardesia_horizontal.glade,
-	* trunk/ardesia/src/preference_dialog.glade,
-	* trunk/ardesia/src/recorder.c, trunk/ardesia/src/saver.c: 
-        - Adjusted translations files
-        - Added spanish translation
-
-
-2010-06-22 15:39  alpha@paranoici.org
-	* trunk/ardesia/src/annotate.c, 
-        * trunk/ardesia/src/text_widget.c,
-	* trunk/ardesia/src/text_widget.h,
-	* trunk/ardesia/src/windows_utils.c,
-	* trunk/ardesia/src/windows_utils.h:
-        - Revisited code for Windows 7
-
-
-2010-06-22 11:43  alpha@paranoici.org
-	* trunk/ardesia/src/Makefile.am, 
-        * trunk/ardesia/src/Makefile.in,
+2010-09-28 17:32  alpha@paranoici.org
 	* trunk/ardesia/src/annotate.c,
         * trunk/ardesia/src/annotate.h,
-	* trunk/ardesia/src/ardesia.h,
-        * trunk/ardesia/src/bar_callbacks.c,
+	* trunk/ardesia/src/utils.c: 
+        - Now the savepoint are saved in a tmp folder decreasing
+          the memory usage 
+
+
+2010-09-26 21:40  alpha@paranoici.org
+	* trunk/ardesia/src/background.c:
+        - Fix a problem that broke the color selection preference on windows 
+          since the revision 1305
+
+
+2010-09-26 17:17  alpha@paranoici.org
+	* trunk/ardesia/src/annotate.c, 
+        * trunk/ardesia/src/bezier_spline.c,
+	* trunk/ardesia/src/broken.c,
+        * trunk/ardesia/src/broken.h: 
+        - Better shape recognition for the roundifier; 
+          now an improved bezier alghorithm and 
+          an ellipse detection system has been included
+
+
+2010-09-23 08:55  alpha@paranoici.org
+	* trunk/ardesia/src/pdf_saver.c, 
+        * trunk/ardesia/src/pdf_saver.h:
+	- Pdf saving using gthread
+
+
+2010-09-22 23:40  alpha@paranoici.org
+	* trunk/ardesia/src/annotate.c,
+	* trunk/ardesia/src/annotation.glade: 
+        - Fix the device initialization; 
+          now you could use multiple devices at the same time 
+          This commit fix the super bug that happened with the
+	  wiimote since the 1255 revision that caused a line join 
+          between the old path and the new one. 
+
+
+2010-09-22 12:45  alpha@paranoici.org
+	* trunk/ardesia/src/pdf_saver.c, 
+        * trunk/ardesia/src/pdf_saver.h:
+	- Better implementation with pthread for the pdf export;
+
+
+2010-09-16 21:50  alpha@paranoici.org
+	* trunk/ardesia/NEWS, 
+        * trunk/ardesia/README,
+        * trunk/ardesia/TODO,
+	* trunk/ardesia/src/text_widget.c: 
+        - Some update for windows; now we are using the gtk 2.16.6, 
+          this will be included in the windows binary package
+
+
+2010-09-16 14:59  alpha@paranoici.org
+	* trunk/ardesia/src/annotate.c, 
+        * trunk/ardesia/src/ardesia.c,
+	* trunk/ardesia/src/ardesia.h, 
+        * trunk/ardesia/src/background.c,
+	* trunk/ardesia/src/color_selector.c,
+	* trunk/ardesia/src/pdf_saver.c,
+	* trunk/ardesia/src/preference_dialog.c,
+	* trunk/ardesia/src/recorder.c, 
+        * trunk/ardesia/src/saver.c,
 	* trunk/ardesia/src/text_widget.c,
-	* trunk/ardesia/src/text_widget.h, 
         * trunk/ardesia/src/utils.c,
-	* trunk/ardesia/src/utils.h, trunk/ardesia/src/windows_utils.c,
-	* trunk/ardesia/src/windows_utils.h: 
-        - Separate the extra code for windows in windows_utils.c 
-        - Refactored windows patchset
+	* trunk/ardesia/src/utils.h: 
+        - Code modification using the more safe glib string function
+          instead the standard library
+
+
+2010-09-16 10:19  alpha@paranoici.org
+	* trunk/ardesia/src/annotate.c,
+        * trunk/ardesia/src/pdf_saver.c,
+	* trunk/ardesia/src/text_widget.c: 
+        - Some adjustment Patch the text code to avoid to write upon the bar
+
+
 

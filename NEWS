@@ -24,7 +24,29 @@ Dependencies:
 
 Usability:
 - performance improvement
+- adjustment in the pressure support
+  for drawing tablet
+- faster pdf export
 - added French translation
+
+Features:
+- Ardesia now works also with Kwin and xcompmgr 
+  composite managers 
+- Better shape recognition with 
+  the roundifier tool;now an improved bezier
+  alghorithm and an ellipse detection system
+  has been implemented
+- the save point are stored on files
+  this save a lot of memory
+
+Bug Fix:
+- fix the sound recording on Linux
+- fix a bug that caused the conjunction
+  of the new point with the last point belong to the 
+  old line; this occurred using the xtest virtaul device
+  that is used by the python-whiteboard wiimote driver also 
+- fix the opening image file with 
+  the "open with ardesia" from desktop icon
 
 -------------
  ardesia 0.4
