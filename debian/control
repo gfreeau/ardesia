@@ -9,16 +9,17 @@ Homepage:
 Package: ardesia
 Architecture: any
 Depends:  libatk1.0-0 (>= 1.9.0), libc6 (>= 2.3.4-1), libcairo2 (>= 1.0.2), libfontconfig1 (>= 2.3.0), libglib2.0-0 (>= 2.8.0), libgtk2.0-0 (>= 2.8.0), libpango1.0-0 (>= 1.10.1), libx11-6, libxcursor1 (>> 1.1.2), libxext6, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libgsl0ldbl, recordmydesktop
-Description: Gtk interface to make annotations on the screen.
- Ardesia help you to make colored free-hand annotations with digital ink on your computer screen, record it and share on the network.
+Description: The free digital sketchpad.
+ Ardesia help you to make colored free-hand annotations with digital ink everywhere, record it and share on the network
  .
+ Thanks to Ardesia you are free to open any application and fix your ideas and comments as if you wrote on a classic chalkboard. 
  You can use the tool to make effective on-screen presentation, highlight things or point out things of interest. 
  The tool facilitates the online presentations and demos showing in real time your computer screen to anyone in the network.
- Create nice tutorial and documentation saving the desktop images with your free hand annotations.
- You can draw lines with different strength, select color, erase things and draw arrows.
- You can free-hand draw geometrical shapes using the shape recognizer, insert text with the keyboard and highlight screen areas.
- You can draw upon the desktop or select an image as background. 
+ You can use this tool to enhance your lessons or courses working with your preferred applications and your preferred operating system.
+ Create nice tutorial and demos saving the desktop images with your free hand annotations.
+ Ardesia includes a sketchpad software that allow to free-hand draw geometrical shapes using the shape recognizer.
  .
- Ardesia works with all the pointing device; you can use a mouse, a graphic tablet, 
- a touch screen, a cheap professional wiimote whiteboard or a commercial whiteboard.
+ Ardesia works with all the pointing device; you can use a mouse, a touch screen, a drawing tablet, a cheap&professional wiimote whiteboard 
+ or a commercial whiteboard,interactive projector and any other devices supported by your operating system. 
+
 
