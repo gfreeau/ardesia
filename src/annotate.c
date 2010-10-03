@@ -962,31 +962,40 @@ void roundify(gboolean closed_path)
       annotate_draw_point_list(outptr);
       return; 
     }
-  
-  GSList* listOutN = extract_outbounded_rectangle(outptr);
-  if ((closed_path) && (is_similar_to_an_ellipse(outptr, listOutN, tollerance * 2)))
-    {
-      // It could be an ellipse draw it with the outbounded rectangle in the outptr list
-      AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)listOutN->data;
-      gdouble lastx = out_point->x; 
-      gdouble lasty = out_point->y;
-      AnnotateStrokeCoordinate* point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (listOutN, 2);
-      if (point3)
-        { 
-          gdouble curx = point3->x; 
-          gdouble cury = point3->y;
-	  annotate_draw_ellipse(lastx, lasty, curx-lastx, cury-lasty);          
-        }
-    }   
+
+  if (closed_path)
+    {  
+       GSList* listOutN = extract_outbounded_rectangle(outptr);
+
+       // It could be an ellipse draw it with the outbounded rectangle in the outptr list
+       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)listOutN->data;
+       gdouble lastx = out_point->x; 
+       gdouble lasty = out_point->y;
+       AnnotateStrokeCoordinate* point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (listOutN, 2);
+
+       /* 
+        * if in one point the sum of the distance by focus F1 and F2 differer more than the tollerance value
+        * the curve line will not be considered an eclipse 
+        */
+       gdouble tollerance = (fabs(point3->x-lastx)+fabs(point3->y-lasty)) /4;
+       if (is_similar_to_an_ellipse(outptr, listOutN, tollerance))
+         {
+            annotate_draw_ellipse(lastx, lasty, point3->x-lastx, point3->y-lasty);          
+         }
+       else
+         {
+            // it is a closed path but not an eclipse I use bezier
+            spline(data->annotation_cairo_context, outptr);
+         }
+       /* disallocate the outbounded rectangle */
+       g_slist_foreach(listOutN, (GFunc)g_free, NULL);
+       g_slist_free(listOutN);
+     }   
   else
     {
        // It's a not closed line use Bezier splines to smooth it
        spline(data->annotation_cairo_context, outptr);
     }
-  
-  /* disallocate the outbounded rectangle */
-  g_slist_foreach(listOutN, (GFunc)g_free, NULL);
-  g_slist_free(listOutN);
 
 }
 

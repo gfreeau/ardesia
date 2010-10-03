@@ -357,7 +357,8 @@ gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gint pix
       gdouble distancef1 = get_distance(point->x, point->y, f1x, f1y);
       gdouble distancef2 = get_distance(point->x, point->y, f2x, f2y);
       gdouble sum = distancef1 + distancef2;
-       if (abs(sum-sump1 )>pixel_tollerance)
+      gdouble difference = fabs(sum-sump1);
+       if (difference>pixel_tollerance)
         {  
            // the sum is so different from the right one; this is not an ellipse 
            return FALSE;
