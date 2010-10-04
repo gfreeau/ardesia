@@ -368,7 +368,7 @@ proximity_in (GtkWidget *win,
 {
   /*
    * @TODO this message don't arrive on windows; why? 
-   * it is a driver problem, gtk or what
+   * is it a driver problem, gtk or what
    *
    */
   AnnotateData *data = (AnnotateData *) func_data;
@@ -406,7 +406,7 @@ proximity_out (GtkWidget *win,
 {
   /*
    * @TODO this message don't arrive on windows; why? 
-   * it is a driver problem, gtk or what
+   * is it a driver problem, gtk or what
    *
    */
   AnnotateData *data = (AnnotateData *) func_data;

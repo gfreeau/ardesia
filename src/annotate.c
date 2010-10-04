@@ -197,7 +197,10 @@ void annotate_modify_color(AnnotateData* data, gdouble pressure)
 {
   if (pressure>=1)
     {
-      cairo_set_source_color_from_string(data->annotation_cairo_context, data->cur_context->fg_color);
+	  if ((data->annotation_cairo_context)&&(data->cur_context->fg_color))
+	    {
+           cairo_set_source_color_from_string(data->annotation_cairo_context, data->cur_context->fg_color);
+		}
     }
   if (pressure <= 0.1)
     {
