@@ -285,6 +285,11 @@ GtkWidget* create_background_window(gchar* backgroundimage)
 
   gtk_widget_show_all(background_data->background_window);
 
+  #ifdef _WIN32
+    /* in the gtk 2.16.6 used for windows the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
+    gtk_widget_set_double_buffered(background_data->background_window, FALSE);
+  #endif
+  
   return  background_data->background_window;
 }
 

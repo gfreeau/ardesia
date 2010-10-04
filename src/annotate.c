@@ -1411,7 +1411,7 @@ void setup_app (GtkWidget* parent)
   gtk_widget_show_all(data->annotation_window);
   
   #ifdef _WIN32
-    /* with some gtk version the double buffered property in the glade file is not recognized */
+    /* in the gtk 2.16.6 used for windows the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
     gtk_widget_set_double_buffered(data->annotation_window, FALSE); 
     // I use a layered window that use the black as transparent color
     setLayeredGdkWindowAttributes(data->annotation_window->window, RGB(0,0,0), 0, LWA_COLORKEY );	
