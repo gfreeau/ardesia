@@ -195,12 +195,13 @@ void annotate_savelist_free()
 /* Modify color according to the pressure */
 void annotate_modify_color(AnnotateData* data, gdouble pressure)
 {
+  if ((!data->annotation_cairo_context)||(!data->cur_context->fg_color))
+    {
+	   return;
+	}
   if (pressure>=1)
     {
-	  if ((data->annotation_cairo_context)&&(data->cur_context->fg_color))
-	    {
-           cairo_set_source_color_from_string(data->annotation_cairo_context, data->cur_context->fg_color);
-		}
+        cairo_set_source_color_from_string(data->annotation_cairo_context, data->cur_context->fg_color);
     }
   if (pressure <= 0.1)
     {
