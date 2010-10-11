@@ -318,10 +318,9 @@ void annotate_add_save_point(gboolean cache)
 {
   AnnotateSave *savepoint = g_malloc(sizeof(AnnotateSave));
  
-  const gchar* tmpdir = g_get_tmp_dir();
   gdouble ellapsed_time = g_timer_elapsed(data->timer, NULL);
 
-  savepoint->filename = g_strdup_printf("%s%sardesia_%f_vellum.png",tmpdir, G_DIR_SEPARATOR_S, ellapsed_time);
+  savepoint->filename = g_strdup_printf("%s%sardesia_%f_vellum.png", data->savepoint_dir, G_DIR_SEPARATOR_S, ellapsed_time);
 
   annotate_redolist_free();
 
@@ -338,7 +337,7 @@ void annotate_add_save_point(gboolean cache)
   
   if (!cache)
     {
-       /*  will be create a file in tmp folder with format ardesia_ellapsed_time.png */
+       /*  will be create a file in the savepoint folder with format ardesia_ellapsed_time.png */
        cairo_surface_write_to_png (saved_surface, savepoint->filename);
        cairo_surface_destroy(saved_surface); 
        savepoint->surface = NULL;
@@ -1230,6 +1229,13 @@ void annotate_quit()
   annotate_coord_list_free();
   annotate_savelist_free();
 
+  if (g_file_test(data->savepoint_dir, G_FILE_TEST_IS_DIR))
+    { 
+       /* Delete the savepoint folder */
+       rmdir_recursive(data->savepoint_dir);
+    }
+
+  g_free(data->savepoint_dir);
   g_free(data->default_pen);
   g_free(data->default_eraser);
  
@@ -1449,6 +1455,20 @@ void setup_app (GtkWidget* parent)
 }
 
 
+void create_savepoint_dir()
+{
+  const gchar* tmpdir = g_get_tmp_dir();
+  data->savepoint_dir = g_strdup_printf("%s%sardesia", tmpdir, G_DIR_SEPARATOR_S);
+  if (g_file_test(data->savepoint_dir, G_FILE_TEST_IS_DIR))
+    { 
+       /* the folder already exist; I delete it */
+       rmdir_recursive(data->savepoint_dir);
+    }
+  g_mkdir(data->savepoint_dir, 0777);
+}
+
+
+
 /* Init the annotation */
 gint annotate_init (GtkWidget* parent, gboolean debug)
 {
@@ -1481,7 +1501,8 @@ gint annotate_init (GtkWidget* parent, gboolean debug)
   data->screen = gdk_display_get_default_screen(data->display);
   data->width = gdk_screen_get_width(data->screen);
   data->height = gdk_screen_get_height (data->screen);
-  
+
+  create_savepoint_dir();  
   setup_app(parent);
 
   return 0;

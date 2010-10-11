@@ -22,6 +22,9 @@
  */
 
 
+#include <glib.h>
+#include <glib/gstdio.h>
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
@@ -163,3 +166,5 @@ gboolean file_exists(gchar* filename);
 const gchar* get_desktop_dir (void);
 
 
+/* Remove recursive a directory */
+void rmdir_recursive (gchar *path);

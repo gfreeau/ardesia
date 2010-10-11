@@ -105,6 +105,8 @@ typedef struct
   /* timer that was started at the init */
   GTimer* timer;
 
+  gchar* savepoint_dir;  
+
   /* the annotation window */   
   GtkWidget *annotation_window;
 
