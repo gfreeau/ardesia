@@ -164,6 +164,11 @@ void annotate_redolist_free()
 	    }
           g_remove(savepoint->filename);
           g_free(savepoint->filename);
+          if (savepoint->surface)
+            {
+              cairo_surface_destroy(savepoint->surface);
+              savepoint->surface = NULL;
+            }
           data->savelist = g_slist_remove(data->savelist, savepoint);
           g_free(savepoint);
         }
@@ -171,7 +176,7 @@ void annotate_redolist_free()
 }
 
 
-/* Free the list of all the savepoint*/
+/* Free the list of all the savepoint */
 void annotate_savelist_free()
 {
   while (data->savelist!=NULL)
@@ -185,6 +190,12 @@ void annotate_savelist_free()
 	    }
           g_remove(savepoint->filename);
           g_free(savepoint->filename);
+          
+          if (savepoint->surface)
+            {
+              cairo_surface_destroy(savepoint->surface);
+              savepoint->surface = NULL;
+            }
           data->savelist = g_slist_remove(data->savelist, savepoint);
           g_free(savepoint);
         }
@@ -303,19 +314,18 @@ void select_color()
  * Add a save point for the undo/redo; 
  * this code must be called at the end of each painting action
  */
-void annotate_add_save_point()
+void annotate_add_save_point(gboolean cache)
 {
-  AnnotateSave *save = g_malloc(sizeof(AnnotateSave));
-  /*  the filename is put in tmp folder with format ardesia_date.png */
+  AnnotateSave *savepoint = g_malloc(sizeof(AnnotateSave));
+ 
   const gchar* tmpdir = g_get_tmp_dir();
-  gchar* filename = get_default_name();
+  gdouble ellapsed_time = g_timer_elapsed(data->timer, NULL);
 
-  save->filename  = g_strdup_printf("%s%s%s_vellum.png",tmpdir, G_DIR_SEPARATOR_S, filename);
-  g_free(filename);
+  savepoint->filename = g_strdup_printf("%s%sardesia_%f_vellum.png",tmpdir, G_DIR_SEPARATOR_S, ellapsed_time);
 
   annotate_redolist_free();
 
-  data->savelist = g_slist_prepend (data->savelist, save);
+  data->savelist = g_slist_prepend (data->savelist, savepoint);
   data->current_save_index = 0;
    
   /* Load a surface with the data->annotation_cairo_context content and write the file */
@@ -324,15 +334,31 @@ void annotate_add_save_point()
   cairo_t *cr = cairo_create (saved_surface);
   cairo_set_source_surface (cr, source_surface, 0, 0);
   cairo_paint(cr);
-  cairo_surface_write_to_png (saved_surface, save->filename);
-  cairo_surface_destroy(saved_surface); 
+  /* the saved_surface contain the savepoint image */  
+  
+  if (!cache)
+    {
+       /*  will be create a file in tmp folder with format ardesia_ellapsed_time.png */
+       cairo_surface_write_to_png (saved_surface, savepoint->filename);
+       cairo_surface_destroy(saved_surface); 
+       savepoint->surface = NULL;
+       if (data->debug)
+         { 
+            g_printerr("Add save point in file %s\n", savepoint->filename);
+         }
+    }
+  else
+    {
+       if (data->debug)
+         { 
+            g_printerr("Store surface in memory %s\n", savepoint->filename);
+         }
+     
+       savepoint->surface = saved_surface;
+    }
+
   cairo_destroy(cr);
 
-  if (data->debug)
-    { 
-      g_printerr("Add save point in file %s\n", save->filename);
-      g_printerr("%d savepoint",g_slist_length(data->savelist));
-    }
 }
 
 
@@ -410,7 +436,16 @@ void annotate_restore_surface()
             return;
          }
  
-      if (savepoint->filename)
+      cairo_new_path(data->annotation_cairo_context);
+      cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
+
+      if (savepoint->surface)
+         {
+           g_printerr("Load surface from memory %s\n", savepoint->filename);
+           cairo_set_source_surface (data->annotation_cairo_context, savepoint->surface, 0, 0);
+           cairo_paint(data->annotation_cairo_context);
+         }
+      else if (savepoint->filename)
          {
            if (data->debug)
              {
@@ -420,13 +455,12 @@ void annotate_restore_surface()
            GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (savepoint->filename, NULL);
            if (pixbuf)
              {
-               cairo_new_path(data->annotation_cairo_context);
-               cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
                gdk_cairo_set_source_pixbuf(data->annotation_cairo_context, pixbuf, 0.0, 0.0);
                cairo_paint(data->annotation_cairo_context);
                g_object_unref (pixbuf);
              }
          }
+
     }
 }
 
@@ -919,11 +953,9 @@ void rectify(gboolean closed_path)
       g_printerr("rectify\n");
     }
 
-  annotate_add_save_point();
+  annotate_add_save_point(TRUE);
   annotate_undo();
-  annotate_redolist_free();
-  annotate_reset_cairo();
-       
+
   annotate_coord_list_free();
   data->coordlist = outptr;
 
@@ -943,10 +975,8 @@ void roundify(gboolean closed_path)
   gint lenght = g_slist_length(outptr);
 
   /* Delete the last path drawn */
-  annotate_add_save_point();
+  annotate_add_save_point(TRUE);
   annotate_undo();
-  annotate_redolist_free();
-  annotate_reset_cairo();
      
   annotate_coord_list_free();
   data->coordlist = outptr;
@@ -1152,7 +1182,7 @@ cairo_t* get_annotation_cairo_context()
 /* Quit the annotation */
 void annotate_quit()
 {
-
+  g_timer_destroy(data->timer); 
   gtk_widget_destroy(data->annotation_window);
   /* unref gtkbuilder */
   g_object_unref (data->annotationWindowGtkBuilder);
@@ -1270,7 +1300,7 @@ void annotate_fill()
         {
            g_printerr("Fill\n");
         }
-      annotate_add_save_point();
+      annotate_add_save_point(FALSE);
     }
 }
 
@@ -1352,7 +1382,7 @@ void annotate_clear_screen ()
 
   annotate_reset_cairo();
   clear_cairo_context(data->annotation_cairo_context);
-  annotate_add_save_point();
+  annotate_add_save_point(FALSE);
 }
 
 
@@ -1442,6 +1472,8 @@ gint annotate_init (GtkWidget* parent, gboolean debug)
   data->is_cursor_hidden = TRUE;
 
   data->debug = debug;
+
+  data->timer = g_timer_new();  
 
   allocate_invisible_cursor();
   

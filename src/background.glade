@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <interface>
+  <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="backgroundWindow">
-    <property name="title" translatable="yes">Ardesia</property>
-    <property name="skip_taskbar_hint">True</property>
-    <property name="events">GDK_EXPOSURE_MASK</property>
     <property name="app_paintable">True</property>
+    <property name="events">GDK_EXPOSURE_MASK</property>
     <property name="double_buffered">False</property>
+    <property name="title" translatable="yes">Ardesia</property>
     <signal name="expose_event" handler="back_event_expose"/>
     <child>
       <placeholder/>

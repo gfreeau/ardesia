@@ -198,7 +198,8 @@ paintto (GtkWidget *win,
          gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
-  
+
+ 
   if (!ev)
     {
        g_printerr("Device '%s': Invalid event; I ungrab all\n",
@@ -249,12 +250,28 @@ paintto (GtkWidget *win,
        /* If the point is already selected and higher pressure then print else jump it */
       if (data->coordlist)
           {
-             AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, 0);
-             if (get_distance(first_point->x, first_point->y, ev->x, ev->y)<5)
+             AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, 0);
+             gint tollerance = data->thickness;
+             if (get_distance(last_point->x, last_point->y, ev->x, ev->y)<tollerance)
                {
-                 if (pressure<first_point->pressure)
+                 /* seems that you are uprising the pen */
+                 if (pressure<last_point->pressure)
                    {
                      /* jump the point you are uprising the hand */
+                     return TRUE;
+                   }
+                 else if (pressure==last_point->pressure)
+                   {
+                     /* ignore the point; do nothing */
+                     return TRUE;
+                   }
+                 else // pressure >= last_point->pressure
+                   {
+                     /* seems that you are pressing the pen more */
+                     annotate_modify_color(data, pressure);
+                     annotate_draw_line (ev->x, ev->y, TRUE);
+                     /* store the new pressure without allocate a new coord */
+                     last_point->pressure = pressure;
                      return TRUE;
                    }
                }
@@ -312,14 +329,15 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
     }  
 
   gint distance = -1;
-  
-  if (g_slist_length(data->coordlist)>2)
+  gint lenght = g_slist_length(data->coordlist);
+
+  if (lenght>2)
     { 
       gint lenght = g_slist_length(data->coordlist);
       AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght-1);
        
       /* This is the tollerance to force to close the path in a magnetic way */
-      gint tollerance = data->thickness;
+      gint tollerance = data->thickness * 2;
       distance = get_distance(ev->x, ev->y, first_point->x, first_point->y);
  
       AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, 0);
@@ -352,7 +370,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
     }
   cairo_stroke_preserve(data->annotation_cairo_context);
   
-  annotate_add_save_point();
+  annotate_add_save_point(FALSE);
    
   annotate_hide_cursor();  
  

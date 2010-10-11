@@ -86,17 +86,25 @@ typedef struct
 typedef struct _AnnotateSave
 {
   gchar* filename;
+  cairo_surface_t *surface;
 } AnnotateSave;
 
 
 /* Annotation data used by the callsbacks */
 typedef struct
 {
-  /* Gtkbuilder for annotation window */
-  GtkBuilder *annotationWindowGtkBuilder;
+  /* the default screen used */
   GdkScreen   *screen;
+ 
+  /* the current display */
   GdkDisplay  *display;
   
+  /* Gtkbuilder for annotation window */
+  GtkBuilder *annotationWindowGtkBuilder;
+
+  /* timer that was started at the init */
+  GTimer* timer;
+
   /* the annotation window */   
   GtkWidget *annotation_window;
 
@@ -127,12 +135,18 @@ typedef struct
   /* the index of the position in the savelist of the current picture */
   gint    current_save_index;
 
-  /* Paint context */ 
+  /* Paint context for the pen */ 
   AnnotatePaintContext *default_pen;
+
+  /* Paint context for the eraser */ 
   AnnotatePaintContext *default_eraser;
+
+  /* Point to the current context */  
   AnnotatePaintContext *cur_context;
+
   AnnotatePaintType old_paint_type;
 
+  /* tool thickness */
   gdouble thickness; 
 
   /* list of the coodinates of the last line drawn */
@@ -296,3 +310,5 @@ void annotate_shape_recognize(gboolean closed_path);
 
 /* Add a save point for the undo/redo */
 void annotate_add_save_point();
+
+
