@@ -10,25 +10,27 @@
 
 
 - French translation
-- Video tutorial
-- Open IRC channel
+- Open a freenode IRC channel
+- Make a Video tutorial
 
-- Refactoring
-  - Savepoint stored and loaded with svg files
-  - savepoint caching in memory
+- Reengineering
+  - Store and load the savepoints using svg files
+  - cache in memory the recent savepoint to have faster undo/redo
+    actions
   - Screencast recorder using vlclib insted spawn the vlc process
 
 - MacOsX-quartz porting
   - Make a plan
 
-- Windows porting
+- Windows7 os
   - Create a binary installer similar to the gimp windows 
     installer http://gimp-win.sourceforge.net/
   - Fix the highlighter; this doesn't work because
     seems that the ARGB32 support in cairo is not yet available 
 
 - Candidate features:
-  - image import (galleries with images, sticky notes)
+  - image importer 
+    - image gallery, sticky notes
   - Lazo selection tool
   - move, copy, paste
   - deploy the artifact online
