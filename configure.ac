@@ -42,7 +42,8 @@ AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = yes)
 AM_CONDITIONAL(ENABLE_STATIC, test "$enable_static" = "yes")
 
 dnl Check modules
-pkg_modules="	gthread-2.0
+pkg_modules="	glib-2.0
+                gthread-2.0
                 gsl
 		cairo
                 gdk-2.0
