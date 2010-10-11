@@ -14,6 +14,7 @@
 - Make a Video tutorial
 
 - Reengineering
+  - Log and stack trace report when occurs a segmentation fault
   - Store and load the savepoints using svg files
   - cache in memory the recent savepoint to have faster undo/redo
     actions
