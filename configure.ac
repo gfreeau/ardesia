@@ -42,9 +42,12 @@ AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = yes)
 AM_CONDITIONAL(ENABLE_STATIC, test "$enable_static" = "yes")
 
 dnl Check modules
-pkg_modules="	gtk+-2.0 >= 2.12 
+pkg_modules="	gthread-2.0
+                gsl
 		cairo
-                gsl"
+                gdk-2.0
+                gtk+-2.0 >= 2.12"
+
 
 PKG_CHECK_MODULES(ARDESIA, [$pkg_modules])
 
