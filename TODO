@@ -14,11 +14,12 @@
 - Open IRC channel
 
 - Refactoring
-  - Screencast recorder using vlclib insted spawn the vlc process
   - Savepoint stored and loaded with svg files
+  - savepoint caching in memory
+  - Screencast recorder using vlclib insted spawn the vlc process
 
 - MacOsX-quartz porting
-  - Investigate about the status
+  - Make a plan
 
 - Windows porting
   - Create a binary installer similar to the gimp windows 
@@ -27,17 +28,21 @@
     seems that the ARGB32 support in cairo is not yet available 
 
 - Candidate features:
-  - deploy the artifact online
-    - email
-    - facebook
-  - define a configuration file and settings 
   - image import (galleries with images, sticky notes)
   - Lazo selection tool
   - move, copy, paste
-  - zoom and rotate
+  - deploy the artifact online
+    - email
+    - facebook
+    - moodle
+  - Virtual keyboard integration
+  - Multi pointer support 
+  - Multi page support
   - pdf import using libpoppler 
-  - Multi pointer support using the xinput2 library
-  - audio support
+  - define a configuration file and settings
+    - preferred colors
+    - thickness size 
+  - zoom and rotate
 
 ===
 EOF
