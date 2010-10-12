@@ -321,20 +321,25 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
 }
 
 
-/* This is the starting point */
-int
-main (gint argc, char *argv[])
+void enable_localization_support()
 {
-  GtkWidget *ardesia_bar_window ;
-
   #ifdef ENABLE_NLS
     setlocale (LC_ALL, "");
     bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
     textdomain (GETTEXT_PACKAGE);
   #endif
 
-  gtk_set_locale ();
-  gtk_init (&argc, &argv);
+  gtk_set_locale();
+}
+
+
+/* This is the starting point */
+int
+main (gint argc, char *argv[])
+{
+  enable_localization_support();
+  
+  gtk_init(&argc, &argv);
 
   set_the_best_colormap();
 
@@ -359,8 +364,7 @@ main (gint argc, char *argv[])
 
   gtk_widget_show (annotation_window);
   
-  ardesia_bar_window = create_bar_window(commandline, annotation_window);
-
+  GtkWidget *ardesia_bar_window = create_bar_window(commandline, annotation_window);
  
   gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
 
@@ -368,17 +372,17 @@ main (gint argc, char *argv[])
   gint height;
   gtk_window_get_size(GTK_WINDOW(ardesia_bar_window) , &width, &height);
 
+  /* x and y are the left corner coord of the bar window */
   gint x, y;
-
   /* calculate_initial_position the window in the desired position */
   calculate_initial_position(ardesia_bar_window, 
                              &x, &y, 
                              width, height,
                              commandline->position);
+  g_free(commandline);
 
   gtk_window_move(GTK_WINDOW(ardesia_bar_window), x, y);  
 
-  g_free(commandline);
   gtk_widget_show(ardesia_bar_window);
 
   gtk_main();
