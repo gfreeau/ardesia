@@ -36,6 +36,8 @@ Features:
   now an improved bezier alghorithm and 
   an ellipse detection system has been implemented
 - low memory usage; the save point are stored on files
+- add system that print the backtrace in the case that
+  a segmentation fault occurs
 
 
 Bug Fix:

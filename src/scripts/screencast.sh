@@ -29,7 +29,7 @@ then
   then
     RECORDER_PROGRAM_OPTIONS="-vvv screen:// :input-slave=alsa://pulse --screen-fps=12 --sout "#transcode{venc=theora,vcodec=theo,vb=800,acodec=vorb,ab=128,samplerate=48000,channels=2,deinterlace,audio-sync,scale=0.75}:duplicate{dst=std{access=shout,mux=ogg,dst=source:$ICECAST_PASSWORD@$ICECAST_ADDRESS:$ICECAST_PORT/$ICECAST_MOUNTPOINT},dst=std{access=file,mux=ogg,dst=$2}}"" 
   else
-    RECORDER_PROGRAM_OPTIONS="-vvv screen:// :input-slave=alsa:// --sout "#transcode{venc=theora,vcodec=theo,vb=800,acodec=vorb,ab=128,samplerate=48000,channels=2,deinterlace,audio-sync,scale=0.75}:duplicate{dst=std{access=file,mux=ogg,dst=$2}}"" 
+    RECORDER_PROGRAM_OPTIONS="-vvv screen:// :input-slave=alsa:// --sout "#transcode{venc=theora,vcodec=theo,vb=512,fps=25,acodec=vorb,ab=128,Channels=2,samplerate=48000,deinterlace,audio-sync,scale=0.75}:duplicate{dst=std{access=file,mux=ogg,dst=$2}}"" 
   fi
   echo With arguments $RECORDER_PROGRAM_OPTIONS
   $RECORDER_PROGRAM $RECORDER_PROGRAM_OPTIONS &
