@@ -25,7 +25,6 @@ IT_PROG_INTLTOOL([0.35.0])
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
 AM_GLIB_GNU_GETTEXT
 
-
 case "$host" in
   *-*-mingw*|*-*-cygwin*)
     platform_win32=yes
@@ -40,6 +39,14 @@ AM_PROG_LIBTOOL
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = yes)
 AM_CONDITIONAL(ENABLE_STATIC, test "$enable_static" = "yes")
+
+AC_CHECK_LIB([sigsegv], [stackoverflow_install_handler])
+AC_CHECK_HEADERS(bfd.h)
+AC_CHECK_LIB(iberty, dyn_string_append)
+AC_CHECK_LIB(bfd, bfd_openr)
+AC_CHECK_HEADERS(execinfo.h)
+AC_CHECK_FUNCS(backtrace)
+ 
 
 dnl Check modules
 pkg_modules="	glib-2.0

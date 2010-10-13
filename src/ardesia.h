@@ -30,6 +30,12 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
+#include <bfd.h>
+#include <execinfo.h>
+#include <sigsegv.h>
+
+
+#define MAX_FRAMES (20)
 
 #ifdef _WIN32
   #define UI_FILE "..\\share\\ardesia\\ui\\ardesia.glade"

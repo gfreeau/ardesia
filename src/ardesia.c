@@ -28,6 +28,10 @@
 #include <bar_callbacks.h>
 
 
+/* globals retained across calls to resolve. */
+static bfd* abfd = 0;
+static asymbol **syms = 0;
+static asection *text = 0;
 
 /* 
  * Calculate the position where calculate_initial_position the main window 
@@ -333,10 +337,89 @@ void enable_localization_support()
 }
 
 
+void print_trace_line(char *address) {
+  char ename[1024];
+  int l = readlink("/proc/self/exe",ename,sizeof(ename));
+  
+  if (l == -1) 
+    {
+       fprintf(stderr, "failed to find executable\n");
+       return;
+    }
+ 	
+   ename[l] = 0;
+
+   bfd_init();
+
+   abfd = bfd_openr(ename, 0);
+   
+   if (!abfd)
+     {
+        fprintf(stderr, "bfd_openr failed: ");
+        return;
+     }
+   
+   /* oddly, this is required for it to work... */
+   bfd_check_format(abfd,bfd_object);
+
+   unsigned storage_needed = bfd_get_symtab_upper_bound(abfd);
+   syms = (asymbol **) malloc(storage_needed);
+
+   text = bfd_get_section_by_name(abfd, ".text");
+
+   long offset = ((long)address) - text->vma;
+   
+   if (offset > 0) 
+     {
+        const char *file;
+        const char *func;
+        unsigned line;
+        if (bfd_find_nearest_line(abfd, text, syms, offset, &file, &func, &line) && file)
+          {
+	     fprintf(stderr, "file: %s, line: %u, func %s\n",file,line,func);
+          }
+     }
+}
+
+
+static void print_trace() 
+{
+     void *array[MAX_FRAMES];
+     size_t size;
+     size_t i;
+     void *approx_text_end = (void*) ((128+100) * 2<<20);
+
+     size = backtrace (array, MAX_FRAMES);
+     printf ("Obtained %zd stack frames.\n", size);
+     for (i = 0; i < size; i++)
+       {
+ 	 if (array[i] < approx_text_end)
+           {
+ 	      print_trace_line(array[i]);
+ 	   }
+       }
+}
+
+
+/* Is called when a sigsegv happened*/
+int sigsegv_handler (void *addr, int bad)
+{
+  print_trace(); 
+  exit(2);
+}
+
+
 /* This is the starting point */
 int
 main (gint argc, char *argv[])
 {
+
+  /* Install the SIGSEGV handler.  */
+  if (sigsegv_install_handler (sigsegv_handler)<0)
+  {
+     exit(2);
+  }
+
   enable_localization_support();
   
   gtk_init(&argc, &argv);
