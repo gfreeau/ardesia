@@ -14,7 +14,6 @@
 - Make a Video tutorial
 
 - Reengineering
-  - Log and stack trace report when occurs a segmentation fault
   - Store and load the savepoints using svg files
   - cache in memory the recent savepoint to have faster undo/redo
     actions
@@ -30,6 +29,7 @@
     seems that the ARGB32 support in cairo is not yet available 
 
 - Candidate features:
+  - send the log and stacktrace when a problem occurs
   - image importer 
     - image gallery, sticky notes
   - Lazo selection tool
