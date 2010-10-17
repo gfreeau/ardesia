@@ -27,9 +27,9 @@ then
   echo Start the screencast running $RECORDER_PROGRAM
   if [ "$ICECAST" = "TRUE" ]
   then
-    RECORDER_PROGRAM_OPTIONS="-vvv screen:// --screen-fps=12 :input-slave=alsa:// --sout  "#transcode{vcodec=theo,vb=512,scale=0.75,acodec=vorb,ab=128,channels=2,samplerate=32000}:duplicate{dst=std{access=shout,mux=ogg,dst=source:$ICECAST_PASSWORD@$ICECAST_ADDRESS:$ICECAST_PORT/$ICECAST_MOUNTPOINT},dst=std{access=file,mux=ogg,dst=$2}}"" 
+    RECORDER_PROGRAM_OPTIONS="-vvv screen:// --screen-fps=12 :input-slave=alsa:// --sout  "#transcode{vcodec=theo,vb=512,scale=0.75,acodec=vorb,ab=128,channels=2,,deinterlace,audio-sync,samplerate=32000}:duplicate{dst=std{access=shout,mux=ogg,dst=source:$ICECAST_PASSWORD@$ICECAST_ADDRESS:$ICECAST_PORT/$ICECAST_MOUNTPOINT},dst=std{access=file,mux=ogg,dst=$2}}"" 
   else
-    RECORDER_PROGRAM_OPTIONS="-vvv screen:// --screen-fps=12 :input-slave=alsa:// --sout "#transcode{vcodec=theo,vb=512,scale=0.75,acodec=vorb,ab=128,channels=2,samplerate=32000}:duplicate{dst=std{access=file,mux=ogg,dst=$2}}"" 
+    RECORDER_PROGRAM_OPTIONS="-vvv screen:// --screen-fps=12 :input-slave=alsa:// --sout "#transcode{vcodec=theo,fps=12,vb=512,scale=0.75,acodec=vorb,ab=64,channels=2,deinterlace,audio-sync,samplerate=32000}:duplicate{dst=std{access=file,mux=ogg,dst=$2}}"" 
   fi
   echo With arguments $RECORDER_PROGRAM_OPTIONS
   $RECORDER_PROGRAM $RECORDER_PROGRAM_OPTIONS &
