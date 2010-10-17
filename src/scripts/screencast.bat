@@ -20,8 +20,8 @@ rem replace this with the name of the micropphone direct show audio input device
 set AUDIO_DEVICE=default
 
 set RECORDER_PROGRAM=vlc.exe
-set RECORDER_PROGRAM_OPTIONS=-vvv -I dummy --dummy-quiet screen:// --screen-fps=12 :input-slave=dshow:// :dshow-vdev="none" :dshow-adev="%AUDIO_DEVICE%" --sout  "#transcode{vcodec=theo,vb=512,scale=0.75,acodec=vorb,ab=128,channels=2,,deinterlace,audio-sync,samplerate=32000}:duplicate{dst=std{access=file,mux=ogg,dst=%2}}"
-set RECORDER_AND_FORWARD_PROGRAM_OPTIONS=-vvv -I dummy --dummy-quiet screen:// --screen-fps=12 :input-slave=dshow:// :dshow-vdev="none" :dshow-adev="%AUDIO_DEVICE%" --sout  "#transcode{vcodec=theo,vb=512,scale=0.75,acodec=vorb,ab=128,channels=2,,deinterlace,audio-sync,samplerate=32000}::duplicate{dst=std{access=shout,mux=ogg,dst=source:%ICECAST_PASSWORD%@%ICECAST_ADDRESS%:%ICECAST_PORT%/%ICECAST_MOUNTPOINT%},dst=std{access=file,mux=ogg,dst=%2}}"
+set RECORDER_PROGRAM_OPTIONS=-vvv -I dummy --dummy-quiet screen:// --screen-fps=12 :input-slave=dshow:// :dshow-vdev="none" :dshow-adev="%AUDIO_DEVICE%" --sout  "#transcode{venc=theora,vcodec=theo,scale=0.7,acodec=vorb,channels=2,samplerate=44100,deinterlace,audio-sync}:standard{access=file,mux=ogg,dst=%2}"
+set RECORDER_AND_FORWARD_PROGRAM_OPTIONS=-vvv -I dummy --dummy-quiet screen:// --screen-fps=12 :input-slave=dshow:// :dshow-vdev="none" :dshow-adev="%AUDIO_DEVICE%" --sout  "#transcode{venc=theora,vcodec=theo,scale=0.7,acodec=vorb,channels=2,samplerate=44100,deinterlace,audio-sync}:duplicate{dst=std{access=shout,mux=ogg,dst=source:%ICECAST_PASSWORD%@%ICECAST_ADDRESS%:%ICECAST_PORT%/%ICECAST_MOUNTPOINT%},dst=std{access=file,mux=ogg,dst=%2}}"
 
 if ""%1"" == ""start"" goto start
 
