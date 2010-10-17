@@ -28,10 +28,12 @@
 #include <bar_callbacks.h>
 
 
+#ifdef linux
 /* globals retained across calls to resolve. */
 static bfd* abfd = 0;
 static asymbol **syms = 0;
 static asection *text = 0;
+#endif
 
 /* 
  * Calculate the position where calculate_initial_position the main window 
@@ -337,6 +339,8 @@ void enable_localization_support()
 }
 
 
+#ifdef linux
+
 void print_trace_line(char *address) {
   char ename[1024];
   int l = readlink("/proc/self/exe",ename,sizeof(ename));
@@ -384,11 +388,16 @@ void print_trace_line(char *address) {
 
 static void print_trace() 
 {
+
      void *array[MAX_FRAMES];
      size_t size;
      size_t i;
      void *approx_text_end = (void*) ((128+100) * 2<<20);
 
+	 /* 
+      * the glibc functions backtrace is missing on all non-glibc platforms
+      */
+  
      size = backtrace (array, MAX_FRAMES);
      printf ("Obtained %zd stack frames.\n", size);
      for (i = 0; i < size; i++)
@@ -398,7 +407,16 @@ static void print_trace()
  	      print_trace_line(array[i]);
  	   }
        }
+
 }
+#else
+static void print_trace() 
+{
+  // not yet implemented
+}
+
+
+#endif
 
 
 /* Is called when a sigsegv happened*/

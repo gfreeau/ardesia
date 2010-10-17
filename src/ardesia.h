@@ -31,7 +31,15 @@
 #include <gtk/gtk.h>
 
 #include <bfd.h>
-#include <execinfo.h>
+
+#ifdef linux
+  /* 
+    the glibc functions backtrace, backtrace_symbols, backtrace_symbols_fd
+    defined in the header are missing on all non-glibc platforms
+  */
+  #include <execinfo.h>
+#endif
+  
 #include <sigsegv.h>
 
 
