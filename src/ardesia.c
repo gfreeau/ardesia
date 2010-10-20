@@ -300,9 +300,20 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
 
   gtkBuilder = gtk_builder_new();
   gchar* file = UI_FILE;
-  if ((commandline->position>2)||((gdk_screen_height() < 768)))
+  if (commandline->position>2)
     {
+      /* north or south */
       file = UI_HOR_FILE;
+    }
+  else
+    {
+      /* east or west */
+      if (gdk_screen_height() < 768)
+        {
+          /* the bar is too long and then I use an horizontal layout */
+          file = UI_HOR_FILE;
+          commandline->position=NORTH;
+        }
     }
 
   /* load the gtkbuilder file with the definition of the ardesia bar gui */
