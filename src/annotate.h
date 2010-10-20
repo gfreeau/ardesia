@@ -122,9 +122,6 @@ typedef struct
   /* transparent pixmap */
   GdkPixmap *transparent_pixmap;
 
-  /* transparent cairo context */
-  cairo_t *transparent_cr;
-
   /* mouse cursor */ 
   GdkCursor *cursor;
  

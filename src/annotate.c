@@ -1195,11 +1195,6 @@ void annotate_quit()
     {  
       g_object_unref(data->shape);
     }
-
-  if (data->transparent_cr)
-    {
-      cairo_destroy(data->transparent_cr);
-    }
 	
   /* destroy cairo */  
   destroy_cairo();
@@ -1468,7 +1463,6 @@ void create_savepoint_dir()
 }
 
 
-
 /* Init the annotation */
 gint annotate_init (GtkWidget* parent, gboolean debug)
 {
@@ -1480,7 +1474,6 @@ gint annotate_init (GtkWidget* parent, gboolean debug)
   data->savelist = NULL;
   data->current_save_index = 0;
   data->transparent_pixmap = NULL;
-  data->transparent_cr = NULL;
   data->cursor = NULL;
 
   data->is_grabbed = FALSE;
