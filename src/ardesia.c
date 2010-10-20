@@ -45,7 +45,7 @@ void calculate_position(GtkWidget *ardesia_bar_window,
                         gint wwidth, gint wheight,
                         gint position)
 {
-  *y = ((dheight - wheight)/2); 
+  *y = 0; 
   /* vertical layout */
   if (position==WEST)
     {
@@ -53,20 +53,20 @@ void calculate_position(GtkWidget *ardesia_bar_window,
     }
   else if (position==EAST)
     {
-      *x = dwidth - wwidth;
+      *x = dwidth;
     }
   else
     {
       /* horizontal layout */
-      *x = (dwidth - wwidth)/2;
+      *x = 0;
       if (position==NORTH)
         {
-          *y = SPACE_FROM_BORDER; 
+          *y = 0; 
         }
       else if (position==SOUTH)
         {
          /* south */
-         *y = dheight - SPACE_FROM_BORDER - wheight;
+         *y = dheight;
         }
       else
         {  
@@ -300,7 +300,7 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
 
   gtkBuilder = gtk_builder_new();
   gchar* file = UI_FILE;
-  if (commandline->position>2)
+  if ((commandline->position>2)||((gdk_screen_height() <= 800)))
     {
       file = UI_HOR_FILE;
     }
