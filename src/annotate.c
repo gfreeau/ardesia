@@ -328,7 +328,7 @@ void annotate_add_save_point(gboolean cache)
   data->current_save_index = 0;
    
   /* Load a surface with the data->annotation_cairo_context content and write the file */
-  cairo_surface_t* saved_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, data->width, data->height); 
+  cairo_surface_t* saved_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gdk_screen_width(), gdk_screen_height()); 
   cairo_surface_t* source_surface = cairo_get_target(data->annotation_cairo_context);
   cairo_t *cr = cairo_create (saved_surface);
   cairo_set_source_surface (cr, source_surface, 0, 0);
@@ -501,7 +501,7 @@ void annotate_select_eraser()
   /* Release the grab pointer */
   void annotate_release_pointer_grab()
     {
-      ungrab_pointer(data->display, data->annotation_window);
+      ungrab_pointer(gdk_display_get_default(), data->annotation_window);
     }
 
 #endif
@@ -1073,7 +1073,7 @@ void setup_input_devices ()
 {
   GList     *devices, *d;
 
-  devices = gdk_display_list_devices (data->display);
+  devices = gdk_display_list_devices (gdk_display_get_default());
   for (d = devices; d; d = d->next)
     {
       GdkDevice *device = (GdkDevice *) d->data;
@@ -1098,69 +1098,25 @@ void setup_input_devices ()
 }
 
 
-/* Select eraser, pen or other tool for tablet; code inherited by gromit */
+/* Select eraser, pen or other tool for tablet */
 void annotate_select_tool (AnnotateData* data, GdkDevice *device, guint state)
 {
-  guint buttons = 0, modifier = 0, len = 0;
-  guint req_buttons = 0, req_modifier = 0;
-  guint i, j, success = 0;
-  AnnotatePaintContext *context = NULL;
-  gchar *name;
- 
   if (device)
     {
-      len = strlen (device->name);
-      name = g_strndup (device->name, len + 3);
-      
-      /* Extract Button/Modifiers from state (see GdkModifierType) */
-      req_buttons = (state >> 8) & 31;
-
-      req_modifier = (state >> 1) & 7;
-      if (state & GDK_SHIFT_MASK) req_modifier |= 1;
-
-      name [len] = 124;
-      name [len+3] = 0;
-  
-      /*  0, 1, 3, 7, 15, 31 */
-      context = NULL;
-      i=-1;
-      do
-        {
-          i++;
-          buttons = req_buttons & ((1 << i)-1);
-          j=-1;
-          do
-            {
-              j++;
-              modifier = req_modifier & ((1 << j)-1);
-              name [len+1] = buttons + 64;
-              name [len+2] = modifier + 48;
-            }
-          while (j<=3 && req_modifier >= (1 << j));
-        }
-      while (i<=5 && req_buttons >= (1 << i));
-
-      g_free (name);
-
-      if (!success)
-        {
-          if (device->source == GDK_SOURCE_ERASER)
-            {
-              annotate_select_eraser();
-            }
-          else
-            {
-              annotate_select_pen();
-	    }
-        }
+        if (device->source == GDK_SOURCE_ERASER)
+          {
+            annotate_select_eraser();
+          }
+        else
+          {
+            annotate_select_pen();
+	  }
     }
   else
     {
       g_printerr("Attempt to select nonexistent device!\n");
       data->cur_context = data->default_pen;
-    }
-  
-  data->device = device;
+    } 
 }
 
 
@@ -1186,11 +1142,6 @@ void annotate_quit()
   /* unref gtkbuilder */
   g_object_unref (data->annotationWindowGtkBuilder);
 
-  if (data->shape_cr)
-    {  
-      cairo_destroy(data->shape_cr);
-    }
-
   if (data->shape)
     {  
       g_object_unref(data->shape);
@@ -1214,11 +1165,6 @@ void annotate_quit()
   if (data->annotation_window)
     {
       gtk_widget_destroy(data->annotation_window); 
-    }
-  
-  if (data->transparent_pixmap)
-    {
-      g_object_unref(data->transparent_pixmap);
     }
 
   annotate_coord_list_free();
@@ -1313,13 +1259,9 @@ void annotate_hide_annotation ()
     {
       g_printerr("Hide annotations\n");
     }
- 
-  gdk_draw_drawable (data->annotation_window->window,
-                     data->annotation_window->style->fg_gc[GTK_WIDGET_STATE (data->annotation_window)],
-                     data->transparent_pixmap,
-                     0, 0,
-                     0, 0,
-                     data->width, data->height);
+  
+  // paint transparent on window
+  clear_cairo_context(data->annotation_cairo_context);
   
   data->are_annotations_hidden = TRUE;
 }
@@ -1420,22 +1362,27 @@ void setup_app (GtkWidget* parent)
   
   gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1);
   
-  gtk_widget_set_usize(data->annotation_window, data->width, data->height);
+  gint width = gdk_screen_width();
+  gint height = gdk_screen_width();
+
+  gtk_widget_set_usize(data->annotation_window, width, height);
 
   /* This is important; connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(data->annotationWindowGtkBuilder, (gpointer) data); 
    
   /* Initialize a transparent pixmap with depth 1 to be used as input shape */
-  data->shape = gdk_pixmap_new (NULL, data->width, data->height, 1); 
-  data->shape_cr = gdk_cairo_create(data->shape);
-  if (cairo_status(data->shape_cr) != CAIRO_STATUS_SUCCESS)
+  data->shape = gdk_pixmap_new (NULL, width, height, 1); 
+
+  cairo_t *shape_cr = gdk_cairo_create(data->shape);
+  if (cairo_status(shape_cr) != CAIRO_STATUS_SUCCESS)
     {
        g_printerr ("Unable to allocate the shape cairo context");
        annotate_quit(); 
        exit(1);
     }
-  clear_cairo_context(data->shape_cr);  
- 
+  clear_cairo_context(shape_cr);  
+  cairo_destroy(shape_cr);
+
   /* This might generate an exposure */
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window));
  
@@ -1473,7 +1420,6 @@ gint annotate_init (GtkWidget* parent, gboolean debug)
   data->coordlist = NULL;
   data->savelist = NULL;
   data->current_save_index = 0;
-  data->transparent_pixmap = NULL;
   data->cursor = NULL;
 
   data->is_grabbed = FALSE;
@@ -1489,11 +1435,6 @@ gint annotate_init (GtkWidget* parent, gboolean debug)
   data->timer = g_timer_new();  
 
   allocate_invisible_cursor();
-  
-  data->display = gdk_display_get_default();
-  data->screen = gdk_display_get_default_screen(data->display);
-  data->width = gdk_screen_get_width(data->screen);
-  data->height = gdk_screen_get_height (data->screen);
 
   create_savepoint_dir();  
   setup_app(parent);

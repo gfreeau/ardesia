@@ -93,11 +93,6 @@ typedef struct _AnnotateSave
 /* Annotation data used by the callsbacks */
 typedef struct
 {
-  /* the default screen used */
-  GdkScreen   *screen;
- 
-  /* the current display */
-  GdkDisplay  *display;
   
   /* Gtkbuilder for annotation window */
   GtkBuilder *annotationWindowGtkBuilder;
@@ -105,6 +100,7 @@ typedef struct
   /* timer that was started at the init */
   GTimer* timer;
 
+  /* directory where store the save point */
   gchar* savepoint_dir;  
 
   /* the annotation window */   
@@ -113,16 +109,10 @@ typedef struct
   /* cairo context attached to the window */
   cairo_t *annotation_cairo_context;
 
-  /* the shape pixmap used as mask */   
+  /* the shape pixmap used as input shaping mask */   
   GdkPixmap   *shape;
 
-  /* cairo context attached to the shape pixmap */
-  cairo_t     *shape_cr;
-
-  /* transparent pixmap */
-  GdkPixmap *transparent_pixmap;
-
-  /* mouse cursor */ 
+  /* mouse cursor to be used */ 
   GdkCursor *cursor;
  
   /* mouse invisible cursor */ 
@@ -143,20 +133,15 @@ typedef struct
   /* Point to the current context */  
   AnnotatePaintContext *cur_context;
 
+  /* 
+     This store the old paint type tool; 
+     it is used to switch from/to eraser/pen 
+     using a tablet pen
+   */
   AnnotatePaintType old_paint_type;
 
   /* tool thickness */
   gdouble thickness; 
-
-  /* list of the coodinates of the last line drawn */
-  GSList       *coordlist;
-
-  /* input device */
-  GdkDevice   *device;
-
-  /* width of the screen */
-  guint        width;
-  guint        height;
  
   /* post draw operation */ 
   gboolean     rectify;
@@ -176,6 +161,9 @@ typedef struct
   
   /* is the debug enabled */
   gboolean     debug;
+
+  /* list of the coodinates of the last line drawn */
+  GSList       *coordlist;
 
 } AnnotateData;
 

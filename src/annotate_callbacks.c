@@ -93,11 +93,7 @@ event_expose (GtkWidget *widget,
       annotate_clear_screen();
       
       annotate_acquire_grab();
-		 
-      data->transparent_pixmap = gdk_pixmap_new (data->annotation_window->window,
-                                                 data->width,
-					         data->height, 
-                                                 -1);
+		      
     }
   annotate_restore_surface();
   return TRUE;
@@ -428,7 +424,6 @@ proximity_out (GtkWidget *win,
     {
        annotate_select_pen();
     }
-  data->device = NULL;
   return FALSE;
 }
 
