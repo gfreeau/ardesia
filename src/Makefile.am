@@ -12,10 +12,10 @@ ui_DATA = ardesia.glade \
 	info_dialog.glade
 
 
-if !PLATFORM_WIN32
-        AM_CPPFLAGS = -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" 
-else
+if PLATFORM_WIN32
         AM_CPPFLAGS = -DPACKAGE_LOCALE_DIR=\""../$(DATADIRNAME)/locale"\" 
+else
+        AM_CPPFLAGS = -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" 
 endif
 
 AM_CPPFLAGS += -DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
@@ -65,21 +65,14 @@ ardesia_SOURCES = \
 
 ardesia_LDFLAGS = 
 
-if ENABLE_STATIC
-ardesia_LDFLAGS += -all-static -Wl,-static
-else
-if !PLATFORM_WIN32
 if WITH_GNU_LD
 ardesia_LDFLAGS += -Wl,--export-dynamic
-endif
-endif
 endif
 
 #This create a windows executable instead an msdos ones
 if PLATFORM_WIN32
 ardesia_LDFLAGS += -mwindows
 endif
-
 
 ardesia_LDADD = $(ARDESIA_LIBS)
 

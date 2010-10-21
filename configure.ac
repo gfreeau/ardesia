@@ -45,7 +45,6 @@ AC_CHECK_FUNCS(backtrace)
 
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = yes)
-AM_CONDITIONAL(ENABLE_STATIC, test "$enable_static" = "yes")
 
 dnl Check modules
 pkg_modules="	glib-2.0
