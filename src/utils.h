@@ -138,7 +138,7 @@ GdkColor* rgba_to_gdkcolor(gchar* rgb);
 
 
 /* Save the contents of the pixbuf in the file with name filename */
-gboolean save_png (GdkPixbuf *pixbuf,const gchar *filename);
+gboolean save_png(GdkPixbuf *pixbuf,const gchar *filename);
 
 
 /* 
@@ -163,8 +163,8 @@ gboolean file_exists(gchar* filename);
  * Get the desktop folder;
  * this function use gconf to found the folder
  */
-const gchar* get_desktop_dir (void);
+const gchar* get_desktop_dir(void);
 
 
 /* Remove recursive a directory */
-void rmdir_recursive (gchar *path);
+void rmdir_recursive(gchar *path);

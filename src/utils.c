@@ -245,6 +245,7 @@ const gchar* get_desktop_dir (void)
 }
 
 
+/* Delete a directory recursively */
 void rmdir_recursive (gchar *path)
 {
   GDir *cur_dir;

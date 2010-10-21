@@ -147,6 +147,28 @@ void annotate_coord_list_free()
 }
 
 
+/* Delete savepoint */
+void delete_save_point(AnnotateSave* savepoint)
+{
+  if (savepoint)
+    {
+       if (data->debug)
+	 { 
+	    g_printerr("Remove %s\n", savepoint->filename);
+	 }
+       g_remove(savepoint->filename);
+       g_free(savepoint->filename);
+       if (savepoint->surface)
+         {
+            cairo_surface_destroy(savepoint->surface);
+            savepoint->surface = NULL;
+         }
+       data->savelist = g_slist_remove(data->savelist, savepoint);
+       g_free(savepoint);
+    }
+}
+
+
 /* Free the list of the  savepoint for the redo */
 void annotate_redolist_free()
 {
@@ -156,22 +178,7 @@ void annotate_redolist_free()
   while (data->savelist!=stop_list)
     {
       AnnotateSave* savepoint = (AnnotateSave*) g_slist_nth_data (data->savelist, 0);
-      if (savepoint)
-        {
-          if (data->debug)
-	    { 
-	      g_printerr("Remove %s\n", savepoint->filename);
-	    }
-          g_remove(savepoint->filename);
-          g_free(savepoint->filename);
-          if (savepoint->surface)
-            {
-              cairo_surface_destroy(savepoint->surface);
-              savepoint->surface = NULL;
-            }
-          data->savelist = g_slist_remove(data->savelist, savepoint);
-          g_free(savepoint);
-        }
+      delete_save_point(savepoint);  
     }
 }
 
@@ -182,23 +189,7 @@ void annotate_savelist_free()
   while (data->savelist!=NULL)
     {
       AnnotateSave* savepoint = (AnnotateSave*) g_slist_nth_data (data->savelist, 0);
-       if (savepoint)
-        {
-          if (data->debug)
-	    { 
-	      g_printerr("Remove %s\n", savepoint->filename);
-	    }
-          g_remove(savepoint->filename);
-          g_free(savepoint->filename);
-          
-          if (savepoint->surface)
-            {
-              cairo_surface_destroy(savepoint->surface);
-              savepoint->surface = NULL;
-            }
-          data->savelist = g_slist_remove(data->savelist, savepoint);
-          g_free(savepoint);
-        }
+      delete_save_point(savepoint);
     }
 }
 

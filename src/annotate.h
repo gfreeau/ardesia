@@ -65,13 +65,12 @@
 
 
 
-
 /* Enumeration containing tools */
 typedef enum
-  {
-    ANNOTATE_PEN,
-    ANNOTATE_ERASER,
-  } AnnotatePaintType;
+{
+  ANNOTATE_PEN,
+  ANNOTATE_ERASER,
+} AnnotatePaintType;
 
 
 /* Paint context */

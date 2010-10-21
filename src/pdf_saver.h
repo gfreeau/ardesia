@@ -30,6 +30,7 @@
 #include <cairo.h>
 #include <cairo-pdf.h>
 
+
 typedef struct
 {
   /* the current pdf save thread */

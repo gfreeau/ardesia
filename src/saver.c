@@ -34,8 +34,8 @@
 /* Grab the screenshoot and put it in the GdkPixbuf */
 GdkPixbuf* grab_screenshot()
 {
-  gint height = gdk_screen_height ();
-  gint width = gdk_screen_width ();
+  gint height = gdk_screen_height();
+  gint width = gdk_screen_width();
 
   GdkWindow *root_window = gdk_get_default_root_window();
   return gdk_pixbuf_get_from_drawable (NULL, root_window, NULL,
@@ -63,7 +63,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file")); 
   
   /* preview of saving */
-  GtkWidget*   preview = gtk_image_new ();
+  GtkWidget*   preview = gtk_image_new();
   gint preview_width = 128;
   gint preview_height = 128;
   GdkPixbuf*   previewPixbuf = gdk_pixbuf_scale_simple(buf, preview_width, preview_height, GDK_INTERP_BILINEAR);

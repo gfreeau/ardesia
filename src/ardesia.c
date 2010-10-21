@@ -455,7 +455,6 @@ main (gint argc, char *argv[])
 
   set_the_best_colormap();
 
-  
   CommandLine *commandline = parse_options(argc, argv);
 
   GtkWidget* background_window = create_background_window(commandline->backgroundimage); 
@@ -480,8 +479,7 @@ main (gint argc, char *argv[])
  
   gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
 
-  gint width;
-  gint height;
+  gint width, height;
   gtk_window_get_size(GTK_WINDOW(ardesia_bar_window) , &width, &height);
 
   /* x and y are the left corner coord of the bar window */

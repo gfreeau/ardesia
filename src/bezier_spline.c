@@ -140,7 +140,6 @@ void spline (cairo_t *cr, GSList *list)
 
 
   /* Now paint the smoothed line */
-  
   for ( i = 0; i < N-1; i++ )
     {
 
@@ -152,8 +151,6 @@ void spline (cairo_t *cr, GSList *list)
       //        printf("%d: Bx'(0) = %lf\n", i+1, -3*X[i][0]+3*P[i][0]);
       //        printf("%d: Bx'(1) = %lf\n", i+1, -3*Q[i][0]+3*X[i+1][0]);
 
-      //cairo_move_to(cr,
-//		    X[i][0], X[i][1]);
 
       cairo_curve_to(cr,
 		     P[i][0], P[i][1],
