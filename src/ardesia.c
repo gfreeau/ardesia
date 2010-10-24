@@ -405,7 +405,7 @@ static void print_trace()
      size_t i;
      void *approx_text_end = (void*) ((128+100) * 2<<20);
 
-	 /* 
+     /* 
       * the glibc functions backtrace is missing on all non-glibc platforms
       */
   
@@ -424,6 +424,7 @@ static void print_trace()
 static void print_trace() 
 {
   // not yet implemented
+  // @TODO exist a cross plattform way to print the backtrace
 }
 
 
