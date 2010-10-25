@@ -1397,7 +1397,7 @@ void setup_app (GtkWidget* parent)
   gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1);
   
   gint width = gdk_screen_width();
-  gint height = gdk_screen_width();
+  gint height = gdk_screen_height();
 
   gtk_widget_set_usize(data->annotation_window, width, height);
 
