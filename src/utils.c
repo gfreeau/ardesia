@@ -278,3 +278,18 @@ void rmdir_recursive (gchar *path)
 
   g_rmdir (path);
 }
+
+
+/* Allocate a new point belonging to the stroke passing the values */
+AnnotateStrokeCoordinate * allocate_point(gint x, gint y, gint width, gdouble pressure)
+{
+   AnnotateStrokeCoordinate* point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+   point->x = x;
+   point->y = y;
+   point->width = width;
+   point->pressure = pressure;
+   return point;
+}
+
+
+

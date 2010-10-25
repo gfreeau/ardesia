@@ -167,16 +167,6 @@ typedef struct
 } AnnotateData;
 
 
-/* Struct to store the painted point */
-typedef struct
-{
-  gdouble x;
-  gdouble y;
-  gint width;
-  gdouble pressure;
-} AnnotateStrokeCoordinate;
-
-
 /* Initialize the annotation window */
 gint annotate_init(GtkWidget* parent, gboolean debug);
 

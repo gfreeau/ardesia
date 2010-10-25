@@ -115,16 +115,7 @@ gboolean is_a_rectangle(GSList* list, gint pixel_tollerance)
 }
 
 
-/* Allocate a new stroke coordinate by values */
-AnnotateStrokeCoordinate * allocate_point(gint x, gint y, gint width, gdouble pressure)
-{
-   AnnotateStrokeCoordinate* point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
-   point->x = x;
-   point->y = y;
-   point->width = width;
-   point->pressure = pressure;
-   return point;
-}
+
 
 
 /* Calculate the media of the point pression */

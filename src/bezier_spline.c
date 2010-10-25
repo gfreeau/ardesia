@@ -24,20 +24,28 @@
 
 #include <bezier_spline.h>
 #include <annotate.h>
+#include <utils.h>
 
 
 /* Spline the lines with a bezier curves */
-void spline (cairo_t *cr, GSList *list)
+GSList* spline (GSList *list)
 {
-
+  GSList* ret = NULL;
   gint i;
   guint N = g_slist_length(list);
   gdouble X[N][2]; 
+  gint width = 12;
+  gdouble pressure = 1;
   for  (i=0; i<N; i++)
     {
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i); 
       X[i][0] = point->x;
       X[i][1] = point->y;
+      if (i==0)
+        {
+           width = point->width;
+           pressure = point->pressure;
+        }
     }
 
 
@@ -151,13 +159,19 @@ void spline (cairo_t *cr, GSList *list)
       //        printf("%d: Bx'(0) = %lf\n", i+1, -3*X[i][0]+3*P[i][0]);
       //        printf("%d: Bx'(1) = %lf\n", i+1, -3*Q[i][0]+3*X[i+1][0]);
 
+      AnnotateStrokeCoordinate* first_point =  allocate_point( P[i][0], P[i][1], width, pressure);
+      ret = g_slist_prepend (ret, first_point);
 
-      cairo_curve_to(cr,
-		     P[i][0], P[i][1],
-		     Q[i][0], Q[i][1],
-		     X[i+1][0], X[i+1][1]);                  
+      AnnotateStrokeCoordinate* second_point =  allocate_point(Q[i][0], Q[i][1], width, pressure);
+      ret = g_slist_prepend (ret, second_point);
+
+      AnnotateStrokeCoordinate* third_point =  allocate_point(X[i+1][0], X[i+1][1], width, pressure);
+      ret = g_slist_prepend (ret, third_point);
+              
     }
 
+   ret = g_slist_reverse(ret);
+   return ret;
 }
 
 

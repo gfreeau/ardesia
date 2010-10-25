@@ -913,20 +913,57 @@ void annotate_draw_point(gdouble x, gdouble y, gdouble pressure)
 
 
 /** Draw the point list */
-void annotate_draw_point_list(GSList* outptr)
+void annotate_draw_point_list(GSList* list)
 {
-  if (outptr)
+  if (list)
     {
       AnnotateStrokeCoordinate* out_point;
-      while (outptr)
+      while (list)
         {
-	  out_point = (AnnotateStrokeCoordinate*)outptr->data;
+	  out_point = (AnnotateStrokeCoordinate*)list->data;
 	  gdouble curx = out_point->x; 
 	  gdouble cury = out_point->y;
           annotate_modify_color(data, out_point->pressure); 
 	  // draw line beetween the two points
 	  annotate_draw_line (curx, cury, FALSE);
-	  outptr = outptr->next;   
+	  list = list->next;   
+	}
+    }
+}
+
+
+void annotate_draw_curve(GSList* list)
+{
+   gint lenght = g_slist_length(list);
+   gint i = 0;  
+
+   if (list)
+    {
+      for (i=0; i<lenght; i=i+3)
+        {
+
+           AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
+           AnnotateStrokeCoordinate* second_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i+1);
+
+           if (!second_point)
+             {
+                return;
+             }
+
+           AnnotateStrokeCoordinate* third_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i+2);
+
+           if (!third_point)
+             {
+                /* draw line from first to second point */
+                annotate_draw_line (second_point->x, second_point->y, FALSE);
+                return;
+             } 
+
+           cairo_curve_to(data->annotation_cairo_context,
+		        first_point->x, first_point->y,
+		        second_point->x, second_point->y,
+		        third_point->x, third_point->y);     
+
 	}
     }
 }
@@ -1008,8 +1045,11 @@ void roundify(gboolean closed_path)
          }
        else
          {
-            // it is a closed path but not an eclipse I use bezier
-            spline(data->annotation_cairo_context, outptr);
+            // it is a closed path but it is not an eclipse I use bezier
+            GSList* splinedList = spline(outptr);
+            annotate_coord_list_free();
+            data->coordlist = splinedList;
+            annotate_draw_curve(splinedList);
          }
        /* disallocate the outbounded rectangle */
        g_slist_foreach(listOutN, (GFunc)g_free, NULL);
@@ -1018,9 +1058,11 @@ void roundify(gboolean closed_path)
   else
     {
        // It's a not closed line use Bezier splines to smooth it
-       spline(data->annotation_cairo_context, outptr);
+       GSList* splinedList = spline(outptr);
+       annotate_coord_list_free();
+       data->coordlist = splinedList;
+       annotate_draw_curve(splinedList);
     }
-
 }
 
 

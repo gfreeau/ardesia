@@ -92,6 +92,17 @@ GtkBuilder *gtkBuilder;
 #define BLUE "0000FF"
 
 
+
+/* Struct to store the painted point */
+typedef struct
+{
+  gdouble x;
+  gdouble y;
+  gint width;
+  gdouble pressure;
+} AnnotateStrokeCoordinate;
+
+
 /* Ungrab pointer */
 void ungrab_pointer(GdkDisplay* display, GtkWidget *win);
 
@@ -168,3 +179,9 @@ const gchar* get_desktop_dir(void);
 
 /* Remove recursive a directory */
 void rmdir_recursive(gchar *path);
+
+
+/* Allocate a new point belonging to the stroke passing the values */
+AnnotateStrokeCoordinate* allocate_point(gint x, gint y, gint width, gdouble pressure);
+
+
