@@ -354,7 +354,6 @@ void stop_text_widget()
     }
   g_free(text_data);
   text_data = NULL;
-  annotate_add_save_point(FALSE);
 }
 
 

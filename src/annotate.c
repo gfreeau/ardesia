@@ -411,6 +411,7 @@ void annotate_push_context(cairo_t * cr)
   cairo_set_source_surface (data->annotation_cairo_context,  source_surface, 0, 0);
   cairo_paint(data->annotation_cairo_context);
   cairo_stroke(data->annotation_cairo_context);
+  annotate_add_save_point(FALSE);
 }
 
 
