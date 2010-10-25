@@ -16,8 +16,7 @@
 - Reengineering
   - Screencast recorder using vlclib insted spawn the vlc process
   - Store and load the savepoints using svg files
-  - cache in memory the recent savepoint to have faster undo/redo
-    actions
+  - cache in memory the recent savepoint to have more reactive undo/redo
 
 - MacOsX-quartz porting
   - Investigate about the status
@@ -28,7 +27,7 @@
     installer http://gimp-win.sourceforge.net/
   - Fix the highlighter; this doesn't work because
     seems that the ARGB32 support in cairo is not yet available 
-  - backtrace on windows
+  - print the backtrace on windows when a segfault occurs
 
 - Candidate features:
   - send the log and stacktrace when a problem occurs
