@@ -14,12 +14,13 @@
 - Make a Video tutorial
 
 - Reengineering
+  - Screencast recorder using vlclib insted spawn the vlc process
   - Store and load the savepoints using svg files
   - cache in memory the recent savepoint to have faster undo/redo
     actions
-  - Screencast recorder using vlclib insted spawn the vlc process
 
 - MacOsX-quartz porting
+  - Investigate about the status
   - Make a plan
 
 - Windows7 os
@@ -27,18 +28,19 @@
     installer http://gimp-win.sourceforge.net/
   - Fix the highlighter; this doesn't work because
     seems that the ARGB32 support in cairo is not yet available 
+  - backtrace on windows
 
 - Candidate features:
   - send the log and stacktrace when a problem occurs
+  - Virtual keyboard integration
   - image importer 
     - image gallery, sticky notes
   - Lazo selection tool
   - move, copy, paste
   - deploy the artifact online
     - email
-    - facebook
     - moodle
-  - Virtual keyboard integration
+    - facebook
   - Multi pointer support 
   - Multi page support
   - pdf import using libpoppler 
