@@ -1,3 +1,32 @@
+
+2010-10-26 00:46  alpha@paranoici.org
+        * trunk/ardesia/src/annotate.c,
+        * trunk/ardesia/src/text_widget.c:
+	- Fix in the text insertion; the save point is added 
+          when the graphich context is pushed
+
+
+2010-10-25 12:00  alpha@paranoici.org
+        * trunk/ardesia/src/annotate.c,
+        * trunk/ardesia/src/annotate.h,
+        * trunk/ardesia/src/bezier_spline.c,
+        * trunk/ardesia/src/bezier_spline.h,
+        * trunk/ardesia/src/broken.c,
+        * trunk/ardesia/src/utils.c,
+        * trunk/ardesia/src/utils.h:
+	- Adjusted code for the spline
+
+
+2010-10-20 03:07  alpha@paranoici.org
+        * trunk/ardesia/src/annotate.c:
+        - Layout for netbook
+
+
+2010-10-17 02:32  alpha@paranoici.org
+        * trunk/ardesia/src/annotate.c:
+        - Print stacktrace info in case of segfault on Linux
+
+
 2010-10-03 17:00  alpha@paranoici.org
 	* trunk/ardesia/src/annotate.c, 
         * trunk/ardesia/src/broken.c:

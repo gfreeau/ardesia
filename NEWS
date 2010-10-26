@@ -9,6 +9,9 @@
 =================================
 
 
+This file contain the news about the tool
+
+
 =================
   RELEASE NOTES
 =================
@@ -24,21 +27,19 @@ Dependencies:
 
 Usability:
 - performance improvement
-- adjustment in the pressure support
-  for drawing tablet
 - faster pdf export
+- enhancement in the pressure support
 - added French translation
 
 Features:
-- Ardesia now works also with Kwin and xcompmgr 
-  composite managers 
+- Ardesia now works with Kwin and xcompmgr 
+  composite managers also 
 - Better shape recognition with the roundifier tool;
-  now an improved bezier alghorithm and 
-  an ellipse detection system has been implemented
+  now a new bezier alghorithm and ellipse detection 
+  has been implemented
 - low memory usage; the save point are stored on files
 - add system that print the backtrace in the case that
   a segmentation fault occurs
-
 
 Bug Fix:
 - fix the sound recording on Linux using pulse audio
@@ -46,8 +47,12 @@ Bug Fix:
   with the last point belong to the old line; 
   this problem occurred only using the xtest virtaul device
   (this is used by the python-whiteboard wiimote driver also) 
-- fix the opening image file as ardesia background right clicking on file icon
-  end selecting "open with ardesia"
+- fix the opening image file as ardesia background right clicking 
+  on file icon end selecting "open with ardesia"
+- fix the missing savepoint after the text insertion that 
+  caused a wrong behaviour with undo and redo when was used
+  the text insertion tool
+
 
 -------------
  ardesia 0.4
@@ -67,7 +72,6 @@ Features:
 - Added the pen pressure support  for the drawing tablet
 - Added the eraser support for the drawing tablet on Linux
 - Export as pdf
-
 
 Bug Fix:
 - Fix the file name suggestion in the 
@@ -103,7 +107,6 @@ Features:
 - set the ardesia windows to stay always on the top
 - build on windows plattform
 
-
 Bug fix:
 - fill now works after a close path drawn 
   with or within the highlighter selected
@@ -117,7 +120,6 @@ Bug fix:
 - solve a bug that froze the application
   when the roundifier was enabled 
   and short a lines was drawn
-
 
 Usability:
 - better user interface
