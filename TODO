@@ -37,9 +37,8 @@
   - Lazo selection tool
   - move, copy, paste
   - deploy the artifact online
-    - email
-    - moodle
-    - facebook
+    - email integration
+    - moodle plugin
   - Multi pointer support 
   - Multi page support
   - pdf import using libpoppler 
