@@ -439,7 +439,7 @@
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Record</property>
                 <property name="use_underline">True</property>
-                <property name="stock_id">gtk-media-record</property>
+                <property name="label_widget">media-record</property>
                 <signal name="clicked" handler="on_toolsRecorder_activate"/>
               </object>
               <packing>
@@ -564,5 +564,13 @@
   <object class="GtkImage" id="addpdf">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/add-pdf.png</property>
+  </object>
+    <object class="GtkImage" id="media-record">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/media-record.png</property>
+  </object>
+  <object class="GtkImage" id="media-recorder-unavailable">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/media-recorder-unavailable.png</property>
   </object>
 </interface>

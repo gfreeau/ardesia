@@ -444,11 +444,12 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
   
   if (!is_recorder_available())	
 	{
-		visualize_missing_recorder_program_dialog(GTK_WINDOW(get_bar_window()));
-        gtk_widget_hide(GTK_WIDGET(toolbutton));
-        bar_data->grab = grab_value;
-        start_tool(bar_data);		
-		return;
+	  visualize_missing_recorder_program_dialog(GTK_WINDOW(get_bar_window()));
+          /* put an icon that remeber that the tool is not available */          
+	  gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"media-recorder-unavailable")));
+          bar_data->grab = grab_value;
+          start_tool(bar_data);		
+	  return;
 	}
 	
   if(is_recording())
