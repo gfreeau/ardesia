@@ -79,10 +79,7 @@ gchar* start_color_selector_dialog(GtkToolButton *toolbutton, GtkWindow *parent,
             gtk_color_selection_set_has_palette(colorsel, TRUE);
             gtk_color_selection_get_current_color(colorsel, gdkcolor);
             ret_color = gdkcolor_to_rgb(gdkcolor);
-            if (picked_color)
-              {
-                g_free(picked_color);
-              }
+            g_free(picked_color);
             picked_color = g_strdup_printf("%s%s", ret_color, "FF");
 	    break;
 
@@ -94,9 +91,8 @@ gchar* start_color_selector_dialog(GtkToolButton *toolbutton, GtkWindow *parent,
 	{
 	  gtk_widget_destroy(colorDialog);
 	}
-
+     
       g_free(gdkcolor);
-
     }
   return ret_color;
 }

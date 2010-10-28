@@ -47,11 +47,11 @@ void calculate_position(GtkWidget *ardesia_bar_window,
 {
   *y = ((dheight - wheight)/2);
   /* vertical layout */
-  if (position==WEST)
+  if (position == WEST)
     {
       *x = 0;
     }
-  else if (position==EAST)
+  else if (position == EAST)
     {
       *x = dwidth;
     }
@@ -59,11 +59,11 @@ void calculate_position(GtkWidget *ardesia_bar_window,
     {
       /* horizontal layout */
       *x = (dwidth - wwidth)/2;
-      if (position==NORTH)
+      if (position == NORTH)
         {
           *y = 0; 
         }
-      else if (position==SOUTH)
+      else if (position == SOUTH)
         {
          /* south */
          *y = dheight;
@@ -71,7 +71,7 @@ void calculate_position(GtkWidget *ardesia_bar_window,
       else
         {  
           /* invalid position */
-          perror ("Valid position are NORTH, SOUTH, WEST or EAST\n");
+          perror("Valid position are NORTH, SOUTH, WEST or EAST\n");
           exit(0);
         }
     }
@@ -138,10 +138,10 @@ void print_help()
 void run_missing_composite_manager_dialog()
 {
    GtkWidget *msg_dialog; 
-   msg_dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
-                                        GTK_BUTTONS_OK, 
-                                        gettext("In order to run Ardesia you need to enable a composite manager")
-                                       );
+   msg_dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
+                                       GTK_BUTTONS_OK, 
+                                       gettext("In order to run Ardesia you need to enable a composite manager")
+                                      );
                  
    gtk_dialog_run(GTK_DIALOG(msg_dialog));
    
@@ -156,7 +156,7 @@ void run_missing_composite_manager_dialog()
 /* Check if a composite manager is active */
 void check_composite_manager(GdkScreen* screen)
 {
-  gboolean composite = gdk_screen_is_composited (screen);
+  gboolean composite = gdk_screen_is_composited(screen);
   if (!composite)
     {
        /* start the dialog that says to enable the composite manager */
@@ -168,8 +168,8 @@ void check_composite_manager(GdkScreen* screen)
 /* Set the best colormap available on the system */
 void set_the_best_colormap()
 {
-    GdkDisplay *display = gdk_display_get_default ();
-    GdkScreen   *screen = gdk_display_get_default_screen (display);
+    GdkDisplay *display = gdk_display_get_default();
+    GdkScreen   *screen = gdk_display_get_default_screen(display);
 
     /* In FreeBSD operating system you might have a composite manager */
     #ifdef __FreeBSD__
@@ -235,7 +235,7 @@ CommandLine* parse_options(gint argc, char *argv[])
 	  commandline->debug=TRUE;
 	  break;
 	case 'g':
-	  if (g_strcmp0 (optarg, "east") == 0)
+	  if (g_strcmp0(optarg, "east") == 0)
 	    {
 	      commandline->position = EAST;
 	    }
@@ -317,7 +317,7 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
     }
 
   /* load the gtkbuilder file with the definition of the ardesia bar gui */
-  if (!gtk_builder_add_from_file (gtkBuilder, file, &error))
+  if (!gtk_builder_add_from_file(gtkBuilder, file, &error))
     {
       g_warning ("Couldn't load builder file: %s", error->message);
       g_error_free (error);
@@ -341,9 +341,9 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
 void enable_localization_support()
 {
   #ifdef ENABLE_NLS
-    setlocale (LC_ALL, "");
-    bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
-    textdomain (GETTEXT_PACKAGE);
+    setlocale(LC_ALL, "");
+    bindtextdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
+    textdomain(GETTEXT_PACKAGE);
   #endif
 
   gtk_set_locale();
@@ -432,7 +432,7 @@ static void print_trace()
 
 
 /* Is called when a sigsegv happened*/
-int sigsegv_handler (void *addr, int bad)
+int sigsegv_handler(void *addr, int bad)
 {
   print_trace(); 
   exit(2);
@@ -441,11 +441,11 @@ int sigsegv_handler (void *addr, int bad)
 
 /* This is the starting point */
 int
-main (gint argc, char *argv[])
+main(gint argc, char *argv[])
 {
 
   /* Install the SIGSEGV handler.  */
-  if (sigsegv_install_handler (sigsegv_handler)<0)
+  if (sigsegv_install_handler(sigsegv_handler)<0)
   {
      exit(2);
   }
@@ -463,7 +463,7 @@ main (gint argc, char *argv[])
  
   gtk_window_set_keep_above(GTK_WINDOW(background_window), TRUE); 
 
-  gtk_widget_show (background_window);
+  gtk_widget_show(background_window);
   set_background_window(background_window);
 
   
@@ -474,7 +474,7 @@ main (gint argc, char *argv[])
 
   gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
 
-  gtk_widget_show (annotation_window);
+  gtk_widget_show(annotation_window);
   
   GtkWidget *ardesia_bar_window = create_bar_window(commandline, annotation_window);
  

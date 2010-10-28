@@ -53,10 +53,7 @@ gboolean  quit(BarData *bar_data)
   if (bar_data)
     {
       g_free(bar_data->color);
-      if (bar_data->workspace_dir)
-      {
-        g_free(bar_data->workspace_dir);
-      }
+      g_free(bar_data->workspace_dir);
       g_free(bar_data);
     }
 
@@ -452,7 +449,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
 	  return;
 	}
 	
-  if(is_recording())
+  if (is_recording())
     {
       quit_recorder();
       /* set stop tooltip */ 

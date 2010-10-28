@@ -108,12 +108,12 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 
   /* create a cursor out of the created pixmap */
   rgb_pixbuf = gdk_pixbuf_get_from_drawable(
-                                            NULL, 
-                                            rgb_pixmap, 
-                                            gdk_colormap_get_system(),
-                                            0, 0, 0, 0,
-                                            width, 
-                                            height);
+                                              NULL, 
+                                              rgb_pixmap, 
+                                              gdk_colormap_get_system(),
+                                              0, 0, 0, 0,
+                                              width, 
+                                              height);
   gdk_pixmap_unref(rgb_pixmap);
   rgba_pixbuf = gdk_pixbuf_add_alpha(rgb_pixbuf, TRUE, trans->red, trans->green, trans->blue);
   gdk_pixbuf_unref(rgb_pixbuf);

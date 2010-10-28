@@ -195,7 +195,7 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
    
    if (pdf_data == NULL)
      {
-        if( !g_thread_supported() )
+        if (!g_thread_supported())
 	  {
 	     g_thread_init(NULL);
 	     gdk_threads_init();                  
@@ -217,7 +217,7 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
 
    // start save thread
    GError           *err = NULL ;
-   if( (pdf_data->thread = g_thread_create((GThreadFunc) pdf_save, (void *) NULL, TRUE, &err)) == NULL)
+   if ((pdf_data->thread = g_thread_create((GThreadFunc) pdf_save, (void *) NULL, TRUE, &err)) == NULL)
      {
 	     g_printerr("Thread create failed: %s!!\n", err->message );
 	     g_error_free ( err ) ;
@@ -240,10 +240,10 @@ void quit_pdf_saver()
              gchar* filename = (gchar*) g_slist_nth_data (pdf_data->input_filelist, 0);
                if (filename)
                  {
-                   g_remove(filename);        
+                   g_remove(filename);       
+                   pdf_data->input_filelist = g_slist_remove(pdf_data->input_filelist, filename);
+                   g_free(filename); 
                  }
-             pdf_data->input_filelist = g_slist_remove(pdf_data->input_filelist, filename);
-             g_free(filename);
            }
         g_free(pdf_data);
      }

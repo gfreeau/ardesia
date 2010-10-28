@@ -109,27 +109,27 @@ void clear_background_window()
   gdk_drawable_get_size(background_data->background_window->window, &width, &height);
 
   /* Instantiate a trasparent pixmap to be used as mask */
-  background_data->background_shape = gdk_pixmap_new (NULL, width, height, 1); 
+  background_data->background_shape = gdk_pixmap_new(NULL, width, height, 1); 
   cairo_t* shape_cr = gdk_cairo_create(background_data->background_shape);
   clear_cairo_context(shape_cr); 
   cairo_destroy(shape_cr);
 
   /* This allows the mouse event to be passed to the window below */
   #ifndef _WIN32
-    gdk_window_input_shape_combine_mask (background_data->background_window->window,
-                                         background_data->background_shape,
-                                         0, 0);
+    gdk_window_input_shape_combine_mask(background_data->background_window->window,
+                                        background_data->background_shape,
+                                        0, 0);
   #endif
 }
 
 
 /* Expose event in background window occurs */
 G_MODULE_EXPORT gboolean
-back_event_expose (GtkWidget *widget, 
+back_event_expose(GtkWidget *widget, 
               GdkEventExpose *event, 
               gpointer user_data)
 {
-  gint is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
+  gint is_fullscreen = gdk_window_get_state(widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
   if (!is_fullscreen)
     {
       return TRUE;
@@ -167,9 +167,9 @@ void load_file()
       gdk_cairo_set_source_pixbuf(background_data->back_cr, pixbuf, 0.0, 0.0);
       cairo_paint(background_data->back_cr);
       cairo_stroke(background_data->back_cr);   
-      g_object_unref(G_OBJECT (pixbuf));
+      g_object_unref(G_OBJECT(pixbuf));
       #ifndef _WIN32
-        gdk_window_input_shape_combine_mask (background_data->background_window->window,
+        gdk_window_input_shape_combine_mask(background_data->background_window->window,
                                              NULL, 
                                              0, 0);
       #endif
@@ -196,7 +196,7 @@ void load_color()
       cairo_stroke(background_data->back_cr);
       
       #ifndef _WIN32
-        gdk_window_input_shape_combine_mask (background_data->background_window->window,  
+        gdk_window_input_shape_combine_mask(background_data->background_window->window,  
                                              NULL, 
                                              0, 0);
       #endif
@@ -206,7 +206,7 @@ void load_color()
 
 
 /* Change the background image of ardesia  */
-void change_background_image (gchar *name)
+void change_background_image(gchar *name)
 {
    if (background_data->background_color)
      {
@@ -220,7 +220,7 @@ void change_background_image (gchar *name)
 
 
 /* Change the background color of ardesia  */
-void change_background_color (gchar* rgba)
+void change_background_color(gchar* rgba)
 {
   if (background_data->background_image)
      {

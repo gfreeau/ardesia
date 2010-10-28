@@ -251,25 +251,25 @@ void rmdir_recursive (gchar *path)
   GDir *cur_dir;
   const gchar *dir_file;
 			
-  cur_dir = g_dir_open (path, 0, NULL);
+  cur_dir = g_dir_open(path, 0, NULL);
   
   if (cur_dir)
     {
-       while ((dir_file = g_dir_read_name (cur_dir)))
+       while ((dir_file = g_dir_read_name(cur_dir)))
          {
-            gchar *fpath = g_build_filename (path, dir_file, NULL);
+            gchar *fpath = g_build_filename(path, dir_file, NULL);
 	
             if (fpath) 
               {
-	         if (g_file_test (fpath, G_FILE_TEST_IS_DIR))
+	         if (g_file_test(fpath, G_FILE_TEST_IS_DIR))
                    {
-		      rmdir_recursive (fpath);
+		      rmdir_recursive(fpath);
 	           } 
                  else 
                    {
-		      g_unlink (fpath);
+		      g_unlink(fpath);
 	           }
-	         g_free (fpath);
+	         g_free(fpath);
 	      }
          }
 			

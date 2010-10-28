@@ -88,7 +88,7 @@ gboolean is_recording()
 /* Quit to record */
 void quit_recorder()
 {
-  if(is_recording())
+  if (is_recording())
   {
     g_spawn_close_pid(recorderpid);
     recorderpid = call_recorder(NULL, "stop");
