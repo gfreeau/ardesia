@@ -148,7 +148,7 @@ void annotate_coord_list_free()
 
 
 /* Delete savepoint */
-void delete_save_point(AnnotateSave* savepoint)
+void delete_save_point(AnnotateSavePoint* savepoint)
 {
   if (savepoint)
     {
@@ -177,7 +177,7 @@ void annotate_redolist_free()
   
   while (data->savelist!=stop_list)
     {
-      AnnotateSave* savepoint = (AnnotateSave*) g_slist_nth_data (data->savelist, 0);
+      AnnotateSavePoint* savepoint = (AnnotateSavePoint*) g_slist_nth_data (data->savelist, 0);
       delete_save_point(savepoint);  
     }
 }
@@ -188,7 +188,7 @@ void annotate_savelist_free()
 {
   while (data->savelist!=NULL)
     {
-      AnnotateSave* savepoint = (AnnotateSave*) g_slist_nth_data (data->savelist, 0);
+      AnnotateSavePoint* savepoint = (AnnotateSavePoint*) g_slist_nth_data (data->savelist, 0);
       delete_save_point(savepoint);
     }
 }
@@ -228,6 +228,7 @@ void annotate_modify_color(AnnotateData* data, gdouble pressure)
 /* Calculate the direction in radiants */
 gfloat annotate_get_arrow_direction()
 {
+  /* the lenght might be grater than two */
   GSList *outptr = data->coordlist;   
   gint delta = 2;
 
@@ -239,18 +240,21 @@ gfloat annotate_get_arrow_direction()
   AnnotateStrokeCoordinate* oldpoint = NULL;
   if (g_slist_length(outptr)>=3)
     {
-       GSList *redoutptr = extract_relevant_points(outptr, FALSE, tollerance);
-       oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (redoutptr, 1);
-       point = (AnnotateStrokeCoordinate*) g_slist_nth_data (redoutptr, 0);
+       /* extract the relevant point */
+       GSList *relevantpoint_list = extract_relevant_points(outptr, FALSE, tollerance);
+       oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (relevantpoint_list, 1);
+       point = (AnnotateStrokeCoordinate*) g_slist_nth_data (relevantpoint_list, 0);
+       /* give the direction using the last two point */
        ret = atan2 (point->y-oldpoint->y, point->x-oldpoint->x);
-       g_slist_foreach(redoutptr, (GFunc)g_free, NULL);
-       g_slist_free(redoutptr);
+       /* free the relevant point list */
+       g_slist_foreach(relevantpoint_list, (GFunc)g_free, NULL);
+       g_slist_free(relevantpoint_list);
     }  
   else
     {
        oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 1);
        point = (AnnotateStrokeCoordinate*) g_slist_nth_data (outptr, 0);
-       // calculate the tan beetween the last two point 
+       // calculate the tan beetween the last two point directly
        ret = atan2 (point->y-oldpoint->y, point->x-oldpoint->x);
     }
   return ret;
@@ -307,14 +311,16 @@ void select_color()
  */
 void annotate_add_save_point(gboolean cache)
 {
-  AnnotateSave *savepoint = g_malloc(sizeof(AnnotateSave));
+  AnnotateSavePoint *savepoint = g_malloc(sizeof(AnnotateSavePoint));
  
   gdouble ellapsed_time = g_timer_elapsed(data->timer, NULL);
 
   savepoint->filename = g_strdup_printf("%s%sardesia_%f_vellum.png", data->savepoint_dir, G_DIR_SEPARATOR_S, ellapsed_time);
 
+  /* the story about the future is deleted */
   annotate_redolist_free();
 
+  /* add new savepoint */
   data->savelist = g_slist_prepend (data->savelist, savepoint);
   data->current_save_index = 0;
    
@@ -339,6 +345,7 @@ void annotate_add_save_point(gboolean cache)
     }
   else
     {
+       /* store in cache */
        if (data->debug)
          { 
             g_printerr("Store surface in memory %s\n", savepoint->filename);
@@ -421,7 +428,7 @@ void annotate_restore_surface()
   if (data->annotation_cairo_context)
     {
       gint i = data->current_save_index;
-      AnnotateSave* savepoint = (AnnotateSave*) g_slist_nth_data (data->savelist, i);
+      AnnotateSavePoint* savepoint = (AnnotateSavePoint*) g_slist_nth_data (data->savelist, i);
       if (!savepoint)
          { 
             return;
@@ -529,7 +536,7 @@ void annotate_unhide_cursor()
 }
 
 
-/* Create pixmap and mask for the invisible cursor */
+/* Create pixmap and mask for the invisible cursor; this is used to hide the cursor */
 void get_invisible_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
   *pixmap = gdk_pixmap_new (NULL, size, size, 1);
@@ -565,7 +572,7 @@ void get_invisible_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 }
 
 
-/* Allocate a invisible cursor that can be used to hide the pointer */
+/* Allocate a invisible cursor that can be used to hide the cursor icon */
 void allocate_invisible_cursor()
 {
    GdkPixmap *pixmap, *mask;
@@ -585,7 +592,7 @@ void allocate_invisible_cursor()
 }
 
  
-/* Hide the cursor */
+/* Hide the cursor icon */
 void annotate_hide_cursor()
 {
   gdk_window_set_cursor(data->annotation_window->window, data->invisible_cursor);
@@ -830,6 +837,7 @@ void annotate_draw_arrow (gint distance)
       return;
     }
   
+  /* lenght>= 2 */
   gfloat direction = annotate_get_arrow_direction ();
   if (data->debug)
     {
@@ -907,6 +915,7 @@ void annotate_draw_ellipse(gint x, gint y, gint width, gint height)
 /* Draw a point in x,y respecting the context */
 void annotate_draw_point(gdouble x, gdouble y, gdouble pressure)
 {
+  /* modify a little bit the color depending on pressure */
   annotate_modify_color(data, pressure); 
   cairo_move_to (data->annotation_cairo_context, x, y);
   cairo_line_to (data->annotation_cairo_context, x, y);
@@ -933,6 +942,7 @@ void annotate_draw_point_list(GSList* list)
 }
 
 
+/* Draw a curve using a cubic bezier splines passing to the list's coordinate */
 void annotate_draw_curve(GSList* list)
 {
    gint lenght = g_slist_length(list);

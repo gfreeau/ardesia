@@ -124,7 +124,7 @@ void start_tool(BarData *bar_data)
         {
            // text button then start the text widget
            annotate_release_grab();
-	   start_text_widget( GTK_WINDOW(get_annotation_window()), bar_data->color, bar_data->thickness);
+	   start_text_widget(GTK_WINDOW(get_bar_window()), bar_data->color, bar_data->thickness);
 	}
       else 
 	{

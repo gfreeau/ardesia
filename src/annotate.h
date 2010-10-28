@@ -82,11 +82,11 @@ typedef struct
 
 
 /* Struct to store the save point */
-typedef struct _AnnotateSave
+typedef struct _AnnotateSavePoint
 {
   gchar* filename;
   cairo_surface_t *surface;
-} AnnotateSave;
+} AnnotateSavePoint;
 
 
 /* Annotation data used by the callsbacks */

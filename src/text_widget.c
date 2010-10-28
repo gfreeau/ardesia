@@ -285,10 +285,8 @@ release (GtkWidget *win,
     GdkPixmap* shape = gdk_pixmap_new (NULL, width, height, 1); 
     cairo_t* shape_cr = gdk_cairo_create(shape);
     clear_cairo_context(shape_cr); 
-          
     /* This allows the mouse event to be passed to the window below when ungrab */
     gdk_window_input_shape_combine_mask (text_data->window->window, shape, 0, 0);  
-
     gdk_flush();
 
     cairo_destroy(shape_cr);
@@ -316,7 +314,7 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
   text_data->pen_width = tickness;
 
   create_text_window(parent);
-      
+  gtk_window_set_keep_above(GTK_WINDOW(text_data->window), TRUE);
   gtk_widget_set_events (text_data->window, TEXT_MOUSE_EVENTS);
 
   g_signal_connect(G_OBJECT(text_data->window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
@@ -334,26 +332,29 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 /* Stop the text insertion widget */
 void stop_text_widget()
 {
-  if (text_data->cr)
+  if (text_data)
     {
-      if (text_data->letterlist)
-        {
-          annotate_push_context(text_data->cr);
-          g_slist_foreach(text_data->letterlist, (GFunc)g_free, NULL);
-          g_slist_free(text_data->letterlist);
-        } 
-      cairo_destroy(text_data->cr);     
+       if (text_data->cr)
+         {
+            if (text_data->letterlist)
+              {
+                 annotate_push_context(text_data->cr);
+                 g_slist_foreach(text_data->letterlist, (GFunc)g_free, NULL);
+                 g_slist_free(text_data->letterlist);
+              } 
+            cairo_destroy(text_data->cr);     
+         }
+       if (text_data->window)
+         {
+            gtk_widget_destroy(text_data->window);
+         }
+       if (text_data->pos)
+         {
+            g_free(text_data->pos);
+         }
+       g_free(text_data);
+       text_data = NULL;
     }
-  if (text_data->window)
-    {
-      gtk_widget_destroy(text_data->window);
-    }
-  if (text_data->pos)
-    {
-      g_free(text_data->pos);
-    }
-  g_free(text_data);
-  text_data = NULL;
 }
 
 
