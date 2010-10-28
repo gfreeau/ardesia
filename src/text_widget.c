@@ -292,9 +292,10 @@ release (GtkWidget *win,
     g_object_unref(shape);
 
   #endif
-  /* This present the ardesia bar and the panels; but it lost the keyboard focus */
-  /* @TODO grab the input keyboard and uncomment the next line */
-  //gtk_window_present(GTK_WINDOW(get_bar_window()));
+  /* install a key snooper */
+  text_data->snooper_handler_id = gtk_key_snooper_install(key_press, NULL);
+  /* This present the ardesia bar and the panels */
+  gtk_window_present(GTK_WINDOW(get_bar_window()));
   return TRUE;
 }
 
@@ -304,6 +305,7 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 {
   text_data = g_malloc(sizeof(TextData));
 
+  text_data->snooper_handler_id = 0;
   text_data->window = NULL;
   text_data->cr = NULL;
 
@@ -335,6 +337,10 @@ void stop_text_widget()
 {
   if (text_data)
     {
+       if (text_data->snooper_handler_id)
+         {
+            gtk_key_snooper_remove(text_data->snooper_handler_id);
+         }
        if (text_data->cr)
          {
             if (text_data->letterlist)
