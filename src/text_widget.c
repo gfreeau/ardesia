@@ -255,7 +255,7 @@ release (GtkWidget *win,
          GdkEventButton *ev, 
          gpointer user_data)
 {
- 
+
   #ifdef _WIN32
     ungrab_pointer(gdk_display_get_default(), text_data->window);
   #endif
@@ -288,12 +288,13 @@ release (GtkWidget *win,
     /* This allows the mouse event to be passed to the window below when ungrab */
     gdk_window_input_shape_combine_mask (text_data->window->window, shape, 0, 0);  
     gdk_flush();
-
     cairo_destroy(shape_cr);
     g_object_unref(shape);
 
   #endif
-
+  /* This present the ardesia bar and the panels; but it lost the keyboard focus */
+  /* @TODO grab the input keyboard and uncomment the next line */
+  //gtk_window_present(GTK_WINDOW(get_bar_window()));
   return TRUE;
 }
 

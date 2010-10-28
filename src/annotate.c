@@ -362,9 +362,12 @@ void annotate_add_save_point(gboolean cache)
 /* Configure pen option for cairo context */
 void configure_pen_options()
 {
-  cairo_set_line_cap (data->annotation_cairo_context, CAIRO_LINE_CAP_ROUND);
-  cairo_set_line_join(data->annotation_cairo_context, CAIRO_LINE_JOIN_ROUND); 
-  cairo_set_line_width(data->annotation_cairo_context, annotate_get_thickness());
+  if (data->annotation_cairo_context)
+    {
+       cairo_set_line_cap (data->annotation_cairo_context, CAIRO_LINE_CAP_ROUND);
+       cairo_set_line_join(data->annotation_cairo_context, CAIRO_LINE_JOIN_ROUND); 
+       cairo_set_line_width(data->annotation_cairo_context, annotate_get_thickness());
+    }
   select_color();  
 }
 
