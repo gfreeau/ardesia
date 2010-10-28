@@ -16,7 +16,8 @@
 - Reengineering
   - Screencast recorder using vlclib insted spawn the vlc process
   - Store and load the savepoints using svg files
-  - cache in memory the recent savepoint to have more reactive undo/redo
+  - cache in memory the recent savepoint; in this way we'll have 
+    a more reactive undo/redo
 
 - MacOsX-quartz porting
   - Investigate about the status
@@ -32,7 +33,7 @@
 - Candidate features:
   - send the log and stacktrace when a problem occurs
   - Virtual keyboard integration
-  - image importer 
+  - image importer
     - image gallery, sticky notes
   - Lazo selection tool
   - move, copy, paste
@@ -43,6 +44,7 @@
   - Multi page support
   - pdf import using libpoppler 
   - define a configuration file and settings
+    - select workspace
     - preferred colors
     - thickness size 
   - zoom and rotate
