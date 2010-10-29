@@ -1192,8 +1192,11 @@ void annotate_quit()
 {
   g_timer_destroy(data->timer); 
 
-  /* unref gtkbuilder */
-  g_object_unref (data->annotationWindowGtkBuilder);
+ /* unref gtkbuilder */
+  if (data->annotationWindowGtkBuilder)
+    {
+       g_object_unref (data->annotationWindowGtkBuilder);
+    }
 
   if (data->shape)
     {  
@@ -1382,13 +1385,23 @@ void annotate_clear_screen()
 /* Create the annotation window */
 GtkWidget* create_annotation_window()
 {
+  GtkWidget* widget = NULL;
+  GError* error = NULL;
+
   /* Initialize the main window */
   data->annotationWindowGtkBuilder = gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
-  gtk_builder_add_from_file(data->annotationWindowGtkBuilder, ANNOTATION_UI_FILE, NULL);
+  gtk_builder_add_from_file(data->annotationWindowGtkBuilder, ANNOTATION_UI_FILE, &error);
+
+  if (error)
+    {
+      g_warning ("Couldn't load builder file: %s", error->message);
+      g_error_free (error);
+      return widget;
+    }  
  
-  GtkWidget* widget = GTK_WIDGET(gtk_builder_get_object(data->annotationWindowGtkBuilder,"annotationWindow")); 
+  widget = GTK_WIDGET(gtk_builder_get_object(data->annotationWindowGtkBuilder,"annotationWindow")); 
    
   return widget;
 }
@@ -1407,6 +1420,12 @@ void setup_app(GtkWidget* parent)
   
   /* create annotation window */
   data->annotation_window = create_annotation_window();
+  
+  if (data->annotation_window == NULL)
+    {
+       g_warning("Unable to create the annotation window");
+       return;
+    }
    
   gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(parent));
   

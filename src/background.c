@@ -72,6 +72,7 @@ void destroy_background_window()
    { 
       /* destroy brutally the background window */
       gtk_widget_destroy(background_data->background_window);
+      background_data->background_window = NULL;
    }
 
   if (background_data->back_cr)
@@ -81,8 +82,13 @@ void destroy_background_window()
 
   g_free(background_data->background_color);
   /* unref gtkbuilder */
-  g_object_unref (background_data->backgroundWindowGtkBuilder);
+  if (background_data->backgroundWindowGtkBuilder)
+    {
+       g_object_unref (background_data->backgroundWindowGtkBuilder);
+    }
   g_free(background_data);
+  /* quit gtk */
+  gtk_main_quit();
 }
 
 
@@ -254,6 +260,7 @@ void set_background_window(GtkWidget* widget)
 /* Create the background window */
 GtkWidget* create_background_window(gchar* backgroundimage)
 {
+  GError* error = NULL;
   background_data = g_malloc(sizeof(BackGroundData));
   background_data->background_color = NULL; 
   background_data->background_image = NULL; 
@@ -270,7 +277,14 @@ GtkWidget* create_background_window(gchar* backgroundimage)
   background_data->backgroundWindowGtkBuilder = gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
-  gtk_builder_add_from_file(background_data->backgroundWindowGtkBuilder, BACKGROUND_UI_FILE, NULL);
+  gtk_builder_add_from_file(background_data->backgroundWindowGtkBuilder, BACKGROUND_UI_FILE, &error);
+
+   if (error)
+    {
+      g_warning ("Couldn't load builder file: %s", error->message);
+      g_error_free (error);
+      return background_data->background_window;
+    }  
  
   background_data->background_window = GTK_WIDGET(gtk_builder_get_object(background_data->backgroundWindowGtkBuilder,"backgroundWindow")); 
   gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0);

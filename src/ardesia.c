@@ -185,6 +185,7 @@ void set_the_best_colormap()
     if (colormap)
       {
         gtk_widget_set_default_colormap(colormap);
+        gdk_colormap_unref (colormap);
       }
 }
 
@@ -471,7 +472,13 @@ main(gint argc, char *argv[])
 
   GtkWidget* background_window = create_background_window(commandline->backgroundimage); 
   
- 
+  if (background_window == NULL)
+    {
+       destroy_background_window();
+       g_free(commandline);
+       exit(0);
+    }
+
   gtk_window_set_keep_above(GTK_WINDOW(background_window), TRUE); 
 
   gtk_widget_show(background_window);
@@ -483,7 +490,7 @@ main(gint argc, char *argv[])
 
   GtkWidget* annotation_window = get_annotation_window();  
 
-  if (!annotation_window)
+  if (annotation_window == NULL)
     {
        annotate_quit();
        destroy_background_window();
@@ -491,13 +498,15 @@ main(gint argc, char *argv[])
        exit(0);
     }
 
+  /* annotation window is valid */
+
   gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
 
   gtk_widget_show(annotation_window);
   
   GtkWidget *ardesia_bar_window = create_bar_window(commandline, annotation_window);
   
-  if (!ardesia_bar_window)
+  if (ardesia_bar_window == NULL)
     {
        annotate_quit();
        destroy_background_window();
