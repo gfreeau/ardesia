@@ -28,26 +28,27 @@
     installer http://gimp-win.sourceforge.net/
   - Fix the highlighter; this doesn't work because
     seems that the ARGB32 support in cairo is not yet available 
-  - print the backtrace on windows when a segfault occurs
+  - Print the backtrace on windows when a segfault occurs
 
 - Candidate features:
-  - send the log and stacktrace when a problem occurs
+  - Beter poligon reognition and drawinf
+  - Send the log and stacktrace when a problem occurs
   - Virtual keyboard integration
-  - image importer
+  - Image importer
     - image gallery, sticky notes
   - Lazo selection tool
-  - move, copy, paste
-  - deploy the artifact online
+  - Move, copy, paste
+  - Deploy the artifact online
     - email integration
     - moodle plugin
   - Multi pointer support 
   - Multi page support
-  - pdf import using libpoppler 
-  - define a configuration file and settings
+  - Pdf import using libpoppler 
+  - Define a configuration file and settings
     - select workspace
     - preferred colors
     - thickness size 
-  - zoom and rotate
+  - Zoom and rotate
 
 ===
 EOF
