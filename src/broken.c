@@ -259,29 +259,38 @@ gboolean is_similar_to_a_regular_poligon(GSList* list)
       return FALSE;
     }
   gint lenght = g_slist_length(list);
-  gdouble old_distance = -1;
   gint i = 0;
+  gdouble ideal_distance = -1;
+  gdouble total_distance = 0;  
+
   AnnotateStrokeCoordinate* old_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
               
   for (i=1; i<lenght; i++)
     {
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
-      gdouble distance = get_distance(point->x, point->y, old_point->x, old_point->y);
-      if (old_distance != -1)
-        {
-          /* I have seen that a good compromise allow a 30% of error */
-          gint threshold =  old_distance/3;
-          if (!(is_similar(distance, old_distance, threshold)))
+      gdouble distance = get_distance(old_point->x, old_point->y, point->x, point->y);
+      printf("(%f,%f); (%f,%f); |%f|\n", old_point->x, old_point->y, point->x, point->y, distance);
+      total_distance = total_distance + distance;
+      old_point = point;
+    }
+
+  ideal_distance = total_distance/lenght;
+  printf("Ideal %f\n",ideal_distance);
+
+  i = 0;
+  gint fixed_tollerance_error = 20;
+  old_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
+  for (i=1; i<lenght; i++)
+    {
+      AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
+      /* I have seen that a good compromise allow around 33% of error */
+          gdouble threshold =  ideal_distance/3 + fixed_tollerance_error;
+          gdouble distance = get_distance(point->x, point->y, old_point->x, old_point->y);
+          if (!(is_similar(distance, ideal_distance, threshold)))
             {
+              printf("%f not similar to ideal %f, differ %f that is greater than the threshold %f\n", distance, ideal_distance, fabs(distance - ideal_distance), threshold);
               return FALSE; 
             }
-          // average distance
-          old_distance = (distance + old_distance)/2;
-        }
-      else
-        {
-          old_distance = distance;
-        }
       old_point = point;
     }
   return TRUE;
@@ -383,12 +392,12 @@ GSList* extract_poligon(GSList* listIn)
   radius = ((maxx-minx)+(maxy-miny))/4;   
   gdouble angle_off = M_PI/2;
   gint lenght = g_slist_length(listIn);
-  gdouble angle_step = 2 * M_PI / lenght;
+  gdouble angle_step = 2 * M_PI / (lenght-1);
   angle_off += angle_step/2;
   gdouble x1, y1;
   gint i;
   gdouble medium_pressure = total_pressure/lenght;
-  for (i=0; i<lenght; i++)
+  for (i=0; i<lenght-1; i++)
     {
       x1 = radius * cos(angle_off) + cx;
       y1 = radius * sin(angle_off) + cy;
@@ -398,6 +407,12 @@ GSList* extract_poligon(GSList* listIn)
       point->pressure = medium_pressure;
       angle_off += angle_step;
     }
+  AnnotateStrokeCoordinate* pointL = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, lenght -1); 
+  AnnotateStrokeCoordinate* pointF = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, 0); 
+  pointL->x = pointF->x;
+  pointL->y = pointF->y;
+  pointL->pressure = medium_pressure;
+
   return listIn;  
 }
 
