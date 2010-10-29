@@ -226,7 +226,7 @@ gboolean file_exists(gchar* filename)
  * Get default name return a name containing the tool name and the current date; 
  * the returned value must be free with the g_free 
  */
-gchar * get_default_name()
+gchar* get_default_name()
 {
   gchar* start_string = "ardesia_";
   gchar* date = get_date(); 

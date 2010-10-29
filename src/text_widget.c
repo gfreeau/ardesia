@@ -94,16 +94,20 @@ void delete_character()
 }
 
 
-/* Press keyboard event */
+/* keyboard event snooper */
 G_MODULE_EXPORT gboolean
-key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
+key_snooper(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
 {
+  if (event->type != GDK_KEY_PRESS) {
+      return TRUE;
+   }
+  
   if ((event->keyval == GDK_BackSpace) ||
       (event->keyval == GDK_Delete))
     {
       // undo
       delete_character();
-      return FALSE;
+      return TRUE;
     }
   /* is finished the line or the letter is near to the bar window */
   if ((text_data->pos->x + text_data->extents.x_advance >= gdk_screen_width()) ||
@@ -268,8 +272,8 @@ release (GtkWidget *win,
   
   #ifdef _WIN32  
     /*
-     *  @TODO the gdk_window_input_shape_combine_mask is not implemented
-     *	try a way to pass the mouse input below the window
+     *  @TODO in win32 the gdk_window_input_shape_combine_mask is not implemented
+     *	try a way to pass the mouse input below the text window
      *  
      */
   #else
@@ -292,8 +296,6 @@ release (GtkWidget *win,
     g_object_unref(shape);
 
   #endif
-  /* install a key snooper */
-  text_data->snooper_handler_id = gtk_key_snooper_install(key_press, NULL);
   /* This present the ardesia bar and the panels */
   gtk_window_present(GTK_WINDOW(get_bar_window()));
   return TRUE;
@@ -322,7 +324,8 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 
   g_signal_connect(G_OBJECT(text_data->window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
   g_signal_connect (G_OBJECT(text_data->window), "button_release_event", G_CALLBACK(release), NULL);
-  g_signal_connect (G_OBJECT(text_data->window), "key_press_event", G_CALLBACK (key_press), NULL);
+  /* install a key snooper */
+  text_data->snooper_handler_id = gtk_key_snooper_install(key_snooper, NULL);
 
   gtk_widget_show_all(text_data->window);
   #ifdef _WIN32 

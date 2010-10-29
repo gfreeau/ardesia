@@ -295,7 +295,7 @@ BarData* init_bar_data()
 GtkWidget*
 create_bar_window (CommandLine *commandline, GtkWidget *parent)
 {
-  GtkWidget *bar_window;
+  GtkWidget *bar_window = NULL;
   GError* error = NULL;
 
   gtkBuilder = gtk_builder_new();
@@ -310,17 +310,24 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
       /* east or west */
       if (gdk_screen_height() < 768)
         {
-          /* the bar is too long and then I use an horizontal layout */
+          /* 
+           * the bar is too long and then I use an horizontal layout; 
+           * this is done to have the full bar for netbook and screen
+           * with the 1024x600 resolution 
+           */
           file = UI_HOR_FILE;
           commandline->position=NORTH;
         }
     }
 
   /* load the gtkbuilder file with the definition of the ardesia bar gui */
-  if (!gtk_builder_add_from_file(gtkBuilder, file, &error))
+  gtk_builder_add_from_file(gtkBuilder, file, &error);
+  if (error)
     {
       g_warning ("Couldn't load builder file: %s", error->message);
       g_error_free (error);
+      g_object_unref (gtkBuilder);
+      return bar_window;
     }  
   
   BarData *bar_data = init_bar_data();
@@ -423,8 +430,11 @@ static void print_trace()
 #else
 static void print_trace() 
 {
-  // not yet implemented
-  // @TODO exist a cross plattform way to print the backtrace
+  /* 
+   * is not yet implemented
+   * @TODO does exist a cross plattform way to print the backtrace?
+   * or we must wai for a cross plattform implementation in glibc
+   */
 }
 
 
@@ -450,6 +460,7 @@ main(gint argc, char *argv[])
      exit(2);
   }
 
+  /* Enable the localization support with gettext */
   enable_localization_support();
   
   gtk_init(&argc, &argv);
@@ -472,11 +483,27 @@ main(gint argc, char *argv[])
 
   GtkWidget* annotation_window = get_annotation_window();  
 
+  if (!annotation_window)
+    {
+       annotate_quit();
+       destroy_background_window();
+       g_free(commandline);
+       exit(0);
+    }
+
   gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
 
   gtk_widget_show(annotation_window);
   
   GtkWidget *ardesia_bar_window = create_bar_window(commandline, annotation_window);
+  
+  if (!ardesia_bar_window)
+    {
+       annotate_quit();
+       destroy_background_window();
+       g_free(commandline);
+       exit(0);
+    }
  
   gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
 

@@ -197,6 +197,7 @@ void annotate_savelist_free()
 /* Modify color according to the pressure */
 void annotate_modify_color(AnnotateData* data, gdouble pressure)
 {
+  /* the pressure is greater than 0 */
   if ((!data->annotation_cairo_context)||(!data->cur_context->fg_color))
     {
 	   return;
@@ -1190,7 +1191,7 @@ cairo_t* get_annotation_cairo_context()
 void annotate_quit()
 {
   g_timer_destroy(data->timer); 
-  gtk_widget_destroy(data->annotation_window);
+
   /* unref gtkbuilder */
   g_object_unref (data->annotationWindowGtkBuilder);
 
