@@ -72,7 +72,6 @@ void destroy_background_window()
    { 
       /* destroy brutally the background window */
       gtk_widget_destroy(background_data->background_window);
-      background_data->background_window = NULL;
    }
 
   if (background_data->back_cr)
@@ -97,6 +96,7 @@ void clear_background_window()
 {
   g_free(background_data->background_color);
   background_data->background_color = NULL;
+
   g_free(background_data->background_image);
   background_data->background_image = NULL;
   

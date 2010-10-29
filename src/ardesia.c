@@ -185,7 +185,7 @@ void set_the_best_colormap()
     if (colormap)
       {
         gtk_widget_set_default_colormap(colormap);
-        gdk_colormap_unref (colormap);
+        gdk_colormap_unref(colormap);
       }
 }
 
@@ -328,6 +328,7 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
       g_warning ("Couldn't load builder file: %s", error->message);
       g_error_free (error);
       g_object_unref (gtkBuilder);
+      gtkBuilder = NULL;
       return bar_window;
     }  
   

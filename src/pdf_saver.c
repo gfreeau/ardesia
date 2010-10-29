@@ -53,7 +53,7 @@ gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixb
    gtk_image_set_from_pixbuf (GTK_IMAGE (preview), previewPixbuf);
   
    gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);   
-   g_object_unref (previewPixbuf);
+   g_object_unref(previewPixbuf);
 
    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), *workspace_dir);
    
@@ -151,7 +151,7 @@ void *pdf_save(void *arg)
         gdk_cairo_set_source_pixbuf(pdf_cr, pixbuf, 0, 0);
         cairo_paint(pdf_cr);
         cairo_show_page(pdf_cr);
-        g_object_unref (pixbuf);
+        g_object_unref(pixbuf);
      }
 
    cairo_surface_flush(pdf_surface);  
@@ -204,12 +204,12 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
 	  }
         if (!init_pdf_saver(parent, workspace_dir, pixbuf))
           {  
-             g_object_unref (pixbuf);
+             g_object_unref(pixbuf);
              return;
           }
       }
   
-   g_object_unref (pixbuf);
+   g_object_unref(pixbuf);
    pdf_data->input_filelist = g_slist_prepend(pdf_data->input_filelist, filename);  
 
 
@@ -220,7 +220,7 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
    if ((pdf_data->thread = g_thread_create((GThreadFunc) pdf_save, (void *) NULL, TRUE, &err)) == NULL)
      {
 	     g_printerr("Thread create failed: %s!!\n", err->message );
-	     g_error_free ( err ) ;
+	     g_error_free(err) ;
      }   
 
 }

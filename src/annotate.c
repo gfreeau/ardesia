@@ -83,7 +83,7 @@ gdouble annotate_get_thickness()
 
 
 /* Create a new paint context */
-AnnotatePaintContext * annotate_paint_context_new(AnnotatePaintType type)
+AnnotatePaintContext* annotate_paint_context_new(AnnotatePaintType type)
 {
   AnnotatePaintContext *context;
   context = g_malloc (sizeof(AnnotatePaintContext));
@@ -108,13 +108,6 @@ void annotate_paint_context_print(gchar *name, AnnotatePaintContext *context)
     }
 
   g_printerr ("color: %s\n", context->fg_color);
-}
-
-
-/* Free the memory allocated by paint context */
-void annotate_paint_context_free (AnnotatePaintContext *context)
-{
-  g_free(context);
 }
 
 
@@ -1187,6 +1180,17 @@ cairo_t* get_annotation_cairo_context()
 }
 
 
+/* Free the memory allocated by paint context */
+void annotate_paint_context_free(AnnotatePaintContext *context)
+{
+  if (context)
+    {
+       g_free(context);
+       context=NULL;
+    }
+}
+
+
 /* Quit the annotation */
 void annotate_quit()
 {
@@ -1200,7 +1204,7 @@ void annotate_quit()
 
   if (data->shape)
     {  
-      g_object_unref(data->shape);
+       g_object_unref(data->shape);
     }
 	
   /* destroy cairo */  
@@ -1211,13 +1215,13 @@ void annotate_quit()
   
   if (data->invisible_cursor)
     {
-      gdk_cursor_unref(data->invisible_cursor);
+       gdk_cursor_unref(data->invisible_cursor);
     }
 
   /* free all */
   if (data->annotation_window)
     {
-      gtk_widget_destroy(data->annotation_window); 
+       gtk_widget_destroy(data->annotation_window); 
     }
 
   annotate_coord_list_free();
@@ -1230,9 +1234,11 @@ void annotate_quit()
     }
 
   g_free(data->savepoint_dir);
-  g_free(data->default_pen);
-  g_free(data->default_eraser);
  
+  annotate_paint_context_free(data->default_pen);
+  annotate_paint_context_free(data->default_eraser);
+  annotate_paint_context_free(data->cur_context);
+
   g_free(data);
 
 }
