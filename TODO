@@ -31,7 +31,7 @@
   - Print the backtrace on windows when a segfault occurs
 
 - Candidate features:
-  - Beter poligon reognition and drawinf
+  - Beter poligon recognition and drawing
   - Send the log and stacktrace when a problem occurs
   - Virtual keyboard integration
   - Image importer
