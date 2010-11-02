@@ -50,7 +50,7 @@ void annotate_set_rectifier(gboolean rectify)
 }
 
 
-/* Set rectifier */
+/* Set rounder */
 void annotate_set_rounder(gboolean roundify)
 {
   data->roundify = roundify;
@@ -111,7 +111,7 @@ void annotate_paint_context_print(gchar *name, AnnotatePaintContext *context)
 }
 
 
-/* Add to the list of the painted point the point (x,y) storing the width */
+/* Add to the list of the painted point the point (x,y) */
 void annotate_coord_list_prepend (gdouble x, gdouble y, gint width, gdouble pressure)
 {
   AnnotateStrokeCoordinate *point;
@@ -203,7 +203,7 @@ void annotate_modify_color(AnnotateData* data, gdouble pressure)
     {
       pressure = 0.1;
     }
-  /* pressure value is from 0 to 1 and it modify the RGBA gradient */
+  /* pressure value is from 0 to 1; this value modify the RGBA gradient */
   gint r,g,b,a;
   sscanf (data->cur_context->fg_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
   gdouble old_pressure = pressure;
@@ -212,7 +212,7 @@ void annotate_modify_color(AnnotateData* data, gdouble pressure)
        AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, 0);
        old_pressure = last_point->pressure;      
     }
-  /* if you put an highter value yo will have more contrast beetween the lighter and darker color depending on pressure */
+  /* if you put an highter value you will have more contrast beetween the lighter and darker color depending on pressure */
   gdouble contrast = 96;
   gdouble corrective = (1-( 3 * pressure + old_pressure)/4) * contrast;
   cairo_set_source_rgba (data->annotation_cairo_context, (r + corrective)/255, (g + corrective)/255, (b+corrective)/255, (gdouble) a/255);
@@ -222,11 +222,11 @@ void annotate_modify_color(AnnotateData* data, gdouble pressure)
 /* Calculate the direction in radiants */
 gfloat annotate_get_arrow_direction()
 {
-  /* the list must be not null and the lenght might be grater than two */
+  /* the list must be not null and the lenght might be greater than two */
   GSList *outptr = data->coordlist;   
   gint delta = 2;
 
-  // make the standard deviation 
+
   gint tollerance = data->thickness * delta;
   gfloat ret;  
 
@@ -234,7 +234,7 @@ gfloat annotate_get_arrow_direction()
   AnnotateStrokeCoordinate* oldpoint = NULL;
   if (g_slist_length(outptr) >= 3)
     {
-       /* extract the relevant point */
+       /* extract the relevant point with the standard deviation */
        GSList *relevantpoint_list = extract_relevant_points(outptr, FALSE, tollerance);
        oldpoint = (AnnotateStrokeCoordinate*) g_slist_nth_data (relevantpoint_list, 1);
        point = (AnnotateStrokeCoordinate*) g_slist_nth_data (relevantpoint_list, 0);
@@ -716,7 +716,7 @@ void get_eraser_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
        exit(1);
     }
 
-  /* paint the eraser circle by code */
+  /* paint the eraser circle icon by code */
   clear_cairo_context(eraser_shape_cr);
   cairo_set_operator(eraser_shape_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(eraser_shape_cr, circle_width);
@@ -777,7 +777,7 @@ void annotate_acquire_input_grab()
 
 
 /* Grab the cursor */
-void annotate_acquire_grab ()
+void annotate_acquire_grab()
 {
   if  (!data->is_grabbed)
     {
@@ -835,7 +835,7 @@ void annotate_draw_arrow(gint distance)
   gint lenght = g_slist_length(data->coordlist);
   if (lenght < 2)
     {
-      /* if it has lenght 1 then is a point and I don't draw the arrow */
+      /* if it has lenght lesser then two then is a point and it has no sense draw the arrow */
       return;
     }
   
@@ -896,7 +896,7 @@ void annotate_draw_arrow(gint distance)
 }
 
 
-/* This draw an ellipse taking the top left edge coordinates the width and the eight of the bounded rectangle */
+/* This an ellipse taking the top left edge coordinates the width and the eight of the bounded rectangle */
 void annotate_draw_ellipse(gint x, gint y, gint width, gint height)
 {
   if (data->debug)
@@ -982,7 +982,7 @@ void annotate_draw_curve(GSList* list)
 }
 
 
-/* Rectify the line or the shape */
+/* Rectify the line */
 void rectify(gboolean closed_path)
 {
   gint tollerance = data->thickness;
@@ -1007,7 +1007,7 @@ void rectify(gboolean closed_path)
 }
 
 
-/* Roundify the line or the shape */
+/* Roundify the line */
 void roundify(gboolean closed_path)
 {
   gint tollerance = data->thickness * 2;
@@ -1038,10 +1038,10 @@ void roundify(gboolean closed_path)
     }
 
   if (closed_path)
-    {  
+    {
+       // It could be an ellipse or a closed curve path  
        GSList* listOutN = extract_outbounded_rectangle(outptr);
 
-       // It could be an ellipse draw it with the outbounded rectangle in the outptr list
        AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)listOutN->data;
        gdouble lastx = out_point->x; 
        gdouble lasty = out_point->y;
@@ -1058,7 +1058,7 @@ void roundify(gboolean closed_path)
          }
        else
          {
-            // it is a closed path but it is not an eclipse I use bezier
+            // it is a closed path but it is not an eclipse I use bezier to spline the path
             GSList* splinedList = spline(outptr);
             annotate_coord_list_free();
             data->coordlist = splinedList;
@@ -1070,7 +1070,7 @@ void roundify(gboolean closed_path)
      }   
   else
     {
-       // It's a not closed line use Bezier splines to smooth it
+       // It's a not closed path than I use bezier to spline the path
        GSList* splinedList = spline(outptr);
        annotate_coord_list_free();
        data->coordlist = splinedList;
@@ -1082,7 +1082,7 @@ void roundify(gboolean closed_path)
 /* Call the geometric shape recognizer */
 void annotate_shape_recognize(gboolean closed_path)
 {
-  /* Rectifier code only if the list is greater that 3 */
+  /* rectify only if the list is greater that 3 */
   if ( g_slist_length(data->coordlist)>3)
     {
       if (data->rectify)
@@ -1244,7 +1244,7 @@ void annotate_quit()
 }
 
 
-/* Release input grab; the input event will must listen below the window */
+/* Release input grab; the input event will be passed below the window */
 void annotate_release_input_grab()
 {
   gdk_window_set_cursor(data->annotation_window->window, NULL);
@@ -1285,7 +1285,7 @@ void annotate_release_grab ()
 }
 
 
-/* Fill the last shape if it is a close path */
+/* Fill the last shape */
 void annotate_fill()
 {
   if (data->debug)
@@ -1311,7 +1311,7 @@ void annotate_fill()
 }
 
 
-/* Undo to the last save point */
+/* Undo reverting to the last save point */
 void annotate_undo()
 {
   if (data->savelist)
@@ -1389,7 +1389,7 @@ GtkWidget* create_annotation_window()
 /* Setup the application */
 void setup_app(GtkWidget* parent)
 {
-  /* initialize pen context */
+  /* initialize the pen context */
   data->default_pen = annotate_paint_context_new(ANNOTATE_PEN);
   data->default_eraser = annotate_paint_context_new(ANNOTATE_ERASER);
   data->cur_context = data->default_pen;
@@ -1397,7 +1397,7 @@ void setup_app(GtkWidget* parent)
   
   setup_input_devices();
   
-  /* create annotation window */
+  /* create the annotation window */
   data->annotation_window = create_annotation_window();
   
   if (data->annotation_window == NULL)
@@ -1415,7 +1415,7 @@ void setup_app(GtkWidget* parent)
 
   gtk_widget_set_usize(data->annotation_window, width, height);
 
-  /* This is important; connect all the callback from gtkbuilder xml file */
+  /* connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(data->annotationWindowGtkBuilder, (gpointer) data); 
    
   /* Initialize a transparent pixmap with depth 1 to be used as input shape */
@@ -1431,13 +1431,13 @@ void setup_app(GtkWidget* parent)
   clear_cairo_context(shape_cr);  
   cairo_destroy(shape_cr);
 
-  /* This might generate an exposure */
+  /* This put the window in fullscreen generating an exposure */
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window));
  
   gtk_widget_show_all(data->annotation_window);
   
   #ifdef _WIN32
-    /* in the gtk 2.16.6 used for windows the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
+    /* in the gtk 2.16.6 the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
     gtk_widget_set_double_buffered(data->annotation_window, FALSE); 
     // I use a layered window that use the black as transparent color
     setLayeredGdkWindowAttributes(data->annotation_window->window, RGB(0,0,0), 0, LWA_COLORKEY );	
