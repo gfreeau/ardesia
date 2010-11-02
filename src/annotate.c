@@ -1474,7 +1474,6 @@ gint annotate_init(GtkWidget* parent, gboolean debug)
   data->arrow = FALSE; 
   data->rectify = FALSE;
   data->roundify = FALSE;
-  data->are_annotations_hidden = FALSE; 
 
   data->is_cursor_hidden = TRUE;
 

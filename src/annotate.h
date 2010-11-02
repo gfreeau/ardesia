@@ -154,9 +154,6 @@ typedef struct
   
   /* is the cursor hidden */
   gboolean     is_cursor_hidden;
-
-  /* is the annotation window hidden */
-  gboolean are_annotations_hidden;
   
   /* is the debug enabled */
   gboolean     debug;

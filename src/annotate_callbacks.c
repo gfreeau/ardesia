@@ -47,10 +47,6 @@ event_expose(GtkWidget *widget,
               gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
-  if (data->are_annotations_hidden)
-    {
-      return TRUE;
-    }
 
   gint is_fullscreen = gdk_window_get_state(widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
   if (!is_fullscreen)
@@ -137,11 +133,7 @@ paint(GtkWidget *win,
       return TRUE;
     }   
   #endif
-	
-  if (data->are_annotations_hidden)
-    {
-      return TRUE;
-    }
+
   annotate_coord_list_free();
  
   annotate_unhide_cursor();
@@ -206,11 +198,6 @@ paintto(GtkWidget *win,
        return TRUE;
     }
   #endif
-  
-  if (data->are_annotations_hidden)
-    {
-      return TRUE;
-    }
 
   annotate_unhide_cursor();
  
@@ -300,11 +287,6 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
       return TRUE;
     }
   #endif 
- 
-  if (data->are_annotations_hidden)
-    {
-      return TRUE;
-    }
 	
   /* only button1 allowed */
   if (!(ev->button == 1))
@@ -378,10 +360,6 @@ proximity_in(GtkWidget *win,
     {
       g_printerr("Proximity in device %s\n", ev->device->name);
     }
-  if (data->are_annotations_hidden)
-    {
-      return TRUE;
-    }
 
   if (data->cur_context->type == ANNOTATE_PEN)
     {
@@ -416,10 +394,7 @@ proximity_out(GtkWidget *win,
     {
       g_printerr("Proximity out device %s\n", ev->device->name);
     }
-  if (data->are_annotations_hidden)
-    {
-      return TRUE;
-    }
+
   if (data->old_paint_type == ANNOTATE_PEN)
     {
        annotate_select_pen();
