@@ -1311,33 +1311,6 @@ void annotate_fill()
 }
 
 
-/* Hide the annotations */
-void annotate_hide_annotation()
-{
-  if (data->debug)
-    {
-      g_printerr("Hide annotations\n");
-    }
-  
-  // paint transparent on window
-  clear_cairo_context(data->annotation_cairo_context);
-  
-  data->are_annotations_hidden = TRUE;
-}
-
-
-/* Show the annotations */
-void annotate_show_annotation ()
-{
-  if (data->debug)
-    {
-      g_printerr("Show annotations\n");
-    }
-  data->are_annotations_hidden = FALSE;  
-  annotate_restore_surface();
-}
-
-
 /* Undo to the last save point */
 void annotate_undo()
 {

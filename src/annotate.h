@@ -185,12 +185,6 @@ void annotate_restore_surface();
 /* Get the cairo context that contains the background */
 cairo_t* get_annotation_cairo_background_context();
 
-/* Hide the annotations */
-void annotate_hide_annotation();
-
-/* Show the annotations */
-void annotate_show_annotation();
-
 /* Paint the context over the annotation window */
 void annotate_push_context(cairo_t * cr);
 
