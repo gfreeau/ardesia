@@ -39,8 +39,7 @@ static gboolean is_active = FALSE;
 
 
 /* 
- * Create a annotate client process the annotate
- * that talk with the server process option is start or stop
+ * Create a recorder process; it return the pid
  */
 GPid call_recorder(gchar* filename, gchar* option)
 {

@@ -21,7 +21,6 @@
  *
  */
  
-/* This is the file whith the code to handle images */
 
 #ifdef HAVE_CONFIG_H
   #include <config.h>
@@ -104,7 +103,7 @@ void clear_background_window()
     * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
     * I avoid a complete transparent window because in some operating system this would become
     * transparent to the pointer input also
-	*
+    *
     */
   gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), BACKGROUND_OPACITY);
 
@@ -273,7 +272,7 @@ GtkWidget* create_background_window(gchar* backgroundimage)
        background_data->background_image = g_strdup_printf("%s", backgroundimage); 
     } 
 
-  /* Initialize the main window */
+  /* Initialize the background window */
   background_data->backgroundWindowGtkBuilder = gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
@@ -291,10 +290,10 @@ GtkWidget* create_background_window(gchar* backgroundimage)
 
   gtk_widget_set_usize(background_data->background_window, gdk_screen_width(), gdk_screen_height());
 
-  /* This is important; connect all the callback from gtkbuilder xml file */
+  /* connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(background_data->backgroundWindowGtkBuilder, (gpointer) NULL);
 
-  /* This might generate an exposure */
+  /* This put in fullscreen and generate an exposure */
   gtk_window_fullscreen(GTK_WINDOW(background_data->background_window));
 
   gtk_widget_show_all(background_data->background_window);

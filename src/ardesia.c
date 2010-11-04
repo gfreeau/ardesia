@@ -110,7 +110,7 @@ void calculate_initial_position(GtkWidget *ardesia_bar_window,
 }
 
 
-/* Prgint command line help */
+/* Print the command line help */
 void print_help()
 {
   gchar* version = "0.5";
@@ -159,7 +159,7 @@ void check_composite_manager(GdkScreen* screen)
   gboolean composite = gdk_screen_is_composited(screen);
   if (!composite)
     {
-       /* start the dialog that says to enable the composite manager */
+       /* start the enable composite manager dialog */
        run_missing_composite_manager_dialog();
     }
 }
@@ -435,8 +435,8 @@ static void print_trace()
 {
   /* 
    * is not yet implemented
-   * @TODO does exist a cross plattform way to print the backtrace?
-   * or we must wai for a cross plattform implementation in glibc
+   * @TODO does exist a cross plattform way to print the backtrace
+   * or we must wait for a cross plattform implementation in non-glibc plattforms?
    */
 }
 
@@ -444,7 +444,7 @@ static void print_trace()
 #endif
 
 
-/* Is called when a sigsegv happened*/
+/* Is called when occurs a sigsegv */
 int sigsegv_handler(void *addr, int bad)
 {
   print_trace(); 
@@ -457,7 +457,7 @@ int
 main(gint argc, char *argv[])
 {
 
-  /* Install the SIGSEGV handler.  */
+  /* Install the SIGSEGV handler */
   if (sigsegv_install_handler(sigsegv_handler)<0)
   {
      exit(2);
@@ -521,7 +521,7 @@ main(gint argc, char *argv[])
   gint width, height;
   gtk_window_get_size(GTK_WINDOW(ardesia_bar_window) , &width, &height);
 
-  /* x and y are the left corner coord of the bar window */
+  /* x and y are the ardesia bar left corner coords */
   gint x, y;
   calculate_initial_position(ardesia_bar_window, 
                              &x, &y, 

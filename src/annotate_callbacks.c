@@ -40,7 +40,7 @@ gdouble get_pressure(GdkEvent* ev)
 }
 
 
-/* Expose event: this occurs when the windows is show */
+/* Expose event: this occurs when the window is shown */
 G_MODULE_EXPORT gboolean
 event_expose(GtkWidget *widget, 
               GdkEventExpose *event, 
@@ -126,9 +126,8 @@ paint(GtkWidget *win,
 
   #ifdef _WIN32
   if (inside_bar_window(ev->x, ev->y))
-    /* point is in the ardesia bar */
     {
-      /* the last point was outside the bar then ungrab */
+      /* the point is inside the ardesia bar then ungrab */
       annotate_release_grab();
       return TRUE;
     }   
@@ -186,14 +185,13 @@ paintto(GtkWidget *win,
   
   #ifdef _WIN32
   if (inside_bar_window(ev->x, ev->y))
-    /* point is in the ardesia bar */
     {
        if (data->debug)
          {    
            g_printerr("Device '%s': Move on the bar then ungrab\n",
 	              ev->device->name);
          }
-       /* the last point was outside the bar then ungrab */
+       /* the point is inside the ardesia bar then ungrab */
        annotate_release_grab();
        return TRUE;
     }
@@ -326,10 +324,10 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
         { 
           gboolean closed_path = (distance == 0) ; 
           annotate_shape_recognize(closed_path);
-          /* If is selected an arrowtype the draw the arrow */
+          /* If is selected an arrowtype then I draw the arrow */
           if (data->arrow)
             {
-	      /* print arrow at the end of the line */
+	      /* print arrow at the end of the path */
 	      annotate_draw_arrow(distance);
 	    }
          }

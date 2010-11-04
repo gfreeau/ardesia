@@ -45,7 +45,7 @@ gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixb
    
    gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file")); 
  
-   /* preview of saving */
+   /* saving preview */
    GtkWidget*   preview = gtk_image_new ();
    gint preview_width = 128;
    gint preview_height = 128;

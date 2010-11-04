@@ -36,8 +36,7 @@ static gchar*       picked_color = NULL;
 
 
 /*
- * Start the dialog that ask to the user where save the image
- * containing the screenshot
+ * Start the color selector dialog 
  * it return the selected color
  */
 gchar* start_color_selector_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar* color)

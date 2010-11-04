@@ -31,8 +31,7 @@
  
 
 /*
- * Start the dialog that give 
- * to the user the program'info
+ * Start the info dialog
  */
 void start_info_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
 {
