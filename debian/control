@@ -1,12 +1,12 @@
 Source: ardesia
+Priority: optional
 Section: graphics
-Priority: extra
 Maintainer: Pilolli Pietro <pilolli@fbk.eu>
-Depends:   libatk1.0-0 (>= 1.9.0), libc6 (>= 2.3.4-1), libcairo2 (>= 1.0.2), libfontconfig1 (>= 2.3.0), libglib2.0-0 (>= 2.8.0), libgtk2.0-0 (>= 2.8.0), libpango1.0-0 (>= 1.10.1), libx11-6, libxcursor1 (>> 1.1.2), libxext6, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libgsl0ldbl, libsigsegv0, vlc
-Build-Depends: debhelper (>= 7)
 Standards-Version: 3.8.1
+Build-Depends: autotools-dev, intltool, libtool, libgtk2.0-dev, libsigsegv-dev, libsigsegv0, binutils-dev, libatk1.0-dev, libx11-dev, libpng12-dev, libglib2.0-dev, libgconf2-dev, libfontconfig1-dev, libfreetype6-dev, libgsl0-dev, libc6-dev 
 
 Package: ardesia
+Depends: libatk1.0-0 (>= 1.9.0), libc6 (>= 2.3.4-1), libcairo2 (>= 1.0.2), libfontconfig1 (>= 2.3.0), libglib2.0-0 (>= 2.8.0), libgtk2.0-0 (>= 2.8.0), libpango1.0-0 (>= 1.10.1), libx11-6, libxcursor1 (>> 1.1.2), libxext6, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libgsl0ldbl, libsigsegv0, vlc
 Architecture: any
 Description: Ardesia is a free digital sketchpad.
  You can make colored free-hand annotations with digital ink everywhere,

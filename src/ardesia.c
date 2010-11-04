@@ -35,9 +35,9 @@ static asymbol **syms = 0;
 static asection *text = 0;
 #endif
 
+
 /* 
- * Calculate the position where calculate_initial_position the main window 
- * the centered position upon the window manager bar
+ * Calculate the better position where put the bar
  */
 void calculate_position(GtkWidget *ardesia_bar_window, 
                         gint dwidth, gint dheight, 
@@ -79,8 +79,8 @@ void calculate_position(GtkWidget *ardesia_bar_window,
 
 
 /* 
- * Calculate initial position
- * Here can be beatiful have a configuration file
+ * Calculate teh initial position
+ * @TODO Here can be beatiful have a configuration file
  * where put the user can decide the position of the window
  */
 void calculate_initial_position(GtkWidget *ardesia_bar_window, 
@@ -134,7 +134,7 @@ void print_help()
 }
 
 
-/* This call the dialog that inform the user to enable compiz */
+/* Call the dialog that inform the user to enable a composite manager */
 void run_missing_composite_manager_dialog()
 {
    GtkWidget *msg_dialog; 
@@ -270,7 +270,7 @@ CommandLine* parse_options(gint argc, char *argv[])
 }
 
 
-/* Allocate and initializate the bar data structure */
+/* Allocate and initialize the bar data structure */
 BarData* init_bar_data()
 {
   BarData *bar_data = (BarData *) g_malloc(sizeof(BarData));
@@ -321,6 +321,7 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
         }
     }
 
+
   /* load the gtkbuilder file with the definition of the ardesia bar gui */
   gtk_builder_add_from_file(gtkBuilder, file, &error);
   if (error)
@@ -334,7 +335,7 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
   
   BarData *bar_data = init_bar_data();
 
-  /* This is important; connect all the callback from gtkbuilder xml file */
+  /* connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(gtkBuilder, (gpointer) bar_data);
   bar_window = GTK_WIDGET (gtk_builder_get_object(gtkBuilder, "winMain"));
   gtk_window_set_transient_for(GTK_WINDOW(bar_window), GTK_WINDOW(parent));
@@ -522,13 +523,13 @@ main(gint argc, char *argv[])
 
   /* x and y are the left corner coord of the bar window */
   gint x, y;
-  /* calculate_initial_position the window in the desired position */
   calculate_initial_position(ardesia_bar_window, 
                              &x, &y, 
                              width, height,
                              commandline->position);
   g_free(commandline);
 
+  /* move the window in the desired position */
   gtk_window_move(GTK_WINDOW(ardesia_bar_window), x, y);  
 
   gtk_widget_show(ardesia_bar_window);

@@ -351,7 +351,7 @@ proximity_in(GtkWidget *win,
              gpointer func_data)
 {
   /*
-   * @TODO this message don't arrive on windows; why? 
+   * @TODO this message doesn't arrive on windows; why? 
    * is it a driver problem, gtk or what
    *
    */
@@ -385,7 +385,7 @@ proximity_out(GtkWidget *win,
               gpointer func_data)
 {
   /*
-   * @TODO this message don't arrive on windows; why? 
+   * @TODO this message doesn't arrive on windows; why? 
    * is it a driver problem, gtk or what
    *
    */
