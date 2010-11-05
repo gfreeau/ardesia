@@ -482,8 +482,8 @@ main(gint argc, char *argv[])
     }
 
   gtk_window_set_keep_above(GTK_WINDOW(background_window), TRUE); 
-
   gtk_widget_show(background_window);
+  
   set_background_window(background_window);
 
   
@@ -503,7 +503,6 @@ main(gint argc, char *argv[])
   /* annotation window is valid */
 
   gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
-
   gtk_widget_show(annotation_window);
   
   GtkWidget *ardesia_bar_window = create_bar_window(commandline, annotation_window);
@@ -515,8 +514,6 @@ main(gint argc, char *argv[])
       g_free(commandline);
       exit(0);
     }
- 
-  gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
 
   gint width, height;
   gtk_window_get_size(GTK_WINDOW(ardesia_bar_window) , &width, &height);
@@ -532,8 +529,9 @@ main(gint argc, char *argv[])
   /* move the window in the desired position */
   gtk_window_move(GTK_WINDOW(ardesia_bar_window), x, y);  
 
+  gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
   gtk_widget_show(ardesia_bar_window);
-
+  
   gtk_main();
   return 0;
 }

@@ -65,14 +65,15 @@ ardesia_SOURCES = \
 
 ardesia_LDFLAGS = 
 
+if !PLATFORM_WIN32
 if WITH_GNU_LD
 ardesia_LDFLAGS += -Wl,--export-dynamic
 endif
-
+else
 #This create a windows executable instead an msdos ones
-if PLATFORM_WIN32
 ardesia_LDFLAGS += -mwindows
 endif
+
 
 ardesia_LDADD = $(ARDESIA_LIBS)
 
