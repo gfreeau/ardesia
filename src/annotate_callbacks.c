@@ -34,17 +34,17 @@
 /* Return the pressure passing the event */
 gdouble get_pressure(GdkEvent* ev)
 {
-      gdouble pressure = 1.0;
-      gdk_event_get_axis(ev, GDK_AXIS_PRESSURE, &pressure);
-      return pressure;
+  gdouble pressure = 1.0;
+  gdk_event_get_axis(ev, GDK_AXIS_PRESSURE, &pressure);
+  return pressure;
 }
 
 
 /* Expose event: this occurs when the window is shown */
 G_MODULE_EXPORT gboolean
 event_expose(GtkWidget *widget, 
-              GdkEventExpose *event, 
-              gpointer func_data)
+	     GdkEventExpose *event, 
+	     gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
 
@@ -64,21 +64,21 @@ event_expose(GtkWidget *widget,
     {
 
       /* initialize a transparent window */	  
-      #ifdef _WIN32
-	/* The hdc has depth 32 and the technology is DT_RASDISPLAY */
-        HDC hdc = GetDC(GDK_WINDOW_HWND(data->annotation_window->window));
-	/* 
-	 * @TODO Use an HDC that support the ARGBA32 format to support the alpha channel and the highlighter
-	 * In the documentation is written that the now the resulting surface is in RGB24 format
-         * 
-	 */
-	cairo_surface_t* surface = cairo_win32_surface_create(hdc);
-	/* Patching cairo adding the cairo_win32_surface_create_for_dc function could fix */
-	//cairo_surface_t* surface = cairo_win32_surface_create_for_dc(hdc, CAIRO_FORMAT_ARGB32, data->width, data->height);
-	data->annotation_cairo_context = cairo_create(surface);
-      #else
-	data->annotation_cairo_context = gdk_cairo_create(data->annotation_window->window);  
-      #endif 
+#ifdef _WIN32
+      /* The hdc has depth 32 and the technology is DT_RASDISPLAY */
+      HDC hdc = GetDC(GDK_WINDOW_HWND(data->annotation_window->window));
+      /* 
+       * @TODO Use an HDC that support the ARGBA32 format to support the alpha channel and the highlighter
+       * In the documentation is written that the now the resulting surface is in RGB24 format
+       * 
+       */
+      cairo_surface_t* surface = cairo_win32_surface_create(hdc);
+      /* Patching cairo adding the cairo_win32_surface_create_for_dc function could fix */
+      //cairo_surface_t* surface = cairo_win32_surface_create_for_dc(hdc, CAIRO_FORMAT_ARGB32, data->width, data->height);
+      data->annotation_cairo_context = cairo_create(surface);
+#else
+      data->annotation_cairo_context = gdk_cairo_create(data->annotation_window->window);  
+#endif 
       if (cairo_status(data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
         {
           g_printerr("Unable to allocate the annotation cairo context"); 
@@ -104,34 +104,34 @@ event_expose(GtkWidget *widget,
 /* This is called when the button is pushed */
 G_MODULE_EXPORT gboolean
 paint(GtkWidget *win,
-       GdkEventButton *ev, 
-       gpointer func_data)
+      GdkEventButton *ev, 
+      gpointer func_data)
 { 
 
   AnnotateData *data = (AnnotateData *) func_data;
  
   if (!ev)
     {
-       g_printerr("Device '%s': Invalid event; I ungrab all\n",
-		   ev->device->name);
-       annotate_release_grab();
-       return TRUE;
+      g_printerr("Device '%s': Invalid event; I ungrab all\n",
+		 ev->device->name);
+      annotate_release_grab();
+      return TRUE;
     }
 
   if (data->debug)
     {    
       g_printerr("Device '%s': Button %i Down at (x,y)=(%f : %f)\n",
-		  ev->device->name, ev->button, ev->x, ev->y);
+		 ev->device->name, ev->button, ev->x, ev->y);
     }
 
-  #ifdef _WIN32
+#ifdef _WIN32
   if (inside_bar_window(ev->x, ev->y))
     {
       /* the point is inside the ardesia bar then ungrab */
       annotate_release_grab();
       return TRUE;
     }   
-  #endif
+#endif
 
   annotate_coord_list_free();
  
@@ -140,11 +140,11 @@ paint(GtkWidget *win,
   /* only button1 allowed */
   if (!(ev->button == 1))
     {
-     if (data->debug)
-       {    
-         g_printerr("Device '%s': Invalid pressure event\n",
+      if (data->debug)
+	{    
+	  g_printerr("Device '%s': Invalid pressure event\n",
 		     ev->device->name);
-       }
+	}
       return TRUE;
     }  
 
@@ -153,11 +153,11 @@ paint(GtkWidget *win,
   gdouble pressure = 1.0; 
   if ((ev->device->source != GDK_SOURCE_MOUSE) && (!(data->cur_context->type == ANNOTATE_ERASER)))
     {
-       pressure = get_pressure((GdkEvent *) ev);
-       if (pressure <= 0)
-         {
-            return TRUE;
-         }
+      pressure = get_pressure((GdkEvent *) ev);
+      if (pressure <= 0)
+	{
+	  return TRUE;
+	}
     }
   annotate_draw_point(ev->x, ev->y, pressure);  
  
@@ -177,25 +177,25 @@ paintto(GtkWidget *win,
  
   if (!ev)
     {
-       g_printerr("Device '%s': Invalid event; I ungrab all\n",
+      g_printerr("Device '%s': Invalid event; I ungrab all\n",
 		 ev->device->name);
-       annotate_release_grab();
-       return TRUE;
+      annotate_release_grab();
+      return TRUE;
     }
   
-  #ifdef _WIN32
+#ifdef _WIN32
   if (inside_bar_window(ev->x, ev->y))
     {
-       if (data->debug)
-         {    
-           g_printerr("Device '%s': Move on the bar then ungrab\n",
-	              ev->device->name);
-         }
-       /* the point is inside the ardesia bar then ungrab */
-       annotate_release_grab();
-       return TRUE;
+      if (data->debug)
+	{    
+	  g_printerr("Device '%s': Move on the bar then ungrab\n",
+		     ev->device->name);
+	}
+      /* the point is inside the ardesia bar then ungrab */
+      annotate_release_grab();
+      return TRUE;
     }
-  #endif
+#endif
 
   annotate_unhide_cursor();
  
@@ -211,41 +211,41 @@ paintto(GtkWidget *win,
   gdouble pressure = 1.0; 
   if ((ev->device->source != GDK_SOURCE_MOUSE) && (!(data->cur_context->type == ANNOTATE_ERASER)))
     {
-       pressure = get_pressure((GdkEvent *) ev);
-       if (pressure <= 0)
-         {
-            return TRUE;
-         }
-       /* If the point is already selected and higher pressure then print else jump it */
+      pressure = get_pressure((GdkEvent *) ev);
+      if (pressure <= 0)
+	{
+	  return TRUE;
+	}
+      /* If the point is already selected and higher pressure then print else jump it */
       if (data->coordlist)
-          {
-             AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data(data->coordlist, 0);
-             gint tollerance = data->thickness;
-             if (get_distance(last_point->x, last_point->y, ev->x, ev->y)<tollerance)
-               {
-                 /* seems that you are uprising the pen */
-                 if (pressure < last_point->pressure)
-                   {
-                     /* jump the point you are uprising the hand */
-                     return TRUE;
-                   }
-                 else if (pressure == last_point->pressure)
-                   {
-                     /* ignore the point; do nothing */
-                     return TRUE;
-                   }
-                 else // pressure >= last_point->pressure
-                   {
-                     /* seems that you are pressing the pen more */
-                     annotate_modify_color(data, pressure);
-                     annotate_draw_line(ev->x, ev->y, TRUE);
-                     /* store the new pressure without allocate a new coord */
-                     last_point->pressure = pressure;
-                     return TRUE;
-                   }
-               }
-            annotate_modify_color(data, pressure);
-          }
+	{
+	  AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data(data->coordlist, 0);
+	  gint tollerance = data->thickness;
+	  if (get_distance(last_point->x, last_point->y, ev->x, ev->y)<tollerance)
+	    {
+	      /* seems that you are uprising the pen */
+	      if (pressure < last_point->pressure)
+		{
+		  /* jump the point you are uprising the hand */
+		  return TRUE;
+		}
+	      else if (pressure == last_point->pressure)
+		{
+		  /* ignore the point; do nothing */
+		  return TRUE;
+		}
+	      else // pressure >= last_point->pressure
+		{
+		  /* seems that you are pressing the pen more */
+		  annotate_modify_color(data, pressure);
+		  annotate_draw_line(ev->x, ev->y, TRUE);
+		  /* store the new pressure without allocate a new coord */
+		  last_point->pressure = pressure;
+		  return TRUE;
+		}
+	    }
+	  annotate_modify_color(data, pressure);
+	}
     }
 
   annotate_draw_line(ev->x, ev->y, TRUE);
@@ -264,10 +264,10 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
   
   if (!ev)
     {
-       g_printerr("Device '%s': Invalid event; I ungrab all\n",
+      g_printerr("Device '%s': Invalid event; I ungrab all\n",
 		 ev->device->name);
-       annotate_release_grab();
-       return TRUE;
+      annotate_release_grab();
+      return TRUE;
     }
   
   if (data->debug)
@@ -276,7 +276,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
 		 ev->device->name, ev->button, ev->x, ev->y);
     }
 
-  #ifdef _WIN32
+#ifdef _WIN32
   if (inside_bar_window(ev->x, ev->y))
     /* point is in the ardesia bar */
     {
@@ -284,7 +284,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
       annotate_release_grab();
       return TRUE;
     }
-  #endif 
+#endif 
 	
   /* only button1 allowed */
   if (!(ev->button == 1))
@@ -330,7 +330,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
 	      /* print arrow at the end of the path */
 	      annotate_draw_arrow(distance);
 	    }
-         }
+	}
     }
   cairo_stroke_preserve(data->annotation_cairo_context);
   
@@ -395,7 +395,7 @@ proximity_out(GtkWidget *win,
 
   if (data->old_paint_type == ANNOTATE_PEN)
     {
-       annotate_select_pen();
+      annotate_select_pen();
     }
   return FALSE;
 }

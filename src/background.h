@@ -30,10 +30,10 @@
 
 #ifdef _WIN32
   
-  #define BACKGROUND_UI_FILE "..\\share\\ardesia\\ui\\background.glade"
+#define BACKGROUND_UI_FILE "..\\share\\ardesia\\ui\\background.glade"
 
 #else
-  #define BACKGROUND_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/background.glade"
+#define BACKGROUND_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/background.glade"
 #endif 
 
 typedef struct

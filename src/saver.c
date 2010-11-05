@@ -23,7 +23,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-  #include <config.h>
+#include <config.h>
 #endif
 
 #include <saver.h>
@@ -116,7 +116,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
             }
 	  if ( result == GTK_RESPONSE_NO)
             {
-		screenshot = FALSE;
+	      screenshot = FALSE;
 	    } 
 	}
     }

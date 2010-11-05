@@ -33,11 +33,11 @@
 #include <bfd.h>
 
 #ifdef linux
-  /* 
-    the glibc functions backtrace, backtrace_symbols, backtrace_symbols_fd
-    defined in the header are missing on all non-glibc platforms
-  */
-  #include <execinfo.h>
+/* 
+   the glibc functions backtrace, backtrace_symbols, backtrace_symbols_fd
+   defined in the header are missing on all non-glibc platforms
+*/
+#include <execinfo.h>
 #endif
   
 #include <sigsegv.h>
@@ -46,11 +46,11 @@
 #define MAX_FRAMES (20)
 
 #ifdef _WIN32
-  #define UI_FILE "..\\share\\ardesia\\ui\\ardesia.glade"
-  #define UI_HOR_FILE "..\\share\\ardesia\\ui\\ardesia_horizontal.glade"
+#define UI_FILE "..\\share\\ardesia\\ui\\ardesia.glade"
+#define UI_HOR_FILE "..\\share\\ardesia\\ui\\ardesia_horizontal.glade"
 #else
-  #define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.glade"
-  #define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia_horizontal.glade"
+#define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.glade"
+#define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia_horizontal.glade"
 #endif  
 
 
@@ -65,47 +65,47 @@
 
 typedef struct
 {
-   gchar* backgroundimage;
-   gboolean debug;
-   gboolean decorated;
-   gint position;
+  gchar* backgroundimage;
+  gboolean debug;
+  gboolean decorated;
+  gint position;
 } CommandLine;
 
 
 typedef struct
 {
-   /* Is the text tool enabled */
-   gboolean text;
+  /* Is the text tool enabled */
+  gboolean text;
 
-   /* pencil is selected */
-   gboolean pencil;
+  /* pencil is selected */
+  gboolean pencil;
 
-   /* highlighter flag */
-   gboolean highlighter;
+  /* highlighter flag */
+  gboolean highlighter;
 
-   /* rectifier flag */
-   gboolean rectifier;
+  /* rectifier flag */
+  gboolean rectifier;
 
-   /* rounder flag */
-   gboolean rounder;
+  /* rounder flag */
+  gboolean rounder;
 
-   /* arrow flag */
-   gboolean arrow;
+  /* arrow flag */
+  gboolean arrow;
 
-   /* selected color in RGBA format */
-   gchar* color;
+  /* selected color in RGBA format */
+  gchar* color;
 
-   /* selected line thickness */
-   gint thickness;
+  /* selected line thickness */
+  gint thickness;
 
-   /* annotation is visible */
-   gboolean annotation_is_visible;
+  /* annotation is visible */
+  gboolean annotation_is_visible;
 
-   /* grab when leave */
-   gboolean grab;
+  /* grab when leave */
+  gboolean grab;
 
-   /* Default folder where store artifacts */
-   gchar* workspace_dir;
+  /* Default folder where store artifacts */
+  gchar* workspace_dir;
    
 }BarData;
 

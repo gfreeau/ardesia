@@ -33,44 +33,44 @@
 #include <cairo.h>
 
 #ifdef _WIN32
-  #include <cairo-win32.h>
-  #include <gdkwin32.h>
-  #include <winuser.h> 
+#include <cairo-win32.h>
+#include <gdkwin32.h>
+#include <winuser.h> 
 #else
-  #ifdef __APPLE__
-    #include <cairo-quartz.h>
-  #else
-    #include <cairo-xlib.h>
-  #endif
+#ifdef __APPLE__
+#include <cairo-quartz.h>
+#else
+#include <cairo-xlib.h>
+#endif
 #endif
 
 
 #ifdef _WIN32
   
-  #define ANNOTATION_UI_FILE "..\\share\\ardesia\\ui\\annotation.glade"
+#define ANNOTATION_UI_FILE "..\\share\\ardesia\\ui\\annotation.glade"
   
-  /* User for brab the pointer on win32*/
-  #define ANNOTATE_MOUSE_EVENTS    ( GDK_POINTER_MOTION_MASK |    \
-                                     GDK_BUTTON_PRESS_MASK   |    \
-                                     GDK_BUTTON_RELEASE_MASK |     \
-                                     GDK_PROXIMITY_IN |     \
-                                     GDK_PROXIMITY_OUT |    \
-		                     GDK_MOTION_NOTIFY| \
-		                     GDK_BUTTON_PRESS \
+/* User for brab the pointer on win32*/
+#define ANNOTATE_MOUSE_EVENTS    ( GDK_POINTER_MOTION_MASK |    \
+				   GDK_BUTTON_PRESS_MASK   |    \
+				   GDK_BUTTON_RELEASE_MASK |	\
+				   GDK_PROXIMITY_IN |		\
+				   GDK_PROXIMITY_OUT |		\
+				   GDK_MOTION_NOTIFY|		\
+				   GDK_BUTTON_PRESS		\
                                    )
 
 #else
-  #define ANNOTATION_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/annotation.glade"
+#define ANNOTATION_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/annotation.glade"
 #endif 
 
 
 
 /* Enumeration containing tools */
 typedef enum
-{
-  ANNOTATE_PEN,
-  ANNOTATE_ERASER,
-} AnnotatePaintType;
+  {
+    ANNOTATE_PEN,
+    ANNOTATE_ERASER,
+  } AnnotatePaintType;
 
 
 /* Paint context */
@@ -136,7 +136,7 @@ typedef struct
      This store the old paint type tool; 
      it is used to switch from/to eraser/pen 
      using a tablet pen
-   */
+  */
   AnnotatePaintType old_paint_type;
 
   /* tool thickness */

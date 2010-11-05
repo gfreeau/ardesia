@@ -23,7 +23,7 @@
  
 
 #ifdef HAVE_CONFIG_H
-  #include <config.h>
+#include <config.h>
 #endif
 
 #include <background.h>
@@ -63,15 +63,15 @@ GdkPixbuf * load_png (gchar *filename)
 void destroy_background_window()
 {
   if (background_data->background_shape)
-   {
+    {
       g_object_unref(background_data->background_shape);
-   }
+    }
 
   if (background_data->background_window != NULL)
-   { 
+    { 
       /* destroy brutally the background window */
       gtk_widget_destroy(background_data->background_window);
-   }
+    }
 
   if (background_data->back_cr)
     {
@@ -82,7 +82,7 @@ void destroy_background_window()
   /* unref gtkbuilder */
   if (background_data->backgroundWindowGtkBuilder)
     {
-       g_object_unref (background_data->backgroundWindowGtkBuilder);
+      g_object_unref (background_data->backgroundWindowGtkBuilder);
     }
   g_free(background_data);
   /* quit gtk */
@@ -99,12 +99,12 @@ void clear_background_window()
   g_free(background_data->background_image);
   background_data->background_image = NULL;
   
-   /* 
-    * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
-    * I avoid a complete transparent window because in some operating system this would become
-    * transparent to the pointer input also
-    *
-    */
+  /* 
+   * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
+   * I avoid a complete transparent window because in some operating system this would become
+   * transparent to the pointer input also
+   *
+   */
   gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), BACKGROUND_OPACITY);
 
   clear_cairo_context(background_data->back_cr);
@@ -120,19 +120,19 @@ void clear_background_window()
   cairo_destroy(shape_cr);
 
   /* This allows the mouse event to be passed to the window below */
-  #ifndef _WIN32
-    gdk_window_input_shape_combine_mask(background_data->background_window->window,
-                                        background_data->background_shape,
-                                        0, 0);
-  #endif
+#ifndef _WIN32
+  gdk_window_input_shape_combine_mask(background_data->background_window->window,
+				      background_data->background_shape,
+				      0, 0);
+#endif
 }
 
 
 /* Expose event in background window occurs */
 G_MODULE_EXPORT gboolean
 back_event_expose(GtkWidget *widget, 
-              GdkEventExpose *event, 
-              gpointer user_data)
+		  GdkEventExpose *event, 
+		  gpointer user_data)
 {
   gint is_fullscreen = gdk_window_get_state(widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
   if (!is_fullscreen)
@@ -141,7 +141,7 @@ back_event_expose(GtkWidget *widget,
     }
   if (!background_data->back_cr)
     {
-       background_data->back_cr = gdk_cairo_create(widget->window); 
+      background_data->back_cr = gdk_cairo_create(widget->window); 
     }
 
   if (background_data->background_image)
@@ -154,7 +154,7 @@ back_event_expose(GtkWidget *widget,
     }
   else
     {
-       clear_background_window();    
+      clear_background_window();    
     }
 
   return TRUE;
@@ -164,7 +164,7 @@ back_event_expose(GtkWidget *widget,
 /* The windows has been exposed after the show_all request to change the background image */
 void load_file()
 {
-    if (background_data->back_cr)
+  if (background_data->back_cr)
     {
       GdkPixbuf* pixbuf = load_png(background_data->background_image);   
       cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_SOURCE);
@@ -173,11 +173,11 @@ void load_file()
       cairo_paint(background_data->back_cr);
       cairo_stroke(background_data->back_cr);   
       g_object_unref(G_OBJECT(pixbuf));
-      #ifndef _WIN32
-        gdk_window_input_shape_combine_mask(background_data->background_window->window,
-                                             NULL, 
-                                             0, 0);
-      #endif
+#ifndef _WIN32
+      gdk_window_input_shape_combine_mask(background_data->background_window->window,
+					  NULL, 
+					  0, 0);
+#endif
     }
 }
 
@@ -200,11 +200,11 @@ void load_color()
       cairo_paint(background_data->back_cr);
       cairo_stroke(background_data->back_cr);
       
-      #ifndef _WIN32
-        gdk_window_input_shape_combine_mask(background_data->background_window->window,  
-                                             NULL, 
-                                             0, 0);
-      #endif
+#ifndef _WIN32
+      gdk_window_input_shape_combine_mask(background_data->background_window->window,  
+					  NULL, 
+					  0, 0);
+#endif
       
     }  
 }
@@ -213,14 +213,14 @@ void load_color()
 /* Change the background image of ardesia  */
 void change_background_image(gchar *name)
 {
-   if (background_data->background_color)
-     {
-        g_free(background_data->background_color);
-        background_data->background_color = NULL;
-     }
+  if (background_data->background_color)
+    {
+      g_free(background_data->background_color);
+      background_data->background_color = NULL;
+    }
 
-   background_data->background_image = name;
-   load_file();
+  background_data->background_image = name;
+  load_file();
 }
 
 
@@ -228,10 +228,10 @@ void change_background_image(gchar *name)
 void change_background_color(gchar* rgba)
 {
   if (background_data->background_image)
-     {
-        g_free(background_data->background_image);
-        background_data->background_image = NULL;
-     }  
+    {
+      g_free(background_data->background_image);
+      background_data->background_image = NULL;
+    }  
 
   if (!(background_data->background_color))
     {
@@ -269,7 +269,7 @@ GtkWidget* create_background_window(gchar* backgroundimage)
   
   if (backgroundimage) 
     {
-       background_data->background_image = g_strdup_printf("%s", backgroundimage); 
+      background_data->background_image = g_strdup_printf("%s", backgroundimage); 
     } 
 
   /* Initialize the background window */
@@ -278,7 +278,7 @@ GtkWidget* create_background_window(gchar* backgroundimage)
   /* Load the gtk builder file created with glade */
   gtk_builder_add_from_file(background_data->backgroundWindowGtkBuilder, BACKGROUND_UI_FILE, &error);
 
-   if (error)
+  if (error)
     {
       g_warning ("Couldn't load builder file: %s", error->message);
       g_error_free (error);
@@ -298,10 +298,10 @@ GtkWidget* create_background_window(gchar* backgroundimage)
 
   gtk_widget_show_all(background_data->background_window);
 
-  #ifdef _WIN32
-    /* in the gtk 2.16.6 used for windows the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
-    gtk_widget_set_double_buffered(background_data->background_window, FALSE);
-  #endif
+#ifdef _WIN32
+  /* in the gtk 2.16.6 used for windows the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
+  gtk_widget_set_double_buffered(background_data->background_window, FALSE);
+#endif
   
   return  background_data->background_window;
 }

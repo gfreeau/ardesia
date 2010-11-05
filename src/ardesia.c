@@ -65,8 +65,8 @@ void calculate_position(GtkWidget *ardesia_bar_window,
         }
       else if (position == SOUTH)
         {
-         /* south */
-         *y = dheight;
+	  /* south */
+	  *y = dheight;
         }
       else
         {  
@@ -94,16 +94,16 @@ void calculate_initial_position(GtkWidget *ardesia_bar_window,
   /* resize if larger that screen width */
   if (wwidth>dwidth)
     {
-       wwidth = dwidth;
-       gtk_window_resize(GTK_WINDOW(ardesia_bar_window), wwidth, wheight);       
+      wwidth = dwidth;
+      gtk_window_resize(GTK_WINDOW(ardesia_bar_window), wwidth, wheight);       
     }
 
   /* resize if larger that screen height */
   if (wheight>dheight)
     {
-       gint tollerance = 15;
-       wheight = dheight - tollerance;
-       gtk_widget_set_usize(ardesia_bar_window, wwidth, wheight);       
+      gint tollerance = 15;
+      wheight = dheight - tollerance;
+      gtk_widget_set_usize(ardesia_bar_window, wwidth, wheight);       
     }
 
   calculate_position(ardesia_bar_window, dwidth, dheight, x, y, wwidth, wheight, position);
@@ -137,19 +137,19 @@ void print_help()
 /* Call the dialog that inform the user to enable a composite manager */
 void run_missing_composite_manager_dialog()
 {
-   GtkWidget *msg_dialog; 
-   msg_dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
-                                       GTK_BUTTONS_OK, 
-                                       gettext("In order to run Ardesia you need to enable a composite manager")
+  GtkWidget *msg_dialog; 
+  msg_dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
+				      GTK_BUTTONS_OK, 
+				      gettext("In order to run Ardesia you need to enable a composite manager")
                                       );
                  
-   gtk_dialog_run(GTK_DIALOG(msg_dialog));
+  gtk_dialog_run(GTK_DIALOG(msg_dialog));
    
-   if (msg_dialog != NULL)
-     {
-       gtk_widget_destroy(msg_dialog);
-     }
-   exit(0);
+  if (msg_dialog != NULL)
+    {
+      gtk_widget_destroy(msg_dialog);
+    }
+  exit(0);
 }
 
 
@@ -159,8 +159,8 @@ void check_composite_manager(GdkScreen* screen)
   gboolean composite = gdk_screen_is_composited(screen);
   if (!composite)
     {
-       /* start the enable composite manager dialog */
-       run_missing_composite_manager_dialog();
+      /* start the enable composite manager dialog */
+      run_missing_composite_manager_dialog();
     }
 }
 
@@ -168,25 +168,25 @@ void check_composite_manager(GdkScreen* screen)
 /* Set the best colormap available on the system */
 void set_the_best_colormap()
 {
-    GdkDisplay *display = gdk_display_get_default();
-    GdkScreen   *screen = gdk_display_get_default_screen(display);
+  GdkDisplay *display = gdk_display_get_default();
+  GdkScreen   *screen = gdk_display_get_default_screen(display);
 
-    /* In FreeBSD operating system you might have a composite manager */
-    #ifdef __FreeBSD__
-       check_composite_manager(screen);
-    #endif
+  /* In FreeBSD operating system you might have a composite manager */
+#ifdef __FreeBSD__
+  check_composite_manager(screen);
+#endif
 
-    /* In linux operating system you must have a composite manager */
-    #ifdef linux
-       check_composite_manager(screen);
-    #endif
+  /* In linux operating system you must have a composite manager */
+#ifdef linux
+  check_composite_manager(screen);
+#endif
 
-    GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
-    if (colormap)
-      {
-        gtk_widget_set_default_colormap(colormap);
-        gdk_colormap_unref(colormap);
-      }
+  GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
+  if (colormap)
+    {
+      gtk_widget_set_default_colormap(colormap);
+      gdk_colormap_unref(colormap);
+    }
 }
 
 
@@ -341,7 +341,7 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
   gtk_window_set_transient_for(GTK_WINDOW(bar_window), GTK_WINDOW(parent));
   if (commandline->decorated)
     {
-       gtk_window_set_decorated(GTK_WINDOW(bar_window), TRUE);
+      gtk_window_set_decorated(GTK_WINDOW(bar_window), TRUE);
     }
 
   return bar_window;
@@ -350,11 +350,11 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
 
 void enable_localization_support()
 {
-  #ifdef ENABLE_NLS
-    setlocale(LC_ALL, "");
-    bindtextdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
-    textdomain(GETTEXT_PACKAGE);
-  #endif
+#ifdef ENABLE_NLS
+  setlocale(LC_ALL, "");
+  bindtextdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
+  textdomain(GETTEXT_PACKAGE);
+#endif
 
   gtk_set_locale();
 }
@@ -368,66 +368,66 @@ void print_trace_line(char *address) {
   
   if (l == -1) 
     {
-       fprintf(stderr, "failed to find executable\n");
-       return;
+      fprintf(stderr, "failed to find executable\n");
+      return;
     }
  	
-   ename[l] = 0;
+  ename[l] = 0;
 
-   bfd_init();
+  bfd_init();
 
-   abfd = bfd_openr(ename, 0);
+  abfd = bfd_openr(ename, 0);
    
-   if (!abfd)
-     {
-        fprintf(stderr, "bfd_openr failed: ");
-        return;
-     }
+  if (!abfd)
+    {
+      fprintf(stderr, "bfd_openr failed: ");
+      return;
+    }
    
-   /* oddly, this is required for it to work... */
-   bfd_check_format(abfd,bfd_object);
+  /* oddly, this is required for it to work... */
+  bfd_check_format(abfd,bfd_object);
 
-   unsigned storage_needed = bfd_get_symtab_upper_bound(abfd);
-   syms = (asymbol **) malloc(storage_needed);
+  unsigned storage_needed = bfd_get_symtab_upper_bound(abfd);
+  syms = (asymbol **) malloc(storage_needed);
 
-   text = bfd_get_section_by_name(abfd, ".text");
+  text = bfd_get_section_by_name(abfd, ".text");
 
-   long offset = ((long)address) - text->vma;
+  long offset = ((long)address) - text->vma;
    
-   if (offset > 0) 
-     {
-        const char *file;
-        const char *func;
-        unsigned line;
-        if (bfd_find_nearest_line(abfd, text, syms, offset, &file, &func, &line) && file)
-          {
-	     fprintf(stderr, "file: %s, line: %u, func %s\n",file,line,func);
-          }
-     }
+  if (offset > 0) 
+    {
+      const char *file;
+      const char *func;
+      unsigned line;
+      if (bfd_find_nearest_line(abfd, text, syms, offset, &file, &func, &line) && file)
+	{
+	  fprintf(stderr, "file: %s, line: %u, func %s\n",file,line,func);
+	}
+    }
 }
 
 
 static void print_trace() 
 {
 
-     void *array[MAX_FRAMES];
-     size_t size;
-     size_t i;
-     void *approx_text_end = (void*) ((128+100) * 2<<20);
+  void *array[MAX_FRAMES];
+  size_t size;
+  size_t i;
+  void *approx_text_end = (void*) ((128+100) * 2<<20);
 
-     /* 
-      * the glibc functions backtrace is missing on all non-glibc platforms
-      */
+  /* 
+   * the glibc functions backtrace is missing on all non-glibc platforms
+   */
   
-     size = backtrace (array, MAX_FRAMES);
-     printf ("Obtained %zd stack frames.\n", size);
-     for (i = 0; i < size; i++)
-       {
- 	 if (array[i] < approx_text_end)
-           {
- 	      print_trace_line(array[i]);
- 	   }
-       }
+  size = backtrace (array, MAX_FRAMES);
+  printf ("Obtained %zd stack frames.\n", size);
+  for (i = 0; i < size; i++)
+    {
+      if (array[i] < approx_text_end)
+	{
+	  print_trace_line(array[i]);
+	}
+    }
 
 }
 #else
@@ -459,9 +459,9 @@ main(gint argc, char *argv[])
 
   /* Install the SIGSEGV handler */
   if (sigsegv_install_handler(sigsegv_handler)<0)
-  {
-     exit(2);
-  }
+    {
+      exit(2);
+    }
 
   /* Enable the localization support with gettext */
   enable_localization_support();
@@ -476,9 +476,9 @@ main(gint argc, char *argv[])
   
   if (background_window == NULL)
     {
-       destroy_background_window();
-       g_free(commandline);
-       exit(0);
+      destroy_background_window();
+      g_free(commandline);
+      exit(0);
     }
 
   gtk_window_set_keep_above(GTK_WINDOW(background_window), TRUE); 
@@ -494,10 +494,10 @@ main(gint argc, char *argv[])
 
   if (annotation_window == NULL)
     {
-       annotate_quit();
-       destroy_background_window();
-       g_free(commandline);
-       exit(0);
+      annotate_quit();
+      destroy_background_window();
+      g_free(commandline);
+      exit(0);
     }
 
   /* annotation window is valid */
@@ -510,10 +510,10 @@ main(gint argc, char *argv[])
   
   if (ardesia_bar_window == NULL)
     {
-       annotate_quit();
-       destroy_background_window();
-       g_free(commandline);
-       exit(0);
+      annotate_quit();
+      destroy_background_window();
+      g_free(commandline);
+      exit(0);
     }
  
   gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);

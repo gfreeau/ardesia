@@ -23,7 +23,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-  #include <config.h>
+#include <config.h>
 #endif
 
 #include <preference_dialog.h>
@@ -64,9 +64,9 @@ on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer dat
 G_MODULE_EXPORT void
 on_preferenceOkButton_clicked(GtkButton *buton, gpointer data)
 {
- PreferenceData *preferenceData = (PreferenceData*) data;
- GObject* colorToolObj = gtk_builder_get_object(preferenceData->preferenceDialogGtkBuilder, "color");
- GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(colorToolObj);
+  PreferenceData *preferenceData = (PreferenceData*) data;
+  GObject* colorToolObj = gtk_builder_get_object(preferenceData->preferenceDialogGtkBuilder, "color");
+  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(colorToolObj);
   if (gtk_toggle_button_get_active(colorToolButton))
     {
       /* background color */
@@ -145,7 +145,7 @@ on_backgroundColorButton_color_set (GtkButton *buton, gpointer data)
 /* Shot when is pushed the cancel button */
 G_MODULE_EXPORT void
 on_preferenceCancelButton_clicked    (GtkButton *buton,
-                                           gpointer data)
+				      gpointer data)
 {
   /* do nothing */
 }
@@ -175,13 +175,13 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   gtk_window_set_transient_for(GTK_WINDOW(preferenceDialog), parent);
   gtk_window_set_modal(GTK_WINDOW(preferenceDialog), TRUE);
   
-  #ifdef _WIN32
-    /* 
-     * In Windows the parent bar go above the dialog;
-     * to avoid this behaviour I put the parent keep above to false
-     */
-    gtk_window_set_keep_above(GTK_WINDOW(parent), FALSE);
-  #endif 
+#ifdef _WIN32
+  /* 
+   * In Windows the parent bar go above the dialog;
+   * to avoid this behaviour I put the parent keep above to false
+   */
+  gtk_window_set_keep_above(GTK_WINDOW(parent), FALSE);
+#endif 
    
   GObject* imgObj = gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder, "imageChooserButton");
   GtkFileChooser* chooser = GTK_FILE_CHOOSER(imgObj);
@@ -228,12 +228,12 @@ void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
   g_object_unref (preference_data->preferenceDialogGtkBuilder);
   g_free(preference_data);
 
-  #ifdef _WIN32
-    /* 
-     * Reput the keep above flag at the parent window bar
-     */
-    gtk_window_set_keep_above(GTK_WINDOW(parent), TRUE);
-  #endif   
+#ifdef _WIN32
+  /* 
+   * Reput the keep above flag at the parent window bar
+   */
+  gtk_window_set_keep_above(GTK_WINDOW(parent), TRUE);
+#endif   
 }
 
 

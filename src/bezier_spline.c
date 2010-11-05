@@ -43,8 +43,8 @@ GSList* spline (GSList *list)
       X[i][1] = point->y;
       if (i==0)
         {
-           width = point->width;
-           pressure = point->pressure;
+	  width = point->width;
+	  pressure = point->pressure;
         }
     }
 
@@ -170,8 +170,8 @@ GSList* spline (GSList *list)
               
     }
 
-   ret = g_slist_reverse(ret);
-   return ret;
+  ret = g_slist_reverse(ret);
+  return ret;
 }
 
 

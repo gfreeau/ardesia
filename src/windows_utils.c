@@ -27,20 +27,20 @@
 #include <windows_utils.h>
   
 BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF crKey,
-	BYTE bAlpha, DWORD dwFlags) = NULL;
+					       BYTE bAlpha, DWORD dwFlags) = NULL;
 	
 
 /* This is needed to wrap the setLayeredWindowAttributes throught the windows user32 dll */
 void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF crKey, BYTE bAlpha, DWORD dwFlags)
 {
-    HWND hwnd = GDK_WINDOW_HWND(gdk_window);
-    HINSTANCE hInstance = LoadLibraryA("user32");		
+  HWND hwnd = GDK_WINDOW_HWND(gdk_window);
+  HINSTANCE hInstance = LoadLibraryA("user32");		
 
-    setLayeredWindowAttributesProc = (BOOL (WINAPI*)(HWND hwnd,
-			                  COLORREF crKey, BYTE bAlpha, DWORD dwFlags))
-			                  GetProcAddress(hInstance,"SetLayeredWindowAttributes");
+  setLayeredWindowAttributesProc = (BOOL (WINAPI*)(HWND hwnd,
+						   COLORREF crKey, BYTE bAlpha, DWORD dwFlags))
+    GetProcAddress(hInstance,"SetLayeredWindowAttributes");
 
-    setLayeredWindowAttributesProc(hwnd, crKey, bAlpha, dwFlags);
+  setLayeredWindowAttributesProc(hwnd, crKey, bAlpha, dwFlags);
 }
 
 
@@ -108,12 +108,12 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 
   /* create a cursor out of the created pixmap */
   rgb_pixbuf = gdk_pixbuf_get_from_drawable(
-                                              NULL, 
-                                              rgb_pixmap, 
-                                              gdk_colormap_get_system(),
-                                              0, 0, 0, 0,
-                                              width, 
-                                              height);
+					    NULL, 
+					    rgb_pixmap, 
+					    gdk_colormap_get_system(),
+					    0, 0, 0, 0,
+					    width, 
+					    height);
   gdk_pixmap_unref(rgb_pixmap);
   rgba_pixbuf = gdk_pixbuf_add_alpha(rgb_pixbuf, TRUE, trans->red, trans->green, trans->blue);
   gdk_pixbuf_unref(rgb_pixbuf);

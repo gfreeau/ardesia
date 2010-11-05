@@ -23,7 +23,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-  #include <config.h>
+#include <config.h>
 #endif
 
 #include <utils.h>
@@ -79,7 +79,7 @@ void ungrab_pointer(GdkDisplay* display, GtkWidget* win)
     {
       /* this probably means the device table is outdated, 
 	 e.g. this device doesn't exist anymore 
-       */
+      */
       g_printerr("Ungrab pointer device error\n");
     }
 }
@@ -144,12 +144,12 @@ void clear_cairo_context(cairo_t* cr)
 /* Set the cairo surface color to the RGBA string */
 void cairo_set_source_color_from_string( cairo_t * cr, gchar* color)
 {
- if (cr)
-   {
-     gint r,g,b,a;
-     sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
-     cairo_set_source_rgba (cr, (gdouble) r/255, (gdouble) g/255, (gdouble) b/255, (gdouble) a/255);
-   }
+  if (cr)
+    {
+      gint r,g,b,a;
+      sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+      cairo_set_source_rgba (cr, (gdouble) r/255, (gdouble) g/255, (gdouble) b/255, (gdouble) a/255);
+    }
 }
 
 
@@ -206,10 +206,10 @@ gchar* get_date()
   t = localtime( &now );
 
   gchar* hour_min_sep = ":";
-  #ifdef _WIN32
-    /* The ":" character on windows is avoided in file name and then I use the "." character instead */
-    hour_min_sep = ".";
-  #endif
+#ifdef _WIN32
+  /* The ":" character on windows is avoided in file name and then I use the "." character instead */
+  hour_min_sep = ".";
+#endif
   gchar* date = g_strdup_printf("%d-%d-%d_%d%s%d-%d", t->tm_mday, t->tm_mon+1,t->tm_year+1900, t->tm_hour, hour_min_sep, t->tm_min, t->tm_sec);
   return date;
 }
@@ -255,25 +255,25 @@ void rmdir_recursive (gchar *path)
   
   if (cur_dir)
     {
-       while ((dir_file = g_dir_read_name(cur_dir)))
-         {
-            gchar *fpath = g_build_filename(path, dir_file, NULL);
+      while ((dir_file = g_dir_read_name(cur_dir)))
+	{
+	  gchar *fpath = g_build_filename(path, dir_file, NULL);
 	
-            if (fpath) 
-              {
-	         if (g_file_test(fpath, G_FILE_TEST_IS_DIR))
-                   {
-		      rmdir_recursive(fpath);
-	           } 
-                 else 
-                   {
-		      g_unlink(fpath);
-	           }
-	         g_free(fpath);
-	      }
-         }
+	  if (fpath) 
+	    {
+	      if (g_file_test(fpath, G_FILE_TEST_IS_DIR))
+		{
+		  rmdir_recursive(fpath);
+		} 
+	      else 
+		{
+		  g_unlink(fpath);
+		}
+	      g_free(fpath);
+	    }
+	}
 			
-       g_dir_close (cur_dir);
+      g_dir_close (cur_dir);
     }
 
   g_rmdir (path);
@@ -283,12 +283,12 @@ void rmdir_recursive (gchar *path)
 /* Allocate a new point belonging to the stroke passing the values */
 AnnotateStrokeCoordinate * allocate_point(gint x, gint y, gint width, gdouble pressure)
 {
-   AnnotateStrokeCoordinate* point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
-   point->x = x;
-   point->y = y;
-   point->width = width;
-   point->pressure = pressure;
-   return point;
+  AnnotateStrokeCoordinate* point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+  point->x = x;
+  point->y = y;
+  point->width = width;
+  point->pressure = pressure;
+  return point;
 }
 
 

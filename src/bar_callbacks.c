@@ -23,7 +23,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-  #include <config.h>
+#include <config.h>
 #endif
 
 
@@ -103,11 +103,11 @@ void set_options(BarData* bar_data)
  
   if ((bar_data->pencil)||(bar_data->arrow))
     {  
-       annotate_select_pen();
+      annotate_select_pen();
     }
   else
     {
-       annotate_select_eraser();
+      annotate_select_eraser();
     }
 }
 
@@ -119,9 +119,9 @@ void start_tool(BarData *bar_data)
     {
       if (bar_data->text)
         {
-           // text button then start the text widget
-           annotate_release_grab();
-	   start_text_widget(GTK_WINDOW(get_bar_window()), bar_data->color, bar_data->thickness);
+	  // text button then start the text widget
+	  annotate_release_grab();
+	  start_text_widget(GTK_WINDOW(get_bar_window()), bar_data->color, bar_data->thickness);
 	}
       else 
 	{
@@ -135,8 +135,8 @@ void start_tool(BarData *bar_data)
 /* Configure events occurs */
 G_MODULE_EXPORT gboolean 
 on_window_configure_event (GtkWidget *widget,
-			GdkEvent *event,
-		 	gpointer func_data)
+			   GdkEvent *event,
+			   gpointer func_data)
 {
   BarData *bar_data = (BarData*) func_data;
   set_options(bar_data);
@@ -156,7 +156,7 @@ on_winMain_destroy_event (GtkWidget *widget, gpointer func_data)
 /* Called when push the quit button */
 G_MODULE_EXPORT gboolean
 on_quit                          (GtkToolButton   *toolbutton,
-			         gpointer         func_data)
+				  gpointer         func_data)
 {
   /* destroy the backgound window this will call the destroy of all windows */
   destroy_background_window();
@@ -322,26 +322,26 @@ on_toolsText_activate            (GtkToolButton   *toolbutton,
 /* Push thickness button */
 G_MODULE_EXPORT void
 on_toolsThick_activate          (GtkToolButton   *toolbutton,
-                                  gpointer         func_data)
+				 gpointer         func_data)
 {
   BarData *bar_data = (BarData*) func_data;
   if (bar_data->thickness== THICK_STEP*2)
     {
-       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thick")));
-       // set thick icon
-       bar_data->thickness = THICK_STEP*3;
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thick")));
+      // set thick icon
+      bar_data->thickness = THICK_STEP*3;
     }
   else if (bar_data->thickness==THICK_STEP*3)
     {
-       // set thin icon
-       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thin")));
-       bar_data->thickness = THICK_STEP;
+      // set thin icon
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thin")));
+      bar_data->thickness = THICK_STEP;
     }
   else if (bar_data->thickness==THICK_STEP)
     {
-       // set medium icon
-       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"medium")));
-       bar_data->thickness = THICK_STEP*2;
+      // set medium icon
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"medium")));
+      bar_data->thickness = THICK_STEP*2;
     }
 }
 
@@ -413,14 +413,14 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
   bar_data->grab = FALSE;
   
   if (!is_recorder_available())	
-	{
-	  visualize_missing_recorder_program_dialog(GTK_WINDOW(get_bar_window()));
-          /* put an icon that remeber that the tool is not available */          
-	  gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"media-recorder-unavailable")));
-          bar_data->grab = grab_value;
-          start_tool(bar_data);		
-	  return;
-	}
+    {
+      visualize_missing_recorder_program_dialog(GTK_WINDOW(get_bar_window()));
+      /* put an icon that remeber that the tool is not available */          
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"media-recorder-unavailable")));
+      bar_data->grab = grab_value;
+      start_tool(bar_data);		
+      return;
+    }
 	
   if (is_recording())
     {
@@ -470,16 +470,16 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
   if (bar_data->grab == FALSE)
     {
       bar_data->grab = TRUE;
-      #ifdef _WIN32
-        /* 
-         * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
-	 * @TODO remove the opacity hack when will be solved the next todo 
-         */
-        if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0)
-          {
-            gtk_window_set_opacity(GTK_WINDOW(get_background_window()), BACKGROUND_OPACITY);
-          }
-      #endif	
+#ifdef _WIN32
+      /* 
+       * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
+       * @TODO remove the opacity hack when will be solved the next todo 
+       */
+      if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0)
+	{
+	  gtk_window_set_opacity(GTK_WINDOW(get_background_window()), BACKGROUND_OPACITY);
+	}
+#endif	
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"lock")));
       /* set tooltip to unhide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Unlock"));
@@ -489,19 +489,19 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
       /* grab enabled */
       bar_data->grab = FALSE;
       annotate_release_grab ();
-      #ifdef _WIN32
-        if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))!=0)
-          {
-            /* 
-	     * @HACK This allow the mouse input go below the window putting the opacity to 0 
-	     * if will be found a better way to see to the window to be transparent
-	     * the the pointer input can be removed the previous hack 
-	     *
-	     * @TODO transparent window to the pointer input in a better way 
-	     */
-             gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
-          }
-      #endif	 
+#ifdef _WIN32
+      if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))!=0)
+	{
+	  /* 
+	   * @HACK This allow the mouse input go below the window putting the opacity to 0 
+	   * if will be found a better way to see to the window to be transparent
+	   * the the pointer input can be removed the previous hack 
+	   *
+	   * @TODO transparent window to the pointer input in a better way 
+	   */
+	  gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
+	}
+#endif	 
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"unlock")));
       /* set tooltip to hide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Lock"));

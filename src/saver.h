@@ -28,14 +28,14 @@
 
 
 #ifdef _WIN32
-  #include <cairo-win32.h>
-  #include <winuser.h>  
+#include <cairo-win32.h>
+#include <winuser.h>  
 #else
-  #ifdef __APPLE__
-    #include <cairo-quartz.h>
-  #else
-    #include <cairo-xlib.h>
-  #endif
+#ifdef __APPLE__
+#include <cairo-quartz.h>
+#else
+#include <cairo-xlib.h>
+#endif
 #endif
 
 

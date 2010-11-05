@@ -23,7 +23,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-  #include <config.h>
+#include <config.h>
 #endif
 
 #include <recorder.h>
@@ -46,17 +46,17 @@ GPid call_recorder(gchar* filename, gchar* option)
   gchar* argv[4] = {RECORDER_FILE, option, filename, (gchar*) 0};
   GPid pid = (GPid) 0;
   if (
-  g_spawn_async (NULL /*working_directory*/,
-                 argv,
-                 NULL /*envp*/,
-                 G_SPAWN_SEARCH_PATH,
-                 NULL /*child_setup*/,
-                 NULL /*user_data*/,
-                 &pid /*child_pid*/,
-                 NULL /*error*/))
-	{
-           is_active = TRUE;	   
-	}
+      g_spawn_async (NULL /*working_directory*/,
+		     argv,
+		     NULL /*envp*/,
+		     G_SPAWN_SEARCH_PATH,
+		     NULL /*child_setup*/,
+		     NULL /*user_data*/,
+		     &pid /*child_pid*/,
+		     NULL /*error*/))
+    {
+      is_active = TRUE;	   
+    }
   return pid;
 }
 
@@ -88,12 +88,12 @@ gboolean is_recording()
 void quit_recorder()
 {
   if (is_recording())
-  {
-    g_spawn_close_pid(recorderpid);
-    recorderpid = call_recorder(NULL, "stop");
-    g_spawn_close_pid(recorderpid);
-    is_active = FALSE;
-  }  
+    {
+      g_spawn_close_pid(recorderpid);
+      recorderpid = call_recorder(NULL, "stop");
+      g_spawn_close_pid(recorderpid);
+      is_active = FALSE;
+    }  
 }
 
 
@@ -182,13 +182,13 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
 	      return status; 
 	    } 
 	}
-	 recorderpid = call_recorder(filename, "start");
-	 status = (recorderpid > 0);
+      recorderpid = call_recorder(filename, "start");
+      status = (recorderpid > 0);
     }
   if (chooser)
-   { 
-     gtk_widget_destroy (chooser);
-   } 
+    { 
+      gtk_widget_destroy (chooser);
+    } 
   g_free(filename);
   return status;
 } 

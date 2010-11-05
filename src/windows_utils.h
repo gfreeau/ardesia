@@ -24,34 +24,34 @@
 
 #ifdef _WIN32
 
-  #include <windows.h>
-  #include <winuser.h>    
+#include <windows.h>
+#include <winuser.h>    
 
-  #include <gdk/gdk.h>
-  #include <gdkwin32.h>
-  #include <gtk/gtk.h>
+#include <gdk/gdk.h>
+#include <gdkwin32.h>
+#include <gtk/gtk.h>
 
-
-  
-  /* Define other symbols needed to create the transparent layered window */
-  #define LWA_COLORKEY	0x00000001
 
   
-  /* Set layered window atrributes to a gdk window */
-  void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF crKey, BYTE bAlpha, DWORD dwFlags);
+/* Define other symbols needed to create the transparent layered window */
+#define LWA_COLORKEY	0x00000001
 
   
-  /* 
-   * gdk_cursor_new_from_pixmap is broken on Windows.
-   * this is a workaround using gdk_cursor_new_from_pixbuf. 
-   */
-  GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
+/* Set layered window atrributes to a gdk window */
+void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF crKey, BYTE bAlpha, DWORD dwFlags);
+
+  
+/* 
+ * gdk_cursor_new_from_pixmap is broken on Windows.
+ * this is a workaround using gdk_cursor_new_from_pixbuf. 
+ */
+GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 					    const GdkColor *fg, const GdkColor *bg,
 					    gint x, gint y);
 						
 						
-  /* Override the with the gdk_cursor_new_from_pixmap with the fixed version */						
-  #define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
+/* Override the with the gdk_cursor_new_from_pixmap with the fixed version */						
+#define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
 
 #endif
 
