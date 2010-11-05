@@ -1439,12 +1439,14 @@ void setup_app(GtkWidget* parent)
 #ifdef _WIN32
   /* in the gtk 2.16.6 the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
   gtk_widget_set_double_buffered(data->annotation_window, FALSE); 
-  // I use a layered window that use the black as transparent color
-  setLayeredGdkWindowAttributes(data->annotation_window->window, RGB(0,0,0), 0, LWA_COLORKEY );	
+  /* @TODO use RGBA colormap and avoid to use the layered window */
+  /* I use a layered window that use the black as transparent color */
+  setLayeredGdkWindowAttributes(data->annotation_window->window, RGBA(0,0,0), 0, LWA_COLORKEY );	
 #endif
 }
 
 
+/* Create the directory where put the savepoint files */
 void create_savepoint_dir()
 {
   const gchar* tmpdir = g_get_tmp_dir();
