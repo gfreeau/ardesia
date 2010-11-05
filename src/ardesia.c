@@ -45,33 +45,33 @@ void calculate_position(GtkWidget *ardesia_bar_window,
                         gint wwidth, gint wheight,
                         gint position)
 {
-  *y = ((dheight - wheight)/2);
+ *y = ((dheight - wheight)/2); 
   /* vertical layout */
-  if (position == WEST)
+  if (position==WEST)
     {
       *x = 0;
     }
-  else if (position == EAST)
+  else if (position==EAST)
     {
-      *x = dwidth;
+      *x = dwidth - wwidth;
     }
   else
     {
       /* horizontal layout */
       *x = (dwidth - wwidth)/2;
-      if (position == NORTH)
+      if (position==NORTH)
         {
-          *y = 0; 
+          *y = SPACE_FROM_BORDER; 
         }
-      else if (position == SOUTH)
+      else if (position==SOUTH)
         {
-	  /* south */
-	  *y = dheight;
+         /* south */
+         *y = dheight - SPACE_FROM_BORDER - wheight;
         }
       else
         {  
           /* invalid position */
-          perror("Valid position are NORTH, SOUTH, WEST or EAST\n");
+          perror ("Valid position are NORTH, SOUTH, WEST or EAST\n");
           exit(0);
         }
     }
