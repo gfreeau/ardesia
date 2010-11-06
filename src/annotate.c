@@ -1194,53 +1194,55 @@ void annotate_paint_context_free(AnnotatePaintContext *context)
 /* Quit the annotation */
 void annotate_quit()
 {
-  g_timer_destroy(data->timer); 
-
-  /* unref gtkbuilder */
-  if (data->annotationWindowGtkBuilder)
+  if (data)
     {
-      g_object_unref (data->annotationWindowGtkBuilder);
-    }
+      g_timer_destroy(data->timer); 
 
-  if (data->shape)
-    {  
-      g_object_unref(data->shape);
-    }
+      /* unref gtkbuilder */
+      if (data->annotationWindowGtkBuilder)
+	{
+	  g_object_unref (data->annotationWindowGtkBuilder);
+	}
+
+      if (data->shape)
+	{  
+	  g_object_unref(data->shape);
+	}
 	
-  /* destroy cairo */  
-  destroy_cairo();
+      /* destroy cairo */  
+      destroy_cairo();
 
-  /* destroy cursors */  
-  disallocate_cursor();
+      /* destroy cursors */  
+      disallocate_cursor();
   
-  if (data->invisible_cursor)
-    {
-      gdk_cursor_unref(data->invisible_cursor);
-    }
+      if (data->invisible_cursor)
+	{
+	  gdk_cursor_unref(data->invisible_cursor);
+	}
 
-  /* free all */
-  if (data->annotation_window)
-    {
-      gtk_widget_destroy(data->annotation_window); 
-    }
+      /* free all */
+      if (data->annotation_window)
+	{
+	  gtk_widget_destroy(data->annotation_window); 
+	}
 
-  annotate_coord_list_free();
-  annotate_savelist_free();
+      annotate_coord_list_free();
+      annotate_savelist_free();
 
-  if (g_file_test(data->savepoint_dir, G_FILE_TEST_IS_DIR))
-    { 
-      /* Delete the savepoint folder */
-      rmdir_recursive(data->savepoint_dir);
-    }
+      if (g_file_test(data->savepoint_dir, G_FILE_TEST_IS_DIR))
+	{ 
+	  /* Delete the savepoint folder */
+	  rmdir_recursive(data->savepoint_dir);
+	}
 
-  g_free(data->savepoint_dir);
+      g_free(data->savepoint_dir);
  
-  annotate_paint_context_free(data->default_pen);
-  annotate_paint_context_free(data->default_eraser);
-  annotate_paint_context_free(data->cur_context);
+      annotate_paint_context_free(data->default_pen);
+      annotate_paint_context_free(data->default_eraser);
+      annotate_paint_context_free(data->cur_context);
 
-  g_free(data);
-
+      g_free(data);
+    }
 }
 
 
