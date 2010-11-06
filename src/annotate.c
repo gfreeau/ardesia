@@ -1204,7 +1204,7 @@ void annotate_quit()
       /* unref gtkbuilder */
       if (data->annotationWindowGtkBuilder)
 	{
-	  g_object_unref (data->annotationWindowGtkBuilder);
+	  g_object_unref(data->annotationWindowGtkBuilder);
 	}
 
       if (data->shape)
@@ -1242,7 +1242,6 @@ void annotate_quit()
  
       annotate_paint_context_free(data->default_pen);
       annotate_paint_context_free(data->default_eraser);
-      annotate_paint_context_free(data->cur_context);
 
       g_free(data);
     }
@@ -1487,7 +1486,7 @@ gint annotate_init(GtkWidget* parent, gboolean debug)
   data->debug = debug;
 
   data->timer = g_timer_new();  
-
+  
   allocate_invisible_cursor();
 
   create_savepoint_dir();  
