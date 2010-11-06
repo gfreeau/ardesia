@@ -1196,7 +1196,10 @@ void annotate_quit()
 {
   if (data)
     {
-      g_timer_destroy(data->timer); 
+      if (data->timer)
+        {
+          g_timer_destroy(data->timer); 
+        }
 
       /* unref gtkbuilder */
       if (data->annotationWindowGtkBuilder)
