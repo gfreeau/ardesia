@@ -31,6 +31,8 @@
   - Print the backtrace on windows when a segfault occurs
 
 - Candidate features:
+  - If a program start in fullscreen Ardesia 
+    go above the program
   - Beter poligon recognition and drawing
   - Send the log and stacktrace when a problem occurs
   - Virtual keyboard integration
