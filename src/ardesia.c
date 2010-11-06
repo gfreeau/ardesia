@@ -45,7 +45,7 @@ void calculate_position(GtkWidget *ardesia_bar_window,
                         gint wwidth, gint wheight,
                         gint position)
 {
- *y = ((dheight - wheight)/2); 
+  *y = ((dheight - wheight)/2); 
   /* vertical layout */
   if (position==WEST)
     {
@@ -65,8 +65,8 @@ void calculate_position(GtkWidget *ardesia_bar_window,
         }
       else if (position==SOUTH)
         {
-         /* south */
-         *y = dheight - SPACE_FROM_BORDER - wheight;
+	  /* south */
+	  *y = dheight - SPACE_FROM_BORDER - wheight;
         }
       else
         {  

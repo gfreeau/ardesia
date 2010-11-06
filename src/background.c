@@ -62,29 +62,32 @@ GdkPixbuf * load_png (gchar *filename)
 /* Destroy the background window */
 void destroy_background_window()
 {
-  if (background_data->background_shape)
+  if (background_data)
     {
-      g_object_unref(background_data->background_shape);
-    }
+      if (background_data->background_shape)
+	{
+	  g_object_unref(background_data->background_shape);
+	}
 
-  if (background_data->background_window != NULL)
-    { 
-      /* destroy brutally the background window */
-      gtk_widget_destroy(background_data->background_window);
-    }
+      if (background_data->background_window != NULL)
+	{ 
+	  /* destroy brutally the background window */
+	  gtk_widget_destroy(background_data->background_window);
+	}
 
-  if (background_data->back_cr)
-    {
-      cairo_destroy(background_data->back_cr);
-    }
+      if (background_data->back_cr)
+	{
+	  cairo_destroy(background_data->back_cr);
+	}
 
-  g_free(background_data->background_color);
-  /* unref gtkbuilder */
-  if (background_data->backgroundWindowGtkBuilder)
-    {
-      g_object_unref (background_data->backgroundWindowGtkBuilder);
+      g_free(background_data->background_color);
+      /* unref gtkbuilder */
+      if (background_data->backgroundWindowGtkBuilder)
+	{
+	  g_object_unref (background_data->backgroundWindowGtkBuilder);
+	}
+      g_free(background_data);
     }
-  g_free(background_data);
   /* quit gtk */
   gtk_main_quit();
 }
