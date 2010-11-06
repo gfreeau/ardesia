@@ -259,16 +259,22 @@ void set_background_window(GtkWidget* widget)
 }
 
 
-/* Create the background window */
-GtkWidget* create_background_window(gchar* backgroundimage)
+BackGroundData* allocate_background_data()
 {
-  GError* error = NULL;
-  background_data = g_malloc(sizeof(BackGroundData));
+  BackGroundData* background_data = g_malloc(sizeof(BackGroundData));
   background_data->background_color = NULL; 
   background_data->background_image = NULL; 
   background_data->back_cr = NULL;
   background_data->background_shape = NULL; 
   background_data->background_image = NULL;
+  background_data->background_window = NULL;
+  return background_data;
+}
+
+/* Create the background window */
+GtkWidget* create_background_window(gchar* backgroundimage)
+{
+  background_data = allocate_background_data(); 
   
   if (backgroundimage) 
     {
@@ -278,6 +284,7 @@ GtkWidget* create_background_window(gchar* backgroundimage)
   /* Initialize the background window */
   background_data->backgroundWindowGtkBuilder = gtk_builder_new();
 
+  GError* error = NULL;
   /* Load the gtk builder file created with glade */
   gtk_builder_add_from_file(background_data->backgroundWindowGtkBuilder, BACKGROUND_UI_FILE, &error);
 
