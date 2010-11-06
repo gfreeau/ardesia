@@ -113,7 +113,6 @@ void calculate_initial_position(GtkWidget *ardesia_bar_window,
 /* Print the command line help */
 void print_help()
 {
-  gchar* version = "0.5";
   gchar* year = "2009-2010";
   gchar* author = "Pietro Pilolli";
   g_printf("Usage: ardesia [options] [filename]\n\n");
@@ -129,7 +128,7 @@ void print_help()
   g_printf("\n");
   g_printf("filename:\t  \t\tThe file containig the image to be be used as background\n");
   g_printf("\n");
-  g_printf("Ardesia %s (C) %s %s\n", version, year, author);
+  g_printf("Ardesia %s (C) %s %s\n", VERSION, year, author);
   exit(1);
 }
 
