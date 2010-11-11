@@ -40,6 +40,7 @@
     - image gallery, sticky notes
   - Lazo selection tool
   - Move, copy, paste
+  - Zoom and rotate
   - Deploy the artifact online
     - email integration
     - moodle plugin
@@ -50,7 +51,6 @@
     - select workspace
     - preferred colors
     - thickness size 
-  - Zoom and rotate
 
 ===
 EOF
