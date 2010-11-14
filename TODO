@@ -32,10 +32,10 @@
 
 - Candidate features:
   - If a program start in fullscreen Ardesia 
-    go above the program
-  - Beter poligon recognition and drawing
-  - Send the log and stacktrace when a problem occurs
+    goes above the program
+  - Better poligon recognition and drawing
   - Virtual keyboard integration
+  - Send the log and stacktrace when a problem occurs
   - Image importer
     - image gallery, sticky notes
   - Lazo selection tool
