@@ -9,19 +9,19 @@
 ======================================
 
 
+- Make a Video tutorial
 - French translation
 - Open a freenode IRC channel
-- Make a Video tutorial
 
 - Reengineering
-  - Screencast recorder using vlclib insted spawn the vlc process
+  - gui and icon revision to increase the usability
+  - Screencast recorder using vlclib instead spawn the vlc process
   - Store and load the savepoints using svg files
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
 
 - MacOsX-quartz porting
-  - Investigate about the status
-  - Make a plan
+  - Investigate about the status and make a plan
 
 - Windows7 os
   - Create a binary installer similar to the gimp windows 
@@ -31,24 +31,24 @@
   - Print the backtrace on windows when a segfault occurs
 
 - Candidate features:
-  - Better poligon recognition and drawing
-  - Virtual keyboard integration
-  - Send the log and stacktrace when a problem occurs
+  - integration with the florence virtual keyboard
+  - Better polygon recognition and drawing
   - Image importer
     - image gallery, sticky notes
   - Lazo selection tool
   - Move, copy, paste
-  - Zoom and rotate
   - Deploy the artifact online
     - email integration
     - moodle plugin
+  - Send the log and the stacktrace if a problem occurs
   - Multi pointer support 
-  - Multi page support
-  - Pdf import using libpoppler 
   - Define a configuration file and settings
     - select workspace
     - preferred colors
     - thickness size 
+  - Zoom and rotate 
+  - Multi page support
+  - Pdf import using libpoppler 
 
 ===
 EOF
