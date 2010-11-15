@@ -19,6 +19,7 @@
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
   - Screencast recorder using vlclib instead spawn the vlc process
+  - better integration with the florence virtual keyboard
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
@@ -31,7 +32,6 @@
     seems that the ARGB32 support in cairo is not yet available 
 
 - Candidate features:
-  - integration with the florence virtual keyboard
   - Better polygon recognition and drawing
   - Image importer
     - image gallery, sticky notes

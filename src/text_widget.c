@@ -153,7 +153,7 @@ key_snooper(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 
 
 /* Set the text cursor */
-gboolean set_text_pointer(GtkWidget * window)
+gboolean set_text_cursor(GtkWidget * window)
 {
   
   gint height = text_data->max_font_height;
@@ -224,6 +224,21 @@ void init(GtkWidget *widget)
   
 }
 
+void start_virtual_keyboard()
+{
+  gchar* cmd = g_strdup_printf("%s &", VIRTUALKEYBOARD_NAME); 
+  system(cmd); 
+  g_free(cmd);
+}
+
+
+void stop_virtual_keyboard()
+{
+  gchar* cmd = g_strdup_printf("killall -9 %s", VIRTUALKEYBOARD_NAME); 
+  system(cmd); 
+  g_free(cmd);
+}
+
 
 /* The windows has been exposed */
 G_MODULE_EXPORT gboolean
@@ -244,10 +259,11 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
 	  cairo_text_extents (text_data->cr, "|" , &text_data->extents);
 	  text_data->max_font_height = text_data->extents.height;
         }
-      set_text_pointer(widget);
+      set_text_cursor(widget);
 #ifdef _WIN32
       grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
 #endif
+      start_virtual_keyboard();  
     }
   return TRUE;
 }
@@ -340,6 +356,7 @@ void stop_text_widget()
 {
   if (text_data)
     {
+      stop_virtual_keyboard();
       if (text_data->snooper_handler_id)
 	{
 	  gtk_key_snooper_remove(text_data->snooper_handler_id);
