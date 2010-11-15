@@ -15,10 +15,10 @@
 
 - Reengineering
   - gui and icon revision to increase the usability
-  - Screencast recorder using vlclib instead spawn the vlc process
   - Store and load the savepoints using svg files
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
+  - Screencast recorder using vlclib instead spawn the vlc process
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
@@ -26,9 +26,9 @@
 - Windows7 os
   - Create a binary installer similar to the gimp windows 
     installer http://gimp-win.sourceforge.net/
+  - Print the backtrace on windows when a segfault occurs
   - Fix the highlighter; this doesn't work because
     seems that the ARGB32 support in cairo is not yet available 
-  - Print the backtrace on windows when a segfault occurs
 
 - Candidate features:
   - integration with the florence virtual keyboard
