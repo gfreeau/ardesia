@@ -67,6 +67,7 @@ typedef struct
 
 typedef struct
 {
+  GPid virtual_keyboard_pid;
   GtkWidget* window;
   cairo_t *cr;
   Pos* pos;

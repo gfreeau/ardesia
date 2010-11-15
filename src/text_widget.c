@@ -40,6 +40,38 @@
 static TextData* text_data;
 
 
+void start_virtual_keyboard()
+{ 
+  gchar* argv[2] = {VIRTUALKEYBOARD_NAME, (gchar*) 0};
+
+
+  g_spawn_async (NULL /*working_directory*/,
+		 argv,
+		 NULL /*envp*/,
+		 G_SPAWN_SEARCH_PATH,
+		 NULL /*child_setup*/,
+		 NULL /*user_data*/,
+		 &text_data->virtual_keyboard_pid /*child_pid*/,
+		 NULL /*error*/);
+}
+
+
+void stop_virtual_keyboard()
+{
+  if (text_data->virtual_keyboard_pid>0)
+    {
+      g_spawn_close_pid(text_data->virtual_keyboard_pid);  
+      /* @TODO replace this with the cross plattform g_pid_terminate when it will available */
+#ifdef _WIN32
+      TerminateProcess((HANDLE) text_data->virtual_keyboard_pid, 0)
+#else
+      kill (text_data->virtual_keyboard_pid, SIGTERM);
+#endif   
+      text_data->virtual_keyboard_pid = (GPid) 0;
+    }
+}
+
+
 /* Creation of the text window */
 void create_text_window(GtkWindow *parent)
 {
@@ -202,11 +234,10 @@ gboolean set_text_cursor(GtkWidget * window)
 /* Initialization routine */
 void init(GtkWidget *widget)
 {
-  if (!text_data->cr)
+  if (text_data->cr==NULL)
     {
       text_data->cr = gdk_cairo_create(widget->window);
     }
-
   clear_cairo_context(text_data->cr);
   cairo_set_line_cap (text_data->cr, CAIRO_LINE_CAP_ROUND);
   cairo_set_line_join(text_data->cr, CAIRO_LINE_JOIN_ROUND); 
@@ -224,21 +255,6 @@ void init(GtkWidget *widget)
   
 }
 
-void start_virtual_keyboard()
-{
-  gchar* cmd = g_strdup_printf("%s &", VIRTUALKEYBOARD_NAME); 
-  system(cmd); 
-  g_free(cmd);
-}
-
-
-void stop_virtual_keyboard()
-{
-  gchar* cmd = g_strdup_printf("killall -9 %s", VIRTUALKEYBOARD_NAME); 
-  system(cmd); 
-  g_free(cmd);
-}
-
 
 /* The windows has been exposed */
 G_MODULE_EXPORT gboolean
@@ -252,18 +268,21 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
   if (widget)
     {
       init(widget);
-      if (text_data->cr)
+      if (text_data->cr!=NULL)
         {
 	  /* This is a trick we must found the maximum height and text_pen_width of the font */
 	  cairo_set_font_size (text_data->cr, text_data->pen_width * 2);
 	  cairo_text_extents (text_data->cr, "|" , &text_data->extents);
 	  text_data->max_font_height = text_data->extents.height;
-        }
-      set_text_cursor(widget);
+          set_text_cursor(widget);
 #ifdef _WIN32
-      grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
+          grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
 #endif
-      start_virtual_keyboard();  
+	  if (text_data->virtual_keyboard_pid==0)
+	    {
+	      start_virtual_keyboard();
+	    } 
+        } 
     }
   return TRUE;
 }
@@ -323,6 +342,7 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 {
   text_data = g_malloc(sizeof(TextData));
 
+  text_data->virtual_keyboard_pid = (GPid) 0;
   text_data->snooper_handler_id = 0;
   text_data->window = NULL;
   text_data->cr = NULL;

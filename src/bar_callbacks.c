@@ -467,10 +467,10 @@ on_toolsPreferences_activate	 (GtkToolButton   *toolbutton,
 /* bring the window back to front: to be call periodically */
 gboolean bar_to_top(gpointer data)
 {
-   gtk_window_present(GTK_WINDOW(data));
-   gtk_widget_grab_focus(data);
-   gdk_window_lower(GTK_WIDGET(data)->window);
-   return TRUE;
+  gtk_window_present(GTK_WINDOW(data));
+  gtk_widget_grab_focus(data);
+  gdk_window_lower(GTK_WIDGET(data)->window);
+  return TRUE;
 }
 
 
@@ -484,8 +484,8 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
     {
       if (timer!=-1)
         { 
-           g_source_remove(timer); 
-           timer = -1;
+	  g_source_remove(timer); 
+	  timer = -1;
         }
       bar_data->grab = TRUE;
 #ifdef _WIN32
