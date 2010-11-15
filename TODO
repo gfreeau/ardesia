@@ -15,11 +15,11 @@
 
 - Reengineering
   - gui and icon revision to increase the usability
+  - better integration with the florence virtual keyboard
   - Store and load the savepoints using svg files
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
   - Screencast recorder using vlclib instead spawn the vlc process
-  - better integration with the florence virtual keyboard
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
