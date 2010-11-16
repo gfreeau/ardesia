@@ -292,4 +292,20 @@ AnnotateStrokeCoordinate * allocate_point(gint x, gint y, gint width, gdouble pr
 }
 
 
+/* Send an email */
+void send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment)
+{
+  gchar* argv[9] = {"xdg-email", "--attach", attachment, "--subject", subject, "--body", body, to, (gchar*) 0};
 
+  g_spawn_sync (NULL /*working_directory*/,
+		argv,
+		NULL /*envp*/,
+		G_SPAWN_SEARCH_PATH,
+		NULL /*child_setup*/,
+		NULL /*user_data*/,
+		NULL /*child_pid*/,
+		NULL /*error*/,
+		NULL,
+		NULL);
+
+}

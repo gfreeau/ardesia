@@ -19,6 +19,7 @@
     a more reactive undo/redo
   - Store and load the savepoints using svg files
   - Screencast recorder using vlclib instead spawn the vlc process
+  - cross plattform email integration without spawn the xdg-email script 
   - better integration with the florence virtual keyboard
 
 - MacOsX-quartz porting
@@ -33,10 +34,9 @@
 
 - Candidate features:
   - Better polygon recognition and drawing
-  - Deploy the artifact online
-    - email integration
-    - moodle plugin
   - Send the log and the stacktrace if a problem occurs
+  - Deploy the artifact online
+    - moodle plugin
   - Image importer
     - image gallery, sticky notes
   - Lazo selection tool

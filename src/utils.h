@@ -185,3 +185,6 @@ void rmdir_recursive(gchar *path);
 AnnotateStrokeCoordinate* allocate_point(gint x, gint y, gint width, gdouble pressure);
 
 
+/* Send an email */
+void send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment);
+
