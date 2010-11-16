@@ -15,11 +15,11 @@
 
 - Reengineering
   - gui and icon revision to increase the usability
-  - better integration with the florence virtual keyboard
-  - Store and load the savepoints using svg files
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
+  - Store and load the savepoints using svg files
   - Screencast recorder using vlclib instead spawn the vlc process
+  - better integration with the florence virtual keyboard
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
@@ -33,14 +33,15 @@
 
 - Candidate features:
   - Better polygon recognition and drawing
-  - Image importer
-    - image gallery, sticky notes
-  - Lazo selection tool
-  - Move, copy, paste
   - Deploy the artifact online
     - email integration
     - moodle plugin
   - Send the log and the stacktrace if a problem occurs
+  - Image importer
+    - image gallery, sticky notes
+  - Lazo selection tool
+  - Move
+  - Copy/paste
   - Multi pointer support 
   - Define a configuration file and settings
     - select workspace
