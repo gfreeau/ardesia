@@ -226,12 +226,32 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
 }
 
 
+/* Send email */
+void send_email(gchar* attachment)
+{
+   gchar* to = "ardesia-developer@googlegroups.com";
+   gchar* subject = "ardesia-contribution";
+   gchar* body = "Dear ardesia developer group,\nI want share my work created with Ardesia with you, please for details see the attachment.";
+   gchar* argv[9] = {"xdg-email", "--attach", attachment, "--subject", subject, "--body", body, to, (gchar*) 0};
+
+   g_spawn_async (NULL /*working_directory*/,
+		 argv,
+		 NULL /*envp*/,
+		 G_SPAWN_SEARCH_PATH,
+		 NULL /*child_setup*/,
+		 NULL /*user_data*/,
+		 NULL /*child_pid*/,
+		 NULL /*error*/);
+}
+
+
 /* Quit the pdf saver */
 void quit_pdf_saver()
 {
   if (pdf_data)
     {
       wait_for_pdf_save_pending_thread();
+      send_email(pdf_data->filename);
       g_free(pdf_data->filename);
 
       /* free the list and all the pixbuf inside it */
