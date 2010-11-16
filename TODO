@@ -33,13 +33,13 @@
   - Print the backtrace on windows when a segfault occurs
 
 - Candidate features:
+  - Filler
   - Better polygon recognition and drawing
   - Deploy the artifact online
     - moodle plugin
   - Image importer
     - image gallery, sticky notes
   - Lazo selection tool
-  - Filler
   - Move
   - Copy/paste
   - Multi pointer support 
