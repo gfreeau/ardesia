@@ -65,7 +65,7 @@ void stop_virtual_keyboard()
 #ifdef _WIN32
       TerminateProcess((HANDLE) text_data->virtual_keyboard_pid, 0)
 #else
-      kill (text_data->virtual_keyboard_pid, SIGTERM);
+	kill (text_data->virtual_keyboard_pid, SIGTERM);
 #endif   
       text_data->virtual_keyboard_pid = (GPid) 0;
     }
@@ -237,22 +237,34 @@ void init(GtkWidget *widget)
   if (text_data->cr==NULL)
     {
       text_data->cr = gdk_cairo_create(widget->window);
+      cairo_set_line_cap (text_data->cr, CAIRO_LINE_CAP_ROUND);
+      cairo_set_line_join(text_data->cr, CAIRO_LINE_JOIN_ROUND); 
+      cairo_set_operator(text_data->cr, CAIRO_OPERATOR_SOURCE);
+      cairo_set_line_width(text_data->cr, text_data->pen_width);
+      cairo_set_source_color_from_string(text_data->cr, text_data->color);
+      /* This is a trick we must found the maximum height and text_pen_width of the font */
+      cairo_set_font_size (text_data->cr, text_data->pen_width * 2);
+      cairo_text_extents (text_data->cr, "|" , &text_data->extents);
+      text_data->max_font_height = text_data->extents.height;
+      set_text_cursor(widget);
+#ifdef _WIN32
+      grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
+#endif
+      if (text_data->virtual_keyboard_pid==0)
+	{
+	  start_virtual_keyboard();
+	} 
     }
+  
   clear_cairo_context(text_data->cr);
-  cairo_set_line_cap (text_data->cr, CAIRO_LINE_CAP_ROUND);
-  cairo_set_line_join(text_data->cr, CAIRO_LINE_JOIN_ROUND); 
-  cairo_set_operator(text_data->cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_line_width(text_data->cr, text_data->pen_width);
-  cairo_set_source_color_from_string(text_data->cr, text_data->color);
 
   if (!text_data->pos)
     {
       text_data->pos = g_malloc (sizeof(Pos));
+      text_data->pos->x = 0;
+      text_data->pos->y = 0;
+      move_editor_cursor();
     }
-  text_data->pos->x = 0;
-  text_data->pos->y = 0;
-  move_editor_cursor();
-  
 }
 
 
@@ -268,21 +280,6 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
   if (widget)
     {
       init(widget);
-      if (text_data->cr!=NULL)
-        {
-	  /* This is a trick we must found the maximum height and text_pen_width of the font */
-	  cairo_set_font_size (text_data->cr, text_data->pen_width * 2);
-	  cairo_text_extents (text_data->cr, "|" , &text_data->extents);
-	  text_data->max_font_height = text_data->extents.height;
-          set_text_cursor(widget);
-#ifdef _WIN32
-          grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
-#endif
-	  if (text_data->virtual_keyboard_pid==0)
-	    {
-	      start_virtual_keyboard();
-	    } 
-        } 
     }
   return TRUE;
 }
@@ -308,7 +305,7 @@ release (GtkWidget *win,
 #ifdef _WIN32  
   /*
    *  @TODO in win32 the gdk_window_input_shape_combine_mask is not implemented
-   *	try a way to pass the mouse input below the text window
+   *  try a way to pass the mouse input below the text window
    *  
    */
 #else
