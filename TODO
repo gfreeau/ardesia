@@ -27,9 +27,9 @@
 - Windows7 os
   - Create a binary installer similar to the gimp windows 
     installer http://gimp-win.sourceforge.net/
-  - Print the backtrace on windows when a segfault occurs
   - Fix the highlighter; this doesn't work because
     seems that the ARGB32 support in cairo is not yet available 
+  - Print the backtrace on windows when a segfault occurs
 
 - Candidate features:
   - Better polygon recognition and drawing
