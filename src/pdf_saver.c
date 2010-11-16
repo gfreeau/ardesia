@@ -242,8 +242,6 @@ void quit_pdf_saver()
   if (pdf_data)
     {
       wait_for_pdf_save_pending_thread();
-      send_pdf_with_email(pdf_data->filename);
-      g_free(pdf_data->filename);
 
       /* free the list and all the pixbuf inside it */
       while (pdf_data->input_filelist!=NULL)
@@ -256,6 +254,8 @@ void quit_pdf_saver()
 	      g_free(filename); 
 	    }
 	}
+      send_pdf_with_email(pdf_data->filename);
+      g_free(pdf_data->filename);
       g_free(pdf_data);
     }
 }
