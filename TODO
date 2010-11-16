@@ -18,8 +18,8 @@
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
   - Screencast recorder using vlclib instead spawn the vlc process
-  - cross plattform email integration without spawn the xdg-email script 
   - better integration with the florence virtual keyboard
+  - cross plattform email integration without spawn the xdg-email script 
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
@@ -32,6 +32,8 @@
   - Print the backtrace on windows when a segfault occurs
 
 - Candidate features:
+  - blinking cursor in the position where do you want write 
+    with the text tool
   - Store and load the savepoints using svg files
   - Filler
   - Better polygon recognition and drawing
