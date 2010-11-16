@@ -22,6 +22,9 @@
   - cross plattform email integration without spawn the xdg-email script 
   - better integration with the florence virtual keyboard
 
+- Testing
+  - Send the log and the stacktrace if a problem occurs
+
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
 
@@ -34,7 +37,6 @@
 
 - Candidate features:
   - Better polygon recognition and drawing
-  - Send the log and the stacktrace if a problem occurs
   - Deploy the artifact online
     - moodle plugin
   - Image importer

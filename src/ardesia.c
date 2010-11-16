@@ -347,6 +347,7 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
 }
 
 
+/* Enable the localization support with gettext */
 void enable_localization_support()
 {
 #ifdef ENABLE_NLS
@@ -361,7 +362,7 @@ void enable_localization_support()
 
 #ifdef linux
 
-void print_trace_line(char *address) {
+void create_trace_line(char *address, FILE *file) {
   char ename[1024];
   int l = readlink("/proc/self/exe",ename,sizeof(ename));
   
@@ -395,18 +396,29 @@ void print_trace_line(char *address) {
    
   if (offset > 0) 
     {
-      const char *file;
+      const char *filen;
       const char *func;
       unsigned line;
-      if (bfd_find_nearest_line(abfd, text, syms, offset, &file, &func, &line) && file)
+      if (bfd_find_nearest_line(abfd, text, syms, offset, &filen, &func, &line) && file)
 	{
-	  fprintf(stderr, "file: %s, line: %u, func %s\n",file,line,func);
+	  fprintf(stderr, "file: %s, line: %u, func %s\n",filen,line,func);
+          fprintf(file, "file: %s, line: %u, func %s\n",filen,line,func);
 	}
     }
 }
 
 
-static void print_trace() 
+/* Send trace with email */
+void send_trace_with_email(gchar* attachment)
+{
+   gchar* to = "ardesia-developer@googlegroups.com";
+   gchar* subject = "ardesia-bug-report";
+   gchar* body = "Dear ardesia developer group,\nAn unhandled application error occurred, please for details see the attachment with the stack trace.";
+   send_email(to, subject, body, attachment);
+}
+
+
+static void create_trace() 
 {
 
   void *array[MAX_FRAMES];
@@ -419,18 +431,25 @@ static void print_trace()
    */
   
   size = backtrace (array, MAX_FRAMES);
-  printf ("Obtained %zd stack frames.\n", size);
+  gchar* default_filename = get_default_name();
+  const gchar* tmpdir = g_get_tmp_dir();
+  gchar* filename  = g_strdup_printf("%s%s%s_stacktrace.txt",tmpdir, G_DIR_SEPARATOR_S, default_filename);
+  g_free(default_filename);
+  FILE *file = fopen(filename, "w");
   for (i = 0; i < size; i++)
     {
       if (array[i] < approx_text_end)
 	{
-	  print_trace_line(array[i]);
+	  create_trace_line(array[i], file);      
 	}
     }
-
+   fclose(file);
+   send_trace_with_email(filename);
+   g_free(filename);
 }
+
 #else
-static void print_trace() 
+static void create_trace() 
 {
   /* 
    * is not yet implemented
@@ -439,14 +458,13 @@ static void print_trace()
    */
 }
 
-
 #endif
 
 
 /* Is called when occurs a sigsegv */
 int sigsegv_handler(void *addr, int bad)
 {
-  print_trace(); 
+  create_trace(); 
   exit(2);
 }
 

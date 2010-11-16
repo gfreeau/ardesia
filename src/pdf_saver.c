@@ -177,9 +177,9 @@ void wait_for_pdf_save_pending_thread()
 void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
 {
   const gchar* tmpdir = g_get_tmp_dir();
-  gchar* dffilename = get_default_name();
-  gchar* filename  = g_strdup_printf("%s%s%s_screenshoot.png",tmpdir, G_DIR_SEPARATOR_S, dffilename);
-  g_free(dffilename);
+  gchar* default_filename = get_default_name();
+  gchar* filename  = g_strdup_printf("%s%s%s_screenshoot.png",tmpdir, G_DIR_SEPARATOR_S, default_filename);
+  g_free(default_filename);
 
 
   GdkPixbuf* pixbuf = grab_screenshot();
@@ -232,7 +232,6 @@ void send_pdf_with_email(gchar* attachment)
   gchar* to = "ardesia-developer@googlegroups.com";
   gchar* subject = "ardesia-contribution";
   gchar* body = "Dear ardesia developer group,\nI want share my work created with Ardesia with you, please for details see the attachment.";
-
   send_email(to, subject, body, attachment);
 }
 
