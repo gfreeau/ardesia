@@ -250,10 +250,6 @@ void init(GtkWidget *widget)
 #ifdef _WIN32
       grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
 #endif
-      if (text_data->virtual_keyboard_pid==0)
-	{
-	  start_virtual_keyboard();
-	} 
     }
   
   clear_cairo_context(text_data->cr);
@@ -330,6 +326,10 @@ release (GtkWidget *win,
 #endif
   /* This present the ardesia bar and the panels */
   gtk_window_present(GTK_WINDOW(get_bar_window()));
+  if (text_data->virtual_keyboard_pid==0)
+   {
+     start_virtual_keyboard();
+   } 
   return TRUE;
 }
 
