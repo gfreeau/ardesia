@@ -17,7 +17,6 @@
   - gui and icon revision to increase the usability
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
-  - Store and load the savepoints using svg files
   - Screencast recorder using vlclib instead spawn the vlc process
   - cross plattform email integration without spawn the xdg-email script 
   - better integration with the florence virtual keyboard
@@ -33,6 +32,7 @@
   - Print the backtrace on windows when a segfault occurs
 
 - Candidate features:
+  - Store and load the savepoints using svg files
   - Filler
   - Better polygon recognition and drawing
   - Deploy the artifact online
