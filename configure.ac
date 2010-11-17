@@ -36,12 +36,11 @@ esac
 
 AM_PROG_LIBTOOL
 
-AC_CHECK_LIB([sigsegv], [stackoverflow_install_handler])
-AC_CHECK_HEADER(sigsegv.h, , AC_MSG_ERROR([SISEGV header not found; please install the libsigsegv-dev package.]))
-AC_CHECK_LIB(iberty, dyn_string_append)
-AC_CHECK_LIB(bfd, bfd_openr)
-AC_CHECK_HEADER(bfd.h, , AC_MSG_ERROR([BFD header not found; please install the binutils-dev package.]))
+
+AC_CHECK_HEADER([sigsegv.h], AC_CHECK_LIB([sigsegv], [stackoverflow_install_handler]), AC_MSG_NOTICE([*** Header file sigsegv.h not found; please install the libsigsegv headers ***])) 
+AC_CHECK_HEADER([bfd.h], AC_CHECK_LIB([bfd], [bfd_openr]), AC_MSG_NOTICE([*** Header file bfd.h not found; please install the binutils headers  ***])) 
 AC_CHECK_FUNCS(backtrace)
+
 
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = yes)

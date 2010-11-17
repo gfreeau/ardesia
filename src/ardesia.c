@@ -28,7 +28,7 @@
 #include <bar_callbacks.h>
 
 
-#ifdef linux
+#ifdef HAVE_LIBSIGSEGV
 /* globals retained across calls to resolve. */
 static bfd* abfd = 0;
 static asymbol **syms = 0;
@@ -474,11 +474,13 @@ int
 main(gint argc, char *argv[])
 {
 
+#ifdef HAVE_LIBSIGSEGV
   /* Install the SIGSEGV handler */
   if (sigsegv_install_handler(sigsegv_handler)<0)
     {
       exit(2);
     }
+#endif
 
   /* Enable the localization support with gettext */
   enable_localization_support();

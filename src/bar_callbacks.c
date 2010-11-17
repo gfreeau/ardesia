@@ -40,8 +40,6 @@
 #include <saver.h>
 #include <pdf_saver.h>
 
-#include <gdk/gdkx.h>
-
 
 static gint timer = -1;
 

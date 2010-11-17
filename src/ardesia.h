@@ -30,7 +30,9 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
-#include <bfd.h>
+#ifdef HAVE_LIBBFD
+  #include <bfd.h>
+#endif
 
 #ifdef linux
 /* 
@@ -40,7 +42,9 @@
 #include <execinfo.h>
 #endif
   
+#ifdef HAVE_LIBSIGSEGV
 #include <sigsegv.h>
+#endif
 
 
 #define MAX_FRAMES (20)
