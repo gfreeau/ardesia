@@ -76,7 +76,6 @@ void stop_virtual_keyboard()
 void create_text_window(GtkWindow *parent)
 {
   text_data->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_transient_for(GTK_WINDOW(text_data->window), parent);
 
   gtk_widget_set_usize (GTK_WIDGET(text_data->window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(text_data->window));
@@ -232,7 +231,7 @@ gboolean set_text_cursor(GtkWidget * window)
 
 
 /* Initialization routine */
-void init(GtkWidget *widget)
+void init_text_widget(GtkWidget *widget)
 {
   if (text_data->cr==NULL)
     {
@@ -275,7 +274,7 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
     }
   if (widget)
     {
-      init(widget);
+      init_text_widget(widget);
     }
   return TRUE;
 }
@@ -283,7 +282,7 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
 
 /* This is called when the button is lease */
 G_MODULE_EXPORT gboolean
-release (GtkWidget *win,
+on_window_text_button_release (GtkWidget *win,
          GdkEventButton *ev, 
          gpointer user_data)
 {
@@ -296,40 +295,14 @@ release (GtkWidget *win,
   text_data->pos->y = ev->y;
   move_editor_cursor();
     
-  gdk_window_set_cursor (text_data->window->window, NULL);
-  
-#ifdef _WIN32  
-  /*
-   *  @TODO in win32 the gdk_window_input_shape_combine_mask is not implemented
-   *  try a way to pass the mouse input below the text window
-   *  
-   */
-#else
-  /*
-   *  Apply a transparent window with the gdk_window_input_shape_combine_mask
-   *  to pass the mouse events below the text window
-   *	 
-   */
-  gint width, height;
-  gtk_window_get_size(GTK_WINDOW(win), &width, &height);
-      
-  /* Initialize a transparent pixmap with depth 1 to be used as input shape */
-  GdkPixmap* shape = gdk_pixmap_new (NULL, width, height, 1); 
-  cairo_t* shape_cr = gdk_cairo_create(shape);
-  clear_cairo_context(shape_cr); 
-  /* This allows the mouse event to be passed to the window below when ungrab */
-  gdk_window_input_shape_combine_mask (text_data->window->window, shape, 0, 0);  
-  gdk_flush();
-  cairo_destroy(shape_cr);
-  g_object_unref(shape);
-
-#endif
   /* This present the ardesia bar and the panels */
   gtk_window_present(GTK_WINDOW(get_bar_window()));
+
   if (text_data->virtual_keyboard_pid==0)
-   {
-     start_virtual_keyboard();
-   } 
+    {
+      stop_virtual_keyboard();
+    } 
+  start_virtual_keyboard();
   return TRUE;
 }
 
@@ -352,13 +325,14 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
   text_data->pen_width = tickness;
 
   create_text_window(parent);
-  gtk_window_set_keep_above(GTK_WINDOW(text_data->window), TRUE);
+
   gtk_widget_set_events (text_data->window, TEXT_MOUSE_EVENTS);
 
   g_signal_connect(G_OBJECT(text_data->window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
-  g_signal_connect (G_OBJECT(text_data->window), "button_release_event", G_CALLBACK(release), NULL);
-  /* install a key snooper */
+  g_signal_connect (G_OBJECT(text_data->window), "button_release_event", G_CALLBACK(on_window_text_button_release), NULL);
+ /* install a key snooper */
   text_data->snooper_handler_id = gtk_key_snooper_install(key_snooper, NULL);
+  
 
   gtk_widget_show_all(text_data->window);
 #ifdef _WIN32 
