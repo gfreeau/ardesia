@@ -360,8 +360,18 @@ void enable_localization_support()
 }
 
 
-#ifdef linux
+/* Send trace with email */
+void send_trace_with_email(gchar* attachment)
+{
+  gchar* to = "ardesia-developer@googlegroups.com";
+  gchar* subject = "ardesia-bug-report";
+  gchar* body = "Dear ardesia developer group,\nAn unhandled application error occurred, please for details see the attachment with the stack trace.";
+  send_email(to, subject, body, attachment);
+}
 
+
+#ifdef linux
+/* Put a trace line in the file giving the address */
 void create_trace_line(char *address, FILE *file) {
   char ename[1024];
   int l = readlink("/proc/self/exe",ename,sizeof(ename));
@@ -406,18 +416,14 @@ void create_trace_line(char *address, FILE *file) {
 	}
     }
 }
-
-
-/* Send trace with email */
-void send_trace_with_email(gchar* attachment)
-{
-  gchar* to = "ardesia-developer@googlegroups.com";
-  gchar* subject = "ardesia-bug-report";
-  gchar* body = "Dear ardesia developer group,\nAn unhandled application error occurred, please for details see the attachment with the stack trace.";
-  send_email(to, subject, body, attachment);
+#else
+ void create_trace_line(char *address, FILE *file) {
+  // to be implemented
 }
+#endif
 
 
+#ifdef HAVE_BACKTRACE
 static void create_trace() 
 {
 
@@ -453,11 +459,9 @@ static void create_trace()
 {
   /* 
    * is not yet implemented
-   * @TODO does exist a cross plattform way to print the backtrace
-   * or we must wait for a cross plattform implementation in non-glibc plattforms?
+   * @TODO does exist a way to print the backtrace without the backtrace routine
    */
 }
-
 #endif
 
 

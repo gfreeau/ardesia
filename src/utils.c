@@ -228,9 +228,8 @@ gboolean file_exists(gchar* filename)
  */
 gchar* get_default_name()
 {
-  gchar* start_string = "ardesia_";
   gchar* date = get_date(); 
-  gchar* filename = g_strdup_printf("%s%s", start_string, date);
+  gchar* filename = g_strdup_printf("%s_%s", PACKAGE_NAME, date);
   g_free(date); 
   return filename;
 }

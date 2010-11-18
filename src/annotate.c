@@ -309,7 +309,7 @@ void annotate_add_save_point(gboolean cache)
  
   gdouble ellapsed_time = g_timer_elapsed(data->timer, NULL);
 
-  savepoint->filename = g_strdup_printf("%s%sardesia_%f_vellum.png", data->savepoint_dir, G_DIR_SEPARATOR_S, ellapsed_time);
+  savepoint->filename = g_strdup_printf("%s%s%s_%f_vellum.png", data->savepoint_dir, G_DIR_SEPARATOR_S, PACKAGE_NAME, ellapsed_time);
 
   /* the story about the future is deleted */
   annotate_redolist_free();
@@ -328,7 +328,7 @@ void annotate_add_save_point(gboolean cache)
   
   if (!cache)
     {
-      /*  will be create a file in the savepoint folder with format ardesia_ellapsed_time.png */
+      /*  will be create a file in the savepoint folder with format PACKAGE_NAME_ellapsed_time.png */
       cairo_surface_write_to_png (saved_surface, savepoint->filename);
       cairo_surface_destroy(saved_surface); 
       savepoint->surface = NULL;
@@ -1454,7 +1454,7 @@ void setup_app(GtkWidget* parent)
 void create_savepoint_dir()
 {
   const gchar* tmpdir = g_get_tmp_dir();
-  data->savepoint_dir = g_strdup_printf("%s%sardesia", tmpdir, G_DIR_SEPARATOR_S);
+  data->savepoint_dir = g_strdup_printf("%s%s%s", tmpdir, G_DIR_SEPARATOR_S, PACKAGE_NAME);
   if (g_file_test(data->savepoint_dir, G_FILE_TEST_IS_DIR))
     { 
       /* the folder already exist; I delete it */
