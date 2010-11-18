@@ -76,7 +76,7 @@ void stop_virtual_keyboard()
 void create_text_window(GtkWindow *parent)
 {
   text_data->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-
+  
   gtk_widget_set_usize (GTK_WIDGET(text_data->window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(text_data->window));
 
@@ -280,13 +280,27 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
 }
 
 
+/* Add a savepoint with the text */
+void save_text()
+{
+  if (text_data->letterlist)
+    {
+      annotate_push_context(text_data->cr);
+      g_slist_foreach(text_data->letterlist, (GFunc)g_free, NULL);
+      g_slist_free(text_data->letterlist);
+      text_data->letterlist = NULL;
+    } 
+}
+
+
 /* This is called when the button is lease */
 G_MODULE_EXPORT gboolean
 on_window_text_button_release (GtkWidget *win,
-         GdkEventButton *ev, 
-         gpointer user_data)
+			       GdkEventButton *ev, 
+			       gpointer user_data)
 {
 
+  save_text();
 #ifdef _WIN32
   ungrab_pointer(gdk_display_get_default(), text_data->window);
 #endif
@@ -294,15 +308,18 @@ on_window_text_button_release (GtkWidget *win,
   text_data->pos->x = ev->x;
   text_data->pos->y = ev->y;
   move_editor_cursor();
-    
-  /* This present the ardesia bar and the panels */
-  gtk_window_present(GTK_WINDOW(get_bar_window()));
 
-  if (text_data->virtual_keyboard_pid==0)
+  if (text_data->virtual_keyboard_pid!=0)
     {
       stop_virtual_keyboard();
     } 
   start_virtual_keyboard();
+  
+  /* This present the ardesia bar and the panels */
+  gtk_window_present(GTK_WINDOW(get_bar_window()));
+
+  gtk_window_present(GTK_WINDOW(text_data->window));
+
   return TRUE;
 }
 
@@ -325,16 +342,18 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
   text_data->pen_width = tickness;
 
   create_text_window(parent);
+  gtk_window_set_keep_above(GTK_WINDOW(text_data->window), TRUE);
 
   gtk_widget_set_events (text_data->window, TEXT_MOUSE_EVENTS);
 
   g_signal_connect(G_OBJECT(text_data->window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
   g_signal_connect (G_OBJECT(text_data->window), "button_release_event", G_CALLBACK(on_window_text_button_release), NULL);
- /* install a key snooper */
+  /* install a key snooper */
   text_data->snooper_handler_id = gtk_key_snooper_install(key_snooper, NULL);
   
 
   gtk_widget_show_all(text_data->window);
+
 #ifdef _WIN32 
   // I use a layered window that use the black as transparent color
   setLayeredGdkWindowAttributes(text_data->window->window, RGB(0,0,0), 0, LWA_COLORKEY);	
@@ -354,12 +373,7 @@ void stop_text_widget()
 	}
       if (text_data->cr)
 	{
-	  if (text_data->letterlist)
-	    {
-	      annotate_push_context(text_data->cr);
-	      g_slist_foreach(text_data->letterlist, (GFunc)g_free, NULL);
-	      g_slist_free(text_data->letterlist);
-	    } 
+	  save_text();
 	  cairo_destroy(text_data->cr);     
 	}
       if (text_data->window)
