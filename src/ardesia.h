@@ -21,6 +21,7 @@
  *
  */
 
+#include <config.h>
 #include <locale.h>
 #include <glib.h>
 #include <glib/gprintf.h>
@@ -31,7 +32,7 @@
 #include <gtk/gtk.h>
 
 #ifdef HAVE_LIBBFD
-  #include <bfd.h>
+#include <bfd.h>
 #endif
 
 #ifdef linux

@@ -87,10 +87,10 @@ void take_pen_tool()
   GtkToggleToolButton* eraserToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonEraser"));
   if (gtk_toggle_tool_button_get_active(eraserToolButton))
     {
-       gtk_toggle_tool_button_set_active(eraserToolButton, FALSE); 
-       /* may be that the user expect to use the old tool for example the arrow */
-       GtkToggleToolButton* pencilToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonPencil"));
-       gtk_toggle_tool_button_set_active(pencilToolButton, TRUE); 
+      gtk_toggle_tool_button_set_active(eraserToolButton, FALSE); 
+      /* may be that the user expect to use the old tool for example the arrow */
+      GtkToggleToolButton* pencilToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonPencil"));
+      gtk_toggle_tool_button_set_active(pencilToolButton, TRUE); 
     }
 }
 

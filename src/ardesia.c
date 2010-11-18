@@ -411,10 +411,10 @@ void create_trace_line(char *address, FILE *file) {
 /* Send trace with email */
 void send_trace_with_email(gchar* attachment)
 {
-   gchar* to = "ardesia-developer@googlegroups.com";
-   gchar* subject = "ardesia-bug-report";
-   gchar* body = "Dear ardesia developer group,\nAn unhandled application error occurred, please for details see the attachment with the stack trace.";
-   send_email(to, subject, body, attachment);
+  gchar* to = "ardesia-developer@googlegroups.com";
+  gchar* subject = "ardesia-bug-report";
+  gchar* body = "Dear ardesia developer group,\nAn unhandled application error occurred, please for details see the attachment with the stack trace.";
+  send_email(to, subject, body, attachment);
 }
 
 
@@ -443,9 +443,9 @@ static void create_trace()
 	  create_trace_line(array[i], file);      
 	}
     }
-   fclose(file);
-   send_trace_with_email(filename);
-   g_free(filename);
+  fclose(file);
+  send_trace_with_email(filename);
+  g_free(filename);
 }
 
 #else
