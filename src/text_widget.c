@@ -76,7 +76,8 @@ void stop_virtual_keyboard()
 void create_text_window(GtkWindow *parent)
 {
   text_data->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  
+  gtk_window_set_transient_for(GTK_WINDOW(text_data->window), parent);
+
   gtk_widget_set_usize (GTK_WIDGET(text_data->window), gdk_screen_width(), gdk_screen_height());
   gtk_window_fullscreen(GTK_WINDOW(text_data->window));
 
@@ -319,6 +320,7 @@ on_window_text_button_release (GtkWidget *win,
   gtk_window_present(GTK_WINDOW(get_bar_window()));
 
   gtk_window_present(GTK_WINDOW(text_data->window));
+  gdk_window_raise(text_data->window->window);
 
   return TRUE;
 }
