@@ -25,6 +25,7 @@
   - Investigate about the status and make a plan
 
 - Windows7 os
+  - backtrace system on windows
   - Create a binary installer similar to the gimp windows 
     installer http://gimp-win.sourceforge.net/
   - Fix the highlighter; this doesn't work because
