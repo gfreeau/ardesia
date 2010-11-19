@@ -1,9 +1,11 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Ardesia
-GenericName=Presentation helper
+Name=Ardesia desktop sketchpad 
+GenericName=Desktop sketchpad
 Comment=Annotate on the desktop screen.
+Comment[it]=Annota sullo schermo del computer
+Comment[es]=Escribir en el escritorio de la computadora
 Exec=ardesia %U
 TryExec=ardesia
 Icon=ardesia.png
