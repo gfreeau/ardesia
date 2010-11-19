@@ -16,7 +16,7 @@ msgstr ""
 
 #: ../src/ardesia.c:143
 msgid "In order to run Ardesia you need to enable a composite manager"
-msgstr "Per far girare Ardesia è necessario abilitare un composite managerKWin"
+msgstr "Per far girare Ardesia è necessario abilitare un composite manager"
 
 #. set tooltip to unhide
 #: ../src/bar_callbacks.c:391
