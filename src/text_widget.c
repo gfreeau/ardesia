@@ -130,7 +130,7 @@ gboolean blink_cursor(gpointer data)
 }
 
 
-/** Delete the last character printed */
+/* Delete the last character printed */
 void delete_character()
 {
   CharInfo *charInfo = (CharInfo *) g_slist_nth_data (text_data->letterlist, 0);
@@ -235,9 +235,9 @@ gboolean set_text_cursor(GtkWidget * window)
 {
   
   gint height = text_data->max_font_height;
-  gint width = text_data->pen_width;
+  gint width = 5;
   
-  GdkPixmap *pixmap = gdk_pixmap_new (NULL, width , height, 1);
+  GdkPixmap *pixmap = gdk_pixmap_new (NULL, width, height, 1);
   cairo_t *text_pointer_pcr = gdk_cairo_create(pixmap);
   cairo_set_operator(text_pointer_pcr, CAIRO_OPERATOR_SOURCE);
   cairo_set_source_rgb(text_pointer_pcr, 1, 1, 1);
@@ -245,7 +245,7 @@ gboolean set_text_cursor(GtkWidget * window)
   cairo_stroke(text_pointer_pcr);
   cairo_destroy(text_pointer_pcr);
   
-  GdkPixmap *bitmap = gdk_pixmap_new (NULL, width , height, 1);  
+  GdkPixmap *bitmap = gdk_pixmap_new (NULL, width, height, 1);  
   cairo_t *text_pointer_cr = gdk_cairo_create(bitmap);
   
   if (text_pointer_cr)
@@ -254,7 +254,7 @@ gboolean set_text_cursor(GtkWidget * window)
       cairo_set_source_rgb(text_pointer_cr, 1, 1, 1);
       cairo_set_operator(text_pointer_cr, CAIRO_OPERATOR_SOURCE);
       cairo_set_line_width(text_pointer_cr, text_data->pen_width);
-      cairo_rectangle(text_pointer_cr, 0, 0, 5, height);  
+      cairo_rectangle(text_pointer_cr, 0, 0, width, height);  
       cairo_stroke(text_pointer_cr);
       cairo_destroy(text_pointer_cr);
     } 
