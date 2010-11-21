@@ -76,6 +76,8 @@ typedef struct
   gint pen_width;
   gint max_font_height;
   cairo_text_extents_t extents;
+  gint timer;
+  gboolean blink_show;
   guint snooper_handler_id;
 }TextData;
 

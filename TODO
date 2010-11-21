@@ -14,10 +14,8 @@
 - Open a freenode IRC channel
 
 - Reengineering
-  - better integration with the florence virtual keyboard
-    - blinking cursor in the position where do you want write 
-      with the text tool
   - gui and icon revision to increase the usability
+  - better integration with the florence virtual keyboard
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
   - Screencast recorder using vlclib instead spawn the vlc process
