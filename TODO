@@ -26,11 +26,10 @@
 
 - Windows7 os
   - backtrace system on windows
-  - Create a binary installer similar to the gimp windows 
-    installer http://gimp-win.sourceforge.net/
   - Fix the highlighter; this doesn't work because
     seems that the ARGB32 support in cairo is not yet available 
-  - Print the backtrace on windows when a segfault occurs
+  - Create a binary installer similar to the gimp windows 
+    installer http://gimp-win.sourceforge.net/
 
 - Candidate features:
   - Store and load the savepoints using svg files
