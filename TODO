@@ -15,10 +15,10 @@
 
 - Reengineering
   - gui and icon revision to increase the usability
-  - better integration with the florence virtual keyboard
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
   - Screencast recorder using vlclib instead spawn the vlc process
+  - better integration with the florence virtual keyboard
   - cross plattform email integration without spawn the xdg-email script 
 
 - MacOsX-quartz porting
@@ -32,9 +32,9 @@
     installer http://gimp-win.sourceforge.net/
 
 - Candidate features:
+  - Better polygon recognition and drawing
   - Store and load the savepoints using svg files
   - Filler
-  - Better polygon recognition and drawing
   - Deploy the artifact online
     - moodle plugin
   - Image importer
