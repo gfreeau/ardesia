@@ -2,72 +2,62 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-20 01:53+0200\n"
+"POT-Creation-Date: 2010-11-25 19:03+0100\n"
 "PO-Revision-Date: \n"
-"Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
+"Last-Translator: alpha <alpha@paranoici.org>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Italian\n"
-"X-Poedit-Country: ITALY\n"
+"X-Poedit-Language: Spanish\n"
+"X-Poedit-Country: SPAIN\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../src/ardesia.c:143
+#: ../src/ardesia.c:142
 msgid "In order to run Ardesia you need to enable a composite manager"
 msgstr "Para ejecutar Ardesia necesita habilitar el administrador compuestos"
 
-#. set tooltip to unhide
-#: ../src/bar_callbacks.c:391
-msgid "Unhide"
-msgstr "Mostrar"
-
-#. set tooltip to hide
-#: ../src/bar_callbacks.c:400 ../src/ardesia.glade.h:10
-msgid "Hide"
-msgstr "Ocultar"
-
 #. set stop tooltip
-#: ../src/bar_callbacks.c:458 ../src/ardesia.glade.h:17
+#: ../src/bar_callbacks.c:443 ../src/ardesia.glade.h:16
 msgid "Record"
 msgstr "Grabar"
 
 #. set stop tooltip
-#: ../src/bar_callbacks.c:469
+#: ../src/bar_callbacks.c:454
 msgid "Stop"
 msgstr "Detener"
 
 #. set tooltip to unhide
-#: ../src/bar_callbacks.c:514 ../src/ardesia.glade.h:25
+#: ../src/bar_callbacks.c:514 ../src/ardesia.glade.h:24
 msgid "Unlock"
 msgstr "Desbloquear"
 
 #. set tooltip to hide
-#: ../src/bar_callbacks.c:536
+#: ../src/bar_callbacks.c:537
 msgid "Lock"
 msgstr "Bloquear"
 
 #. open color widget
-#: ../src/color_selector.c:50
+#: ../src/color_selector.c:49
 msgid "Changing color"
 msgstr "Cambiar el color"
 
-#: ../src/recorder.c:109
+#: ../src/recorder.c:108
 msgid ""
 "To record with Ardesia you must install the vlc program and add it to the "
 "PATH environment variable"
 msgstr "Para grabar con Ardesia debe instalar el programa vlc y anadir al path"
 
-#: ../src/recorder.c:131
+#: ../src/recorder.c:130
 msgid "Save video as ogv"
 msgstr "Guardar el vídeo como ogv"
 
-#: ../src/recorder.c:136 ../src/saver.c:63
+#: ../src/recorder.c:135 ../src/saver.c:63
 msgid "Choose a file"
 msgstr "Elegir un archivo"
 
-#: ../src/recorder.c:172 ../src/saver.c:110
+#: ../src/recorder.c:171 ../src/saver.c:110
 msgid "File Exists. Overwrite"
 msgstr "El archivo existe. Sobrescribir"
 
@@ -111,67 +101,67 @@ msgstr "Relleno"
 msgid "Green"
 msgstr "Verde"
 
-#: ../src/ardesia.glade.h:11
+#: ../src/ardesia.glade.h:10
 msgid "Highlighter"
 msgstr "Resaltador"
 
-#: ../src/ardesia.glade.h:12
+#: ../src/ardesia.glade.h:11
 msgid "Info"
 msgstr "Info"
 
-#: ../src/ardesia.glade.h:13
+#: ../src/ardesia.glade.h:12
 msgid "Insert Text"
 msgstr "Insertar tesxto"
 
-#: ../src/ardesia.glade.h:14
+#: ../src/ardesia.glade.h:13
 msgid "Pencil"
 msgstr "Lapiz"
 
-#: ../src/ardesia.glade.h:15
+#: ../src/ardesia.glade.h:14
 msgid "Preferences"
 msgstr "Preferencias"
 
-#: ../src/ardesia.glade.h:16
+#: ../src/ardesia.glade.h:15
 msgid "Quit"
 msgstr "Cerrar"
 
-#: ../src/ardesia.glade.h:18
+#: ../src/ardesia.glade.h:17
 msgid "Rectifier"
 msgstr "Rectificar"
 
-#: ../src/ardesia.glade.h:19
+#: ../src/ardesia.glade.h:18
 msgid "Red"
 msgstr "Rojo"
 
-#: ../src/ardesia.glade.h:20
+#: ../src/ardesia.glade.h:19
 msgid "Redo"
 msgstr "Rehacer"
 
-#: ../src/ardesia.glade.h:21
+#: ../src/ardesia.glade.h:20
 msgid "Rounder"
 msgstr "Rondar"
 
-#: ../src/ardesia.glade.h:22
+#: ../src/ardesia.glade.h:21
 msgid "Save"
 msgstr "Guardar"
 
-#: ../src/ardesia.glade.h:23
+#: ../src/ardesia.glade.h:22
 msgid "Thickness"
 msgstr "Espesor"
 
-#: ../src/ardesia.glade.h:24
+#: ../src/ardesia.glade.h:23
 msgid "Undo"
 msgstr "Deshacer"
 
-#: ../src/ardesia.glade.h:26
+#: ../src/ardesia.glade.h:25
 msgid "White"
 msgstr "Blanco"
 
-#: ../src/ardesia.glade.h:27
+#: ../src/ardesia.glade.h:26
 msgid "Yellow"
 msgstr "Amarillo"
 
-#: ../src/ardesia.glade.h:28
+#: ../src/ardesia.glade.h:27
 msgid "info"
 msgstr "informacion"
 
@@ -252,3 +242,9 @@ msgstr "immagine"
 #: ../src/preference_dialog.glade.h:5
 msgid "none"
 msgstr "ninguna"
+
+#~ msgid "Unhide"
+#~ msgstr "Mostrar"
+
+#~ msgid "Hide"
+#~ msgstr "Ocultar"

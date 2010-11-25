@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-20 01:53+0200\n"
+"POT-Creation-Date: 2010-11-25 19:03+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
@@ -14,46 +14,36 @@ msgstr ""
 "X-Poedit-Country: ITALY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../src/ardesia.c:143
+#: ../src/ardesia.c:142
 msgid "In order to run Ardesia you need to enable a composite manager"
 msgstr "Per far girare Ardesia è necessario abilitare un composite manager"
 
-#. set tooltip to unhide
-#: ../src/bar_callbacks.c:391
-msgid "Unhide"
-msgstr "Mostra"
-
-#. set tooltip to hide
-#: ../src/bar_callbacks.c:400 ../src/ardesia.glade.h:10
-msgid "Hide"
-msgstr "Nascondi"
-
 #. set stop tooltip
-#: ../src/bar_callbacks.c:458 ../src/ardesia.glade.h:17
+#: ../src/bar_callbacks.c:443 ../src/ardesia.glade.h:16
 msgid "Record"
 msgstr "Registra"
 
 #. set stop tooltip
-#: ../src/bar_callbacks.c:469
+#: ../src/bar_callbacks.c:454
 msgid "Stop"
 msgstr "Ferma"
 
 #. set tooltip to unhide
-#: ../src/bar_callbacks.c:514 ../src/ardesia.glade.h:25
+#: ../src/bar_callbacks.c:514 ../src/ardesia.glade.h:24
 msgid "Unlock"
 msgstr "Sblocca"
 
 #. set tooltip to hide
-#: ../src/bar_callbacks.c:536
+#: ../src/bar_callbacks.c:537
 msgid "Lock"
 msgstr "Blocca"
 
 #. open color widget
-#: ../src/color_selector.c:50
+#: ../src/color_selector.c:49
 msgid "Changing color"
 msgstr "Cambia colore"
 
-#: ../src/recorder.c:109
+#: ../src/recorder.c:108
 msgid ""
 "To record with Ardesia you must install the vlc program and add it to the "
 "PATH environment variable"
@@ -61,15 +51,15 @@ msgstr ""
 "Per registrare con Ardesia devi installare il programma vlc e aggiungerlo "
 "alla variabile d'ambiente PATH"
 
-#: ../src/recorder.c:131
+#: ../src/recorder.c:130
 msgid "Save video as ogv"
 msgstr "Salva il video nel formato ogv"
 
-#: ../src/recorder.c:136 ../src/saver.c:63
+#: ../src/recorder.c:135 ../src/saver.c:63
 msgid "Choose a file"
 msgstr "Scegli un file"
 
-#: ../src/recorder.c:172 ../src/saver.c:110
+#: ../src/recorder.c:171 ../src/saver.c:110
 msgid "File Exists. Overwrite"
 msgstr "Il file esiste. Sovrascrivilo"
 
@@ -113,67 +103,67 @@ msgstr "Riempi"
 msgid "Green"
 msgstr "Verde"
 
-#: ../src/ardesia.glade.h:11
+#: ../src/ardesia.glade.h:10
 msgid "Highlighter"
 msgstr "Evidenziatore"
 
-#: ../src/ardesia.glade.h:12
+#: ../src/ardesia.glade.h:11
 msgid "Info"
 msgstr "Info"
 
-#: ../src/ardesia.glade.h:13
+#: ../src/ardesia.glade.h:12
 msgid "Insert Text"
 msgstr "Inserisci testo"
 
-#: ../src/ardesia.glade.h:14
+#: ../src/ardesia.glade.h:13
 msgid "Pencil"
 msgstr "Penna"
 
-#: ../src/ardesia.glade.h:15
+#: ../src/ardesia.glade.h:14
 msgid "Preferences"
 msgstr "Preferenze"
 
-#: ../src/ardesia.glade.h:16
+#: ../src/ardesia.glade.h:15
 msgid "Quit"
 msgstr "Esci"
 
-#: ../src/ardesia.glade.h:18
+#: ../src/ardesia.glade.h:17
 msgid "Rectifier"
 msgstr "Rettifica"
 
-#: ../src/ardesia.glade.h:19
+#: ../src/ardesia.glade.h:18
 msgid "Red"
 msgstr "Rosso"
 
-#: ../src/ardesia.glade.h:20
+#: ../src/ardesia.glade.h:19
 msgid "Redo"
 msgstr "Ripristina"
 
-#: ../src/ardesia.glade.h:21
+#: ../src/ardesia.glade.h:20
 msgid "Rounder"
 msgstr "Approssima"
 
-#: ../src/ardesia.glade.h:22
+#: ../src/ardesia.glade.h:21
 msgid "Save"
 msgstr "Salva"
 
-#: ../src/ardesia.glade.h:23
+#: ../src/ardesia.glade.h:22
 msgid "Thickness"
 msgstr "Spessore"
 
-#: ../src/ardesia.glade.h:24
+#: ../src/ardesia.glade.h:23
 msgid "Undo"
 msgstr "Annulla"
 
-#: ../src/ardesia.glade.h:26
+#: ../src/ardesia.glade.h:25
 msgid "White"
 msgstr "Bianco"
 
-#: ../src/ardesia.glade.h:27
+#: ../src/ardesia.glade.h:26
 msgid "Yellow"
 msgstr "Giallo"
 
-#: ../src/ardesia.glade.h:28
+#: ../src/ardesia.glade.h:27
 msgid "info"
 msgstr "informazioni"
 
