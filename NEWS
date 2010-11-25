@@ -16,6 +16,29 @@ This file contain the news about the tool
   RELEASE NOTES
 =================
 
+-------------
+ ardesia 0.6
+-------------
+
+Usability:
+- added French translation
+- blinking cursor that highlight the text tool focus
+
+Features:
+- Now Ardesia try periodically to stay above all windows 
+  if the unlock button is pressed
+- Florence virtual keyboard integration: if you have it
+  installed, will be show/hide when you select the text 
+  tool
+- Email support: If you have created a pdf with ardesia
+  when you quit the program, it open your default mailer
+  with stub email with the pdf in attachment; this is
+  a good way to share your artifact, this feauture is
+  available for linux only
+- Bug Tracking: If the program is able to found a 
+  misbehaviour it ask to send an email with the log to
+  the ardesia developers staff
+
 
 -------------
  ardesia 0.5
@@ -29,7 +52,6 @@ Usability:
 - performance improvement
 - faster pdf export
 - enhancement in the pressure support
-- added French translation
 
 Features:
 - Ardesia now works with Kwin and xcompmgr 
@@ -190,7 +212,7 @@ Features:
  ardesia 0.1
 -------------
 
-The initial protipe written in python;
+The initial protype written in python;
 this has not been distributed to the public.
 I have put this version in the trash.
 

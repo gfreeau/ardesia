@@ -17,9 +17,9 @@
   - gui and icon revision to increase the usability
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
-  - Screencast recorder using vlclib instead spawn the vlc process
   - cross plattform email integration without spawn the xdg-email script 
   - better integration with the florence virtual keyboard
+  - Screencast recorder using vlclib instead spawn the vlc process
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
