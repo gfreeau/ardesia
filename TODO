@@ -24,9 +24,9 @@
   - Investigate about the status and make a plan
 
 - Windows7 os
+  - backtrace system on windows
   - Create a binary installer similar to the gimp windows 
     installer http://gimp-win.sourceforge.net/
-  - backtrace system on windows
   - Fix the highlighter; this doesn't work because
     seems that the ARGB32 support in cairo is not yet available 
   - Build a 64 bit executable version
