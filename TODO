@@ -32,6 +32,7 @@
   - Build a 64 bit executable version
 
 - Candidate features:
+  - Add french translation
   - Store and load the savepoints using svg files
   - Better polygon recognition and drawing
   - Deploy the artifact online
