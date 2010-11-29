@@ -1,0 +1,247 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Ardesia 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-11-25 19:03+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
+"Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: FRANCE\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: ../src/ardesia.c:142
+msgid "In order to run Ardesia you need to enable a composite manager"
+msgstr ""
+"Pour exécuter Ardesia est nécessaire de l'exécuter le composite manager"
+
+#. set stop tooltip
+#: ../src/bar_callbacks.c:443 ../src/ardesia.glade.h:16
+msgid "Record"
+msgstr "Enregistrer"
+
+#. set stop tooltip
+#: ../src/bar_callbacks.c:454
+msgid "Stop"
+msgstr "arrête"
+
+#. set tooltip to unhide
+#: ../src/bar_callbacks.c:514 ../src/ardesia.glade.h:24
+msgid "Unlock"
+msgstr "Déverrouiller"
+
+#. set tooltip to hide
+#: ../src/bar_callbacks.c:537
+msgid "Lock"
+msgstr "Vérrouiller"
+
+#. open color widget
+#: ../src/color_selector.c:49
+msgid "Changing color"
+msgstr "Changement de couleur"
+
+#: ../src/recorder.c:108
+msgid ""
+"To record with Ardesia you must install the vlc program and add it to the "
+"PATH environment variable"
+msgstr ""
+"Pour enregistrer une vidéo avec Ardesia, vous devez installer vlc et ajouter "
+"à la variable d'environnement PATH"
+
+#: ../src/recorder.c:130
+msgid "Save video as ogv"
+msgstr "Enregistrer la vidéo en OGV"
+
+#: ../src/recorder.c:135 ../src/saver.c:63
+msgid "Choose a file"
+msgstr "Choisissez un fichier"
+
+#: ../src/recorder.c:171 ../src/saver.c:110
+msgid "File Exists. Overwrite"
+msgstr "Le fichier existe. Écraser"
+
+#: ../src/saver.c:55
+msgid "Save image"
+msgstr "Enregistrer l'image"
+
+#: ../src/ardesia.glade.h:1
+msgid "Add to pdf"
+msgstr "Ajouter au pdf"
+
+#: ../src/ardesia.glade.h:2
+msgid "Ardesia"
+msgstr "Ardesia"
+
+#: ../src/ardesia.glade.h:3
+msgid "Arrow"
+msgstr "Flèche"
+
+#: ../src/ardesia.glade.h:4
+msgid "Blue"
+msgstr "Blue"
+
+#: ../src/ardesia.glade.h:5
+msgid "Clear"
+msgstr "Effacer"
+
+#: ../src/ardesia.glade.h:6
+msgid "Color Chooser"
+msgstr "Choisissez une couleur"
+
+#: ../src/ardesia.glade.h:7
+msgid "Eraser"
+msgstr "Gomme"
+
+#: ../src/ardesia.glade.h:8
+msgid "Filler"
+msgstr "remplissage"
+
+#: ../src/ardesia.glade.h:9
+msgid "Green"
+msgstr "vert"
+
+#: ../src/ardesia.glade.h:10
+msgid "Highlighter"
+msgstr "Surligneur"
+
+#: ../src/ardesia.glade.h:11
+msgid "Info"
+msgstr "Info"
+
+#: ../src/ardesia.glade.h:12
+msgid "Insert Text"
+msgstr "Inserisci testo"
+
+#: ../src/ardesia.glade.h:13
+msgid "Pencil"
+msgstr "Penna"
+
+#: ../src/ardesia.glade.h:14
+msgid "Preferences"
+msgstr "Préférences"
+
+#: ../src/ardesia.glade.h:15
+msgid "Quit"
+msgstr "Quitter"
+
+#: ../src/ardesia.glade.h:17
+msgid "Rectifier"
+msgstr "Rectification"
+
+#: ../src/ardesia.glade.h:18
+msgid "Red"
+msgstr "Red"
+
+#: ../src/ardesia.glade.h:19
+msgid "Redo"
+msgstr "Rétablir"
+
+#: ../src/ardesia.glade.h:20
+msgid "Rounder"
+msgstr "Approssima"
+
+#: ../src/ardesia.glade.h:21
+msgid "Save"
+msgstr "Enregistrer"
+
+#: ../src/ardesia.glade.h:22
+msgid "Thickness"
+msgstr "Epaisseur"
+
+#: ../src/ardesia.glade.h:23
+msgid "Undo"
+msgstr "Annuler"
+
+#: ../src/ardesia.glade.h:25
+msgid "White"
+msgstr "Blanc"
+
+#: ../src/ardesia.glade.h:26
+msgid "Yellow"
+msgstr "Jaune"
+
+#: ../src/ardesia.glade.h:27
+msgid "info"
+msgstr "Information"
+
+#: ../src/info_dialog.glade.h:1
+msgid ""
+"\n"
+"    Ardesia -- a program for painting on the screen\n"
+"    with this program you can play, draw, learn and teach\n"
+"    This program has been written such as a freedom sonet\n"
+"    We believe in the freedom and in the freedom of education\n"
+" \n"
+"    Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
+" \n"
+"    This program is free software; you can redistribute it and/or modify\n"
+"    it under the terms of the GNU General Public License as published by\n"
+"    the Free Software Foundation; either version 2 of the License, or\n"
+"    (at your option) any later version.\n"
+" \n"
+"    This program is distributed in the hope that it will be useful,\n"
+"    but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"    GNU General Public License for more details.\n"
+" \n"
+"    You should have received a copy of the GNU General Public License\n"
+"    along with this program; if not, write to the Free Software\n"
+"    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, "
+"USA.\n"
+"   "
+msgstr ""
+"\n"
+"    Ardesia -- un programma per dipengere sullo schermo\n"
+"    con questo programma puoi giocare, disegnare, imparare e insegnare\n"
+"    Questo programma e' stato scritto come un sonetto di liberta'\n"
+"    Crediamo nella liberta' e nella liberta' di insegnamento\n"
+" \n"
+"    Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
+" \n"
+"    This program is free software; you can redistribute it and/or modify\n"
+"    it under the terms of the GNU General Public License as published by\n"
+"    the Free Software Foundation; either version 2 of the License, or\n"
+"    (at your option) any later version.\n"
+" \n"
+"    This program is distributed in the hope that it will be useful,\n"
+"    but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"    GNU General Public License for more details.\n"
+" \n"
+"    You should have received a copy of the GNU General Public License\n"
+"    along with this program; if not, write to the Free Software\n"
+"    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, "
+"USA.\n"
+"   "
+
+#: ../src/info_dialog.glade.h:23
+msgid ""
+"   Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
+"    "
+msgstr ""
+"   Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
+"    "
+
+#: ../src/preference_dialog.glade.h:1
+msgid "Choose the background"
+msgstr "Choisissez le fond"
+
+#: ../src/preference_dialog.glade.h:2
+msgid "Choose the background color"
+msgstr "Choisissez la couleur de fond"
+
+#: ../src/preference_dialog.glade.h:3
+msgid "background color"
+msgstr "couleur de fond"
+
+#: ../src/preference_dialog.glade.h:4
+msgid "image"
+msgstr "image"
+
+#: ../src/preference_dialog.glade.h:5
+msgid "none"
+msgstr "aucun"
