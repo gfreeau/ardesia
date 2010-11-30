@@ -19,6 +19,7 @@
   - cross plattform email integration without spawn the xdg-email script 
   - better integration with the florence virtual keyboard
   - Screencast recorder using vlclib instead spawn the vlc process
+  - Reduce the video size
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
@@ -35,6 +36,8 @@
   - Store and load the savepoints using svg files
   - Better polygon recognition and drawing
   - Deploy the artifact online
+    - saved images with email 
+    - saved video with email 
     - moodle plugin
   - Filler
   - Image importer
