@@ -9,9 +9,14 @@
 ======================================
 
 
-- Make a pdf user manual
-- Make a video tutorial
-- Open a freenode IRC channel
+- Management
+  - Publish a live distro with Ardesia
+  - Make a pdf user manual
+  - Make a video tutorial
+  - Open a freenode IRC channel
+
+- MacOsX-quartz porting
+  - Investigate about the status and make a plan
 
 - Reengineering
   - gui and icon revision to increase the usability
@@ -21,9 +26,6 @@
   - better integration with the florence virtual keyboard
   - Screencast recorder using vlclib instead spawn the vlc process
   - Reduce the video size
-
-- MacOsX-quartz porting
-  - Investigate about the status and make a plan
 
 - Windows7 os
   - backtrace system on windows
