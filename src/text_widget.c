@@ -326,6 +326,9 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
 /* Add a savepoint with the text */
 void save_text()
 {
+  text_data->blink_show=FALSE;
+  blink_cursor(NULL);   
+  stop_timer(); 
   if (text_data->letterlist)
     {
       annotate_push_context(text_data->cr);
@@ -342,7 +345,6 @@ on_window_text_button_release (GtkWidget *win,
 			       GdkEventButton *ev, 
 			       gpointer user_data)
 {
-
   save_text();
 #ifdef _WIN32
   ungrab_pointer(gdk_display_get_default(), text_data->window);
@@ -364,7 +366,6 @@ on_window_text_button_release (GtkWidget *win,
   gtk_window_present(GTK_WINDOW(text_data->window));
   gdk_window_raise(text_data->window->window);
 
-  stop_timer(); 
   text_data->timer = g_timeout_add(1000, blink_cursor, NULL);   
  
   return TRUE;
@@ -414,6 +415,7 @@ void stop_text_widget()
 {
   if (text_data)
     {
+      save_text();
       stop_virtual_keyboard();
       if (text_data->snooper_handler_id)
 	{
@@ -421,10 +423,8 @@ void stop_text_widget()
 	}
       if (text_data->cr)
 	{
-	  save_text();
 	  cairo_destroy(text_data->cr);     
 	}
-      stop_timer(); 
       if (text_data->window)
 	{
 	  gtk_widget_destroy(text_data->window);
