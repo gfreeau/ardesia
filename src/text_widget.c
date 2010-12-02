@@ -104,28 +104,31 @@ void move_editor_cursor()
 /* Blink cursor */
 gboolean blink_cursor(gpointer data)
 {
-  cairo_t* cr = gdk_cairo_create(text_data->window->window);
-  cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
-  cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND); 
-  
-  if (text_data->blink_show)
+  if (text_data->window)
     {
-      cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-      cairo_set_line_width(cr, text_data->pen_width);
-      cairo_set_source_color_from_string(cr, text_data->color);
-      text_data->blink_show=FALSE;
-    }  
-  else
-    {
-      cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
-      text_data->blink_show=TRUE;
-    }  
+      cairo_t* cr = gdk_cairo_create(text_data->window->window);
+      cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
+      cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND); 
   
-  gint height = text_data->max_font_height;
-  cairo_rectangle(cr, text_data->pos->x, text_data->pos->y-height+1, 5, height);  
-  cairo_fill(cr);
-  cairo_stroke(cr);
-  cairo_destroy(cr);
+      if (text_data->blink_show)
+	{
+	  cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+	  cairo_set_line_width(cr, text_data->pen_width);
+	  cairo_set_source_color_from_string(cr, text_data->color);
+	  text_data->blink_show=FALSE;
+	}  
+      else
+	{
+	  cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
+	  text_data->blink_show=TRUE;
+	}  
+  
+      gint height = text_data->max_font_height;
+      cairo_rectangle(cr, text_data->pos->x, text_data->pos->y-height+1, 5, height);  
+      cairo_fill(cr);
+      cairo_stroke(cr);
+      cairo_destroy(cr);
+    }
   return TRUE;
 }
 
@@ -140,9 +143,9 @@ void delete_character()
       cairo_set_operator (text_data->cr, CAIRO_OPERATOR_CLEAR);
  
       cairo_rectangle(text_data->cr, charInfo->x + charInfo->x_bearing, 
-                      charInfo->y + charInfo->y_bearing, 
-                      gdk_screen_width(), 
-                      text_data->max_font_height + text_data->pen_width + 3);
+		      charInfo->y + charInfo->y_bearing, 
+		      gdk_screen_width(), 
+		      text_data->max_font_height + text_data->pen_width + 3);
 
       cairo_fill(text_data->cr);
       cairo_stroke(text_data->cr);
@@ -372,15 +375,26 @@ on_window_text_button_release (GtkWidget *win,
 }
 
 
+/* Destroy text window */
+void destroy_text_window()
+{
+  if (text_data->window)
+    {
+      gtk_widget_destroy(text_data->window);
+      text_data->window = NULL;
+    }
+}
+
+
 /* This shots when the text ponter is moving */
 G_MODULE_EXPORT gboolean
 on_window_text_cursor_motion(GtkWidget *win, 
-        GdkEventMotion *ev, 
-        gpointer func_data)
+			     GdkEventMotion *ev, 
+			     gpointer func_data)
 {
   if (inside_bar_window(ev->x, ev->y))
     {
-       stop_text_widget();
+      destroy_text_window();
     }
   return TRUE;
 }
@@ -435,22 +449,18 @@ void stop_text_widget()
       if (text_data->snooper_handler_id)
 	{
 	  gtk_key_snooper_remove(text_data->snooper_handler_id);
-          text_data->snooper_handler_id = 0;
+	  text_data->snooper_handler_id = 0;
 	}
       if (text_data->cr)
 	{
 	  cairo_destroy(text_data->cr);     
-          text_data->cr = NULL;
+	  text_data->cr = NULL;
 	}
-      if (text_data->window)
-	{
-	  gtk_widget_destroy(text_data->window);
-          text_data->window = NULL;
-	}
+      destroy_text_window();
       if (text_data->pos)
 	{
 	  g_free(text_data->pos);
-          text_data->pos = NULL;
+	  text_data->pos = NULL;
 	}
       g_free(text_data);
       text_data = NULL;
