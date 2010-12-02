@@ -269,12 +269,13 @@ gboolean is_similar_to_a_regular_poligon(GSList* list)
     {
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
       gdouble distance = get_distance(old_point->x, old_point->y, point->x, point->y);
-      printf("(%f,%f); (%f,%f); |%f|\n", old_point->x, old_point->y, point->x, point->y, distance);
+      // printf("(%f,%f); (%f,%f); |%f|\n", old_point->x, old_point->y, point->x, point->y, distance);
       total_distance = total_distance + distance;
       old_point = point;
     }
 
   ideal_distance = total_distance/lenght;
+  
   printf("Ideal %f\n",ideal_distance);
 
   i = 0;
@@ -288,7 +289,7 @@ gboolean is_similar_to_a_regular_poligon(GSList* list)
       gdouble distance = get_distance(point->x, point->y, old_point->x, old_point->y);
       if (!(is_similar(distance, ideal_distance, threshold)))
 	{
-	  printf("%f not similar to ideal %f, differ %f that is greater than the threshold %f\n", distance, ideal_distance, fabs(distance - ideal_distance), threshold);
+	  // printf("%f not similar to ideal %f, differ %f that is greater than the threshold %f\n", distance, ideal_distance, fabs(distance - ideal_distance), threshold);
 	  return FALSE; 
 	}
       old_point = point;

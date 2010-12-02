@@ -1022,7 +1022,7 @@ void roundify(gboolean closed_path)
   data->coordlist = outptr;
   AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght/2);
   annotate_modify_color(data, point->pressure); 
-  
+ 
   if (lenght == 1)
     {
       /* It is a point */ 
@@ -1030,9 +1030,9 @@ void roundify(gboolean closed_path)
       annotate_draw_point(out_point->x, out_point->y, out_point->pressure);
       return;
     }
-  if (lenght == 2)
+  if (lenght <= 3)
     {
-      /* It is a rect line */
+      /* Draw the point line as is and jump the rounding */
       annotate_draw_point_list(outptr);
       return; 
     }
