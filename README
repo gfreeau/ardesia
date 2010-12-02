@@ -1,11 +1,11 @@
-=================================================================
-       ##     #####    #####    ######   ####    #     ##
-      #  #    #    #   #    #   #       #        #    #  #
-     #    #   #    #   #    #   #####    ####    #   #    #
-     ######   #####    #    #   #            #   #   ######    
-     #    #   #   #    #    #   #       #    #   #   #    #
-     #    #   #    #   #####    ######   ####    #   #    #    
-=================================================================
+===============================================================================================
+                      ##     #####    #####    ######   ####    #     ##
+                     #  #    #    #   #    #   #       #        #    #  #
+                    #    #   #    #   #    #   #####    ####    #   #    #
+                    ######   #####    #    #   #            #   #   ######    
+                    #    #   #   #    #    #   #       #    #   #   #    #
+                    #    #   #    #   #####    ######   ####    #   #    #    
+===============================================================================================
 
 
 --------------
@@ -19,29 +19,30 @@ You can draw upon the desktop or import an image and annotate it and redistribut
 to the world.
 Let's create quick sketch and artwork.
 
-Thanks to Ardesia you are free to open any application and fix your ideas and comments as
-if you wrote on a classic chalkboard. Tradition and innovation are living together in simplicity
-thanks to a natural user interface that reproduce the natural feeling of the free hand painting.
+Thanks to Ardesia you are free to open any application and fix your ideas and comments as if 
+you wrote on a classic chalkboard. Tradition and innovation are living together in simplicity
+thanks to a natural user interface that reproduce the natural feeling of the free hand 
+painting.
 Reduce the traditional whiteboard and paper usage; Ardesia is smooth and fuzzy!
 
 You can use the tool to make effective on-screen presentation, highlight things or point out
 things of interest. 
-The tool facilitates the online presentations and demos showing in real time your computer screen 
-to anyone in the network.
+The tool facilitates the online presentations and demos showing in real time your computer 
+screen to anyone in the network.
 
-You can use this tool to enhance your lessons or courses working with your preferred applications 
-and your preferred operating system.
+You can use this tool to enhance your lessons or courses working with your preferred 
+applications and your preferred operating system.
 
 Create nice tutorial and demos saving the desktop images with your free hand annotations.
 
-Ardesia includes a sketchpad software that allow to free-hand draw geometrical shapes using the 
-shape recognizer.
+Ardesia includes a sketchpad software that allow to free-hand draw geometrical shapes using 
+the shape recognizer.
 
 Ardesia respects the interoperability standards, it imports and exports artifact using common 
 file open formats. 
-Ardesia works with all the pointing device; you can use a mouse, a touch screen, a drawing tablet,
-a cheap&professional wiimote whiteboard or a commercial whiteboard,interactive projector 
-and any other devices supported by your operating system. 
+Ardesia works with all the pointing device; you can use a mouse, a touch screen, a drawing 
+tablet, a cheap&professional wiimote whiteboard or a commercial whiteboard, interactive 
+projector and any other devices supported by your operating system. 
 
 Ardesia is pressure sensitive, if you are using properly configured your devices you can 
 draw lines with varying width. 
@@ -50,7 +51,8 @@ It is possible to erase something with the other end of the (Wacom) pen.
 Ardesia has been designed with the Glade/GtkBuilder tool
 and it uses to draw the cairo graphics library.
 
-For more info about annotate and the new feature, please read the NEWS file located in the current folder.
+For more info about annotate and the new feature, please read the NEWS file located in the 
+current folder.
 
 
 ---------
@@ -73,7 +75,11 @@ Please read the INSTALL file located on the current folder.
 ----------------------
 
 In order to run Ardesia on Linux you need to run a composite manager such as
-compiz or kwin.
+compiz, kwin or xcompmgr.
+
+If you use Windows I remember that only Windows Vista and Windows 7 
+are supported; Windows Xp and previous versions are not because they have not
+a composite manager.
 
 To use the recording feature you must install the vlc multimedia player 
 and streamer.
@@ -149,7 +155,7 @@ Button explanation
   you can forward the stream to an icecast server
   (please see the instruction inside the file located 
    on $(prefix)/share/ardesia/scripts/screencast.sh or
-   if you use windows on bin\screencast.bat).
+   if you use Windows on bin\screencast.bat).
   After a correct configuration when you push the record the streaming will start
 - Info: It shows the info about the tool
 - Quit: It allows to quit the program
@@ -231,10 +237,10 @@ filename:	  		The file containig the image to be be used as background
     with an other program
   - install the vlc package (it's required)
     http://www.videolan.org/vlc/
-  - if you use windows add the vlc folder to the PATH environment variable
+  - if you use Windows add the vlc folder to the PATH environment variable
   - if you have other problems try to customize the 
     $PREFIX/share/ardesia/scripts/screencast.sh
-    or share\ardesia\scripts\screencast.bat if you use windows
+    or share\ardesia\scripts\screencast.bat if you use Windows
 
 - I have read that with Ardesia I can put my presentation on the web.
   How I can do this?
@@ -250,7 +256,7 @@ filename:	  		The file containig the image to be be used as background
       - reach the icecast2 server
       - have ardesia installed
     - Open the file $PREFIX/share/ardesia/scripts/screencast.sh
-      or share\ardesia\scripts\screencast.bat if you use windows
+      or share\ardesia\scripts\screencast.bat if you use Windows
       - Uncomment the line
         - ICECAST="TRUE";
       - Set these variable   
