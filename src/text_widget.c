@@ -372,6 +372,20 @@ on_window_text_button_release (GtkWidget *win,
 }
 
 
+/* This shots when the text ponter is moving */
+G_MODULE_EXPORT gboolean
+on_window_text_cursor_motion(GtkWidget *win, 
+        GdkEventMotion *ev, 
+        gpointer func_data)
+{
+  if (inside_bar_window(ev->x, ev->y))
+    {
+       stop_text_widget();
+    }
+  return TRUE;
+}
+
+
 /* Start the widget for the text insertion */
 void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 {
@@ -397,6 +411,7 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 
   g_signal_connect(G_OBJECT(text_data->window), "expose-event", G_CALLBACK(on_window_text_expose_event), NULL);
   g_signal_connect (G_OBJECT(text_data->window), "button_release_event", G_CALLBACK(on_window_text_button_release), NULL);
+  g_signal_connect (G_OBJECT(text_data->window), "motion_notify_event", G_CALLBACK(on_window_text_cursor_motion), NULL);
   
   /* install a key snooper */
   text_data->snooper_handler_id = gtk_key_snooper_install(key_snooper, NULL);
@@ -420,18 +435,22 @@ void stop_text_widget()
       if (text_data->snooper_handler_id)
 	{
 	  gtk_key_snooper_remove(text_data->snooper_handler_id);
+          text_data->snooper_handler_id = 0;
 	}
       if (text_data->cr)
 	{
 	  cairo_destroy(text_data->cr);     
+          text_data->cr = NULL;
 	}
       if (text_data->window)
 	{
 	  gtk_widget_destroy(text_data->window);
+          text_data->window = NULL;
 	}
       if (text_data->pos)
 	{
 	  g_free(text_data->pos);
+          text_data->pos = NULL;
 	}
       g_free(text_data);
       text_data = NULL;

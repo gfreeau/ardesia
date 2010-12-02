@@ -29,6 +29,7 @@
 
 - Windows Vista and Windows 7 operating system
   - backtrace system
+  - virtual keyboard integration
   - Create a binary installer similar to the gimp Windows installer 
     http://gimp-win.sourceforge.net/
   - Fix the highlighter; this doesn't work because
