@@ -10,8 +10,10 @@
 
 
 - Management
-  - Publish a live distro with Ardesia
   - Open a freenode IRC channel
+  - Publish a live distro with Ardesia
+  - Define minimum system requirements
+  - Ardesia fedora packaging
   - Make a pdf user manual
   - Make a video tutorial
 
@@ -32,16 +34,16 @@
   - virtual keyboard integration
   - Create a binary installer similar to the gimp Windows installer 
     http://gimp-win.sourceforge.net/
-  - Fix the highlighter; this doesn't work because
-    seems that the ARGB32 support in cairo is not yet available 
+  - Fix the highlighter; this doesn't work because seems that 
+    the ARGB32 support in cairo is not yet available 
   - Build a 64 bit executable version
 
 - Candidate features:
   - Store and load the savepoints using svg files
   - Better polygon recognition and drawing
   - Deploy the artifact online
-    - saved images with email 
-    - saved video with email 
+    - save images with email 
+    - save video with email 
     - moodle plugin
   - Filler
   - Image importer
