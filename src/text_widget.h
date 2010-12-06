@@ -44,6 +44,7 @@
 #define VIRTUALKEYBOARD_NAME "florence"
 
 #define TEXT_MOUSE_EVENTS        ( GDK_POINTER_MOTION_MASK |	\
+                   GDK_BUTTON_PRESS_MASK |      \
 				   GDK_BUTTON_RELEASE_MASK      \
 				   )
 

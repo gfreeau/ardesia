@@ -349,9 +349,6 @@ on_window_text_button_release (GtkWidget *win,
 			       gpointer user_data)
 {
   save_text();
-#ifdef _WIN32
-  ungrab_pointer(gdk_display_get_default(), text_data->window);
-#endif
   
   text_data->pos->x = ev->x;
   text_data->pos->y = ev->y;
@@ -378,6 +375,9 @@ on_window_text_button_release (GtkWidget *win,
 /* Destroy text window */
 void destroy_text_window()
 {
+  #ifdef _WIN32
+    ungrab_pointer(gdk_display_get_default(), text_data->window);
+  #endif
   if (text_data->window)
     {
       gtk_widget_destroy(text_data->window);
@@ -394,7 +394,7 @@ on_window_text_cursor_motion(GtkWidget *win,
 {
   if (inside_bar_window(ev->x, ev->y))
     {
-      destroy_text_window();
+      stop_text_widget();
     }
   return TRUE;
 }
