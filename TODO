@@ -36,14 +36,14 @@
 
 
 - Windows operating systems
-  - Windows Xp support
-  - reduce the white blinking when the windows are opened
   - backtrace system
+  - Windows Xp support
   - virtual keyboard integration
   - Create a binary installer similar to the gimp Windows installer 
     http://gimp-win.sourceforge.net/
   - Fix the highlighter; this doesn't work because seems that 
     the ARGB32 support in cairo is not yet available 
+  - reduce the white blinking when the windows are opened
   - Build a 64 bit executable version
 
 
