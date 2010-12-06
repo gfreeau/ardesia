@@ -13,19 +13,20 @@
   - Open a freenode IRC channel
   - Publish a live distro with Ardesia
   - Define minimum system requirements
-  - Ardesia fedora packaging
   - Make a pdf user manual
   - Make a video tutorial
+  - Ardesia fedora packaging
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
 
 - Reengineering
-  - reduce the white blinking when the windows is opened
+  - reduce the white blinking when the windows are opened
   - gui and icon revision to increase the usability
   - Reduce the video size
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
+  - more compact savepoint storage
   - cross plattform email integration without spawn the xdg-email script 
   - better integration with the florence virtual keyboard
   - Screencast recorder using vlclib instead spawn the vlc process
