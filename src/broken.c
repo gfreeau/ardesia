@@ -191,7 +191,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
     
       h = (2*area)/sqrtf(X2*X2 + Y2*Y2);    
        
-      if (fabs(h) >= pixel_tollerance)
+      if (fabs(h) >= (pixel_tollerance))
 	{
 	  // add  a point with the B coordinates
 	  AnnotateStrokeCoordinate* new_point =  allocate_point(Bx, By, Bwidth, pressure);
@@ -252,7 +252,7 @@ gboolean found_min_and_max(GSList* list, gdouble* minx, gdouble* miny, gdouble* 
 
 
 /* The path described in list is similar to a regular poligon */
-gboolean is_similar_to_a_regular_poligon(GSList* list)
+gboolean is_similar_to_a_regular_poligon(GSList* list, gint pixel_tollerance)
 {
   if (!list)
     {
@@ -269,23 +269,22 @@ gboolean is_similar_to_a_regular_poligon(GSList* list)
     {
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
       gdouble distance = get_distance(old_point->x, old_point->y, point->x, point->y);
-      // printf("(%f,%f); (%f,%f); |%f|\n", old_point->x, old_point->y, point->x, point->y, distance);
+      //printf("(%f,%f); (%f,%f); |%f|\n", old_point->x, old_point->y, point->x, point->y, distance);
       total_distance = total_distance + distance;
       old_point = point;
     }
 
   ideal_distance = total_distance/lenght;
   
-  printf("Ideal %f\n",ideal_distance);
+  //printf("Ideal %f\n\n",ideal_distance);
 
   i = 0;
-  gint fixed_tollerance_error = 20;
   old_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
   for (i=1; i<lenght; i++)
     {
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
       /* I have seen that a good compromise allow around 33% of error */
-      gdouble threshold =  ideal_distance/3 + fixed_tollerance_error;
+      gdouble threshold =  ideal_distance/3 + pixel_tollerance;
       gdouble distance = get_distance(point->x, point->y, old_point->x, old_point->y);
       if (!(is_similar(distance, ideal_distance, threshold)))
 	{
@@ -584,7 +583,7 @@ GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, gint pixe
 	  if (close_path)
 	    {
 	      // is similar to regular a poligon 
-	      if (is_similar_to_a_regular_poligon(listOut))
+	      if (is_similar_to_a_regular_poligon(listOut, pixel_tollerance))
 		{
 		  listOut = extract_poligon(listOut);
 		} 
