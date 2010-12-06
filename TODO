@@ -21,6 +21,7 @@
   - Investigate about the status and make a plan
 
 - Reengineering
+  - reduce the white blinking when the windows is opened
   - gui and icon revision to increase the usability
   - Reduce the video size
   - cache in memory the recent savepoint; in this way we'll have 
@@ -29,7 +30,8 @@
   - better integration with the florence virtual keyboard
   - Screencast recorder using vlclib instead spawn the vlc process
 
-- Windows Vista and Windows 7 operating system
+- Windows operating systems
+  - Windows Xp support
   - backtrace system
   - virtual keyboard integration
   - Create a binary installer similar to the gimp Windows installer 
