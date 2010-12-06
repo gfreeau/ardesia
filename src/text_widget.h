@@ -52,17 +52,17 @@
 
 typedef struct
 {
-  gint x;
-  gint y;
-  gint x_bearing;
-  gint y_bearing;
+  gdouble x;
+  gdouble y;
+  gdouble x_bearing;
+  gdouble y_bearing;
 } CharInfo;
 
 
 typedef struct
 {
-  gint x;
-  gint y;
+  gdouble x;
+  gdouble y;
 } Pos;
 
 
@@ -75,7 +75,7 @@ typedef struct
   GSList *letterlist; 
   gchar* color;
   gint pen_width;
-  gint max_font_height;
+  gdouble max_font_height;
   cairo_text_extents_t extents;
   gint timer;
   gboolean blink_show;
