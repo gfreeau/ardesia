@@ -64,7 +64,7 @@ void stop_virtual_keyboard()
       g_spawn_close_pid(text_data->virtual_keyboard_pid);  
       /* @TODO replace this with the cross plattform g_pid_terminate when it will available */
 #ifdef _WIN32
-      TerminateProcess((HANDLE) text_data->virtual_keyboard_pid, 0)
+      TerminateProcess((HANDLE) text_data->virtual_keyboard_pid, 0);
 #else
 	kill (text_data->virtual_keyboard_pid, SIGTERM);
 #endif   

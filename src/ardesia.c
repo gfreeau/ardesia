@@ -28,7 +28,7 @@
 #include <bar_callbacks.h>
 
 
-#ifdef HAVE_LIBSIGSEGV
+#ifdef HAVE_LIBBFD
 /* globals retained across calls to resolve. */
 static bfd* abfd = 0;
 static asymbol **syms = 0;
