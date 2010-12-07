@@ -31,7 +31,7 @@ static PdfData *pdf_data;
 
 
 /* Start the dialog that ask the filename where is being exported the pdf */
-gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pixbuf)
+static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pixbuf)
 {
   gboolean ret = TRUE;
    
@@ -111,7 +111,7 @@ gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** workspace_dir, GdkPixb
 
 
 /* Initialize the pdf saver */
-gboolean init_pdf_saver(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pixbuf)
+static gboolean init_pdf_saver(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pixbuf)
 {  
   pdf_data = (PdfData *) g_malloc(sizeof(PdfData));   
   pdf_data->thread = NULL;
@@ -131,7 +131,7 @@ gboolean init_pdf_saver(GtkWindow *parent, gchar** workspace_dir, GdkPixbuf *pix
 }
 
 
-void *pdf_save(void *arg)
+static void *pdf_save(void *arg)
 {   
   gint height = gdk_screen_height ();
   gint width = gdk_screen_width ();
@@ -163,13 +163,23 @@ void *pdf_save(void *arg)
 
 
 /* wait if there is a pending thread */
-void wait_for_pdf_save_pending_thread()
+static void wait_for_pdf_save_pending_thread()
 {
   if (pdf_data->thread)
     {
       g_thread_join(pdf_data->thread);
       pdf_data->thread = NULL;
     }
+}
+
+
+/* Send email */
+static void send_pdf_with_email(gchar* attachment)
+{
+  gchar* to = "ardesia-developer@googlegroups.com";
+  gchar* subject = "ardesia-contribution";
+  gchar* body = "Dear ardesia developer group,\nI want share my work created with Ardesia with you, please for details see the attachment.";
+  send_email(to, subject, body, attachment);
 }
 
 
@@ -223,16 +233,6 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
       g_error_free(err) ;
     }   
 
-}
-
-
-/* Send email */
-void send_pdf_with_email(gchar* attachment)
-{
-  gchar* to = "ardesia-developer@googlegroups.com";
-  gchar* subject = "ardesia-contribution";
-  gchar* body = "Dear ardesia developer group,\nI want share my work created with Ardesia with you, please for details see the attachment.";
-  send_email(to, subject, body, attachment);
 }
 
 
