@@ -28,13 +28,16 @@
 #include <bar_callbacks.h>
 
 
-#ifdef HAVE_LIBBFD
+#ifdef linux
 /* globals retained across calls to resolve. */
 static bfd* abfd = 0;
 static asymbol **syms = 0;
 static asection *text = 0;
 #endif
 
+#ifdef _WIN32
+#include <windows_backtrace.h>
+#endif
 
 /* 
  * Calculate the better position where put the bar
@@ -360,16 +363,6 @@ void enable_localization_support()
 }
 
 
-/* Send trace with email */
-void send_trace_with_email(gchar* attachment)
-{
-  gchar* to = "ardesia-developer@googlegroups.com";
-  gchar* subject = "ardesia-bug-report";
-  gchar* body = "Dear ardesia developer group,\nAn unhandled application error occurred, please for details see the attachment with the stack trace.";
-  send_email(to, subject, body, attachment);
-}
-
-
 #ifdef linux
 /* Put a trace line in the file giving the address */
 void create_trace_line(char *address, FILE *file) {
@@ -416,12 +409,6 @@ void create_trace_line(char *address, FILE *file) {
 	}
     }
 }
-#else
- void create_trace_line(char *address, FILE *file) {
-  // to be implemented
-}
-#endif
-
 
 #ifdef HAVE_BACKTRACE
 static void create_trace() 
@@ -454,17 +441,6 @@ static void create_trace()
   g_free(filename);
 }
 
-#else
-static void create_trace() 
-{
-  /* 
-   * is not yet implemented
-   * @TODO does exist a way to print the backtrace without the backtrace routine
-   */
-}
-#endif
-
-
 /* Is called when occurs a sigsegv */
 int sigsegv_handler(void *addr, int bad)
 {
@@ -472,12 +448,21 @@ int sigsegv_handler(void *addr, int bad)
   exit(2);
 }
 
+#endif
+#endif
+
+static void
+foo()
+{
+	int *f=NULL;
+	*f = 0;
+}
 
 /* This is the starting point */
 int
 main(gint argc, char *argv[])
 {
-
+#ifdef linux
 #ifdef HAVE_LIBSIGSEGV
   /* Install the SIGSEGV handler */
   if (sigsegv_install_handler(sigsegv_handler)<0)
@@ -485,7 +470,12 @@ main(gint argc, char *argv[])
       exit(2);
     }
 #endif
-
+#endif
+#ifdef _WIN32
+backtrace_register();
+#endif
+//This is to test that the segmentation fault handler works fine
+//foo();
   /* Enable the localization support with gettext */
   enable_localization_support();
   

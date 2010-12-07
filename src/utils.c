@@ -308,3 +308,13 @@ void send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment)
 		NULL);
 
 }
+
+
+/* Send trace with email */
+void send_trace_with_email(gchar* attachment)
+{
+  gchar* to = "ardesia-developer@googlegroups.com";
+  gchar* subject = "ardesia-bug-report";
+  gchar* body = "Dear ardesia developer group,\nAn unhandled application error occurred, please for details see the attachment with the stack trace.";
+  send_email(to, subject, body, attachment);
+}

@@ -196,7 +196,6 @@ key_snooper(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     {
       text_data->pos->x = 0;
       text_data->pos->y +=  text_data->max_font_height;
-
     }
   /* is the character printable? */
   else if (isprint(event->keyval))

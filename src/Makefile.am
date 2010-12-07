@@ -47,6 +47,8 @@ ardesia_SOURCES = \
 	utils.h \
         windows_utils.c \
 	windows_utils.h \
+	  windows_backtrace.c \
+	windows_backtrace.h \
         saver.c \
 	saver.h \
         color_selector.c \
@@ -71,7 +73,7 @@ ardesia_LDFLAGS += -Wl,--export-dynamic
 endif
 else
 #This create a windows executable instead an msdos ones
-ardesia_LDFLAGS += -mwindows
+ardesia_LDFLAGS += -mwindows -lbfd -lintl -liberty -limagehlp
 endif
 
 
