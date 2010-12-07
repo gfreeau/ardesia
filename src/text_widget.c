@@ -66,7 +66,7 @@ void stop_virtual_keyboard()
 #ifdef _WIN32
       TerminateProcess((HANDLE) text_data->virtual_keyboard_pid, 0);
 #else
-	kill (text_data->virtual_keyboard_pid, SIGTERM);
+      kill (text_data->virtual_keyboard_pid, SIGTERM);
 #endif   
       text_data->virtual_keyboard_pid = (GPid) 0;
     }
@@ -374,9 +374,9 @@ on_window_text_button_release (GtkWidget *win,
 /* Destroy text window */
 void destroy_text_window()
 {
-  #ifdef _WIN32
-    ungrab_pointer(gdk_display_get_default(), text_data->window);
-  #endif
+#ifdef _WIN32
+  ungrab_pointer(gdk_display_get_default(), text_data->window);
+#endif
   if (text_data->window)
     {
       gtk_widget_destroy(text_data->window);

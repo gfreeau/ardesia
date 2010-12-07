@@ -31,24 +31,6 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
-#ifdef HAVE_LIBBFD
-#include <bfd.h>
-#endif
-
-#ifdef linux
-/* 
-   the glibc functions backtrace, backtrace_symbols, backtrace_symbols_fd
-   defined in the header are missing on all non-glibc platforms
-*/
-#include <execinfo.h>
-#endif
-  
-#ifdef HAVE_LIBSIGSEGV
-#include <sigsegv.h>
-#endif
-
-
-#define MAX_FRAMES (20)
 
 #ifdef _WIN32
 #define UI_FILE "..\\share\\ardesia\\ui\\ardesia.glade"

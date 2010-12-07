@@ -35,19 +35,19 @@ Fix known bugs:
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
   - more compact savepoint storage
-  - cross plattform email integration without spawn the xdg-email script 
   - better integration with the florence virtual keyboard
   - Better polygon recognition and drawing
   - Screencast recorder using vlclib instead spawn the vlc process
+  - reduce the white blinking when the windows are opened
 
 
 - Windows operating systems
   - backtrace system
   - Windows Xp support
   - virtual keyboard integration
+  - cross plattform email integration without spawn the xdg-email script 
   - Create a binary installer similar to the gimp Windows installer 
     http://gimp-win.sourceforge.net/
-  - reduce the white blinking when the windows are opened
   - Build a 64 bit executable version
 
 

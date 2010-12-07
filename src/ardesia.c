@@ -29,10 +29,7 @@
 
 
 #ifdef linux
-/* globals retained across calls to resolve. */
-static bfd* abfd = 0;
-static asymbol **syms = 0;
-static asection *text = 0;
+#include <linux_backtrace.h>
 #endif
 
 #ifdef _WIN32
@@ -362,101 +359,15 @@ void enable_localization_support()
   gtk_set_locale();
 }
 
+/*
+  static void
+  foo()
+  {
+  int *f=NULL;
+  *f = 0;
+  }
+*/
 
-#ifdef linux
-/* Put a trace line in the file giving the address */
-void create_trace_line(char *address, FILE *file) {
-  char ename[1024];
-  int l = readlink("/proc/self/exe",ename,sizeof(ename));
-  
-  if (l == -1) 
-    {
-      fprintf(stderr, "failed to find executable\n");
-      return;
-    }
- 	
-  ename[l] = 0;
-
-  bfd_init();
-
-  abfd = bfd_openr(ename, 0);
-   
-  if (!abfd)
-    {
-      fprintf(stderr, "bfd_openr failed: ");
-      return;
-    }
-   
-  /* oddly, this is required for it to work... */
-  bfd_check_format(abfd,bfd_object);
-
-  unsigned storage_needed = bfd_get_symtab_upper_bound(abfd);
-  syms = (asymbol **) malloc(storage_needed);
-
-  text = bfd_get_section_by_name(abfd, ".text");
-
-  long offset = ((long)address) - text->vma;
-   
-  if (offset > 0) 
-    {
-      const char *filen;
-      const char *func;
-      unsigned line;
-      if (bfd_find_nearest_line(abfd, text, syms, offset, &filen, &func, &line) && file)
-	{
-	  fprintf(stderr, "file: %s, line: %u, func %s\n",filen,line,func);
-          fprintf(file, "file: %s, line: %u, func %s\n",filen,line,func);
-	}
-    }
-}
-
-#ifdef HAVE_BACKTRACE
-static void create_trace() 
-{
-
-  void *array[MAX_FRAMES];
-  size_t size;
-  size_t i;
-  void *approx_text_end = (void*) ((128+100) * 2<<20);
-
-  /* 
-   * the glibc functions backtrace is missing on all non-glibc platforms
-   */
-  
-  size = backtrace (array, MAX_FRAMES);
-  gchar* default_filename = get_default_name();
-  const gchar* tmpdir = g_get_tmp_dir();
-  gchar* filename  = g_strdup_printf("%s%s%s_stacktrace.txt",tmpdir, G_DIR_SEPARATOR_S, default_filename);
-  g_free(default_filename);
-  FILE *file = fopen(filename, "w");
-  for (i = 0; i < size; i++)
-    {
-      if (array[i] < approx_text_end)
-	{
-	  create_trace_line(array[i], file);      
-	}
-    }
-  fclose(file);
-  send_trace_with_email(filename);
-  g_free(filename);
-}
-
-/* Is called when occurs a sigsegv */
-int sigsegv_handler(void *addr, int bad)
-{
-  create_trace(); 
-  exit(2);
-}
-
-#endif
-#endif
-
-static void
-foo()
-{
-	int *f=NULL;
-	*f = 0;
-}
 
 /* This is the starting point */
 int
@@ -464,18 +375,13 @@ main(gint argc, char *argv[])
 {
 #ifdef linux
 #ifdef HAVE_LIBSIGSEGV
-  /* Install the SIGSEGV handler */
-  if (sigsegv_install_handler(sigsegv_handler)<0)
-    {
-      exit(2);
-    }
+  linux_backtrace_register();
 #endif
 #endif
 #ifdef _WIN32
-backtrace_register();
+  backtrace_register();
 #endif
-//This is to test that the segmentation fault handler works fine
-//foo();
+  //foo();
   /* Enable the localization support with gettext */
   enable_localization_support();
   
