@@ -17,7 +17,13 @@
   - Make a video tutorial
   - Ardesia fedora packaging
 
-
+  
+Fix known bugs:
+  - Fix the highlighter; this doesn't work under Windows
+    because seems that the ARGB32 support in cairo is not yet available 
+  - Fix the wrong position of the text cursor on windows
+	
+	
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
 
@@ -41,8 +47,6 @@
   - virtual keyboard integration
   - Create a binary installer similar to the gimp Windows installer 
     http://gimp-win.sourceforge.net/
-  - Fix the highlighter; this doesn't work because seems that 
-    the ARGB32 support in cairo is not yet available 
   - reduce the white blinking when the windows are opened
   - Build a 64 bit executable version
 
