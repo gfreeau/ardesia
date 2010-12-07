@@ -39,8 +39,6 @@
 #endif
 
 
-/* Grab the screenshoot and put it in the GdkPixbuf */
-GdkPixbuf* grab_screenshot();
 
 /*
  * Start the dialog that ask to the user where save the image

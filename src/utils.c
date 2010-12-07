@@ -173,6 +173,18 @@ gboolean save_png (GdkPixbuf *pixbuf,const gchar *filename)
 }
 
 
+/* Grab the screenshoot and put it in the GdkPixbuf */
+GdkPixbuf* grab_screenshot()
+{
+  gint height = gdk_screen_height();
+  gint width = gdk_screen_width();
+
+  GdkWindow *root_window = gdk_get_default_root_window();
+  return gdk_pixbuf_get_from_drawable (NULL, root_window, NULL,
+                                       0, 0, 0, 0, width, height);
+}
+
+
 /*
  * This is function return if the point (x,y) in inside the ardesia bar window
  */

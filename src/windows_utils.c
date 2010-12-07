@@ -45,7 +45,7 @@ void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF crKey, BYTE b
 
 
 /* Is the two color similar */
-gboolean colors_too_similar(const GdkColor *colora, const GdkColor *colorb)
+static gboolean colors_too_similar(const GdkColor *colora, const GdkColor *colorb)
 {
   return (abs(colora->red - colorb->red) < 256 &&
 	  abs(colora->green - colorb->green) < 256 &&

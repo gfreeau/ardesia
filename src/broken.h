@@ -31,9 +31,6 @@
 /* Return a subpath of listInp containg only the meaningful points using the standard deviation */
 GSList* extract_relevant_points(GSList *listInp, gboolean rectify, gint pixel_tollerance);
 
-/* Straight the line */
-GSList* straighten(GSList* list);
-
 /* Return the outbounded rectangle outside the path described to listIn */
 GSList*  extract_outbounded_rectangle(GSList* listIn);
 

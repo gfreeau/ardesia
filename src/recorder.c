@@ -37,11 +37,10 @@ static GPid recorderpid;
 static gboolean is_active = FALSE;
 
 
-
 /* 
  * Create a recorder process; it return the pid
  */
-GPid call_recorder(gchar* filename, gchar* option)
+static GPid call_recorder(gchar* filename, gchar* option)
 {
   gchar* argv[4] = {RECORDER_FILE, option, filename, (gchar*) 0};
   GPid pid = (GPid) 0;

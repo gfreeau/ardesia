@@ -32,6 +32,92 @@
 #include <utils.h>
 
 
+/*
+ * Start the dialog that ask to the user
+ * the background setting
+ */
+void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
+{
+  PreferenceData *preference_data = (PreferenceData *) g_malloc(sizeof(PreferenceData));
+
+  /* 0 no background, 1 background color, 2 png background, */
+  preference_data->background = 0;
+
+  GtkWidget *preferenceDialog;
+
+  /* Initialize the main window */
+  preference_data->preferenceDialogGtkBuilder = gtk_builder_new();
+
+  /* Load the gtk builder file created with glade */
+  gtk_builder_add_from_file(preference_data->preferenceDialogGtkBuilder, PREFERENCE_UI_FILE, NULL);
+ 
+  /* Fill the window by the gtk builder xml */
+  preferenceDialog = GTK_WIDGET(gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"preferences"));
+  gtk_window_set_transient_for(GTK_WINDOW(preferenceDialog), parent);
+  gtk_window_set_modal(GTK_WINDOW(preferenceDialog), TRUE);
+  
+#ifdef _WIN32
+  /* 
+   * In Windows the parent bar go above the dialog;
+   * to avoid this behaviour I put the parent keep above to false
+   */
+  gtk_window_set_keep_above(GTK_WINDOW(parent), FALSE);
+#endif 
+   
+  GObject* imgObj = gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder, "imageChooserButton");
+  GtkFileChooser* chooser = GTK_FILE_CHOOSER(imgObj);
+
+
+  gtk_file_chooser_set_current_folder(chooser, BACKGROUNDS_FOLDER);
+ 
+  /* Put the file filter for the supported formats */
+  GtkFileFilter *filter = gtk_file_filter_new ();
+  gtk_file_filter_set_name (filter, "PNG and JPEG");
+  gtk_file_filter_add_mime_type (filter, "image/jpeg");
+  gtk_file_filter_add_mime_type (filter, "image/png");
+  gtk_file_chooser_add_filter (chooser, filter);
+ 
+  preference_data->preview = gtk_image_new ();
+  gtk_file_chooser_set_preview_widget (chooser, preference_data->preview);
+ 
+  GtkWidget* color_button = GTK_WIDGET(gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"backgroundColorButton"));
+  gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON(color_button), TRUE);
+ 
+  /* Connect all signals by reflection */
+  gtk_builder_connect_signals (preference_data->preferenceDialogGtkBuilder, (gpointer) preference_data);
+   
+  if (preference_data->background == 1)
+    {
+      GObject * colorObj = gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"color");
+      GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(colorObj);
+      gtk_toggle_button_set_active(colorToolButton, TRUE);
+    }
+  else if (preference_data->background == 2)
+    {
+      GObject* fileObj = gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"file");
+      GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(fileObj);
+      gtk_toggle_button_set_active(imageToolButton, TRUE);
+    }
+
+  gtk_dialog_run(GTK_DIALOG(preferenceDialog));
+  
+  if (preferenceDialog != NULL)
+    {
+      gtk_widget_destroy(preferenceDialog);
+    }
+
+  g_object_unref (preference_data->preferenceDialogGtkBuilder);
+  g_free(preference_data);
+
+#ifdef _WIN32
+  /* 
+   * Reput the keep above flag at the parent window bar
+   */
+  gtk_window_set_keep_above(GTK_WINDOW(parent), TRUE);
+#endif   
+}
+
+
 /* Update the preview image */
 G_MODULE_EXPORT void
 on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer data)
@@ -148,92 +234,6 @@ on_preferenceCancelButton_clicked    (GtkButton *buton,
 				      gpointer data)
 {
   /* do nothing */
-}
-
-
-/*
- * Start the dialog that ask to the user
- * the background setting
- */
-void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
-{
-  PreferenceData *preference_data = (PreferenceData *) g_malloc(sizeof(PreferenceData));
-
-  /* 0 no background, 1 background color, 2 png background, */
-  preference_data->background = 0;
-
-  GtkWidget *preferenceDialog;
-
-  /* Initialize the main window */
-  preference_data->preferenceDialogGtkBuilder = gtk_builder_new();
-
-  /* Load the gtk builder file created with glade */
-  gtk_builder_add_from_file(preference_data->preferenceDialogGtkBuilder, PREFERENCE_UI_FILE, NULL);
- 
-  /* Fill the window by the gtk builder xml */
-  preferenceDialog = GTK_WIDGET(gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"preferences"));
-  gtk_window_set_transient_for(GTK_WINDOW(preferenceDialog), parent);
-  gtk_window_set_modal(GTK_WINDOW(preferenceDialog), TRUE);
-  
-#ifdef _WIN32
-  /* 
-   * In Windows the parent bar go above the dialog;
-   * to avoid this behaviour I put the parent keep above to false
-   */
-  gtk_window_set_keep_above(GTK_WINDOW(parent), FALSE);
-#endif 
-   
-  GObject* imgObj = gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder, "imageChooserButton");
-  GtkFileChooser* chooser = GTK_FILE_CHOOSER(imgObj);
-
-
-  gtk_file_chooser_set_current_folder(chooser, BACKGROUNDS_FOLDER);
- 
-  /* Put the file filter for the supported formats */
-  GtkFileFilter *filter = gtk_file_filter_new ();
-  gtk_file_filter_set_name (filter, "PNG and JPEG");
-  gtk_file_filter_add_mime_type (filter, "image/jpeg");
-  gtk_file_filter_add_mime_type (filter, "image/png");
-  gtk_file_chooser_add_filter (chooser, filter);
- 
-  preference_data->preview = gtk_image_new ();
-  gtk_file_chooser_set_preview_widget (chooser, preference_data->preview);
- 
-  GtkWidget* color_button = GTK_WIDGET(gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"backgroundColorButton"));
-  gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON(color_button), TRUE);
- 
-  /* Connect all signals by reflection */
-  gtk_builder_connect_signals (preference_data->preferenceDialogGtkBuilder, (gpointer) preference_data);
-   
-  if (preference_data->background == 1)
-    {
-      GObject * colorObj = gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"color");
-      GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(colorObj);
-      gtk_toggle_button_set_active(colorToolButton, TRUE);
-    }
-  else if (preference_data->background == 2)
-    {
-      GObject* fileObj = gtk_builder_get_object(preference_data->preferenceDialogGtkBuilder,"file");
-      GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(fileObj);
-      gtk_toggle_button_set_active(imageToolButton, TRUE);
-    }
-
-  gtk_dialog_run(GTK_DIALOG(preferenceDialog));
-  
-  if (preferenceDialog != NULL)
-    {
-      gtk_widget_destroy(preferenceDialog);
-    }
-
-  g_object_unref (preference_data->preferenceDialogGtkBuilder);
-  g_free(preference_data);
-
-#ifdef _WIN32
-  /* 
-   * Reput the keep above flag at the parent window bar
-   */
-  gtk_window_set_keep_above(GTK_WINDOW(parent), TRUE);
-#endif   
 }
 
 

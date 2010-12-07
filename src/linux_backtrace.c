@@ -41,7 +41,7 @@ static asection *text = 0;
 
 
 /* Put a trace line in the file giving the address */
-void create_trace_line(char *address, FILE *file) 
+static void create_trace_line(char *address, FILE *file) 
 {
   char ename[1024];
   int l = readlink("/proc/self/exe",ename,sizeof(ename));
@@ -87,7 +87,7 @@ void create_trace_line(char *address, FILE *file)
     }
 }
 #else
-void create_trace_line(char *address, FILE *file) 
+static void create_trace_line(char *address, FILE *file) 
 {
   fprintf(stderr, "Unable to create the stacktrace line bfd library is not build or supported on your system\n");
 }
@@ -134,7 +134,7 @@ static void create_trace()
 
 
 /* Is called when occurs a sigsegv */
-int sigsegv_handler(void *addr, int bad)
+static int sigsegv_handler(void *addr, int bad)
 {
   create_trace(); 
   exit(2);

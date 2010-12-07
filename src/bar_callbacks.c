@@ -44,7 +44,7 @@
 static gint timer = -1;
 
 /* Called when close the program */
-gboolean  quit(BarData *bar_data)
+static gboolean  quit(BarData *bar_data)
 {
   quit_pdf_saver();
   annotate_quit();
@@ -68,7 +68,7 @@ gboolean  quit(BarData *bar_data)
 
 
 /* Add alpha channel to build the RGBA string */
-void add_alpha(BarData *bar_data)
+static void add_alpha(BarData *bar_data)
 {
   if (bar_data->highlighter)
     {
@@ -82,7 +82,7 @@ void add_alpha(BarData *bar_data)
 
 
 /* select the pen tool */
-void take_pen_tool()
+static void take_pen_tool()
 {
   GtkToggleToolButton* eraserToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonEraser"));
   if (gtk_toggle_tool_button_get_active(eraserToolButton))
@@ -96,7 +96,7 @@ void take_pen_tool()
 
 
 /* set color; this is called each time that the user want change color */
-void set_color(BarData *bar_data, gchar* selected_color)
+static void set_color(BarData *bar_data, gchar* selected_color)
 {
   take_pen_tool();
   strncpy(bar_data->color, selected_color, 6);
@@ -105,7 +105,7 @@ void set_color(BarData *bar_data, gchar* selected_color)
 
 
 /* Pass the options to annotate */
-void set_options(BarData* bar_data)
+static void set_options(BarData* bar_data)
 {
   annotate_set_rectifier(bar_data->rectifier);
   
@@ -128,7 +128,7 @@ void set_options(BarData* bar_data)
 
 
 /* Start to paint with the selected tool */
-void start_tool(BarData *bar_data)
+static void start_tool(BarData *bar_data)
 {
   if (bar_data->grab)
     {

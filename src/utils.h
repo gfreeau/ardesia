@@ -152,6 +152,10 @@ GdkColor* rgba_to_gdkcolor(gchar* rgb);
 gboolean save_png(GdkPixbuf *pixbuf,const gchar *filename);
 
 
+/* Grab the screenshoot and put it in the GdkPixbuf */
+GdkPixbuf* grab_screenshot();
+
+
 /* 
  * Get default name return a name containing the tool name and the current date; 
  * the returned value must be free with the g_free 

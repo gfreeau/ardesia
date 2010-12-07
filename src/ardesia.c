@@ -39,7 +39,7 @@
 /* 
  * Calculate the better position where put the bar
  */
-void calculate_position(GtkWidget *ardesia_bar_window, 
+static void calculate_position(GtkWidget *ardesia_bar_window, 
                         gint dwidth, gint dheight, 
                         gint *x, gint *y, 
                         gint wwidth, gint wheight,
@@ -83,7 +83,7 @@ void calculate_position(GtkWidget *ardesia_bar_window,
  * @TODO Here can be beatiful have a configuration file
  * where put the user can decide the position of the window
  */
-void calculate_initial_position(GtkWidget *ardesia_bar_window, 
+static void calculate_initial_position(GtkWidget *ardesia_bar_window, 
                                 gint *x, gint *y, 
                                 gint wwidth, gint wheight, 
                                 gint position)
@@ -111,7 +111,7 @@ void calculate_initial_position(GtkWidget *ardesia_bar_window,
 
 
 /* Print the command line help */
-void print_help()
+static void print_help()
 {
   gchar* year = "2009-2010";
   gchar* author = "Pietro Pilolli";
@@ -134,7 +134,7 @@ void print_help()
 
 
 /* Call the dialog that inform the user to enable a composite manager */
-void run_missing_composite_manager_dialog()
+static void run_missing_composite_manager_dialog()
 {
   GtkWidget *msg_dialog; 
   msg_dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, 
@@ -153,7 +153,7 @@ void run_missing_composite_manager_dialog()
 
 
 /* Check if a composite manager is active */
-void check_composite_manager(GdkScreen* screen)
+static void check_composite_manager(GdkScreen* screen)
 {
   gboolean composite = gdk_screen_is_composited(screen);
   if (!composite)
@@ -165,7 +165,7 @@ void check_composite_manager(GdkScreen* screen)
 
 
 /* Set the best colormap available on the system */
-void set_the_best_colormap()
+static void set_the_best_colormap()
 {
   GdkDisplay *display = gdk_display_get_default();
   GdkScreen   *screen = gdk_display_get_default_screen(display);
@@ -190,7 +190,7 @@ void set_the_best_colormap()
 
 
 /* Parse the command line in the standar getopt way */
-CommandLine* parse_options(gint argc, char *argv[])
+static CommandLine* parse_options(gint argc, char *argv[])
 {
   CommandLine* commandline = g_malloc(sizeof(CommandLine)); 
   
@@ -270,7 +270,7 @@ CommandLine* parse_options(gint argc, char *argv[])
 
 
 /* Allocate and initialize the bar data structure */
-BarData* init_bar_data()
+static BarData* init_bar_data()
 {
   BarData *bar_data = (BarData *) g_malloc(sizeof(BarData));
   bar_data->color = g_strdup_printf("%s", "FF0000FF");
@@ -292,7 +292,7 @@ BarData* init_bar_data()
 
 
 /* Create the ardesia bar window */
-GtkWidget*
+static GtkWidget*
 create_bar_window (CommandLine *commandline, GtkWidget *parent)
 {
   GtkWidget *bar_window = NULL;
@@ -348,7 +348,7 @@ create_bar_window (CommandLine *commandline, GtkWidget *parent)
 
 
 /* Enable the localization support with gettext */
-void enable_localization_support()
+static void enable_localization_support()
 {
 #ifdef ENABLE_NLS
   setlocale(LC_ALL, "");

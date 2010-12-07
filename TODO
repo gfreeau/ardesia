@@ -18,7 +18,7 @@
   - Ardesia fedora packaging
 
   
-Fix known bugs:
+- Bug fix:
   - Fix the highlighter; this doesn't work under Windows
     because seems that the ARGB32 support in cairo is not yet available 
   - Fix the wrong position of the text cursor on windows
@@ -39,7 +39,7 @@ Fix known bugs:
   - Better polygon recognition and drawing
   - Screencast recorder using vlclib instead spawn the vlc process
   - reduce the white blinking when the windows are opened
-  - cross plattform email integration without spawn the xdg-email script 
+  - email integration without spawn the xdg-email script 
 
 
 - Windows operating systems

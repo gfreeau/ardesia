@@ -32,7 +32,7 @@
 
 
 /* Return the pressure passing the event */
-gdouble get_pressure(GdkEvent* ev)
+static gdouble get_pressure(GdkEvent* ev)
 {
   gdouble pressure = 1.0;
   gdk_event_get_axis(ev, GDK_AXIS_PRESSURE, &pressure);
