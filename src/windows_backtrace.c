@@ -36,8 +36,6 @@
 
    build command: gcc -O2 -shared -Wall -o backtrace.dll backtrace.c -lbfd -liberty -limagehlp 
 
-   how to use: Call LoadLibraryA("backtrace.dll"); at beginning of your program .
-
 */
 
 /* All this file will be build only on windows */
@@ -47,7 +45,6 @@
 #include <utils.h>
 
 static char * g_output = NULL;
-static LPTOP_LEVEL_EXCEPTION_FILTER g_prev = NULL;
 
 static void
 output_init(struct output_buffer *ob, char * buf, size_t sz)
@@ -347,26 +344,13 @@ exception_filter(LPEXCEPTION_POINTERS info)
   send_trace_with_email(filename);
   g_free(filename);
   
+  free(g_output);
+	  
   exit(1);
 
   return 0;
 }
 
-
-BOOL WINAPI 
-DllMain(HANDLE hinstDLL, DWORD dwReason, LPVOID lpvReserved)
-{
-  switch (dwReason) 
-    {
-    case DLL_PROCESS_ATTACH:
-      backtrace_register(malloc(BUFFER_MAX));
-      break;
-    case DLL_PROCESS_DETACH:
-      backtrace_unregister();
-      break;
-    }
-  return TRUE;
-}
 
 void
 windows_backtrace_register()
@@ -374,21 +358,9 @@ windows_backtrace_register()
   if (g_output == NULL) 
     {
       g_output = malloc(BUFFER_MAX);
-      g_prev = SetUnhandledExceptionFilter(exception_filter);
+      SetUnhandledExceptionFilter(exception_filter);
     }
 }
 
-
-static void
-windows_backtrace_unregister(void)
-{
-  if (g_output) 
-    {
-      free(g_output);
-      SetUnhandledExceptionFilter(g_prev);
-      g_prev = NULL;
-      g_output = NULL;
-    }
-}
 
 #endif
