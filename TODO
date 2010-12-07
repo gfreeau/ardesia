@@ -39,13 +39,14 @@ Fix known bugs:
   - Better polygon recognition and drawing
   - Screencast recorder using vlclib instead spawn the vlc process
   - reduce the white blinking when the windows are opened
+  - cross plattform email integration without spawn the xdg-email script 
 
 
 - Windows operating systems
-  - backtrace system
+  - send backtrace with email 
+  - send pdf with email 
   - Windows Xp support
   - virtual keyboard integration
-  - cross plattform email integration without spawn the xdg-email script 
   - Create a binary installer similar to the gimp Windows installer 
     http://gimp-win.sourceforge.net/
   - Build a 64 bit executable version

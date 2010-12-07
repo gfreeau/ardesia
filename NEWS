@@ -30,14 +30,15 @@ Features:
 - Florence virtual keyboard integration: if you have it
   installed, will be show/hide when you select the text 
   tool
+- add system that print the backtrace in the case that
+  a segmentation fault occurs (in Windows also)
 - Email support: If you have created a pdf with ardesia
   when you quit the program, it open your default mailer
   with stub email with the pdf in attachment; this is
-  a good way to share your artifact, this feauture is
-  available for linux only
+  a good way to share your artifact (linux only)
 - Bug Tracking: If the program is able to found a 
   misbehaviour it ask to send an email with the log to
-  the ardesia developers staff
+  the ardesia developers staff (linux only)
 
 
 -------------
@@ -61,7 +62,7 @@ Features:
   has been implemented
 - low memory usage; the save point are stored on files
 - add system that print the backtrace in the case that
-  a segmentation fault occurs
+  a segmentation fault occurs (linux only)
 
 Bug Fix:
 - fix the sound recording on Linux using pulse audio

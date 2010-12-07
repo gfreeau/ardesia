@@ -29,12 +29,6 @@
  
    Use, modification and distribution are subject to the "New BSD License"
    as listed at <url: http://www.opensource.org/licenses/bsd-license.php >.
- 
-   filename: backtrace.c
-
-   compiler: gcc 3.4.5 (mingw-win32)
-
-   build command: gcc -O2 -shared -Wall -o backtrace.dll backtrace.c -lbfd -liberty -limagehlp 
 
 */
 
