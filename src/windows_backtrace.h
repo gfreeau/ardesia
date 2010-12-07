@@ -80,6 +80,6 @@ struct output_buffer {
 	size_t ptr;
 };
 
-void backtrace_register();
+void windows_backtrace_register();
 
 #endif

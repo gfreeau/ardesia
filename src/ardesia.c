@@ -379,7 +379,7 @@ main(gint argc, char *argv[])
 #endif
 #endif
 #ifdef _WIN32
-  backtrace_register();
+  windows_backtrace_register();
 #endif
   //foo();
   /* Enable the localization support with gettext */

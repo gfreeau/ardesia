@@ -353,30 +353,6 @@ exception_filter(LPEXCEPTION_POINTERS info)
 }
 
 
-void
-backtrace_register()
-{
-  if (g_output == NULL) 
-    {
-      g_output = malloc(BUFFER_MAX);
-      g_prev = SetUnhandledExceptionFilter(exception_filter);
-    }
-}
-
-
-static void
-backtrace_unregister(void)
-{
-  if (g_output) 
-    {
-      free(g_output);
-      SetUnhandledExceptionFilter(g_prev);
-      g_prev = NULL;
-      g_output = NULL;
-    }
-}
-
-
 BOOL WINAPI 
 DllMain(HANDLE hinstDLL, DWORD dwReason, LPVOID lpvReserved)
 {
@@ -390,6 +366,29 @@ DllMain(HANDLE hinstDLL, DWORD dwReason, LPVOID lpvReserved)
       break;
     }
   return TRUE;
+}
+
+void
+windows_backtrace_register()
+{
+  if (g_output == NULL) 
+    {
+      g_output = malloc(BUFFER_MAX);
+      g_prev = SetUnhandledExceptionFilter(exception_filter);
+    }
+}
+
+
+static void
+windows_backtrace_unregister(void)
+{
+  if (g_output) 
+    {
+      free(g_output);
+      SetUnhandledExceptionFilter(g_prev);
+      g_prev = NULL;
+      g_output = NULL;
+    }
 }
 
 #endif
