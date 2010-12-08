@@ -19,9 +19,9 @@
 
   
 - Bug fix:
+  - Fix the wrong position of the text cursor on windows
   - Fix the highlighter; this doesn't work under Windows
     because seems that the ARGB32 support in cairo is not yet available 
-  - Fix the wrong position of the text cursor on windows
 	
 	
 - MacOsX-quartz porting
@@ -55,7 +55,7 @@
 - Candidate features:
   - Deploy the artifact online
     - send saved images with email 
-    - send video with email 
+    - publish video 
     - moodle plugin
   - Filler
   - Image importer
