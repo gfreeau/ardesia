@@ -133,6 +133,7 @@ static void print_help()
 }
 
 
+#ifndef _WIN32
 /* Call the dialog that inform the user to enable a composite manager */
 static void run_missing_composite_manager_dialog()
 {
@@ -151,7 +152,6 @@ static void run_missing_composite_manager_dialog()
   exit(0);
 }
 
-
 /* Check if a composite manager is active */
 static void check_composite_manager(GdkScreen* screen)
 {
@@ -162,6 +162,7 @@ static void check_composite_manager(GdkScreen* screen)
       run_missing_composite_manager_dialog();
     }
 }
+#endif
 
 
 /* Set the best colormap available on the system */

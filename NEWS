@@ -25,15 +25,14 @@ Usability:
 - blinking cursor that highlight the text tool focus
 
 Features:
-- Now Ardesia try periodically to stay above all windows 
-  if the unlock button is pressed
+- Now Ardesia stay above all windows; you can open a program
+  in fullscreen and annotate on it 
 - Florence virtual keyboard integration: if you have it
   installed, will be show/hide when you select the text 
-  tool
-- add system that print the backtrace in the case that
-  a segmentation fault occurs (in Windows also)
+  tool (linux only)
+- log the backtrace in the case when a fault occurs
 - Email support: If you have created a pdf with ardesia
-  when you quit the program, it open your default mailer
+  when you quit the program, ardesia open your default mailer
   with stub email with the pdf in attachment; this is
   a good way to share your artifact (linux only)
 - Bug Tracking: If the program is able to found a 

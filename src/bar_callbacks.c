@@ -41,7 +41,20 @@
 #include <pdf_saver.h>
 
 
+
+#ifndef _WIN32
 static gint timer = -1;
+
+/* Try to uprise the window */
+static gboolean bar_to_top(gpointer data)
+{
+  gtk_window_present(GTK_WINDOW(data));
+  gtk_widget_grab_focus(data);
+  gdk_window_lower(GTK_WIDGET(data)->window);
+  return TRUE;
+}
+#endif
+
 
 /* Called when close the program */
 static gboolean  quit(BarData *bar_data)
@@ -475,16 +488,6 @@ on_toolsPreferences_activate	 (GtkToolButton   *toolbutton,
 }
 
 
-/* bring the window back to front: to be call periodically */
-gboolean bar_to_top(gpointer data)
-{
-  gtk_window_present(GTK_WINDOW(data));
-  gtk_widget_grab_focus(data);
-  gdk_window_lower(GTK_WIDGET(data)->window);
-  return TRUE;
-}
-
-
 /* Push lock/unlock button */
 G_MODULE_EXPORT void
 on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
@@ -493,11 +496,13 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) func_data;
   if (bar_data->grab == FALSE)
     {
+	#ifndef _WIN32
       if (timer!=-1)
         { 
 	  g_source_remove(timer); 
 	  timer = -1;
         }
+		#endif
       bar_data->grab = TRUE;
 #ifdef _WIN32
       /* 
@@ -515,8 +520,11 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
     }
   else
     {
+	  #ifndef _WIN32
+	  #try to uprise the window
       timer = g_timeout_add(BAR_TO_TOP_TIMEOUT, bar_to_top, get_background_window());
-      /* grab enabled */
+      #endif
+	  /* grab enabled */
       bar_data->grab = FALSE;
       annotate_release_grab ();
 #ifdef _WIN32

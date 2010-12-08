@@ -45,17 +45,17 @@
 - Windows operating systems
   - send backtrace with email 
   - send pdf with email 
-  - Windows Xp support
   - virtual keyboard integration
   - Create a binary installer similar to the gimp Windows installer 
     http://gimp-win.sourceforge.net/
+  - Windows Xp support
   - Build a 64 bit executable version
 
 
 - Candidate features:
   - Deploy the artifact online
-    - save images with email 
-    - save video with email 
+    - send saved images with email 
+    - send video with email 
     - moodle plugin
   - Filler
   - Image importer
