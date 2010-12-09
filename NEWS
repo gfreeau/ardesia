@@ -27,17 +27,18 @@ Usability:
 Features:
 - Now Ardesia stay above all windows; you can open a program
   in fullscreen and annotate on it 
-- Florence virtual keyboard integration: if you have it
-  installed, will be show/hide when you select the text 
-  tool (linux only)
-- log the backtrace in the case when a fault occurs
+- log the backtrace in tour TMP folder when a fault occurs
 - Email support: If you have created a pdf with ardesia
   when you quit the program, ardesia open your default mailer
-  with stub email with the pdf in attachment; this is
+  with a stub email with the pdf attachment; this is
   a good way to share your artifact (linux only)
 - Bug Tracking: If the program is able to found a 
   misbehaviour it ask to send an email with the log to
   the ardesia developers staff (linux only)
+- New text insertion tool to improve the usability
+- Florence virtual keyboard integration: if you have it
+  installed, will be show/hide when you select the text 
+  tool (linux only)
 
 
 -------------
