@@ -44,10 +44,14 @@
 #define TEXT_CURSOR_WIDTH 4
 #define VIRTUALKEYBOARD_NAME "florence"
 
-#define TEXT_MOUSE_EVENTS        ( GDK_POINTER_MOTION_MASK |	\
-                   GDK_BUTTON_PRESS_MASK |      \
-				   GDK_BUTTON_RELEASE_MASK      \
-				   )
+
+#ifdef _WIN32
+  
+#define TEXT_UI_FILE "..\\share\\ardesia\\ui\\text.glade"
+
+#else
+#define TEXT_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/text.glade"
+#endif 
 
 
 
@@ -69,8 +73,10 @@ typedef struct
 
 typedef struct
 {
-  GPid virtual_keyboard_pid;
+  /* Gtkbuilder to build the window */
+  GtkBuilder *gtk_builder;
   GtkWidget* window;
+  GPid virtual_keyboard_pid;
   cairo_t *cr;
   Pos* pos;
   GSList *letterlist; 
