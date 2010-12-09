@@ -40,10 +40,10 @@
  * Calculate the better position where put the bar
  */
 static void calculate_position(GtkWidget *ardesia_bar_window, 
-                        gint dwidth, gint dheight, 
-                        gint *x, gint *y, 
-                        gint wwidth, gint wheight,
-                        gint position)
+			       gint dwidth, gint dheight, 
+			       gint *x, gint *y, 
+			       gint wwidth, gint wheight,
+			       gint position)
 {
   *y = ((dheight - wheight)/2); 
   /* vertical layout */
@@ -84,9 +84,9 @@ static void calculate_position(GtkWidget *ardesia_bar_window,
  * where put the user can decide the position of the window
  */
 static void calculate_initial_position(GtkWidget *ardesia_bar_window, 
-                                gint *x, gint *y, 
-                                gint wwidth, gint wheight, 
-                                gint position)
+				       gint *x, gint *y, 
+				       gint wwidth, gint wheight, 
+				       gint position)
 {
   gint dwidth = gdk_screen_width();
   gint dheight = gdk_screen_height();

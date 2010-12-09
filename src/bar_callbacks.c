@@ -496,13 +496,13 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) func_data;
   if (bar_data->grab == FALSE)
     {
-	#ifndef _WIN32
+#ifndef _WIN32
       if (timer!=-1)
         { 
 	  g_source_remove(timer); 
 	  timer = -1;
         }
-		#endif
+#endif
       bar_data->grab = TRUE;
 #ifdef _WIN32
       /* 
@@ -520,11 +520,11 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
     }
   else
     {
-	  #ifndef _WIN32
-	  #try to uprise the window
+#ifndef _WIN32
+      //try to uprise the window
       timer = g_timeout_add(BAR_TO_TOP_TIMEOUT, bar_to_top, get_background_window());
-      #endif
-	  /* grab enabled */
+#endif
+      /* grab enabled */
       bar_data->grab = FALSE;
       annotate_release_grab ();
 #ifdef _WIN32
