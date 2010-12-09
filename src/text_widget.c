@@ -468,7 +468,7 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 
 #ifdef _WIN32 
   /* in the gtk 2.16.6 the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
-  gtk_widget_set_double_buffered(data->annotation_window, FALSE); 
+  gtk_widget_set_double_buffered(text_data->window, FALSE); 
   // I use a layered window that use the black as transparent color
   setLayeredGdkWindowAttributes(text_data->window->window, RGB(0,0,0), 0, LWA_COLORKEY);	
 #endif
