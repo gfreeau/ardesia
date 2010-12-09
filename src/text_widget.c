@@ -105,16 +105,7 @@ static void create_text_window(GtkWindow *parent)
       gtk_window_set_opacity(GTK_WINDOW(text_data->window), 1);
       gtk_widget_set_usize (GTK_WIDGET(text_data->window), gdk_screen_width(), gdk_screen_height());
 
-
-      /* connect all the callback from gtkbuilder xml file */
-      gtk_builder_connect_signals(text_data->gtk_builder, (gpointer) text_data); 
     }
-
-
-  /* This put the window in fullscreen generating an exposure */
-  gtk_window_fullscreen(GTK_WINDOW(text_data->window));
- 
-  gtk_widget_show_all(text_data->window);  
      
 }
 
@@ -462,12 +453,22 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 
   create_text_window(parent);
   
+  gtk_window_set_keep_above(GTK_WINDOW(text_data->window), TRUE);
+
+  /* connect all the callback from gtkbuilder xml file */
+  gtk_builder_connect_signals(text_data->gtk_builder, (gpointer) text_data); 
+
   /* install a key snooper */
   text_data->snooper_handler_id = gtk_key_snooper_install(key_snooper, NULL);
-  
-  gtk_widget_show_all(text_data->window);
+
+  /* This put the window in fullscreen generating an exposure */
+  gtk_window_fullscreen(GTK_WINDOW(text_data->window));
+ 
+  gtk_widget_show_all(text_data->window);  
 
 #ifdef _WIN32 
+  /* in the gtk 2.16.6 the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
+  gtk_widget_set_double_buffered(data->annotation_window, FALSE); 
   // I use a layered window that use the black as transparent color
   setLayeredGdkWindowAttributes(text_data->window->window, RGB(0,0,0), 0, LWA_COLORKEY);	
 #endif
