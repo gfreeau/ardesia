@@ -279,7 +279,7 @@ static BarData* init_bar_data()
   bar_data->pencil = TRUE;
   bar_data->grab = TRUE;
   bar_data->text = FALSE;
-  bar_data->thickness = 14;
+  bar_data->thickness = THICK_STEP * 2;
   bar_data->highlighter = FALSE;
   bar_data->rectifier = FALSE;
   bar_data->rounder = FALSE;

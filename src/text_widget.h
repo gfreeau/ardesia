@@ -41,6 +41,7 @@
 #endif
 
 
+#define TEXT_CURSOR_WIDTH 4
 #define VIRTUALKEYBOARD_NAME "florence"
 
 #define TEXT_MOUSE_EVENTS        ( GDK_POINTER_MOTION_MASK |	\

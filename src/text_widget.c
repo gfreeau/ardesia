@@ -124,7 +124,7 @@ static gboolean blink_cursor(gpointer data)
 	}  
   
       gint height = text_data->max_font_height;
-      cairo_rectangle(cr, text_data->pos->x, text_data->pos->y-height+1, 5, height);  
+      cairo_rectangle(cr, text_data->pos->x, text_data->pos->y - height, TEXT_CURSOR_WIDTH, height);  
       cairo_fill(cr);
       cairo_stroke(cr);
       cairo_destroy(cr);
@@ -170,12 +170,13 @@ static void stop_timer()
 /* Set the text cursor */
 static gboolean set_text_cursor(GtkWidget * window)
 {
-  
-  gint height = text_data->max_font_height;
-  gint width = 5;
+  gdouble decoration_height = 4;     
+  gint height = text_data->max_font_height + decoration_height * 2;
+  gint width = TEXT_CURSOR_WIDTH * 3;
   
   GdkPixmap *pixmap = gdk_pixmap_new (NULL, width, height, 1);
   cairo_t *text_pointer_pcr = gdk_cairo_create(pixmap);
+  clear_cairo_context(text_pointer_pcr);
   cairo_set_operator(text_pointer_pcr, CAIRO_OPERATOR_SOURCE);
   cairo_set_source_rgb(text_pointer_pcr, 1, 1, 1);
   cairo_paint(text_pointer_pcr);
@@ -190,8 +191,22 @@ static gboolean set_text_cursor(GtkWidget * window)
       clear_cairo_context(text_pointer_cr);
       cairo_set_source_rgb(text_pointer_cr, 1, 1, 1);
       cairo_set_operator(text_pointer_cr, CAIRO_OPERATOR_SOURCE);
-      cairo_set_line_width(text_pointer_cr, text_data->pen_width);
-      cairo_rectangle(text_pointer_cr, 0, 0, width, height);  
+      cairo_set_line_width(text_pointer_cr, 2);
+
+      cairo_line_to(text_pointer_cr, 1, 1);
+      cairo_line_to(text_pointer_cr, width-1, 1);
+      cairo_line_to(text_pointer_cr, width-1, decoration_height);
+      cairo_line_to(text_pointer_cr, 2*width/3+1, decoration_height);
+      cairo_line_to(text_pointer_cr, 2*width/3+1, height-decoration_height);
+      cairo_line_to(text_pointer_cr, width-1, height-decoration_height);
+      cairo_line_to(text_pointer_cr, width-1, height-1);
+      cairo_line_to(text_pointer_cr, 1, height-1);
+      cairo_line_to(text_pointer_cr, 1, height-decoration_height);
+      cairo_line_to(text_pointer_cr, width/3-1, height-decoration_height);
+      cairo_line_to(text_pointer_cr, width/3-1, decoration_height);
+      cairo_line_to(text_pointer_cr, 1, decoration_height);
+      cairo_close_path(text_pointer_cr);
+      
       cairo_stroke(text_pointer_cr);
       cairo_destroy(text_pointer_cr);
     } 
@@ -199,7 +214,7 @@ static gboolean set_text_cursor(GtkWidget * window)
   GdkColor *background_color_p = rgba_to_gdkcolor(BLACK);
   GdkColor *foreground_color_p = rgba_to_gdkcolor(text_data->color);
   
-  GdkCursor* cursor = gdk_cursor_new_from_pixmap (pixmap, bitmap, foreground_color_p, background_color_p, 1, height-1);
+  GdkCursor* cursor = gdk_cursor_new_from_pixmap (pixmap, bitmap, foreground_color_p, background_color_p, TEXT_CURSOR_WIDTH, height-decoration_height);
   gdk_window_set_cursor (text_data->window->window, cursor);
   gdk_flush ();
   gdk_cursor_unref(cursor);
