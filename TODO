@@ -54,9 +54,9 @@
 
 - Candidate features:
   - Deploy the artifact online
+    - upload video on youtube
     - send saved images with email 
-    - publish video 
-    - moodle plugin
+    - moodle integration
   - Filler
   - Image importer
     - image gallery, sticky notes
