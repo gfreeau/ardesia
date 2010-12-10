@@ -255,8 +255,8 @@ static void init_text_widget(GtkWidget *widget)
       cairo_set_operator(text_data->cr, CAIRO_OPERATOR_SOURCE);
       cairo_set_line_width(text_data->cr, text_data->pen_width);
       cairo_set_source_color_from_string(text_data->cr, text_data->color);
-      /* This is a trick we must found the maximum height and text_pen_width of the font */
       cairo_set_font_size (text_data->cr, text_data->pen_width * 2);
+      /* This is a trick we must found the maximum height of the font */
       cairo_text_extents (text_data->cr, "|" , &text_data->extents);
       text_data->max_font_height = text_data->extents.height;
       set_text_cursor(widget);
