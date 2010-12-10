@@ -152,7 +152,6 @@ void windows_send_email(gchar* to, gchar* subject, gchar* body, gchar* attachmen
 
   M_RD[0].ulRecipClass = MAPI_TO;
   M_RD[0].lpszName = to;
-  //M_RD[0].lpszName = "alpha@paranoici.org";
 
   M_MSG.nRecipCount = sizeof(M_RD) / sizeof(M_RD[0]);
   M_MSG.lpRecips = M_RD;
@@ -164,7 +163,7 @@ void windows_send_email(gchar* to, gchar* subject, gchar* body, gchar* attachmen
   M_MSG.nFileCount = sizeof(M_FD) / sizeof(M_FD[0]);
   M_MSG.lpFiles = M_FD;
 
-  MAPISendMail(0, 0, &M_MSG, MAPI_LOGON_UI | MAPI_NEW_SESSION, 0L);
+  MAPISendMail(0, 0, &M_MSG, MAPI_LOGON_UI | MAPI_DIALOG, 0L);
 }
 
 #endif

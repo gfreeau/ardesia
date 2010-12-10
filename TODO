@@ -43,7 +43,6 @@
 
 
 - Windows operating systems
-  - email support; write an xdg-email executable with MAPI
   - virtual keyboard integration
   - Create a binary installer similar to the gimp Windows installer 
     http://gimp-win.sourceforge.net/
