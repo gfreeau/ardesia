@@ -25,6 +25,8 @@
 #ifdef _WIN32
 
 #include <windows.h>
+#include <mapi.h>
+
 #include <winuser.h>    
 
 #include <gdk/gdk.h>
@@ -52,6 +54,8 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 						
 /* Override the with the gdk_cursor_new_from_pixmap with the fixed version */						
 #define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
+
+void windows_send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment);
 
 #endif
 

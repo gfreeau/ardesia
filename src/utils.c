@@ -28,7 +28,9 @@
 
 #include <utils.h>
 
-
+#ifdef _WIN32
+  #include <windows_utils.h>
+#endif
 	
 /* Grab pointer */
 void grab_pointer(GtkWidget *win, GdkEventMask eventmask)
@@ -306,6 +308,9 @@ AnnotateStrokeCoordinate * allocate_point(gint x, gint y, gint width, gdouble pr
 /* Send an email */
 void send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment)
 {
+#ifdef _WIN32
+  windows_send_email(to, subject, body, attachment);
+#else
   gchar* argv[9] = {"xdg-email", "--attach", attachment, "--subject", subject, "--body", body, to, (gchar*) 0};
 
   g_spawn_sync (NULL /*working_directory*/,
@@ -318,7 +323,7 @@ void send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment)
 		NULL /*error*/,
 		NULL,
 		NULL);
-
+#endif
 }
 
 

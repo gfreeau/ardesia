@@ -25,7 +25,8 @@
 #ifdef _WIN32
 
 #include <windows_utils.h>
-  
+
+ 
 BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF crKey,
 					       BYTE bAlpha, DWORD dwFlags) = NULL;
 	
@@ -121,6 +122,49 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
   gdk_pixbuf_unref(rgba_pixbuf);
 
   return cursor;
+}
+
+
+/* Send an email */
+void windows_send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment)
+{
+  HINSTANCE inst;
+  LPMAPISENDMAIL MAPISendMail;
+
+  inst = LoadLibrary("MAPI32.DLL");
+
+  MAPISendMail = (LPMAPISENDMAIL) GetProcAddress(inst, "MAPISendMail");
+
+  MapiMessage M_MSG;
+  ZeroMemory(&M_MSG, sizeof(M_MSG));
+
+  M_MSG.ulReserved = 0;
+  M_MSG.lpszSubject = subject;
+  M_MSG.lpszNoteText = body;
+  M_MSG.lpszMessageType = NULL;
+  M_MSG.lpszDateReceived = NULL;
+  M_MSG.lpszConversationID = NULL;
+  M_MSG.flFlags = 0;
+  M_MSG.lpOriginator = NULL;
+
+  MapiRecipDesc M_RD[1];
+  ZeroMemory(&M_RD, sizeof(M_RD));
+
+  M_RD[0].ulRecipClass = MAPI_TO;
+  M_RD[0].lpszName = to;
+  //M_RD[0].lpszName = "alpha@paranoici.org";
+
+  M_MSG.nRecipCount = sizeof(M_RD) / sizeof(M_RD[0]);
+  M_MSG.lpRecips = M_RD;
+
+  MapiFileDesc M_FD[1];
+  M_FD[0].lpszPathName = attachment;
+  M_FD[0].lpszFileName = attachment;
+
+  M_MSG.nFileCount = sizeof(M_FD) / sizeof(M_FD[0]);
+  M_MSG.lpFiles = M_FD;
+
+  MAPISendMail(0, 0, &M_MSG, MAPI_LOGON_UI | MAPI_NEW_SESSION, 0L);
 }
 
 #endif

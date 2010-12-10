@@ -136,6 +136,7 @@ void destroy_background_window()
 	{ 
 	  /* destroy brutally the background window */
 	  gtk_widget_destroy(background_data->background_window);
+	  background_data->background_window = NULL;
 	}
 
       if (background_data->back_cr)
