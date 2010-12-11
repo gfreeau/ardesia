@@ -32,6 +32,8 @@
   - gui and icon revision to increase the usability
   - Reduce the video size
   - Screencast recorder using vlclib instead spawn the vlc process
+  - Code revision
+  - Bar and transparent layer on the same window
   - Store and load the savepoints using svg files
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
@@ -52,7 +54,7 @@
 
 - Candidate features:
   - Deploy the artifact online
-    - upload video on youtube
+    - video; youtube upload
     - send saved images with email 
     - moodle integration
   - Filler
