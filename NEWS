@@ -20,22 +20,26 @@ This file contain the news about the tool
  ardesia 0.6
 -------------
 
+Internationalization:
+- Add french translation
+
 Usability:
-- added French translation
-- blinking cursor that highlight the text tool focus
+- New text insertion tool to improve the usability;
+  implemented a new text insertion cursor, 
+  when you click on the page a new cursor blinks on
+  the text focus
 
 Features:
-- Now Ardesia stay above all windows; you can open a program
+- Ardesia stay above all windows; you can open a program
   in fullscreen and annotate on it 
-- log the backtrace in tour TMP folder when a fault occurs
-- Email support: If you have created a pdf with ardesia
-  when you quit the program, ardesia open your default mailer
-  with a stub email with the pdf attachment; this is
-  a good way to share your artifact (linux only)
-- Bug Tracking: If the program is able to found a 
-  misbehaviour it ask to send an email with the log to
-  the ardesia developers staff (linux only)
-- New text insertion tool to improve the usability
+- When a fault occurs it logs the backtrace in tour TMP folder
+- Email support
+- Pdf email sender; when you quit the program if you have made 
+  a pdf Ardesia opens your defaul mailer with a new stub mail 
+  and it attachs your artifact
+- Bug Tracking: If the program is able to found a misbehaviour 
+  it open an email stub with the log to be sended 
+  to the ardesia developers staff
 - Florence virtual keyboard integration: if you have it
   installed, will be show/hide when you select the text 
   tool (linux only)
