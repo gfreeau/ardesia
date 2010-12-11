@@ -45,7 +45,9 @@
 
 
 - Windows operating systems
-  - virtual keyboard integration
+  - audio recording without configure the sound card name inside
+    the screencast.bat
+  - avoid to add the vlc.exe to PATH environment variable
   - Create a binary installer similar to the gimp Windows installer 
     http://gimp-win.sourceforge.net/
   - Windows Xp support

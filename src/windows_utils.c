@@ -125,7 +125,7 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 }
 
 
-/* Send an email */
+/* Send an email with MAPI */
 void windows_send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment)
 {
   HINSTANCE inst;

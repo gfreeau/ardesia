@@ -48,7 +48,7 @@ static void start_virtual_keyboard()
   g_spawn_async (NULL /*working_directory*/,
 		 argv,
 		 NULL /*envp*/,
-		 G_SPAWN_SEARCH_PATH,
+		 G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD | G_SPAWN_LEAVE_DESCRIPTORS_OPEN,
 		 NULL /*child_setup*/,
 		 NULL /*user_data*/,
 		 &text_data->virtual_keyboard_pid /*child_pid*/,
@@ -60,14 +60,14 @@ static void start_virtual_keyboard()
 static void stop_virtual_keyboard()
 {
   if (text_data->virtual_keyboard_pid>0)
-    {
-      g_spawn_close_pid(text_data->virtual_keyboard_pid);  
+    { 
       /* @TODO replace this with the cross plattform g_pid_terminate when it will available */
 #ifdef _WIN32
-      TerminateProcess((HANDLE) text_data->virtual_keyboard_pid, 0);
+      TerminateProcess ((HANDLE) text_data->virtual_keyboard_pid, 0);
 #else
       kill (text_data->virtual_keyboard_pid, SIGTERM);
 #endif   
+      g_spawn_close_pid(text_data->virtual_keyboard_pid); 
       text_data->virtual_keyboard_pid = (GPid) 0;
     }
 }

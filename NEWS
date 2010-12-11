@@ -28,6 +28,11 @@ Usability:
   implemented a new text insertion cursor, 
   when you click on the page a new cursor blinks on
   the text focus
+- integration with the "Tablet PC Input Panel" on windows
+  for the text insertion tool
+- integration with the "Florence Ramble Virtual Keyboard"
+  on Linux for the insertion tool
+
 
 Features:
 - Ardesia stay above all windows; you can open a program
