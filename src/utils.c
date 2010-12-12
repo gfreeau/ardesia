@@ -29,7 +29,7 @@
 #include <utils.h>
 
 #ifdef _WIN32
-  #include <windows_utils.h>
+#include <windows_utils.h>
 #endif
 	
 /* Grab pointer */

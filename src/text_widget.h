@@ -43,7 +43,7 @@
 
 #define TEXT_CURSOR_WIDTH 4
 
-#ifdef _linux
+#ifdef linux
 #define VIRTUALKEYBOARD_NAME "florence"
 #endif
 

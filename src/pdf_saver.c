@@ -242,7 +242,7 @@ void quit_pdf_saver()
   if (pdf_data)
     {
       wait_for_pdf_save_pending_thread();
-	  // send the pdf
+      // send the pdf
       send_pdf_with_email(pdf_data->filename);
  
       /* free the list and all the pixbuf inside it */
@@ -257,10 +257,10 @@ void quit_pdf_saver()
 	    }
 	}
      
-	  if (pdf_data->filename)
-	    {
+      if (pdf_data->filename)
+	{
           g_free(pdf_data->filename);
-		}
+	}
       g_free(pdf_data);
     }
 }
