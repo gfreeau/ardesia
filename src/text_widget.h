@@ -49,7 +49,7 @@
 
 #ifdef _WIN32
 #define VIRTUALKEYBOARD_NAME "C:\\Program Files\\Common Files\\Microsoft Shared\\ink\\TabTip.exe"
-  
+ 
 #define TEXT_UI_FILE "..\\share\\ardesia\\ui\\text.glade"
 #define TEXT_MOUSE_EVENTS        ( GDK_POINTER_MOTION_MASK |    \
 				   GDK_BUTTON_PRESS_MASK |      \

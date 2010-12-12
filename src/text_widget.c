@@ -59,11 +59,12 @@ static void start_virtual_keyboard()
 /* Stop the virtual keyboard */
 static void stop_virtual_keyboard()
 {
-  if (text_data->virtual_keyboard_pid>0)
+  if (text_data->virtual_keyboard_pid > 0)
     { 
       /* @TODO replace this with the cross plattform g_pid_terminate when it will available */
 #ifdef _WIN32
-      TerminateProcess ((HANDLE) text_data->virtual_keyboard_pid, 0);
+       HWND hWnd = FindWindow("IPTip_Main_Window", NULL);       
+       SendMessage(hWnd, WM_SYSCOMMAND, SC_CLOSE, 0);
 #else
       kill (text_data->virtual_keyboard_pid, SIGTERM);
 #endif   
@@ -400,10 +401,7 @@ on_window_text_button_release (GtkWidget *win,
   text_data->pos->y = ev->y;
   move_editor_cursor();
 
-  if (text_data->virtual_keyboard_pid!=0)
-    {
-      stop_virtual_keyboard();
-    } 
+  stop_virtual_keyboard();
   start_virtual_keyboard();
   
   /* This present the ardesia bar and the panels */

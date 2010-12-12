@@ -39,8 +39,6 @@
     a more reactive undo/redo
   - more compact savepoint storage
   - email integration without spawn the xdg-email script 
-  - better integration with the florence virtual keyboard
-  - better integration with the Tablet PC Input Panel
   - Better polygon recognition and drawing
   - reduce the white blinking when the windows are opened
 
@@ -56,6 +54,7 @@
 
 
 - Candidate features:
+  - show the virtual keyboard far away from the text cursor position 
   - Deploy the artifact online
     - video; youtube upload
     - send saved images with email 
