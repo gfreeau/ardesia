@@ -35,6 +35,7 @@
 #else
 #ifdef __APPLE__
 #include <cairo-quartz.h>
+#define VIRTUALKEYBOARD_NAME "florence"
 #else
 #include <cairo-xlib.h>
 #endif
@@ -61,7 +62,6 @@
 #else
 #define TEXT_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/text.glade"
 #endif 
-
 
 
 typedef struct
