@@ -74,27 +74,31 @@ Please read the INSTALL file located on the current folder.
  Runtime Requirements
 ----------------------
 
-In order to run Ardesia on Linux you need to run a composite manager such as
-compiz, kwin or xcompmgr.
+- Composite manager
+  In order to run Ardesia on Linux you need to run a composite manager such as
+  compiz, kwin or xcompmgr.
 
-If you use Windows I remember that only Windows Vista and Windows 7 
-are supported; Windows Xp and previous versions are not because they have not
-a composite manager.
+  If you use Windows I remember that only Windows Vista and Windows 7 
+  are supported; Windows Xp and previous versions are not because they have not
+  a composite manager.
 
-To use the recording feature you must install the vlc multimedia player 
-and streamer.
+- VLC
+  To use the recording feature you must install the vlc multimedia player 
+  and streamer.
+  If you use Ubuntu you can install vlc with this command:
+  #sudo apt-get install vlc
 
-If you use Ubuntu you can install vlc with this command:
+  If you use an other Linux distro please use your package manager
 
-sudo apt-get install vlc
+  If you are using Windows you must download the vlc installer
+  from http://www.videolan.org/vlc and install it.
+  After the installation add to the PATH environment
+  variable the vlc installation folder.
 
-If you use an other Linux distro please use your package manager
-
-If you are using Windows you must download the vlc installer
-from http://www.videolan.org/vlc and install it.
-After the installation add to the PATH environment
-variable the vlc installation folder.
-
+- xdg-utils (Linux only)
+  If you use Ubuntu you can install the xdg-utils with this command:
+  #sudo apt-get install xdg-utils
+  
 
 -------
  Usage
