@@ -19,8 +19,8 @@
 
   
 - Bug fix:
-  - Fix the highlighter; this doesn't work under Windows
-    because seems that the ARGB32 support in cairo is not yet available 
+  - Fix the highlighter; it doesn't work under Windows
+    because it seems that the ARGB32 support in cairo is not yet available 
   - Fix the wrong position of the text cursor on windows
 	
 	
@@ -29,22 +29,22 @@
 
 
 - Reengineering
-  - gui and icon revision to increase the usability
+  - icon and UI design to improve usability
   - Reduce the video size
   - Screencast recorder using vlclib instead spawn the vlc process
-  - Code revision
+  - Code review
   - Bar and transparent layer on the same window
   - Store and load the savepoints using svg files
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
   - more compact savepoint storage
-  - email integration without spawn the xdg-email script 
   - Better polygon recognition and drawing
   - reduce the white blinking when the windows are opened
+  - email integration without spawn the xdg-email script 
 
 
 - Windows operating systems
-  - audio recording without configure the sound card name inside
+  - audio recording without configure the audio device name inside
     the screencast.bat
   - avoid to add the vlc.exe to PATH environment variable
   - Create a binary installer similar to the gimp Windows installer 
