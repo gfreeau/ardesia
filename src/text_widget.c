@@ -294,7 +294,7 @@ static void init_text_widget(GtkWidget *widget)
   
   if (!text_data->pos)
     {
-	  clear_cairo_context(text_data->cr);
+      clear_cairo_context(text_data->cr);
       text_data->pos = g_malloc (sizeof(Pos));
       text_data->pos->x = 0;
       text_data->pos->y = 0;
@@ -427,16 +427,16 @@ static gboolean is_above_virtual_keyboard(gint x, gint y)
   HWND hWnd = FindWindow(VIRTUALKEYBOARD_WINDOW_NAME, NULL);
   if (!hWnd)
     {
-	   return FALSE;
-	}  
+      return FALSE;
+    }  
   if (!GetWindowRect(hWnd, &rect))
     { 
-	   return FALSE;
-	}
+      return FALSE;
+    }
   if ((rect.left<x)&&(x<rect.right)&&(rect.top<y)&&(y<rect.bottom))
-  {
-     return TRUE;
-  }
+    {
+      return TRUE;
+    }
   return FALSE;
 }
 #endif
@@ -453,16 +453,16 @@ on_window_text_button_release (GtkWidget *win,
     {
       return TRUE;
     }
-  #ifdef _WIN32
-    gboolean above = is_above_virtual_keyboard(ev->x, ev->y);
-    if (above)
-	  {
-	     /* You have lost the focus; re get it */
-	     grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
-		 /* ignore the data; the event wil be passed to the virtual keyboard */
-	     return TRUE;
-	  }
-  #endif
+#ifdef _WIN32
+  gboolean above = is_above_virtual_keyboard(ev->x, ev->y);
+  if (above)
+    {
+      /* You have lost the focus; re get it */
+      grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
+      /* ignore the data; the event wil be passed to the virtual keyboard */
+      return TRUE;
+    }
+#endif
 
   if ((text_data) && (text_data->pos))
     {
