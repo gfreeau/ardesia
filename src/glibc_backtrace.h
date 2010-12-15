@@ -21,7 +21,7 @@
  *
  */
 
-#ifdef linux
+#ifdef HAVE_BACKTRACE
 
 /* 
    the glibc functions backtrace, backtrace_symbols, backtrace_symbols_fd
@@ -31,7 +31,7 @@
 
 #define MAX_FRAMES (20)
 
-void linux_backtrace_register();
+void glibc_backtrace_register();
 
 
 #endif

@@ -28,8 +28,8 @@
 #include <bar_callbacks.h>
 
 
-#ifdef linux
-#include <linux_backtrace.h>
+#ifdef HAVE_BACKTRACE
+#include <glibc_backtrace.h>
 #endif
 
 #ifdef _WIN32
@@ -172,7 +172,7 @@ static void set_the_best_colormap()
   GdkScreen   *screen = gdk_display_get_default_screen(display);
 
   /* In FreeBSD operating system you might have a composite manager */
-#ifdef __FreeBSD__
+#if ( defined(__freebsd__) || defined(__freebsd) || defined(_freebsd) || defined(freebsd) )
   check_composite_manager(screen);
 #endif
 
@@ -374,9 +374,9 @@ static void enable_localization_support()
 int
 main(gint argc, char *argv[])
 {
-#ifdef linux
+#ifdef HAVE_BACKTRACE
 #ifdef HAVE_LIBSIGSEGV
-  linux_backtrace_register();
+  glibc_backtrace_register();
 #endif
 #endif
 #ifdef _WIN32

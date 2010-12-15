@@ -21,11 +21,11 @@
  *
  */
 
-
-#ifdef linux
-
-#include <linux_backtrace.h>
 #include <utils.h>
+
+#ifdef HAVE_BACKTRACE
+
+#include <glibc_backtrace.h>
 
 #ifdef HAVE_LIBSIGSEGV
 #include <sigsegv.h>
@@ -33,6 +33,13 @@
 
 #ifdef HAVE_LIBBFD
 #include <bfd.h>
+
+
+#if ( defined(__macos_x__) || defined(__macos_x) || defined(_macos_x) || defined(macos_x) || \
+      defined(__apple__) || defined(__apple) || defined(_apple) || defined(apple) )
+#include <sys/param.h>
+#include <mach-o/dyld.h>
+#endif 
 
 /* globals retained across calls to resolve. */
 static bfd* abfd = 0;
@@ -44,7 +51,20 @@ static asection *text = 0;
 static void create_trace_line(char *address, FILE *file) 
 {
   char ename[1024];
+#if ( defined(__freebsd__) || defined(__freebsd) || defined(_freebsd) || defined(freebsd) )
+  int l = readlink("/proc/curproc/file", chrarray_Buffer, PATH_MAXLEN);
+#elif ( defined(__macos_x__) || defined(__macos_x) || defined(_macos_x) || defined(macos_x) || \
+	defined(__apple__) || defined(__apple) || defined(_apple) || defined(apple) )
+  u32 u32_BufferLength ;
+  if ( _NSGetExecutablePath( chrarray_Buffer, &u32_BufferLength ))
+    {
+      printf("An error occured while reading the executable path. Program terminated.\n");
+      // Error!
+    }
+  intBufferLength = (int) u32_BufferLength ;
+#else // Linux
   int l = readlink("/proc/self/exe",ename,sizeof(ename));
+#endif
   
   if (l == -1) 
     {
@@ -141,7 +161,7 @@ static int sigsegv_handler(void *addr, int bad)
 }
 
 
-void linux_backtrace_register()
+void glibc_backtrace_register()
 {
 #ifdef HAVE_LIBSIGSEGV
   /* Install the SIGSEGV handler */

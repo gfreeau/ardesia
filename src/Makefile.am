@@ -50,8 +50,8 @@ ardesia_SOURCES = \
 	windows_utils.h \
 	windows_backtrace.c \
 	windows_backtrace.h \
-	linux_backtrace.c \
-	linux_backtrace.h \
+	glibc_backtrace.c \
+	glibc_backtrace.h \
         saver.c \
 	saver.h \
         color_selector.c \
