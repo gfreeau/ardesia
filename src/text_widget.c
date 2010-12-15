@@ -37,7 +37,7 @@
 #endif
 
 
-static TextData* text_data;
+static TextData* text_data = NULL;
 
 
 /* Start the virtual keyboard */
@@ -105,7 +105,6 @@ static void create_text_window(GtkWindow *parent)
 
       gtk_window_set_opacity(GTK_WINDOW(text_data->window), 1);
       gtk_widget_set_usize (GTK_WIDGET(text_data->window), gdk_screen_width(), gdk_screen_height());
-
     }
      
 }
@@ -129,22 +128,24 @@ static gboolean blink_cursor(gpointer data)
       cairo_t* cr = gdk_cairo_create(text_data->window->window);
       cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
       cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND); 
-  
+        
+      gint height = text_data->max_font_height;  
+
       if (text_data->blink_show)
 	{
 	  cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
 	  cairo_set_line_width(cr, text_data->pen_width);
 	  cairo_set_source_color_from_string(cr, text_data->color);
+          cairo_rectangle(cr, text_data->pos->x, text_data->pos->y - height, TEXT_CURSOR_WIDTH, height);  
 	  text_data->blink_show=FALSE;
 	}  
       else
 	{
 	  cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
+          cairo_rectangle(cr, text_data->pos->x, text_data->pos->y - height, TEXT_CURSOR_WIDTH, height);  
+          cairo_rectangle(cr, text_data->pos->x-1, text_data->pos->y - height - 1, TEXT_CURSOR_WIDTH  + 2, height + 2);  
 	  text_data->blink_show=TRUE;
 	}  
-  
-      gint height = text_data->max_font_height;
-      cairo_rectangle(cr, text_data->pos->x, text_data->pos->y - height, TEXT_CURSOR_WIDTH, height);  
       cairo_fill(cr);
       cairo_stroke(cr);
       cairo_destroy(cr);
@@ -162,10 +163,10 @@ static void delete_character()
     {  
       cairo_set_operator (text_data->cr, CAIRO_OPERATOR_CLEAR);
  
-      cairo_rectangle(text_data->cr, charInfo->x + charInfo->x_bearing, 
-		      charInfo->y + charInfo->y_bearing, 
-		      gdk_screen_width(), 
-		      text_data->max_font_height + text_data->pen_width + 3);
+      cairo_rectangle(text_data->cr, charInfo->x + charInfo->x_bearing -1, 
+		      charInfo->y + charInfo->y_bearing -1, 
+		      gdk_screen_width()+2, 
+		      text_data->max_font_height + 2);
 
       cairo_fill(text_data->cr);
       cairo_stroke(text_data->cr);
@@ -177,15 +178,16 @@ static void delete_character()
 }
 
 
-/* Stop the timer to handle the blioking cursor */
+/* Stop the timer to handle the bloking cursor */
 static void stop_timer()
 {
-  if (text_data->timer!=-1)
+  if (text_data->timer>0)
     {
       g_source_remove(text_data->timer); 
       text_data->timer = -1;
     }
 }
+
 
 /* Set the text cursor */
 static gboolean set_text_cursor(GtkWidget * window)
@@ -268,6 +270,31 @@ static void init_text_widget(GtkWidget *widget)
   
   clear_cairo_context(text_data->cr);
 
+#ifndef _WIN32
+  /* Instantiate a trasparent pixmap with a black hole upon the bar area to be used as mask */
+  GdkBitmap* shape = gdk_pixmap_new(NULL,  gdk_screen_width(), gdk_screen_height(), 1);
+  cairo_t* shape_cr = gdk_cairo_create(shape);
+
+  cairo_set_operator(shape_cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_rgba (shape_cr, 1, 1, 1, 1);
+  cairo_paint(shape_cr);
+
+  GtkWidget* bar= get_bar_window();
+  int x,y,width,height;
+  gtk_window_get_position(GTK_WINDOW(bar),&x,&y);
+  gtk_window_get_size(GTK_WINDOW(bar),&width,&height);
+
+  cairo_set_operator(shape_cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_rgba (shape_cr, 0, 0, 0, 0);
+  cairo_rectangle(shape_cr, x, y, width, height);
+  cairo_fill(shape_cr);	
+
+  gdk_window_input_shape_combine_mask(text_data->window->window,
+				      shape,
+				      0, 0);
+  cairo_destroy(shape_cr);
+#endif
+
   if (!text_data->pos)
     {
       text_data->pos = g_malloc (sizeof(Pos));
@@ -281,15 +308,18 @@ static void init_text_widget(GtkWidget *widget)
 /* Add a savepoint with the text */
 static void save_text()
 {
-  text_data->blink_show=FALSE;
-  blink_cursor(NULL);   
-  stop_timer(); 
-  if (text_data->letterlist)
+  if (text_data)
     {
-      annotate_push_context(text_data->cr);
-      g_slist_foreach(text_data->letterlist, (GFunc)g_free, NULL);
-      g_slist_free(text_data->letterlist);
-      text_data->letterlist = NULL;
+      text_data->blink_show=FALSE;
+      blink_cursor(NULL);   
+      stop_timer(); 
+      if (text_data->letterlist)
+	{
+	  annotate_push_context(text_data->cr);
+	  g_slist_foreach(text_data->letterlist, (GFunc)g_free, NULL);
+	  g_slist_free(text_data->letterlist);
+	  text_data->letterlist = NULL;
+	}
     } 
 }
 
@@ -297,13 +327,16 @@ static void save_text()
 /* Destroy text window */
 static void destroy_text_window()
 {
-#ifdef _WIN32
-  ungrab_pointer(gdk_display_get_default(), text_data->window);
-#endif
   if (text_data->window)
     {
-      gtk_widget_destroy(text_data->window);
-      text_data->window = NULL;
+#ifdef _WIN32
+      ungrab_pointer(gdk_display_get_default(), text_data->window);
+#endif
+      if (text_data->window)
+	{
+	  gtk_widget_destroy(text_data->window);
+	  text_data->window = NULL;
+	}
     }
 }
 
@@ -395,23 +428,31 @@ on_window_text_button_release (GtkWidget *win,
 			       GdkEventButton *ev, 
 			       gpointer user_data)
 {
-  save_text();
+  /* only button1 allowed */
+  if (!(ev->button == 1))
+    {
+      return TRUE;
+    }  
+  if ((text_data) && (text_data->pos))
+    {
+      save_text();
   
-  text_data->pos->x = ev->x;
-  text_data->pos->y = ev->y;
-  move_editor_cursor();
+      text_data->pos->x = ev->x;
+      text_data->pos->y = ev->y;
+      move_editor_cursor();
 
-  stop_virtual_keyboard();
-  start_virtual_keyboard();
+      stop_virtual_keyboard();
+      start_virtual_keyboard();
   
-  /* This present the ardesia bar and the panels */
-  gtk_window_present(GTK_WINDOW(get_bar_window()));
+      /* This present the ardesia bar and the panels */
+      gtk_window_present(GTK_WINDOW(get_bar_window()));
 
-  gtk_window_present(GTK_WINDOW(text_data->window));
-  gdk_window_raise(text_data->window->window);
+      gtk_window_present(GTK_WINDOW(text_data->window));
+      gdk_window_raise(text_data->window->window);
 
-  text_data->timer = g_timeout_add(1000, blink_cursor, NULL);   
- 
+      text_data->timer = g_timeout_add(1000, blink_cursor, NULL);    
+    }
+
   return TRUE;
 }
 
@@ -422,10 +463,12 @@ on_window_text_cursor_motion(GtkWidget *win,
 			     GdkEventMotion *ev, 
 			     gpointer func_data)
 {
+#ifdef _WIN32
   if (inside_bar_window(ev->x, ev->y))
     {
       stop_text_widget();
     }
+#endif
   return TRUE;
 }
 
@@ -463,7 +506,6 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
   gtk_window_fullscreen(GTK_WINDOW(text_data->window));
  
   gtk_widget_show_all(text_data->window);  
-
 #ifdef _WIN32 
   /* in the gtk 2.16.6 the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
   gtk_widget_set_double_buffered(text_data->window, FALSE); 
@@ -478,19 +520,19 @@ void stop_text_widget()
 {
   if (text_data)
     {
-      save_text();
       stop_virtual_keyboard();
       if (text_data->snooper_handler_id)
 	{
 	  gtk_key_snooper_remove(text_data->snooper_handler_id);
 	  text_data->snooper_handler_id = 0;
 	}
+      save_text();
+      destroy_text_window();
       if (text_data->cr)
 	{
 	  cairo_destroy(text_data->cr);     
 	  text_data->cr = NULL;
 	}
-      destroy_text_window();
       if (text_data->pos)
 	{
 	  g_free(text_data->pos);
