@@ -123,7 +123,7 @@ static void move_editor_cursor()
 /* Blink cursor */
 static gboolean blink_cursor(gpointer data)
 {
-  if (text_data->window)
+  if ((text_data->window)&&(text_data->pos))
     {
       cairo_t* cr = gdk_cairo_create(text_data->window->window);
       cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
@@ -263,13 +263,8 @@ static void init_text_widget(GtkWidget *widget)
       cairo_text_extents (text_data->cr, "|" , &text_data->extents);
       text_data->max_font_height = text_data->extents.height;
       set_text_cursor(widget);
-#ifdef _WIN32
-      grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
-#endif
     }
   
-  clear_cairo_context(text_data->cr);
-
 #ifndef _WIN32
   /* Instantiate a trasparent pixmap with a black hole upon the bar area to be used as mask */
   GdkBitmap* shape = gdk_pixmap_new(NULL,  gdk_screen_width(), gdk_screen_height(), 1);
@@ -293,10 +288,13 @@ static void init_text_widget(GtkWidget *widget)
 				      shape,
 				      0, 0);
   cairo_destroy(shape_cr);
+#else
+  grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
 #endif
-
+  
   if (!text_data->pos)
     {
+	  clear_cairo_context(text_data->cr);
       text_data->pos = g_malloc (sizeof(Pos));
       text_data->pos->x = 0;
       text_data->pos->y = 0;
@@ -422,6 +420,28 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
 }
 
 
+#ifdef _WIN32
+static gboolean is_above_virtual_keyboard(gint x, gint y)
+{
+  RECT rect;
+  HWND hWnd = FindWindow(VIRTUALKEYBOARD_WINDOW_NAME, NULL);
+  if (!hWnd)
+    {
+	   return FALSE;
+	}  
+  if (!GetWindowRect(hWnd, &rect))
+    { 
+	   return FALSE;
+	}
+  if ((rect.left<x)&&(x<rect.right)&&(rect.top<y)&&(y<rect.bottom))
+  {
+     return TRUE;
+  }
+  return FALSE;
+}
+#endif
+
+  
 /* This is called when the button is lease */
 G_MODULE_EXPORT gboolean
 on_window_text_button_release (GtkWidget *win,
@@ -432,7 +452,18 @@ on_window_text_button_release (GtkWidget *win,
   if (!(ev->button == 1))
     {
       return TRUE;
-    }  
+    }
+  #ifdef _WIN32
+    gboolean above = is_above_virtual_keyboard(ev->x, ev->y);
+    if (above)
+	  {
+	     /* You have lost the focus; re get it */
+	     grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
+		 /* ignore the data; the event wil be passed to the virtual keyboard */
+	     return TRUE;
+	  }
+  #endif
+
   if ((text_data) && (text_data->pos))
     {
       save_text();

@@ -53,9 +53,13 @@
 #define VIRTUALKEYBOARD_WINDOW_NAME "IPTip_Main_Window" 
  
 #define TEXT_UI_FILE "..\\share\\ardesia\\ui\\text.glade"
-#define TEXT_MOUSE_EVENTS        ( GDK_POINTER_MOTION_MASK |    \
-				   GDK_BUTTON_PRESS_MASK |      \
-                                   GDK_BUTTON_RELEASE_MASK      \
+#define TEXT_MOUSE_EVENTS         ( GDK_POINTER_MOTION_MASK |    \
+				   GDK_BUTTON_PRESS_MASK   |    \
+				   GDK_BUTTON_RELEASE_MASK |	\
+				   GDK_PROXIMITY_IN |		\
+				   GDK_PROXIMITY_OUT |		\
+				   GDK_MOTION_NOTIFY|		\
+				   GDK_BUTTON_PRESS		\
                                    )
 
 
