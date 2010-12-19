@@ -36,13 +36,12 @@
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
   - more compact savepoint storage
-  - Better polygon recognition and drawing
   - reduce the white blinking when the windows are opened
   - email integration without spawn the xdg-email script 
 
 
 - Windows operating systems
-  - include the audio recording in the screencast;
+  - include the audio channel in the screencast;
     if it possible do it without configure the audio device name
     inside the screencast.bat
   - avoid to add the vlc.exe to PATH environment variable
@@ -53,23 +52,24 @@
 
 
 - Candidate features:
-  - Show the virtual keyboard far away from the text cursor position 
+  - Image importer
+    - image gallery, sticky notes
   - Deploy the artifact online
     - video; youtube upload
     - send saved images with email 
     - moodle integration
-  - Filler
-  - Image importer
-    - image gallery, sticky notes
   - Lazo selection tool
   - Move
   - Copy/paste
+  - Filler
   - Multi pointer support 
   - Define a configuration file and settings
     - select workspace
     - preferred colors
     - thickness size 
   - Zoom and rotate 
+  - Show the virtual keyboard far away from the text cursor position 
+  - Nnot parallel to the axis polygon recognition
 
 ===
 EOF
