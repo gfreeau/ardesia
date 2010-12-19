@@ -61,15 +61,15 @@
   - Lazo selection tool
   - Move
   - Copy/paste
-  - Filler
   - Multi pointer support 
   - Define a configuration file and settings
+    - thickness size 
     - select workspace
     - preferred colors
-    - thickness size 
-  - Zoom and rotate 
   - Show the virtual keyboard far away from the text cursor position 
-  - Nnot parallel to the axis polygon recognition
+  - Filler available for all the closed path (not only for the last one)
+  - Not parallel to the axis polygon recognition
+  - Zoom and rotate 
 
 ===
 EOF
