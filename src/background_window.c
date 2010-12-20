@@ -225,7 +225,7 @@ GtkWidget* create_background_window(gchar* backgroundimage)
   gtk_widget_set_usize(background_data->background_window, gdk_screen_width(), gdk_screen_height());
 
   /* connect all the callback from gtkbuilder xml file */
-  gtk_builder_connect_signals(background_data->backgroundWindowGtkBuilder, (gpointer) NULL);
+  gtk_builder_connect_signals(background_data->backgroundWindowGtkBuilder, (gpointer) background_data);
 
   /* This put in fullscreen and generate an exposure */
   gtk_window_fullscreen(GTK_WINDOW(background_data->background_window));
@@ -279,38 +279,6 @@ GtkWidget* get_background_window()
   return background_data->background_window;
 }
 
-
-/* Expose event in background window occurs */
-G_MODULE_EXPORT gboolean
-back_event_expose(GtkWidget *widget, 
-		  GdkEventExpose *event, 
-		  gpointer user_data)
-{
-  gint is_fullscreen = gdk_window_get_state(widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
-  if (!is_fullscreen)
-    {
-      return TRUE;
-    }
-  if (!background_data->back_cr)
-    {
-      background_data->back_cr = gdk_cairo_create(widget->window); 
-    }
-
-  if (background_data->background_image)
-    {
-      change_background_image(background_data->background_image);
-    }
-  else if (background_data->background_color)
-    {
-      change_background_color(background_data->background_color);
-    }
-  else
-    {
-      clear_background_window();    
-    }
-
-  return TRUE;
-}
 
 /* Set the background window */
 void set_background_window(GtkWidget* widget)

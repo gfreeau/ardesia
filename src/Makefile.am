@@ -36,6 +36,8 @@ ardesia_SOURCES = \
 	annotation_window_callbacks.h \
 	background_window.c \
 	background_window.h \
+	background_window_callbacks.c \
+	background_window_callbacks.h \
         broken.c \
 	broken.h \
         bezier_spline.c \
@@ -58,6 +60,8 @@ ardesia_SOURCES = \
 	color_selector.h \
         preference_dialog.c \
 	preference_dialog.h \
+	preference_dialog_callbacks.c \
+	preference_dialog_callbacks.h \
         text_window.c \
 	text_window.h \
         info_dialog.c \
