@@ -8,24 +8,19 @@
                         #    ####### ######  #######
 ==========================================================================
 
-
 - Management
-  - Register the ardesia IRC channel on freenode
+  - Ardesia fedora packaging
   - Make a pdf user manual
   - Make a video tutorial
-  - Ardesia fedora packaging
+  - Register the ardesia IRC channel on freenode
 
-  
-- Bug fix:
-  - Fix the highlighter; it doesn't work under Windows
-    because it seems that the ARGB32 support in cairo is not yet available 
-  - Fix the wrong position of the text cursor on windows
-	
-	
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
 
-
+- Bug fix:
+  - Fix the highlighter; it doesn't work under Windows
+    because it seems that the ARGB32 support in cairo is not yet available 
+	
 - Reengineering
   - icon and UI design to improve usability
   - Reduce the video size
@@ -37,8 +32,6 @@
     a more reactive undo/redo
   - more compact savepoint storage
   - reduce the white blinking when the windows are opened
-  - email integration without spawn the xdg-email script 
-
 
 - Windows operating systems
   - include the audio channel in the screencast;
@@ -49,7 +42,6 @@
     http://gimp-win.sourceforge.net/
   - Windows Xp support
   - Build a 64 bit executable version
-
 
 - Candidate features:
   - Image importer
