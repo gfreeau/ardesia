@@ -16,12 +16,10 @@ set ICECAST_PASSWORD=hackme
 set ICECAST_ADDRESS=127.0.0.1
 set ICECAST_PORT=8000
 set ICECAST_MOUNTPOINT=ardesia.ogg
-rem replace this with the name of the micropphone direct show audio input device
-set AUDIO_DEVICE="IDT high definition Codec"
 
 set RECORDER_PROGRAM=vlc.exe
-set RECORDER_PROGRAM_OPTIONS=-vvv -I dummy --dummy-quiet screen:// --screen-fps=12 :input-slave=:dshow-adev="%AUDIO_DEVICE%" --sout  "#transcode{venc=theora,vcodec=theo,vb=512,scale=0.7,acodec=vorb,ab=128,channels=2,samplerate=44100,deinterlace,audio-sync}:standard{access=file,mux=ogg,dst=%2}"
-set RECORDER_AND_FORWARD_PROGRAM_OPTIONS=-vvv -I dummy --dummy-quiet screen:// --screen-fps=12 :input-slave=:dshow-adev="%AUDIO_DEVICE%" --sout  "#transcode{venc=theora,vcodec=theo,vb=512,scale=0.7,acodec=vorb,ab=128,channels=2,samplerate=44100,deinterlace,audio-sync}:duplicate{dst=std{access=shout,mux=ogg,dst=source:%ICECAST_PASSWORD%@%ICECAST_ADDRESS%:%ICECAST_PORT%/%ICECAST_MOUNTPOINT%},dst=std{access=file,mux=ogg,dst=%2}}"
+set RECORDER_PROGRAM_OPTIONS=-vvv -I dummy --dummy-quiet screen:// --screen-fps=12 :input-slave=dshow:// :dshow-vdev="none" :dshow-adev --sout  "#transcode{venc=theora,vcodec=theo,vb=512,scale=0.7,acodec=vorb,ab=128,channels=2,samplerate=44100,audio-sync}:standard{access=file,mux=ogg,dst=%2}"
+set RECORDER_AND_FORWARD_PROGRAM_OPTIONS=-vvv -I dummy --dummy-quiet screen:// --screen-fps=12 :input-slave=dshow:// :dshow-vdev="none" :dshow-adev --sout  "#transcode{venc=theora,vcodec=theo,vb=512,scale=0.7,acodec=vorb,ab=128,channels=2,samplerate=44100,audio-sync}:duplicate{dst=std{access=shout,mux=ogg,dst=source:%ICECAST_PASSWORD%@%ICECAST_ADDRESS%:%ICECAST_PORT%/%ICECAST_MOUNTPOINT%},dst=std{access=file,mux=ogg,dst=%2}}"
 
 if ""%1"" == ""start"" goto start
 

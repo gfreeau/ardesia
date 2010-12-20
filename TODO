@@ -18,6 +18,7 @@
   - Investigate about the status and make a plan
 
 - Bug fix:
+  - Audio recording under Windows: Vlc is not able to use the input slave 
   - Fix the highlighter; it doesn't work under Windows
     because it seems that the ARGB32 support in cairo is not yet available 
 	
@@ -34,9 +35,6 @@
   - reduce the white blinking when the windows are opened
 
 - Windows operating systems
-  - include the audio channel in the screencast;
-    if it possible do it without configure the audio device name
-    inside the screencast.bat
   - avoid to add the vlc.exe to PATH environment variable
   - Create a binary installer similar to the gimp Windows installer 
     http://gimp-win.sourceforge.net/
