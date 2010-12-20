@@ -30,6 +30,8 @@ AM_CFLAGS =\
 bin_PROGRAMS = ardesia
 
 ardesia_SOURCES = \
+	bar.c \
+	bar.h \
 	bar_callbacks.c \
 	bar_callbacks.h \
 	annotation_window_callbacks.c \

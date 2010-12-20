@@ -25,7 +25,7 @@
   - icon and UI design to improve usability
   - Reduce the video size
   - Screencast recorder using vlclib instead spawn the vlc process
-  - Code review
+  - Virtual keyboard consolidation
   - Bar and transparent layer on the same window
   - Store and load the savepoints using svg files
   - cache in memory the recent savepoint; in this way we'll have 

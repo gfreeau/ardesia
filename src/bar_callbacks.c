@@ -28,7 +28,7 @@
 
 #include <utils.h>
 #include <bar_callbacks.h>
-#include <ardesia.h>
+#include <bar.h>
 #include <annotation_window.h>
 #include <background_window.h>
 #include <text_window.h>

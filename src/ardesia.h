@@ -32,22 +32,10 @@
 #include <gtk/gtk.h>
 
 
-#ifdef _WIN32
-#define UI_FILE "..\\share\\ardesia\\ui\\vertical_bar.glade"
-#define UI_HOR_FILE "..\\share\\ardesia\\ui\\horizontal_bar.glade"
-#else
-#define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/vertical_bar.glade"
-#define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/horizontal_bar.glade"
-#endif  
-
-
 #define EAST 1
 #define WEST 2
 #define NORTH 3
 #define SOUTH 4
-
-/* distance space from border to the ardesia bar in pixel unit */
-#define SPACE_FROM_BORDER 25
 
 
 typedef struct
@@ -57,43 +45,4 @@ typedef struct
   gboolean decorated;
   gint position;
 } CommandLine;
-
-
-typedef struct
-{
-  /* Is the text tool enabled */
-  gboolean text;
-
-  /* pencil is selected */
-  gboolean pencil;
-
-  /* highlighter flag */
-  gboolean highlighter;
-
-  /* rectifier flag */
-  gboolean rectifier;
-
-  /* rounder flag */
-  gboolean rounder;
-
-  /* arrow flag */
-  gboolean arrow;
-
-  /* selected color in RGBA format */
-  gchar* color;
-
-  /* selected line thickness */
-  gint thickness;
-
-  /* annotation is visible */
-  gboolean annotation_is_visible;
-
-  /* grab when leave */
-  gboolean grab;
-
-  /* Default folder where store artifacts */
-  gchar* workspace_dir;
-   
-}BarData;
-
  
