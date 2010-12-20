@@ -33,11 +33,11 @@
 
 
 #ifdef _WIN32
-#define UI_FILE "..\\share\\ardesia\\ui\\ardesia.glade"
-#define UI_HOR_FILE "..\\share\\ardesia\\ui\\ardesia_horizontal.glade"
+#define UI_FILE "..\\share\\ardesia\\ui\\vertical_bar.glade"
+#define UI_HOR_FILE "..\\share\\ardesia\\ui\\horizontal_bar.glade"
 #else
-#define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia.glade"
-#define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/ardesia_horizontal.glade"
+#define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/vertical_bar.glade"
+#define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/horizontal_bar.glade"
 #endif  
 
 

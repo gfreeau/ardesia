@@ -26,16 +26,15 @@
 #include <config.h>
 #endif
 
-
-#include <bar_callbacks.h>
 #include <utils.h>
+#include <bar_callbacks.h>
 #include <ardesia.h>
-#include <annotate.h>
-#include <background.h>
+#include <annotation_window.h>
+#include <background_window.h>
+#include <text_window.h>
 #include <color_selector.h>
 #include <preference_dialog.h>
 #include <info_dialog.h>
-#include <text_widget.h>
 #include <recorder.h>
 #include <saver.h>
 #include <pdf_saver.h>

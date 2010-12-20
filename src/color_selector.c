@@ -28,7 +28,7 @@
 
 #include <color_selector.h>
 #include <utils.h>
-#include <background.h>
+
 
 
 /* old picked color in RGBA format */

@@ -1,16 +1,16 @@
-## Process this file with automake to produce Makefile.in
+## Proess this file with automake to produce Makefile.in
 
 uidir = $(datadir)/ardesia/ui
 scriptsdir = $(datadir)/ardesia/scripts
 uipixmapsdir = $(uidir)/pixmaps
 uibackgroundsdir = $(uidir)/backgrounds
-ui_DATA = ardesia.glade \
-	ardesia_horizontal.glade \
-	preference_dialog.glade \
-	annotation.glade \
-	background.glade \
-	text.glade \
-	info_dialog.glade
+ui_DATA = vertical_bar.glade \
+	  horizontal_bar.glade \
+	  preference_dialog.glade \
+	  annotation_window.glade \
+	  background_window.glade \
+	  text_window.glade \
+	  info_dialog.glade
 
 
 if PLATFORM_WIN32
@@ -32,18 +32,18 @@ bin_PROGRAMS = ardesia
 ardesia_SOURCES = \
 	bar_callbacks.c \
 	bar_callbacks.h \
-	annotate_callbacks.c \
-	annotate_callbacks.h \
-	background.c \
-	background.h \
+	annotation_window_callbacks.c \
+	annotation_window_callbacks.h \
+	background_window.c \
+	background_window.h \
         broken.c \
 	broken.h \
         bezier_spline.c \
 	bezier_spline.h \
         pdf_saver.c \
 	pdf_saver.h \
-        annotate.c \
-	annotate.h \
+        annotation_window.c \
+	annotation_window.h \
         utils.c \
 	utils.h \
         windows_utils.c \
@@ -58,8 +58,8 @@ ardesia_SOURCES = \
 	color_selector.h \
         preference_dialog.c \
 	preference_dialog.h \
-        text_widget.c \
-	text_widget.h \
+        text_window.c \
+	text_window.h \
         info_dialog.c \
 	info_dialog.h \
         recorder.c \

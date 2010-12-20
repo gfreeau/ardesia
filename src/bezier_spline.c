@@ -23,7 +23,7 @@
 
 
 #include <bezier_spline.h>
-#include <annotate.h>
+#include <annotation_window.h>
 #include <utils.h>
 
 

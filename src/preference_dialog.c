@@ -27,8 +27,8 @@
 #endif
 
 #include <preference_dialog.h>
-#include <background.h>
-#include <annotate.h>
+#include <background_window.h>
+#include <annotation_window.h>
 #include <utils.h>
 
 

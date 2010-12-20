@@ -21,11 +21,11 @@
 #include <config.h>
 #endif
 
-#include <annotate.h>
-#include <annotate_callbacks.h>
+#include <annotation_window.h>
+#include <annotation_window_callbacks.h>
 #include <utils.h>
 #include <broken.h>
-#include <background.h>
+#include <background_window.h>
 #include <bezier_spline.h>
 
 #ifdef _WIN32

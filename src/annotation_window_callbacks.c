@@ -25,8 +25,8 @@
  * Functions for handling various (GTK+)-Events
  */
 
-#include <annotate_callbacks.h>
-#include <annotate.h>
+#include <annotation_window_callbacks.h>
+#include <annotation_window.h>
 #include <utils.h>
 
 

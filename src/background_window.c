@@ -26,9 +26,9 @@
 #include <config.h>
 #endif
 
-#include <background.h>
 #include <utils.h> 
-#include <annotate.h>
+#include <background_window.h>
+#include <annotation_window.h>
 
 
 static BackGroundData* background_data;

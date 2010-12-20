@@ -51,8 +51,7 @@
 #ifdef _WIN32
 #define VIRTUALKEYBOARD_NAME "C:\\Program Files\\Common Files\\Microsoft Shared\\ink\\TabTip.exe"
 #define VIRTUALKEYBOARD_WINDOW_NAME "IPTip_Main_Window" 
- 
-#define TEXT_UI_FILE "..\\share\\ardesia\\ui\\text.glade"
+
 #define TEXT_MOUSE_EVENTS         ( GDK_POINTER_MOTION_MASK |	\
 				    GDK_BUTTON_PRESS_MASK   |	\
 				    GDK_BUTTON_RELEASE_MASK |	\
@@ -62,9 +61,10 @@
 				    GDK_BUTTON_PRESS		\
 				    )
 
+#define TEXT_UI_FILE "..\\share\\ardesia\\ui\\text_window.glade"
 
 #else
-#define TEXT_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/text.glade"
+#define TEXT_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/text_window.glade"
 #endif 
 
 

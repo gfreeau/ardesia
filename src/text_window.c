@@ -28,9 +28,9 @@
 #include <config.h>
 #endif
 
-#include <text_widget.h>
 #include <utils.h>
-#include <annotate.h>
+#include <annotation_window.h>
+#include <text_window.h>
 
 #ifdef _WIN32
 #include <windows_utils.h>

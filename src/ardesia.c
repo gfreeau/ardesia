@@ -23,8 +23,8 @@
 
 #include <ardesia.h>
 #include <utils.h>
-#include <annotate.h>
-#include <background.h>
+#include <annotation_window.h>
+#include <background_window.h>
 #include <bar_callbacks.h>
 
 
