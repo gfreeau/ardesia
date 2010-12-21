@@ -35,7 +35,6 @@
   - reduce the white blinking when the windows are opened
 
 - Windows operating systems
-  - avoid to add the vlc.exe to PATH environment variable
   - Create a binary installer similar to the gimp Windows installer 
     http://gimp-win.sourceforge.net/
   - Windows Xp support
