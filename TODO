@@ -58,7 +58,8 @@
   - Show the virtual keyboard far away from the text cursor position 
   - Filler available for all the closed path (not only for the last one)
   - Not parallel to the axis polygon recognition
-  - Zoom and rotate 
+  - Rotate
+  - Zoom
 
 ===
 EOF
