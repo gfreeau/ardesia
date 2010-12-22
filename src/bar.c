@@ -145,7 +145,7 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
            * with the 1024x600 resolution 
            */
           file = UI_HOR_FILE;
-          commandline->position=NORTH;
+          commandline->position=SOUTH;
         }
     }
 
