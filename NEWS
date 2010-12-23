@@ -32,6 +32,8 @@ Usability:
   for the text insertion tool
 - integration with the "Florence Ramble Virtual Keyboard"
   on Linux for the insertion tool
+- vlc used to perform the recording is auto detect if it is
+  installed in a default location
 
 
 Features:
