@@ -26,18 +26,18 @@
   - Reduce the video size
   - Text insertion consolidation
   - Bar and transparent layer on the same window
-  - Screencast recorder using vlclib instead spawn the vlc process
   - Store and load the savepoints using svg files
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
   - more compact savepoint storage
   - reduce the white blinking when the windows are opened
+  - Screencast recorder using vlclib instead spawn the vlc process
 
 - Windows operating systems
-  - Create a binary installer similar to the gimp Windows installer 
-    http://gimp-win.sourceforge.net/
   - Windows Xp support
   - Build a 64 bit executable version
+  - Create a binary installer similar to the gimp Windows installer 
+    http://gimp-win.sourceforge.net/
 
 - Candidate features:
   - Image importer
