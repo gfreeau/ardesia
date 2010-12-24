@@ -55,11 +55,11 @@
     - thickness size 
     - select workspace
     - preferred colors
-  - Show the virtual keyboard far away from the text cursor position 
   - Filler available for all the closed path (not only for the last one)
+  - Zoom
+  - Show the virtual keyboard far away from the text cursor position 
   - Not parallel to the axis polygon recognition
   - Rotate
-  - Zoom
 
 ===
 EOF
