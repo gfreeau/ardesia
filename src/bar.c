@@ -181,6 +181,8 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
                              width, height,
                              commandline->position);
 
+  /* the position is calculated respect the top left corner and then I set the north west gravity */
+  gtk_window_set_gravity(GTK_WINDOW(bar_window), GDK_GRAVITY_NORTH_WEST);
   /* move the window in the desired position */
   gtk_window_move(GTK_WINDOW(bar_window), x, y);  
 
