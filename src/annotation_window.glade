@@ -1,14 +1,16 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="annotationWindow">
+    <property name="app_paintable">True</property>
+    <property name="can_focus">True</property>
+    <property name="events">GDK_EXPOSURE_MASK | GDK_POINTER_MOTION_MASK | GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_STRUCTURE_MASK | GDK_PROXIMITY_IN_MASK | GDK_PROXIMITY_OUT_MASK</property>
+    <property name="extension_events">cursor</property>
+    <property name="double_buffered">False</property>
     <property name="title" translatable="yes">window</property>
     <property name="destroy_with_parent">True</property>
     <property name="skip_taskbar_hint">True</property>
-    <property name="extension_events">cursor</property>
-    <property name="events">GDK_EXPOSURE_MASK | GDK_POINTER_MOTION_MASK | GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_STRUCTURE_MASK | GDK_PROXIMITY_IN_MASK | GDK_PROXIMITY_OUT_MASK</property>
-    <property name="app_paintable">True</property>
-    <property name="double_buffered">False</property>
     <signal name="expose_event" handler="event_expose"/>
     <signal name="motion_notify_event" handler="paintto"/>
     <signal name="button_press_event" handler="paint"/>
