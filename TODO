@@ -9,9 +9,9 @@
 ==========================================================================
 
 - Management
-  - Ardesia fedora packaging
   - Make a pdf user manual
   - Make a video tutorial
+  - Ardesia fedora packaging
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
@@ -30,14 +30,13 @@
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
   - more compact savepoint storage
-  - reduce the white blinking when the windows are opened
   - Screencast recorder using vlclib instead spawn the vlc process
 
 - Windows operating systems
   - Windows Xp support
-  - Build a 64 bit executable version
   - Create a binary installer similar to the gimp Windows installer 
     http://gimp-win.sourceforge.net/
+  - Build a 64 bit executable version
 
 - Candidate features:
   - Image importer
@@ -53,7 +52,7 @@
   - Multi pointer support 
   - Define a configuration file and settings
     - thickness size 
-    - select workspace
+    - workspace selection
     - preferred colors
   - Filler available for all the closed path (not only for the last one)
   - Zoom
