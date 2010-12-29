@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-25 19:03+0100\n"
+"POT-Creation-Date: 2010-12-29 22:37+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
@@ -14,27 +14,25 @@ msgstr ""
 "X-Poedit-Country: ITALY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../src/ardesia.c:142
-msgid "In order to run Ardesia you need to enable a composite manager"
-msgstr "Per far girare Ardesia è necessario abilitare un composite manager"
-
 #. set stop tooltip
-#: ../src/bar_callbacks.c:443 ../src/ardesia.glade.h:16
+#: ../src/bar_callbacks.c:439 ../src/horizontal_bar.glade:425
+#: ../src/vertical_bar.glade.h:17
 msgid "Record"
 msgstr "Registra"
 
 #. set stop tooltip
-#: ../src/bar_callbacks.c:454
+#: ../src/bar_callbacks.c:450
 msgid "Stop"
 msgstr "Ferma"
 
 #. set tooltip to unhide
-#: ../src/bar_callbacks.c:514 ../src/ardesia.glade.h:24
+#: ../src/bar_callbacks.c:502 ../src/horizontal_bar.glade:304
+#: ../src/vertical_bar.glade.h:23
 msgid "Unlock"
 msgstr "Sblocca"
 
 #. set tooltip to hide
-#: ../src/bar_callbacks.c:537
+#: ../src/bar_callbacks.c:528
 msgid "Lock"
 msgstr "Blocca"
 
@@ -43,7 +41,19 @@ msgstr "Blocca"
 msgid "Changing color"
 msgstr "Cambia colore"
 
-#: ../src/recorder.c:108
+#: ../src/pdf_saver.c:38
+msgid "Export as pdf"
+msgstr "Esporta come pdf"
+
+#: ../src/pdf_saver.c:46 ../src/recorder.c:149 ../src/saver.c:50
+msgid "Choose a file"
+msgstr "Scegli un file"
+
+#: ../src/pdf_saver.c:90 ../src/recorder.c:185 ../src/saver.c:97
+msgid "File Exists. Overwrite"
+msgstr "Il file esiste. Sovrascrivilo"
+
+#: ../src/recorder.c:122
 msgid ""
 "To record with Ardesia you must install the vlc program and add it to the "
 "PATH environment variable"
@@ -51,123 +61,128 @@ msgstr ""
 "Per registrare con Ardesia devi installare il programma vlc e aggiungerlo "
 "alla variabile d'ambiente PATH"
 
-#: ../src/recorder.c:130
+#: ../src/recorder.c:144
 msgid "Save video as ogv"
 msgstr "Salva il video nel formato ogv"
 
-#: ../src/recorder.c:135 ../src/saver.c:63
-msgid "Choose a file"
-msgstr "Scegli un file"
-
-#: ../src/recorder.c:171 ../src/saver.c:110
-msgid "File Exists. Overwrite"
-msgstr "Il file esiste. Sovrascrivilo"
-
-#: ../src/saver.c:55
+#: ../src/saver.c:42
 msgid "Save image"
 msgstr "Salva immagine"
 
-#: ../src/ardesia.glade.h:1
-msgid "Add to pdf"
-msgstr "Aggiungi a pdf"
+#: ../src/ardesia.c:69
+msgid "In order to run Ardesia you need to enable a composite manager"
+msgstr "Per far girare Ardesia è necessario abilitare un composite manager"
 
-#: ../src/ardesia.glade.h:2
+#: ../src/annotation_window.glade:11
+msgid "window"
+msgstr "finestra"
+
+#: ../src/background_window.glade:10 ../src/horizontal_bar.glade:8
+#: ../src/vertical_bar.glade.h:2
 msgid "Ardesia"
 msgstr "Ardesia"
 
-#: ../src/ardesia.glade.h:3
-msgid "Arrow"
-msgstr "Freccia"
-
-#: ../src/ardesia.glade.h:4
-msgid "Blue"
-msgstr "Blu"
-
-#: ../src/ardesia.glade.h:5
-msgid "Clear"
-msgstr "Pulisci"
-
-#: ../src/ardesia.glade.h:6
-msgid "Color Chooser"
-msgstr "Scegli un colore"
-
-#: ../src/ardesia.glade.h:7
-msgid "Eraser"
-msgstr "Cancellino"
-
-#: ../src/ardesia.glade.h:8
-msgid "Filler"
-msgstr "Riempi"
-
-#: ../src/ardesia.glade.h:9
-msgid "Green"
-msgstr "Verde"
-
-#: ../src/ardesia.glade.h:10
-msgid "Highlighter"
-msgstr "Evidenziatore"
-
-#: ../src/ardesia.glade.h:11
-msgid "Info"
-msgstr "Info"
-
-#: ../src/ardesia.glade.h:12
-msgid "Insert Text"
-msgstr "Inserisci testo"
-
-#: ../src/ardesia.glade.h:13
-msgid "Pencil"
-msgstr "Penna"
-
-#: ../src/ardesia.glade.h:14
-msgid "Preferences"
-msgstr "Preferenze"
-
-#: ../src/ardesia.glade.h:15
-msgid "Quit"
-msgstr "Esci"
-
-#: ../src/ardesia.glade.h:17
-msgid "Rectifier"
-msgstr "Rettifica"
-
-#: ../src/ardesia.glade.h:18
-msgid "Red"
-msgstr "Rosso"
-
-#: ../src/ardesia.glade.h:19
-msgid "Redo"
-msgstr "Ripristina"
-
-#: ../src/ardesia.glade.h:20
-msgid "Rounder"
-msgstr "Approssima"
-
-#: ../src/ardesia.glade.h:21
-msgid "Save"
-msgstr "Salva"
-
-#: ../src/ardesia.glade.h:22
+#: ../src/horizontal_bar.glade:36 ../src/vertical_bar.glade.h:21
 msgid "Thickness"
 msgstr "Spessore"
 
-#: ../src/ardesia.glade.h:23
-msgid "Undo"
-msgstr "Annulla"
+#: ../src/horizontal_bar.glade:63 ../src/vertical_bar.glade.h:7
+msgid "Drawing Mode"
+msgstr "Modalità disegno"
 
-#: ../src/ardesia.glade.h:25
-msgid "White"
-msgstr "Bianco"
+#: ../src/horizontal_bar.glade:90 ../src/vertical_bar.glade.h:9
+msgid "Filler"
+msgstr "Riempi"
 
-#: ../src/ardesia.glade.h:26
+#: ../src/horizontal_bar.glade:104 ../src/vertical_bar.glade.h:11
+msgid "Highlighter"
+msgstr "Evidenziatore"
+
+#: ../src/horizontal_bar.glade:131 ../src/vertical_bar.glade.h:3
+msgid "Arrow"
+msgstr "Freccia"
+
+#: ../src/horizontal_bar.glade:146 ../src/vertical_bar.glade.h:13
+msgid "Insert Text"
+msgstr "Inserisci testo"
+
+#: ../src/horizontal_bar.glade:161 ../src/vertical_bar.glade.h:14
+msgid "Pencil"
+msgstr "Penna"
+
+#: ../src/horizontal_bar.glade:175 ../src/vertical_bar.glade.h:8
+msgid "Eraser"
+msgstr "Cancellino"
+
+#: ../src/horizontal_bar.glade:203 ../src/vertical_bar.glade.h:4
+msgid "Blue"
+msgstr "Blu"
+
+#: ../src/horizontal_bar.glade:218 ../src/vertical_bar.glade.h:10
+msgid "Green"
+msgstr "Verde"
+
+#: ../src/horizontal_bar.glade:233 ../src/vertical_bar.glade.h:25
 msgid "Yellow"
 msgstr "Giallo"
 
-#: ../src/ardesia.glade.h:27
+#: ../src/horizontal_bar.glade:248 ../src/vertical_bar.glade.h:18
+msgid "Red"
+msgstr "Rosso"
+
+#: ../src/horizontal_bar.glade:262 ../src/vertical_bar.glade.h:24
+msgid "White"
+msgstr "Bianco"
+
+#: ../src/horizontal_bar.glade:277 ../src/vertical_bar.glade.h:6
+msgid "Color Chooser"
+msgstr "Scegli un colore"
+
+#: ../src/horizontal_bar.glade:318 ../src/vertical_bar.glade.h:5
+msgid "Clear"
+msgstr "Pulisci"
+
+#: ../src/horizontal_bar.glade:344 ../src/vertical_bar.glade.h:22
+msgid "Undo"
+msgstr "Annulla"
+
+#: ../src/horizontal_bar.glade:357 ../src/vertical_bar.glade.h:19
+msgid "Redo"
+msgstr "Ripristina"
+
+#: ../src/horizontal_bar.glade:383 ../src/vertical_bar.glade.h:15
+msgid "Preferences"
+msgstr "Preferenze"
+
+#: ../src/horizontal_bar.glade:397 ../src/vertical_bar.glade.h:20
+msgid "Save"
+msgstr "Salva"
+
+#: ../src/horizontal_bar.glade:411 ../src/vertical_bar.glade.h:1
+msgid "Add to pdf"
+msgstr "Aggiungi a pdf"
+
+#: ../src/horizontal_bar.glade:439 ../src/vertical_bar.glade.h:12
+msgid "Info"
+msgstr "Info"
+
+#: ../src/horizontal_bar.glade:440 ../src/vertical_bar.glade.h:26
 msgid "info"
 msgstr "informazioni"
 
-#: ../src/info_dialog.glade.h:1
+#: ../src/horizontal_bar.glade:454 ../src/vertical_bar.glade.h:16
+msgid "Quit"
+msgstr "Esci"
+
+#: ../src/info_dialog.glade:10
+msgid ""
+"   Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
+"    "
+msgstr ""
+"   Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
+"    "
+
+#: ../src/info_dialog.glade:13
 msgid ""
 "\n"
 "    Ardesia -- a program for painting on the screen\n"
@@ -217,30 +232,26 @@ msgstr ""
 "USA.\n"
 "   "
 
-#: ../src/info_dialog.glade.h:23
-msgid ""
-"   Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
-"    "
-msgstr ""
-"   Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
-"    "
-
-#: ../src/preference_dialog.glade.h:1
+#: ../src/preference_dialog.glade:7
 msgid "Choose the background"
 msgstr "Scegli lo sfondo"
 
-#: ../src/preference_dialog.glade.h:2
-msgid "Choose the background color"
-msgstr "Scegli il colore dello sfondo"
-
-#: ../src/preference_dialog.glade.h:3
-msgid "background color"
-msgstr "colore dello sfondo"
-
-#: ../src/preference_dialog.glade.h:4
+#: ../src/preference_dialog.glade:22
 msgid "image"
 msgstr "immagine"
 
-#: ../src/preference_dialog.glade.h:5
+#: ../src/preference_dialog.glade:36
+msgid "background color"
+msgstr "colore dello sfondo"
+
+#: ../src/preference_dialog.glade:54
+msgid "Choose the background color"
+msgstr "Scegli il colore dello sfondo"
+
+#: ../src/preference_dialog.glade:67
 msgid "none"
 msgstr "nessuno"
+
+#: ../src/text_window.glade:5
+msgid "text_window"
+msgstr "finestra inserimento testo"

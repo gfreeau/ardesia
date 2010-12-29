@@ -60,7 +60,7 @@
               <object class="GtkToolButton" id="buttonMode">
                 <property name="width_request">27</property>
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Mode</property>
+                <property name="tooltip_text" translatable="yes">Drawing Mode</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">hand</property>
                 <signal name="clicked" handler="on_toolsMode_activate"/>
