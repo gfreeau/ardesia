@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="height_request">700</property>
+    <property name="height_request">670</property>
     <property name="events">GDK_LEAVE_NOTIFY_MASK</property>
     <property name="title" translatable="yes">Ardesia</property>
     <property name="destroy_with_parent">True</property>
@@ -14,8 +14,8 @@
     <property name="opacity">0.9</property>
     <property name="startup_id">Ardesia</property>
     <signal name="destroy" handler="on_winMain_destroy_event"/>
-    <signal name="configure-event" handler="on_window_configure_event"/>
     <signal name="leave_notify_event" handler="on_winMain_leave_notify_event"/>
+    <signal name="configure_event" handler="on_window_configure_event"/>
     <signal name="enter_notify_event" handler="on_winMain_enter_notify_event"/>
     <signal name="delete_event" handler="on_winMain_delete_event"/>
     <child>
@@ -57,6 +57,33 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToolButton" id="buttonMode">
+                <property name="height_request">27</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Mode</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">hand</property>
+                <signal name="clicked" handler="on_toolsMode_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolItem" id="modeSeparatorItem">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkHSeparator" id="modeSeparator">
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToolButton" id="buttonFiller">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
@@ -64,34 +91,6 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">filler</property>
                 <signal name="clicked" handler="on_toolsFiller_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleToolButton" id="buttonRectifier">
-                <property name="height_request">27</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Rectifier</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">rectifier</property>
-                <signal name="clicked" handler="on_toolsRectifier_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleToolButton" id="buttonRounder">
-                <property name="height_request">27</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Rounder</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">rounder</property>
-                <signal name="clicked" handler="on_toolsRounder_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -483,9 +482,9 @@
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/thick.png</property>
   </object>
-  <object class="GtkImage" id="filler">
+  <object class="GtkImage" id="hand">
     <property name="visible">True</property>
-    <property name="pixbuf">pixmaps/filler.png</property>
+    <property name="pixbuf">pixmaps/hand.png</property>
   </object>
   <object class="GtkImage" id="rectifier">
     <property name="visible">True</property>
@@ -494,6 +493,10 @@
   <object class="GtkImage" id="rounder">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/rounder.png</property>
+  </object>
+  <object class="GtkImage" id="filler">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/filler.png</property>
   </object>
   <object class="GtkImage" id="highlighter">
     <property name="visible">True</property>
@@ -543,7 +546,7 @@
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/add-pdf.png</property>
   </object>
-    <object class="GtkImage" id="media-record">
+  <object class="GtkImage" id="media-record">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/media-record.png</property>
   </object>

@@ -264,55 +264,6 @@ on_toolsHighlighter_activate     (GtkToolButton   *toolbutton,
 }
 
 
-/* Push rectifier button */
-G_MODULE_EXPORT void
-on_toolsRectifier_activate       (GtkToolButton   *toolbutton,
-				  gpointer         func_data)
-{
-  BarData *bar_data = (BarData*) func_data;
-  if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
-    {
-      /* if rounder is active release it */
-      GtkToggleToolButton* rounderToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonRounder"));
-      if (gtk_toggle_tool_button_get_active(rounderToolButton))
-        {
-	  gtk_toggle_tool_button_set_active(rounderToolButton, FALSE); 
-          bar_data->rounder = FALSE;
-        }
-      bar_data->rectifier = TRUE;
-    }
-  else
-    {
-      bar_data->rectifier = FALSE;
-    }
-}
-
-
-/* Push rounder button */
-G_MODULE_EXPORT void
-on_toolsRounder_activate         (GtkToolButton   *toolbutton,
-				  gpointer         func_data)
-{
-  BarData *bar_data = (BarData*) func_data;
-  if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
-    {
-      /* if rectifier is active release it */
-      GObject* rectifier_obj= gtk_builder_get_object(gtkBuilder,"buttonRectifier");
-      GtkToggleToolButton* rectifierToolButton = GTK_TOGGLE_TOOL_BUTTON(rectifier_obj);
-      if (gtk_toggle_tool_button_get_active( rectifierToolButton))
-        {
-	  gtk_toggle_tool_button_set_active( rectifierToolButton, FALSE); 
-          bar_data->rectifier = FALSE;
-        }
-      bar_data->rounder = TRUE;
-    }
-  else
-    {
-      bar_data->rounder = FALSE;
-    }
-}
-
-
 /* Push filler button */
 G_MODULE_EXPORT void
 on_toolsFiller_activate          (GtkToolButton   *toolbutton,
@@ -343,6 +294,39 @@ on_toolsText_activate            (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) func_data;
   bar_data->text = TRUE;
   bar_data->arrow = FALSE;
+}
+
+
+/* Push mode button */
+G_MODULE_EXPORT void
+on_toolsMode_activate          (GtkToolButton   *toolbutton,
+				 gpointer         func_data)
+{
+  BarData *bar_data = (BarData*) func_data;
+  if (!bar_data->rectifier)
+    {
+       if (!bar_data->rounder)
+         {
+           //select rounder
+           gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"rounder")));
+           bar_data->rounder = TRUE;
+           bar_data->rectifier = FALSE;
+         }
+       else
+         {
+           //select rectifier
+           gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"rectifier")));
+           bar_data->rectifier = TRUE;
+           bar_data->rounder = FALSE;
+         }
+    }  
+  else
+    {
+       // select none
+       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"hand")));
+       bar_data->rectifier = FALSE;
+       bar_data->rounder = FALSE; 
+    }
 }
 
 
