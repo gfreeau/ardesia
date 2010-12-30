@@ -1,168 +1,255 @@
-
-2010-10-26 00:46  alpha@paranoici.org
-        * trunk/ardesia/src/annotate.c,
-        * trunk/ardesia/src/text_widget.c:
-	- Fix in the text insertion; the save point is added 
-          when the graphich context is pushed
-
-
-2010-10-25 12:00  alpha@paranoici.org
-        * trunk/ardesia/src/annotate.c,
-        * trunk/ardesia/src/annotate.h,
-        * trunk/ardesia/src/bezier_spline.c,
-        * trunk/ardesia/src/bezier_spline.h,
-        * trunk/ardesia/src/broken.c,
-        * trunk/ardesia/src/utils.c,
-        * trunk/ardesia/src/utils.h:
-	- Adjusted code for the spline
+2010-12-29 21:30  alpha@paranoici.org
+	* trunk/ardesia/src/bar_callbacks.c,
+	* trunk/ardesia/src/horizontal_bar.glade,
+	* trunk/ardesia/src/pixmaps/hand.png,
+	* trunk/ardesia/src/vertical_bar.glade: 
+        - Add mode button free hand, 
+          roundifier and rectifier on the mode button
 
 
-2010-10-20 03:07  alpha@paranoici.org
-        * trunk/ardesia/src/annotate.c:
-        - Layout for netbook
+2010-12-27 16:49  alpha@paranoici.org
+	* trunk/ardesia/src/annotation_window.glade: 
+        - Add has focus property
 
 
-2010-10-17 02:32  alpha@paranoici.org
-        * trunk/ardesia/src/annotate.c:
-        - Print stacktrace info in case of segfault on Linux
+2010-12-26 13:49  alpha@paranoici.org
+	* trunk/ardesia/src/bar.c: 
+        - Add the bar gravity to the north west;
+	  this fix the wrong bar location in ubuntu 10.10
 
 
-2010-10-03 17:00  alpha@paranoici.org
-	* trunk/ardesia/src/annotate.c, 
-        * trunk/ardesia/src/broken.c:
-	- Enanchement in the ellipse recognition code
+2010-12-22 16:14  alpha@paranoici.org
+	* trunk/ardesia/src/bar.c: 
+        - For the netbook layout I move the bar on south
 
 
-2010-10-02 16:49  alpha@paranoici.org
-	* trunk/ardesia/src/annotate.c,
-        * trunk/ardesia/src/background.c,
-	* trunk/ardesia/src/broken.c, 
-        * trunk/ardesia/src/pdf_saver.c:
-	- Fix the pressure when the rectifier modifier
-          is enabled
-
-
-2010-10-02 16:00  alpha@paranoici.org
-	* trunk/ardesia/src/scripts/screencast.sh: 
-        - Fix the screencast script to save the audio 
-          from the alsa pulse device on Linux
-
-
-2010-09-30 00:33  alpha@paranoici.org
-	* trunk/ardesia/src/pdf_saver.c, 
+2010-12-21 00:00  alpha@paranoici.org
+	* trunk/ardesia/TODO, 
         * trunk/ardesia/src/recorder.c,
-	* trunk/ardesia/src/saver.c: 
-        - Fix bug that cause the saving of the
-	  exported file without extension
+	* trunk/ardesia/src/scripts/screencast.bat: 
+        - Adjusted script in order to use vlc for recording 
+          also if it is not in the PATH if it is installed 
+          in a standard location
 
 
-2010-09-29 23:50  alpha@paranoici.org
-	* trunk/ardesia/src/annotate.c,
-	* trunk/ardesia/src/annotate_callbacks.c,
-	* trunk/ardesia/src/broken.c: 
-        - adjustment in pressure support
+2010-12-20 22:01  alpha@paranoici.org
+	* trunk/ardesia/TODO, 
+        * trunk/ardesia/src/scripts/screencast.bat,
+	*  trunk/ardesia/src/scripts/screencast.sh: 
+        - Seems that the audio is not recorded in windows because 
+          vlc is not able to handle a master and a input slave 
+          of different type.
+          Seems that the only way to fix vlc to do screencast with audio 
+          is implement a generic screen capture directShow source filter. 
+	  Seems that exist a program called UscreenCapture that
+	  create an emulate directshow device with the screencast usable
+	  with vlc in this way: dshow:// :dshow-vdev="UScreenCapture"
+	  Anyway the input slave doesn't require the audio device name
 
 
-2010-09-29 17:15  alpha@paranoici.org
-	* trunk/ardesia/src/annotate.c, 
-        * trunk/ardesia/src/pdf_saver.c,
-	* trunk/ardesia/src/pdf_saver.h,
-        * trunk/ardesia/src/saver.c,
-	* trunk/ardesia/src/utils.c, 
-        * trunk/ardesia/src/utils.h:
-	- Pdf export now use temp file decreasing the memory usage
-
-
-2010-09-29 15:39  alpha@paranoici.org
-	* trunk/ardesia/src/Makefile.am,
-        * trunk/ardesia/src/annotate.c,
-	* trunk/ardesia/src/annotate.h, 
-        * trunk/ardesia/src/background.c,
-	* trunk/ardesia/src/background.glade,
-	* trunk/ardesia/src/background.h, 
-        * trunk/ardesia/src/saver.c:
-        - refactoring the background window code using glade
-        - fix the opening of an image file as background 
-          with the "open with ardesia" directive on a image file 
-
-
-2010-09-28 17:32  alpha@paranoici.org
-	* trunk/ardesia/src/annotate.c,
-        * trunk/ardesia/src/annotate.h,
-	* trunk/ardesia/src/utils.c: 
-        - Now the savepoint are saved in a tmp folder decreasing
-          the memory usage 
-
-
-2010-09-26 21:40  alpha@paranoici.org
-	* trunk/ardesia/src/background.c:
-        - Fix a problem that broke the color selection preference on windows 
-          since the revision 1305
-
-
-2010-09-26 17:17  alpha@paranoici.org
-	* trunk/ardesia/src/annotate.c, 
-        * trunk/ardesia/src/bezier_spline.c,
-	* trunk/ardesia/src/broken.c,
-        * trunk/ardesia/src/broken.h: 
-        - Better shape recognition for the roundifier; 
-          now an improved bezier alghorithm and 
-          an ellipse detection system has been included
-
-
-2010-09-23 08:55  alpha@paranoici.org
-	* trunk/ardesia/src/pdf_saver.c, 
-        * trunk/ardesia/src/pdf_saver.h:
-	- Pdf saving using gthread
-
-
-2010-09-22 23:40  alpha@paranoici.org
-	* trunk/ardesia/src/annotate.c,
-	* trunk/ardesia/src/annotation.glade: 
-        - Fix the device initialization; 
-          now you could use multiple devices at the same time 
-          This commit fix the super bug that happened with the
-	  wiimote since the 1255 revision that caused a line join 
-          between the old path and the new one. 
-
-
-2010-09-22 12:45  alpha@paranoici.org
-	* trunk/ardesia/src/pdf_saver.c, 
-        * trunk/ardesia/src/pdf_saver.h:
-	- Better implementation with pthread for the pdf export;
-
-
-2010-09-16 21:50  alpha@paranoici.org
-	* trunk/ardesia/NEWS, 
-        * trunk/ardesia/README,
-        * trunk/ardesia/TODO,
-	* trunk/ardesia/src/text_widget.c: 
-        - Some update for windows; now we are using the gtk 2.16.6, 
-          this will be included in the windows binary package
-
-
-2010-09-16 14:59  alpha@paranoici.org
-	* trunk/ardesia/src/annotate.c, 
-        * trunk/ardesia/src/ardesia.c,
-	* trunk/ardesia/src/ardesia.h, 
-        * trunk/ardesia/src/background.c,
-	* trunk/ardesia/src/color_selector.c,
-	* trunk/ardesia/src/pdf_saver.c,
-	* trunk/ardesia/src/preference_dialog.c,
-	* trunk/ardesia/src/recorder.c, 
-        * trunk/ardesia/src/saver.c,
+2010-12-15 19:36  alpha@paranoici.org
 	* trunk/ardesia/src/text_widget.c,
-        * trunk/ardesia/src/utils.c,
-	* trunk/ardesia/src/utils.h: 
-        - Code modification using the more safe glib string function
-          instead the standard library
+	* trunk/ardesia/src/text_widget.h:
+        - Better keyboard integration on windows
 
 
-2010-09-16 10:19  alpha@paranoici.org
-	* trunk/ardesia/src/annotate.c,
+2010-12-15 16:01  alpha@paranoici.org
+	* trunk/ardesia/src/Makefile.am, 
+        * trunk/ardesia/src/ardesia.c,
+	* trunk/ardesia/src/glibc_backtrace.c,
+	* trunk/ardesia/src/glibc_backtrace.h,
+	* trunk/ardesia/src/linux_backtrace.c,
+	* trunk/ardesia/src/linux_backtrace.h:
+        - Change in backtrace system in order to support backtrace on BSD
+
+
+2010-12-15 01:19  alpha@paranoici.org
+	* trunk/ardesia/src/text.glade,
+        * trunk/ardesia/src/text_widget.c:
+	- Some adjustment in the text insertion mode to work with wacom
+	  tablet on linux
+
+
+2010-12-12 14:49  alpha@paranoici.org
+	* trunk/ardesia/TODO, 
+        * trunk/ardesia/src/text_widget.c,
+	* trunk/ardesia/src/text_widget.h:
+        - Implemented the hide of the "text input panel" when the cusor 
+          is above the bar Has been scheduled a better integration that 
+          will show the keyboard far away by the text cursor position 
+          to avoid the overlapping. 
+          To do this task it is needed investigate furthermore about the
+	  florence and "text input panel" API or if it is possible simply
+	  moving the window
+
+
+2010-12-11 17:36  alpha@paranoici.org
+	* trunk/ardesia/NEWS, trunk/ardesia/TODO,
+        * trunk/ardesia/src/text_widget.c,
+	* trunk/ardesia/src/text_widget.h,
+	* trunk/ardesia/src/windows_utils.c,
+	* trunk/ardesia/src/windows_utils.h: 
+        - Lazy integration with Tablet PC Input Panel this is shown 
+          (if it is installed) when you are in the text insertion mode
+
+
+2010-12-10 18:51  alpha@paranoici.org
+	* trunk/ardesia/TODO, 
+        * trunk/ardesia/src/windows_utils.c: 
+        - After a day now we have the definitive code to open the default
+          mailer on Windows
+
+
+2010-12-10 16:21  alpha@paranoici.org
+	* trunk/ardesia/src/background.c,
         * trunk/ardesia/src/pdf_saver.c,
-	* trunk/ardesia/src/text_widget.c: 
-        - Some adjustment Patch the text code to avoid to write upon the bar
+	* trunk/ardesia/src/utils.c, 
+        * trunk/ardesia/src/windows_utils.c,
+	* trunk/ardesia/src/windows_utils.h: 
+        - First email send implementation for windows
 
 
+2010-12-09 17:16  alpha@paranoici.org
+	* trunk/ardesia/src/Makefile.am,
+        * trunk/ardesia/src/text.glade,
+	* trunk/ardesia/src/text_widget.c,
+	*  trunk/ardesia/src/text_widget.h: 
+        - Refactored code using gtkbuilder for the text window
+
+
+2010-12-09 15:34  alpha@paranoici.org
+	* trunk/ardesia/src/ardesia.c,
+        * trunk/ardesia/src/bar_callbacks.h,
+	* trunk/ardesia/src/text_widget.c,
+	* trunk/ardesia/src/text_widget.h, 
+        * trunk/ardesia/src/utils.h: 
+        - New cursor for text insertion to be discriminated 
+          with the blinking focus
+
+
+2010-12-08 16:44  alpha@paranoici.org
+	* trunk/ardesia/NEWS, 
+        * trunk/ardesia/TODO,
+	* trunk/ardesia/src/ardesia.c,
+        * trunk/ardesia/src/bar_callbacks.c:
+	- Fix unlock in Windows 
+        - Update readable files
+
+
+2010-12-07 09:49  alpha@paranoici.org
+	* trunk/ardesia/src/Makefile.am, 
+        * trunk/ardesia/src/ardesia.c,
+	* trunk/ardesia/src/text_widget.c, 
+        * trunk/ardesia/src/utils.c,
+	* trunk/ardesia/src/utils.h,
+	* trunk/ardesia/src/windows_backtrace.c,
+	* trunk/ardesia/src/windows_backtrace.h: 
+        - First implementation of backtrace on windows 
+          it is done using some code licensed with
+	  the new bsd license from the backtrace-mingw code
+
+
+2010-12-02 16:21  alpha@paranoici.org
+	* trunk/ardesia/src/annotate.c, 
+        * trunk/ardesia/src/broken.c: 
+        - Fix a bug that freeze the program with 3 point and the rounder selected
+
+
+2010-11-29 09:25  alpha@paranoici.org
+	* trunk/ardesia/TODO, 
+        * trunk/ardesia/po/LINGUAS,
+	* trunk/ardesia/po/es.po, 
+        * trunk/ardesia/po/it.po: 
+        - Add french translation
+
+
+2010-11-21 19:27  alpha@paranoici.org
+	* trunk/ardesia/TODO, 
+        * trunk/ardesia/src/text_widget.c,
+	* trunk/ardesia/src/text_widget.h: 
+        - Implementation of blinking cursor in the text insertion
+
+
+2010-11-18 15:00  alpha@paranoici.org
+	* trunk/ardesia/TODO, 
+        * trunk/ardesia/src/text_widget.c: 
+        - Better integration with the florence-ramble virtualkeyboard
+
+
+2010-11-16 23:00  alpha@paranoici.org
+	* trunk/ardesia/src/text_widget.c:
+        - The keyboard appear only after that you have selected the point 
+          where do you want write
+
+
+2010-11-16 16:39  alpha@paranoici.org
+	* trunk/ardesia/TODO, trunk/ardesia/src/pdf_saver.c: 
+        - The code to send pdf and the stacktrace when a problem occurs run fine
+
+
+2010-11-16 16:24  alpha@paranoici.org
+	* trunk/ardesia/INSTALL, 
+        * trunk/ardesia/TODO,
+	* trunk/ardesia/src/ardesia.c, 
+        * trunk/ardesia/src/pdf_saver.c:
+	- First implemetation for the automatic trace if a segfault occurs
+
+
+2010-11-16 09:46  alpha@paranoici.org
+	* trunk/ardesia/src/bar_callbacks.c: 
+        - If the eraser tool is selected and you choose a new color than 
+          the pen is retaken by the program
+
+
+2010-11-16 00:55  alpha@paranoici.org
+	* trunk/ardesia/src/text_widget.c:
+        - Adjustement in the text widget and virtual keyboard integration
+
+
+2010-11-15 18:02  alpha@paranoici.org
+	* trunk/ardesia/src/bar_callbacks.c,
+	* trunk/ardesia/src/text_widget.c,
+	* trunk/ardesia/src/text_widget.h: 
+        - First realistic implementation for the virtual keyboard integration;
+          The two issue to be improved are 
+          - hide-unhide the keyboard instead kill and reinstantiate a new process 
+          - Decide the position of the virtual keyboard and show it far 
+            from the mouse pointer to deny the overriding of the text and the keyboard 
+          Anyway this issue are postponed because to do this is needed a virtual keyboard 
+          api that it is not available at the moment
+
+
+2010-11-15 16:26  alpha@paranoici.org
+	* trunk/ardesia/TODO, 
+        * trunk/ardesia/src/annotate.h,
+	* trunk/ardesia/src/text_widget.c,
+	* trunk/ardesia/src/text_widget.h: 
+        - First implementation in which autoappear the virtual keyboard
+
+
+2010-11-15 15:45  alpha@paranoici.org
+	* trunk/ardesia/TODO:
+        - Multipage support will not implemented
+	  Using Ardesia with a pdfviewer such as evince or enice
+          can be a good solution to have the same result
+
+
+2010-11-15 15:08  alpha@paranoici.org
+
+	* trunk/ardesia/TODO, 
+        * trunk/ardesia/src/bar_callbacks.c,
+	* trunk/ardesia/src/bar_callbacks.h: 
+        - Now if a program start in fullscreen mode 
+          Ardesia goes above the program When the unlock button is pressed 
+          ardesia try periodically to stay above until to the locking
+
+
+2010-11-06 18:08  alpha@paranoici.org
+	* trunk/ardesia/configure.ac,
+        * trunk/ardesia/src/ardesia.c,
+	* trunk/ardesia/src/info_dialog.c,
+	* trunk/ardesia/src/info_dialog.glade: 
+        - The version in about dialog is setted by code; 
+          now the release number might be change only in
+	  the configure.ac file
 

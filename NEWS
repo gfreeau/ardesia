@@ -28,6 +28,8 @@ Usability:
   implemented a new text insertion cursor, 
   when you click on the page a new cursor blinks on
   the text focus
+- New drawing mode tool: you can select the free hand mode,
+  the roundifier or the rectifier
 - integration with the "Tablet PC Input Panel" on windows
   for the text insertion tool
 - integration with the "Florence Ramble Virtual Keyboard"
