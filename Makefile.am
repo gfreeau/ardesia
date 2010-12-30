@@ -37,7 +37,7 @@ DISTCLEANFILES = intltool-extract \
 
 deb:
 	debuild -us -uc -b
-	mv ../ardesia_*.deb .
+	mv ../$(PACKAGE_NAME)_$(PACKAGE_VERSION)-*.deb .
 
 update-po:
 	(cd po; $(MAKE) update-po)
