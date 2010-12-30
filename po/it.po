@@ -88,7 +88,7 @@ msgstr "Spessore"
 
 #: ../src/horizontal_bar.glade:63 ../src/vertical_bar.glade.h:7
 msgid "Drawing Mode"
-msgstr "Modalità disegno"
+msgstr "Modalita' disegno"
 
 #: ../src/horizontal_bar.glade:90 ../src/vertical_bar.glade.h:9
 msgid "Filler"
