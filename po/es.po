@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-29 22:37+0100\n"
 "PO-Revision-Date: \n"
-"Last-Translator: alpha <alpha@paranoici.org>\n"
+"Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr "Cambiar el color"
 
 #: ../src/pdf_saver.c:38
 msgid "Export as pdf"
-msgstr ""
+msgstr "Exportar como PDF"
 
 #: ../src/pdf_saver.c:46 ../src/recorder.c:149 ../src/saver.c:50
 msgid "Choose a file"
@@ -73,7 +73,7 @@ msgstr "Para ejecutar Ardesia necesita habilitar el administrador compuestos"
 
 #: ../src/annotation_window.glade:11
 msgid "window"
-msgstr ""
+msgstr "Fenetre"
 
 #: ../src/background_window.glade:10 ../src/horizontal_bar.glade:8
 #: ../src/vertical_bar.glade.h:2
@@ -252,4 +252,4 @@ msgstr "ninguna"
 
 #: ../src/text_window.glade:5
 msgid "text_window"
-msgstr ""
+msgstr "fenetre d'entrée de texte"

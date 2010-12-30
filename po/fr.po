@@ -76,7 +76,7 @@ msgstr ""
 
 #: ../src/annotation_window.glade:11
 msgid "window"
-msgstr ""
+msgstr "fenetre"
 
 #: ../src/background_window.glade:10 ../src/horizontal_bar.glade:8
 #: ../src/vertical_bar.glade.h:2
