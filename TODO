@@ -34,7 +34,6 @@
   - Screencast recorder using vlclib instead spawn the vlc process
 
 - Windows operating systems
-  - Windows Xp support
   - Create a binary installer similar to the gimp Windows installer 
     http://gimp-win.sourceforge.net/
   - Build a 64 bit executable version
@@ -45,9 +44,9 @@
   - Lazo selection tool
   - Export image in a library
   - Deploy the artifact online
-    - video; youtube upload
     - send saved images with email 
     - moodle integration
+    - video; youtube upload
   - Move
   - Copy/paste
   - Multi pointer support 
@@ -55,7 +54,7 @@
     - thickness size 
     - workspace selection
     - preferred colors
-  - Filler available for all the closed path (not only for the last one)
+  - Filler available for all the closed path (not for the last one only)
   - Zoom
   - Show the virtual keyboard far away from the text cursor position 
   - Not parallel to the axis polygon recognition
