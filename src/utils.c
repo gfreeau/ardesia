@@ -335,3 +335,20 @@ void send_trace_with_email(gchar* attachment)
   gchar* body = "Dear ardesia developer group,\nAn unhandled application error occurred, please for details see the attachment with the stack trace.";
   send_email(to, subject, body, attachment);
 }
+
+
+/* Is the desktop manager gnome */
+gboolean is_gnome()
+{
+#ifdef _WIN32
+  return FALSE;
+#endif
+  char* current_desktop = getenv("XDG_CURRENT_DESKTOP");
+  if ((current_desktop) && (strcmp(current_desktop,"GNOME")!=0)) {
+    free(current_desktop);
+    return FALSE;
+  }
+  return TRUE;
+}
+
+

@@ -42,7 +42,14 @@ static TextData* text_data = NULL;
 
 /* Start the virtual keyboard */
 static void start_virtual_keyboard()
-{ 
+{
+#ifdef _linux
+  if (!(is_gnome()))
+    {
+      return;
+    }
+#endif
+   
   gchar* argv[2] = {VIRTUALKEYBOARD_NAME, (gchar*) 0};
 
   g_spawn_async (NULL /*working_directory*/,
@@ -59,6 +66,12 @@ static void start_virtual_keyboard()
 /* Stop the virtual keyboard */
 static void stop_virtual_keyboard()
 {
+#ifdef _linux
+  if (!(is_gnome()))
+    {
+      return;
+    }
+#endif
   if (text_data->virtual_keyboard_pid > 0)
     { 
       /* @TODO replace this with the cross plattform g_pid_terminate when it will available */

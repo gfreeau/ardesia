@@ -197,3 +197,7 @@ void send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment);
 
 /* Send trace with email */
 void send_trace_with_email(gchar* attachment);
+
+
+/* Is the desktop manager gnome */
+gboolean is_gnome();
