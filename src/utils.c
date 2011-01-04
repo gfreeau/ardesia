@@ -343,11 +343,14 @@ gboolean is_gnome()
 #ifdef _WIN32
   return FALSE;
 #endif
-  char* current_desktop = getenv("XDG_CURRENT_DESKTOP");
-  if ((current_desktop) && (strcmp(current_desktop,"GNOME")!=0)) {
-    free(current_desktop);
-    return FALSE;
-  }
+
+  gchar* current_desktop = getenv("XDG_CURRENT_DESKTOP");
+  if (current_desktop)
+    {
+      if (strcmp(current_desktop,"GNOME")!=0) {
+	return FALSE;
+      }
+    }
   return TRUE;
 }
 
