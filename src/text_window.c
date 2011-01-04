@@ -43,7 +43,7 @@ static TextData* text_data = NULL;
 /* Start the virtual keyboard */
 static void start_virtual_keyboard()
 {
-#ifdef _linux
+#ifdef linux
   if (!(is_gnome()))
     {
       return;
@@ -66,7 +66,7 @@ static void start_virtual_keyboard()
 /* Stop the virtual keyboard */
 static void stop_virtual_keyboard()
 {
-#ifdef _linux
+#ifdef linux
   if (!(is_gnome()))
     {
       return;
