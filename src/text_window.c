@@ -305,7 +305,7 @@ static void init_text_widget(GtkWidget *widget)
   grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
 #endif
   
-  if ((!text_data->letterlist) && (text_data->blink_show))
+  if (!text_data->letterlist)
     {
       clear_cairo_context(text_data->cr);
     }
