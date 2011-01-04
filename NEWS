@@ -30,10 +30,9 @@ Usability:
   the text focus
 - New drawing mode tool: you can select the free hand mode,
   the roundifier or the rectifier
-- integration with the "Tablet PC Input Panel" on windows
-  for the text insertion tool
-- integration with the "Florence Ramble Virtual Keyboard"
-  on Linux for the insertion tool
+- insertion tool integration with the "Tablet PC Input Panel" on windows
+- insertion tool integration with the "Florence Ramble Virtual Keyboard"
+  on Linux in the Gnome Desktop environment
 - vlc used to perform the recording is auto detect if it is
   installed in a default location
 
