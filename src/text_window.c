@@ -325,9 +325,9 @@ static void save_text()
 {
   if (text_data)
     {
+      stop_timer(); 
       text_data->blink_show=FALSE;
       blink_cursor(NULL);   
-      stop_timer(); 
       if (text_data->letterlist)
 	{
 	  annotate_push_context(text_data->cr);
@@ -364,9 +364,9 @@ key_snooper(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     return TRUE;
   }
   
+  stop_timer(); 
   text_data->blink_show=FALSE;
   blink_cursor(NULL);   
-  stop_timer(); 
  
   if ((event->keyval == GDK_BackSpace) ||
       (event->keyval == GDK_Delete))
@@ -573,7 +573,7 @@ void stop_text_widget()
 	{
 	  gtk_key_snooper_remove(text_data->snooper_handler_id);
 	  text_data->snooper_handler_id = 0;
-	}
+	}      
       save_text();
       destroy_text_window();
       if (text_data->cr)
