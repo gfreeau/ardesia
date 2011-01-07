@@ -113,6 +113,10 @@ static void set_the_best_colormap()
       gtk_widget_set_default_colormap(colormap);
       gdk_colormap_unref(colormap);
     }
+  else
+    {
+      g_warning("Screen doesn't support alpha channel\n");
+    }
 }
 
 
