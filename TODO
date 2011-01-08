@@ -20,12 +20,15 @@
   - Audio recording under Windows: Vlc is not able to use the input slave 
   - Fix the highlighter; it doesn't work under Windows
     because it seems that the ARGB32 support in cairo is not yet available 
+
+- Maintaining
+  - gtk 2.22
+  - Ubuntu 10.10
 	
 - Reengineering
-  - icon and UI design to improve usability
-  - Reduce the video size
   - Text insertion consolidation
   - Bar and transparent layer on the same window
+  - Reduce the video size
   - Store and load the savepoints using svg files
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
