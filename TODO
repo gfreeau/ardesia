@@ -12,6 +12,10 @@
   - Make a pdf user manual
   - Make a video tutorial
   - Ardesia fedora packaging
+  - Windows operating systems
+    - Create a binary installer similar to the gimp Windows installer 
+      http://gimp-win.sourceforge.net/
+    - Build a 64 bit executable version
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
@@ -30,11 +34,6 @@
   - Use double buffered windows to have a smoother exposure to the eye 
   - more compact savepoint storage
   - Screencast recorder using vlclib instead spawn the vlc process
-
-- Windows operating systems
-  - Create a binary installer similar to the gimp Windows installer 
-    http://gimp-win.sourceforge.net/
-  - Build a 64 bit executable version
 
 - Candidate features:
   - Image importer
