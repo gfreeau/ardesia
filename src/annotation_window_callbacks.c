@@ -68,13 +68,12 @@ event_expose(GtkWidget *widget,
       /* The hdc has depth 32 and the technology is DT_RASDISPLAY */
       HDC hdc = GetDC(GDK_WINDOW_HWND(data->annotation_window->window));
       /* 
-       * @TODO Use an HDC that support the ARGBA32 format to support the alpha channel and the highlighter
+       * @TODO Use an HDC that support the ARGB32 format to support the alpha channel and the highlighter
        * In the documentation is written that the now the resulting surface is in RGB24 format
        * 
        */
       cairo_surface_t* surface = cairo_win32_surface_create(hdc);
-      /* Patching cairo adding the cairo_win32_surface_create_for_dc function could fix */
-      //cairo_surface_t* surface = cairo_win32_surface_create_for_dc(hdc, CAIRO_FORMAT_ARGB32, data->width, data->height);
+
       data->annotation_cairo_context = cairo_create(surface);
 #else
       data->annotation_cairo_context = gdk_cairo_create(data->annotation_window->window);  
