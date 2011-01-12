@@ -15,7 +15,7 @@
   - Windows operating systems
     - Create a binary installer similar to the gimp Windows installer 
       http://gimp-win.sourceforge.net/
-	- gtk 2.22
+    - gtk 2.22
     - Build a 64 bit executable version
 
 - MacOsX-quartz porting

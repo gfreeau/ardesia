@@ -2,7 +2,7 @@
 <interface>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="text_window">
-    <property name="title" translatable="yes">text_window</property>
+    <property name="title">text_window</property>
     <property name="destroy_with_parent">True</property>
     <property name="skip_taskbar_hint">True</property>
         <property name="extension_events">cursor</property>

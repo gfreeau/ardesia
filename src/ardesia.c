@@ -36,12 +36,19 @@
 #endif
 
 
+static void print_version()
+{
+  g_printf("Ardesia %s; the free digital sketchpad\n\n", PACKAGE_VERSION);
+  exit(1);
+}
+
 /* Print the command line help */
 static void print_help()
 {
   gchar* year = "2009-2010";
   gchar* author = "Pietro Pilolli";
-  g_printf("Usage: ardesia [options] [filename]\n\n");
+  g_printf("Usage: %s [options] [filename]\n\n", PACKAGE_NAME);
+  g_printf("Ardesia the free digital sketchpad\n\n");
   g_printf("options:\n");
   g_printf("  --verbose ,\t-v\t\tEnable verbose mode to see the logs\n");
   g_printf("  --decorate,\t-d\t\tDecorate the window with the borders\n");
@@ -54,7 +61,7 @@ static void print_help()
   g_printf("\n");
   g_printf("filename:\t  \t\tThe file containig the image to be be used as background\n");
   g_printf("\n");
-  g_printf("Ardesia %s (C) %s %s\n", VERSION, year, author);
+  g_printf("%s (C) %s %s\n", PACKAGE_STRING, year, author);
   exit(1);
 }
 
@@ -139,7 +146,8 @@ static CommandLine* parse_options(gint argc, char *argv[])
 	  /* These options set a flag. */
 	  {"help", no_argument,       0, 'h'},
           {"decorated", no_argument,  0, 'd'},
-	  {"verbose", no_argument,       0, 'v'},
+	  {"verbose", no_argument,    0, 'V' },
+          {"version", no_argument,    0, 'v'},
 	  /* These options don't set a flag.
 	     We distinguish them by their indices. */
 	  {"gravity", required_argument, 0, 'g'},
@@ -159,10 +167,13 @@ static CommandLine* parse_options(gint argc, char *argv[])
 	case 'h':
 	  print_help();
 	  break;
+        case 'v':
+	  print_version();
+	  break;
         case 'd':
 	  commandline->decorated=TRUE;
 	  break;
-	case 'v':
+	case 'V':
 	  commandline->debug=TRUE;
 	  break;
 	case 'g':
