@@ -208,6 +208,34 @@ gboolean inside_bar_window(gdouble xp, gdouble yp)
 }
 
 
+/* Drill the gdkwindow in the area where the ardesia bar is located */
+void drill_window_in_bar_area(GdkWindow* window)
+{
+  /* Instantiate a trasparent pixmap with a black hole upon the bar area to be used as mask */
+  GdkBitmap* shape = gdk_pixmap_new(NULL,  gdk_screen_width(), gdk_screen_height(), 1);
+  cairo_t* shape_cr = gdk_cairo_create(shape);
+
+  cairo_set_operator(shape_cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_rgba (shape_cr, 1, 1, 1, 1);
+  cairo_paint(shape_cr);
+
+  GtkWidget* bar= get_bar_window();
+  int x,y,width,height;
+  gtk_window_get_position(GTK_WINDOW(bar),&x,&y);
+  gtk_window_get_size(GTK_WINDOW(bar),&width,&height);
+
+  cairo_set_operator(shape_cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_rgba (shape_cr, 0, 0, 0, 0);
+  cairo_rectangle(shape_cr, x, y, width, height);
+  cairo_fill(shape_cr);	
+
+  gdk_window_input_shape_combine_mask(window,
+				      shape,
+				      0, 0);
+  cairo_destroy(shape_cr);
+}
+
+
 /* 
  * Get the current date and format in a printable format; 
  * the returned value must be free with the g_free 

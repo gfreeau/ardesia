@@ -86,7 +86,6 @@ event_expose(GtkWidget *widget,
         }     
 		
       annotate_clear_screen();
-      
       annotate_acquire_grab();
 		      
     }
@@ -124,7 +123,7 @@ paint(GtkWidget *win,
     }
 
 #ifdef _WIN32
-  if (inside_bar_window(ev->x, ev->y))
+  if (inside_bar_window(ev->x_root, ev->y_root))
     {
       /* the point is inside the ardesia bar then ungrab */
       annotate_release_grab();
@@ -183,7 +182,7 @@ paintto(GtkWidget *win,
     }
   
 #ifdef _WIN32
-  if (inside_bar_window(ev->x, ev->y))
+  if (inside_bar_window(ev->x_root, ev->y_root))
     {
       if (data->debug)
 	{    
@@ -276,7 +275,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
     }
 
 #ifdef _WIN32
-  if (inside_bar_window(ev->x, ev->y))
+  if (inside_bar_window(ev->x_root, ev->y_root))
     /* point is in the ardesia bar */
     {
       /* the last point was outside the bar then ungrab */

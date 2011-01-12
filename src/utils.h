@@ -143,6 +143,10 @@ void clear_cairo_context(cairo_t* cr);
 gboolean inside_bar_window(gdouble xp, gdouble yp);
 
 
+/* Drill the gdkwindow in the area where the ardesia bar is located */
+void drill_window_in_bar_area(GdkWindow* window);
+
+
 /*
  * Take a rgba string and return the pointer to the allocated GdkColor 
  * neglecting the alpha channel

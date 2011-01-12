@@ -278,30 +278,9 @@ static void init_text_widget(GtkWidget *widget)
       set_text_cursor(widget);
     }
   
-#ifndef _WIN32
-  /* Instantiate a trasparent pixmap with a black hole upon the bar area to be used as mask */
-  GdkBitmap* shape = gdk_pixmap_new(NULL,  gdk_screen_width(), gdk_screen_height(), 1);
-  cairo_t* shape_cr = gdk_cairo_create(shape);
-
-  cairo_set_operator(shape_cr,CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgba (shape_cr, 1, 1, 1, 1);
-  cairo_paint(shape_cr);
-
-  GtkWidget* bar= get_bar_window();
-  int x,y,width,height;
-  gtk_window_get_position(GTK_WINDOW(bar),&x,&y);
-  gtk_window_get_size(GTK_WINDOW(bar),&width,&height);
-
-  cairo_set_operator(shape_cr,CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgba (shape_cr, 0, 0, 0, 0);
-  cairo_rectangle(shape_cr, x, y, width, height);
-  cairo_fill(shape_cr);	
-
-  gdk_window_input_shape_combine_mask(text_data->window->window,
-				      shape,
-				      0, 0);
-  cairo_destroy(shape_cr);
-#else
+    drill_window_in_bar_area(text_data->window->window);
+  
+#ifdef _WIN32
   grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
 #endif
   
@@ -471,7 +450,7 @@ on_window_text_button_release (GtkWidget *win,
       return TRUE;
     }
 #ifdef _WIN32
-  gboolean above = is_above_virtual_keyboard(ev->x, ev->y);
+  gboolean above = is_above_virtual_keyboard(ev->x_root, ev->y_root);
   if (above)
     {
       /* You have lost the focus; re get it */
@@ -485,8 +464,8 @@ on_window_text_button_release (GtkWidget *win,
     {
       save_text();
   
-      text_data->pos->x = ev->x;
-      text_data->pos->y = ev->y;
+      text_data->pos->x = ev->x_root;
+      text_data->pos->y = ev->y_root;
       move_editor_cursor();
 
       stop_virtual_keyboard();
@@ -512,7 +491,7 @@ on_window_text_cursor_motion(GtkWidget *win,
 			     gpointer func_data)
 {
 #ifdef _WIN32
-  if (inside_bar_window(ev->x, ev->y))
+  if (inside_bar_window(ev->x_root, ev->y_root))
     {
       stop_text_widget();
     }

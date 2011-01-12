@@ -15,47 +15,42 @@
   - Windows operating systems
     - Create a binary installer similar to the gimp Windows installer 
       http://gimp-win.sourceforge.net/
+	- gtk 2.22
     - Build a 64 bit executable version
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
-
-- Maintaining
-  - gtk 2.22
-  - Ubuntu 10.10
-	
+  
 - Reengineering
   - Text insertion consolidation
   - Bar and transparent layer on the same window
-  - Reduce the video size
   - Store and load the savepoints using svg files
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
   - Use double buffered windows to have a smoother exposure to the eye 
   - more compact savepoint storage
-  - Screencast recorder using vlclib instead spawn the vlc process
+  - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
+  - Create an Ardesia folder on desktop and put all the saved file inside it
   - Image importer
     - image gallery, sticky notes
   - Lazo selection tool
   - Export image in a library
   - Deploy the artifact online
+    - video; youtube upload
     - send saved images with email 
     - moodle integration
-    - video; youtube upload
   - Move
   - Copy/paste
   - Multi pointer support 
   - Define a configuration file and settings
     - thickness size 
-    - workspace selection
-    - preferred colors
   - Filler available for all the closed path (not for the last one only)
   - Zoom
   - Show the virtual keyboard far away from the text cursor position 
   - Not parallel to the axis polygon recognition
-  - Rotate
+  - Rotate elements
 
 ===
 EOF
