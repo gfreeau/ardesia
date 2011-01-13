@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-12 18:54+0100\n"
+"POT-Creation-Date: 2011-01-13 17:16+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
@@ -14,130 +14,111 @@ msgstr ""
 "X-Poedit-Country: SPAIN\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../src/ardesia.c:76
-msgid "In order to run Ardesia you need to enable a composite manager"
-msgstr "Para ejecutar Ardesia necesita habilitar el administrador compuestos"
-
-#. set stop tooltip
-#: ../src/bar_callbacks.c:439 ../src/horizontal_bar.glade:424
-#: ../src/vertical_bar.glade.h:16
-msgid "Record"
-msgstr "Grabar"
-
-#. set stop tooltip
-#: ../src/bar_callbacks.c:450
-msgid "Stop"
-msgstr "Detener"
-
-#. set tooltip to unhide
-#: ../src/bar_callbacks.c:502 ../src/horizontal_bar.glade:303
-#: ../src/vertical_bar.glade.h:22
-msgid "Unlock"
-msgstr "Desbloquear"
-
-#. set tooltip to hide
-#: ../src/bar_callbacks.c:528
-msgid "Lock"
-msgstr "Bloquear"
-
-#. open color widget
-#: ../src/color_selector.c:49
-msgid "Changing color"
-msgstr "Cambiar el color"
-
-#: ../src/horizontal_bar.glade:35 ../src/vertical_bar.glade.h:20
+#: ../data/horizontal_bar.glade:35 ../data/vertical_bar.glade.h:20
 msgid "Thickness"
 msgstr "Espesor"
 
-#: ../src/horizontal_bar.glade:62 ../src/vertical_bar.glade.h:6
+#: ../data/horizontal_bar.glade:62 ../data/vertical_bar.glade.h:6
 msgid "Drawing Mode"
 msgstr "Modo del dibujo"
 
-#: ../src/horizontal_bar.glade:89 ../src/vertical_bar.glade.h:8
+#: ../data/horizontal_bar.glade:89 ../data/vertical_bar.glade.h:8
 msgid "Filler"
 msgstr "Relleno"
 
-#: ../src/horizontal_bar.glade:103 ../src/vertical_bar.glade.h:10
-msgid "Highlighter"
-msgstr "Resaltador"
-
-#: ../src/horizontal_bar.glade:130 ../src/vertical_bar.glade.h:2
+#: ../data/horizontal_bar.glade:116 ../data/vertical_bar.glade.h:2
 msgid "Arrow"
 msgstr "Flecha"
 
-#: ../src/horizontal_bar.glade:145 ../src/vertical_bar.glade.h:12
+#: ../data/horizontal_bar.glade:131 ../data/vertical_bar.glade.h:12
 msgid "Insert Text"
 msgstr "Insertar tesxto"
 
-#: ../src/horizontal_bar.glade:160 ../src/vertical_bar.glade.h:13
+#: ../data/horizontal_bar.glade:146 ../data/vertical_bar.glade.h:13
 msgid "Pencil"
 msgstr "Lapiz"
 
-#: ../src/horizontal_bar.glade:174 ../src/vertical_bar.glade.h:7
+#: ../data/horizontal_bar.glade:160 ../data/vertical_bar.glade.h:10
+msgid "Highlighter"
+msgstr "Resaltador"
+
+#: ../data/horizontal_bar.glade:175 ../data/vertical_bar.glade.h:7
 msgid "Eraser"
 msgstr "Goma de borrar"
 
-#: ../src/horizontal_bar.glade:202 ../src/vertical_bar.glade.h:3
+#: ../data/horizontal_bar.glade:203 ../data/vertical_bar.glade.h:3
 msgid "Blue"
 msgstr "Azul"
 
-#: ../src/horizontal_bar.glade:217 ../src/vertical_bar.glade.h:9
+#: ../data/horizontal_bar.glade:218 ../data/vertical_bar.glade.h:9
 msgid "Green"
 msgstr "Verde"
 
-#: ../src/horizontal_bar.glade:232 ../src/vertical_bar.glade.h:24
+#: ../data/horizontal_bar.glade:233 ../data/vertical_bar.glade.h:24
 msgid "Yellow"
 msgstr "Amarillo"
 
-#: ../src/horizontal_bar.glade:247 ../src/vertical_bar.glade.h:17
+#: ../data/horizontal_bar.glade:248 ../data/vertical_bar.glade.h:17
 msgid "Red"
 msgstr "Rojo"
 
-#: ../src/horizontal_bar.glade:261 ../src/vertical_bar.glade.h:23
+#: ../data/horizontal_bar.glade:262 ../data/vertical_bar.glade.h:23
 msgid "White"
 msgstr "Blanco"
 
-#: ../src/horizontal_bar.glade:276 ../src/vertical_bar.glade.h:5
+#: ../data/horizontal_bar.glade:277 ../data/vertical_bar.glade.h:5
 msgid "Color Chooser"
 msgstr "Elegir un color"
 
-#: ../src/horizontal_bar.glade:317 ../src/vertical_bar.glade.h:4
+#. set tooltip to unhide
+#: ../data/horizontal_bar.glade:304 ../data/vertical_bar.glade.h:22
+#: ../src/bar_callbacks.c:498
+msgid "Unlock"
+msgstr "Desbloquear"
+
+#: ../data/horizontal_bar.glade:318 ../data/vertical_bar.glade.h:4
 msgid "Clear"
 msgstr "Limpio"
 
-#: ../src/horizontal_bar.glade:343 ../src/vertical_bar.glade.h:21
+#: ../data/horizontal_bar.glade:344 ../data/vertical_bar.glade.h:21
 msgid "Undo"
 msgstr "Deshacer"
 
-#: ../src/horizontal_bar.glade:356 ../src/vertical_bar.glade.h:18
+#: ../data/horizontal_bar.glade:357 ../data/vertical_bar.glade.h:18
 msgid "Redo"
 msgstr "Rehacer"
 
-#: ../src/horizontal_bar.glade:382 ../src/vertical_bar.glade.h:14
+#: ../data/horizontal_bar.glade:383 ../data/vertical_bar.glade.h:14
 msgid "Preferences"
 msgstr "Preferencias"
 
-#: ../src/horizontal_bar.glade:396 ../src/vertical_bar.glade.h:19
+#: ../data/horizontal_bar.glade:397 ../data/vertical_bar.glade.h:19
 msgid "Save"
 msgstr "Guardar"
 
-#: ../src/horizontal_bar.glade:410 ../src/vertical_bar.glade.h:1
+#: ../data/horizontal_bar.glade:411 ../data/vertical_bar.glade.h:1
 msgid "Add to pdf"
 msgstr "Anadir a pdf"
 
-#: ../src/horizontal_bar.glade:438 ../src/vertical_bar.glade.h:11
+#. set stop tooltip
+#: ../data/horizontal_bar.glade:425 ../data/vertical_bar.glade.h:16
+#: ../src/bar_callbacks.c:435
+msgid "Record"
+msgstr "Grabar"
+
+#: ../data/horizontal_bar.glade:439 ../data/vertical_bar.glade.h:11
 msgid "Info"
 msgstr "Info"
 
-#: ../src/horizontal_bar.glade:439 ../src/vertical_bar.glade.h:25
+#: ../data/horizontal_bar.glade:440 ../data/vertical_bar.glade.h:25
 msgid "info"
 msgstr "informacion"
 
-#: ../src/horizontal_bar.glade:453 ../src/vertical_bar.glade.h:15
+#: ../data/horizontal_bar.glade:454 ../data/vertical_bar.glade.h:15
 msgid "Quit"
 msgstr "Cerrar"
 
-#: ../src/info_dialog.glade.h:1
+#: ../data/info_dialog.glade.h:1
 msgid ""
 "\n"
 "    Ardesia -- a program for painting on the screen\n"
@@ -187,13 +168,52 @@ msgstr ""
 "USA.\n"
 "   "
 
-#: ../src/info_dialog.glade.h:23
+#: ../data/info_dialog.glade.h:23
 msgid ""
 "   Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
 "    "
 msgstr ""
 "   Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
 "    "
+
+#: ../data/preference_dialog.glade.h:1
+msgid "Choose the background"
+msgstr "Elegir de fondo"
+
+#: ../data/preference_dialog.glade.h:2
+msgid "Choose the background color"
+msgstr "Elegir color de fondo"
+
+#: ../data/preference_dialog.glade.h:3
+msgid "background color"
+msgstr "color de fondo"
+
+#: ../data/preference_dialog.glade.h:4
+msgid "image"
+msgstr "immagine"
+
+#: ../data/preference_dialog.glade.h:5
+msgid "none"
+msgstr "ninguna"
+
+#: ../src/ardesia.c:76
+msgid "In order to run Ardesia you need to enable a composite manager"
+msgstr "Para ejecutar Ardesia necesita habilitar el administrador compuestos"
+
+#. set stop tooltip
+#: ../src/bar_callbacks.c:446
+msgid "Stop"
+msgstr "Detener"
+
+#. set tooltip to hide
+#: ../src/bar_callbacks.c:524
+msgid "Lock"
+msgstr "Bloquear"
+
+#. open color widget
+#: ../src/color_selector.c:49
+msgid "Changing color"
+msgstr "Cambiar el color"
 
 #: ../src/pdf_saver.c:38
 msgid "Export as pdf"
@@ -206,26 +226,6 @@ msgstr "Elegir un archivo"
 #: ../src/pdf_saver.c:90 ../src/recorder.c:185 ../src/saver.c:97
 msgid "File Exists. Overwrite"
 msgstr "El archivo existe. Sobrescribir"
-
-#: ../src/preference_dialog.glade.h:1
-msgid "Choose the background"
-msgstr "Elegir de fondo"
-
-#: ../src/preference_dialog.glade.h:2
-msgid "Choose the background color"
-msgstr "Elegir color de fondo"
-
-#: ../src/preference_dialog.glade.h:3
-msgid "background color"
-msgstr "color de fondo"
-
-#: ../src/preference_dialog.glade.h:4
-msgid "image"
-msgstr "immagine"
-
-#: ../src/preference_dialog.glade.h:5
-msgid "none"
-msgstr "ninguna"
 
 #: ../src/recorder.c:122
 msgid ""

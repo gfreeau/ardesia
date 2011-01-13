@@ -3,6 +3,14 @@
 
 [encoding: UTF-8]
 
+data/annotation_window.glade
+data/background_window.glade
+data/horizontal_bar.glade 
+data/info_dialog.glade
+data/preference_dialog.glade
+data/text_window.glade
+data/vertical_bar.glade
+
 src/annotation_window.c            
 src/annotation_window_callbacks.c  
 src/ardesia.c                      
@@ -15,7 +23,6 @@ src/broken.c
 src/color_selector.c   
 src/glibc_backtrace.c  
 src/info_dialog.c      
-src/info_dialog.glade
 src/pdf_saver.c  
 src/preference_dialog.c            
 src/preference_dialog_callbacks.c  
@@ -25,11 +32,4 @@ src/text_window.c
 src/utils.c
 src/windows_backtrace.c
 src/windows_utils.c
-
-data/annotation_window.glade
-data/background_window.glade
-data/horizontal_bar.glade 
-data/preference_dialog.glade
-data/text_window.glade
-data/vertical_bar.glade
 
