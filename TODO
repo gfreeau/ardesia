@@ -32,9 +32,9 @@
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
-  - Create an Ardesia folder on desktop and put all the saved file inside it
+  - Create a new Ardesia folder on desktop where put the artifacts
   - Image importer
-    - image gallery, sticky notes
+    - fullscreen import, image gallery (sticky notes...)
   - Lazo selection tool
   - Export image in a library
   - Deploy the artifact online
