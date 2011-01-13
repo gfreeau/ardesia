@@ -214,6 +214,7 @@ on_winMain_leave_notify_event   (GtkWidget       *widget,
 			         gpointer         func_data)
 {
   BarData *bar_data = (BarData*) func_data;
+  add_alpha(bar_data);
   start_tool(bar_data);
   return TRUE;
 }
@@ -246,24 +247,6 @@ on_winMain_delete_event          (GtkWidget       *widget,
 }
 
 
-/* Push highlighter button */
-G_MODULE_EXPORT void
-on_toolsHighlighter_activate     (GtkToolButton   *toolbutton,
-				  gpointer         func_data)
-{
-  BarData *bar_data = (BarData*) func_data;
-  if (gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(toolbutton)))
-    {
-      bar_data->highlighter = TRUE;
-    }
-  else
-    {
-      bar_data->highlighter = FALSE;
-    }
-  add_alpha(bar_data);
-}
-
-
 /* Push filler button */
 G_MODULE_EXPORT void
 on_toolsFiller_activate          (GtkToolButton   *toolbutton,
@@ -282,6 +265,7 @@ on_toolsArrow_activate           (GtkToolButton   *toolbutton,
   bar_data->text = FALSE;
   bar_data->pencil = TRUE;
   bar_data->arrow = TRUE;
+  bar_data->highlighter = FALSE;
   set_color(bar_data, bar_data->color);
 }
 
@@ -294,6 +278,17 @@ on_toolsText_activate            (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) func_data;
   bar_data->text = TRUE;
   bar_data->arrow = FALSE;
+  bar_data->highlighter = FALSE;
+}
+
+
+/* Push highlighter button */
+G_MODULE_EXPORT void
+on_toolsHighlighter_activate     (GtkToolButton   *toolbutton,
+				  gpointer         func_data)
+{
+  BarData *bar_data = (BarData*) func_data;
+  bar_data->highlighter = TRUE;
 }
 
 
@@ -366,6 +361,7 @@ on_toolsPencil_activate          (GtkToolButton   *toolbutton,
   bar_data->text = FALSE;
   bar_data->pencil = TRUE;
   bar_data->arrow = FALSE;
+  bar_data->highlighter = FALSE;
   set_color(bar_data, bar_data->color);
 }
 

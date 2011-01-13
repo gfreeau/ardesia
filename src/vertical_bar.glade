@@ -98,20 +98,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToggleToolButton" id="buttonHighlighter">
-                <property name="height_request">27</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Highlighter</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">highlighter</property>
-                <signal name="clicked" handler="on_toolsHighlighter_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkToolItem" id="toolSeparatorItem">
                 <property name="visible">True</property>
                 <child>
@@ -162,6 +148,21 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">pencil</property>
                 <signal name="clicked" handler="on_toolsPencil_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRadioToolButton" id="buttonHighlighter">
+                <property name="height_request">27</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Highlighter</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">highlighter</property>
+                <property name="group">buttonPencil</property>
+                <signal name="clicked" handler="on_toolsHighlighter_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
