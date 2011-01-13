@@ -1,5 +1,8 @@
+# Files from the Ardesia distribution which have already been
+# marked to allow runtime translation of messages
 
-# List of source files containing translatable strings.
+[encoding: UTF-8]
+
 src/annotation_window.c            
 src/annotation_window_callbacks.c  
 src/annotation_window.glade

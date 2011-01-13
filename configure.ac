@@ -1,10 +1,8 @@
-dnl Process this file with autoconf to produce a configure script.
-dnl Created by Anjuta application wizard.
+# Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.54)
 
-m4_define([ardesia_version], 0.7)
-
+m4_define([ardesia_version], [0.7])
 m4_define([glib_required_version], [2.24.0])
 m4_define([gtk_required_version], [2.20.0])
 m4_define([gdk_pixbuf_required_version], [gtk_required_version])
@@ -14,33 +12,52 @@ m4_define([pangocairo_required_version], [1.22.0])
 m4_define([libpng_required_version], [1.2.37])
 
 
-AC_INIT(ardesia, [ardesia_version],
+AC_INIT([ARDESIA], [ardesia_version],
 	http://code.google.com/p/ardesia/issues/list,
 	[ardesia])
 
-AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_HEADERS([config.h])
 
+AC_CONFIG_SRCDIR([src/ardesia.c])
+AC_CONFIG_MACRO_DIR([m4macros])
 
-AM_INIT_AUTOMAKE(no-define dist-bzip2 no-dist-gzip)
-AM_MAINTAINER_MODE
+AM_INIT_AUTOMAKE(no-define dist-bzip2)
+AM_CONFIG_HEADER(config.h)
 
+# Enable silent build rules by default, requires at least
+# Automake-1.11. Disable by either passing --disable-silent-rules to
+# configure or passing V=1 to make
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-LT_PREREQ([2.2.6])
-LT_INIT([dlopen win32-dll disable-static])
-AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
-AC_PATH_PROG(DLLTOOL, dlltool)
-
-
-dnl ***************************************************************************
-dnl Internationalization
-dnl ***************************************************************************
+# gettext i18n support
 GETTEXT_PACKAGE=ardesia
 AC_SUBST(GETTEXT_PACKAGE)
-IT_PROG_INTLTOOL([0.35.0])
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
-AM_GLIB_GNU_GETTEXT
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
+                   [The prefix for our gettext translation domains.])
 
+# Determine a C compiler to use
+AC_PROG_CC
+AM_PROG_CC_C_O
+
+# Initialize libtool
+AM_DISABLE_STATIC
+AC_LIBTOOL_WIN32_DLL
+AM_PROG_LIBTOOL
+
+AM_PROG_AS
+
+# Initialize maintainer mode
+AM_MAINTAINER_MODE
+
+# Honor aclocal flags
+ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
+
+
+# Check for pkg-config
+PKG_PROG_PKG_CONFIG(0.16)
+
+#################
+# Check for Win32
+#################
 case "$host" in
   *-*-mingw*|*-*-cygwin*)
     platform_win32=yes
@@ -49,6 +66,13 @@ case "$host" in
     platform_win32=no
     ;;
 esac
+
+######################
+# Internationalisation
+######################
+
+IT_PROG_INTLTOOL(0.40.1)
+AM_GLIB_GNU_GETTEXT
 
 AM_PROG_LIBTOOL
 
