@@ -5,31 +5,13 @@
 
 data/annotation_window.glade
 data/background_window.glade
-data/horizontal_bar.glade 
 data/info_dialog.glade
 data/preference_dialog.glade
 data/text_window.glade
 data/vertical_bar.glade
-
-src/annotation_window.c            
-src/annotation_window_callbacks.c  
-src/ardesia.c                      
-src/background_window.c            
-src/background_window_callbacks.c  
-src/bar.c                          
-src/bar_callbacks.c  
-src/bezier_spline.c  
-src/broken.c         
-src/color_selector.c   
-src/glibc_backtrace.c  
-src/info_dialog.c      
-src/pdf_saver.c  
-src/preference_dialog.c            
-src/preference_dialog_callbacks.c  
-src/recorder.c     
-src/saver.c        
-src/text_window.c  
+                                                    
 src/utils.c
 src/windows_backtrace.c
 src/windows_utils.c
+
 
