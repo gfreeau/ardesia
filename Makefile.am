@@ -14,12 +14,12 @@ ardesiadoc_DATA = \
 autogen_FILE = autogen.sh
 
 desktopdir = $(datadir)/applications
-desktop_in_files = applications/ardesia.desktop.in
+desktop_in_files = data/ardesia.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
 pixmapdir = $(datadir)/pixmaps
-pixmap_DATA = pixmaps/ardesia.png
+pixmap_DATA = data/pixmaps/ardesia.png
 
 INTLTOOL_FILES = intltool-extract.in \
 	intltool-merge.in \
@@ -28,7 +28,7 @@ INTLTOOL_FILES = intltool-extract.in \
 EXTRA_DIST = $(ardesiadoc_DATA) \
 	$(INTLTOOL_FILES) $(autogen_FILE) \
 	src/scripts src/pixmaps src/backgrounds\
-	pixmaps debian applications
+	data
 
 DISTCLEANFILES = intltool-extract \
 	intltool-merge \
