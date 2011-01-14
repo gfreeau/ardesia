@@ -181,10 +181,15 @@ gboolean file_exists(gchar* filename);
 
 
 /*
- * Get the desktop folder;
- * this function use gconf to found the folder
+ * Get the desktop directory
  */
 const gchar* get_desktop_dir(void);
+
+
+/*
+ * Get the documents directory
+ */
+const gchar* get_documents_dir(void);
 
 
 /* Remove recursive a directory */
@@ -205,3 +210,7 @@ void send_trace_with_email(gchar* attachment);
 
 /* Is the desktop manager gnome */
 gboolean is_gnome();
+
+
+/* Create desktop entry passing value */
+gboolean create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* lang, gchar* icon, gchar* exec);

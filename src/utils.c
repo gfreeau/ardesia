@@ -278,11 +278,20 @@ gchar* get_default_name()
 
 
 /*
- * Get the desktop folder
+ * Get the desktop directory
  */
 const gchar* get_desktop_dir (void)
 {
   return g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
+}
+
+
+/*
+ * Get the documents directory
+ */
+const gchar* get_documents_dir (void)
+{
+  return g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS);
 }
 
 
@@ -383,3 +392,20 @@ gboolean is_gnome()
 }
 
 
+/* Create desktop entry passing value */
+gboolean create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* lang, gchar* icon, gchar* exec)
+{
+    FILE *fp = fopen(filename, "w");
+    if (fp) 
+      {
+        fprintf(fp, "[Desktop Entry]\n"); 
+        fprintf(fp, "Type=%s\n", type);
+        fprintf(fp, "Name=%s\n", name);
+        fprintf(fp, "Icon=%s\n", icon); 
+ 	fprintf(fp, "Exec=%s", exec); 
+        fclose(fp);
+ 
+        return TRUE;
+      }
+   return FALSE;
+}

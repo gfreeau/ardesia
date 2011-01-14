@@ -12,7 +12,7 @@ m4_define([pangocairo_required_version], [1.22.0])
 m4_define([libpng_required_version], [1.2.37])
 
 
-AC_INIT([ARDESIA], [ardesia_version],
+AC_INIT([ardesia], [ardesia_version],
 	http://code.google.com/p/ardesia/issues/list,
 	[ardesia])
 

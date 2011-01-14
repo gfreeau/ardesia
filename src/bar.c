@@ -60,7 +60,7 @@ static void calculate_position(GtkWidget *ardesia_bar_window,
       else
         {  
           /* invalid position */
-          perror ("Valid position are NORTH, SOUTH, WEST or EAST\n");
+          perror ("Valid positions are NORTH, SOUTH, WEST or EAST\n");
           exit(0);
         }
     }
@@ -68,9 +68,8 @@ static void calculate_position(GtkWidget *ardesia_bar_window,
 
 
 /* 
- * Calculate teh initial position
- * @TODO Here can be beatiful have a configuration file
- * where put the user can decide the position of the window
+ * Calculate the initial position
+ * @TODO configuration file or wizard to decide the window position
  */
 static void calculate_initial_position(GtkWidget *ardesia_bar_window, 
 				       gint *x, gint *y, 
@@ -99,6 +98,36 @@ static void calculate_initial_position(GtkWidget *ardesia_bar_window,
 }
 
 
+/* Setup the workspace */
+static void configure_workspace(BarData *bar_data)
+{
+   /* The workspace dir is set in the documents ardesia folder */
+   bar_data->workspace_dir = g_strdup_printf("%s%s%s", get_documents_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
+   if (!g_file_test(bar_data->workspace_dir, G_FILE_TEST_EXISTS)) 
+    {
+       g_mkdir(bar_data->workspace_dir, 0700); 
+    }
+#ifdef linux 
+  gchar* desktop_entry_filename = g_strdup_printf("%s%s%s_workspace.desktop", get_desktop_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
+
+  if (g_file_test(desktop_entry_filename, G_FILE_TEST_EXISTS))
+   {
+      g_free(desktop_entry_filename);
+      return;
+   }
+  
+  gchar* exec = g_strdup_printf("xdg-open %s\n", bar_data->workspace_dir);
+  gboolean success = create_desktop_entry(desktop_entry_filename, "Application", PACKAGE_NAME, "it", "folder-documents", exec);
+  if (!success)
+    {
+       g_warning ("Failed to create the desktop entry file: %s", desktop_entry_filename);
+    }
+  g_free(exec);
+  g_free(desktop_entry_filename);
+#endif  
+
+}
+
 /* Allocate and initialize the bar data structure */
 static BarData* init_bar_data()
 {
@@ -114,8 +143,7 @@ static BarData* init_bar_data()
   bar_data->rounder = FALSE;
   bar_data->arrow = FALSE;
 
-  /* The workspace dir is set to the desktop dir */
-  bar_data->workspace_dir = g_strdup_printf("%s", get_desktop_dir());
+  configure_workspace(bar_data);
 
   return bar_data;
 }
@@ -154,7 +182,7 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
   gtk_builder_add_from_file(gtkBuilder, file, &error);
   if (error)
     {
-      g_warning ("Couldn't load builder file: %s", error->message);
+      g_warning ("Failed to load builder file: %s", error->message);
       g_error_free (error);
       g_object_unref (gtkBuilder);
       gtkBuilder = NULL;

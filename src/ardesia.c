@@ -36,11 +36,13 @@
 #endif
 
 
+/* Print the version of the tool and exit */
 static void print_version()
 {
   g_printf("Ardesia %s; the free digital sketchpad\n\n", PACKAGE_VERSION);
   exit(1);
 }
+
 
 /* Print the command line help */
 static void print_help()
@@ -122,7 +124,7 @@ static void set_the_best_colormap()
     }
   else
     {
-      g_warning("Screen doesn't support alpha channel\n");
+      g_warning("The screen does not support the alpha channel\n");
     }
 }
 

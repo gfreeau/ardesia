@@ -30,16 +30,17 @@
   - Use double buffered windows to have a smoother exposure to the eye 
   - more compact savepoint storage
   - Screencast recorder using lib instead spawn processes
+  - Windows
+    - Create a new Ardesia folder on desktop where put the artifacts
 
 - Candidate features:
-  - Create a new Ardesia folder on desktop where put the artifacts
   - Image importer
     - fullscreen import, image gallery (sticky notes...)
   - Lazo selection tool
   - Export image in a library
   - Deploy the artifact online
     - video; youtube upload
-    - send saved images with email 
+    - share saved images with email 
     - moodle integration
   - Move
   - Copy/paste

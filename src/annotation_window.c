@@ -54,7 +54,7 @@ static void delete_save_point(AnnotateSavePoint* savepoint)
     {
       if (data->debug)
 	{ 
-	  g_printerr("Remove %s\n", savepoint->filename);
+	  g_printerr("The savepoint %s has been removed\n", savepoint->filename);
 	}
       if (savepoint->filename)
 	{
@@ -159,8 +159,7 @@ static void select_color()
             { 
               if (data->debug)
 	        { 
-	          g_printerr("Called select color but this is not allocated\n");
-                  g_printerr("I put the red one to recover to the problem\n");
+                  g_printerr("The color is not selected; I put the red one to recover to the problem\n");
 	        }
               cairo_set_source_color_from_string(data->annotation_cairo_context, "FF0000FF");
             }
@@ -170,7 +169,7 @@ static void select_color()
           // it is the eraser tool
           if (data->debug)
 	    { 
-	      g_printerr("Select cairo clear operator for erase\n");
+	      g_printerr("The eraser tool has been selected\n");
 	    }
           cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_CLEAR);
         }
@@ -238,7 +237,7 @@ static void get_invisible_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mas
     {
       if (data->debug)
 	{ 
-	  g_printerr ("Unable to allocate the cairo context to hide the cursor"); 
+	  g_printerr ("Failed to allocate the cairo context to hide the cursor"); 
 	  annotate_quit(); 
 	  exit(1);
 	}
@@ -253,7 +252,7 @@ static void get_invisible_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mas
     {
       if (data->debug)
 	{ 
-	  g_printerr ("Unable to allocate the cairo context for the surface to be restored\n"); 
+	  g_printerr ("Failed to allocate the cairo context for the surface to be restored\n"); 
 	  annotate_quit(); 
 	  exit(1);
 	}
@@ -294,7 +293,7 @@ static void get_eraser_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
   cairo_t *eraser_cr = gdk_cairo_create(*pixmap);
   if (cairo_status(eraser_cr) != CAIRO_STATUS_SUCCESS)
     {
-      g_printerr("Unable to allocate the eraser cursor cairo context"); 
+      g_printerr("Failed to allocate the eraser cursor cairo context"); 
       annotate_quit();
       exit(1);
     }
@@ -306,7 +305,7 @@ static void get_eraser_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
   cairo_t *eraser_shape_cr = gdk_cairo_create(*mask);
   if (cairo_status(eraser_shape_cr) != CAIRO_STATUS_SUCCESS)
     {
-      g_printerr("Unable to allocate the eraser shape cursor cairo context"); 
+      g_printerr("Failed to allocate the eraser shape cursor cairo context"); 
       annotate_quit(); 
       exit(1);
     }
@@ -333,7 +332,7 @@ static void get_pen_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
   cairo_t *pen_cr = gdk_cairo_create(*pixmap);
   if (cairo_status(pen_cr) != CAIRO_STATUS_SUCCESS)
     {
-      g_printerr ("Unable to allocate the pen cursor cairo context"); 
+      g_printerr ("Failed to allocate the pen cursor cairo context"); 
       annotate_quit(); 
       exit(1);
     }
@@ -347,7 +346,7 @@ static void get_pen_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
   cairo_t *pen_shape_cr = gdk_cairo_create(*mask);
   if (cairo_status(pen_shape_cr) != CAIRO_STATUS_SUCCESS)
     {
-      g_printerr ("Unable to allocate the pen shape cursor cairo context"); 
+      g_printerr ("Failed to allocate the pen shape cursor cairo context"); 
       annotate_quit(); 
       exit(1);
     }
@@ -393,7 +392,7 @@ static void annotate_set_pen_cursor()
 
   if (data->debug)
     {
-      g_printerr("Set pen cursor %s\n", data->cur_context->fg_color);
+      g_printerr("The color %s has been selected\n", data->cur_context->fg_color);
     }  
 
   
@@ -718,7 +717,7 @@ static GtkWidget* create_annotation_window()
 
   if (error)
     {
-      g_warning ("Couldn't load builder file: %s", error->message);
+      g_warning ("Failed to load builder file: %s", error->message);
       g_error_free (error);
       return widget;
     }  
@@ -745,7 +744,7 @@ static void setup_app(GtkWidget* parent)
   
   if (data->annotation_window == NULL)
     {
-      g_warning("Unable to create the annotation window");
+      g_warning("Failed to create the annotation window");
       return;
     }
    
@@ -767,7 +766,7 @@ static void setup_app(GtkWidget* parent)
   cairo_t *shape_cr = gdk_cairo_create(data->shape);
   if (cairo_status(shape_cr) != CAIRO_STATUS_SUCCESS)
     {
-      g_printerr ("Unable to allocate the shape cairo context");
+      g_printerr ("Failed to allocate the shape cairo context");
       annotate_quit(); 
       exit(1);
     }
@@ -941,7 +940,7 @@ void annotate_add_save_point(gboolean cache)
       savepoint->surface = NULL;
       if (data->debug)
 	{ 
-	  g_printerr("Add save point in file %s\n", savepoint->filename);
+	  g_printerr("The save point %s has been stored in file\n", savepoint->filename);
 	}
     }
   else
@@ -949,7 +948,7 @@ void annotate_add_save_point(gboolean cache)
       /* store in cache */
       if (data->debug)
 	{ 
-	  g_printerr("Store surface in memory %s\n", savepoint->filename);
+	  g_printerr("The savepoint %s has been stored in memory\n", savepoint->filename);
 	}
      
       savepoint->surface = saved_surface;
@@ -976,7 +975,7 @@ void annotate_push_context(cairo_t * cr)
 {
   if (data->debug)
     {
-      g_printerr("Merge text window in the annotation window\n");
+      g_printerr("The text window content has been painted over the annotation window\n");
     }
 
   annotate_reset_cairo(); 
@@ -1030,7 +1029,7 @@ void annotate_restore_surface()
 
       if (savepoint->surface)
 	{
-	  g_printerr("Load surface from memory %s\n", savepoint->filename);
+	  g_printerr("The savepoint %s has been loaded from memory\n", savepoint->filename);
 	  cairo_set_source_surface (data->annotation_cairo_context, savepoint->surface, 0, 0);
 	  cairo_paint(data->annotation_cairo_context);
 	}
@@ -1038,7 +1037,7 @@ void annotate_restore_surface()
 	{
 	  if (data->debug)
 	    {
-	      g_printerr("Load file %s\n", savepoint->filename);
+	      g_printerr("The savepoint %s has been loaded from file\n", savepoint->filename);
 	    }
 	  // load the file in the annotation surface
 	  GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (savepoint->filename, NULL);
@@ -1059,7 +1058,7 @@ void annotate_select_pen()
 {
   if (data->debug)
     {
-      g_printerr("Select pen\n");
+      g_printerr("The pen has been selected\n");
     }
   data->cur_context = data->default_pen;
   data->old_paint_type = ANNOTATE_PEN;
@@ -1072,7 +1071,7 @@ void annotate_select_eraser()
 {
   if (data->debug)
     {
-      g_printerr("Select eraser\n");
+      g_printerr("The eraser has been selected\n");
     } 
   data->cur_context = data->default_eraser;
   data->old_paint_type = ANNOTATE_ERASER;
@@ -1099,7 +1098,7 @@ void annotate_hide_cursor()
 }
 
 
-/* Grab the cursor */
+/* acquire the grab  */
 void annotate_acquire_grab()
 {
   if  (!data->is_grabbed)

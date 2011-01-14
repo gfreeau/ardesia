@@ -103,7 +103,7 @@ static void create_text_window(GtkWindow *parent)
 
       if (error)
 	{
-	  g_warning ("Couldn't load builder file: %s", error->message);
+	  g_warning ("Failed to load builder file: %s", error->message);
 	  g_error_free (error);
 	  return;
 	}  

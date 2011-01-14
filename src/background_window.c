@@ -51,7 +51,7 @@ static GdkPixbuf * load_png (gchar *filename)
   else
     {
       /* @TODO Handle this in a visual way or avoid this */
-      g_printerr("Couldn't load the file %s as background\n", filename);
+      g_printerr("Failed to load the file %s as background\n", filename);
       exit(0);
     }
   pixbuf = scaled;
@@ -214,7 +214,7 @@ GtkWidget* create_background_window(gchar* backgroundimage)
 
   if (error)
     {
-      g_warning ("Couldn't load builder file: %s", error->message);
+      g_warning ("Failed to load builder file: %s", error->message);
       g_error_free (error);
       return background_data->background_window;
     }  

@@ -80,7 +80,7 @@ event_expose(GtkWidget *widget,
 #endif 
       if (cairo_status(data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
         {
-          g_printerr("Unable to allocate the annotation cairo context"); 
+          g_printerr("Failed to allocate the annotation cairo context"); 
           annotate_quit(); 
           exit(1);
         }     
