@@ -101,35 +101,14 @@ static void calculate_initial_position(GtkWidget *ardesia_bar_window,
 /* Setup the workspace */
 static void configure_workspace(BarData *bar_data)
 {
-   /* The workspace dir is set in the documents ardesia folder */
-   bar_data->workspace_dir = g_strdup_printf("%s%s%s", get_documents_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
-   if (!g_file_test(bar_data->workspace_dir, G_FILE_TEST_EXISTS)) 
+  /* The workspace dir is set in the documents ardesia folder */
+  bar_data->workspace_dir = g_strdup_printf("%s%s%s", get_documents_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
+  if (!g_file_test(bar_data->workspace_dir, G_FILE_TEST_EXISTS)) 
     {
-       g_mkdir(bar_data->workspace_dir, 0700); 
+      g_mkdir(bar_data->workspace_dir, 0700); 
     }
-#ifdef linux 
-  gchar* desktop_entry_filename = g_strdup_printf("%s%s%s_workspace.desktop", get_desktop_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
-
-  if (g_file_test(desktop_entry_filename, G_FILE_TEST_EXISTS))
-   {
-      g_free(desktop_entry_filename);
-      return;
-   }
-  
-  gchar* exec = g_strdup_printf("xdg-open %s\n", bar_data->workspace_dir);
-  gboolean success = create_desktop_entry(desktop_entry_filename, "Application", PACKAGE_NAME, "it", "folder-documents", exec);
-  if (!success)
-    {
-       g_warning ("Failed to create the desktop entry file: %s", desktop_entry_filename);
-    }
-  g_free(exec);
-  g_free(desktop_entry_filename);
-#endif  
-#ifdef _WIN32
-  gchar* desktop_entry_filename = g_strdup_printf("%s%s%s_workspace.lnk", get_desktop_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
-  windows_create_link(bar_data->workspace_dir , desktop_entry_filename, "%SystemRoot%\\system32\\imageres.dll", 123);
-#endif
 }
+
 
 /* Allocate and initialize the bar data structure */
 static BarData* init_bar_data()
@@ -149,6 +128,19 @@ static BarData* init_bar_data()
   configure_workspace(bar_data);
 
   return bar_data;
+}
+
+
+/* Create a shorcut to the workspace on the desktop */
+static void create_workspace_shortcut(gchar* workspace_dir)
+{
+  gchar* desktop_entry_filename = g_strdup_printf("%s%s%s_workspace", get_desktop_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
+#ifdef _WIN32
+  windows_create_link(workspace_dir , desktop_entry_filename, "%SystemRoot%\\system32\\imageres.dll", 123);
+#else
+  xdg_create_link(workspace_dir , desktop_entry_filename, "folder-documents");
+#endif
+  g_free(desktop_entry_filename);  
 }
 
 
@@ -193,6 +185,7 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
     }  
   
   BarData *bar_data = init_bar_data();
+  create_workspace_shortcut(bar_data->workspace_dir);
 
   /* connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(gtkBuilder, (gpointer) bar_data);

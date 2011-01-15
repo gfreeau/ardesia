@@ -61,7 +61,7 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 void windows_send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment);
 
 /* Create a link with icon */
-void windows_create_link(gchar* src, gchar* dest, gchar* iconpath, int icon_index);
+void windows_create_link(gchar* src, gchar* dest, gchar* icon_path, int icon_index);
 
 #endif
 

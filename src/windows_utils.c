@@ -167,8 +167,15 @@ void windows_send_email(gchar* to, gchar* subject, gchar* body, gchar* attachmen
 
 
 /* Create a link with icon */
-void windows_create_link(gchar* src, gchar* dest, gchar* iconpath, int icon_index)
+void windows_create_link(gchar* src, gchar* dest, gchar* icon_path, int icon_index)
 {  
+  gchar* extension = "lnk";
+  gchar* link_filename = g_strdup_printf("%s.%s", dest, extension);
+  if (g_file_test(link_filename, G_FILE_TEST_EXISTS))
+    {
+      g_free(link_filename);
+      return;
+    }
   IShellLink* shell_link;
   IPersistFile* persist_file;
   WCHAR wsz[MAX_PATH];
@@ -176,11 +183,12 @@ void windows_create_link(gchar* src, gchar* dest, gchar* iconpath, int icon_inde
   CoCreateInstance(&CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, &IID_IShellLink, (LPVOID *) &shell_link);
 
   shell_link->lpVtbl->SetPath(shell_link, (LPCTSTR) src);
-  shell_link->lpVtbl->SetIconLocation(shell_link, (LPCTSTR) iconpath, icon_index);
+  shell_link->lpVtbl->SetIconLocation(shell_link, (LPCTSTR) icon_path, icon_index);
 
   shell_link->lpVtbl->QueryInterface(shell_link, &IID_IPersistFile, (LPVOID *)&persist_file);
 
-  MultiByteToWideChar(CP_ACP, 0, (PTSTR) dest, -1, wsz, MAX_PATH);
+  MultiByteToWideChar(CP_ACP, 0, (PTSTR) link_filename, -1, wsz, MAX_PATH);
+  g_free(link_filename);
 
   persist_file->lpVtbl->Save(persist_file, wsz, TRUE);
   persist_file->lpVtbl->Release(persist_file);

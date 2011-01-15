@@ -213,4 +213,10 @@ gboolean is_gnome();
 
 
 /* Create desktop entry passing value */
-gboolean create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* lang, gchar* icon, gchar* exec);
+void xdg_create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* lang, gchar* icon, gchar* exec);
+
+
+/* Create a desktop link */
+void xdg_create_link(gchar* src_filename, gchar* dest, gchar* icon);
+
+

@@ -393,19 +393,35 @@ gboolean is_gnome()
 
 
 /* Create desktop entry passing value */
-gboolean create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* lang, gchar* icon, gchar* exec)
+void xdg_create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* lang, gchar* icon, gchar* exec)
 {
-    FILE *fp = fopen(filename, "w");
-    if (fp) 
-      {
-        fprintf(fp, "[Desktop Entry]\n"); 
-        fprintf(fp, "Type=%s\n", type);
-        fprintf(fp, "Name=%s\n", name);
-        fprintf(fp, "Icon=%s\n", icon); 
- 	    fprintf(fp, "Exec=%s", exec); 
-        fclose(fp);
- 
-        return TRUE;
-      }
-   return FALSE;
+  FILE *fp = fopen(filename, "w");
+  if (fp) 
+    {
+      fprintf(fp, "[Desktop Entry]\n"); 
+      fprintf(fp, "Type=%s\n", type);
+      fprintf(fp, "Name=%s\n", name);
+      fprintf(fp, "Icon=%s\n", icon); 
+      fprintf(fp, "Exec=%s", exec); 
+      fclose(fp);
+    }
 }
+
+
+/* Create a desktop link */
+void xdg_create_link(gchar* src, gchar* dest, gchar* icon)
+{
+  gchar* extension = "desktop";
+  gchar* link_filename = g_strdup_printf("%s.%s", dest, extension);
+
+  if (g_file_test(link_filename, G_FILE_TEST_EXISTS))
+    {
+      g_free(link_filename);
+      return;
+    }
+  gchar* exec = g_strdup_printf("xdg-open %s\n", src);
+  xdg_create_desktop_entry(link_filename, "Application", PACKAGE_NAME, "it", icon, exec);
+  g_free(link_filename);
+  g_free(exec);
+}
+
