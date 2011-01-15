@@ -32,7 +32,7 @@
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
-  - Better import/export/reuse 
+  - import/export/reuse 
   - image gallery (sticky notes...)
   - Lazo selection tool
   - Export image in a library
