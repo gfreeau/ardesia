@@ -70,7 +70,7 @@ ardesia_LDFLAGS += -Wl,--export-dynamic
 endif
 else
 #This create a windows executable instead an msdos ones
-ardesia_LDFLAGS += -mwindows -lbfd -lintl -liberty -limagehlp
+ardesia_LDFLAGS += -mwindows -lbfd -lintl -liberty -limagehlp -lole32 -luuid
 endif
 
 ardesia_LDADD = $(ARDESIA_LIBS)

@@ -25,7 +25,6 @@
 #ifdef _WIN32
 
 #include <windows_utils.h>
-
  
 BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF crKey,
 					       BYTE bAlpha, DWORD dwFlags) = NULL;
@@ -165,6 +164,29 @@ void windows_send_email(gchar* to, gchar* subject, gchar* body, gchar* attachmen
 
   MAPISendMail(0, 0, &M_MSG, MAPI_LOGON_UI | MAPI_DIALOG, 0L);
 }
+
+
+/* Create a link with icon */
+void windows_create_link(gchar* src, gchar* dest, gchar* iconpath, int icon_index)
+{  
+  IShellLink* shell_link;
+  IPersistFile* persist_file;
+  WCHAR wsz[MAX_PATH];
+  
+  CoCreateInstance(&CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, &IID_IShellLink, (LPVOID *) &shell_link);
+
+  shell_link->lpVtbl->SetPath(shell_link, (LPCTSTR) src);
+  shell_link->lpVtbl->SetIconLocation(shell_link, (LPCTSTR) iconpath, icon_index);
+
+  shell_link->lpVtbl->QueryInterface(shell_link, &IID_IPersistFile, (LPVOID *)&persist_file);
+
+  MultiByteToWideChar(CP_ACP, 0, (PTSTR) dest, -1, wsz, MAX_PATH);
+
+  persist_file->lpVtbl->Save(persist_file, wsz, TRUE);
+  persist_file->lpVtbl->Release(persist_file);
+  shell_link->lpVtbl->Release(shell_link);
+}
+
 
 #endif
 

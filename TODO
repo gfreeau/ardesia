@@ -30,8 +30,6 @@
   - Use double buffered windows to have a smoother exposure to the eye 
   - more compact savepoint storage
   - Screencast recorder using lib instead spawn processes
-  - Windows
-    - Create a new Ardesia folder on desktop where put the artifacts
 
 - Candidate features:
   - Image importer

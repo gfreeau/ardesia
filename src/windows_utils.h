@@ -27,7 +27,9 @@
 #include <windows.h>
 #include <mapi.h>
 
-#include <winuser.h>    
+#include <winuser.h>
+#include <shlwapi.h>    
+#include <objbase.h>
 
 #include <gdk/gdk.h>
 #include <gdkwin32.h>
@@ -57,6 +59,9 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 
 /* Send an email with MAPI*/
 void windows_send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment);
+
+/* Create a link with icon */
+void windows_create_link(gchar* src, gchar* dest, gchar* iconpath, int icon_index);
 
 #endif
 

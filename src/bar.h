@@ -28,6 +28,7 @@
 #include <ardesia.h>
 
 #ifdef _WIN32
+#include <windows_utils.h>
 #define UI_FILE "..\\share\\ardesia\\ui\\vertical_bar.glade"
 #define UI_HOR_FILE "..\\share\\ardesia\\ui\\horizontal_bar.glade"
 #else

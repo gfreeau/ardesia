@@ -402,7 +402,7 @@ gboolean create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* 
         fprintf(fp, "Type=%s\n", type);
         fprintf(fp, "Name=%s\n", name);
         fprintf(fp, "Icon=%s\n", icon); 
- 	fprintf(fp, "Exec=%s", exec); 
+ 	    fprintf(fp, "Exec=%s", exec); 
         fclose(fp);
  
         return TRUE;

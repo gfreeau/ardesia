@@ -125,7 +125,10 @@ static void configure_workspace(BarData *bar_data)
   g_free(exec);
   g_free(desktop_entry_filename);
 #endif  
-
+#ifdef _WIN32
+  gchar* desktop_entry_filename = g_strdup_printf("%s%s%s_workspace.lnk", get_desktop_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
+  windows_create_link(bar_data->workspace_dir , desktop_entry_filename, "%SystemRoot%\\system32\\imageres.dll", 123);
+#endif
 }
 
 /* Allocate and initialize the bar data structure */
