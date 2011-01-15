@@ -32,8 +32,8 @@
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
-  - Image importer
-    - fullscreen import, image gallery (sticky notes...)
+  - Better import/export/reuse 
+  - image gallery (sticky notes...)
   - Lazo selection tool
   - Export image in a library
   - Deploy the artifact online
