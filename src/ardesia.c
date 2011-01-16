@@ -120,7 +120,8 @@ static void set_the_best_colormap()
   if (colormap)
     {
       gtk_widget_set_default_colormap(colormap);
-      gdk_colormap_unref(colormap);
+      gtk_widget_push_colormap(colormap);
+      gtk_widget_set_default_colormap(colormap);
     }
   else
     {
