@@ -27,27 +27,26 @@
   - Store and load the savepoints using svg files
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
-  - Use double buffered windows to have a smoother exposure to the eye 
   - more compact savepoint storage
+  - Use double buffered windows to have a smoother exposure to the eye 
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
   - import/export/reuse 
+  - Deploy the artifact online
+    - share saved images with email 
+    - video; youtube upload
+    - moodle integration
   - image gallery (sticky notes...)
   - Lazo selection tool
-  - Export image in a library
-  - Deploy the artifact online
-    - video; youtube upload
-    - share saved images with email 
-    - moodle integration
   - Move
   - Copy/paste
+  - Filler available for all the closed path (not for the last one only)
+  - Show the virtual keyboard far away from the text cursor position 
   - Multi pointer support 
   - Define a configuration file and settings
     - thickness size 
-  - Filler available for all the closed path (not for the last one only)
   - Zoom
-  - Show the virtual keyboard far away from the text cursor position 
   - Not parallel to the axis polygon recognition
   - Rotate elements
 
