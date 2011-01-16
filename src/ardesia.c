@@ -120,12 +120,18 @@ static void set_the_best_colormap()
   if (colormap)
     {
       gtk_widget_set_default_colormap(colormap);
-      gtk_widget_push_colormap(colormap);
-      gtk_widget_set_default_colormap(colormap);
     }
   else
     {
       g_warning("The screen does not support the alpha channel\n");
+      GdkVisual* visual = gdk_screen_get_rgba_visual(screen);
+      if (visual == NULL)
+      {
+        g_warning("The screen does not support the rgba visual\n");
+        visual = gdk_screen_get_system_visual(screen);
+        gtk_widget_set_default_colormap(colormap);
+        gtk_widget_set_default_visual(visual);
+      }
     }
 }
 
