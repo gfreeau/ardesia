@@ -107,9 +107,20 @@ static void take_pen_tool()
 }
 
 
+static void unlock(BarData *bar_data)
+{
+   if (!bar_data->grab)
+     {
+        GtkToggleToolButton* eraserToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonUnlock"));
+        gtk_toggle_tool_button_set_active(eraserToolButton, FALSE); 
+     }
+}
+
+
 /* set color; this is called each time that the user want change color */
 static void set_color(BarData *bar_data, gchar* selected_color)
 {
+  unlock(bar_data);
   take_pen_tool();
   strncpy(bar_data->color, selected_color, 6);
   annotate_set_color(bar_data->color);
@@ -276,6 +287,7 @@ on_toolsText_activate            (GtkToolButton   *toolbutton,
 		                  gpointer         func_data)
 {
   BarData *bar_data = (BarData*) func_data;
+  unlock(bar_data);
   bar_data->text = TRUE;
   bar_data->arrow = FALSE;
   bar_data->highlighter = FALSE;
@@ -288,6 +300,10 @@ on_toolsHighlighter_activate     (GtkToolButton   *toolbutton,
 				  gpointer         func_data)
 {
   BarData *bar_data = (BarData*) func_data;
+  unlock(bar_data);
+  bar_data->text = FALSE;
+  bar_data->pencil = TRUE;
+  bar_data->arrow = FALSE;
   bar_data->highlighter = TRUE;
 }
 
@@ -358,6 +374,7 @@ on_toolsPencil_activate          (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
 {
   BarData *bar_data = (BarData*) func_data;
+  unlock(bar_data);
   bar_data->text = FALSE;
   bar_data->pencil = TRUE;
   bar_data->arrow = FALSE;
@@ -372,6 +389,7 @@ on_toolsEraser_activate          (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
 {
   BarData *bar_data = (BarData*) func_data;
+  unlock(bar_data);
   bar_data->text = FALSE;
   bar_data->pencil = FALSE;
   bar_data->arrow = FALSE;

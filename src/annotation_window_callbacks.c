@@ -83,12 +83,12 @@ event_expose(GtkWidget *widget,
           g_printerr("Failed to allocate the annotation cairo context"); 
           annotate_quit(); 
           exit(1);
-        }     
-		
+        }     		
       annotate_clear_screen();
       annotate_acquire_grab();
 		      
     }
+  gdk_cairo_region(data->annotation_cairo_context, event->region); 
   annotate_restore_surface();
   return TRUE;
 }
