@@ -32,7 +32,8 @@
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
-  - import/export/reuse 
+  - export in iwb format 
+  - import in iwb format
   - Deploy the artifact online
     - share saved images with email 
     - video; youtube upload
