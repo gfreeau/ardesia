@@ -52,7 +52,7 @@ static void print_help()
   g_printf("Usage: %s [options] [filename]\n\n", PACKAGE_NAME);
   g_printf("Ardesia the free digital sketchpad\n\n");
   g_printf("options:\n");
-  g_printf("  --verbose ,\t-v\t\tEnable verbose mode to see the logs\n");
+  g_printf("  --verbose ,\t-V\t\tEnable verbose mode to see the logs\n");
   g_printf("  --decorate,\t-d\t\tDecorate the window with the borders\n");
   g_printf("  --gravity ,\t-g\t\tSet the gravity of the bar. Possible values are:\n");
   g_printf("  \t\t\t\teast [default]\n");
@@ -60,6 +60,7 @@ static void print_help()
   g_printf("  \t\t\t\tnorth\n");
   g_printf("  \t\t\t\tsouth\n");
   g_printf("  --help    ,\t-h\t\tShows the help screen\n");
+  g_printf("  --version ,\t-V\t\tShow version information and exit\n");
   g_printf("\n");
   g_printf("filename:\t  \t\tThe file containig the image to be be used as background\n");
   g_printf("\n");
