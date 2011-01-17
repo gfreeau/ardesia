@@ -60,7 +60,7 @@ static void print_help()
   g_printf("  \t\t\t\tnorth\n");
   g_printf("  \t\t\t\tsouth\n");
   g_printf("  --help    ,\t-h\t\tShows the help screen\n");
-  g_printf("  --version ,\t-V\t\tShow version information and exit\n");
+  g_printf("  --version ,\t-v\t\tShow version information and exit\n");
   g_printf("\n");
   g_printf("filename:\t  \t\tThe file containig the image to be be used as background\n");
   g_printf("\n");
@@ -163,7 +163,7 @@ static CommandLine* parse_options(gint argc, char *argv[])
 	};
 
       gint option_index = 0;
-      c = getopt_long(argc, argv, "hdvg:",
+      c = getopt_long(argc, argv, "hdvVg:",
 		      long_options, &option_index);
      
       /* Detect the end of the options. */
