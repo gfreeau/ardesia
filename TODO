@@ -23,8 +23,8 @@
   
 - Reengineering
   - Text insertion consolidation
-  - Bar and transparent layer on the same window
   - Store and load the savepoints using svg files
+  - Bar and transparent layer on the same window
   - cache in memory the recent savepoint; in this way we'll have 
     a more reactive undo/redo
   - more compact savepoint storage
