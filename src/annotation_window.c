@@ -788,6 +788,21 @@ static void setup_app(GtkWidget* parent)
 }
 
 
+/* Return if it is a closed path */
+static gboolean is_a_closed_path(GSList* list)
+{
+   // Check if it is a closed path
+   gint lenght = g_slist_length(list);
+   AnnotateStrokeCoordinate* point0 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
+   AnnotateStrokeCoordinate* pointN = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, lenght-1);
+   if (get_distance(point0->x, point0->y, pointN->x, pointN->y) > 0)
+     {
+        return TRUE;
+     }
+   return FALSE;
+}
+
+
 /* Get the annotation window */
 GtkWidget* get_annotation_window()
 {
@@ -1373,6 +1388,11 @@ void annotate_fill()
     }
   if (data->coordlist)
     {
+      if (is_a_closed_path(data->coordlist))
+        {
+          cairo_stroke(data->annotation_cairo_context);
+          return;
+        }
       if (!(data->roundify)&&(!(data->rectify)))
 	{
 	  annotate_draw_point_list(data->coordlist);     
