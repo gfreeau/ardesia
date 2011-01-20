@@ -31,6 +31,23 @@
 #ifdef _WIN32
 #include <windows_utils.h>
 #endif
+
+static gchar* project_name = NULL;
+
+
+/* Get the name of the current project */
+gchar* get_project_name()
+{
+  return project_name;
+}
+
+
+/* Set the name of the current project */
+void set_project_name(gchar * name)
+{
+  project_name = name;
+}
+
 	
 /* Grab pointer */
 void grab_pointer(GtkWidget *win, GdkEventMask eventmask)
@@ -404,6 +421,7 @@ void xdg_create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* 
       fprintf(fp, "Icon=%s\n", icon); 
       fprintf(fp, "Exec=%s", exec); 
       fclose(fp);
+      chmod(filename, 0751);
     }
 }
 

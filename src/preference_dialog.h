@@ -51,6 +51,6 @@ typedef struct
  * Start the dialog that ask to the user
  * the background setting
  */
-void start_preference_dialog(GtkToolButton   *toolbutton, GtkWindow *parent);
+void start_preference_dialog(GtkWindow *parent);
 
 

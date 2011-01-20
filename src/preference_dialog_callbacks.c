@@ -53,6 +53,28 @@ on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer dat
 }
 
 
+/* Shot when the selected folder change in the file browser */
+G_MODULE_EXPORT void
+on_imageChooserButton_file_set (GtkButton *buton, gpointer data)
+{
+  PreferenceData *preferenceData = (PreferenceData*) data;
+  GObject* fileObj = gtk_builder_get_object(preferenceData->preferenceDialogGtkBuilder,"file");
+  GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(fileObj);
+  gtk_toggle_button_set_active(imageToolButton, TRUE);
+}
+
+
+/* Shot when is pushed the background color button */
+G_MODULE_EXPORT void
+on_backgroundColorButton_color_set (GtkButton *buton, gpointer data)
+{
+  PreferenceData *preferenceData = (PreferenceData*) data;
+  GObject* colorObj = gtk_builder_get_object(preferenceData->preferenceDialogGtkBuilder,"color");
+  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(colorObj);
+  gtk_toggle_button_set_active(colorToolButton, TRUE);
+}
+
+
 /* Shot when the ok button in preference dialog is pushed */
 G_MODULE_EXPORT void
 on_preferenceOkButton_clicked(GtkButton *buton, gpointer data)
@@ -110,28 +132,6 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer data)
           preferenceData->background = 0;  
 	} 
     }        
-}
-
-
-/* Shot when the selected folder change in the file browser */
-G_MODULE_EXPORT void
-on_imageChooserButton_file_set (GtkButton *buton, gpointer data)
-{
-  PreferenceData *preferenceData = (PreferenceData*) data;
-  GObject* fileObj = gtk_builder_get_object(preferenceData->preferenceDialogGtkBuilder,"file");
-  GtkToggleButton* imageToolButton = GTK_TOGGLE_BUTTON(fileObj);
-  gtk_toggle_button_set_active(imageToolButton, TRUE);
-}
-
-
-/* Shot when is pushed the background color button */
-G_MODULE_EXPORT void
-on_backgroundColorButton_color_set (GtkButton *buton, gpointer data)
-{
-  PreferenceData *preferenceData = (PreferenceData*) data;
-  GObject* colorObj = gtk_builder_get_object(preferenceData->preferenceDialogGtkBuilder,"color");
-  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(colorObj);
-  gtk_toggle_button_set_active(colorToolButton, TRUE);
 }
 
 

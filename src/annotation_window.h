@@ -96,9 +96,6 @@ typedef struct
   /* Gtkbuilder for annotation window */
   GtkBuilder *annotationWindowGtkBuilder;
 
-  /* timer that was started at the init */
-  GTimer* timer;
-
   /* directory where store the save point */
   gchar* savepoint_dir;  
 

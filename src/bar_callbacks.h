@@ -23,6 +23,7 @@
 
 
 #include <gtk/gtk.h>
+#include <iwb_saver.h>
 
 /* full opaque alpha */
 #define OPAQUE_ALPHA "FF"

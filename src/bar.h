@@ -73,8 +73,11 @@ typedef struct
   /* grab when leave */
   gboolean grab;
 
-  /* Default folder where store artifacts */
+  /* Workspace dir where store artifacts */
   gchar* workspace_dir;
+
+ /* Default folder where store artifacts */
+  gchar* project_dir;
    
 }BarData;
 

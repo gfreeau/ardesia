@@ -105,6 +105,12 @@ typedef struct
 } AnnotateStrokeCoordinate;
 
 
+/* Get the name of the current project */
+gchar* get_project_name();
+
+/* Set the name of the current project */
+void set_project_name(gchar * name);
+
 /* Ungrab pointer */
 void ungrab_pointer(GdkDisplay* display, GtkWidget *win);
 

@@ -24,6 +24,7 @@
 #include <utils.h>
 #include <annotation_window.h>
 #include <background_window.h>
+#include <project_dialog.h>
 #include <bar.h>
 
 
@@ -263,6 +264,10 @@ main(gint argc, char *argv[])
 
   CommandLine *commandline = parse_options(argc, argv);
 
+  /* show the project name wizard */
+  gchar* project_name = start_project_dialog(NULL);
+  set_project_name(project_name);
+
   GtkWidget* background_window = create_background_window(commandline->backgroundimage); 
   
   if (background_window == NULL)
@@ -276,7 +281,6 @@ main(gint argc, char *argv[])
   gtk_widget_show(background_window);
   
   set_background_window(background_window);
-
   
   /** Init annotate */
   annotate_init(background_window, commandline->debug); 
@@ -308,11 +312,9 @@ main(gint argc, char *argv[])
 
   g_free(commandline);
 
-
-
   gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
   gtk_widget_show(ardesia_bar_window);
-  
+
   gtk_main();
   return 0;
 }

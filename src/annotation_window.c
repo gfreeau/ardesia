@@ -35,7 +35,6 @@
 
 static AnnotateData* data;
 
-
 /* Create a new paint context */
 static AnnotatePaintContext* annotate_paint_context_new(AnnotatePaintType type)
 {
@@ -693,13 +692,21 @@ static void setup_input_devices()
 static void create_savepoint_dir()
 {
   const gchar* tmpdir = g_get_tmp_dir();
-  data->savepoint_dir = g_strdup_printf("%s%s%s", tmpdir, G_DIR_SEPARATOR_S, PACKAGE_NAME);
-  if (g_file_test(data->savepoint_dir, G_FILE_TEST_IS_DIR))
+  gchar* images = "images";
+  gchar* project_name = get_project_name();
+
+  gchar* ardesia_tmp_dir = g_strdup_printf("%s%s%s", tmpdir, G_DIR_SEPARATOR_S, PACKAGE_NAME);
+  gchar* project_tmp_dir = g_strdup_printf("%s%s%s", ardesia_tmp_dir, G_DIR_SEPARATOR_S, project_name);
+  if (g_file_test(ardesia_tmp_dir, G_FILE_TEST_IS_DIR))
     { 
       /* the folder already exist; I delete it */
-      rmdir_recursive(data->savepoint_dir);
+      rmdir_recursive(ardesia_tmp_dir);
     }
-  g_mkdir(data->savepoint_dir, 0777);
+
+  data->savepoint_dir = g_strdup_printf("%s%s%s", project_tmp_dir, G_DIR_SEPARATOR_S, images);
+  g_mkdir_with_parents(data->savepoint_dir, 0777);
+  g_free(ardesia_tmp_dir);
+  g_free(project_tmp_dir);
 }
 
 
@@ -927,10 +934,10 @@ void annotate_modify_color(AnnotateData* data, gdouble pressure)
 void annotate_add_save_point(gboolean cache)
 {
   AnnotateSavePoint *savepoint = g_malloc(sizeof(AnnotateSavePoint));
- 
-  gdouble ellapsed_time = g_timer_elapsed(data->timer, NULL);
 
-  savepoint->filename = g_strdup_printf("%s%s%s_%f_vellum.png", data->savepoint_dir, G_DIR_SEPARATOR_S, PACKAGE_NAME, ellapsed_time);
+  gint savepoint_index = g_slist_length(data->savelist) + 1;
+  
+  savepoint->filename = g_strdup_printf("%s%s%s_%d_vellum.png", data->savepoint_dir, G_DIR_SEPARATOR_S, PACKAGE_NAME, savepoint_index);
 
   /* the story about the future is deleted */
   annotate_redolist_free();
@@ -949,7 +956,7 @@ void annotate_add_save_point(gboolean cache)
   
   if (!cache)
     {
-      /*  will be create a file in the savepoint folder with format PACKAGE_NAME_ellapsed_time.png */
+      /*  will be create a file in the savepoint folder with format PACKAGE_NAME_1.png */
       cairo_surface_write_to_png (saved_surface, savepoint->filename);
       cairo_surface_destroy(saved_surface); 
       savepoint->surface = NULL;
@@ -1285,11 +1292,7 @@ void annotate_paint_context_free(AnnotatePaintContext *context)
 void annotate_quit()
 {
   if (data)
-    {
-      if (data->timer)
-        {
-          g_timer_destroy(data->timer); 
-        }
+    {   
 
       /* unref gtkbuilder */
       if (data->annotationWindowGtkBuilder)
@@ -1322,11 +1325,9 @@ void annotate_quit()
       annotate_coord_list_free();
       annotate_savelist_free();
 
-      if (g_file_test(data->savepoint_dir, G_FILE_TEST_IS_DIR))
-	{ 
-	  /* Delete the savepoint folder */
-	  rmdir_recursive(data->savepoint_dir);
-	}
+      gchar* ardesia_tmp_dir = g_strdup_printf("%s%s%s", g_get_tmp_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
+      rmdir_recursive(ardesia_tmp_dir);
+      g_free(ardesia_tmp_dir);
 
       g_free(data->savepoint_dir);
  
@@ -1480,8 +1481,6 @@ gint annotate_init(GtkWidget* parent, gboolean debug)
   data->is_cursor_hidden = TRUE;
 
   data->debug = debug;
-
-  data->timer = g_timer_new();  
   
   allocate_invisible_cursor();
 

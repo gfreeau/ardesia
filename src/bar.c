@@ -103,9 +103,10 @@ static void configure_workspace(BarData *bar_data)
 {
   /* The workspace dir is set in the documents ardesia folder */
   bar_data->workspace_dir = g_strdup_printf("%s%s%s", get_documents_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
-  if (!g_file_test(bar_data->workspace_dir, G_FILE_TEST_EXISTS)) 
+  bar_data->project_dir = g_strdup_printf("%s%s%s", bar_data->workspace_dir, G_DIR_SEPARATOR_S, get_project_name());
+  if (!g_file_test(bar_data->project_dir, G_FILE_TEST_EXISTS)) 
     {
-      g_mkdir(bar_data->workspace_dir, 0700); 
+      g_mkdir_with_parents(bar_data->project_dir, 0700); 
     }
 }
 

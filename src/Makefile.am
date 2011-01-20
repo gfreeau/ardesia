@@ -48,10 +48,16 @@ ardesia_SOURCES = \
 	saver.h \
         color_selector.c \
 	color_selector.h \
+	iwb_saver.c \
+	iwb_save.h \
         preference_dialog.c \
 	preference_dialog.h \
 	preference_dialog_callbacks.c \
 	preference_dialog_callbacks.h \
+        project_dialog.c \
+	project_dialog.h \
+	project_dialog_callbacks.c \
+	project_dialog_callbacks.h \
         text_window.c \
 	text_window.h \
         info_dialog.c \
@@ -59,8 +65,8 @@ ardesia_SOURCES = \
         recorder.c \
 	recorder.h \
 	ardesia.c \
-        ardesia.h
-
+	ardesia.h 
+   
 
 ardesia_LDFLAGS = 
 

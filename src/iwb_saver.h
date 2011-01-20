@@ -21,25 +21,7 @@
  *
  */
 
+#include <zlib.h>
 
-#include <glib.h>
-
-
-#ifndef BROKEN_FILE
-#define BROKEN_FILE
-
-/* Return a subpath of listInp containg only the meaningful points using the standard deviation */
-GSList* extract_relevant_points(GSList *listInp, gboolean rectify, gint pixel_tollerance);
-
-/* Return the outbounded rectangle outside the path described to listIn */
-GSList*  extract_outbounded_rectangle(GSList* listIn);
-
-/* The path described in list is similar to an ellipse,  unbounded_rect is the outbounded rectangle to the eclipse */
-gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gint pixel_tollerance); 
-
-/* Take a list of point and return magically the new recognized path */        
-GSList*    broken( GSList* inp, gboolean close_path, gboolean rectify, gint pixel_tollerance);
-
-#endif
-
-
+/* export in iwb format */
+void export_iwb(gchar * folder);
