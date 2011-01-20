@@ -130,7 +130,9 @@ static void set_the_best_colormap()
       if (visual == NULL)
       {
         g_warning("The screen does not support the rgba visual!\n");
+#ifndef _WIN32
         exit(0);
+#endif
       }
     }
 }
