@@ -73,9 +73,8 @@ gchar* start_project_dialog(GtkWindow *parent)
   //disalloc structure 
   g_object_unref (project_data->projectDialogGtkBuilder);
   gchar* ret = g_strdup_printf("%s", project_data->project_name);
+  g_free(project_data->project_name);
   g_free(project_data);
- 
-  //return project name
 
   gtk_widget_destroy(projectDialog);
   return ret; 
