@@ -80,7 +80,7 @@ static void add_savepoint(gint index)
   gint height = gdk_screen_height();
   open_svg();
   gchar* id = g_strdup_printf("id%d", index +1);
-  gchar* file = g_strdup_printf("images%s%s_%d_vellum.png", G_DIR_SEPARATOR_S, PACKAGE_NAME, index);
+  gchar* file = g_strdup_printf("images/%s_%d_vellum.png", PACKAGE_NAME, index);
 
   fprintf(fp,"\t\t<svg:image id=\"%s\" xlink:href=\"%s\" x=\"0\" y=\"0\" width=\"%d\" height=\"%d\"/>\n", id, file, width, height);
   g_free(file);
