@@ -21,8 +21,6 @@
   - Investigate about the status and make a plan
   
 - Reengineering
-  - Separate the keyboard caller code, show the keyboard
-    each time that is selected and intert text area
   - Store and load the savepoints using svg files
   - Bar and transparent layer on the same window
   - cache in memory the recent savepoint
@@ -32,6 +30,7 @@
   - create the iwb without spawn the zip process
 
 - Candidate features:
+  - show the keyboard each time that the user click on a intert text area
   - import in iwb format
   - Deploy the artifact online
     - share saved images with email 

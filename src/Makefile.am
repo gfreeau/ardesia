@@ -44,6 +44,8 @@ ardesia_SOURCES = \
 	windows_backtrace.h \
 	glibc_backtrace.c \
 	glibc_backtrace.h \
+	keyboard.c \
+	keyboard.h \
         saver.c \
 	saver.h \
         color_selector.c \

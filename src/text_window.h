@@ -44,13 +44,8 @@
 
 #define TEXT_CURSOR_WIDTH 4
 
-#ifdef linux
-#define VIRTUALKEYBOARD_NAME "florence"
-#endif
 
 #ifdef _WIN32
-#define VIRTUALKEYBOARD_NAME "C:\\Program Files\\Common Files\\Microsoft Shared\\ink\\TabTip.exe"
-#define VIRTUALKEYBOARD_WINDOW_NAME "IPTip_Main_Window" 
 
 #define TEXT_MOUSE_EVENTS         ( GDK_POINTER_MOTION_MASK |	\
 				    GDK_BUTTON_PRESS_MASK   |	\

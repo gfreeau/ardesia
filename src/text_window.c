@@ -31,6 +31,7 @@
 #include <utils.h>
 #include <annotation_window.h>
 #include <text_window.h>
+#include <keyboard.h>
 
 #ifdef _WIN32
 #include <windows_utils.h>
@@ -38,53 +39,6 @@
 
 
 static TextData* text_data = NULL;
-
-
-/* Start the virtual keyboard */
-static void start_virtual_keyboard()
-{
-#ifdef linux
-  if (!(is_gnome()))
-    {
-      return;
-    }
-#endif
-   
-  gchar* argv[2] = {VIRTUALKEYBOARD_NAME, (gchar*) 0};
-
-  g_spawn_async (NULL /*working_directory*/,
-		 argv,
-		 NULL /*envp*/,
-		 G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD | G_SPAWN_LEAVE_DESCRIPTORS_OPEN,
-		 NULL /*child_setup*/,
-		 NULL /*user_data*/,
-		 &text_data->virtual_keyboard_pid /*child_pid*/,
-		 NULL /*error*/);
-}
-
-
-/* Stop the virtual keyboard */
-static void stop_virtual_keyboard()
-{
-#ifdef linux
-  if (!(is_gnome()))
-    {
-      return;
-    }
-#endif
-  if (text_data->virtual_keyboard_pid > 0)
-    { 
-      /* @TODO replace this with the cross plattform g_pid_terminate when it will available */
-#ifdef _WIN32
-      HWND hWnd = FindWindow(VIRTUALKEYBOARD_WINDOW_NAME, NULL);       
-      SendMessage(hWnd, WM_SYSCOMMAND, SC_CLOSE, 0);
-#else
-      kill (text_data->virtual_keyboard_pid, SIGTERM);
-#endif   
-      g_spawn_close_pid(text_data->virtual_keyboard_pid); 
-      text_data->virtual_keyboard_pid = (GPid) 0;
-    }
-}
 
 
 /* Create the text window */
