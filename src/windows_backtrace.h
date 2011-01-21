@@ -21,16 +21,16 @@
  *
  */
  
- /* 
- 	Copyright (c) 2010 ,
- 		Cloud Wu . All rights reserved.
+/* 
+   Copyright (c) 2010 ,
+   Cloud Wu . All rights reserved.
  
- 		http://www.codingnow.com
+   http://www.codingnow.com
  
- 	Use, modification and distribution are subject to the "New BSD License"
- 	as listed at <url: http://www.opensource.org/licenses/bsd-license.php >.
+   Use, modification and distribution are subject to the "New BSD License"
+   as listed at <url: http://www.opensource.org/licenses/bsd-license.php >.
 
-  */
+*/
 
 #ifdef _WIN32
 
@@ -48,28 +48,28 @@
 #define BUFFER_MAX (16*1024)
 
 struct bfd_ctx {
-	bfd * handle;
-	asymbol ** symbol;
+  bfd * handle;
+  asymbol ** symbol;
 };
 
 struct bfd_set {
-	char * name;
-	struct bfd_ctx * bc;
-	struct bfd_set *next;
+  char * name;
+  struct bfd_ctx * bc;
+  struct bfd_set *next;
 };
 
 struct find_info {
-	asymbol **symbol;
-	bfd_vma counter;
-	const char *file;
-	const char *func;
-	unsigned line;
+  asymbol **symbol;
+  bfd_vma counter;
+  const char *file;
+  const char *func;
+  unsigned line;
 };
 
 struct output_buffer {
-	char * buf;
-	size_t sz;
-	size_t ptr;
+  char * buf;
+  size_t sz;
+  size_t ptr;
 };
 
 void windows_backtrace_register();

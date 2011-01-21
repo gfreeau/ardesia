@@ -43,7 +43,7 @@ gchar* start_project_dialog(GtkWindow *parent)
   /* Initialize the main window */
   project_data->projectDialogGtkBuilder = gtk_builder_new();
 
-    /* Load the gtk builder file created with glade */
+  /* Load the gtk builder file created with glade */
   gtk_builder_add_from_file(project_data->projectDialogGtkBuilder, PROJECT_UI_FILE, NULL);
  
   /* Fill the window by the gtk builder xml */

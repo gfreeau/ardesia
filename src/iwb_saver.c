@@ -27,6 +27,7 @@
 static FILE* fp = NULL;
 
 
+/* Add the xml header */
 static void add_header()
 {
   gchar* becta_ns = "http://www.becta.org.uk/iwb";
@@ -37,12 +38,14 @@ static void add_header()
 }
 
 
+/* Close the iwb xml tag */
 void close_iwb()
 {
   fprintf(fp, "</iwb>\n");
 }
 
 
+/* Open the svg tag */
 static void open_svg()
 {
   gint width = gdk_screen_width();
@@ -50,12 +53,15 @@ static void open_svg()
   fprintf(fp,"\t<svg:svg width=\"%d\" height=\"%d\" viewbox=\"0 0 %d %d\">\n", width, height, width, height);
 }
 
+
+/* Close the svg tag */
 static void close_svg()
 {
   fprintf(fp,"\t</svg:svg>\n");
 }
 
 
+/* Add the background element */
 static void add_background()
 {
   gint width = gdk_screen_width();
@@ -68,12 +74,14 @@ static void add_background()
 }
 
 
+/* Add the background reference */
 static void add_background_reference()
 {
   fprintf(fp,"\t<iwb:element ref=\"id1\" background=\"true\"/>\n");
 }
 
 
+/* Add the savepoint element */
 static void add_savepoint(gint index)
 {
   gint width = gdk_screen_width();
@@ -89,6 +97,7 @@ static void add_savepoint(gint index)
 }
 
 
+/* Add the savepoint elements */
 static void add_savepoints(gint savepoint_number)
 {
   //for each i call add_savepoint
@@ -100,6 +109,7 @@ static void add_savepoints(gint savepoint_number)
 }
 
 
+/* Add the savepoint reference */
 static void add_savepoint_reference(gint index)
 {
   gchar* id = g_strdup_printf("id%d", index +1);
@@ -108,6 +118,7 @@ static void add_savepoint_reference(gint index)
 }
 
 
+/* Add the savepoint references */
 static void add_savepoint_references(gint savepoint_number)
 {
   //for each i call add_savepoint_reference
@@ -119,6 +130,7 @@ static void add_savepoint_references(gint savepoint_number)
 }
 
 
+/* Create the iwb xml content file */
 static void create_content(gchar* content_filename, gchar* img_dir_path)
 {
   fp = fopen(content_filename, "w");
@@ -144,7 +156,8 @@ static void create_content(gchar* content_filename, gchar* img_dir_path)
   fclose(fp);
 }
 
-/* export in iwb format */
+
+/* Export in iwb format */
 void export_iwb(gchar* location)
 {
   const gchar* tmpdir = g_get_tmp_dir();

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-13 17:16+0100\n"
+"POT-Creation-Date: 2011-01-21 01:07+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
@@ -13,110 +13,6 @@ msgstr ""
 "X-Poedit-Language: Spanish\n"
 "X-Poedit-Country: SPAIN\n"
 "X-Poedit-SourceCharset: utf-8\n"
-
-#: ../data/horizontal_bar.glade:35 ../data/vertical_bar.glade.h:20
-msgid "Thickness"
-msgstr "Espesor"
-
-#: ../data/horizontal_bar.glade:62 ../data/vertical_bar.glade.h:6
-msgid "Drawing Mode"
-msgstr "Modo del dibujo"
-
-#: ../data/horizontal_bar.glade:89 ../data/vertical_bar.glade.h:8
-msgid "Filler"
-msgstr "Relleno"
-
-#: ../data/horizontal_bar.glade:116 ../data/vertical_bar.glade.h:2
-msgid "Arrow"
-msgstr "Flecha"
-
-#: ../data/horizontal_bar.glade:131 ../data/vertical_bar.glade.h:12
-msgid "Insert Text"
-msgstr "Insertar tesxto"
-
-#: ../data/horizontal_bar.glade:146 ../data/vertical_bar.glade.h:13
-msgid "Pencil"
-msgstr "Lapiz"
-
-#: ../data/horizontal_bar.glade:160 ../data/vertical_bar.glade.h:10
-msgid "Highlighter"
-msgstr "Resaltador"
-
-#: ../data/horizontal_bar.glade:175 ../data/vertical_bar.glade.h:7
-msgid "Eraser"
-msgstr "Goma de borrar"
-
-#: ../data/horizontal_bar.glade:203 ../data/vertical_bar.glade.h:3
-msgid "Blue"
-msgstr "Azul"
-
-#: ../data/horizontal_bar.glade:218 ../data/vertical_bar.glade.h:9
-msgid "Green"
-msgstr "Verde"
-
-#: ../data/horizontal_bar.glade:233 ../data/vertical_bar.glade.h:24
-msgid "Yellow"
-msgstr "Amarillo"
-
-#: ../data/horizontal_bar.glade:248 ../data/vertical_bar.glade.h:17
-msgid "Red"
-msgstr "Rojo"
-
-#: ../data/horizontal_bar.glade:262 ../data/vertical_bar.glade.h:23
-msgid "White"
-msgstr "Blanco"
-
-#: ../data/horizontal_bar.glade:277 ../data/vertical_bar.glade.h:5
-msgid "Color Chooser"
-msgstr "Elegir un color"
-
-#. set tooltip to unhide
-#: ../data/horizontal_bar.glade:304 ../data/vertical_bar.glade.h:22
-#: ../src/bar_callbacks.c:498
-msgid "Unlock"
-msgstr "Desbloquear"
-
-#: ../data/horizontal_bar.glade:318 ../data/vertical_bar.glade.h:4
-msgid "Clear"
-msgstr "Limpio"
-
-#: ../data/horizontal_bar.glade:344 ../data/vertical_bar.glade.h:21
-msgid "Undo"
-msgstr "Deshacer"
-
-#: ../data/horizontal_bar.glade:357 ../data/vertical_bar.glade.h:18
-msgid "Redo"
-msgstr "Rehacer"
-
-#: ../data/horizontal_bar.glade:383 ../data/vertical_bar.glade.h:14
-msgid "Preferences"
-msgstr "Preferencias"
-
-#: ../data/horizontal_bar.glade:397 ../data/vertical_bar.glade.h:19
-msgid "Save"
-msgstr "Guardar"
-
-#: ../data/horizontal_bar.glade:411 ../data/vertical_bar.glade.h:1
-msgid "Add to pdf"
-msgstr "Anadir a pdf"
-
-#. set stop tooltip
-#: ../data/horizontal_bar.glade:425 ../data/vertical_bar.glade.h:16
-#: ../src/bar_callbacks.c:435
-msgid "Record"
-msgstr "Grabar"
-
-#: ../data/horizontal_bar.glade:439 ../data/vertical_bar.glade.h:11
-msgid "Info"
-msgstr "Info"
-
-#: ../data/horizontal_bar.glade:440 ../data/vertical_bar.glade.h:25
-msgid "info"
-msgstr "informacion"
-
-#: ../data/horizontal_bar.glade:454 ../data/vertical_bar.glade.h:15
-msgid "Quit"
-msgstr "Cerrar"
 
 #: ../data/info_dialog.glade.h:1
 msgid ""
@@ -196,50 +92,143 @@ msgstr "immagine"
 msgid "none"
 msgstr "ninguna"
 
-#: ../src/ardesia.c:76
-msgid "In order to run Ardesia you need to enable a composite manager"
-msgstr "Para ejecutar Ardesia necesita habilitar el administrador compuestos"
+#: ../data/project_dialog.glade.h:1
+msgid "Choose a project name"
+msgstr "Elegir el nombre del proyecto"
 
-#. set stop tooltip
-#: ../src/bar_callbacks.c:446
-msgid "Stop"
-msgstr "Detener"
+#: ../data/vertical_bar.glade.h:1
+msgid "Add to pdf"
+msgstr "Anadir a pdf"
 
-#. set tooltip to hide
-#: ../src/bar_callbacks.c:524
-msgid "Lock"
-msgstr "Bloquear"
+#: ../data/vertical_bar.glade.h:2
+msgid "Arrow"
+msgstr "Flecha"
 
-#. open color widget
-#: ../src/color_selector.c:49
-msgid "Changing color"
-msgstr "Cambiar el color"
+#: ../data/vertical_bar.glade.h:3
+msgid "Blue"
+msgstr "Azul"
 
-#: ../src/pdf_saver.c:38
-msgid "Export as pdf"
-msgstr "Exportar como PDF"
+#: ../data/vertical_bar.glade.h:4
+msgid "Clear"
+msgstr "Limpio"
 
-#: ../src/pdf_saver.c:46 ../src/recorder.c:149 ../src/saver.c:50
-msgid "Choose a file"
-msgstr "Elegir un archivo"
+#: ../data/vertical_bar.glade.h:5
+msgid "Color Chooser"
+msgstr "Elegir un color"
 
-#: ../src/pdf_saver.c:90 ../src/recorder.c:185 ../src/saver.c:97
-msgid "File Exists. Overwrite"
-msgstr "El archivo existe. Sobrescribir"
+#: ../data/vertical_bar.glade.h:6
+msgid "Drawing Mode"
+msgstr "Modo del dibujo"
 
-#: ../src/recorder.c:122
-msgid ""
-"To record with Ardesia you must install the vlc program and add it to the "
-"PATH environment variable"
-msgstr "Para grabar con Ardesia debe instalar el programa vlc y anadir al path"
+#: ../data/vertical_bar.glade.h:7
+msgid "Eraser"
+msgstr "Goma de borrar"
 
-#: ../src/recorder.c:144
-msgid "Save video as ogv"
-msgstr "Guardar el vídeo como ogv"
+#: ../data/vertical_bar.glade.h:8
+msgid "Filler"
+msgstr "Relleno"
 
-#: ../src/saver.c:42
-msgid "Save image"
-msgstr "Guardar imagen"
+#: ../data/vertical_bar.glade.h:9
+msgid "Green"
+msgstr "Verde"
+
+#: ../data/vertical_bar.glade.h:10
+msgid "Highlighter"
+msgstr "Resaltador"
+
+#: ../data/vertical_bar.glade.h:11
+msgid "Info"
+msgstr "Info"
+
+#: ../data/vertical_bar.glade.h:12
+msgid "Insert Text"
+msgstr "Insertar tesxto"
+
+#: ../data/vertical_bar.glade.h:13
+msgid "Pencil"
+msgstr "Lapiz"
+
+#: ../data/vertical_bar.glade.h:14
+msgid "Preferences"
+msgstr "Preferencias"
+
+#: ../data/vertical_bar.glade.h:15
+msgid "Quit"
+msgstr "Cerrar"
+
+#: ../data/vertical_bar.glade.h:16
+msgid "Record"
+msgstr "Grabar"
+
+#: ../data/vertical_bar.glade.h:17
+msgid "Red"
+msgstr "Rojo"
+
+#: ../data/vertical_bar.glade.h:18
+msgid "Redo"
+msgstr "Rehacer"
+
+#: ../data/vertical_bar.glade.h:19
+msgid "Save"
+msgstr "Guardar"
+
+#: ../data/vertical_bar.glade.h:20
+msgid "Thickness"
+msgstr "Espesor"
+
+#: ../data/vertical_bar.glade.h:21
+msgid "Undo"
+msgstr "Deshacer"
+
+#: ../data/vertical_bar.glade.h:22
+msgid "Unlock"
+msgstr "Desbloquear"
+
+#: ../data/vertical_bar.glade.h:23
+msgid "White"
+msgstr "Blanco"
+
+#: ../data/vertical_bar.glade.h:24
+msgid "Yellow"
+msgstr "Amarillo"
+
+#: ../data/vertical_bar.glade.h:25
+msgid "info"
+msgstr "informacion"
+
+#~ msgid "In order to run Ardesia you need to enable a composite manager"
+#~ msgstr ""
+#~ "Para ejecutar Ardesia necesita habilitar el administrador compuestos"
+
+#~ msgid "Stop"
+#~ msgstr "Detener"
+
+#~ msgid "Lock"
+#~ msgstr "Bloquear"
+
+#~ msgid "Changing color"
+#~ msgstr "Cambiar el color"
+
+#~ msgid "Export as pdf"
+#~ msgstr "Exportar como PDF"
+
+#~ msgid "Choose a file"
+#~ msgstr "Elegir un archivo"
+
+#~ msgid "File Exists. Overwrite"
+#~ msgstr "El archivo existe. Sobrescribir"
+
+#~ msgid ""
+#~ "To record with Ardesia you must install the vlc program and add it to the "
+#~ "PATH environment variable"
+#~ msgstr ""
+#~ "Para grabar con Ardesia debe instalar el programa vlc y anadir al path"
+
+#~ msgid "Save video as ogv"
+#~ msgstr "Guardar el vídeo como ogv"
+
+#~ msgid "Save image"
+#~ msgstr "Guardar imagen"
 
 #~ msgid "window"
 #~ msgstr "Fenetre"

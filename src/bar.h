@@ -76,7 +76,7 @@ typedef struct
   /* Workspace dir where store artifacts */
   gchar* workspace_dir;
 
- /* Default folder where store artifacts */
+  /* Default folder where store artifacts */
   gchar* project_dir;
    
 }BarData;

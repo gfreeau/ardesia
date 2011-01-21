@@ -128,12 +128,12 @@ static void set_the_best_colormap()
       g_warning("The screen does not support the alpha channel\n");
       GdkVisual* visual = gdk_screen_get_rgba_visual(screen);
       if (visual == NULL)
-      {
-        g_warning("The screen does not support the rgba visual!\n");
+	{
+	  g_warning("The screen does not support the rgba visual!\n");
 #ifndef _WIN32
-        exit(0);
+	  exit(0);
 #endif
-      }
+	}
     }
 }
 

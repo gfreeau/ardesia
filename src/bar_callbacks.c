@@ -111,11 +111,11 @@ static void take_pen_tool()
 
 static void unlock(BarData *bar_data)
 {
-   if (!bar_data->grab)
-     {
-        GtkToggleToolButton* eraserToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonUnlock"));
-        gtk_toggle_tool_button_set_active(eraserToolButton, FALSE); 
-     }
+  if (!bar_data->grab)
+    {
+      GtkToggleToolButton* eraserToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonUnlock"));
+      gtk_toggle_tool_button_set_active(eraserToolButton, FALSE); 
+    }
 }
 
 
@@ -313,32 +313,32 @@ on_toolsHighlighter_activate     (GtkToolButton   *toolbutton,
 /* Push mode button */
 G_MODULE_EXPORT void
 on_toolsMode_activate          (GtkToolButton   *toolbutton,
-				 gpointer         func_data)
+				gpointer         func_data)
 {
   BarData *bar_data = (BarData*) func_data;
   if (!bar_data->rectifier)
     {
-       if (!bar_data->rounder)
-         {
-           //select rounder
-           gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"rounder")));
-           bar_data->rounder = TRUE;
-           bar_data->rectifier = FALSE;
-         }
-       else
-         {
-           //select rectifier
-           gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"rectifier")));
-           bar_data->rectifier = TRUE;
-           bar_data->rounder = FALSE;
-         }
+      if (!bar_data->rounder)
+	{
+	  //select rounder
+	  gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"rounder")));
+	  bar_data->rounder = TRUE;
+	  bar_data->rectifier = FALSE;
+	}
+      else
+	{
+	  //select rectifier
+	  gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"rectifier")));
+	  bar_data->rectifier = TRUE;
+	  bar_data->rounder = FALSE;
+	}
     }  
   else
     {
-       // select none
-       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"hand")));
-       bar_data->rectifier = FALSE;
-       bar_data->rounder = FALSE; 
+      // select none
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"hand")));
+      bar_data->rectifier = FALSE;
+      bar_data->rounder = FALSE; 
     }
 }
 

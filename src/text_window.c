@@ -278,7 +278,7 @@ static void init_text_widget(GtkWidget *widget)
       set_text_cursor(widget);
     }
   
-    drill_window_in_bar_area(text_data->window->window);
+  drill_window_in_bar_area(text_data->window->window);
   
 #ifdef _WIN32
   grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);

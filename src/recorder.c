@@ -63,7 +63,7 @@ static GPid call_recorder(gchar* filename, gchar* option)
 /* Is the recorder available */
 gboolean is_recorder_available()
 {
-  #ifdef _WIN32
+#ifdef _WIN32
   gchar* videolan = "\\VideoLAN\\VLC";
   gchar* programfile= getenv("PROGRAMFILES");
   gchar* file = g_strdup_printf("%s\\%s", programfile, videolan);
@@ -77,7 +77,7 @@ gboolean is_recorder_available()
   g_free(programfile);
   g_free(file);
   if (ret) return TRUE;
-  #endif
+#endif
   gchar* argv[5] = {"vlc", "-I", "dummy", "--dummy-quiet", (gchar*) 0};
   
   return g_spawn_async (NULL /*working_directory*/,

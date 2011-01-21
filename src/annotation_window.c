@@ -798,15 +798,15 @@ static void setup_app(GtkWidget* parent)
 /* Return if it is a closed path */
 static gboolean is_a_closed_path(GSList* list)
 {
-   // Check if it is a closed path
-   gint lenght = g_slist_length(list);
-   AnnotateStrokeCoordinate* point0 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
-   AnnotateStrokeCoordinate* pointN = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, lenght-1);
-   if (get_distance(point0->x, point0->y, pointN->x, pointN->y) > 0)
-     {
-        return TRUE;
-     }
-   return FALSE;
+  // Check if it is a closed path
+  gint lenght = g_slist_length(list);
+  AnnotateStrokeCoordinate* point0 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
+  AnnotateStrokeCoordinate* pointN = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, lenght-1);
+  if (get_distance(point0->x, point0->y, pointN->x, pointN->y) > 0)
+    {
+      return TRUE;
+    }
+  return FALSE;
 }
 
 
