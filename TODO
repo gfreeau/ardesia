@@ -21,10 +21,11 @@
   - Investigate about the status and make a plan
   
 - Reengineering
+  - Separate the keyboard caller code, show the keyboard
+    each time that is selected and intert text area
   - Store and load the savepoints using svg files
   - Bar and transparent layer on the same window
-  - cache in memory the recent savepoint; in this way we'll have 
-    a more reactive undo/redo
+  - cache in memory the recent savepoint
   - Text insertion consolidation
   - Use double buffered windows to have a smoother exposure to the eye 
   - Screencast recorder using lib instead spawn processes
