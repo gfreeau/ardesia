@@ -13,7 +13,7 @@
   - Make a video tutorial
   - Ardesia fedora packaging
   - Windows operating systems
-    - Create an Inno Setup installer
+    - Integrate Inno Setup installer with autotools
     - Build a 64 bit executable version
     - gtk 2.22
 
