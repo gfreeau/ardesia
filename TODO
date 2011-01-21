@@ -13,9 +13,9 @@
   - Make a video tutorial
   - Ardesia fedora packaging
   - Windows operating systems
-    - Create an izpack installer
+    - Create an Inno Setup installer
     - Build a 64 bit executable version
-	- gtk 2.22
+    - gtk 2.22
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
