@@ -27,9 +27,9 @@ DISTCLEANFILES = intltool-extract \
 	intltool-update \
 	po/.intltool-merge-cache
 
-
-win-installer:
-	(cd .; sh win-installer/run.sh)
+deb:
+	debuild -us -uc -b
+	mv ../$(PACKAGE_NAME)_$(PACKAGE_VERSION)-*.deb .
 
 	
 update-po:
