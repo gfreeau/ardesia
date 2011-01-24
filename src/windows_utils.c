@@ -156,11 +156,13 @@ void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachme
   M_MSG.lpRecips = M_RD;
 
   gint attach_lenght = g_slist_length(attachmentList);
-
-  MapiFileDesc M_FD[lenght];
-
+  
+  MapiFileDesc M_FD[attach_lenght];
+  
+  gint i =0;
   for (i=0; i<attach_lenght; i++)
     { 
+	  gchar* attachment =  g_slist_nth_data (attachmentList, i);
       M_FD[i].lpszPathName = attachment;
       M_FD[i].lpszFileName = attachment;
     }  
