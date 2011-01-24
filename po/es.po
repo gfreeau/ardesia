@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-21 01:07+0100\n"
+"POT-Creation-Date: 2011-01-24 16:14+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
@@ -95,6 +95,10 @@ msgstr "ninguna"
 #: ../data/project_dialog.glade.h:1
 msgid "Choose a project name"
 msgstr "Elegir el nombre del proyecto"
+
+#: ../data/share_confirmation_dialog.glade.h:1
+msgid "Do you want to share your work by email?"
+msgstr "Quieres compartir tu trabajo por correo electronico?"
 
 #: ../data/vertical_bar.glade.h:1
 msgid "Add to pdf"

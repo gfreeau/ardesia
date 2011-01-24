@@ -8,6 +8,7 @@ data/background_window.glade
 data/info_dialog.glade
 data/preference_dialog.glade
 data/project_dialog.glade
+data/share_confirmation_dialog.glade
 data/text_window.glade
 data/vertical_bar.glade
                                                     
