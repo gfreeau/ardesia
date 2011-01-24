@@ -124,6 +124,9 @@ static gboolean init_pdf_saver(GtkWindow *parent, gchar** workspace_dir, GdkPixb
   /* start the widget to ask the file name where save the pdf */       
   gboolean ret = start_save_pdf_dialog(parent, workspace_dir, pixbuf);
 
+  // add to the list of the artifacts created in the session
+  add_artifact(pdf_data->filename);
+
   if (!ret)
     {
         
@@ -235,9 +238,6 @@ void quit_pdf_saver()
   if (pdf_data)
     {
       wait_for_pdf_save_pending_thread();
-
-      // add to the list of the artifacts created in the session
-      add_artifact(pdf_data->filename);
  
       /* free the list and all the pixbuf inside it */
       while (pdf_data->input_filelist!=NULL)

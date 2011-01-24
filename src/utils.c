@@ -390,7 +390,7 @@ void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
 
   gint attach_lenght = g_slist_length(attachmentList);
 
-  gint arg_lenght = attach_lenght + 8;
+  gint arg_lenght = (attach_lenght*2) + 7;
 
   gchar** argv = g_malloc((arg_lenght+1) * sizeof(gchar*)); 
   

@@ -323,7 +323,8 @@ main(gint argc, char *argv[])
   if (artifact_list)
     {  
        /* @TODO Send email dialog */  
-       send_artifacts_with_email(artifact_list);  
+       send_artifacts_with_email(artifact_list);
+       free_artifacts();  
     }
 
   return 0;
