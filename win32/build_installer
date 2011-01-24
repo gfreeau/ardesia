@@ -1,4 +1,5 @@
-DESTDIR=win-installer/ardesia_0.7-windows-1_i386
+WIN32DIR=win32
+DESTDIR=$WIN32DIR/ardesia_0.7-windows-1_i386
 
 mkdir -p $DESTDIR
 
@@ -6,7 +7,7 @@ cp AUTHORS $DESTDIR
 cp COPYING $DESTDIR
 cp NEWS $DESTDIR
 cp README $DESTDIR
-cp win-installer/RUN $DESTDIR
+cp $WIN32DIR/RUN $DESTDIR
 
 mkdir -p $DESTDIR/bin
 
