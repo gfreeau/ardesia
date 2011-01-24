@@ -77,7 +77,7 @@ static gboolean  quit(BarData *bar_data)
       g_object_unref (gtkBuilder); 
     }
   gtk_main_quit();
-  exit(0);
+  return TRUE;
 }
 
 

@@ -176,16 +176,6 @@ static void wait_for_pdf_save_pending_thread()
 }
 
 
-/* Send email */
-static void send_pdf_with_email(gchar* attachment)
-{
-  gchar* to = "ardesia-developer@googlegroups.com";
-  gchar* subject = "ardesia-contribution";
-  gchar* body = "Dear ardesia developer group,\nI want share my work created with Ardesia with you, please for details see the attachment.";
-  send_email(to, subject, body, attachment);
-}
-
-
 /* Add the screenshot to pdf */
 void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
 {
@@ -246,7 +236,7 @@ void quit_pdf_saver()
     {
       wait_for_pdf_save_pending_thread();
       // send the pdf
-      send_pdf_with_email(pdf_data->filename);
+      send_artifact_with_email(pdf_data->filename);
  
       /* free the list and all the pixbuf inside it */
       while (pdf_data->input_filelist!=NULL)

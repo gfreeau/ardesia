@@ -316,8 +316,8 @@ main(gint argc, char *argv[])
 
   gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
   gtk_widget_show(ardesia_bar_window);
-
   gtk_main();
+  
   return 0;
 }
 
