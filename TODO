@@ -20,22 +20,22 @@
   - Investigate about the status and make a plan
   
 - Reengineering
-  - Better Inno Setup integration with autotools
   - Store and load the savepoints using svg files
   - Bar and transparent layer on the same window
-  - cache in memory the recent savepoint
+  - Cache in memory the recent savepoint
   - Text insertion consolidation
   - Use double buffered windows to have a smoother exposure to the eye 
   - Screencast recorder using lib instead spawn processes
-  - create the iwb without spawn the zip process
+  - Create the iwb without spawn the zip process
 
 - Candidate features:
-  - show an information dialog when a crash occurs
-  - import in iwb format
-  - show the keyboard each time that a text entry field is in focus
+  - Inno Setup integration with autotools
+  - Show an information dialog when a crash occurs
+  - Import in iwb format
+  - Show the keyboard each time that a text entry field is in focus
   - Deploy the artifact online
     - video; youtube upload
-  - image gallery (sticky notes...)
+  - Image gallery (sticky notes...)
   - Lazo selection tool
   - Move
   - Copy/paste
