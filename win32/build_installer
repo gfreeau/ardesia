@@ -30,6 +30,8 @@ mkdir -p $DESTDIR/bin
 
 cp /mingw/bin/ardesia.exe $DESTDIR/bin
 cp /mingw/bin/curtain.exe  $DESTDIR/bin
+cp /mingw/bin/spotlighter.exe $DESTDIR/bin
+
 cp /mingw/bin/freetype6.dll $DESTDIR/bin
 cp /mingw/bin/gspawn-win32-helper.exe $DESTDIR/bin
 cp /mingw/bin/intl.dll $DESTDIR/bin
@@ -52,7 +54,6 @@ cp /mingw/bin/libpangocairo-1.0-0.dll $DESTDIR/bin
 cp /mingw/bin/libpangoft2-1.0-0.dll $DESTDIR/bin
 cp /mingw/bin/libpangowin32-1.0-0.dll $DESTDIR/bin
 cp /mingw/bin/libpng14-14.dll $DESTDIR/bin
-cp /mingw/bin/spotlighter.exe $DESTDIR/bin
 cp /mingw/bin/zlib1.dll $DESTDIR/bin
 
 mkdir -p $DESTDIR/etc/gtk-2.0

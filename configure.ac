@@ -120,9 +120,12 @@ pkg_modules="	glib-2.0
 
 PKG_CHECK_MODULES(ARDESIA, [$pkg_modules])
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 src/Makefile
 po/Makefile.in
 data/Makefile
+win32/ardesia.iss
 ])
+
+AC_OUTPUT
