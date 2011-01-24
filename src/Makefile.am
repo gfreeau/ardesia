@@ -60,6 +60,10 @@ ardesia_SOURCES = \
 	project_dialog.h \
 	project_dialog_callbacks.c \
 	project_dialog_callbacks.h \
+        share_confirmation_dialog.c \
+	share_confirmation_dialog.h \
+	share_confirmation_dialog_callbacks.c \
+	share_confirmation_dialog_callbacks.h \
         text_window.c \
 	text_window.h \
         info_dialog.c \

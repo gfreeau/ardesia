@@ -25,6 +25,7 @@
 #include <annotation_window.h>
 #include <background_window.h>
 #include <project_dialog.h>
+#include <share_confirmation_dialog.h>
 #include <bar.h>
 
 
@@ -322,8 +323,7 @@ main(gint argc, char *argv[])
 
   if (artifact_list)
     {  
-       /* @TODO Send email dialog */  
-       send_artifacts_with_email(artifact_list);
+       start_share_dialog(NULL);
        free_artifacts();  
     }
 

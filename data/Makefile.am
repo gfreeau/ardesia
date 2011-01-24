@@ -12,6 +12,7 @@ ui_DATA = vertical_bar.glade \
 	  project_dialog.glade \
 	  annotation_window.glade \
 	  background_window.glade \
+	  share_confirmation_dialog.glade \
 	  text_window.glade \
 	  info_dialog.glade
 
