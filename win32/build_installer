@@ -5,7 +5,9 @@ echo "You also need InnoSetup (http://www.innosetup.org) with iscc in your PATH"
 
 WIN32_DIR=win32
 DESTDIR=$WIN32_DIR/ardesia_0.7-windows-1_i386
-
+IS_VERSION=5
+IS_DIR=$PROGRAMFILES/Inno\ Setup\ $IS_VERSION
+PATH=$IS_DIR:$PATH
 ISCC_COMPILER=ISCC.exe
 ARDESIA_ISCC_FILENAME=$WIN32_DIR/ardesia.iss
 
