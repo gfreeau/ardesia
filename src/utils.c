@@ -360,12 +360,34 @@ AnnotateStrokeCoordinate * allocate_point(gint x, gint y, gint width, gdouble pr
 
 
 /* Send an email */
-void send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment)
+void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
 {
 #ifdef _WIN32
   windows_send_email(to, subject, body, attachment);
 #else
-  gchar* argv[9] = {"xdg-email", "--attach", attachment, "--subject", subject, "--body", body, to, (gchar*) 0};
+  gint attach_lenght = g_slist_length(attachmentList);
+
+  gint arg_lenght = attach_lenght + 7;
+
+  gchar** argv = g_malloc((arg_lenght+1) * sizeof(gchar*)); 
+  
+  argv[0] = "xdg-email";
+  argv[1] = "--subject";
+  argv[2] = subject;
+  argv[3] = "--body";
+  argv[4] = body;
+
+  int i=0;
+  int j=5;
+  for (i=0; i<attach_lenght; i++)
+    {
+       gchar* attachment = (gchar*) g_slist_nth_data (attachmentList, i);
+       argv[j] = "--attach";
+       argv[j+1] = attachment;
+       j = j+2;
+    }
+  
+  argv[arg_lenght-1] = to;
 
   g_spawn_sync (NULL /*working_directory*/,
 		argv,
@@ -387,7 +409,10 @@ void send_artifact_with_email(gchar* attachment)
   gchar* to = "ardesia-developer@googlegroups.com";
   gchar* subject = "ardesia-contribution";
   gchar* body = "Dear ardesia developer group,\nI want share my work created with Ardesia with you, please for details see the attachment.";
-  send_email(to, subject, body, attachment);
+  GSList* attachmentList = NULL;
+  attachmentList = g_slist_prepend (attachmentList, attachment);
+  send_email(to, subject, body, attachmentList);
+
 }
 
 
@@ -397,7 +422,10 @@ void send_trace_with_email(gchar* attachment)
   gchar* to = "ardesia-developer@googlegroups.com";
   gchar* subject = "ardesia-bug-report";
   gchar* body = "Dear ardesia developer group,\nAn unhandled application error occurred, please for details see the attachment with the stack trace.";
-  send_email(to, subject, body, attachment);
+  GSList* attachmentList = NULL;
+  attachmentList = g_slist_prepend (attachmentList, attachment);
+  send_email(to, subject, body, attachmentList);
+
 }
 
 
