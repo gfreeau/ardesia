@@ -214,6 +214,10 @@ void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList);
 void send_artifact_with_email(gchar* attachment);
 
 
+/* Send artifacts with email */
+void send_artifacts_with_email(GSList* attachmentList);
+
+
 /* Send trace with email */
 void send_trace_with_email(gchar* attachment);
 

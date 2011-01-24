@@ -381,10 +381,10 @@ void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
   int j=5;
   for (i=0; i<attach_lenght; i++)
     {
-       gchar* attachment = (gchar*) g_slist_nth_data (attachmentList, i);
-       argv[j] = "--attach";
-       argv[j+1] = attachment;
-       j = j+2;
+      gchar* attachment = (gchar*) g_slist_nth_data (attachmentList, i);
+      argv[j] = "--attach";
+      argv[j+1] = attachment;
+      j = j+2;
     }
   
   argv[arg_lenght-1] = to;
@@ -403,16 +403,22 @@ void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
 }
 
 
-/* Send artifact with email */
-void send_artifact_with_email(gchar* attachment)
+/* Send artifacts with email */
+void send_artifacts_with_email(GSList* attachmentList)
 {
   gchar* to = "ardesia-developer@googlegroups.com";
   gchar* subject = "ardesia-contribution";
   gchar* body = "Dear ardesia developer group,\nI want share my work created with Ardesia with you, please for details see the attachment.";
+  send_email(to, subject, body, attachmentList);
+}
+
+
+/* Send artifact with email */
+void send_artifact_with_email(gchar* attachment)
+{
   GSList* attachmentList = NULL;
   attachmentList = g_slist_prepend (attachmentList, attachment);
-  send_email(to, subject, body, attachmentList);
-
+  send_artifacts_with_email(attachmentList);
 }
 
 

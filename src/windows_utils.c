@@ -160,10 +160,10 @@ void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachme
   MapiFileDesc M_FD[lenght];
 
   for (i=0; i<attach_lenght; i++)
-     { 
-       M_FD[i].lpszPathName = attachment;
-       M_FD[i].lpszFileName = attachment;
-     }  
+    { 
+      M_FD[i].lpszPathName = attachment;
+      M_FD[i].lpszFileName = attachment;
+    }  
 
   M_MSG.nFileCount = sizeof(M_FD) / sizeof(M_FD[0]);
   M_MSG.lpFiles = M_FD;
