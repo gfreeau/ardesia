@@ -30,11 +30,14 @@
   - create the iwb without spawn the zip process
 
 - Candidate features:
-  - show the keyboard each time that a text entry field is in focus
-  - import in iwb format
+  - put a dialog that ask if you want send your works with email
+    at the end of the session
+  - show an information dialog when a crash occurs
   - Deploy the artifact online
     - share saved images and iwb with email 
     - video; youtube upload
+  - show the keyboard each time that a text entry field is in focus
+  - import in iwb format
   - image gallery (sticky notes...)
   - Lazo selection tool
   - Move

@@ -59,8 +59,8 @@ static gboolean bar_to_top(gpointer data)
 static gboolean  quit(BarData *bar_data)
 {
   export_iwb(bar_data->project_dir);
-  quit_pdf_saver();
   annotate_quit();
+  quit_pdf_saver();
   quit_recorder();
 
   /* Disallocate all the BarData */
