@@ -363,7 +363,7 @@ AnnotateStrokeCoordinate * allocate_point(gint x, gint y, gint width, gdouble pr
 void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
 {
 #ifdef _WIN32
-  windows_send_email(to, subject, body, attachment);
+  windows_send_email(to, subject, body, attachmentList);
 #else
   gint attach_lenght = g_slist_length(attachmentList);
 

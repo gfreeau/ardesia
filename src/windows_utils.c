@@ -125,7 +125,7 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 
 
 /* Send an email with MAPI */
-void windows_send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment)
+void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
 {
   HINSTANCE inst;
   LPMAPISENDMAIL MAPISendMail;
@@ -155,9 +155,15 @@ void windows_send_email(gchar* to, gchar* subject, gchar* body, gchar* attachmen
   M_MSG.nRecipCount = sizeof(M_RD) / sizeof(M_RD[0]);
   M_MSG.lpRecips = M_RD;
 
-  MapiFileDesc M_FD[1];
-  M_FD[0].lpszPathName = attachment;
-  M_FD[0].lpszFileName = attachment;
+  gint attach_lenght = g_slist_length(attachmentList);
+
+  MapiFileDesc M_FD[lenght];
+
+  for (i=0; i<attach_lenght; i++)
+     { 
+       M_FD[i].lpszPathName = attachment;
+       M_FD[i].lpszFileName = attachment;
+     }  
 
   M_MSG.nFileCount = sizeof(M_FD) / sizeof(M_FD[0]);
   M_MSG.lpFiles = M_FD;

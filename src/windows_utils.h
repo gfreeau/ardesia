@@ -57,8 +57,10 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 /* Override the with the gdk_cursor_new_from_pixmap with the fixed version */						
 #define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
 
-/* Send an email with MAPI*/
-void windows_send_email(gchar* to, gchar* subject, gchar* body, gchar* attachment);
+
+/* Send an email with MAPI */
+void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList);
+
 
 /* Create a link with icon */
 void windows_create_link(gchar* src, gchar* dest, gchar* icon_path, int icon_index);
