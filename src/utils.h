@@ -108,8 +108,22 @@ typedef struct
 /* Get the name of the current project */
 gchar* get_project_name();
 
+
 /* Set the name of the current project */
 void set_project_name(gchar * name);
+
+
+/* Get the list of the path of the artifacts created in the session */
+GSList* get_artifacts();
+
+
+/* Add the path of an artifacts created in the session to the list */
+void add_artifact(gchar* path);
+
+
+/* Free the structure containing the artifact list created in the session */
+void free_artifacts();
+
 
 /* Ungrab pointer */
 void ungrab_pointer(GdkDisplay* display, GtkWidget *win);

@@ -318,6 +318,14 @@ main(gint argc, char *argv[])
   gtk_widget_show(ardesia_bar_window);
   gtk_main();
   
+  GSList * artifact_list = get_artifacts();
+
+  if (artifact_list)
+    {  
+       /* @TODO Send email dialog */  
+       send_artifacts_with_email(artifact_list);  
+    }
+
   return 0;
 }
 

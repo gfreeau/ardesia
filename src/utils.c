@@ -33,6 +33,7 @@
 #endif
 
 static gchar* project_name = NULL;
+static GSList* artifacts = NULL;
 
 
 /* Get the name of the current project */
@@ -46,6 +47,27 @@ gchar* get_project_name()
 void set_project_name(gchar * name)
 {
   project_name = name;
+}
+
+/* Get the list of the path of the artifacts created in the session */
+GSList* get_artifacts()
+{
+  return artifacts;
+}
+
+
+/* Add the path of an artifacts created in the session to the list */
+void add_artifact(gchar* path)
+{
+  gchar* copied_path = g_strdup_printf("%s", path);
+  artifacts = g_slist_prepend (artifacts, copied_path);
+}
+
+
+/* Free the structure containing the artifact list created in the session */
+void free_artifacts()
+{
+   g_slist_foreach(artifacts, (GFunc)g_free, NULL);
 }
 
 	
@@ -365,9 +387,10 @@ void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
 #ifdef _WIN32
   windows_send_email(to, subject, body, attachmentList);
 #else
+
   gint attach_lenght = g_slist_length(attachmentList);
 
-  gint arg_lenght = attach_lenght + 7;
+  gint arg_lenght = attach_lenght + 8;
 
   gchar** argv = g_malloc((arg_lenght+1) * sizeof(gchar*)); 
   
@@ -387,7 +410,8 @@ void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
       j = j+2;
     }
   
-  argv[arg_lenght-1] = to;
+  argv[arg_lenght-2] = to;
+  argv[arg_lenght-1] = NULL;
 
   g_spawn_sync (NULL /*working_directory*/,
 		argv,
@@ -399,6 +423,7 @@ void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
 		NULL /*error*/,
 		NULL,
 		NULL);
+
 #endif
 }
 
