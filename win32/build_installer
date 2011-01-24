@@ -1,5 +1,17 @@
-WIN32DIR=win32
-DESTDIR=$WIN32DIR/ardesia_0.7-windows-1_i386
+#!/bin/sh
+
+echo "You need to execute this on a Windows machine within msys (http://www.mingw.org)" 
+echo "You also need InnoSetup (http://www.innosetup.org) with iscc in your PATH" 
+
+WIN32_DIR=win32
+DESTDIR=$WIN32_DIR/ardesia_0.7-windows-1_i386
+
+ISCC_COMPILER=ISCC.exe
+ARDESIA_ISCC_FILENAME=$WIN32_DIR/ardesia.iss
+
+echo Inno Setup installation directory $IS_DIR
+echo Inno Setup compiler $ISCC_COMPILER
+echo Inno Setup $ARDESIA_ISCC_FILENAME
 
 mkdir -p $DESTDIR
 
@@ -7,7 +19,10 @@ cp AUTHORS $DESTDIR
 cp COPYING $DESTDIR
 cp NEWS $DESTDIR
 cp README $DESTDIR
-cp $WIN32DIR/RUN $DESTDIR
+cp $WIN32_DIR/RUN $DESTDIR
+
+
+echo Prepare the $DESTDIR directory 
 
 mkdir -p $DESTDIR/bin
 
@@ -143,3 +158,7 @@ cp /mingw/share/locale/it/LC_MESSAGES/ardesia.mo $DESTDIR/share/locale/it/LC_MES
 mkdir -p $DESTDIR/share/spotlighter/ui/
 
 cp /mingw/share/spotlighter/ui/spotlighter.ui $DESTDIR/share/spotlighter/ui/
+
+echo Build $ARDESIA_ISCC_FILENAME
+
+$ISCC_COMPILER $ARDESIA_ISCC_FILENAME
