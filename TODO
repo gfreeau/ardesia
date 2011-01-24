@@ -30,7 +30,7 @@
   - create the iwb without spawn the zip process
 
 - Candidate features:
-  - put a dialog that ask if you want send your works with email
+  - put a confirmation dialog that ask if you want to share your work by email
     at the end of the session
   - show an information dialog when a crash occurs
   - Deploy the artifact online
