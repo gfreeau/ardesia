@@ -137,7 +137,7 @@ void visualize_missing_recorder_program_dialog(GtkWindow* parent_window)
  * This function take as input the recor toolbutton in ardesia bar
  * return true is the recorder is started
  */
-gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar **workspace_dir)
+gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar **folder)
 {
   gboolean status = FALSE;
 
@@ -149,7 +149,7 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file"));
 
   gchar* project_name = get_project_name();
-  gchar* current_folder = g_strdup_printf("%s%s%s", *workspace_dir, G_DIR_SEPARATOR_S, project_name);
+  gchar* current_folder = g_strdup_printf("%s", *folder);
 
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), current_folder);
   g_free(current_folder);  
@@ -161,8 +161,8 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
       /* store the folder location this will be proposed the next time */
-      g_free(*workspace_dir);
-      *workspace_dir = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser)); 
+      g_free(*folder);
+      *folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser)); 
 
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
      
