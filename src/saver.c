@@ -121,7 +121,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
       save_png (buf, filename);
     }
   
-  // add to the list of the artifacts created in the session
+  /* add to the list of the artifacts created in the session */
   add_artifact(filename);
 
   g_free(filename);

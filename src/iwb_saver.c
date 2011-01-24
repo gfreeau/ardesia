@@ -190,8 +190,10 @@ void export_iwb(gchar* location)
 		NULL,
 		NULL,
 		NULL);
-  
 
+  /* add to the list of the artifacts created in the session */
+  add_artifact(zip_filename);
+  
   g_free(ardesia_tmp_dir);
   g_free(project_tmp_dir); 
   g_free(content_filepath);

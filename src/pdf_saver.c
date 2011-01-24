@@ -124,7 +124,7 @@ static gboolean init_pdf_saver(GtkWindow *parent, gchar** workspace_dir, GdkPixb
   /* start the widget to ask the file name where save the pdf */       
   gboolean ret = start_save_pdf_dialog(parent, workspace_dir, pixbuf);
 
-  // add to the list of the artifacts created in the session
+  /* add to the list of the artifacts created in the session */
   add_artifact(pdf_data->filename);
 
   if (!ret)
@@ -152,7 +152,7 @@ static void *pdf_save(void *arg)
   for (i=lenght-1; i>=0; i--)
     {
       gchar* current_filename = (gchar*) g_slist_nth_data (pdf_data->input_filelist, i);
-      // load the filename content   
+      /* load the filename content */   
       GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (current_filename, NULL);
       gdk_cairo_set_source_pixbuf(pdf_cr, pixbuf, 0, 0);
       cairo_paint(pdf_cr);
@@ -203,9 +203,9 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
     {
       if (!g_thread_supported())
 	{
+	  /* initialize internal mutex "gdk_threads_mutex" */
 	  g_thread_init(NULL);
 	  gdk_threads_init();                  
-	  // Called to initialize internal mutex "gdk_threads_mutex".
 	  g_printerr("g_thread supported\n");
 	}
       if (!init_pdf_saver(parent, workspace_dir, pixbuf))
@@ -221,7 +221,7 @@ void add_pdf_page(GtkWindow *parent, gchar** workspace_dir)
 
   wait_for_pdf_save_pending_thread();
 
-  // start save thread
+  /* start save thread */
   GError           *err = NULL ;
   if ((pdf_data->thread = g_thread_create((GThreadFunc) pdf_save, (void *) NULL, TRUE, &err)) == NULL)
     {

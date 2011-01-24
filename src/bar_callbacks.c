@@ -159,7 +159,7 @@ static void start_tool(BarData *bar_data)
     {
       if (bar_data->text)
         {
-	  // text button then start the text widget
+	  /* text button then start the text widget */
 	  annotate_release_grab();
 	  start_text_widget(GTK_WINDOW(get_annotation_window()), bar_data->color, bar_data->thickness);
 	}
@@ -212,8 +212,10 @@ on_info                         (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) func_data;
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
-  // start the info dialog
+
+  /* start the info dialog */
   start_info_dialog(toolbutton, GTK_WINDOW(get_bar_window()));
+
   bar_data->grab = grab_value;
   start_tool(bar_data);
   return TRUE;
@@ -320,14 +322,14 @@ on_toolsMode_activate          (GtkToolButton   *toolbutton,
     {
       if (!bar_data->rounder)
 	{
-	  //select rounder
+	  /* select rounder */
 	  gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"rounder")));
 	  bar_data->rounder = TRUE;
 	  bar_data->rectifier = FALSE;
 	}
       else
 	{
-	  //select rectifier
+	  /* select rectifier */
 	  gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"rectifier")));
 	  bar_data->rectifier = TRUE;
 	  bar_data->rounder = FALSE;
@@ -335,7 +337,7 @@ on_toolsMode_activate          (GtkToolButton   *toolbutton,
     }  
   else
     {
-      // select none
+      /* select free hand writing */
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"hand")));
       bar_data->rectifier = FALSE;
       bar_data->rounder = FALSE; 
@@ -352,18 +354,18 @@ on_toolsThick_activate          (GtkToolButton   *toolbutton,
   if (bar_data->thickness== THICK_STEP*2)
     {
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thick")));
-      // set thick icon
+      /* set thick icon */
       bar_data->thickness = THICK_STEP*3;
     }
   else if (bar_data->thickness==THICK_STEP*3)
     {
-      // set thin icon
+      /* set thin icon */
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thin")));
       bar_data->thickness = THICK_STEP;
     }
   else if (bar_data->thickness==THICK_STEP)
     {
-      // set medium icon
+      /* set medium icon */
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"medium")));
       bar_data->thickness = THICK_STEP*2;
     }
@@ -520,7 +522,7 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
   else
     {
 #ifndef _WIN32
-      //try to uprise the window
+      /* try to uprise the window */
       timer = g_timeout_add(BAR_TO_TOP_TIMEOUT, bar_to_top, get_background_window());
 #endif
       /* grab enabled */

@@ -284,7 +284,7 @@ main(gint argc, char *argv[])
   
   set_background_window(background_window);
   
-  /** Init annotate */
+  /* init annotate */
   annotate_init(background_window, commandline->debug); 
 
   GtkWidget* annotation_window = get_annotation_window();  
