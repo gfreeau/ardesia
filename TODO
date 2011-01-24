@@ -36,10 +36,10 @@
   - Deploy the artifact online
     - video; youtube upload
   - Image gallery (sticky notes...)
+  - Filler implemented with the flood filler algorithm
   - Lazo selection tool
   - Move
   - Copy/paste
-  - Filler available for all the closed path (not for the last one only)
   - Show the virtual keyboard far away from the text cursor position 
   - Multi pointer support 
   - Define a configuration file and settings
