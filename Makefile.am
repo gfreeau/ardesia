@@ -27,10 +27,16 @@ DISTCLEANFILES = intltool-extract \
 	intltool-update \
 	po/.intltool-merge-cache
 
+
+.PHONY : clean win-installer
+
+
 deb:
 	debuild -us -uc -b
 	mv ../$(PACKAGE_NAME)_$(PACKAGE_VERSION)-*.deb .
-
+	
+win-installer:
+	@win32/build_installer	
 	
 update-po:
 	(cd po; $(MAKE) update-po)
