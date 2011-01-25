@@ -58,6 +58,8 @@ Source: "ardesia_@VERSION@-windows-1_i386\share\spotlighter\ui\spotlighter.ui"; 
 
 [Icons]
 Name: "{group}\Ardesia"; Filename: "{app}\bin\ardesia.exe"
+Name: "{group}\Curtain"; Filename: "{app}\bin\curtain.exe"
+Name: "{group}\Spotlighter"; Filename: "{app}\bin\spotlighter.exe"
 Name: "{group}\{cm:UninstallProgram,Ardesia}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\Ardesia"; Filename: "{app}\bin\ardesia.exe"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Ardesia"; Filename: "{app}\bin\ardesia.exe"; Tasks: quicklaunchicon
