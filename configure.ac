@@ -125,6 +125,7 @@ Makefile
 src/Makefile
 po/Makefile.in
 data/Makefile
+win32/build_installer
 win32/ardesia.iss
 ])
 

@@ -4,7 +4,7 @@ echo "You need to execute this on a Windows machine within msys (http://www.ming
 echo "You also need InnoSetup (http://www.innosetup.org) with iscc in your PATH" 
 
 WIN32_DIR=win32
-DESTDIR=$WIN32_DIR/ardesia_0.7-windows-1_i386
+DESTDIR=$WIN32_DIR/ardesia_@VERSION@-windows-1_i386
 IS_VERSION=5
 IS_DIR=$PROGRAMFILES/Inno\ Setup\ $IS_VERSION
 PATH=$IS_DIR:$PATH
@@ -27,10 +27,6 @@ cp $WIN32_DIR/RUN $DESTDIR
 echo Prepare the $DESTDIR directory 
 
 mkdir -p $DESTDIR/bin
-
-cp /mingw/bin/ardesia.exe $DESTDIR/bin
-cp /mingw/bin/curtain.exe  $DESTDIR/bin
-cp /mingw/bin/spotlighter.exe $DESTDIR/bin
 
 cp /mingw/bin/freetype6.dll $DESTDIR/bin
 cp /mingw/bin/gspawn-win32-helper.exe $DESTDIR/bin
@@ -84,6 +80,11 @@ cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-wbmp.dll $DESTDIR/lib/gtk-2
 cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-xbm.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
 cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-xpm.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
 
+
+cp /mingw/bin/ardesia.exe $DESTDIR/bin
+cp /mingw/bin/curtain.exe  $DESTDIR/bin
+cp /mingw/bin/spotlighter.exe $DESTDIR/bin
+
 mkdir -p $DESTDIR/share/ardesia/scripts
 
 cp /mingw/share/ardesia/scripts/screencast.bat $DESTDIR/share/ardesia/scripts
@@ -113,6 +114,7 @@ cp /mingw/share/ardesia/ui/backgrounds/world_map.png $DESTDIR/share/ardesia/ui/b
 
 cp /mingw/share/ardesia/ui/horizontal_bar.glade $DESTDIR/share/ardesia/ui
 cp /mingw/share/ardesia/ui/info_dialog.glade $DESTDIR/share/ardesia/ui
+
 
 mkdir -p $DESTDIR/share/ardesia/ui/pixmaps
 
