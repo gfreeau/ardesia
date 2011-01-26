@@ -120,6 +120,7 @@ mkdir -p $DESTDIR/share/ardesia/ui/pixmaps
 
 cp @prefix@/share/ardesia/ui/pixmaps/add-pdf.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/ardesia_logo.png $DESTDIR/share/ardesia/ui/pixmaps
+cp @prefix@/share/ardesia/ui/pixmaps/ardesia.ico $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/arrow.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/blue.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/eraser.png $DESTDIR/share/ardesia/ui/pixmaps
@@ -148,6 +149,9 @@ mkdir -p $DESTDIR/share/curtain/ui
 cp @prefix@/share/curtain/ui/curtain.png $DESTDIR/share/curtain/ui
 cp @prefix@/share/curtain/ui/curtain.ui $DESTDIR/share/curtain/ui
 
+mkdir -p $DESTDIR/share/curtain/ui/pixmaps
+cp @prefix@/share/curtain/ui/pixmaps/curtain.ico $DESTDIR/share/curtain/ui/pixmaps
+
 mkdir -p $DESTDIR/share/locale/es/LC_MESSAGES/
 
 cp @prefix@/share/locale/es/LC_MESSAGES/ardesia.mo $DESTDIR/share/locale/es/LC_MESSAGES/ardesia.mo
@@ -163,6 +167,9 @@ cp @prefix@/share/locale/it/LC_MESSAGES/ardesia.mo $DESTDIR/share/locale/it/LC_M
 mkdir -p $DESTDIR/share/spotlighter/ui/
 
 cp @prefix@/share/spotlighter/ui/spotlighter.ui $DESTDIR/share/spotlighter/ui/
+
+mkdir -p $DESTDIR/share/spotlighter/ui/pixmaps
+cp @prefix@/share/spotlighter/ui/pixmaps/spotlighter.ico $DESTDIR/share/spotlighter/ui/pixmaps
 
 echo Build $ARDESIA_ISCC_FILENAME
 
