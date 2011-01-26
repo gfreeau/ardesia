@@ -26,6 +26,7 @@
 #ifdef HAVE_BACKTRACE
 
 #include <glibc_backtrace.h>
+#include <crash_dialog.h>
 
 #ifdef HAVE_LIBSIGSEGV
 #include <sigsegv.h>
@@ -141,7 +142,7 @@ static void create_trace()
 	}
     }
   fclose(file);
-  send_trace_with_email(filename);
+  start_crash_dialog(NULL, filename);
   g_free(filename);
 }
 #else

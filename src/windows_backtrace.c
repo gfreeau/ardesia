@@ -36,7 +36,9 @@
 #ifdef _WIN32
 
 #include <windows_backtrace.h>
+#include <crash_dialog.h>
 #include <utils.h>
+
 
 static char * g_output = NULL;
 
@@ -335,7 +337,7 @@ exception_filter(LPEXCEPTION_POINTERS info)
   FILE *file = fopen(filename, "w");
   fputs(g_output, file);
   fclose(file);
-  send_trace_with_email(filename);
+  start_crash_dialog(NULL, filename);
   g_free(filename);
   
   free(g_output);

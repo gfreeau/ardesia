@@ -5,6 +5,7 @@
 
 data/annotation_window.glade
 data/background_window.glade
+data/crash_dialog.glade
 data/info_dialog.glade
 data/preference_dialog.glade
 data/project_dialog.glade

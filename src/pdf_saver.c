@@ -55,7 +55,6 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixb
   gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);   
   g_object_unref(previewPixbuf);
 
-  gchar* project_name = get_project_name();
   gchar* current_folder = g_strdup_printf("%s", *folder);
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), current_folder);
   g_free(current_folder);

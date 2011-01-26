@@ -148,7 +148,6 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
 
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file"));
 
-  gchar* project_name = get_project_name();
   gchar* current_folder = g_strdup_printf("%s", *folder);
 
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), current_folder);

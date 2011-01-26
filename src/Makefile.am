@@ -32,6 +32,10 @@ ardesia_SOURCES = \
 	broken.h \
         bezier_spline.c \
 	bezier_spline.h \
+        crash_dialog.c \
+	crash_dialog.h \
+	crash_dialog_callbacks.c \
+	crash_dialog_callbacks.h \
         pdf_saver.c \
 	pdf_saver.h \
         annotation_window.c \
