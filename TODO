@@ -9,20 +9,20 @@
 ==========================================================================
 
 - Management
-  - Make a pdf user manual
   - Make a video tutorial
+  - Make a pdf user manual
   - Ardesia fedora packaging
   - Windows operating systems
-    - Build a 64 bit executable version
     - gtk 2.22
+    - Build a 64 bit executable version
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
   
 - Reengineering
   - Store and load the savepoints using svg files
-  - Bar and transparent layer on the same window
   - Cache in memory the recent savepoint
+  - Bar and transparent layer on the same window
   - Text insertion consolidation
   - Use double buffered windows to have a smoother exposure to the eye 
   - Screencast recorder using lib instead spawn processes
