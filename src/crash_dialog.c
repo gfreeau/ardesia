@@ -39,13 +39,6 @@ void start_crash_dialog(GtkWindow *parent, gchar* crash_report)
 {
   CrashData *crash_data = (CrashData *) g_malloc(sizeof(CrashData));
 
-  GSList * artifact_list = get_artifacts();
-
-  if (!artifact_list)
-    {
-       return;
-    }  
-
   GtkWidget *crashDialog;
 
   /* Initialize the main window */

@@ -235,13 +235,17 @@ static void enable_localization_support()
   gtk_set_locale();
 }
 
+
+/* 
+ * This function create a segmentation fault; 
+ * it is useful to test the segmentation fault handler
+ */
 /*
-  static void
-  foo()
-  {
+static void create_segmentation_fault()
+{
   int *f=NULL;
   *f = 0;
-  }
+}
 */
 
 
@@ -249,6 +253,11 @@ static void enable_localization_support()
 int
 main(gint argc, char *argv[])
 {
+  /* Enable the localization support with gettext */
+  enable_localization_support();
+  
+  gtk_init(&argc, &argv);
+
 #ifdef HAVE_BACKTRACE
 #ifdef HAVE_LIBSIGSEGV
   glibc_backtrace_register();
@@ -257,11 +266,12 @@ main(gint argc, char *argv[])
 #ifdef _WIN32
   windows_backtrace_register();
 #endif
-  //foo();
-  /* Enable the localization support with gettext */
-  enable_localization_support();
-  
-  gtk_init(&argc, &argv);
+
+  /*
+   * Uncomment this and the create_segmentation_fault function 
+   * to create a segmentation fault 
+   */
+  //create_segmentation_fault();
 
   set_the_best_colormap();
 

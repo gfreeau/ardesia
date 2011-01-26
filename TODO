@@ -29,7 +29,6 @@
   - Create the iwb without spawn the zip process
 
 - Candidate features:
-  - Show an information dialog when a crash occurs
   - Import in iwb format
   - Show the keyboard each time that a text entry field is in focus
   - Deploy the artifact online
