@@ -63,7 +63,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), current_folder);
   g_free(current_folder);
 
-  gchar* filename = get_default_name();
+  gchar* filename = get_default_file_name();
   
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   

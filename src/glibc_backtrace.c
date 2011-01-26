@@ -129,7 +129,7 @@ static void create_trace()
    */
   
   size = backtrace (array, MAX_FRAMES);
-  gchar* default_filename = get_default_name();
+  gchar* default_filename = get_default_file_name();
   const gchar* tmpdir = g_get_tmp_dir();
   gchar* filename  = g_strdup_printf("%s%s%s_stacktrace.txt",tmpdir, G_DIR_SEPARATOR_S, default_filename);
   g_free(default_filename);

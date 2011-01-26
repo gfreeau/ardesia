@@ -304,13 +304,14 @@ gboolean file_exists(gchar* filename)
 
 
 /* 
- * Get default name return a name containing the tool name and the current date; 
- * the returned value must be free with the g_free 
+ * Return a file name containing 
+ * the project name and the current date 
+ *
  */
-gchar* get_default_name()
+gchar* get_default_file_name()
 {
   gchar* date = get_date(); 
-  gchar* filename = g_strdup_printf("%s_%s", PACKAGE_NAME, date);
+  gchar* filename = g_strdup_printf("%s_%s", project_name, date);
   g_free(date); 
   return filename;
 }

@@ -59,7 +59,7 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixb
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), current_folder);
   g_free(current_folder);
    
-  gchar* filename = get_default_name();
+  gchar* filename = get_default_file_name();
 
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
 
@@ -182,7 +182,7 @@ static void wait_for_pdf_save_pending_thread()
 void add_pdf_page(GtkWindow *parent, gchar** folder)
 {
   const gchar* tmpdir = g_get_tmp_dir();
-  gchar* default_filename = get_default_name();
+  gchar* default_filename = get_default_file_name();
   gchar* filename  = g_strdup_printf("%s%s%s_screenshoot.png",tmpdir, G_DIR_SEPARATOR_S, default_filename);
   g_free(default_filename);
 

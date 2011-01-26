@@ -183,10 +183,11 @@ GdkPixbuf* grab_screenshot();
 
 
 /* 
- * Get default name return a name containing the tool name and the current date; 
- * the returned value must be free with the g_free 
+ * Return a file name containing 
+ * the project name and the current date 
+ *
  */
-gchar * get_default_name();
+gchar* get_default_file_name();
 
 
 /* 
