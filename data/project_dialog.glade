@@ -29,6 +29,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
+                <signal name="focus_in_event" handler="on_projectDialogEntry_focus_in_event"/>
               </object>
               <packing>
                 <property name="position">1</property>

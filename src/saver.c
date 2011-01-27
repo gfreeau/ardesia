@@ -28,6 +28,7 @@
 
 #include <saver.h>
 #include <utils.h>
+#include <keyboard.h>
 
 
 /*
@@ -69,7 +70,9 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
   
   gboolean screenshot = FALSE;
  
-  if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
+  start_virtual_keyboard();
+  gint run_status = gtk_dialog_run (GTK_DIALOG (chooser));
+  if (run_status == GTK_RESPONSE_ACCEPT)
     {   
       /* store the folder location this will be proposed the next time */
       g_free(*folder);
@@ -109,6 +112,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
 	    } 
 	}
     }
+  stop_virtual_keyboard();
   gtk_widget_destroy (preview);
   if (chooser != NULL)
     {

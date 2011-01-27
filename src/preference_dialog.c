@@ -28,6 +28,7 @@
 
 #include <preference_dialog.h>
 #include <annotation_window.h>
+#include <keyboard.h>
 
 
 /*
@@ -36,6 +37,7 @@
  */
 void start_preference_dialog(GtkWindow *parent)
 {
+  start_virtual_keyboard();
   PreferenceData *preference_data = (PreferenceData *) g_malloc(sizeof(PreferenceData));
 
   /* 0 no background, 1 background color, 2 png background, */
@@ -112,7 +114,8 @@ void start_preference_dialog(GtkWindow *parent)
    * Reput the keep above flag at the parent window bar
    */
   gtk_window_set_keep_above(GTK_WINDOW(parent), TRUE);
-#endif   
+#endif
+ stop_virtual_keyboard();   
 }
 
 

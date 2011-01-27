@@ -28,7 +28,7 @@
 
 #include <color_selector.h>
 #include <utils.h>
-
+#include <keyboard.h>
 
 
 /* old picked color in RGBA format */
@@ -41,6 +41,7 @@ static gchar*       picked_color = NULL;
  */
 gchar* start_color_selector_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar* color)
 {
+  start_virtual_keyboard();
   GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON(toolbutton);
   gchar* ret_color = NULL;
   if (gtk_toggle_tool_button_get_active(button))
@@ -93,6 +94,7 @@ gchar* start_color_selector_dialog(GtkToolButton *toolbutton, GtkWindow *parent,
      
       g_free(gdkcolor);
     }
+  stop_virtual_keyboard();
   return ret_color;
 }
 

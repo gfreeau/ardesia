@@ -28,6 +28,7 @@
 
 #include <recorder.h>
 #include <utils.h>
+#include <keyboard.h>
 
 
 /* pid of the recording process */
@@ -156,7 +157,8 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
   gchar* filename = get_default_file_name();
 
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
-  
+
+  start_virtual_keyboard();  
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
       /* store the folder location this will be proposed the next time */
@@ -203,6 +205,7 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
       recorderpid = call_recorder(filename, "start");
       status = (recorderpid > 0);
     }
+  stop_virtual_keyboard();
   if (chooser)
     { 
       gtk_widget_destroy (chooser);

@@ -23,6 +23,18 @@
 
 #include <utils.h>
 #include <project_dialog.h>
+#include <keyboard.h>
+
+
+G_MODULE_EXPORT gboolean 
+on_projectDialogEntry_focus_in_event (GtkWidget *widget,
+			   GdkEvent *event,
+			   gpointer func_data)
+{
+  start_virtual_keyboard();
+  return TRUE;
+}
+
 
 /* Shot when the ok button in preference dialog is pushed */
 G_MODULE_EXPORT void
@@ -32,5 +44,6 @@ on_projectOkButton_clicked(GtkButton *buton, gpointer data)
   GtkWidget* dialogEntry = GTK_WIDGET(gtk_builder_get_object(project_data->projectDialogGtkBuilder,"projectDialogEntry"));
   gchar* str = gtk_editable_get_chars(GTK_EDITABLE(dialogEntry), 0, -1);
   g_free(project_data->project_name); 
-  project_data->project_name = str; 
+  project_data->project_name = str;
+  stop_virtual_keyboard(); 
 }

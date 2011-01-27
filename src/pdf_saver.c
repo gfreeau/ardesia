@@ -24,6 +24,7 @@
 #include <pdf_saver.h>
 #include <utils.h>
 #include <saver.h>
+#include <keyboard.h>
 
 
 /* internal structure allocated once */
@@ -62,7 +63,8 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixb
   gchar* filename = get_default_file_name();
 
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
-
+  
+  start_virtual_keyboard();
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
       /* store the folder location this will be proposed the next time */
@@ -103,6 +105,7 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixb
 	}
     }
   
+  stop_virtual_keyboard();
   gtk_widget_destroy (preview);
   if (chooser != NULL)
     {
