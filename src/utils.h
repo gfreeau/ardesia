@@ -26,15 +26,11 @@
 #include <glib/gstdio.h>
 
 #include <stdlib.h>
-#include <unistd.h>
 #include <errno.h>
 
 #include <string.h>
 
 #include <math.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
 
 #include <gdk/gdk.h>
 
