@@ -88,7 +88,7 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer data)
       GObject* backgroundColorObj = gtk_builder_get_object(preferenceData->preferenceDialogGtkBuilder,"backgroundColorButton");
 
       GtkColorButton* backgroundColorButton = GTK_COLOR_BUTTON(backgroundColorObj);
-      GdkColor* gdkcolor = g_malloc (sizeof (GdkColor)); 
+      GdkColor* gdkcolor = g_malloc ((gsize) sizeof (GdkColor)); 
       gtk_color_button_get_color(backgroundColorButton,gdkcolor);
 
       gchar* rgb = gdkcolor_to_rgb(gdkcolor);

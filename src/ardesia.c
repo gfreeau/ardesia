@@ -144,7 +144,7 @@ static void set_the_best_colormap()
 /* Parse the command line in the standar getopt way */
 static CommandLine* parse_options(gint argc, char *argv[])
 {
-  CommandLine* commandline = g_malloc(sizeof(CommandLine)); 
+  CommandLine* commandline = g_malloc((gsize) sizeof(CommandLine)); 
   
   commandline->position = EAST;
   commandline->debug = FALSE;

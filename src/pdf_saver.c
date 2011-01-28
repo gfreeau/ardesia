@@ -118,7 +118,7 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixb
 /* Initialize the pdf saver */
 static gboolean init_pdf_saver(GtkWindow *parent, gchar** folder, GdkPixbuf *pixbuf)
 {  
-  pdf_data = (PdfData *) g_malloc(sizeof(PdfData));   
+  pdf_data = (PdfData *) g_malloc((gsize) sizeof(PdfData));   
   pdf_data->thread = NULL;
   pdf_data->input_filelist = NULL;
   pdf_data->filename = NULL;

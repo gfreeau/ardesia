@@ -36,7 +36,7 @@
  */
 void start_share_dialog(GtkWindow *parent)
 {
-  ShareData *share_data = (ShareData *) g_malloc(sizeof(ShareData));
+  ShareData *share_data = (ShareData *) g_malloc((gsize) sizeof(ShareData));
 
   GSList * artifact_list = get_artifacts();
 

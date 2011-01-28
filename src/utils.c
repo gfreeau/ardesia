@@ -162,7 +162,7 @@ gchar* gdkcolor_to_rgb(GdkColor* gdkcolor)
  */
 GdkColor* rgba_to_gdkcolor(gchar* rgba)
 {
-  GdkColor* gdkcolor = g_malloc(sizeof(GdkColor));
+  GdkColor* gdkcolor = g_malloc((gsize) sizeof(GdkColor));
   gchar *rgb = g_strndup(rgba, 6);
   gchar *color = g_strdup_printf("%s%s", "#", rgb);
   gdk_color_parse (color, gdkcolor);
@@ -376,7 +376,7 @@ void rmdir_recursive (gchar *path)
 /* Allocate a new point belonging to the stroke passing the values */
 AnnotateStrokeCoordinate * allocate_point(gint x, gint y, gint width, gdouble pressure)
 {
-  AnnotateStrokeCoordinate* point =  g_malloc (sizeof (AnnotateStrokeCoordinate));
+  AnnotateStrokeCoordinate* point =  g_malloc ((gsize) sizeof (AnnotateStrokeCoordinate));
   point->x = x;
   point->y = y;
   point->width = width;

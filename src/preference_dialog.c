@@ -38,7 +38,7 @@
 void start_preference_dialog(GtkWindow *parent)
 {
   start_virtual_keyboard();
-  PreferenceData *preference_data = (PreferenceData *) g_malloc(sizeof(PreferenceData));
+  PreferenceData *preference_data = (PreferenceData *) g_malloc((gsize) sizeof(PreferenceData));
 
   /* 0 no background, 1 background color, 2 png background, */
   preference_data->background = 0;

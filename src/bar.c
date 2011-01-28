@@ -114,7 +114,7 @@ static void configure_workspace(BarData *bar_data)
 /* Allocate and initialize the bar data structure */
 static BarData* init_bar_data()
 {
-  BarData *bar_data = (BarData *) g_malloc(sizeof(BarData));
+  BarData *bar_data = (BarData *) g_malloc((gsize) sizeof(BarData));
   bar_data->color = g_strdup_printf("%s", "FF0000FF");
   bar_data->annotation_is_visible = TRUE;
   bar_data->pencil = TRUE;

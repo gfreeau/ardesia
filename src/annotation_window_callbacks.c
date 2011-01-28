@@ -34,9 +34,13 @@
 /* Return the pressure passing the event */
 static gdouble get_pressure(GdkEvent* ev)
 {
-  gdouble pressure = 1.0;
-  gdk_event_get_axis(ev, GDK_AXIS_PRESSURE, &pressure);
-  return pressure;
+  gdouble pressure;
+  gboolean ret = gdk_event_get_axis(ev, GDK_AXIS_PRESSURE, &pressure);
+  if (ret)
+    {
+      return pressure;
+    }
+  return 1.0;
 }
 
 
@@ -82,7 +86,7 @@ event_expose(GtkWidget *widget,
         {
           g_printerr("Failed to allocate the annotation cairo context"); 
           annotate_quit(); 
-          exit(1);
+          exit(EXIT_FAILURE);
         }    
  		
       annotate_clear_screen();
@@ -150,7 +154,7 @@ paint(GtkWidget *win,
   annotate_reset_cairo();
 
   gdouble pressure = 1.0; 
-  if ((ev->device->source != GDK_SOURCE_MOUSE) && (!(data->cur_context->type == ANNOTATE_ERASER)))
+  if ((ev->device->source != GDK_SOURCE_MOUSE) && (data->cur_context->type != ANNOTATE_ERASER))
     {
       pressure = get_pressure((GdkEvent *) ev);
       if (pressure <= 0)

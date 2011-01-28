@@ -28,7 +28,7 @@
 
 
 /* Number x is roundable to y */
-static gboolean is_similar(gdouble x, gdouble y, gint pixel_tollerance)
+static gboolean is_similar(gdouble x, gdouble y, gdouble pixel_tollerance)
 {
   gdouble delta = abs(x-y); 
   if (delta <= pixel_tollerance) 
@@ -43,7 +43,7 @@ static gboolean is_similar(gdouble x, gdouble y, gint pixel_tollerance)
  * The list of point is roundable to a rectangle
  * Note this algorithm found only the rettangle parallel to the axis
  */
-static gboolean is_a_rectangle(GSList* list, gint pixel_tollerance)
+static gboolean is_a_rectangle(GSList* list, gdouble pixel_tollerance)
 {
   if (!list)
     {
@@ -130,7 +130,7 @@ static gboolean found_min_and_max(GSList* list, gdouble* minx, gdouble* miny, gd
 
 
 /* The path described in list is similar to a regular poligon */
-static gboolean is_similar_to_a_regular_poligon(GSList* list, gint pixel_tollerance)
+static gboolean is_similar_to_a_regular_poligon(GSList* list, gdouble pixel_tollerance)
 {
   if (!list)
     {
@@ -333,7 +333,7 @@ static GSList* straighten(GSList* list)
 
 
 /* Return a subpath of listInp containg only the meaningful points using the standard deviation */
-GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel_tollerance)
+GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gdouble pixel_tollerance)
 {
   if (!listInp)
     {
@@ -455,7 +455,7 @@ GSList*  extract_outbounded_rectangle(GSList* listIn)
 
        
 /* The path described in list is similar to an ellipse,  unbounded_rect is the outbounded rectangle to the eclipse */
-gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gint pixel_tollerance)
+gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gdouble pixel_tollerance)
 {
   if (!list)
     {
@@ -526,7 +526,7 @@ gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gint pix
 
             
 /* Take a list of point and return magically the new recognized path */
-GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, gint pixel_tollerance)
+GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, gdouble pixel_tollerance)
 {
   if (!listInp)
     {

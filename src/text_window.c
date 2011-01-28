@@ -243,7 +243,7 @@ static void init_text_widget(GtkWidget *widget)
 
   if (!text_data->pos)
     {
-      text_data->pos = g_malloc (sizeof(Pos));
+      text_data->pos = g_malloc ((gsize) sizeof(Pos));
       text_data->pos->x = 0;
       text_data->pos->y = 0;
       move_editor_cursor();
@@ -323,7 +323,7 @@ key_snooper(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       /* The character is printable */
       gchar *utf8 = g_strdup_printf("%c", event->keyval);
       
-      CharInfo *charInfo = g_malloc(sizeof (CharInfo));
+      CharInfo *charInfo = g_malloc((gsize) sizeof (CharInfo));
       charInfo->x = text_data->pos->x;
       charInfo->y = text_data->pos->y; 
       
@@ -455,7 +455,7 @@ on_window_text_cursor_motion(GtkWidget *win,
 /* Start the widget for the text insertion */
 void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 {
-  text_data = g_malloc(sizeof(TextData));
+  text_data = g_malloc((gsize) sizeof(TextData));
 
   text_data->gtk_builder = NULL;
   text_data->window = NULL;

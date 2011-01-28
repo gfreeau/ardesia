@@ -39,24 +39,22 @@ static AnnotateData* data;
 /* Create a new paint context */
 static AnnotatePaintContext* annotate_paint_context_new(AnnotatePaintType type)
 {
-  AnnotatePaintContext *context;
-  context = g_malloc (sizeof(AnnotatePaintContext));
+  AnnotatePaintContext *context = g_malloc ((gsize) sizeof(AnnotatePaintContext));
   context->type = type;
-  context->fg_color = NULL;
+  context->fg_color = g_strdup_printf("FF0000FF");
   return context;
 }
 
 
 /* Calculate the direction in radiants */
-static gfloat annotate_get_arrow_direction()
+static gdouble annotate_get_arrow_direction()
 {
   /* the list must be not null and the lenght might be greater than two */
   GSList *outptr = data->coordlist;   
-  gint delta = 2;
+  gdouble delta = 2.0;
 
-
-  gint tollerance = data->thickness * delta;
-  gfloat ret;  
+  gdouble tollerance = data->thickness * delta;
+  gdouble ret;  
 
   AnnotateStrokeCoordinate* point = NULL;
   AnnotateStrokeCoordinate* oldpoint = NULL;
@@ -103,14 +101,6 @@ static void select_color()
           if (data->cur_context->fg_color)
             {
               cairo_set_source_color_from_string(data->annotation_cairo_context, data->cur_context->fg_color);
-            }
-          else
-            { 
-              if (data->debug)
-	        { 
-                  g_printerr("The color is not selected; I put the red one to recover to the problem\n");
-	        }
-              cairo_set_source_color_from_string(data->annotation_cairo_context, "FF0000FF");
             }
         }
       else
@@ -821,7 +811,7 @@ static void annotate_savelist_free()
  */
 void annotate_add_save_point(gboolean cache)
 {
-  AnnotateSavePoint *savepoint = g_malloc(sizeof(AnnotateSavePoint));
+  AnnotateSavePoint *savepoint = g_malloc((gsize) sizeof(AnnotateSavePoint));
 
   gint savepoint_index = g_slist_length(data->savelist) + 1;
   
@@ -974,7 +964,7 @@ gdouble annotate_get_thickness()
 void annotate_coord_list_prepend (gdouble x, gdouble y, gint width, gdouble pressure)
 {
   AnnotateStrokeCoordinate *point;
-  point = g_malloc (sizeof (AnnotateStrokeCoordinate));
+  point = g_malloc ((gsize) sizeof (AnnotateStrokeCoordinate));
   point->x = x;
   point->y = y;
   point->width = width;
@@ -1180,7 +1170,7 @@ void annotate_draw_arrow(gint distance)
     }
   
   /* lenght >= 2 */
-  gfloat direction = annotate_get_arrow_direction();
+  gdouble direction = annotate_get_arrow_direction();
   if (data->debug)
     {
       g_printerr("Arrow direction %f\n", direction/M_PI*180);
@@ -1474,7 +1464,7 @@ void annotate_clear_screen()
 gint annotate_init(GtkWidget* parent, gboolean debug)
 
 {
-  data = g_malloc (sizeof(AnnotateData));
+  data = g_malloc ((gsize) sizeof(AnnotateData));
  
   /* init the data structure */ 
   data->annotation_cairo_context = NULL;

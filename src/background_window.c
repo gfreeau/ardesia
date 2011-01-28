@@ -111,7 +111,7 @@ static void load_color()
 /* Allocate internal structure */
 static BackGroundData* allocate_background_data()
 {
-  BackGroundData* background_data = g_malloc(sizeof(BackGroundData));
+  BackGroundData* background_data = g_malloc((gsize) sizeof(BackGroundData));
   background_data->background_color = NULL; 
   background_data->background_image = NULL; 
   background_data->back_cr = NULL;

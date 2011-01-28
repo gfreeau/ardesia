@@ -36,7 +36,7 @@
  */
 gchar* start_project_dialog(GtkWindow *parent)
 {
-  ProjectData *project_data = (ProjectData *) g_malloc(sizeof(ProjectData));
+  ProjectData *project_data = (ProjectData *) g_malloc((gsize) sizeof(ProjectData));
 
   GtkWidget *projectDialog;
 
