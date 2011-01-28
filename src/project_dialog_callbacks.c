@@ -26,6 +26,7 @@
 #include <keyboard.h>
 
 
+/* This shot when the text entry is in focus */
 G_MODULE_EXPORT gboolean 
 on_projectDialogEntry_focus_in_event (GtkWidget *widget,
 			   GdkEvent *event,

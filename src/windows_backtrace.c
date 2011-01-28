@@ -348,6 +348,7 @@ exception_filter(LPEXCEPTION_POINTERS info)
 }
 
 
+/* Register the windows backtrace handler */
 void
 windows_backtrace_register()
 {

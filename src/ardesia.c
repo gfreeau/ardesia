@@ -21,6 +21,7 @@
  *
  */
 
+
 #include <utils.h>
 #include <annotation_window.h>
 #include <background_window.h>
@@ -89,6 +90,7 @@ static void run_missing_composite_manager_dialog()
     }
   exit(0);
 }
+
 
 /* Check if a composite manager is active */
 static void check_composite_manager(GdkScreen* screen)
@@ -309,8 +311,9 @@ main(gint argc, char *argv[])
     }
 
   /* annotation window is valid */
-
   gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
+
+
   gtk_widget_show(annotation_window);
   
   GtkWidget *ardesia_bar_window = create_bar_window(commandline, annotation_window);

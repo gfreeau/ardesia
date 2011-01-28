@@ -109,6 +109,7 @@ static void take_pen_tool()
 }
 
 
+/* Unlock the tool */
 static void unlock(BarData *bar_data)
 {
   if (!bar_data->grab)
@@ -119,7 +120,7 @@ static void unlock(BarData *bar_data)
 }
 
 
-/* set color; this is called each time that the user want change color */
+/* Set color; this is called each time that the user want change color */
 static void set_color(BarData *bar_data, gchar* selected_color)
 {
   unlock(bar_data);
@@ -246,6 +247,7 @@ on_winMain_enter_notify_event   (GtkWidget       *widget,
     {
       stop_text_widget();
     }
+
   return TRUE;
 }
 

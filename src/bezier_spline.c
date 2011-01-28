@@ -49,7 +49,7 @@ GSList* spline (GSList *list)
     }
 
 
-  // Pi, Qi are control points for curve (Xi, Xi+1)
+  /* Pi, Qi are control points for curve (Xi, Xi+1) */
   gdouble P[N-1][2], Q[N-1][2];
 
   /*****************************************************************************
@@ -77,12 +77,12 @@ GSList* spline (GSList *list)
   gsl_vector *bx, *by, *x;
   gsl_permutation *perm;
    
-  // allocate matrix and vectors
+  /* allocate matrix and vectors */
   m  = gsl_matrix_calloc(2*(N-1), 2*(N-1)); 
   bx = gsl_vector_calloc(2*(N-1)); 
   by = gsl_vector_calloc(2*(N-1)); 
   
-  // fill-in matrix
+  /* fill-in matrix */
   for ( i = 0; i < N-2; i++ ) 
     {
       gsl_matrix_set(m, eq, i+1, 1);        // Pi+1
@@ -99,7 +99,7 @@ GSList* spline (GSList *list)
   gsl_matrix_set(m, eq++, 2*(N-1)-1, 1);    // Qn-1 = Xn
 
   
-  // fill-in vectors
+  /* fill-in vectors */
   for ( i = 0; i < N-2; i++ ) 
     {
       gsl_vector_set(bx, 2*i, 2*X[i+1][0]);
@@ -111,14 +111,14 @@ GSList* spline (GSList *list)
   gsl_vector_set(by, 2*(N-1)-2, X[0][1]);
   gsl_vector_set(by, 2*(N-1)-1, X[N-1][1]);
     
-  // caluclate LU decomposition, solve lin. systems...  
+  /* caluclate LU decomposition, solve lin. systems... */  
   perm = gsl_permutation_alloc(2*(N-1));
   gsl_linalg_LU_decomp(m, perm, &s);
 
-  // solve for bx
+  /* solve for bx */
   x  = gsl_vector_calloc(2*(N-1));
   gsl_linalg_LU_solve( m, perm, bx, x ); 
-  // copy solution (@FIXME: should be avoided!)
+  /* copy solution (@FIXME: should be avoided!) */
   for ( i = 0; i < N-1; i++ )
     {
       P[i][0] = gsl_vector_get(x, i);
@@ -126,10 +126,10 @@ GSList* spline (GSList *list)
     }
   gsl_vector_free(x);
 
-  // solve for by
+  /* solve for by */
   x  = gsl_vector_calloc(2*(N-1));
   gsl_linalg_LU_solve( m, perm, by, x ); 
-  // copy solution (@FIXME: should be avoided!)
+  /* copy solution (@FIXME: should be avoided!) */
   for ( i = 0; i < N-1; i++ )
     {
       P[i][1] = gsl_vector_get(x, i);
@@ -141,7 +141,7 @@ GSList* spline (GSList *list)
 
   gsl_permutation_free (perm);
   
-  // free matrix and vectors
+  /* free matrix and vectors */
   gsl_matrix_free (m);
   gsl_vector_free (bx);
   gsl_vector_free (by);
@@ -151,13 +151,13 @@ GSList* spline (GSList *list)
   for ( i = 0; i < N-1; i++ )
     {
 
-      // B second derivates  
-      //        printf("%d: Bx''(0) = %lf\n", i+1, 6*X[i][0]-12*P[i][0]+6*Q[i][0]);
-      //        printf("%d: Bx''(1) = %lf\n\n", i+1, 6*P[i][0]-12*Q[i][0]+6*X[i+1][0]);
+      /* B second derivates */  
+      // printf("%d: Bx''(0) = %lf\n", i+1, 6*X[i][0]-12*P[i][0]+6*Q[i][0]);
+      // printf("%d: Bx''(1) = %lf\n\n", i+1, 6*P[i][0]-12*Q[i][0]+6*X[i+1][0]);
 
-      // B first derivates
-      //        printf("%d: Bx'(0) = %lf\n", i+1, -3*X[i][0]+3*P[i][0]);
-      //        printf("%d: Bx'(1) = %lf\n", i+1, -3*Q[i][0]+3*X[i+1][0]);
+      /* B first derivates */
+      // printf("%d: Bx'(0) = %lf\n", i+1, -3*X[i][0]+3*P[i][0]);
+      // printf("%d: Bx'(1) = %lf\n", i+1, -3*Q[i][0]+3*X[i+1][0]);
 
       AnnotateStrokeCoordinate* first_point =  allocate_point( P[i][0], P[i][1], width, pressure);
       ret = g_slist_prepend (ret, first_point);

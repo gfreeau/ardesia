@@ -100,7 +100,7 @@ static void add_savepoint(gint index)
 /* Add the savepoint elements */
 static void add_savepoints(gint savepoint_number)
 {
-  //for each i call add_savepoint
+  /* for each i call add_savepoint */
   gint i=1;
   for (i=1; i<=savepoint_number; i++)
     {
@@ -121,7 +121,7 @@ static void add_savepoint_reference(gint index)
 /* Add the savepoint references */
 static void add_savepoint_references(gint savepoint_number)
 {
-  //for each i call add_savepoint_reference
+  /* for each i call add_savepoint_reference */
   gint i=1;
   for (i=1; i<=savepoint_number; i++)
     {

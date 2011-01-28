@@ -190,6 +190,7 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
 
   /* connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(gtkBuilder, (gpointer) bar_data);
+
   bar_window = GTK_WIDGET (gtk_builder_get_object(gtkBuilder, "winMain"));
   gtk_window_set_transient_for(GTK_WINDOW(bar_window), GTK_WINDOW(parent));
   if (commandline->decorated)
@@ -208,6 +209,7 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
 
   /* the position is calculated respect the top left corner and then I set the north west gravity */
   gtk_window_set_gravity(GTK_WINDOW(bar_window), GDK_GRAVITY_NORTH_WEST);
+
   /* move the window in the desired position */
   gtk_window_move(GTK_WINDOW(bar_window), x, y);  
 

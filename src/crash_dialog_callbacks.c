@@ -28,7 +28,6 @@
 G_MODULE_EXPORT void
 on_crashOkButton_clicked(GtkButton *buton, gpointer data)
 {
-   //OK
    CrashData* crash_data = (CrashData*) data;
    send_trace_with_email(crash_data->crash_report);
 }
@@ -38,5 +37,5 @@ on_crashOkButton_clicked(GtkButton *buton, gpointer data)
 G_MODULE_EXPORT void
 on_crashCancelButton_clicked(GtkButton *buton, gpointer data)
 {
-   //CANCEL
+   /* Do nothing */
 }

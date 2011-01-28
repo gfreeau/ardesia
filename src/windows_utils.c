@@ -71,8 +71,9 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
   /*
    * @HACK  It seems impossible to work with RGBA pixmaps directly in
    * GDK-Win32.  Instead we pick some third color, different from fg
-   * and bg, and use that as the '<b style="color: black; background-color: rgb(255, 153, 153);">transparent</b> color'.  We do this using
-   * colors_too_similar (see above) because two colors could be
+   * and bg, and use that as the 
+   * '<b style="color: black; background-color: rgb(255, 153, 153);">transparent</b> color'.
+   * We do this using colors_too_similar (see above) because two colors could be
    * unequal in GdkColor's 16-bit/sample, but equal in GdkPixbuf's
    * 8-bit/sample. 
    *
@@ -177,6 +178,7 @@ void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachme
 /* Create a link with icon */
 void windows_create_link(gchar* src, gchar* dest, gchar* icon_path, int icon_index)
 {  
+
   gchar* extension = "lnk";
   gchar* link_filename = g_strdup_printf("%s.%s", dest, extension);
   if (g_file_test(link_filename, G_FILE_TEST_EXISTS))
@@ -184,6 +186,7 @@ void windows_create_link(gchar* src, gchar* dest, gchar* icon_path, int icon_ind
       g_free(link_filename);
       return;
     }
+
   IShellLink* shell_link;
   IPersistFile* persist_file;
   WCHAR wsz[MAX_PATH];
@@ -202,7 +205,6 @@ void windows_create_link(gchar* src, gchar* dest, gchar* icon_path, int icon_ind
   persist_file->lpVtbl->Release(persist_file);
   shell_link->lpVtbl->Release(shell_link);
 }
-
 
 #endif
 

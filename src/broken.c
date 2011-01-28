@@ -73,7 +73,8 @@ static gboolean is_a_rectangle(GSList* list, gint pixel_tollerance)
     {
       return FALSE; 
     }
-  // it is a rectangle
+
+  /* it is a rectangle */
   return TRUE;
 }
 
@@ -146,14 +147,14 @@ static gboolean is_similar_to_a_regular_poligon(GSList* list, gint pixel_tollera
     {
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
       gdouble distance = get_distance(old_point->x, old_point->y, point->x, point->y);
-      //printf("(%f,%f); (%f,%f); |%f|\n", old_point->x, old_point->y, point->x, point->y, distance);
+      // printf("(%f,%f); (%f,%f); |%f|\n", old_point->x, old_point->y, point->x, point->y, distance);
       total_distance = total_distance + distance;
       old_point = point;
     }
 
   ideal_distance = total_distance/lenght;
   
-  //printf("Ideal %f\n\n",ideal_distance);
+  // printf("Ideal %f\n\n",ideal_distance);
 
   i = 0;
   old_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
@@ -282,7 +283,7 @@ static GSList* straighten(GSList* list)
       gfloat delta_degree = abs(directionAB-directionBC);
       if (delta_degree > degree_threshold)
         {
-	  //copy B it's a good point
+	  /* copy B it's a good point */
 	  AnnotateStrokeCoordinate* point =  allocate_point(pointB->x, pointB->y, pointB->width, pointB->pressure);
 	  listOut = g_slist_prepend (listOut, point); 
         } 
@@ -312,18 +313,18 @@ static GSList* straighten(GSList* list)
   /* is it is closed to 0 degree I draw an horizontal line */
   if ((0-degree_threshold<=direction)&&(direction<=0+degree_threshold)) 
     {
-      // y is the average
+      /* y is the average */
       gdouble y = (first_point->y+last_point->y)/2;
-      // put this y for each element in the list
+      /* put this y for each element in the list */
       g_slist_foreach(listOut, (GFunc)puty, &y);
     } 
   
   /* is it is closed to 90 degree I draw a vertical line */
   if ((90-degree_threshold<=direction)&&(direction<=90+degree_threshold)) 
     {
-      // x is the average
+      /* x is the average */
       gdouble x = (first_point->x+last_point->x)/2;
-      // put this x for each element in the list
+      /* put this x for each element in the list */
       g_slist_foreach(listOut, (GFunc)putx, &x);
     } 
 
@@ -364,7 +365,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
   gint Cwidth = pointB->width;
 
   AnnotateStrokeCoordinate* first_point =  allocate_point(Ax, Ay, Awidth, pressure);
-  // add a point with the coordinates of pointA
+  /* add a point with the coordinates of pointA */
   listOut = g_slist_prepend (listOut, first_point);
 
   gdouble area = 0.;
@@ -390,7 +391,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
        
       if (fabs(h) >= (pixel_tollerance))
 	{
-	  // add  a point with the B coordinates
+	  /* add  a point with the B coordinates */
 	  AnnotateStrokeCoordinate* new_point =  allocate_point(Bx, By, Bwidth, pressure);
 	  listOut = g_slist_prepend (listOut, new_point);
 	  area = 0.0;
@@ -398,7 +399,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gint pixel
 	  Ay = By;
 	  Awidth = Bwidth;
 	} 
-      // put to B the C coordinates
+      /* put to B the C coordinates */
       Bx = Cx;
       By = Cy;
       Bwidth = Cwidth;
@@ -516,7 +517,7 @@ gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gint pix
       gdouble difference = fabs(sum-sump1);
       if (difference>pixel_tollerance)
         {  
-	  // the sum is so different from the right one; this is not an ellipse 
+	  /* the sum is so different from the right one; this is not an ellipse */ 
 	  return FALSE;
         }
     }
@@ -540,7 +541,7 @@ GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, gint pixe
 	{     
 	  if (close_path)
 	    {
-	      // is similar to regular a poligon 
+	      /* it is similar to regular a poligon */ 
 	      if (is_similar_to_a_regular_poligon(listOut, pixel_tollerance))
 		{
 		  listOut = extract_poligon(listOut);
@@ -561,9 +562,9 @@ GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, gint pixe
 	    }
 	  else
 	    {
-	      // try to make straighten
+	      /* try to make straighten */
 	      GSList* straight_list = straighten(listOut);
-	      // free outptr
+	      /* free outptr */
 	      g_slist_foreach(listOut, (GFunc)g_free, NULL);
 	      g_slist_free(listOut);
 	      listOut = straight_list;

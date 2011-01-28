@@ -35,6 +35,7 @@
 
 static AnnotateData* data;
 
+
 /* Create a new paint context */
 static AnnotatePaintContext* annotate_paint_context_new(AnnotatePaintType type)
 {
@@ -43,57 +44,6 @@ static AnnotatePaintContext* annotate_paint_context_new(AnnotatePaintType type)
   context->type = type;
   context->fg_color = NULL;
   return context;
-}
-
-
-/* Delete savepoint */
-static void delete_save_point(AnnotateSavePoint* savepoint)
-{
-  if (savepoint)
-    {
-      if (data->debug)
-	{ 
-	  g_printerr("The savepoint %s has been removed\n", savepoint->filename);
-	}
-      if (savepoint->filename)
-	{
-	  g_remove(savepoint->filename);
-	  g_free(savepoint->filename);
-	}
-      if (savepoint->surface)
-	{
-	  cairo_surface_destroy(savepoint->surface);
-	  savepoint->surface = NULL;
-	}
-      data->savelist = g_slist_remove(data->savelist, savepoint);
-      g_free(savepoint);
-      savepoint = NULL;
-    }
-}
-
-
-/* Free the list of the  savepoint for the redo */
-void static annotate_redolist_free()
-{
-  gint i = data->current_save_index;
-  GSList *stop_list = g_slist_nth (data->savelist,i);
-  
-  while (data->savelist!=stop_list)
-    {
-      AnnotateSavePoint* savepoint = (AnnotateSavePoint*) g_slist_nth_data (data->savelist, 0);
-      delete_save_point(savepoint);  
-    }
-}
-
-
-/* Free the list of all the savepoint */
-static void annotate_savelist_free()
-{
-  while (data->savelist!=NULL)
-    {
-      AnnotateSavePoint* savepoint = (AnnotateSavePoint*) g_slist_nth_data (data->savelist, 0);
-      delete_save_point(savepoint);
-    }
 }
 
 
@@ -144,7 +94,7 @@ static void select_color()
     {
       if (!(data->cur_context->type == ANNOTATE_ERASER))
         {
-          // pen or arrow tool
+          /* pen or arrow tool */
           if (data->debug)
 	    { 
 	      g_printerr("Select color %s\n", data->cur_context->fg_color);
@@ -165,7 +115,7 @@ static void select_color()
         }
       else
         {
-          // it is the eraser tool
+          /* it is the eraser tool */
           if (data->debug)
 	    { 
 	      g_printerr("The eraser tool has been selected\n");
@@ -214,6 +164,7 @@ static void update_cursor()
     {
       return;
     }
+
 #ifdef _WIN32
   annotate_release_pointer_grab();
 #endif
@@ -503,7 +454,7 @@ static void annotate_draw_point_list(GSList* list)
 	  gdouble curx = out_point->x; 
 	  gdouble cury = out_point->y;
           annotate_modify_color(data, out_point->pressure); 
-	  // draw line beetween the two points
+	  /* draw line beetween the two points */
 	  annotate_draw_line (curx, cury, FALSE);
 	  list = list->next;   
 	}
@@ -606,7 +557,7 @@ static void roundify(gboolean closed_path)
 
   if (closed_path)
     {
-      // It could be an ellipse or a closed curve path  
+      /* It could be an ellipse or a closed curve path */  
       GSList* listOutN = extract_outbounded_rectangle(outptr);
 
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)listOutN->data;
@@ -619,25 +570,27 @@ static void roundify(gboolean closed_path)
        * the curve line will not be considered an eclipse 
        */
       gdouble tollerance = (fabs(point3->x-lastx)+fabs(point3->y-lasty)) /4;
+
       if (is_similar_to_an_ellipse(outptr, listOutN, tollerance))
 	{
 	  annotate_draw_ellipse(lastx, lasty, point3->x-lastx, point3->y-lasty);          
 	}
       else
 	{
-	  // it is a closed path but it is not an eclipse I use bezier to spline the path
+	  /* it is a closed path but it is not an eclipse; I use bezier to spline the path */
 	  GSList* splinedList = spline(outptr);
 	  annotate_coord_list_free();
 	  data->coordlist = splinedList;
 	  annotate_draw_curve(splinedList);
 	}
+
       /* disallocate the outbounded rectangle */
       g_slist_foreach(listOutN, (GFunc)g_free, NULL);
       g_slist_free(listOutN);
     }   
   else
     {
-      // It's a not closed path than I use bezier to spline the path
+      /* It's a not closed path than I use bezier to spline the path */
       GSList* splinedList = spline(outptr);
       annotate_coord_list_free();
       data->coordlist = splinedList;
@@ -685,28 +638,6 @@ static void setup_input_devices()
 	    }
         }
     }
-}
-
-
-/* Create the directory where put the savepoint files */
-static void create_savepoint_dir()
-{
-  const gchar* tmpdir = g_get_tmp_dir();
-  gchar* images = "images";
-  gchar* project_name = get_project_name();
-
-  gchar* ardesia_tmp_dir = g_strdup_printf("%s%s%s", tmpdir, G_DIR_SEPARATOR_S, PACKAGE_NAME);
-  gchar* project_tmp_dir = g_strdup_printf("%s%s%s", ardesia_tmp_dir, G_DIR_SEPARATOR_S, project_name);
-  if (g_file_test(ardesia_tmp_dir, G_FILE_TEST_IS_DIR))
-    { 
-      /* the folder already exist; I delete it */
-      rmdir_recursive(ardesia_tmp_dir);
-    }
-
-  data->savepoint_dir = g_strdup_printf("%s%s%s", project_tmp_dir, G_DIR_SEPARATOR_S, images);
-  g_mkdir_with_parents(data->savepoint_dir, 0777);
-  g_free(ardesia_tmp_dir);
-  g_free(project_tmp_dir);
 }
 
 
@@ -777,6 +708,7 @@ static void setup_app(GtkWidget* parent)
       annotate_quit(); 
       exit(1);
     }
+
   clear_cairo_context(shape_cr);  
   cairo_destroy(shape_cr);
 
@@ -798,7 +730,7 @@ static void setup_app(GtkWidget* parent)
 /* Return if it is a closed path */
 static gboolean is_a_closed_path(GSList* list)
 {
-  // Check if it is a closed path
+  /* Check if it is a closed path */
   gint lenght = g_slist_length(list);
   AnnotateStrokeCoordinate* point0 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
   AnnotateStrokeCoordinate* pointN = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, lenght-1);
@@ -807,6 +739,174 @@ static gboolean is_a_closed_path(GSList* list)
       return TRUE;
     }
   return FALSE;
+}
+
+
+/* Create the directory where put the savepoint files */
+static void create_savepoint_dir()
+{
+  const gchar* tmpdir = g_get_tmp_dir();
+  gchar* images = "images";
+  gchar* project_name = get_project_name();
+
+  gchar* ardesia_tmp_dir = g_strdup_printf("%s%s%s", tmpdir, G_DIR_SEPARATOR_S, PACKAGE_NAME);
+  gchar* project_tmp_dir = g_strdup_printf("%s%s%s", ardesia_tmp_dir, G_DIR_SEPARATOR_S, project_name);
+  if (g_file_test(ardesia_tmp_dir, G_FILE_TEST_IS_DIR))
+    { 
+      /* the folder already exist; I delete it */
+      rmdir_recursive(ardesia_tmp_dir);
+    }
+
+  data->savepoint_dir = g_strdup_printf("%s%s%s", project_tmp_dir, G_DIR_SEPARATOR_S, images);
+  g_mkdir_with_parents(data->savepoint_dir, 0777);
+  g_free(ardesia_tmp_dir);
+  g_free(project_tmp_dir);
+}
+
+
+/* Delete savepoint */
+static void delete_save_point(AnnotateSavePoint* savepoint)
+{
+  if (savepoint)
+    {
+      if (data->debug)
+	{ 
+	  g_printerr("The savepoint %s has been removed\n", savepoint->filename);
+	}
+      if (savepoint->filename)
+	{
+	  g_remove(savepoint->filename);
+	  g_free(savepoint->filename);
+	}
+      if (savepoint->surface)
+	{
+	  cairo_surface_destroy(savepoint->surface);
+	  savepoint->surface = NULL;
+	}
+      data->savelist = g_slist_remove(data->savelist, savepoint);
+      g_free(savepoint);
+      savepoint = NULL;
+    }
+}
+
+
+/* Free the list of the  savepoint for the redo */
+void static annotate_redolist_free()
+{
+  gint i = data->current_save_index;
+  GSList *stop_list = g_slist_nth (data->savelist,i);
+  
+  while (data->savelist!=stop_list)
+    {
+      AnnotateSavePoint* savepoint = (AnnotateSavePoint*) g_slist_nth_data (data->savelist, 0);
+      delete_save_point(savepoint);  
+    }
+}
+
+
+/* Free the list of all the savepoint */
+static void annotate_savelist_free()
+{
+  while (data->savelist!=NULL)
+    {
+      AnnotateSavePoint* savepoint = (AnnotateSavePoint*) g_slist_nth_data (data->savelist, 0);
+      delete_save_point(savepoint);
+    }
+}
+
+
+/* 
+ * Add a save point for the undo/redo; 
+ * this code must be called at the end of each painting action
+ */
+void annotate_add_save_point(gboolean cache)
+{
+  AnnotateSavePoint *savepoint = g_malloc(sizeof(AnnotateSavePoint));
+
+  gint savepoint_index = g_slist_length(data->savelist) + 1;
+  
+  savepoint->filename = g_strdup_printf("%s%s%s_%d_vellum.png", data->savepoint_dir, G_DIR_SEPARATOR_S, PACKAGE_NAME, savepoint_index);
+
+  /* the story about the future is deleted */
+  annotate_redolist_free();
+
+  /* add new savepoint */
+  data->savelist = g_slist_prepend (data->savelist, savepoint);
+  data->current_save_index = 0;
+   
+  /* Load a surface with the data->annotation_cairo_context content and write the file */
+  cairo_surface_t* saved_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gdk_screen_width(), gdk_screen_height()); 
+  cairo_surface_t* source_surface = cairo_get_target(data->annotation_cairo_context);
+  cairo_t *cr = cairo_create (saved_surface);
+  cairo_set_source_surface (cr, source_surface, 0, 0);
+  cairo_paint(cr);
+  /* the saved_surface contain the savepoint image */  
+  
+  if (!cache)
+    {
+      /*  will be create a file in the savepoint folder with format PACKAGE_NAME_1.png */
+      cairo_surface_write_to_png (saved_surface, savepoint->filename);
+      cairo_surface_destroy(saved_surface); 
+      savepoint->surface = NULL;
+      if (data->debug)
+	{ 
+	  g_printerr("The save point %s has been stored in file\n", savepoint->filename);
+	}
+    }
+  else
+    {
+      /* store in cache */
+      if (data->debug)
+	{ 
+	  g_printerr("The savepoint %s has been stored in memory\n", savepoint->filename);
+	}
+     
+      savepoint->surface = saved_surface;
+    }
+
+  cairo_destroy(cr);
+
+}
+
+
+/* Draw the last save point on the window restoring the surface */
+void annotate_restore_surface()
+{
+  if (data->annotation_cairo_context)
+    {
+      gint i = data->current_save_index;
+      AnnotateSavePoint* savepoint = (AnnotateSavePoint*) g_slist_nth_data (data->savelist, i);
+      if (!savepoint)
+	{ 
+	  return;
+	}
+ 
+      cairo_new_path(data->annotation_cairo_context);
+      cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
+
+      if (savepoint->surface)
+	{
+	  g_printerr("The savepoint %s has been loaded from memory\n", savepoint->filename);
+	  cairo_set_source_surface (data->annotation_cairo_context, savepoint->surface, 0, 0);
+	  cairo_paint(data->annotation_cairo_context);
+	}
+      else if (savepoint->filename)
+	{
+	  if (data->debug)
+	    {
+	      g_printerr("The savepoint %s has been loaded from file\n", savepoint->filename);
+	    }
+	  // load the file in the annotation surface
+	  GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (savepoint->filename, NULL);
+	  if (pixbuf)
+	    {
+	      gdk_cairo_set_source_pixbuf(data->annotation_cairo_context, pixbuf, 0.0, 0.0);
+	      cairo_paint(data->annotation_cairo_context);
+	      g_object_unref (pixbuf);
+	    }
+	}
+
+    }
 }
 
 
@@ -927,60 +1027,6 @@ void annotate_modify_color(AnnotateData* data, gdouble pressure)
 }
 
 
-/* 
- * Add a save point for the undo/redo; 
- * this code must be called at the end of each painting action
- */
-void annotate_add_save_point(gboolean cache)
-{
-  AnnotateSavePoint *savepoint = g_malloc(sizeof(AnnotateSavePoint));
-
-  gint savepoint_index = g_slist_length(data->savelist) + 1;
-  
-  savepoint->filename = g_strdup_printf("%s%s%s_%d_vellum.png", data->savepoint_dir, G_DIR_SEPARATOR_S, PACKAGE_NAME, savepoint_index);
-
-  /* the story about the future is deleted */
-  annotate_redolist_free();
-
-  /* add new savepoint */
-  data->savelist = g_slist_prepend (data->savelist, savepoint);
-  data->current_save_index = 0;
-   
-  /* Load a surface with the data->annotation_cairo_context content and write the file */
-  cairo_surface_t* saved_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gdk_screen_width(), gdk_screen_height()); 
-  cairo_surface_t* source_surface = cairo_get_target(data->annotation_cairo_context);
-  cairo_t *cr = cairo_create (saved_surface);
-  cairo_set_source_surface (cr, source_surface, 0, 0);
-  cairo_paint(cr);
-  /* the saved_surface contain the savepoint image */  
-  
-  if (!cache)
-    {
-      /*  will be create a file in the savepoint folder with format PACKAGE_NAME_1.png */
-      cairo_surface_write_to_png (saved_surface, savepoint->filename);
-      cairo_surface_destroy(saved_surface); 
-      savepoint->surface = NULL;
-      if (data->debug)
-	{ 
-	  g_printerr("The save point %s has been stored in file\n", savepoint->filename);
-	}
-    }
-  else
-    {
-      /* store in cache */
-      if (data->debug)
-	{ 
-	  g_printerr("The savepoint %s has been stored in memory\n", savepoint->filename);
-	}
-     
-      savepoint->surface = saved_surface;
-    }
-
-  cairo_destroy(cr);
-
-}
-
-
 /* Set a new cairo path with the new options */
 void annotate_reset_cairo()
 {
@@ -1031,47 +1077,6 @@ void annotate_push_context(cairo_t * cr)
   cairo_paint(data->annotation_cairo_context);
   cairo_stroke(data->annotation_cairo_context);
   annotate_add_save_point(FALSE);
-}
-
-
-/* Draw the last save point on the window restoring the surface */
-void annotate_restore_surface()
-{
-  if (data->annotation_cairo_context)
-    {
-      gint i = data->current_save_index;
-      AnnotateSavePoint* savepoint = (AnnotateSavePoint*) g_slist_nth_data (data->savelist, i);
-      if (!savepoint)
-	{ 
-	  return;
-	}
- 
-      cairo_new_path(data->annotation_cairo_context);
-      cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
-
-      if (savepoint->surface)
-	{
-	  g_printerr("The savepoint %s has been loaded from memory\n", savepoint->filename);
-	  cairo_set_source_surface (data->annotation_cairo_context, savepoint->surface, 0, 0);
-	  cairo_paint(data->annotation_cairo_context);
-	}
-      else if (savepoint->filename)
-	{
-	  if (data->debug)
-	    {
-	      g_printerr("The savepoint %s has been loaded from file\n", savepoint->filename);
-	    }
-	  // load the file in the annotation surface
-	  GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (savepoint->filename, NULL);
-	  if (pixbuf)
-	    {
-	      gdk_cairo_set_source_pixbuf(data->annotation_cairo_context, pixbuf, 0.0, 0.0);
-	      cairo_paint(data->annotation_cairo_context);
-	      g_object_unref (pixbuf);
-	    }
-	}
-
-    }
 }
 
 
@@ -1155,15 +1160,19 @@ void annotate_draw_line(gdouble x2, gdouble y2, gboolean stroke)
 void annotate_draw_arrow(gint distance)
 {
   gint arrow_minimum_size = data->thickness * 2;
+
   if (distance < arrow_minimum_size)
     {  
       return;
     }
+
   if (data->debug)
     {
       g_printerr("Draw arrow: ");
     }
+
   gint lenght = g_slist_length(data->coordlist);
+
   if (lenght < 2)
     {
       /* if it has lenght lesser then two then is a point and it has no sense draw the arrow */
@@ -1463,6 +1472,7 @@ void annotate_clear_screen()
 
 /* Init the annotation */
 gint annotate_init(GtkWidget* parent, gboolean debug)
+
 {
   data = g_malloc (sizeof(AnnotateData));
  

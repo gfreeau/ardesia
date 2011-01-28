@@ -28,7 +28,6 @@
 G_MODULE_EXPORT void
 on_shareOkButton_clicked(GtkButton *buton, gpointer data)
 {
-   //OK
    GSList * artifact_list = get_artifacts();
    send_artifacts_with_email(artifact_list);
 }
@@ -38,5 +37,5 @@ on_shareOkButton_clicked(GtkButton *buton, gpointer data)
 G_MODULE_EXPORT void
 on_shareCancelButton_clicked(GtkButton *buton, gpointer data)
 {
-   //CANCEL
+   /* do nothing */
 }

@@ -62,7 +62,6 @@ event_expose(GtkWidget *widget,
 
   if (!(data->annotation_cairo_context))
     {
-
       /* initialize a transparent window */	  
 #ifdef _WIN32
       /* The hdc has depth 32 and the technology is DT_RASDISPLAY */
@@ -78,16 +77,18 @@ event_expose(GtkWidget *widget,
 #else
       data->annotation_cairo_context = gdk_cairo_create(data->annotation_window->window);  
 #endif 
+
       if (cairo_status(data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
         {
           g_printerr("Failed to allocate the annotation cairo context"); 
           annotate_quit(); 
           exit(1);
-        }     		
+        }    
+ 		
       annotate_clear_screen();
-      annotate_acquire_grab();
-		      
+      annotate_acquire_grab();		      
     }
+
   gdk_cairo_region(data->annotation_cairo_context, event->region); 
   annotate_restore_surface();
   return TRUE;
@@ -157,6 +158,7 @@ paint(GtkWidget *win,
 	  return TRUE;
 	}
     }
+
   annotate_draw_point(ev->x, ev->y, pressure);  
  
   annotate_coord_list_prepend(ev->x, ev->y, annotate_get_thickness(), pressure);
@@ -171,7 +173,6 @@ paintto(GtkWidget *win,
         gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
-
  
   if (!ev)
     {
@@ -209,11 +210,13 @@ paintto(GtkWidget *win,
   gdouble pressure = 1.0; 
   if ((ev->device->source != GDK_SOURCE_MOUSE) && (!(data->cur_context->type == ANNOTATE_ERASER)))
     {
+
       pressure = get_pressure((GdkEvent *) ev);
       if (pressure <= 0)
 	{
 	  return TRUE;
 	}
+
       /* If the point is already selected and higher pressure then print else jump it */
       if (data->coordlist)
 	{
@@ -380,6 +383,7 @@ proximity_out(GtkWidget *win,
               GdkEventProximity *ev,
               gpointer func_data)
 {
+
   /*
    * @TODO this message doesn't arrive on windows; why? 
    * is it a driver problem, gtk or what
@@ -395,6 +399,7 @@ proximity_out(GtkWidget *win,
     {
       annotate_select_pen();
     }
+
   return FALSE;
 }
 

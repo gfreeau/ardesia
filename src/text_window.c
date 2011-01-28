@@ -43,8 +43,7 @@ static TextData* text_data = NULL;
 
 /* Create the text window */
 static void create_text_window(GtkWindow *parent)
-{
-  
+{  
   GError* error = NULL;
 
   if (!text_data->gtk_builder)
@@ -62,7 +61,6 @@ static void create_text_window(GtkWindow *parent)
 	  return;
 	}  
     }
-
 
   if (!text_data->window)
     {

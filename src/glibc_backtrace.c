@@ -134,6 +134,7 @@ static void create_trace()
   gchar* filename  = g_strdup_printf("%s%s%s_stacktrace.txt",tmpdir, G_DIR_SEPARATOR_S, default_filename);
   g_free(default_filename);
   FILE *file = fopen(filename, "w");
+
   for (i = 0; i < size; i++)
     {
       if (array[i] < approx_text_end)
@@ -141,6 +142,7 @@ static void create_trace()
 	  create_trace_line(array[i], file);      
 	}
     }
+
   fclose(file);
   start_crash_dialog(NULL, filename);
   g_free(filename);
