@@ -21,9 +21,6 @@
  *
  */
 
-
-#include <gdk/gdkinput.h>
-
 #include <gtk/gtk.h>
 
 
