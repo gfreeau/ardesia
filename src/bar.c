@@ -161,12 +161,12 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
   else
     {
       /* east or west */
-      if (gdk_screen_height() < 768)
+      if (gdk_screen_height() < 720)
         {
           /* 
            * the bar is too long and then I use an horizontal layout; 
            * this is done to have the full bar for netbook and screen
-           * with the 1024x600 resolution 
+           * with low vertical resolution
            */
           file = UI_HOR_FILE;
           commandline->position=SOUTH;
