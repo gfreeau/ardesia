@@ -22,8 +22,8 @@
 - Reengineering
   - Store and load the savepoints using svg files
   - Cache in memory the recent savepoint
-  - Bar and transparent layer on the same window
   - Text insertion consolidation
+  - Bar and transparent layer on the same window
   - Use double buffered windows to have a smoother exposure to the eye 
   - Screencast recorder using lib instead spawn processes
   - Create the iwb without spawn the zip process
@@ -37,13 +37,13 @@
   - Lazo selection tool
   - Move
   - Copy/paste
-  - Show the virtual keyboard far away from the text cursor position 
   - Multi pointer support 
   - Define a configuration file and settings
     - thickness size 
   - Zoom
   - Not parallel to the axis polygon recognition
   - Rotate elements
+  - Show the virtual keyboard far away from the text cursor position 
 
 ===
 EOF

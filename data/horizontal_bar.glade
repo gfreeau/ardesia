@@ -396,7 +396,7 @@
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Save</property>
                 <property name="use_underline">True</property>
-                <property name="stock_id">gtk-floppy</property>
+		<property name="label_widget">screenshoot</property>
                 <signal name="clicked" handler="on_toolsScreenShot_activate"/>
               </object>
               <packing>
@@ -541,6 +541,10 @@
   <object class="GtkImage" id="lock">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/lock.png</property>
+  </object>
+  <object class="GtkImage" id="screenshoot">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/camera-photo.png</property>
   </object>
   <object class="GtkImage" id="addpdf">
     <property name="visible">True</property>

@@ -123,6 +123,7 @@ cp @prefix@/share/ardesia/ui/pixmaps/ardesia_logo.png $DESTDIR/share/ardesia/ui/
 cp @prefix@/share/ardesia/ui/pixmaps/ardesia.ico $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/arrow.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/blue.png $DESTDIR/share/ardesia/ui/pixmaps
+cp @prefix@/share/ardesia/ui/pixmaps/camera-photo.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/eraser.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/filler.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/green.png $DESTDIR/share/ardesia/ui/pixmaps
