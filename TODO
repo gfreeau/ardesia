@@ -22,9 +22,9 @@
 - Reengineering
   - Store and load the savepoints using svg files
   - Cache in memory the recent savepoint
+  - Use double buffered windows to have a smoother exposure to the eye 
   - Text insertion consolidation
   - Bar and transparent layer on the same window
-  - Use double buffered windows to have a smoother exposure to the eye 
   - Screencast recorder using lib instead spawn processes
   - Create the iwb without spawn the zip process
 
