@@ -17,6 +17,19 @@ This file contain the news about the tool
 =================
 
 -------------
+ ardesia 0.7
+-------------
+
+Packaging
+- New windows packaging with the inno setup installer
+
+Features
+- Save in the iwb format
+- Send with email iwb, screenshots and pdf created in session
+- Virtual keyboard shown each time that is focused an editable item
+- New crash dialog
+
+-------------
  ardesia 0.6
 -------------
 
