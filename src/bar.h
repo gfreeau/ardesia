@@ -85,3 +85,4 @@ typedef struct
 /* Create the ardesia bar window */
 GtkWidget* create_bar_window(CommandLine *commandline, GtkWidget *parent);
 
+

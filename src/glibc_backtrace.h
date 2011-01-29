@@ -29,7 +29,9 @@
 */
 #include <execinfo.h>
 
+
 #define MAX_FRAMES (20)
+
 
 void glibc_backtrace_register();
 

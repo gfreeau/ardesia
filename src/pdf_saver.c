@@ -35,6 +35,14 @@ static PdfData *pdf_data;
 static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixbuf *pixbuf)
 {
   gboolean ret = TRUE;
+  GtkWidget*   preview = NULL;
+  gint preview_width = 128;
+  gint preview_height = 128;
+  GdkPixbuf*   previewPixbuf = NULL;
+  gchar* current_folder = "";
+  gchar* filename = "";
+  gchar* supported_extension = ".pdf";
+  gint result = GTK_RESPONSE_NO;
    
   GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext("Export as pdf"), 
 						    parent, 
@@ -47,20 +55,18 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixb
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file")); 
  
   /* saving preview */
-  GtkWidget*   preview = gtk_image_new ();
-  gint preview_width = 128;
-  gint preview_height = 128;
-  GdkPixbuf*   previewPixbuf = gdk_pixbuf_scale_simple(pixbuf, preview_width, preview_height, GDK_INTERP_BILINEAR);
+  preview = gtk_image_new ();
+  previewPixbuf = gdk_pixbuf_scale_simple(pixbuf, preview_width, preview_height, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (preview), previewPixbuf);
   
   gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);   
   g_object_unref(previewPixbuf);
 
-  gchar* current_folder = g_strdup_printf("%s", *folder);
+  current_folder = g_strdup_printf("%s", *folder);
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), current_folder);
   g_free(current_folder);
    
-  gchar* filename = get_default_file_name();
+  filename = get_default_file_name();
 
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   
@@ -71,7 +77,6 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixb
       g_free(*folder);
       *folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser)); 
 
-      gchar* supported_extension = ".pdf";
       g_free(filename);
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
 
@@ -93,7 +98,7 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixb
                                                GTK_MESSAGE_WARNING,
                                                GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
 	  
-          gint result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
+          result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
           if (msg_dialog != NULL)
             { 
 	      gtk_widget_destroy(msg_dialog);
@@ -117,14 +122,16 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixb
 
 /* Initialize the pdf saver */
 static gboolean init_pdf_saver(GtkWindow *parent, gchar** folder, GdkPixbuf *pixbuf)
-{  
+{ 
+  gboolean ret = FALSE;
+ 
   pdf_data = (PdfData *) g_malloc((gsize) sizeof(PdfData));   
   pdf_data->thread = NULL;
   pdf_data->input_filelist = NULL;
   pdf_data->filename = NULL;
    
   /* start the widget to ask the file name where save the pdf */       
-  gboolean ret = start_save_pdf_dialog(parent, folder, pixbuf);
+  ret = start_save_pdf_dialog(parent, folder, pixbuf);
 
   /* add to the list of the artifacts created in the session */
   add_artifact(pdf_data->filename);
@@ -184,17 +191,17 @@ static void wait_for_pdf_save_pending_thread()
 /* Add the screenshot to pdf */
 void add_pdf_page(GtkWindow *parent, gchar** folder)
 {
+  GdkPixbuf* pixbuf = grab_screenshot();
+  cairo_surface_t* saved_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gdk_screen_width(), gdk_screen_height());
+  cairo_t *cr = cairo_create (saved_surface);
   const gchar* tmpdir = g_get_tmp_dir();
   gchar* default_filename = get_default_file_name();
   gchar* filename  = g_strdup_printf("%s%s%s_screenshoot.png",tmpdir, G_DIR_SEPARATOR_S, default_filename);
+  GError           *err = NULL ;
+  
   g_free(default_filename);
 
-
-  GdkPixbuf* pixbuf = grab_screenshot();
-
   /* Load a surface with the data->annotation_cairo_context content and write the file */
-  cairo_surface_t* saved_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gdk_screen_width(), gdk_screen_height());
-  cairo_t *cr = cairo_create (saved_surface);
   gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
   cairo_paint(cr);
   cairo_surface_write_to_png (saved_surface, filename);
@@ -224,7 +231,6 @@ void add_pdf_page(GtkWindow *parent, gchar** folder)
   wait_for_pdf_save_pending_thread();
 
   /* start save thread */
-  GError           *err = NULL ;
   if ((pdf_data->thread = g_thread_create((GThreadFunc) pdf_save, (void *) NULL, TRUE, &err)) == NULL)
     {
       g_printerr("Thread create failed: %s!!\n", err->message );

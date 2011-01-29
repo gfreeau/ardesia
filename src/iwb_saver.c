@@ -66,9 +66,10 @@ static void add_background()
 {
   gint width = gdk_screen_width();
   gint height = gdk_screen_height();
-  open_svg();
   gchar* rgb = "rgb(0,0,0)";
   gchar* opacity = "0";
+  
+  open_svg();
   fprintf(fp,"\t\t<svg:rect id=\"id1\" x=\"0\" y=\"0\" width=\"%d\" height=\"%d\" fill=\"%s\" fill-opacity=\"%s\"/>\n", width, height, rgb, opacity);
   close_svg();
 }
@@ -86,9 +87,10 @@ static void add_savepoint(gint index)
 {
   gint width = gdk_screen_width();
   gint height = gdk_screen_height();
-  open_svg();
   gchar* id = g_strdup_printf("id%d", index +1);
   gchar* file = g_strdup_printf("images/%s_%d_vellum.png", PACKAGE_NAME, index);
+  
+  open_svg();
 
   fprintf(fp,"\t\t<svg:image id=\"%s\" xlink:href=\"%s\" x=\"0\" y=\"0\" width=\"%d\" height=\"%d\"/>\n", id, file, width, height);
   g_free(file);
@@ -133,11 +135,11 @@ static void add_savepoint_references(gint savepoint_number)
 /* Create the iwb xml content file */
 static void create_content(gchar* content_filename, gchar* img_dir_path)
 {
+  int savepoint_number = 0;
+  GDir *img_dir;
+  
   fp = fopen(content_filename, "w");
 
-  int savepoint_number = 0;
- 
-  GDir *img_dir;
   img_dir = g_dir_open(img_dir_path, 0, NULL);
 
   while ((g_dir_read_name(img_dir)))
@@ -170,9 +172,7 @@ void export_iwb(gchar* location)
 
   gchar* images = "images";
   gchar* img_dir_path = g_strdup_printf("%s%s%s", project_tmp_dir, G_DIR_SEPARATOR_S, images);
-
-  create_content(content_filepath, img_dir_path);
-
+  
   /* will be putted in the project dir */
   gchar* extension = "iwb";
   /* the zip is the iwb in the project inside the ardesia workspace */
@@ -180,6 +180,9 @@ void export_iwb(gchar* location)
 
   /* create zip, add all the file inside images to the zip and the content.xml */
   gchar* argv[6] = {"zip", "-r", zip_filename, "images", content_filename, (gchar*) 0};
+  
+  create_content(content_filepath, img_dir_path);
+
   g_spawn_sync (project_tmp_dir /*working_directory*/,
 		argv,
 		NULL /*envp*/,

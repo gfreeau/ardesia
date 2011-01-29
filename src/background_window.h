@@ -57,20 +57,26 @@ typedef struct
 /* Create the background window */
 GtkWidget* create_background_window();
 
+
 /* Change the background image */
 void change_background_image(gchar *backgroundimage);
+
 
 /* Change the background color */
 void change_background_color(gchar *rgba);
 
+
 /* Clear the background */
 void clear_background_window();
+
 
 /** Destroy background window */
 void destroy_background_window();
 
+
 /* Get the background window */
 GtkWidget* get_background_window();
+
 
 /* Set the background window */
 void set_background_window(GtkWidget* widget);

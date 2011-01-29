@@ -170,9 +170,13 @@ static void update_cursor()
 /* Create pixmap and mask for the invisible cursor; this is used to hide the cursor */
 static void get_invisible_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
+  cairo_t *invisible_cr = NULL;
+  cairo_t *invisible_shape_cr = NULL;
+  
   *pixmap = gdk_pixmap_new (NULL, size, size, 1);
   *mask =  gdk_pixmap_new (NULL, size, size, 1); 
-  cairo_t *invisible_cr = gdk_cairo_create(*pixmap);
+  invisible_cr = gdk_cairo_create(*pixmap);
+  
   if (cairo_status(invisible_cr) != CAIRO_STATUS_SUCCESS)
     {
       if (data->debug)
@@ -187,7 +191,7 @@ static void get_invisible_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mas
   cairo_stroke(invisible_cr);
   cairo_destroy(invisible_cr);
 
-  cairo_t *invisible_shape_cr = gdk_cairo_create(*mask);
+  invisible_shape_cr = gdk_cairo_create(*mask);
   if (cairo_status(invisible_shape_cr) != CAIRO_STATUS_SUCCESS)
     {
       if (data->debug)
@@ -207,10 +211,10 @@ static void get_invisible_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mas
 static void allocate_invisible_cursor()
 {
   GdkPixmap *pixmap, *mask;
-  get_invisible_pixmaps(1, &pixmap, &mask);
-  
   GdkColor *background_color_p = rgba_to_gdkcolor(BLACK);
   GdkColor *foreground_color_p = rgba_to_gdkcolor(WHITE);
+  
+  get_invisible_pixmaps(1, &pixmap, &mask);
   
   data->invisible_cursor = gdk_cursor_new_from_pixmap (pixmap, mask,
 						       foreground_color_p,
@@ -227,10 +231,13 @@ static void allocate_invisible_cursor()
 static void get_eraser_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
   gint circle_width = 2; 
+  cairo_t *eraser_cr = NULL;
+  cairo_t *eraser_shape_cr = NULL;
+  
   *pixmap = gdk_pixmap_new(NULL, size, size, 1);
   *mask =  gdk_pixmap_new(NULL, size, size, 1);
  
-  cairo_t *eraser_cr = gdk_cairo_create(*pixmap);
+  eraser_cr = gdk_cairo_create(*pixmap);
   if (cairo_status(eraser_cr) != CAIRO_STATUS_SUCCESS)
     {
       g_printerr("Failed to allocate the eraser cursor cairo context"); 
@@ -242,7 +249,7 @@ static void get_eraser_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
   cairo_stroke(eraser_cr);
   cairo_destroy(eraser_cr);
 
-  cairo_t *eraser_shape_cr = gdk_cairo_create(*mask);
+  eraser_shape_cr = gdk_cairo_create(*mask);
   if (cairo_status(eraser_shape_cr) != CAIRO_STATUS_SUCCESS)
     {
       g_printerr("Failed to allocate the eraser shape cursor cairo context"); 
@@ -265,11 +272,14 @@ static void get_eraser_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 static void get_pen_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
   gint side_lenght = (size*3) + data->thickness;
+  gint circle_width = 2; 
+  cairo_t *pen_cr = NULL;
+  cairo_t *pen_shape_cr = NULL;
+  
   *pixmap = gdk_pixmap_new (NULL, side_lenght, side_lenght, 1);
   *mask =  gdk_pixmap_new (NULL, side_lenght, side_lenght, 1);
-  gint circle_width = 2; 
 
-  cairo_t *pen_cr = gdk_cairo_create(*pixmap);
+  pen_cr = gdk_cairo_create(*pixmap);
   if (cairo_status(pen_cr) != CAIRO_STATUS_SUCCESS)
     {
       g_printerr ("Failed to allocate the pen cursor cairo context"); 
@@ -283,7 +293,7 @@ static void get_pen_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
   cairo_stroke(pen_cr);
   cairo_destroy(pen_cr);
 
-  cairo_t *pen_shape_cr = gdk_cairo_create(*mask);
+  pen_shape_cr = gdk_cairo_create(*mask);
   if (cairo_status(pen_shape_cr) != CAIRO_STATUS_SUCCESS)
     {
       g_printerr ("Failed to allocate the pen shape cursor cairo context"); 
@@ -323,12 +333,14 @@ static void disallocate_cursor()
 static void annotate_set_pen_cursor()
 {
   gint size=12;
+  GdkPixmap *pixmap, *mask;
+  GdkColor *background_color_p = rgba_to_gdkcolor(BLACK);
+  GdkColor *foreground_color_p = rgba_to_gdkcolor(data->cur_context->fg_color); 
+  gint thickness = data->thickness;
 
   disallocate_cursor();
 
-  GdkPixmap *pixmap, *mask;
   get_pen_pixmaps(size, &pixmap, &mask); 
-  GdkColor *background_color_p = rgba_to_gdkcolor(BLACK);
 
   if (data->debug)
     {
@@ -336,8 +348,6 @@ static void annotate_set_pen_cursor()
     }  
 
   
-  GdkColor *foreground_color_p = rgba_to_gdkcolor(data->cur_context->fg_color); 
-  gint thickness = data->thickness;
 
   data->cursor = gdk_cursor_new_from_pixmap (pixmap, mask, 
                                              foreground_color_p, 
@@ -355,14 +365,15 @@ static void annotate_set_pen_cursor()
 /* Set the eraser cursor */
 static void annotate_set_eraser_cursor()
 {   
-  disallocate_cursor();
   gint size = annotate_get_thickness();
-
   GdkPixmap *pixmap, *mask;
-  get_eraser_pixmaps(size, &pixmap, &mask); 
-  
   GdkColor *background_color_p = rgba_to_gdkcolor(BLACK);
   GdkColor *foreground_color_p = rgba_to_gdkcolor(RED);
+  
+  disallocate_cursor();
+
+  get_eraser_pixmaps(size, &pixmap, &mask); 
+  
  
   data->cursor = gdk_cursor_new_from_pixmap(pixmap, mask,
                                             foreground_color_p, 
@@ -435,14 +446,15 @@ static void annotate_draw_ellipse(gint x, gint y, gint width, gint height)
 /** Draw the point list */
 static void annotate_draw_point_list(GSList* list)
 {
+
   if (list)
     {
-      AnnotateStrokeCoordinate* out_point;
       while (list)
         {
-	  out_point = (AnnotateStrokeCoordinate*)list->data;
-	  gdouble curx = out_point->x; 
-	  gdouble cury = out_point->y;
+          AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)list->data;
+          gdouble curx = out_point->x; 
+          gdouble cury = out_point->y;
+
           annotate_modify_color(data, out_point->pressure); 
 	  /* draw line beetween the two points */
 	  annotate_draw_line (curx, cury, FALSE);
@@ -456,22 +468,21 @@ static void annotate_draw_point_list(GSList* list)
 static void annotate_draw_curve(GSList* list)
 {
   gint lenght = g_slist_length(list);
-  gint i = 0;  
 
   if (list)
     {
+      gint i = 0;  
       for (i=0; i<lenght; i=i+3)
         {
 
 	  AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data(list, i);
 	  AnnotateStrokeCoordinate* second_point = (AnnotateStrokeCoordinate*) g_slist_nth_data(list, i+1);
+	  AnnotateStrokeCoordinate* third_point = (AnnotateStrokeCoordinate*) g_slist_nth_data(list, i+2);
 
 	  if (!second_point)
 	    {
 	      return;
 	    }
-
-	  AnnotateStrokeCoordinate* third_point = (AnnotateStrokeCoordinate*) g_slist_nth_data(list, i+2);
 
 	  if (!third_point)
 	    {
@@ -521,6 +532,7 @@ static void roundify(gboolean closed_path)
   gint tollerance = data->thickness * 2;
   GSList *outptr = extract_relevant_points(data->coordlist, closed_path, tollerance);  
   gint lenght = g_slist_length(outptr);
+  AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght/2);
 
   /* Delete the last path drawn */
   annotate_add_save_point(TRUE);
@@ -528,7 +540,6 @@ static void roundify(gboolean closed_path)
      
   annotate_coord_list_free();
   data->coordlist = outptr;
-  AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght/2);
   annotate_modify_color(data, point->pressure); 
  
   if (lenght == 1)
@@ -904,13 +915,6 @@ void annotate_restore_surface()
 GtkWidget* get_annotation_window()
 {
   return data->annotation_window;
-}
-
-
-/* Get the cairo context that contains the annotation */
-cairo_t* get_annotation_cairo_context()
-{
-  return data->annotation_cairo_context;
 }
 
 

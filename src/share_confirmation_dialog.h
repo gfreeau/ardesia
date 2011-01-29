@@ -29,14 +29,7 @@
 #define SHARE_UI_FILE "..\\share\\ardesia\\ui\\share_confirmation_dialog.glade"
 #else
 #define SHARE_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/share_confirmation_dialog.glade"
-#endif 
-
-
-typedef struct
-{
-  /* Preference dialog */
-  GtkBuilder*  shareDialogGtkBuilder;
-}ShareData;
+#endif
 
 
 /*
@@ -44,3 +37,5 @@ typedef struct
  * if he wants share your work
  */
 void start_share_dialog(GtkWindow *parent);
+
+

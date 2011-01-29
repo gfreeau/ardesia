@@ -83,10 +83,10 @@ static void load_file()
 /* The windows has been exposed after the show_all request to change the background color */
 static void load_color()
 {
+  gint r,g,b,a;
   if (background_data->back_cr)
     {
       cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_SOURCE);
-      gint r,g,b,a;
       sscanf(background_data->background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
       /*
        * @TODO implement with a full opaque windows and use cairo_set_source_rgba function to paint
@@ -160,6 +160,10 @@ void destroy_background_window()
 /* Clear the background */
 void clear_background_window()
 {
+  gint height = -1;
+  gint width = -1;
+  cairo_t* shape_cr = NULL;
+  
   g_free(background_data->background_color);
   background_data->background_color = NULL;
 
@@ -176,13 +180,11 @@ void clear_background_window()
 
   clear_cairo_context(background_data->back_cr);
   
-  gint height;
-  gint width;
   gdk_drawable_get_size(background_data->background_window->window, &width, &height);
 
   /* Instantiate a trasparent pixmap to be used as mask */
   background_data->background_shape = gdk_pixmap_new(NULL, width, height, 1); 
-  cairo_t* shape_cr = gdk_cairo_create(background_data->background_shape);
+  shape_cr = gdk_cairo_create(background_data->background_shape);
   clear_cairo_context(shape_cr); 
   cairo_destroy(shape_cr);
 
@@ -198,6 +200,8 @@ void clear_background_window()
 /* Create the background window */
 GtkWidget* create_background_window(gchar* backgroundimage)
 {
+  GError* error = NULL;
+  
   background_data = allocate_background_data(); 
   
   if (backgroundimage) 
@@ -208,7 +212,6 @@ GtkWidget* create_background_window(gchar* backgroundimage)
   /* Initialize the background window */
   background_data->backgroundWindowGtkBuilder = gtk_builder_new();
 
-  GError* error = NULL;
   /* Load the gtk builder file created with glade */
   gtk_builder_add_from_file(background_data->backgroundWindowGtkBuilder, BACKGROUND_UI_FILE, &error);
 

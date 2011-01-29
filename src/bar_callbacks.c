@@ -98,13 +98,13 @@ static void add_alpha(BarData *bar_data)
 /* select the pen tool */
 static void take_pen_tool()
 {
-  GtkToggleToolButton* eraserToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonEraser"));
-  if (gtk_toggle_tool_button_get_active(eraserToolButton))
+  GtkToggleToolButton* eraser_tool_button = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonEraser"));
+  GtkToggleToolButton* pencil_tool_button = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonPencil"));
+  if (gtk_toggle_tool_button_get_active(eraser_tool_button))
     {
-      gtk_toggle_tool_button_set_active(eraserToolButton, FALSE); 
+      gtk_toggle_tool_button_set_active(eraser_tool_button, FALSE); 
       /* may be that the user expect to use the old tool for example the arrow */
-      GtkToggleToolButton* pencilToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonPencil"));
-      gtk_toggle_tool_button_set_active(pencilToolButton, TRUE); 
+      gtk_toggle_tool_button_set_active(pencil_tool_button, TRUE); 
     }
 }
 
@@ -435,11 +435,12 @@ G_MODULE_EXPORT void
 on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
 { 
+  BarData *bar_data = (BarData*) func_data;	
+  gboolean grab_value = bar_data->grab;
+  
   /* Release grab */
   annotate_release_grab ();
   
-  BarData *bar_data = (BarData*) func_data;	
-  gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
   
   if (!is_recorder_available())	
@@ -582,12 +583,17 @@ G_MODULE_EXPORT void
 on_buttonColor_activate	         (GtkToggleToolButton   *toolbutton,
 			          gpointer         func_data)
 {
-  if (!gtk_toggle_tool_button_get_active(toolbutton)) return;
   BarData *bar_data = (BarData*) func_data;
   gboolean grab_value = bar_data->grab;
+  gchar* new_color = start_color_selector_dialog(GTK_TOOL_BUTTON(toolbutton), GTK_WINDOW(get_bar_window()), bar_data->color);
+
+  if (!gtk_toggle_tool_button_get_active(toolbutton))
+    {
+       return;
+    }
+
   bar_data->grab = FALSE;
   bar_data->pencil = TRUE;
-  gchar* new_color = start_color_selector_dialog(GTK_TOOL_BUTTON(toolbutton), GTK_WINDOW(get_bar_window()), bar_data->color);
 
   /* if it is a valid color */
   if (new_color)

@@ -80,8 +80,12 @@ G_MODULE_EXPORT void
 on_preferenceOkButton_clicked(GtkButton *buton, gpointer data)
 {
   PreferenceData *preferenceData = (PreferenceData*) data;
+  gchar* rgb = NULL;
+  gchar* a = NULL;
+  gchar* rgba = NULL;
   GObject* colorToolObj = gtk_builder_get_object(preferenceData->preferenceDialogGtkBuilder, "color");
   GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(colorToolObj);
+  
   if (gtk_toggle_button_get_active(colorToolButton))
     {
       /* background color */
@@ -91,10 +95,10 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer data)
       GdkColor* gdkcolor = g_malloc ((gsize) sizeof (GdkColor)); 
       gtk_color_button_get_color(backgroundColorButton,gdkcolor);
 
-      gchar* rgb = gdkcolor_to_rgb(gdkcolor);
-
-      gchar* a = g_strdup_printf("%02x", gtk_color_button_get_alpha (backgroundColorButton)/257);
-      gchar* rgba = g_strdup_printf("%s%s", rgb, a);
+      rgb = gdkcolor_to_rgb(gdkcolor);
+      a = g_strdup_printf("%02x", gtk_color_button_get_alpha (backgroundColorButton)/257);
+      rgba = g_strdup_printf("%s%s", rgb, a);
+      
       change_background_color(rgba);
       g_free(a);
       g_free(rgb);

@@ -45,3 +45,5 @@ typedef struct
  * the project settings
  */
 gchar* start_project_dialog(GtkWindow *parent);
+
+

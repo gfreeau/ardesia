@@ -163,10 +163,7 @@ close_bfd_ctx(struct bfd_ctx *bc)
 {
   if (bc)
     {
-      if (bc->symbol) 
-	{
-	  free(bc->symbol);
-	}
+      free(bc->symbol);
       if (bc->handle) 
 	{
 	  bfd_close(bc->handle);

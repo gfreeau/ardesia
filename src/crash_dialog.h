@@ -44,3 +44,5 @@ typedef struct
  * Start the dialog that inform that a crash is occurred
  */
 void start_crash_dialog(GtkWindow *parent, gchar* crash_report);
+
+

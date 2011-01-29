@@ -106,7 +106,10 @@ static void configure_workspace(BarData *bar_data)
   bar_data->project_dir = g_strdup_printf("%s%s%s", bar_data->workspace_dir, G_DIR_SEPARATOR_S, get_project_name());
   if (!g_file_test(bar_data->project_dir, G_FILE_TEST_EXISTS)) 
     {
-      g_mkdir_with_parents(bar_data->project_dir, 0700); 
+      if (g_mkdir_with_parents(bar_data->project_dir, 0700)==-1)
+        {
+           g_warning("Unable to create folder %s\n", bar_data->project_dir);
+        } 
     }
 }
 
@@ -150,9 +153,9 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
 {
   GtkWidget *bar_window = NULL;
   GError* error = NULL;
+  gchar* file = UI_FILE;
 
   gtkBuilder = gtk_builder_new();
-  gchar* file = UI_FILE;
   if (commandline->position>2)
     {
       /* north or south */

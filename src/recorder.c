@@ -43,8 +43,8 @@ static gboolean is_active = FALSE;
  */
 static GPid call_recorder(gchar* filename, gchar* option)
 {
-  gchar* argv[4] = {RECORDER_FILE, option, filename, (gchar*) 0};
   GPid pid = (GPid) 0;
+  gchar* argv[4] = {RECORDER_FILE, option, filename, (gchar*) 0};
   if (
       g_spawn_async (NULL /*working_directory*/,
 		     argv,

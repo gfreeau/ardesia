@@ -31,7 +31,7 @@
 GSList* spline (GSList *list)
 {
   GSList* ret = NULL;
-  gint i;
+  guint i;
   guint N = g_slist_length(list);
   gdouble X[N][2]; 
   gint width = 12;
@@ -50,7 +50,8 @@ GSList* spline (GSList *list)
 
 
   /* Pi, Qi are control points for curve (Xi, Xi+1) */
-  gdouble P[N-1][2], Q[N-1][2];
+  gdouble P[N-1][2];
+  gdouble Q[N-1][2];
 
   /*****************************************************************************
   

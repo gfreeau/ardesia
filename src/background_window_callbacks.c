@@ -31,13 +31,14 @@ back_event_expose(GtkWidget *widget,
 		  GdkEventExpose *event, 
 		  gpointer user_data)
 {
+  BackGroundData* background_data = (BackGroundData*) user_data;
+  
   gint is_fullscreen = gdk_window_get_state(widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
   if (!is_fullscreen)
     {
       return TRUE;
     }
 
-  BackGroundData* background_data = (BackGroundData*) user_data;
   if (!background_data->back_cr)
     {
       background_data->back_cr = gdk_cairo_create(widget->window); 

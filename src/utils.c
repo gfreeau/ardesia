@@ -203,8 +203,7 @@ gboolean save_png (GdkPixbuf *pixbuf,const gchar *filename)
   gint width = gdk_pixbuf_get_width (pixbuf);
   gint height = gdk_pixbuf_get_height (pixbuf);
 
-  cairo_surface_t *surface;
-  surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
+  cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
   cairo_t *cr = cairo_create(surface);
   gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
   cairo_paint(cr);
@@ -256,13 +255,13 @@ void drill_window_in_bar_area(GdkWindow* window)
   /* Instantiate a trasparent pixmap with a black hole upon the bar area to be used as mask */
   GdkBitmap* shape = gdk_pixmap_new(NULL,  gdk_screen_width(), gdk_screen_height(), 1);
   cairo_t* shape_cr = gdk_cairo_create(shape);
+  GtkWidget* bar= get_bar_window();
+  gint x,y,width,height;
 
   cairo_set_operator(shape_cr,CAIRO_OPERATOR_SOURCE);
   cairo_set_source_rgba (shape_cr, 1, 1, 1, 1);
   cairo_paint(shape_cr);
 
-  GtkWidget* bar= get_bar_window();
-  int x,y,width,height;
   gtk_window_get_position(GTK_WINDOW(bar),&x,&y);
   gtk_window_get_size(GTK_WINDOW(bar),&width,&height);
 
@@ -286,15 +285,17 @@ gchar* get_date()
 {
   struct tm* t;
   time_t now;
+  gchar* hour_min_sep = ":";
+  gchar* date = "";
+  
   time( &now );
   t = localtime( &now );
 
-  gchar* hour_min_sep = ":";
 #ifdef _WIN32
   /* The ":" character on windows is avoided in file name and then I use the "." character instead */
   hour_min_sep = ".";
 #endif
-  gchar* date = g_strdup_printf("%d-%d-%d_%d%s%d-%d", t->tm_mday, t->tm_mon+1,t->tm_year+1900, t->tm_hour, hour_min_sep, t->tm_min, t->tm_sec);
+  date = g_strdup_printf("%d-%d-%d_%d%s%d-%d", t->tm_mday, t->tm_mon+1,t->tm_year+1900, t->tm_hour, hour_min_sep, t->tm_min, t->tm_sec);
   return date;
 }
 
@@ -398,14 +399,15 @@ void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
 
   gchar** argv = g_malloc((arg_lenght+1) * sizeof(gchar*)); 
   
+  gint i=0;
+  gint j=5;
+  
   argv[0] = "xdg-email";
   argv[1] = "--subject";
   argv[2] = subject;
   argv[3] = "--body";
   argv[4] = body;
 
-  int i=0;
-  int j=5;
   for (i=0; i<attach_lenght; i++)
     {
       gchar* attachment = (gchar*) g_slist_nth_data (attachmentList, i);
@@ -439,15 +441,6 @@ void send_artifacts_with_email(GSList* attachmentList)
   gchar* subject = "ardesia-contribution";
   gchar* body = "Dear ardesia developer group,\nI want share my work created with Ardesia with you, please for details see the attachment.";
   send_email(to, subject, body, attachmentList);
-}
-
-
-/* Send artifact with email */
-void send_artifact_with_email(gchar* attachment)
-{
-  GSList* attachmentList = NULL;
-  attachmentList = g_slist_prepend (attachmentList, attachment);
-  send_artifacts_with_email(attachmentList);
 }
 
 
@@ -503,14 +496,15 @@ void xdg_create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* 
 void xdg_create_link(gchar* src, gchar* dest, gchar* icon)
 {
   gchar* extension = "desktop";
+  gchar* exec = g_strdup_printf("xdg-open %s\n", src);
   gchar* link_filename = g_strdup_printf("%s.%s", dest, extension);
+  
   if (g_file_test(link_filename, G_FILE_TEST_EXISTS))
     {
       g_free(link_filename);
       return;
     }
 
-  gchar* exec = g_strdup_printf("xdg-open %s\n", src);
   xdg_create_desktop_entry(link_filename, "Application", PACKAGE_NAME, "it", icon, exec);
   g_free(link_filename);
   g_free(exec);

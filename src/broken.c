@@ -45,26 +45,31 @@ static gboolean is_similar(gdouble x, gdouble y, gdouble pixel_tollerance)
  */
 static gboolean is_a_rectangle(GSList* list, gdouble pixel_tollerance)
 {
-  if (!list)
-    {
-      return FALSE;
-    }
+  AnnotateStrokeCoordinate* point0 = NULL;
+  AnnotateStrokeCoordinate* point1 = NULL;
+  AnnotateStrokeCoordinate* point2 = NULL;
+  AnnotateStrokeCoordinate* point3 = NULL;
+  
   if ( g_slist_length(list) != 4)
     {
       return FALSE; 
     }
-  AnnotateStrokeCoordinate* point0 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
-  AnnotateStrokeCoordinate* point1 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 1);
+  
+  point0 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
+  point1 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 1);
+
   if (!(is_similar(point0->x, point1->x, pixel_tollerance)))
     {
       return FALSE; 
     }
-  AnnotateStrokeCoordinate* point2 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 2);
+
+  point2 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 2);
   if (!(is_similar(point1->y, point2->y, pixel_tollerance)))
     {
       return FALSE; 
     }
-  AnnotateStrokeCoordinate* point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 3);
+  
+  point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 3);
   if (!(is_similar(point2->x, point3->x, pixel_tollerance)))
     {
       return FALSE; 
@@ -98,17 +103,16 @@ static gdouble calculate_medium_pression(GSList *list)
 /* Take the list and the rurn the minx miny maxx and maxy points */
 static gboolean found_min_and_max(GSList* list, gdouble* minx, gdouble* miny, gdouble* maxx, gdouble* maxy, gdouble* total_pressure)
 {
-  if (!list)
-    {
-      return FALSE;
-    }
+  gint lenght = 0;
+  AnnotateStrokeCoordinate* out_point = NULL;
+  
   /* This function has sense only for the list with lenght greater than two */
-  gint lenght = g_slist_length(list);
+  lenght = g_slist_length(list);
   if (lenght < 3)
     {
       return FALSE;
     }
-  AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)list->data;
+  out_point = (AnnotateStrokeCoordinate*)list->data;
   *minx = out_point->x;
   *miny = out_point->y;
   *maxx = out_point->x;
@@ -132,15 +136,11 @@ static gboolean found_min_and_max(GSList* list, gdouble* minx, gdouble* miny, gd
 /* The path described in list is similar to a regular poligon */
 static gboolean is_similar_to_a_regular_poligon(GSList* list, gdouble pixel_tollerance)
 {
-  if (!list)
-    {
-      return FALSE;
-    }
-  gint lenght = g_slist_length(list);
   gint i = 0;
   gdouble ideal_distance = -1;
   gdouble total_distance = 0;  
-
+  
+  gint lenght = g_slist_length(list);
   AnnotateStrokeCoordinate* old_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
               
   for (i=1; i<lenght; i++)
@@ -178,10 +178,6 @@ static gboolean is_similar_to_a_regular_poligon(GSList* list, gdouble pixel_toll
 /* Take a path and return the regular poligon path */
 static GSList* extract_poligon(GSList* listIn)
 {
-  if (!listIn)
-    {
-      return NULL;
-    }
   gdouble cx, cy;
   gdouble radius;
   gdouble minx;
@@ -189,33 +185,44 @@ static GSList* extract_poligon(GSList* listIn)
   gdouble maxx;
   gdouble maxy;
   gdouble total_pressure;
-  gboolean status = found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_pressure);
+  gboolean status = FALSE;  
+  gdouble angle_off = M_PI/2;
+  gdouble x1, y1;
+  gint i;
+  gint lenght = 0;
+  gdouble angle_step = 0;
+  gdouble medium_pressure = 1.0;
+  AnnotateStrokeCoordinate* pointL = NULL; 
+  AnnotateStrokeCoordinate* pointF = NULL; 
+
+  status = found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_pressure);
+  
   if (!status)
     {
       return NULL;
     }
+
   cx = (maxx + minx)/2;   
   cy = (maxy + miny)/2;   
   radius = ((maxx-minx)+(maxy-miny))/4;   
-  gdouble angle_off = M_PI/2;
-  gint lenght = g_slist_length(listIn);
-  gdouble angle_step = 2 * M_PI / (lenght-1);
+  lenght = g_slist_length(listIn);
+  angle_step = 2 * M_PI / (lenght-1);
   angle_off += angle_step/2;
-  gdouble x1, y1;
-  gint i;
-  gdouble medium_pressure = total_pressure/lenght;
+  medium_pressure = total_pressure/lenght;
+  
   for (i=0; i<lenght-1; i++)
     {
+      AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, i);
       x1 = radius * cos(angle_off) + cx;
       y1 = radius * sin(angle_off) + cy;
-      AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, i);
       point->x = x1;
       point->y = y1;
       point->pressure = medium_pressure;
       angle_off += angle_step;
     }
-  AnnotateStrokeCoordinate* pointL = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, lenght -1); 
-  AnnotateStrokeCoordinate* pointF = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, 0); 
+
+  pointL = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, lenght -1); 
+  pointF = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, 0); 
   pointL->x = pointF->x;
   pointL->y = pointF->y;
   pointL->pressure = medium_pressure;
@@ -255,23 +262,23 @@ static gfloat calculate_edge_degree(AnnotateStrokeCoordinate* pointA, AnnotateSt
 /* Straight the line */
 static GSList* straighten(GSList* list)
 {  
-  GSList* listOut = NULL;
-  if (!list)
-    {
-      return listOut;
-    }
-  
- 
-  gint lenght = g_slist_length(list);
-  
   gint degree_threshold = 15;
-
+  GSList* listOut = NULL;
+  gint lenght = 0;
+  AnnotateStrokeCoordinate* inp_point = NULL;
+  AnnotateStrokeCoordinate* first_point =  NULL;
+  AnnotateStrokeCoordinate* last_point = NULL;  
+  AnnotateStrokeCoordinate* last_out_point =  NULL;
+  gint i;
+  gfloat direction;  
+  
+  lenght = g_slist_length(list);
+  
   /* copy the first one point; it is a good point */
-  AnnotateStrokeCoordinate* inp_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
-  AnnotateStrokeCoordinate* first_point =  allocate_point(inp_point->x, inp_point->y, inp_point->width, inp_point->pressure);
+  inp_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
+  first_point =  allocate_point(inp_point->x, inp_point->y, inp_point->width, inp_point->pressure);
   listOut = g_slist_prepend (listOut, first_point); 
  
-  gint i;
   for (i=0; i<lenght-2; i++)
     {
       AnnotateStrokeCoordinate* pointA = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
@@ -279,8 +286,8 @@ static GSList* straighten(GSList* list)
       AnnotateStrokeCoordinate* pointC = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i+2);
       gfloat directionAB = calculate_edge_degree(pointA, pointB);  
       gfloat directionBC = calculate_edge_degree(pointB, pointC);  
-
       gfloat delta_degree = abs(directionAB-directionBC);
+
       if (delta_degree > degree_threshold)
         {
 	  /* copy B it's a good point */
@@ -291,14 +298,13 @@ static GSList* straighten(GSList* list)
     }
 
   /* Copy the last point; it is a good point */
-  AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, lenght-1);
-  
-  AnnotateStrokeCoordinate* last_out_point =  allocate_point(last_point->x, last_point->y, last_point->width, last_point->pressure);
+  last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, lenght-1);  
+  last_out_point =  allocate_point(last_point->x, last_point->y, last_point->width, last_point->pressure);
+
   listOut = g_slist_prepend (listOut, last_out_point);
 
   /* I reverse the list to preserve the initial order */
   listOut = g_slist_reverse(listOut);
-
 
   lenght = g_slist_length(listOut);
   
@@ -308,7 +314,7 @@ static GSList* straighten(GSList* list)
     }
   
   /* It is a segment! */   
-  gfloat direction = calculate_edge_degree(first_point, last_point);  
+  direction = calculate_edge_degree(first_point, last_point);  
 
   /* is it is closed to 0 degree I draw an horizontal line */
   if ((0-degree_threshold<=direction)&&(direction<=0+degree_threshold)) 
@@ -335,13 +341,7 @@ static GSList* straighten(GSList* list)
 /* Return a subpath of listInp containg only the meaningful points using the standard deviation */
 GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gdouble pixel_tollerance)
 {
-  if (!listInp)
-    {
-      return NULL;
-    }
-
   gint lenght = g_slist_length(listInp);
-
   /* Initialize the list */
   GSList* listOut = NULL;
   
@@ -363,15 +363,17 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gdouble pi
   gdouble Cx = pointB->x;
   gdouble Cy = pointB->y;
   gint Cwidth = pointB->width;
-
-  AnnotateStrokeCoordinate* first_point =  allocate_point(Ax, Ay, Awidth, pressure);
-  /* add a point with the coordinates of pointA */
-  listOut = g_slist_prepend (listOut, first_point);
-
+  
   gdouble area = 0.;
   gdouble h = 0;
   
   gdouble X1, Y1, X2, Y2;
+
+  AnnotateStrokeCoordinate* first_point =  allocate_point(Ax, Ay, Awidth, pressure);
+  AnnotateStrokeCoordinate* last_point =  NULL;
+  
+  /* add a point with the coordinates of pointA */
+  listOut = g_slist_prepend (listOut, first_point);
 
   for (i = i+2; i<lenght; i++)
     {
@@ -406,7 +408,7 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gdouble pi
     }
   
   /* Add the last point with the coordinates */
-  AnnotateStrokeCoordinate* last_point =  allocate_point(Cx, Cy, Cwidth, pressure);
+  last_point =  allocate_point(Cx, Cy, Cwidth, pressure);
   listOut = g_slist_prepend (listOut, last_point); 
 
   /* I reverse the list to preserve the initial order */
@@ -418,36 +420,40 @@ GSList* extract_relevant_points(GSList *listInp, gboolean close_path, gdouble pi
 /* Return the outbounded rectangle outside the path described to listIn */
 GSList*  extract_outbounded_rectangle(GSList* listIn)
 { 
-  if (!listIn)
-    {
-      return NULL;
-    }
   gdouble minx;
   gdouble miny;
   gdouble maxx;
   gdouble maxy;
   gdouble total_pressure = 1.0;
   gint lenght = g_slist_length(listIn);
+  GSList* listOut = NULL;
+  AnnotateStrokeCoordinate* point0 = NULL;
+  AnnotateStrokeCoordinate* point1 = NULL;
+  AnnotateStrokeCoordinate* point2 = NULL;
+  AnnotateStrokeCoordinate* point3 = NULL;
+  gdouble media_pressure = 1.0; 
+ 
+  AnnotateStrokeCoordinate* pointF = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, 0);
+  gint width = pointF->width;
+
   gboolean status = found_min_and_max(listIn, &minx, &miny, &maxx, &maxy, &total_pressure);
   if (!status)
     {
       return NULL;
     }
-  GSList* listOut = NULL;
-  gdouble media_pressure = total_pressure/lenght; 
-  AnnotateStrokeCoordinate* pointF = (AnnotateStrokeCoordinate*) g_slist_nth_data (listIn, 0);
-  gint width = pointF->width;
 
-  AnnotateStrokeCoordinate* point0 = allocate_point (minx, miny, width, media_pressure);
+  media_pressure = total_pressure/lenght; 
+
+  point0 = allocate_point (minx, miny, width, media_pressure);
   listOut = g_slist_prepend (listOut, point0);
                        
-  AnnotateStrokeCoordinate* point1 =  allocate_point (maxx, miny, width, media_pressure);
+  point1 =  allocate_point (maxx, miny, width, media_pressure);
   listOut = g_slist_prepend (listOut, point1);
 
-  AnnotateStrokeCoordinate* point2 =  allocate_point (maxx, maxy, width, media_pressure);
+  point2 =  allocate_point (maxx, maxy, width, media_pressure);
   listOut = g_slist_prepend (listOut, point2);
 
-  AnnotateStrokeCoordinate* point3 =  allocate_point (minx, maxy, width, media_pressure);
+  point3 =  allocate_point (minx, maxy, width, media_pressure);
   listOut = g_slist_prepend (listOut, point3);
 
   return listOut;
@@ -457,13 +463,9 @@ GSList*  extract_outbounded_rectangle(GSList* listIn)
 /* The path described in list is similar to an ellipse,  unbounded_rect is the outbounded rectangle to the eclipse */
 gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gdouble pixel_tollerance)
 {
-  if (!list)
-    {
-      return FALSE;
-    }
   gint lenght = g_slist_length(list);
+  gint i=0;   
    
-
   AnnotateStrokeCoordinate* point1 = (AnnotateStrokeCoordinate*) g_slist_nth_data (unbounded_rect, 2);
   AnnotateStrokeCoordinate* point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (unbounded_rect, 0);
 
@@ -479,6 +481,10 @@ gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gdouble 
 
   gdouble aq = powf(a,2);
   gdouble bq = powf(b,2);
+  
+  gdouble distancep1f1;
+  gdouble distancep1f2;
+  gdouble sump1;
   
   if (aq>bq)
     {
@@ -501,12 +507,11 @@ gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gdouble 
       f2y = originy+c;
     }
 
-  gdouble distancep1f1 = get_distance(point1->x, point1->y, f1x, f1y);
-  gdouble distancep1f2 = get_distance(point1->x, point1->y, f2x, f2y);
-  gdouble sump1 = distancep1f1 + distancep1f2;
+  distancep1f1 = get_distance(point1->x, point1->y, f1x, f1y);
+  distancep1f2 = get_distance(point1->x, point1->y, f2x, f2y);
+  sump1 = distancep1f1 + distancep1f2;
 
   /* In the ellipse the sum of the distance(p,f1)+distance(p,f2) must be constant */
-  gint i=0;   
 
   for (i=0; i<lenght; i++)
     {
@@ -528,54 +533,48 @@ gboolean is_similar_to_an_ellipse(GSList* list, GSList* unbounded_rect, gdouble 
 /* Take a list of point and return magically the new recognized path */
 GSList* broken(GSList* listInp, gboolean close_path, gboolean rectify, gdouble pixel_tollerance)
 {
-  if (!listInp)
-    {
-      return NULL;
-    }
-  
-  GSList* listOut = extract_relevant_points(listInp, close_path, pixel_tollerance);  
+  GSList* relevantList = extract_relevant_points(listInp, close_path, pixel_tollerance);  
    
-  if (listOut)
+  if (relevantList)
     { 
       if (rectify) 
 	{     
 	  if (close_path)
 	    {
 	      /* it is similar to regular a poligon */ 
-	      if (is_similar_to_a_regular_poligon(listOut, pixel_tollerance))
+	      if (is_similar_to_a_regular_poligon(relevantList, pixel_tollerance))
 		{
-		  listOut = extract_poligon(listOut);
+		  relevantList = extract_poligon(relevantList);
 		} 
 	      else
 		{
 
-		  if (is_a_rectangle(listOut, pixel_tollerance))
+		  if (is_a_rectangle(relevantList, pixel_tollerance))
 		    {
 		      /* is a rectangle */
-		      GSList* listOutN = extract_outbounded_rectangle(listOut);
-		      g_slist_foreach(listOut, (GFunc)g_free, NULL);
-		      g_slist_free(listOut);
-		      listOut = listOutN;
-		      return listOut;
+		      GSList* retList = extract_outbounded_rectangle(relevantList);
+		      g_slist_foreach(relevantList, (GFunc)g_free, NULL);
+		      g_slist_free(relevantList);
+		      return retList;
 		    }
 		}
 	    }
 	  else
 	    {
 	      /* try to make straighten */
-	      GSList* straight_list = straighten(listOut);
+	      GSList* retList = straighten(relevantList);
 	      /* free outptr */
-	      g_slist_foreach(listOut, (GFunc)g_free, NULL);
-	      g_slist_free(listOut);
-	      listOut = straight_list;
+	      g_slist_foreach(relevantList, (GFunc)g_free, NULL);
+	      g_slist_free(relevantList);
+              return retList;
 	    }
 	} 
       else       
 	{
-	  return listOut;    
+	  return relevantList;    
 	}  
     }
-  return listOut;
+  return relevantList;
 }
 
 

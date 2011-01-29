@@ -221,10 +221,6 @@ AnnotateStrokeCoordinate* allocate_point(gint x, gint y, gint width, gdouble pre
 void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList);
 
 
-/* Send artifact with email */
-void send_artifact_with_email(gchar* attachment);
-
-
 /* Send artifacts with email */
 void send_artifacts_with_email(GSList* attachmentList);
 

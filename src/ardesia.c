@@ -110,6 +110,7 @@ static void set_the_best_colormap()
 {
   GdkDisplay *display = gdk_display_get_default();
   GdkScreen   *screen = gdk_display_get_default_screen(display);
+  GdkVisual* visual = NULL;
 
   /* In FreeBSD operating system you might have a composite manager */
 #if ( defined(__freebsd__) || defined(__freebsd) || defined(_freebsd) || defined(freebsd) )
@@ -129,7 +130,7 @@ static void set_the_best_colormap()
   else
     {
       g_warning("The screen does not support the alpha channel\n");
-      GdkVisual* visual = gdk_screen_get_rgba_visual(screen);
+      visual = gdk_screen_get_rgba_visual(screen);
       if (visual == NULL)
 	{
 	  g_warning("The screen does not support the rgba visual!\n");
@@ -255,6 +256,13 @@ static void create_segmentation_fault()
 int
 main(gint argc, char *argv[])
 {
+  CommandLine *commandline = NULL;
+  gchar* project_name = "";
+  GtkWidget* background_window = NULL; 
+  GtkWidget* annotation_window = NULL; 
+  GtkWidget* ardesia_bar_window = NULL; 
+  GSList * artifact_list = NULL;
+  
   /* Enable the localization support with gettext */
   enable_localization_support();
   
@@ -277,13 +285,13 @@ main(gint argc, char *argv[])
 
   set_the_best_colormap();
 
-  CommandLine *commandline = parse_options(argc, argv);
+  commandline = parse_options(argc, argv);
 
   /* show the project name wizard */
-  gchar* project_name = start_project_dialog(NULL);
+  project_name = start_project_dialog(NULL);
   set_project_name(project_name);
 
-  GtkWidget* background_window = create_background_window(commandline->backgroundimage); 
+  background_window = create_background_window(commandline->backgroundimage); 
   
   if (background_window == NULL)
     {
@@ -300,7 +308,7 @@ main(gint argc, char *argv[])
   /* init annotate */
   annotate_init(background_window, commandline->debug); 
 
-  GtkWidget* annotation_window = get_annotation_window();  
+  annotation_window = get_annotation_window();  
 
   if (annotation_window == NULL)
     {
@@ -316,7 +324,7 @@ main(gint argc, char *argv[])
 
   gtk_widget_show(annotation_window);
   
-  GtkWidget *ardesia_bar_window = create_bar_window(commandline, annotation_window);
+  ardesia_bar_window = create_bar_window(commandline, annotation_window);
   
   if (ardesia_bar_window == NULL)
     {
@@ -332,7 +340,7 @@ main(gint argc, char *argv[])
   gtk_widget_show(ardesia_bar_window);
   gtk_main();
   
-  GSList * artifact_list = get_artifacts();
+  artifact_list = get_artifacts();
 
   if (artifact_list)
     {  

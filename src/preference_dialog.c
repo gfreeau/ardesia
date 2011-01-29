@@ -37,13 +37,14 @@
  */
 void start_preference_dialog(GtkWindow *parent)
 {
-  start_virtual_keyboard();
   PreferenceData *preference_data = (PreferenceData *) g_malloc((gsize) sizeof(PreferenceData));
+  GtkWidget *preferenceDialog;
+  
+  start_virtual_keyboard();
 
   /* 0 no background, 1 background color, 2 png background, */
   preference_data->background = 0;
 
-  GtkWidget *preferenceDialog;
 
   /* Initialize the main window */
   preference_data->preferenceDialogGtkBuilder = gtk_builder_new();

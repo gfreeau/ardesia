@@ -36,8 +36,7 @@
  */
 void start_share_dialog(GtkWindow *parent)
 {
-  ShareData *share_data = (ShareData *) g_malloc((gsize) sizeof(ShareData));
-
+  GtkWidget *shareDialog;
   GSList * artifact_list = get_artifacts();
 
   if (!artifact_list)
@@ -45,16 +44,14 @@ void start_share_dialog(GtkWindow *parent)
        return;
     }  
 
-  GtkWidget *shareDialog;
-
   /* Initialize the main window */
-  share_data->shareDialogGtkBuilder = gtk_builder_new();
+  GtkBuilder* shareDialogGtkBuilder = gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
-  gtk_builder_add_from_file(share_data->shareDialogGtkBuilder, SHARE_UI_FILE, NULL);
+  gtk_builder_add_from_file(shareDialogGtkBuilder, SHARE_UI_FILE, NULL);
  
   /* Fill the window by the gtk builder xml */
-  shareDialog = GTK_WIDGET(gtk_builder_get_object(share_data->shareDialogGtkBuilder,"shareDialog"));
+  shareDialog = GTK_WIDGET(gtk_builder_get_object(shareDialogGtkBuilder,"shareDialog"));
   gtk_window_set_transient_for(GTK_WINDOW(shareDialog), parent);
   gtk_window_set_modal(GTK_WINDOW(shareDialog), TRUE);
   
@@ -67,7 +64,7 @@ void start_share_dialog(GtkWindow *parent)
 #endif 
   
   /* Connect all signals by reflection */
-  gtk_builder_connect_signals (share_data->shareDialogGtkBuilder, (gpointer) share_data);
+  gtk_builder_connect_signals (shareDialogGtkBuilder, (gpointer) NULL);
 
   gtk_dialog_run(GTK_DIALOG(shareDialog));
 

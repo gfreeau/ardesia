@@ -38,10 +38,21 @@
 void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar** folder)
 {
 
+  GtkWidget*   preview = NULL;
+  gint preview_width = 128;
+  gint preview_height = 128;
+  GdkPixbuf*   previewPixbuf = NULL;
+  gchar* current_folder = "";
+  gchar* filename = "";
+  gchar* filenamecopy = "";
+  gchar* supported_extension = ".pdf";
+  gint result = GTK_RESPONSE_NO;
+  gint run_status = GTK_RESPONSE_NO;
+  gboolean screenshot = FALSE;
   GdkPixbuf* buf = grab_screenshot(); 
-  
-  GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext("Save image"), 
- 						    parent, 
+   
+  GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext("Export as pdf"), 
+						    parent, 
 						    GTK_FILE_CHOOSER_ACTION_SAVE,
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
@@ -51,27 +62,23 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file")); 
   
   /* preview of saving */
-  GtkWidget*   preview = gtk_image_new();
-  gint preview_width = 128;
-  gint preview_height = 128;
-  GdkPixbuf*   previewPixbuf = gdk_pixbuf_scale_simple(buf, preview_width, preview_height, GDK_INTERP_BILINEAR);
+  preview = gtk_image_new();
+  previewPixbuf = gdk_pixbuf_scale_simple(buf, preview_width, preview_height, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (preview), previewPixbuf);
   
   gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);   
   g_object_unref (previewPixbuf);
 
-  gchar* current_folder = g_strdup_printf("%s", *folder);
+  current_folder = g_strdup_printf("%s", *folder);
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), current_folder);
   g_free(current_folder);
 
-  gchar* filename = get_default_file_name();
+  filename = get_default_file_name();
   
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   
-  gboolean screenshot = FALSE;
- 
   start_virtual_keyboard();
-  gint run_status = gtk_dialog_run (GTK_DIALOG (chooser));
+  run_status = gtk_dialog_run (GTK_DIALOG (chooser));
   if (run_status == GTK_RESPONSE_ACCEPT)
     {   
       /* store the folder location this will be proposed the next time */
@@ -80,10 +87,10 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
 
       g_free(filename);
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      gchar* filenamecopy = g_strdup_printf("%s",filename); 
+      filenamecopy = g_strdup_printf("%s",filename); 
 
       screenshot = TRUE;
-      gchar* supported_extension = ".png";
+      supported_extension = ".png";
      
       if (!g_str_has_suffix(filename, supported_extension))
         {
@@ -101,7 +108,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
                                                GTK_MESSAGE_WARNING,
                                                GTK_BUTTONS_YES_NO, gettext("File Exists. Overwrite"));
 	  
-          gint result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
+          result = gtk_dialog_run(GTK_DIALOG(msg_dialog));
           if (msg_dialog != NULL)
             { 
 	      gtk_widget_destroy(msg_dialog);

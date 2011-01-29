@@ -42,8 +42,12 @@ typedef struct
   gchar*  filename;
 }PdfData;
 
+
 /* Add the screenshot to pdf */
 void add_pdf_page(GtkWindow *parent, gchar** workspace_dir);
 
+
 /* Quit the pdf saver */
 void quit_pdf_saver();
+
+

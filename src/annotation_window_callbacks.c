@@ -34,13 +34,14 @@
 /* Return the pressure passing the event */
 static gdouble get_pressure(GdkEvent* ev)
 {
-  gdouble pressure;
+  gdouble default_value = 1.0;
+  gdouble pressure = default_value;
   gboolean ret = gdk_event_get_axis(ev, GDK_AXIS_PRESSURE, &pressure);
   if (ret)
     {
       return pressure;
     }
-  return 1.0;
+  return default_value;
 }
 
 
@@ -297,12 +298,11 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
       return TRUE;
     }  
 
-  gint distance = -1;
   gint lenght = g_slist_length(data->coordlist);
 
   if (lenght > 2)
     { 
-      gint lenght = g_slist_length(data->coordlist);
+      gint distance = -1;
       AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data(data->coordlist, lenght-1);
        
       /* This is the tollerance to force to close the path in a magnetic way */
@@ -327,7 +327,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
    
       if (!(data->cur_context->type == ANNOTATE_ERASER))
         { 
-          gboolean closed_path = (distance == 0) ; 
+          gboolean closed_path = (distance == 0); 
           annotate_shape_recognize(closed_path);
           /* If is selected an arrowtype then I draw the arrow */
           if (data->arrow)

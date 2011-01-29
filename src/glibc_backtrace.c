@@ -52,8 +52,11 @@ static asection *text = 0;
 static void create_trace_line(char *address, FILE *file) 
 {
   char ename[1024];
+  ssize_t l = -1;
+  long storage_needed = 0;
+  unsigned long offset = 0;
 #if ( defined(__freebsd__) || defined(__freebsd) || defined(_freebsd) || defined(freebsd) )
-  int l = readlink("/proc/curproc/file", chrarray_Buffer, PATH_MAXLEN);
+  l = readlink("/proc/curproc/file", chrarray_Buffer, PATH_MAXLEN);
 #elif ( defined(__macos_x__) || defined(__macos_x) || defined(_macos_x) || defined(macos_x) || \
 	defined(__apple__) || defined(__apple) || defined(_apple) || defined(apple) )
   u32 u32_BufferLength ;
@@ -64,7 +67,7 @@ static void create_trace_line(char *address, FILE *file)
     }
   intBufferLength = (int) u32_BufferLength ;
 #else // Linux
-  int l = readlink("/proc/self/exe",ename,sizeof(ename));
+  l = readlink("/proc/self/exe",ename,sizeof(ename));
 #endif
   
   if (l == -1) 
@@ -86,14 +89,18 @@ static void create_trace_line(char *address, FILE *file)
     }
    
   /* oddly, this is required for it to work... */
-  bfd_check_format(abfd,bfd_object);
+  if (!bfd_check_format(abfd,bfd_object))
+    {
+      fprintf(stderr, "bfd_check_format failed\n");
+      return;
+    }
 
-  unsigned storage_needed = bfd_get_symtab_upper_bound(abfd);
+  storage_needed = bfd_get_symtab_upper_bound(abfd);
   syms = (asymbol **) malloc(storage_needed);
 
   text = bfd_get_section_by_name(abfd, ".text");
 
-  long offset = ((long)address) - text->vma;
+  offset = ((unsigned long)address) - text->vma;
    
   if (offset > 0) 
     {
@@ -123,17 +130,16 @@ static void create_trace()
   size_t size;
   size_t i;
   void *approx_text_end = (void*) ((128+100) * 2<<20);
+  gchar* default_filename = get_default_file_name();
+  gchar* filename  = g_strdup_printf("%s%s%s_stacktrace.txt", g_get_tmp_dir(), G_DIR_SEPARATOR_S, default_filename);
+  FILE *file = fopen(filename, "w");
 
   /* 
    * the glibc functions backtrace is missing on all non-glibc platforms
    */
   
   size = backtrace (array, MAX_FRAMES);
-  gchar* default_filename = get_default_file_name();
-  const gchar* tmpdir = g_get_tmp_dir();
-  gchar* filename  = g_strdup_printf("%s%s%s_stacktrace.txt",tmpdir, G_DIR_SEPARATOR_S, default_filename);
   g_free(default_filename);
-  FILE *file = fopen(filename, "w");
 
   for (i = 0; i < size; i++)
     {

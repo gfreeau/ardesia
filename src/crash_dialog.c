@@ -31,25 +31,33 @@
 #include <utils.h>
 
 
+/* Create a new crash data variable */
+static CrashData* new_crash_data(gchar* crash_report)
+{
+  CrashData* crash_data = (CrashData *) g_malloc((gsize) sizeof(CrashData));
+
+  /* Initialize the data */
+  crash_data->crashDialogGtkBuilder = gtk_builder_new();
+  crash_data->crash_report = crash_report;
+  return crash_data;
+}
+
+
 /*
  * Start the dialog that ask to the user
  * if he wants crash you work
  */
 void start_crash_dialog(GtkWindow *parent, gchar* crash_report)
 {
-  CrashData *crash_data = (CrashData *) g_malloc((gsize) sizeof(CrashData));
+  CrashData *crash_data = new_crash_data(crash_report);
 
   GtkWidget *crashDialog;
-
-  /* Initialize the main window */
-  crash_data->crashDialogGtkBuilder = gtk_builder_new();
-  crash_data->crash_report = crash_report;
 
   /* Load the gtk builder file created with glade */
   gtk_builder_add_from_file(crash_data->crashDialogGtkBuilder, CRASH_UI_FILE, NULL);
  
   /* Fill the window by the gtk builder xml */
-  crashDialog = GTK_WIDGET(gtk_builder_get_object(crash_data->crashDialogGtkBuilder,"crashDialog"));
+  crashDialog = GTK_WIDGET(gtk_builder_get_object(crash_data->crashDialogGtkBuilder, "crashDialog"));
   gtk_window_set_transient_for(GTK_WINDOW(crashDialog), parent);
   gtk_window_set_modal(GTK_WINDOW(crashDialog), TRUE);
   
