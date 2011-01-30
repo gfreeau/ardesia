@@ -1,77 +1,90 @@
 2011-01-29 18:00  alpha@paranoici.org
 	* trunk/ardesia/src/annotation_window.c,
-	  trunk/ardesia/src/annotation_window.h,
-	  trunk/ardesia/src/annotation_window_callbacks.c,
-	  trunk/ardesia/src/ardesia.c,
-	  trunk/ardesia/src/background_window.c,
-	  trunk/ardesia/src/background_window.h,
-	  trunk/ardesia/src/background_window_callbacks.c,
-	  trunk/ardesia/src/bar.c, trunk/ardesia/src/bar.h,
-	  trunk/ardesia/src/bar_callbacks.c,
-	  trunk/ardesia/src/bezier_spline.c, trunk/ardesia/src/broken.c,
-	  trunk/ardesia/src/broken.h, trunk/ardesia/src/color_selector.c,
-	  trunk/ardesia/src/crash_dialog.c,
-	  trunk/ardesia/src/crash_dialog.h,
-	  trunk/ardesia/src/glibc_backtrace.c,
-	  trunk/ardesia/src/glibc_backtrace.h,
-	  trunk/ardesia/src/iwb_saver.c, trunk/ardesia/src/iwb_saver.h,
-	  trunk/ardesia/src/keyboard.h, trunk/ardesia/src/pdf_saver.c,
-	  trunk/ardesia/src/pdf_saver.h,
-	  trunk/ardesia/src/preference_dialog.c,
-	  trunk/ardesia/src/preference_dialog_callbacks.c,
-	  trunk/ardesia/src/project_dialog.h,
-	  trunk/ardesia/src/recorder.c, trunk/ardesia/src/recorder.h,
-	  trunk/ardesia/src/saver.c,
-	  trunk/ardesia/src/share_confirmation_dialog.c,
-	  trunk/ardesia/src/share_confirmation_dialog.h,
-	  trunk/ardesia/src/utils.c, trunk/ardesia/src/utils.h,
-	  trunk/ardesia/src/windows_backtrace.c: 
+	* trunk/ardesia/src/annotation_window.h,
+	* trunk/ardesia/src/annotation_window_callbacks.c,
+	* trunk/ardesia/src/ardesia.c,
+	* trunk/ardesia/src/background_window.c,
+	* trunk/ardesia/src/background_window.h,
+	* trunk/ardesia/src/background_window_callbacks.c,
+	* trunk/ardesia/src/bar.c,
+        * trunk/ardesia/src/bar.h,
+	* trunk/ardesia/src/bar_callbacks.c,
+	* trunk/ardesia/src/bezier_spline.c,
+        * trunk/ardesia/src/broken.c,
+	* trunk/ardesia/src/broken.h, 
+        * trunk/ardesia/src/color_selector.c,
+	* trunk/ardesia/src/crash_dialog.c,
+	* trunk/ardesia/src/crash_dialog.h,
+	* trunk/ardesia/src/glibc_backtrace.c,
+	* trunk/ardesia/src/glibc_backtrace.h,
+	* trunk/ardesia/src/iwb_saver.c,
+        * trunk/ardesia/src/iwb_saver.h,
+	* trunk/ardesia/src/keyboard.h, 
+        * trunk/ardesia/src/pdf_saver.c,
+	* trunk/ardesia/src/pdf_saver.h,
+	* trunk/ardesia/src/preference_dialog.c,
+	* trunk/ardesia/src/preference_dialog_callbacks.c,
+	* trunk/ardesia/src/project_dialog.h,
+	* trunk/ardesia/src/recorder.c,
+        * trunk/ardesia/src/recorder.h,
+	* trunk/ardesia/src/saver.c,
+	* trunk/ardesia/src/share_confirmation_dialog.c,
+	* trunk/ardesia/src/share_confirmation_dialog.h,
+	* trunk/ardesia/src/utils.c,
+        * trunk/ardesia/src/utils.h,
+	* trunk/ardesia/src/windows_backtrace.c: 
         - Code revision in style and in bug and memory leak prevention using 
           cppcheck and splint tools
 
 
 
 2011-01-28 10:28  alpha@paranoici.org
-	* trunk/ardesia/TODO, trunk/ardesia/data/horizontal_bar.glade,
-	  trunk/ardesia/data/pixmaps/camera-photo.png,
-	  trunk/ardesia/data/vertical_bar.glade,
-	  trunk/ardesia/win32/build_installer.in:
+	* trunk/ardesia/TODO,
+        * trunk/ardesia/data/horizontal_bar.glade,
+	* trunk/ardesia/data/pixmaps/camera-photo.png,
+	* trunk/ardesia/data/vertical_bar.glade,
+	* trunk/ardesia/win32/build_installer.in:
         - Add camera photo instead floppy to give the idea that this is 
           a screenshoot export instead of the save in iwb the native format
 
 
 2011-01-27 13:45  alpha@paranoici.org
-	* trunk/ardesia/TODO, trunk/ardesia/data/project_dialog.glade,
-	  trunk/ardesia/src/color_selector.c,
-	  trunk/ardesia/src/pdf_saver.c,
-	  trunk/ardesia/src/preference_dialog.c,
-	  trunk/ardesia/src/project_dialog_callbacks.c,
-	  trunk/ardesia/src/recorder.c, trunk/ardesia/src/saver.c: 
+	* trunk/ardesia/TODO, 
+        * trunk/ardesia/data/project_dialog.glade,
+        * trunk/ardesia/src/color_selector.c,
+        * trunk/ardesia/src/pdf_saver.c,
+        * trunk/ardesia/src/preference_dialog.c,
+        * trunk/ardesia/src/project_dialog_callbacks.c,
+        * trunk/ardesia/src/recorder.c, 
+        * trunk/ardesia/src/saver.c: 
         - Show the keyboard each time that exist a text input dialog
 
 
 2011-01-26 18:21  alpha@paranoici.org
 	* trunk/ardesia/data/pixmaps/ardesia.ico,
-	  trunk/ardesia/win32/ardesia.iss.in,
-	  trunk/ardesia/win32/build_installer.in,
-	  trunk/curtain/Makefile.am, trunk/curtain/pixmaps/curtain.ico,
-	  trunk/spotlighter/Makefile.am,
-	  trunk/spotlighter/pixmaps/spotlighter.ico: 
+	* trunk/ardesia/win32/ardesia.iss.in,
+	* trunk/ardesia/win32/build_installer.in,
+	* trunk/curtain/Makefile.am, 
+        * trunk/curtain/pixmaps/curtain.ico,
+	* trunk/spotlighter/Makefile.am,
+	* trunk/spotlighter/pixmaps/spotlighter.ico: 
         - Add ico icons for the windows installer
 
 
 2011-01-26 12:24  alpha@paranoici.org
 	* trunk/ardesia/data/Makefile.am,
-	  trunk/ardesia/data/crash_dialog.glade,
-	  trunk/ardesia/po/POTFILES.in, trunk/ardesia/src/Makefile.am,
-	  trunk/ardesia/src/crash_dialog.c,
-	  trunk/ardesia/src/crash_dialog.h,
-	  trunk/ardesia/src/crash_dialog_callbacks.c,
-	  trunk/ardesia/src/crash_dialog_callbacks.h,
-	  trunk/ardesia/src/glibc_backtrace.c,
-	  trunk/ardesia/src/pdf_saver.c, trunk/ardesia/src/recorder.c,
-	  trunk/ardesia/src/saver.c,
-	  trunk/ardesia/src/windows_backtrace.c: 
+	* trunk/ardesia/data/crash_dialog.glade,
+	* trunk/ardesia/po/POTFILES.in, 
+	* trunk/ardesia/src/Makefile.am,
+	* trunk/ardesia/src/crash_dialog.c,
+	* trunk/ardesia/src/crash_dialog.h,
+	* trunk/ardesia/src/crash_dialog_callbacks.c,
+	* trunk/ardesia/src/crash_dialog_callbacks.h,
+	* trunk/ardesia/src/glibc_backtrace.c,
+	* trunk/ardesia/src/pdf_saver.c,
+	* trunk/ardesia/src/recorder.c,
+	* trunk/ardesia/src/saver.c,
+	* trunk/ardesia/src/windows_backtrace.c: 
         - Solve some warning 
 	- Add crash dialog with email report send comfirmation
 
@@ -91,17 +104,18 @@
 
 
 2011-01-25 12:24  alpha@paranoici.org
-	* trunk/ardesia/configure.ac, trunk/ardesia/win32/build_installer,
-	  trunk/ardesia/win32/build_installer.in: Generalize the code
-	  using @version@ in the build_installer script
-
+	* trunk/ardesia/configure.ac,
+	* trunk/ardesia/win32/build_installer,
+	* trunk/ardesia/win32/build_installer.in:
+        - Generalize the code using @version@ in the build_installer script
 
 
 2011-01-24 22:32  alpha@paranoici.org
-	* trunk/ardesia/Makefile.am, trunk/ardesia/configure.ac,
-	  trunk/ardesia/win32/ardesia.iss,
-	  trunk/ardesia/win32/ardesia.iss.in,
-	  trunk/ardesia/win32/build_installer: 
+	* trunk/ardesia/Makefile.am,
+	* trunk/ardesia/configure.ac,
+	* trunk/ardesia/win32/ardesia.iss,
+	* trunk/ardesia/win32/ardesia.iss.in,
+	* trunk/ardesia/win32/build_installer: 
         - Add ardesia.iss AC_CONFIG_FILES 
         - Use @version@ instead of 0.7 in this way the
 	  version number will resolved throught autotools and specified in
@@ -137,27 +151,31 @@
 
 
 2011-01-24 15:29  alpha@paranoici.org
-	* trunk/ardesia/data/share_confirmation_dialog.glade,
-	  trunk/ardesia/src/share_confirmation_dialog.c,
-	  trunk/ardesia/src/share_confirmation_dialog.h,
-	  trunk/ardesia/src/share_confirmation_dialog_callbacks.c,
-	  trunk/ardesia/src/share_confirmation_dialog_callbacks.h: 
-       - Adjusted translation for the share confirmation dialog
-       - Developed a confirmation dialog that ask if do do want to share
+        * trunk/ardesia/data/share_confirmation_dialog.glade,
+	* trunk/ardesia/src/share_confirmation_dialog.c,
+	* trunk/ardesia/src/share_confirmation_dialog.h,
+	* trunk/ardesia/src/share_confirmation_dialog_callbacks.c,
+	* trunk/ardesia/src/share_confirmation_dialog_callbacks.h: 
+        - Adjusted translation for the share confirmation dialog
+        - Developed a confirmation dialog that ask if do do want to share
 	  your work by email
 
 
 2011-01-24 13:51  alpha@paranoici.org
-	* trunk/ardesia/TODO, trunk/ardesia/src/ardesia.c,
-	  trunk/ardesia/src/bar_callbacks.c,
-	  trunk/ardesia/src/iwb_saver.c, trunk/ardesia/src/pdf_saver.c,
-	  trunk/ardesia/src/saver.c: 
+	* trunk/ardesia/TODO,
+	* trunk/ardesia/src/ardesia.c,
+	* trunk/ardesia/src/bar_callbacks.c,
+	* trunk/ardesia/src/iwb_saver.c,
+	* trunk/ardesia/src/pdf_saver.c,
+	* trunk/ardesia/src/saver.c: 
         - Add pdf, images and the iwb in the attachment
 
 
 2011-01-24 13:34  alpha@paranoici.org
-	* trunk/ardesia/src/ardesia.c, trunk/ardesia/src/pdf_saver.c,
-	  trunk/ardesia/src/utils.c, trunk/ardesia/src/utils.h:
+	* trunk/ardesia/src/ardesia.c,
+	* trunk/ardesia/src/pdf_saver.c,
+	* trunk/ardesia/src/utils.c,
+	* trunk/ardesia/src/utils.h:
         - Implement a way to send multiple files with email attachment
 	  after that the windows are destroyed
         - The annotation window might be closed before send an
@@ -165,11 +183,13 @@
 
 
 2011-01-23 12:26  alpha@paranoici.org
-	* trunk/ardesia/Makefile.am, trunk/ardesia/data/Makefile.am,
-	  trunk/ardesia/data/ardesia.iss, trunk/ardesia/win-installer,
-	  trunk/ardesia/win-installer/RUN,
-	  trunk/ardesia/win-installer/ardesia.iss,
-	  trunk/ardesia/win-installer/run.sh: 
+	* trunk/ardesia/Makefile.am,
+	* trunk/ardesia/data/Makefile.am,
+	* trunk/ardesia/data/ardesia.iss,
+	* trunk/ardesia/win-installer,
+	* trunk/ardesia/win-installer/RUN,
+	* trunk/ardesia/win-installer/ardesia.iss,
+	* trunk/ardesia/win-installer/run.sh: 
         - Lazy integration with Inno setup in order to build the windows installer 
           To create it run after the ardesia installation on win32 
           "sh win-installer/run.sh" in the msys shell and then the open 
@@ -184,23 +204,29 @@
 
 
 2011-01-21 10:19  alpha@paranoici.org
-	* trunk/ardesia/TODO, trunk/ardesia/src/Makefile.am,
-	  trunk/ardesia/src/keyboard.c, trunk/ardesia/src/keyboard.h,
-	  trunk/ardesia/src/text_window.c,
-	  trunk/ardesia/src/text_window.h: 
+	* trunk/ardesia/TODO,
+	* trunk/ardesia/src/Makefile.am,
+	* trunk/ardesia/src/keyboard.c,
+	* trunk/ardesia/src/keyboard.h,
+	* trunk/ardesia/src/text_window.c,
+	* trunk/ardesia/src/text_window.h: 
         - Separate virtual keyboard caller code
 
 
 2011-01-21 00:31  alpha@paranoici.org
-	* trunk/ardesia/po/POTFILES.in, trunk/ardesia/po/es.po,
-	  trunk/ardesia/po/fr.po, trunk/ardesia/po/it.po,
-	  trunk/ardesia/src/annotation_window.c,
-	  trunk/ardesia/src/ardesia.c, trunk/ardesia/src/bar.h,
-	  trunk/ardesia/src/bar_callbacks.c,
-	  trunk/ardesia/src/iwb_saver.c,
-	  trunk/ardesia/src/project_dialog.c,
-	  trunk/ardesia/src/recorder.c, trunk/ardesia/src/text_window.c,
-	  trunk/ardesia/src/windows_backtrace.h: 
+	* trunk/ardesia/po/POTFILES.in,
+	* trunk/ardesia/po/es.po,
+	* trunk/ardesia/po/fr.po,
+	* trunk/ardesia/po/it.po,
+	* trunk/ardesia/src/annotation_window.c,
+	* trunk/ardesia/src/ardesia.c,
+	* trunk/ardesia/src/bar.h,
+	* trunk/ardesia/src/bar_callbacks.c,
+	* trunk/ardesia/src/iwb_saver.c,
+	* trunk/ardesia/src/project_dialog.c,
+	* trunk/ardesia/src/recorder.c,
+	* trunk/ardesia/src/text_window.c,
+	* trunk/ardesia/src/windows_backtrace.h: 
         - Add translation for the new project dialog 
         - Skip the translation of the horizontal bar this has the same contents 
           of the vertical one; this fix the intltool-update -m command under the
@@ -218,42 +244,51 @@
 
 2011-01-20 13:37  alpha@paranoici.org
 	* trunk/ardesia/data/project_dialog.glade,
-	  trunk/ardesia/src/Makefile.am,
-	  trunk/ardesia/src/annotation_window.c,
-	  trunk/ardesia/src/annotation_window.h,
-	  trunk/ardesia/src/annotation_window_callbacks.c,
-	  trunk/ardesia/src/annotation_window_callbacks.h,
-	  trunk/ardesia/src/ardesia.c, trunk/ardesia/src/ardesia.h,
-	  trunk/ardesia/src/background_window.c,
-	  trunk/ardesia/src/background_window.h,
-	  trunk/ardesia/src/background_window_callbacks.c,
-	  trunk/ardesia/src/background_window_callbacks.h,
-	  trunk/ardesia/src/bar.c, trunk/ardesia/src/bar.h,
-	  trunk/ardesia/src/bar_callbacks.c,
-	  trunk/ardesia/src/bar_callbacks.h,
-	  trunk/ardesia/src/bezier_spline.c,
-	  trunk/ardesia/src/bezier_spline.h, trunk/ardesia/src/broken.c,
-	  trunk/ardesia/src/broken.h, trunk/ardesia/src/color_selector.c,
-	  trunk/ardesia/src/color_selector.h,
-	  trunk/ardesia/src/glibc_backtrace.c,
-	  trunk/ardesia/src/glibc_backtrace.h,
-	  trunk/ardesia/src/info_dialog.c,
-	  trunk/ardesia/src/info_dialog.h, trunk/ardesia/src/iwb_saver.c,
-	  trunk/ardesia/src/iwb_saver.h, trunk/ardesia/src/pdf_saver.c,
-	  trunk/ardesia/src/pdf_saver.h,
-	  trunk/ardesia/src/preference_dialog.c,
-	  trunk/ardesia/src/preference_dialog.h,
-	  trunk/ardesia/src/preference_dialog_callbacks.c,
-	  trunk/ardesia/src/preference_dialog_callbacks.h,
-	  trunk/ardesia/src/recorder.c, trunk/ardesia/src/recorder.h,
-	  trunk/ardesia/src/saver.c, trunk/ardesia/src/saver.h,
-	  trunk/ardesia/src/text_window.c,
-	  trunk/ardesia/src/text_window.h, trunk/ardesia/src/utils.c,
-	  trunk/ardesia/src/utils.h,
-	  trunk/ardesia/src/windows_backtrace.c,
-	  trunk/ardesia/src/windows_backtrace.h,
-	  trunk/ardesia/src/windows_utils.c,
-	  trunk/ardesia/src/windows_utils.h:
+	* trunk/ardesia/src/Makefile.am,
+	* trunk/ardesia/src/annotation_window.c,
+	* trunk/ardesia/src/annotation_window.h,
+	* trunk/ardesia/src/annotation_window_callbacks.c,
+	* trunk/ardesia/src/annotation_window_callbacks.h,
+	* trunk/ardesia/src/ardesia.c,
+	* trunk/ardesia/src/ardesia.h,
+	* trunk/ardesia/src/background_window.c,
+	* trunk/ardesia/src/background_window.h,
+	* trunk/ardesia/src/background_window_callbacks.c,
+	* trunk/ardesia/src/background_window_callbacks.h,
+	* trunk/ardesia/src/bar.c,
+	* trunk/ardesia/src/bar.h,
+	* trunk/ardesia/src/bar_callbacks.c,
+	* trunk/ardesia/src/bar_callbacks.h,
+	* trunk/ardesia/src/bezier_spline.c,
+	* trunk/ardesia/src/bezier_spline.h,
+	* trunk/ardesia/src/broken.c,
+	* trunk/ardesia/src/broken.h,
+	* trunk/ardesia/src/color_selector.c,
+	* trunk/ardesia/src/color_selector.h,
+	* trunk/ardesia/src/glibc_backtrace.c,
+	* trunk/ardesia/src/glibc_backtrace.h,
+	* trunk/ardesia/src/info_dialog.c,
+	* trunk/ardesia/src/info_dialog.h,
+	* trunk/ardesia/src/iwb_saver.c,
+	* trunk/ardesia/src/iwb_saver.h,
+	* trunk/ardesia/src/pdf_saver.c,
+	* trunk/ardesia/src/pdf_saver.h,
+	* trunk/ardesia/src/preference_dialog.c,
+	* trunk/ardesia/src/preference_dialog.h,
+	* trunk/ardesia/src/preference_dialog_callbacks.c,
+	* trunk/ardesia/src/preference_dialog_callbacks.h,
+	* trunk/ardesia/src/recorder.c,
+Ù	* trunk/ardesia/src/recorder.h,
+	* trunk/ardesia/src/saver.c,
+	* trunk/ardesia/src/saver.h,
+	* trunk/ardesia/src/text_window.c,
+	* trunk/ardesia/src/text_window.h,
+	* trunk/ardesia/src/utils.c,
+	* trunk/ardesia/src/utils.h,
+	* trunk/ardesia/src/windows_backtrace.c,
+	* trunk/ardesia/src/windows_backtrace.h,
+	* trunk/ardesia/src/windows_utils.c,
+	* trunk/ardesia/src/windows_utils.h:
         - First version that export in the iwb format; 
           this is a partial but working implementation
 
@@ -276,7 +311,7 @@
 
 2011-01-17 00:43  alpha@paranoici.org
 	* trunk/ardesia/src/annotation_window_callbacks.c,
-	  trunk/ardesia/src/bar_callbacks.c: 
+	* trunk/ardesia/src/bar_callbacks.c: 
         - After that you have push the unlock button if you select a tool
           or the colours palette the tool locks automatically
 
@@ -288,28 +323,37 @@
 
 
 2011-01-15 16:27  alpha@paranoici.org
-	* trunk/ardesia/src/bar.c, trunk/ardesia/src/utils.c,
-	  trunk/ardesia/src/utils.h, trunk/ardesia/src/windows_utils.c,
-	  trunk/ardesia/src/windows_utils.h: 
+	* trunk/ardesia/src/bar.c,
+	* trunk/ardesia/src/utils.c,
+	* trunk/ardesia/src/utils.h,
+	* trunk/ardesia/src/windows_utils.c,
+	* trunk/ardesia/src/windows_utils.h: 
         - Code revision of the new code to make the ardesia shortcut on the desktop
 
 
 2011-01-15 13:51  alpha@paranoici.org
-	* trunk/ardesia/TODO, trunk/ardesia/src/Makefile.am,
-	  trunk/ardesia/src/bar.c, trunk/ardesia/src/bar.h,
-	  trunk/ardesia/src/utils.c, trunk/ardesia/src/windows_utils.c,
-	  trunk/ardesia/src/windows_utils.h: 
+	* trunk/ardesia/TODO,
+	* trunk/ardesia/src/Makefile.am,
+	* trunk/ardesia/src/bar.c,
+	* trunk/ardesia/src/bar.h,
+	* trunk/ardesia/src/utils.c,
+	* trunk/ardesia/src/windows_utils.c,
+	* trunk/ardesia/src/windows_utils.h: 
         - Create a new Ardesia folder on desktop where put the artifacts
 
 
 2011-01-14 15:43  alpha@paranoici.org
-	* trunk/ardesia/TODO, trunk/ardesia/configure.ac,
-	  trunk/ardesia/src/annotation_window.c,
-	  trunk/ardesia/src/annotation_window_callbacks.c,
-	  trunk/ardesia/src/ardesia.c,
-	  trunk/ardesia/src/background_window.c, trunk/ardesia/src/bar.c,
-	  trunk/ardesia/src/recorder.c, trunk/ardesia/src/text_window.c,
-	  trunk/ardesia/src/utils.c, trunk/ardesia/src/utils.h: 
+	* trunk/ardesia/TODO,
+	* trunk/ardesia/configure.ac,
+	* trunk/ardesia/src/annotation_window.c,
+	* trunk/ardesia/src/annotation_window_callbacks.c,
+	* trunk/ardesia/src/ardesia.c,
+	* trunk/ardesia/src/background_window.c,
+	* trunk/ardesia/src/bar.c,
+	* trunk/ardesia/src/recorder.c,
+	* trunk/ardesia/src/text_window.c,
+	* trunk/ardesia/src/utils.c,
+	* trunk/ardesia/src/utils.h: 
         - Code revision 
         - The workspace where the files are stored has been moved on the ardesia 
           under the Documents folder 
@@ -318,133 +362,146 @@
 
 
 2011-01-13 17:55  alpha@paranoici.org
-	* trunk/ardesia/TODO, trunk/ardesia/data/horizontal_bar.glade,
-	  trunk/ardesia/data/vertical_bar.glade: 
+	* trunk/ardesia/TODO,
+	* trunk/ardesia/data/horizontal_bar.glade,
+	* trunk/ardesia/data/vertical_bar.glade: 
         - Rescheduled TODO 
         - Change the order of the writing tool
 
 
 2011-01-13 15:27  alpha@paranoici.org
-	* trunk/ardesia/Makefile.am, trunk/ardesia/configure.ac,
-	  trunk/ardesia/data/annotation_window.glade,
-	  trunk/ardesia/data/background_window.glade,
-	  trunk/ardesia/data/backgrounds,
-	  trunk/ardesia/data/horizontal_bar.glade,
-	  trunk/ardesia/data/info_dialog.glade,
-	  trunk/ardesia/data/pixmaps/add-pdf.png,
-	  trunk/ardesia/data/pixmaps/ardesia_logo.png,
-	  trunk/ardesia/data/pixmaps/arrow.png,
-	  trunk/ardesia/data/pixmaps/blue.png,
-	  trunk/ardesia/data/pixmaps/eraser.png,
-	  trunk/ardesia/data/pixmaps/filler.png,
-	  trunk/ardesia/data/pixmaps/green.png,
-	  trunk/ardesia/data/pixmaps/hand.png,
-	  trunk/ardesia/data/pixmaps/highlighter.png,
-	  trunk/ardesia/data/pixmaps/lock.png,
-	  trunk/ardesia/data/pixmaps/media-record.png,
-	  trunk/ardesia/data/pixmaps/media-recorder-unavailable.png,
-	  trunk/ardesia/data/pixmaps/medium.png,
-	  trunk/ardesia/data/pixmaps/pencil.png,
-	  trunk/ardesia/data/pixmaps/rectifier.png,
-	  trunk/ardesia/data/pixmaps/red.png,
-	  trunk/ardesia/data/pixmaps/rounder.png,
-	  trunk/ardesia/data/pixmaps/thick.png,
-	  trunk/ardesia/data/pixmaps/thin.png,
-	  trunk/ardesia/data/pixmaps/unlock.png,
-	  trunk/ardesia/data/pixmaps/white.png,
-	  trunk/ardesia/data/pixmaps/yellow.png,
-	  trunk/ardesia/data/preference_dialog.glade,
-	  trunk/ardesia/data/scripts,
-	  trunk/ardesia/data/text_window.glade,
-	  trunk/ardesia/data/vertical_bar.glade,
-	  trunk/ardesia/src/Makefile.am,
-	  trunk/ardesia/src/annotation_window.glade,
-	  trunk/ardesia/src/background_window.glade,
-	  trunk/ardesia/src/backgrounds,
-	  trunk/ardesia/src/horizontal_bar.glade,
-	  trunk/ardesia/src/info_dialog.glade,
-	  trunk/ardesia/src/pixmaps/add-pdf.png,
-	  trunk/ardesia/src/pixmaps/ardesia_logo.png,
-	  trunk/ardesia/src/pixmaps/arrow.png,
-	  trunk/ardesia/src/pixmaps/blue.png,
-	  trunk/ardesia/src/pixmaps/eraser.png,
-	  trunk/ardesia/src/pixmaps/filler.png,
-	  trunk/ardesia/src/pixmaps/green.png,
-	  trunk/ardesia/src/pixmaps/hand.png,
-	  trunk/ardesia/src/pixmaps/highlighter.png,
-	  trunk/ardesia/src/pixmaps/lock.png,
-	  trunk/ardesia/src/pixmaps/media-record.png,
-	  trunk/ardesia/src/pixmaps/media-recorder-unavailable.png,
-	  trunk/ardesia/src/pixmaps/medium.png,
-	  trunk/ardesia/src/pixmaps/pencil.png,
-	  trunk/ardesia/src/pixmaps/rectifier.png,
-	  trunk/ardesia/src/pixmaps/red.png,
-	  trunk/ardesia/src/pixmaps/rounder.png,
-	  trunk/ardesia/src/pixmaps/thick.png,
-	  trunk/ardesia/src/pixmaps/thin.png,
-	  trunk/ardesia/src/pixmaps/unlock.png,
-	  trunk/ardesia/src/pixmaps/white.png,
-	  trunk/ardesia/src/pixmaps/yellow.png,
-	  trunk/ardesia/src/preference_dialog.glade,
-	  trunk/ardesia/src/scripts, trunk/ardesia/src/text_window.glade,
-	  trunk/ardesia/src/vertical_bar.glade: 
+	* trunk/ardesia/Makefile.am,
+	* trunk/ardesia/configure.ac,
+	* trunk/ardesia/data/annotation_window.glade,
+	* trunk/ardesia/data/background_window.glade,
+	* trunk/ardesia/data/backgrounds,
+	* trunk/ardesia/data/horizontal_bar.glade,
+	* trunk/ardesia/data/info_dialog.glade,
+	* trunk/ardesia/data/pixmaps/add-pdf.png,
+	* trunk/ardesia/data/pixmaps/ardesia_logo.png,
+	* trunk/ardesia/data/pixmaps/arrow.png,
+	* trunk/ardesia/data/pixmaps/blue.png,
+	* trunk/ardesia/data/pixmaps/eraser.png,
+	* trunk/ardesia/data/pixmaps/filler.png,
+	* trunk/ardesia/data/pixmaps/green.png,
+	* trunk/ardesia/data/pixmaps/hand.png,
+	* trunk/ardesia/data/pixmaps/highlighter.png,
+	* trunk/ardesia/data/pixmaps/lock.png,
+	* trunk/ardesia/data/pixmaps/media-record.png,
+	* trunk/ardesia/data/pixmaps/media-recorder-unavailable.png,
+	* trunk/ardesia/data/pixmaps/medium.png,
+	* trunk/ardesia/data/pixmaps/pencil.png,
+	* trunk/ardesia/data/pixmaps/rectifier.png,
+	* trunk/ardesia/data/pixmaps/red.png,
+	* trunk/ardesia/data/pixmaps/rounder.png,
+	* trunk/ardesia/data/pixmaps/thick.png,
+	* trunk/ardesia/data/pixmaps/thin.png,
+	* trunk/ardesia/data/pixmaps/unlock.png,
+	* trunk/ardesia/data/pixmaps/white.png,
+	* trunk/ardesia/data/pixmaps/yellow.png,
+	* trunk/ardesia/data/preference_dialog.glade,
+	* trunk/ardesia/data/scripts,
+	* trunk/ardesia/data/text_window.glade,
+	* trunk/ardesia/data/vertical_bar.glade,
+	* trunk/ardesia/src/Makefile.am,
+	* trunk/ardesia/src/annotation_window.glade,
+	* trunk/ardesia/src/background_window.glade,
+	* trunk/ardesia/src/backgrounds,
+	* trunk/ardesia/src/horizontal_bar.glade,
+	* trunk/ardesia/src/info_dialog.glade,
+	* trunk/ardesia/src/pixmaps/add-pdf.png,
+	* trunk/ardesia/src/pixmaps/ardesia_logo.png,
+	* trunk/ardesia/src/pixmaps/arrow.png,
+	* trunk/ardesia/src/pixmaps/blue.png,
+	* trunk/ardesia/src/pixmaps/eraser.png,
+	* trunk/ardesia/src/pixmaps/filler.png,
+	* trunk/ardesia/src/pixmaps/green.png,
+	* trunk/ardesia/src/pixmaps/hand.png,
+	* trunk/ardesia/src/pixmaps/highlighter.png,
+	* trunk/ardesia/src/pixmaps/lock.png,
+	* trunk/ardesia/src/pixmaps/media-record.png,
+	* trunk/ardesia/src/pixmaps/media-recorder-unavailable.png,
+	* trunk/ardesia/src/pixmaps/medium.png,
+	* trunk/ardesia/src/pixmaps/pencil.png,
+	* trunk/ardesia/src/pixmaps/rectifier.png,
+	* trunk/ardesia/src/pixmaps/red.png,
+	* trunk/ardesia/src/pixmaps/rounder.png,
+	* trunk/ardesia/src/pixmaps/thick.png,
+	* trunk/ardesia/src/pixmaps/thin.png,
+	* trunk/ardesia/src/pixmaps/unlock.png,
+	* trunk/ardesia/src/pixmaps/white.png,
+	* trunk/ardesia/src/pixmaps/yellow.png,
+	* trunk/ardesia/src/preference_dialog.glade,
+	* trunk/ardesia/src/scripts,
+	* trunk/ardesia/src/text_window.glade,
+	* trunk/ardesia/src/vertical_bar.glade: 
         - Refactoring of the package
 
 
 2011-01-13 14:41  alpha@paranoici.org
 	* trunk/ardesia/Makefile.am,
-	  trunk/ardesia/applications/ardesia.desktop.in,
-	  trunk/ardesia/data, trunk/ardesia/data/ardesia.desktop.in,
-	  trunk/ardesia/data/pixmaps, trunk/ardesia/pixmaps: 
+	* trunk/ardesia/applications/ardesia.desktop.in,
+	* trunk/ardesia/data,
+	* trunk/ardesia/data/ardesia.desktop.in,
+	* trunk/ardesia/data/pixmaps,
+	* trunk/ardesia/pixmaps: 
         - Make order in the package
 
 
 2011-01-13 14:23  alpha@paranoici.org
-	* trunk/ardesia/config.guess, trunk/ardesia/config.sub,
-	  trunk/ardesia/depcomp, trunk/ardesia/install-sh,
-	  trunk/ardesia/intltool-extract.in,
-	  trunk/ardesia/intltool-merge.in,
-	  trunk/ardesia/intltool-update.in, trunk/ardesia/missing,
-	  trunk/ardesia/mkinstalldirs: 
+	* trunk/ardesia/config.guess,
+	* trunk/ardesia/config.sub,
+	* trunk/ardesia/depcomp,
+	* trunk/ardesia/install-sh,
+	* trunk/ardesia/intltool-extract.in,
+	* trunk/ardesia/intltool-merge.in,
+	* trunk/ardesia/intltool-update.in,
+	* trunk/ardesia/missing,
+	* trunk/ardesia/mkinstalldirs: 
         - Delete from repo some autogenerated file
 
 
 2011-01-13 12:24  alpha@paranoici.org
 	* trunk/ardesia/src/bar_callbacks.c,
-	  trunk/ardesia/src/horizontal_bar.glade,
-	  trunk/ardesia/src/vertical_bar.glade: 
+	* trunk/ardesia/src/horizontal_bar.glade,
+	* trunk/ardesia/src/vertical_bar.glade: 
         - The hightlighter is put as a tool, this give a better gui
           REGARDS: With the new interface is not possible anymore select 
                    a semiopaque color with the arrow and the text tools
 
 
 2011-01-13 01:12  alpha@paranoici.org
-	* trunk/ardesia/configure.ac, trunk/ardesia/po/LINGUAS,
-	  trunk/ardesia/po/POTFILES.in, trunk/ardesia/po/es.po,
-	  trunk/ardesia/po/fr.po, trunk/ardesia/po/it.po,
-	  trunk/ardesia/src/horizontal_bar.glade:
+	* trunk/ardesia/configure.ac,
+	* trunk/ardesia/po/LINGUAS,
+	* trunk/ardesia/po/POTFILES.in,
+	* trunk/ardesia/po/es.po,
+	* trunk/ardesia/po/fr.po,
+	* trunk/ardesia/po/it.po,
+	* trunk/ardesia/src/horizontal_bar.glade:
         - Adjustment in localization 
         - more strict check for configure
 
 
 2011-01-12 14:25  alpha@paranoici.org
-	* trunk/ardesia/TODO, trunk/ardesia/configure.ac,
-	  trunk/ardesia/po/POTFILES.in,
-	  trunk/ardesia/src/annotation_window.glade,
-	  trunk/ardesia/src/ardesia.c,
-	  trunk/ardesia/src/background_window.glade,
-	  trunk/ardesia/src/horizontal_bar.glade,
-	  trunk/ardesia/src/info_dialog.c,
-	  trunk/ardesia/src/text_window.glade,
-	  trunk/ardesia/src/vertical_bar.glade: 
+	* trunk/ardesia/TODO,
+	* trunk/ardesia/configure.ac,
+	* trunk/ardesia/po/POTFILES.in,
+	* trunk/ardesia/src/annotation_window.glade,
+	* trunk/ardesia/src/ardesia.c,
+	* trunk/ardesia/src/background_window.glade,
+	* trunk/ardesia/src/horizontal_bar.glade,
+	* trunk/ardesia/src/info_dialog.c,
+	* trunk/ardesia/src/text_window.glade,
+	* trunk/ardesia/src/vertical_bar.glade: 
         - Build system review
 
 
 2011-01-12 03:20  alpha@paranoici.org
 	* trunk/ardesia/TODO,
-	  trunk/ardesia/src/annotation_window_callbacks.c,
-	  trunk/ardesia/src/text_window.c, trunk/ardesia/src/utils.c,
-	  trunk/ardesia/src/utils.h: 
+	* trunk/ardesia/src/annotation_window_callbacks.c,
+	* trunk/ardesia/src/text_window.c,
+	* trunk/ardesia/src/utils.c,
+	* trunk/ardesia/src/utils.h: 
         - Defined drill_window_in_bar_area that make an hole to the window 
           for event handling in the area where the ardesia bar is located 
         - The location of the pointer is taken from GdkEventButton used 
