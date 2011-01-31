@@ -10,8 +10,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: French\n"
-"X-Poedit-Country: FRANCE\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: ../data/crash_dialog.glade.h:1
@@ -45,11 +45,10 @@ msgid ""
 "   "
 msgstr ""
 "\n"
-"    Ardesia - un programme pour la peinture sur l'ecran\n"
-"    avec ce programme vous pouvez jouer, dessiner, apprendre et "
-"d'enseigner \n"
-"    Ce programme a été écrit comme un sonet liberte'\n"
-"    Nous croyons dans la liberté et à la liberté de l'enseignement\n"
+"    Ardesia -- ein Programm fur die Malerei auf dem Desktop-Bildschirm\n"
+"    Mit diesem Programm konnen Sie spielen, malen, lernen und lehren\n"
+"    Dieses Programm wurde als ein Sonett der Freiheit geschrieben\n"
+"    Wir glauben an die Freiheit und die Freiheit der Erziehung\n"
 " \n"
 "    Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
 " \n"
@@ -79,39 +78,39 @@ msgstr ""
 
 #: ../data/preference_dialog.glade.h:1
 msgid "Choose the background"
-msgstr "Choisissez le fond"
+msgstr "Wahlen sie den hintergrund"
 
 #: ../data/preference_dialog.glade.h:2
 msgid "Choose the background color"
-msgstr "Choisissez la couleur de fond"
+msgstr "Wahlen sie die hintergrundfarbe"
 
 #: ../data/preference_dialog.glade.h:3
 msgid "background color"
-msgstr "couleur de fond"
+msgstr "Wahlen sie die hintergrundfarbe"
 
 #: ../data/preference_dialog.glade.h:4
 msgid "image"
-msgstr "image"
+msgstr "bild"
 
 #: ../data/preference_dialog.glade.h:5
 msgid "none"
-msgstr "aucun"
+msgstr "none"
 
 #: ../data/project_dialog.glade.h:1
 msgid "Choose a project name"
-msgstr "Choisir le nom du projet"
+msgstr "Wahlen sie einen projektnamen"
 
 #: ../data/share_confirmation_dialog.glade.h:1
 msgid "Do you want to share your work by email?"
-msgstr "Voulez-vous partager votre travail par e-mail?"
+msgstr "Wollen sie ihre arbeit per E-Mail teilen?"
 
 #: ../data/vertical_bar.glade.h:1
 msgid "Add to pdf"
-msgstr "Ajouter au pdf"
+msgstr "Zur pdf"
 
 #: ../data/vertical_bar.glade.h:2
 msgid "Arrow"
-msgstr "Flèche"
+msgstr "Arrow"
 
 #: ../data/vertical_bar.glade.h:3
 msgid "Blue"
@@ -119,31 +118,31 @@ msgstr "Blue"
 
 #: ../data/vertical_bar.glade.h:4
 msgid "Clear"
-msgstr "Effacer"
+msgstr "Clear"
 
 #: ../data/vertical_bar.glade.h:5
 msgid "Color Chooser"
-msgstr "Choisissez une couleur"
+msgstr "Farbwahler"
 
 #: ../data/vertical_bar.glade.h:6
 msgid "Drawing Mode"
-msgstr "Dessin mode"
+msgstr "Zeichnen modus"
 
 #: ../data/vertical_bar.glade.h:7
 msgid "Eraser"
-msgstr "Gomme"
+msgstr "Radierer"
 
 #: ../data/vertical_bar.glade.h:8
 msgid "Filler"
-msgstr "remplissage"
+msgstr "Fullstoff"
 
 #: ../data/vertical_bar.glade.h:9
 msgid "Green"
-msgstr "vert"
+msgstr "Green"
 
 #: ../data/vertical_bar.glade.h:10
 msgid "Highlighter"
-msgstr "Surligneur"
+msgstr "Marker"
 
 #: ../data/vertical_bar.glade.h:11
 msgid "Info"
@@ -151,23 +150,23 @@ msgstr "Info"
 
 #: ../data/vertical_bar.glade.h:12
 msgid "Insert Text"
-msgstr "Inserisci testo"
+msgstr "Text einfugen"
 
 #: ../data/vertical_bar.glade.h:13
 msgid "Pencil"
-msgstr "Penna"
+msgstr "Bleistift"
 
 #: ../data/vertical_bar.glade.h:14
 msgid "Preferences"
-msgstr "Préférences"
+msgstr "Voreinstellungen"
 
 #: ../data/vertical_bar.glade.h:15
 msgid "Quit"
-msgstr "Quitter"
+msgstr "Beenden"
 
 #: ../data/vertical_bar.glade.h:16
 msgid "Record"
-msgstr "Enregistrer"
+msgstr "Record"
 
 #: ../data/vertical_bar.glade.h:17
 msgid "Red"
@@ -175,76 +174,32 @@ msgstr "Red"
 
 #: ../data/vertical_bar.glade.h:18
 msgid "Redo"
-msgstr "Rétablir"
+msgstr "Bereit"
 
 #: ../data/vertical_bar.glade.h:19
 msgid "Save"
-msgstr "Enregistrer"
+msgstr "Speichern"
 
 #: ../data/vertical_bar.glade.h:20
 msgid "Thickness"
-msgstr "Epaisseur"
+msgstr "Dicke"
 
 #: ../data/vertical_bar.glade.h:21
 msgid "Undo"
-msgstr "Annuler"
+msgstr "Ryckgangig machen"
 
 #: ../data/vertical_bar.glade.h:22
 msgid "Unlock"
-msgstr "Déverrouiller"
+msgstr "Offnen"
 
 #: ../data/vertical_bar.glade.h:23
 msgid "White"
-msgstr "Blanc"
+msgstr "Weib"
 
 #: ../data/vertical_bar.glade.h:24
 msgid "Yellow"
-msgstr "Jaune"
+msgstr "Gelb"
 
 #: ../data/vertical_bar.glade.h:25
 msgid "info"
-msgstr "Information"
-
-#~ msgid "In order to run Ardesia you need to enable a composite manager"
-#~ msgstr ""
-#~ "Pour exécuter Ardesia est nécessaire de l'exécuter le composite manager"
-
-#~ msgid "Stop"
-#~ msgstr "arrête"
-
-#~ msgid "Lock"
-#~ msgstr "Vérrouiller"
-
-#~ msgid "Changing color"
-#~ msgstr "Changement de couleur"
-
-#~ msgid "Export as pdf"
-#~ msgstr "Exporter au Pdf"
-
-#~ msgid "Choose a file"
-#~ msgstr "Choisissez un fichier"
-
-#~ msgid "File Exists. Overwrite"
-#~ msgstr "Le fichier existe. Écraser"
-
-#~ msgid ""
-#~ "To record with Ardesia you must install the vlc program and add it to the "
-#~ "PATH environment variable"
-#~ msgstr ""
-#~ "Pour enregistrer une vidéo avec Ardesia, vous devez installer vlc et "
-#~ "ajouter à la variable d'environnement PATH"
-
-#~ msgid "Save video as ogv"
-#~ msgstr "Enregistrer la vidéo en OGV"
-
-#~ msgid "Save image"
-#~ msgstr "Enregistrer l'image"
-
-#~ msgid "window"
-#~ msgstr "fenetre"
-
-#~ msgid "Ardesia"
-#~ msgstr "Ardesia"
-
-#~ msgid "text_window"
-#~ msgstr "fenetre d'entrée de texte"
+msgstr "info"
