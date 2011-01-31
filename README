@@ -196,18 +196,21 @@ Here it follows a complete description of the options for the Ardesia:
 
 Usage: ardesia [options] [filename]
 
+Ardesia the free digital sketchpad
+
 options:
-  --verbose ,	-v		Enable verbose mode to see the logs
+  --verbose ,	-V		Enable verbose mode to see the logs
   --decorate,	-d		Decorate the window with the borders
   --gravity ,	-g		Set the gravity of the bar. Possible values are:
   				east [default]
   				west
   				north
   				south
-
   --help    ,	-h		Shows the help screen
+  --version ,	-v		Show version information and exit
 
 filename:	  		The file containig the image to be be used as background
+
 
 
 -----------------

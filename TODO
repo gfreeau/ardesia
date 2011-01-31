@@ -12,10 +12,6 @@
   - Deutsch Translation
   - Make a video tutorial
   - Make a pdf user manual
-  - Ardesia fedora packaging
-  - Windows operating systems
-    - gtk 2.22
-    - Build a 64 bit executable version
 
 - MacOsX-quartz porting
   - Investigate about the status and make a plan
@@ -25,7 +21,6 @@
   - Cache in memory the recent savepoint
   - Use double buffered windows to have a smoother exposure to the eye 
   - Text insertion consolidation
-  - Bar and transparent layer on the same window
   - Screencast recorder using lib instead spawn processes
   - Create the iwb without spawn the zip process
 
@@ -43,8 +38,7 @@
     - thickness size 
   - Zoom
   - Not parallel to the axis polygon recognition
-  - Rotate elements
-  - Show the virtual keyboard far away from the text cursor position 
+  - Rotate the shapes
 
 ===
 EOF
