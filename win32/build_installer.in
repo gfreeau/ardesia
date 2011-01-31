@@ -153,6 +153,10 @@ cp @prefix@/share/curtain/ui/curtain.ui $DESTDIR/share/curtain/ui
 mkdir -p $DESTDIR/share/curtain/ui/pixmaps
 cp @prefix@/share/curtain/ui/pixmaps/curtain.ico $DESTDIR/share/curtain/ui/pixmaps
 
+mkdir -p $DESTDIR/share/locale/de/LC_MESSAGES/
+
+cp @prefix@/share/locale/de/LC_MESSAGES/ardesia.mo $DESTDIR/share/locale/de/LC_MESSAGES/ardesia.mo
+
 mkdir -p $DESTDIR/share/locale/es/LC_MESSAGES/
 
 cp @prefix@/share/locale/es/LC_MESSAGES/ardesia.mo $DESTDIR/share/locale/es/LC_MESSAGES/ardesia.mo
