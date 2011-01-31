@@ -23,11 +23,23 @@ This file contain the news about the tool
 Packaging
 - New windows packaging with the inno setup installer
 
+Usability
+- The default folder where store the created files
+  called aredia workspace now is located under document diectory
+- Created a shortcurt on desktop that links to the ardesia wokspace
+- Now to save an image you must push on the the camera photo icon
+
 Features
-- Save in the iwb format
-- Send with email iwb, screenshots and pdf created in session
+- Save in the Interactive Whiteboard Common File Format (iwbcff) open format
+- At the closure of the the program you can send by email iwbcff, 
+  screenshots and pdf created in session
 - Virtual keyboard shown each time that is focused an editable item
 - New crash dialog
+
+Bug Fix:
+- Fix in the filler that caused a strange behaviour if is filled 
+  a not closed path
+
 
 -------------
  ardesia 0.6
@@ -71,8 +83,7 @@ Features:
 -------------
 
 Dependencies:
-- gtk 2.16.6 included inside 
-  the windows package
+- gtk 2.16.6 included inside the windows package
 
 Usability:
 - performance improvement
