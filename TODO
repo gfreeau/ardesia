@@ -19,10 +19,11 @@
   - Store and load the savepoints using svg files
   - Use double buffered windows to have a smoother exposure to the eye 
   - Text insertion consolidation
-  - Screencast recorder using lib instead spawn processes
   - Create the iwb without spawn the zip/unzip process
+  - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
+  - Open with Ardesia (iwb file) on Windows
   - Open existing project dialog
   - Image gallery (sticky notes...)
   - Deploy the artifact online
