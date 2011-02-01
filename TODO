@@ -24,6 +24,7 @@
   - Create the iwb without spawn the zip/unzip process
 
 - Candidate features:
+  - Open existing project dialog
   - Deploy the artifact online
     - video; youtube upload
   - Image gallery (sticky notes...)
