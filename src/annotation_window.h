@@ -81,7 +81,6 @@ typedef struct
 typedef struct _AnnotateSavePoint
 {
   gchar* filename;
-  cairo_surface_t *surface;
 } AnnotateSavePoint;
 
 

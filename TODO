@@ -18,23 +18,21 @@
 - Reengineering
   - Store and load the savepoints using svg files
   - Use double buffered windows to have a smoother exposure to the eye 
-  - Cache in memory the recent savepoint
   - Text insertion consolidation
   - Screencast recorder using lib instead spawn processes
   - Create the iwb without spawn the zip/unzip process
 
 - Candidate features:
   - Open existing project dialog
+  - Image gallery (sticky notes...)
   - Deploy the artifact online
     - video; youtube upload
-  - Image gallery (sticky notes...)
   - Filler implemented with the flood filler algorithm
   - Lazo selection tool
   - Move
   - Copy/paste
   - Multi pointer support 
-  - Define a configuration file and settings
-    - thickness size 
+  - Configurable thickness size 
   - Zoom
   - Not parallel to the axis polygon recognition
   - Rotate the shapes

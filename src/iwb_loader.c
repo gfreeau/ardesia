@@ -36,8 +36,7 @@ GSList* load_savepoint_by_reference(GSList* savelist, gchar* project_tmp_dir, xm
   xmlChar* href = xmlGetProp(node, (xmlChar*) "href");
   
   savepoint->filename  = g_strdup_printf("%s%s%s", project_tmp_dir, G_DIR_SEPARATOR_S, href);
-  savepoint->surface = NULL;
-
+  
   xmlFree(href);
 
   /* add to the savepoint list */

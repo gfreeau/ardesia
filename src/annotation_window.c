@@ -780,11 +780,6 @@ static void delete_save_point(AnnotateSavePoint* savepoint)
 	  g_remove(savepoint->filename);
 	  g_free(savepoint->filename);
 	}
-      if (savepoint->surface)
-	{
-	  cairo_surface_destroy(savepoint->surface);
-	  savepoint->surface = NULL;
-	}
       data->savelist = g_slist_remove(data->savelist, savepoint);
       g_free(savepoint);
       savepoint = NULL;
@@ -821,7 +816,7 @@ static void annotate_savelist_free()
  * Add a save point for the undo/redo; 
  * this code must be called at the end of each painting action
  */
-void annotate_add_save_point(gboolean cache)
+void annotate_add_save_point()
 {
   AnnotateSavePoint *savepoint = g_malloc((gsize) sizeof(AnnotateSavePoint));
 
@@ -844,27 +839,16 @@ void annotate_add_save_point(gboolean cache)
   cairo_paint(cr);
   /* the saved_surface contain the savepoint image */  
   
-  if (!cache)
-    {
-      /*  will be create a file in the savepoint folder with format PACKAGE_NAME_1.png */
-      cairo_surface_write_to_png (saved_surface, savepoint->filename);
-      cairo_surface_destroy(saved_surface); 
-      savepoint->surface = NULL;
-      if (data->debug)
-	{ 
-	  g_printerr("The save point %s has been stored in file\n", savepoint->filename);
-	}
+
+  /*  will be create a file in the savepoint folder with format PACKAGE_NAME_1.png */
+  cairo_surface_write_to_png (saved_surface, savepoint->filename);
+  cairo_surface_destroy(saved_surface); 
+  if (data->debug)
+    { 
+      g_printerr("The save point %s has been stored in file\n", savepoint->filename);
     }
-  else
-    {
-      /* store in cache */
-      if (data->debug)
-	{ 
-	  g_printerr("The savepoint %s has been stored in memory\n", savepoint->filename);
-	}
-     
-      savepoint->surface = saved_surface;
-    }
+    
+
 
   cairo_destroy(cr);
 }
@@ -885,13 +869,7 @@ void annotate_restore_surface()
       cairo_new_path(data->annotation_cairo_context);
       cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
 
-      if (savepoint->surface)
-	{
-	  g_printerr("The savepoint %s has been loaded from memory\n", savepoint->filename);
-	  cairo_set_source_surface (data->annotation_cairo_context, savepoint->surface, 0, 0);
-	  cairo_paint(data->annotation_cairo_context);
-	}
-      else if (savepoint->filename)
+      if (savepoint->filename)
 	{
 	  if (data->debug)
 	    {
@@ -1070,7 +1048,7 @@ void annotate_push_context(cairo_t * cr)
   cairo_set_source_surface (data->annotation_cairo_context,  source_surface, 0, 0);
   cairo_paint(data->annotation_cairo_context);
   cairo_stroke(data->annotation_cairo_context);
-  annotate_add_save_point(FALSE);
+  annotate_add_save_point();
 }
 
 
@@ -1410,7 +1388,7 @@ void annotate_fill()
         {
 	  g_printerr("Fill\n");
         }
-      annotate_add_save_point(FALSE);
+      annotate_add_save_point();
     }
 }
 
@@ -1461,7 +1439,7 @@ void annotate_clear_screen()
 
   annotate_reset_cairo();
   clear_cairo_context(data->annotation_cairo_context);
-  annotate_add_save_point(FALSE);
+  annotate_add_save_point();
 }
 
 
