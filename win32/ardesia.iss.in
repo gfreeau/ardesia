@@ -13,6 +13,8 @@ AppPublisher=Practix,  Srl.
 AppPublisherURL=http://code.google.com/p/ardesia/
 AppSupportURL=http://code.google.com/p/ardesia/
 AppUpdatesURL=http://code.google.com/p/ardesia/
+ChangesAssociations=yes
+ChangesEnvironment=yes
 DefaultDirName={pf}\Ardesia
 DefaultGroupName=Ardesia
 LicenseFile=ardesia_@VERSION@-windows-1_i386\COPYING
@@ -68,3 +70,34 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Ardesia"; Filename
 
 [Run]
 Filename: "{app}\bin\ardesia.exe"; Description: "{cm:LaunchProgram,Ardesia}"; Flags: nowait postinstall skipifsilent
+
+[Code]
+function NotOnPathAlready(): Boolean;
+var
+  BinDir, Path: String;
+begin
+  if RegQueryStringValue(HKEY_CURRENT_USER, 'Environment', 'Path', Path) then
+  begin // Successfully read the value
+    BinDir := ExpandConstant('{app}\bin');
+    if Pos(LowerCase(BinDir), Lowercase(Path)) = 0 then
+    begin
+      Result := True;
+    end
+    else
+    begin
+      Result := False;
+    end
+  end
+  else // The key probably doesn't exist
+  begin
+    Log('Could not access HKCU\Environment\PATH so assume it is ok to add it');
+    Result := True;
+  end;
+end;
+
+
+[Registry]
+Root: HKCR; Subkey: ".iwb"; ValueType: string; ValueName: ""; ValueData: "ardesia"; Flags: uninsdeletevalue
+Root: HKCR; Subkey: "ardesia"; ValueType: string; ValueName: ""; ValueData: "Ardesia Project File"; Flags: uninsdeletekeyifempty
+Root: HKCR; SubKey: ardesia\shell\open\command; ValueType: string; ValueName: ""; ValueData: """{app}\bin\ardesia.exe"" ""%1"""; Flags: uninsdeletevalue
+Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}\bin"; Check: NotOnPathAlready()
