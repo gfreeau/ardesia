@@ -20,6 +20,9 @@ This file contain the news about the tool
  ardesia 0.7
 -------------
 
+Internationalization:
+- Add german translation
+
 Packaging
 - New windows packaging with the inno setup installer
 
@@ -30,7 +33,8 @@ Usability
 - Now to save an image you must push on the the camera photo icon
 
 Features
-- Load and save in the Interactive Whiteboard Common File Format (iwbcff) open format
+- Open, save and reuse projects thanks to the Interactive Whiteboard 
+  Common File Format (iwbcff)
 - At the closure of the the program you can send by email iwbcff, 
   screenshots and pdf created in session
 - Virtual keyboard shown each time that is focused an editable item
