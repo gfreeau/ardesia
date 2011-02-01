@@ -58,7 +58,6 @@ static gboolean bar_to_top(gpointer data)
 /* Called when close the program */
 static gboolean  quit(BarData *bar_data)
 {
-  export_iwb(bar_data->project_dir);
   annotate_quit();
   quit_pdf_saver();
   quit_recorder();
@@ -67,8 +66,6 @@ static gboolean  quit(BarData *bar_data)
   if (bar_data)
     {
       g_free(bar_data->color);
-      g_free(bar_data->workspace_dir);
-      g_free(bar_data->project_dir);
       g_free(bar_data);
     }
 
@@ -410,7 +407,7 @@ on_toolsScreenShot_activate	 (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) func_data;
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
-  start_save_image_dialog(toolbutton, GTK_WINDOW(get_bar_window()), &bar_data->project_dir);
+  start_save_image_dialog(toolbutton, GTK_WINDOW(get_bar_window()));
   bar_data->grab = grab_value;
   start_tool(bar_data);
 }
@@ -424,7 +421,7 @@ on_toolsAddPdf_activate	 (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) func_data;
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
-  add_pdf_page(GTK_WINDOW(get_bar_window()), &bar_data->project_dir);
+  add_pdf_page(GTK_WINDOW(get_bar_window()));
   bar_data->grab = grab_value;
   start_tool(bar_data);
 }
@@ -464,7 +461,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
   else
     { 
       /* the recording is not active */ 
-      gboolean status = start_save_video_dialog(toolbutton, GTK_WINDOW(get_bar_window()), &bar_data->project_dir);
+      gboolean status = start_save_video_dialog(toolbutton, GTK_WINDOW(get_bar_window()));
       if (status)
         {
           /* set stop tooltip */ 

@@ -133,11 +133,11 @@ static void add_savepoint_references(gint savepoint_number)
 
 
 /* Create the iwb xml content file */
-static void create_content(gchar* content_filename, gchar* img_dir_path)
+static void create_xml_content(gchar* content_filename, gchar* img_dir_path)
 {
   int savepoint_number = 0;
-  GDir *img_dir;
-  
+  GDir *img_dir;  
+
   fp = fopen(content_filename, "w");
 
   img_dir = g_dir_open(img_dir_path, 0, NULL);
@@ -159,8 +159,27 @@ static void create_content(gchar* content_filename, gchar* img_dir_path)
 }
 
 
+/* Create iwb file */
+static void create_iwb(gchar* zip_filename, gchar* working_dir, gchar* images_folder, gchar* content_filename)
+{
+ /* create zip, add all the file inside images to the zip and the content.xml */
+  gchar* argv[6] = {"zip", "-r", zip_filename, images_folder, content_filename, (gchar*) 0};
+
+  g_spawn_sync (working_dir /*working_directory*/,
+		argv,
+		NULL /*envp*/,
+		G_SPAWN_SEARCH_PATH,
+		NULL /*child_setup*/,
+		NULL /*user_data*/,
+		NULL /*child_pid*/,
+		NULL,
+		NULL,
+		NULL);
+}
+
+
 /* Export in iwb format */
-void export_iwb(gchar* location)
+void export_iwb(gchar* iwb_location)
 {
   const gchar* tmpdir = g_get_tmp_dir();
   gchar* content_filename = "content.xml";
@@ -172,35 +191,19 @@ void export_iwb(gchar* location)
 
   gchar* images = "images";
   gchar* img_dir_path = g_strdup_printf("%s%s%s", project_tmp_dir, G_DIR_SEPARATOR_S, images);
-  
-  /* will be putted in the project dir */
-  gchar* extension = "iwb";
-  /* the zip is the iwb in the project inside the ardesia workspace */
-  gchar* zip_filename = g_strdup_printf("%s%s%s.%s", location, G_DIR_SEPARATOR_S, project_name, extension);
 
-  /* create zip, add all the file inside images to the zip and the content.xml */
-  gchar* argv[6] = {"zip", "-r", zip_filename, "images", content_filename, (gchar*) 0};
-  
-  create_content(content_filepath, img_dir_path);
+  g_remove(content_filepath);
+  create_xml_content(content_filepath, img_dir_path);
 
-  g_spawn_sync (project_tmp_dir /*working_directory*/,
-		argv,
-		NULL /*envp*/,
-		G_SPAWN_SEARCH_PATH,
-		NULL /*child_setup*/,
-		NULL /*user_data*/,
-		NULL /*child_pid*/,
-		NULL,
-		NULL,
-		NULL);
+  g_remove(iwb_location);
+  create_iwb(iwb_location, project_tmp_dir, "images", content_filename);
 
   /* add to the list of the artifacts created in the session */
-  add_artifact(zip_filename);
+  add_artifact(iwb_location);
   
   g_free(ardesia_tmp_dir);
   g_free(project_tmp_dir); 
   g_free(content_filepath);
   g_free(img_dir_path);
-  
 }
 

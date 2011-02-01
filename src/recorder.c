@@ -138,7 +138,7 @@ void visualize_missing_recorder_program_dialog(GtkWindow* parent_window)
  * This function take as input the recor toolbutton in ardesia bar
  * return true is the recorder is started
  */
-gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar **folder)
+gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
 {
   gboolean status = FALSE;
 
@@ -149,10 +149,7 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
 
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file"));
 
-  gchar* current_folder = g_strdup_printf("%s", *folder);
-
-  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), current_folder);
-  g_free(current_folder);  
+  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), get_project_dir());
 
   gchar* filename = get_default_file_name();
 
@@ -161,10 +158,6 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent, g
   start_virtual_keyboard();  
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
-      /* store the folder location this will be proposed the next time */
-      g_free(*folder);
-      *folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser)); 
-
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
      
       gchar* supported_extension = ".ogv";

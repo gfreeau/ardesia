@@ -27,6 +27,8 @@
 #include <broken.h>
 #include <background_window.h>
 #include <bezier_spline.h>
+#include <iwb_loader.h>
+#include <iwb_saver.h>
 
 #ifdef _WIN32
 #include <windows_utils.h>
@@ -512,8 +514,8 @@ static void rectify(gboolean closed_path)
       g_printerr("rectify\n");
     }
 
-  annotate_add_save_point(TRUE);
-  annotate_undo();
+  /* Restore the surface withgout the last path handwritten */
+  annotate_restore_surface();
 
   annotate_coord_list_free();
   data->coordlist = outptr;
@@ -534,9 +536,8 @@ static void roundify(gboolean closed_path)
   gint lenght = g_slist_length(outptr);
   AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, lenght/2);
 
-  /* Delete the last path drawn */
-  annotate_add_save_point(TRUE);
-  annotate_undo();
+  /* Restore the surface withgout the last path handwritten */
+  annotate_restore_surface();
      
   annotate_coord_list_free();
   data->coordlist = outptr;
@@ -866,7 +867,6 @@ void annotate_add_save_point(gboolean cache)
     }
 
   cairo_destroy(cr);
-
 }
 
 
@@ -1294,6 +1294,7 @@ void annotate_paint_context_free(AnnotatePaintContext *context)
 /* Quit the annotation */
 void annotate_quit()
 {
+  export_iwb(get_iwbfile());
   if (data)
     {   
 
@@ -1465,7 +1466,7 @@ void annotate_clear_screen()
 
 
 /* Init the annotation */
-gint annotate_init(GtkWidget* parent, gboolean debug)
+gint annotate_init(GtkWidget* parent, gchar* iwbfile, gboolean debug)
 
 {
   data = g_malloc ((gsize) sizeof(AnnotateData));
@@ -1487,8 +1488,14 @@ gint annotate_init(GtkWidget* parent, gboolean debug)
   data->debug = debug;
   
   allocate_invisible_cursor();
+  
+  create_savepoint_dir();
 
-  create_savepoint_dir();  
+  if (iwbfile)
+    {
+      data->savelist = load_iwb(iwbfile);
+    }
+  
   setup_app(parent);
 
   return 0;

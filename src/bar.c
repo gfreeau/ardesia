@@ -98,21 +98,6 @@ static void calculate_initial_position(GtkWidget *ardesia_bar_window,
 }
 
 
-/* Setup the workspace */
-static void configure_workspace(BarData *bar_data)
-{
-  /* The workspace dir is set in the documents ardesia folder */
-  bar_data->workspace_dir = g_strdup_printf("%s%s%s", get_documents_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
-  bar_data->project_dir = g_strdup_printf("%s%s%s", bar_data->workspace_dir, G_DIR_SEPARATOR_S, get_project_name());
-  if (!g_file_test(bar_data->project_dir, G_FILE_TEST_EXISTS)) 
-    {
-      if (g_mkdir_with_parents(bar_data->project_dir, 0700)==-1)
-        {
-           g_warning("Unable to create folder %s\n", bar_data->project_dir);
-        } 
-    }
-}
-
 
 /* Allocate and initialize the bar data structure */
 static BarData* init_bar_data()
@@ -129,23 +114,9 @@ static BarData* init_bar_data()
   bar_data->rounder = FALSE;
   bar_data->arrow = FALSE;
 
-  configure_workspace(bar_data);
-
   return bar_data;
 }
 
-
-/* Create a shorcut to the workspace on the desktop */
-static void create_workspace_shortcut(gchar* workspace_dir)
-{
-  gchar* desktop_entry_filename = g_strdup_printf("%s%s%s_workspace", get_desktop_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
-#ifdef _WIN32
-  windows_create_link(workspace_dir , desktop_entry_filename, "%SystemRoot%\\system32\\imageres.dll", 123);
-#else
-  xdg_create_link(workspace_dir , desktop_entry_filename, "folder-documents");
-#endif
-  g_free(desktop_entry_filename);  
-}
 
 
 /* Create the ardesia bar window */
@@ -189,7 +160,6 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
     }  
   
   BarData *bar_data = init_bar_data();
-  create_workspace_shortcut(bar_data->workspace_dir);
 
   /* connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(gtkBuilder, (gpointer) bar_data);

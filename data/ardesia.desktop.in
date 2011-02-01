@@ -12,4 +12,4 @@ Icon=ardesia.png
 Terminal=false
 Categories=GNOME;GTK;Utility;
 StartupNotify=true
-MimeType=image/png;image/svg+xml;
+MimeType=application/x-iwb;

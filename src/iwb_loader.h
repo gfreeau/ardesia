@@ -1,9 +1,5 @@
 /* 
- * Ardesia -- a program for painting on the screen
- * with this program you can play, draw, learn and teach
- * This program has been written such as a freedom sonet
- * We believe in the freedom and in the freedom of education
- *
+ * Ardesia-- a program for painting on the screen 
  * Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>
  *
  * Ardesia is free software: you can redistribute it and/or modify it
@@ -21,29 +17,12 @@
  *
  */
 
-
-#include <gtk/gtk.h>
-
-#include <cairo.h>
-
-
-#ifdef _WIN32
-#include <cairo-win32.h>
-#include <winuser.h>  
-#else
-#ifdef __APPLE__
-#include <cairo-quartz.h>
-#else
-#include <cairo-xlib.h>
-#endif
-#endif
+#include <glib.h>
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>
 
 
-
-/*
- * Start the dialog that ask to the user where save the image
- * containing the screenshot
- */
-void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent);
-
-
+/* Load an iwb file and create the list of savepoint */
+GSList* load_iwb(gchar* iwbfile);

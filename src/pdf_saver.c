@@ -32,14 +32,13 @@ static PdfData *pdf_data;
 
 
 /* Start the dialog that ask the filename where is being exported the pdf */
-static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixbuf *pixbuf)
+static gboolean start_save_pdf_dialog(GtkWindow *parent, GdkPixbuf *pixbuf)
 {
   gboolean ret = TRUE;
   GtkWidget*   preview = NULL;
   gint preview_width = 128;
   gint preview_height = 128;
   GdkPixbuf*   previewPixbuf = NULL;
-  gchar* current_folder = "";
   gchar* filename = "";
   gchar* supported_extension = ".pdf";
   gint result = GTK_RESPONSE_NO;
@@ -62,9 +61,7 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixb
   gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);   
   g_object_unref(previewPixbuf);
 
-  current_folder = g_strdup_printf("%s", *folder);
-  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), current_folder);
-  g_free(current_folder);
+  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), get_project_dir());
    
   filename = get_default_file_name();
 
@@ -73,9 +70,6 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixb
   start_virtual_keyboard();
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
-      /* store the folder location this will be proposed the next time */
-      g_free(*folder);
-      *folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser)); 
 
       g_free(filename);
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
@@ -121,7 +115,7 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, gchar** folder, GdkPixb
 
 
 /* Initialize the pdf saver */
-static gboolean init_pdf_saver(GtkWindow *parent, gchar** folder, GdkPixbuf *pixbuf)
+static gboolean init_pdf_saver(GtkWindow *parent, GdkPixbuf *pixbuf)
 { 
   gboolean ret = FALSE;
  
@@ -131,7 +125,7 @@ static gboolean init_pdf_saver(GtkWindow *parent, gchar** folder, GdkPixbuf *pix
   pdf_data->filename = NULL;
    
   /* start the widget to ask the file name where save the pdf */       
-  ret = start_save_pdf_dialog(parent, folder, pixbuf);
+  ret = start_save_pdf_dialog(parent, pixbuf);
 
   /* add to the list of the artifacts created in the session */
   add_artifact(pdf_data->filename);
@@ -189,7 +183,7 @@ static void wait_for_pdf_save_pending_thread()
 
 
 /* Add the screenshot to pdf */
-void add_pdf_page(GtkWindow *parent, gchar** folder)
+void add_pdf_page(GtkWindow *parent)
 {
   GdkPixbuf* pixbuf = grab_screenshot();
   cairo_surface_t* saved_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gdk_screen_width(), gdk_screen_height());
@@ -217,7 +211,7 @@ void add_pdf_page(GtkWindow *parent, gchar** folder)
 	  gdk_threads_init();                  
 	  g_printerr("g_thread supported\n");
 	}
-      if (!init_pdf_saver(parent, folder, pixbuf))
+      if (!init_pdf_saver(parent, pixbuf))
 	{  
 	  g_object_unref(pixbuf);
 	  return;

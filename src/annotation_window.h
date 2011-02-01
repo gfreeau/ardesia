@@ -158,7 +158,7 @@ typedef struct
 
 
 /* Initialize the annotation window */
-gint annotate_init(GtkWidget* parent, gboolean debug);
+gint annotate_init(GtkWidget* parent, gchar* iwbfile, gboolean debug);
 
 
 /* Get the annotation window */

@@ -198,17 +198,12 @@ void clear_background_window()
 
 
 /* Create the background window */
-GtkWidget* create_background_window(gchar* backgroundimage)
+GtkWidget* create_background_window()
 {
   GError* error = NULL;
   
   background_data = allocate_background_data(); 
   
-  if (backgroundimage) 
-    {
-      background_data->background_image = g_strdup_printf("%s", backgroundimage); 
-    } 
-
   /* Initialize the background window */
   background_data->backgroundWindowGtkBuilder = gtk_builder_new();
 

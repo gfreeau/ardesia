@@ -44,7 +44,7 @@ typedef struct
 
 
 /* Add the screenshot to pdf */
-void add_pdf_page(GtkWindow *parent, gchar** workspace_dir);
+void add_pdf_page(GtkWindow *parent);
 
 
 /* Quit the pdf saver */

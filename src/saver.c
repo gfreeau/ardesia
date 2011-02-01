@@ -35,14 +35,13 @@
  * Start the dialog that ask to the user where save the image
  * containing the screenshot
  */
-void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar** folder)
+void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
 {
 
   GtkWidget*   preview = NULL;
   gint preview_width = 128;
   gint preview_height = 128;
   GdkPixbuf*   previewPixbuf = NULL;
-  gchar* current_folder = "";
   gchar* filename = "";
   gchar* filenamecopy = "";
   gchar* supported_extension = ".pdf";
@@ -69,9 +68,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
   gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);   
   g_object_unref (previewPixbuf);
 
-  current_folder = g_strdup_printf("%s", *folder);
-  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), current_folder);
-  g_free(current_folder);
+  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), get_project_dir());
 
   filename = get_default_file_name();
   
@@ -81,10 +78,6 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent, gchar
   run_status = gtk_dialog_run (GTK_DIALOG (chooser));
   if (run_status == GTK_RESPONSE_ACCEPT)
     {   
-      /* store the folder location this will be proposed the next time */
-      g_free(*folder);
-      *folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(chooser)); 
-
       g_free(filename);
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
       filenamecopy = g_strdup_printf("%s",filename); 

@@ -21,10 +21,9 @@
   - Cache in memory the recent savepoint
   - Text insertion consolidation
   - Screencast recorder using lib instead spawn processes
-  - Create the iwb without spawn the zip process
+  - Create the iwb without spawn the zip/unzip process
 
 - Candidate features:
-  - Import in iwb format
   - Deploy the artifact online
     - video; youtube upload
   - Image gallery (sticky notes...)

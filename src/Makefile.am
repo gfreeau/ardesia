@@ -56,6 +56,8 @@ ardesia_SOURCES = \
 	color_selector.h \
 	iwb_saver.c \
 	iwb_save.h \
+	iwb_loader.c \
+	iwb_loader.h \
         preference_dialog.c \
 	preference_dialog.h \
 	preference_dialog_callbacks.c \

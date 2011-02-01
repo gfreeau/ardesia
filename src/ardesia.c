@@ -65,7 +65,7 @@ static void print_help()
   g_printf("  --help    ,\t-h\t\tShows the help screen\n");
   g_printf("  --version ,\t-v\t\tShow version information and exit\n");
   g_printf("\n");
-  g_printf("filename:\t  \t\tThe file containig the image to be be used as background\n");
+  g_printf("filename:\t  \t\tThe interactive Whiteboard Common File (iwb)\n");
   g_printf("\n");
   g_printf("%s (C) %s %s\n", PACKAGE_STRING, year, author);
   exit(1);
@@ -149,7 +149,7 @@ static CommandLine* parse_options(gint argc, char *argv[])
   
   commandline->position = EAST;
   commandline->debug = FALSE;
-  commandline->backgroundimage = NULL;
+  commandline->iwbfile = NULL;
   commandline->decorated=FALSE;
 
   /* getopt_long stores the option index here. */
@@ -220,7 +220,7 @@ static CommandLine* parse_options(gint argc, char *argv[])
     }
   if (optind<argc)
     {
-      commandline->backgroundimage = argv[optind];
+      commandline->iwbfile = argv[optind];
     } 
   return commandline;
 }
@@ -252,12 +252,54 @@ static void create_segmentation_fault()
 */
 
 
+/* Create a shorcut to the workspace on the desktop */
+static void create_workspace_shortcut(gchar* workspace_dir)
+{
+  gchar* desktop_entry_filename = g_strdup_printf("%s%s%s_workspace", get_desktop_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
+#ifdef _WIN32
+  windows_create_link(workspace_dir , desktop_entry_filename, "%SystemRoot%\\system32\\imageres.dll", 123);
+#else
+  xdg_create_link(workspace_dir , desktop_entry_filename, "folder-documents");
+#endif
+  g_free(desktop_entry_filename);  
+}
+
+
+/* Setup the workspace */
+static gchar* configure_workspace(gchar* project_name)
+{
+  /* The workspace dir is set in the documents ardesia folder */
+  gchar* workspace_dir = g_strdup_printf("%s%s%s", get_documents_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
+
+  create_workspace_shortcut(workspace_dir);
+  
+  return workspace_dir;
+}
+
+
+static gchar* create_default_project_dir(gchar* workspace_dir, gchar* project_name)
+{
+  gchar* project_dir = g_strdup_printf("%s%s%s", workspace_dir, G_DIR_SEPARATOR_S, project_name);
+
+  if (!g_file_test(project_dir, G_FILE_TEST_EXISTS)) 
+    {
+      if (g_mkdir_with_parents(project_dir, 0700)==-1)
+        {
+           g_warning("Unable to create folder %s\n", project_dir);
+        } 
+    }
+  return project_dir;
+} 
+
+
 /* This is the starting point */
 int
 main(gint argc, char *argv[])
 {
   CommandLine *commandline = NULL;
   gchar* project_name = "";
+  gchar* project_dir = "";
+  gchar* iwbfile = "";
   GtkWidget* background_window = NULL; 
   GtkWidget* annotation_window = NULL; 
   GtkWidget* ardesia_bar_window = NULL; 
@@ -287,11 +329,31 @@ main(gint argc, char *argv[])
 
   commandline = parse_options(argc, argv);
 
-  /* show the project name wizard */
-  project_name = start_project_dialog(NULL);
+  if (commandline->iwbfile)
+    {
+       iwbfile = commandline->iwbfile;
+       int initpos = g_substrlastpos(commandline->iwbfile, G_DIR_SEPARATOR_S); 
+       int endpos  = g_substrlastpos(commandline->iwbfile, ".");
+       project_name = g_substr(commandline->iwbfile, initpos+1, endpos-1);   
+       project_dir = g_substr(commandline->iwbfile, 0, initpos-1); 
+    }
+  else
+    {
+       /* show the project name wizard */
+       project_name = start_project_dialog(NULL);
+       gchar* workspace_dir = configure_workspace(project_name);
+       project_dir = create_default_project_dir(workspace_dir, project_name);
+       g_free(workspace_dir);
+       /* will be putted in the project dir */
+       gchar* extension = "iwb";
+       /* the zip is the iwb in the project inside the ardesia workspace */
+       iwbfile = g_strdup_printf("%s%s%s.%s", project_dir, G_DIR_SEPARATOR_S, project_name, extension);
+    }
   set_project_name(project_name);
+  set_project_dir(project_dir);
+  set_iwbfile(iwbfile);
 
-  background_window = create_background_window(commandline->backgroundimage); 
+  background_window = create_background_window(); 
   
   if (background_window == NULL)
     {
@@ -306,7 +368,7 @@ main(gint argc, char *argv[])
   set_background_window(background_window);
   
   /* init annotate */
-  annotate_init(background_window, commandline->debug); 
+  annotate_init(background_window, commandline->iwbfile, commandline->debug); 
 
   annotation_window = get_annotation_window();  
 
@@ -347,6 +409,10 @@ main(gint argc, char *argv[])
        start_share_dialog(NULL);
        free_artifacts();  
     }
+         
+  g_free(project_name);
+  g_free(project_dir);
+  g_free(iwbfile);
 
   return 0;
 }

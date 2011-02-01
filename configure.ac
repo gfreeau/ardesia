@@ -113,6 +113,7 @@ dnl Check modules
 pkg_modules="	glib-2.0
                 gthread-2.0
                 gsl
+                libxml-2.0
 		cairo
                 gdk-2.0
                 gtk+-2.0 >= 2.12"

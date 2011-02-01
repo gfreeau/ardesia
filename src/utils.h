@@ -109,6 +109,22 @@ gchar* get_project_name();
 void set_project_name(gchar * name);
 
 
+/* Get the dir of the current project */
+gchar* get_project_dir();
+
+
+/* Set the dir of the current project */
+void set_project_dir(gchar * dir);
+
+
+/* Get the iwb file of the current project */
+gchar* get_iwbfile();
+
+
+/* Set the iwb file of the current project */
+void set_iwbfile(gchar * file);
+
+
 /* Get the list of the path of the artifacts created in the session */
 GSList* get_artifacts();
 
@@ -239,5 +255,15 @@ void xdg_create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* 
 
 /* Create a desktop link */
 void xdg_create_link(gchar* src_filename, gchar* dest, gchar* icon);
+
+
+/* Get the last position where substr occurs in str */
+int g_substrlastpos(const char *str, const char *substr);
+
+
+/* Substring of string from start to end position */
+gchar* g_substr (const gchar* string,
+		 gint         start,
+		 gint         end);
 
 

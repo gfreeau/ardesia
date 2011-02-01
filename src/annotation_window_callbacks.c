@@ -30,7 +30,6 @@
 #include <utils.h>
 
 
-
 /* Return the pressure passing the event */
 static gdouble get_pressure(GdkEvent* ev)
 {
@@ -65,7 +64,7 @@ event_expose(GtkWidget *widget,
       g_printerr("Expose event\n");
     }
 
-  if (!(data->annotation_cairo_context))
+  if (data->annotation_cairo_context == NULL)
     {
       /* initialize a transparent window */	  
 #ifdef _WIN32
@@ -89,11 +88,14 @@ event_expose(GtkWidget *widget,
           annotate_quit(); 
           exit(EXIT_FAILURE);
         }    
- 		
-      annotate_clear_screen();
-      annotate_acquire_grab();		      
+      annotate_acquire_grab();
+      if (data->savelist == NULL)
+        {
+	  annotate_clear_screen();
+        }		      
     }
-
+  /* data->annotation_cairo_context is not NULL */
+  clear_cairo_context(data->annotation_cairo_context);
   gdk_cairo_region(data->annotation_cairo_context, event->region); 
   annotate_restore_surface();
   return TRUE;

@@ -35,6 +35,12 @@
 /* the name of the current project */
 static gchar* project_name = NULL;
 
+/* the name of the current project */
+static gchar* project_dir = NULL;
+
+/* the name of the current project */
+static gchar* iwbfile = NULL;
+
 /* the list of the artfacts created in the current session */
 static GSList* artifacts = NULL;
 
@@ -51,6 +57,35 @@ void set_project_name(gchar * name)
 {
   project_name = name;
 }
+
+
+/* Get the dir of the current project */
+gchar* get_project_dir()
+{
+  return project_dir;
+}
+
+
+/* Set the dir of the current project */
+void set_project_dir(gchar * dir)
+{
+  project_dir = dir;
+}
+
+
+/* Get the iwb file of the current project */
+gchar* get_iwbfile()
+{
+  return iwbfile;
+}
+
+
+/* Set the iwb file of the current project */
+void set_iwbfile(gchar * file)
+{
+  iwbfile = file;
+}
+
 
 /* Get the list of the path of the artifacts created in the session */
 GSList* get_artifacts()
@@ -70,7 +105,7 @@ void add_artifact(gchar* path)
 /* Free the structure containing the artifact list created in the session */
 void free_artifacts()
 {
-   g_slist_foreach(artifacts, (GFunc)g_free, NULL);
+  g_slist_foreach(artifacts, (GFunc)g_free, NULL);
 }
 
 	
@@ -509,4 +544,32 @@ void xdg_create_link(gchar* src, gchar* dest, gchar* icon)
   g_free(link_filename);
   g_free(exec);
 }
+
+
+/* Get the last position where substr occurs in str */
+int g_substrlastpos(const char *str, const char *substr)
+{
+  gint len = strlen (str);
+  int i;
+  for (i = len-1; i >= 0; --i)
+    {
+      if (str[i] == *substr)
+        {
+          return i;
+        }
+    }
+  return -1;
+}
+
+
+/* Substring of string from start to end position */
+gchar* g_substr (const gchar* string,
+		 gint         start,
+		 gint         end)
+{
+  gsize len = (end - start + 1);
+  gchar *output = g_malloc0 (len + 1);
+  return g_utf8_strncpy (output, &string[start], len);
+}
+
 

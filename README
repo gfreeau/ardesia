@@ -184,14 +184,6 @@ If you want modify this launch ardesia from command line in this way:
 
 # ardesia --gravity north
 
-With Ardesia you can annotate image files such as png, jpeg and svg.
-
-For example with this command you will have a lined paper 
-similar to a notebook page:
-
-# ardesia /usr/local/share/ardesia/backgrounds/notebook_paper.png
-
-
 Here it follows a complete description of the options for the Ardesia:
 
 Usage: ardesia [options] [filename]
@@ -209,7 +201,7 @@ options:
   --help    ,	-h		Shows the help screen
   --version ,	-v		Show version information and exit
 
-filename:	  		The file containig the image to be be used as background
+filename:	  		The interactive Whiteboard Common File (iwb)
 
 
 
