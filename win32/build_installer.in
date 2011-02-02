@@ -28,6 +28,8 @@ echo Prepare the $DESTDIR directory
 
 mkdir -p $DESTDIR/bin
 
+cp $WIN32_DIR/ardesia_open.bat $DESTDIR/bin
+
 cp /bin/zip.exe $DESTDIR/bin
 cp /bin/unzip.exe $DESTDIR/bin
 

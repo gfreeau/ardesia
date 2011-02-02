@@ -23,8 +23,6 @@
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
-  - Open with Ardesia (iwb file) on Windows
-  - Open existing project dialog
   - Image gallery (sticky notes...)
   - Deploy the artifact online
     - video; youtube upload
