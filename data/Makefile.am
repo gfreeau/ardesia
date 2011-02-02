@@ -34,7 +34,8 @@ install-data-local:
 	cp -r backgrounds/* $(DESTDIR)$(uibackgroundsdir) 
 	mkdir -p $(DESTDIR)$(scriptsdir) 
 	cp -r scripts/* $(DESTDIR)$(scriptsdir) 
-	chmod a+x $(DESTDIR)$(scriptsdir)/* 
+	chmod a+x $(DESTDIR)$(scriptsdir)/*
+	xdg-icon-resource install --novendor --size 48 $(uipixmapsdir)/application-x-iwb.png 
 
 # Remove ui directory on uninstall
 uninstall-local:

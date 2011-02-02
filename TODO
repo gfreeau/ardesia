@@ -23,7 +23,6 @@
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
-  - Associate iwb icon to iwb file on linux
   - Image gallery (sticky notes...)
   - Deploy the artifact online
     - video; youtube upload
