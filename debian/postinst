@@ -1,0 +1,6 @@
+#! /bin/sh
+# postinst script for klik
+#
+# see: dh_installdeb(1)
+
+[ -x "`which xdg-icon-resource`" ] && xdg-icon-resource install --novendor --size 48 /usr/local/share/ardesia/ui/pixmaps/application-x-iwb.png >/dev/null
