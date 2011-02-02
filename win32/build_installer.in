@@ -29,6 +29,7 @@ echo Prepare the $DESTDIR directory
 mkdir -p $DESTDIR/bin
 
 cp $WIN32_DIR/ardesia_open.bat $DESTDIR/bin
+cp $WIN32_DIR/iwb.ico $DESTDIR/share/ardesia/ui/pixmaps
 
 cp /bin/zip.exe $DESTDIR/bin
 cp /bin/unzip.exe $DESTDIR/bin
