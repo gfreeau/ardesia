@@ -17,7 +17,6 @@
   
 - Reengineering
   - Store and load the savepoints using svg files
-  - Use double buffered windows to have a smoother exposure to the eye 
   - Text insertion consolidation
   - Create the iwb without spawn the zip/unzip process
   - Screencast recorder using lib instead spawn processes
