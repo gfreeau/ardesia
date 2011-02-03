@@ -30,13 +30,17 @@ DISTCLEANFILES = intltool-extract \
 
 .PHONY : clean win-installer
 
+if !PLATFORM_WIN32
 
 deb:
 	debuild -us -uc -b
 	mv ../$(PACKAGE_NAME)_$(PACKAGE_VERSION)-*.deb .
-	
+
+else
 win-installer:
-	@win32/build_installer	
+	@win32/build_installer
+	
+endif
 	
 update-po:
 	(cd po; $(MAKE) update-po)
