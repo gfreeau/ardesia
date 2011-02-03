@@ -17,15 +17,15 @@
   
 - Reengineering
   - Store and load the savepoints using svg files
-  - Text insertion consolidation
   - Create the iwb without spawn the zip/unzip process
+  - Text insertion consolidation
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
   - Image gallery (sticky notes...)
   - Deploy the artifact online
     - video; youtube upload
-  - Filler implemented with the flood filler algorithm
+  - full filler implementation (flood filler algorithm)
   - Lazo selection tool
   - Move
   - Copy/paste
