@@ -681,6 +681,9 @@ static void setup_app(GtkWidget* parent)
   
   /* create the annotation window */
   data->annotation_window = create_annotation_window();
+
+  /* put the opacity to 0 to avoid the initial flickering */
+  gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 0);
   
   if (data->annotation_window == NULL)
     {
@@ -690,15 +693,11 @@ static void setup_app(GtkWidget* parent)
    
   gtk_window_set_transient_for(GTK_WINDOW(data->annotation_window), GTK_WINDOW(parent));
   
-  gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1);
-  
   gint width = gdk_screen_width();
   gint height = gdk_screen_height();
 
   gtk_widget_set_usize(data->annotation_window, width, height);
 
-  /* connect all the callback from gtkbuilder xml file */
-  gtk_builder_connect_signals(data->annotationWindowGtkBuilder, (gpointer) data); 
    
   /* Initialize a transparent pixmap with depth 1 to be used as input shape */
   data->shape = gdk_pixmap_new(NULL, width, height, 1); 
@@ -714,11 +713,14 @@ static void setup_app(GtkWidget* parent)
   clear_cairo_context(shape_cr);  
   cairo_destroy(shape_cr);
 
+  /* connect all the callback from gtkbuilder xml file */
+  gtk_builder_connect_signals(data->annotationWindowGtkBuilder, (gpointer) data); 
+
+  gtk_widget_show_all(data->annotation_window);
+
   /* This put the window in fullscreen generating an exposure */
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window));
- 
-  gtk_widget_show_all(data->annotation_window);
-  
+   
 #ifdef _WIN32
   /* in the gtk 2.16.6 the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
   gtk_widget_set_double_buffered(data->annotation_window, FALSE); 

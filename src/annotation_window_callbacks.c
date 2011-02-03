@@ -80,7 +80,7 @@ event_expose(GtkWidget *widget,
       data->annotation_cairo_context = cairo_create(surface);
 #else
       data->annotation_cairo_context = gdk_cairo_create(data->annotation_window->window);  
-#endif 
+#endif
 
       if (cairo_status(data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
         {
@@ -92,11 +92,10 @@ event_expose(GtkWidget *widget,
       if (data->savelist == NULL)
         {
 	  annotate_clear_screen();
-        }		      
+        }
+      gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1); 		      
     }
   /* data->annotation_cairo_context is not NULL */
-  clear_cairo_context(data->annotation_cairo_context);
-  gdk_cairo_region(data->annotation_cairo_context, event->region); 
   annotate_restore_surface();
   return TRUE;
 }

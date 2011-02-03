@@ -218,17 +218,17 @@ GtkWidget* create_background_window()
     }  
  
   background_data->background_window = GTK_WIDGET(gtk_builder_get_object(background_data->backgroundWindowGtkBuilder,"backgroundWindow")); 
-  gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), 0);
+  gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), BACKGROUND_OPACITY);
 
   gtk_widget_set_usize(background_data->background_window, gdk_screen_width(), gdk_screen_height());
 
   /* connect all the callback from gtkbuilder xml file */
   gtk_builder_connect_signals(background_data->backgroundWindowGtkBuilder, (gpointer) background_data);
 
+  gtk_widget_show_all(background_data->background_window);
+
   /* This put in fullscreen and generate an exposure */
   gtk_window_fullscreen(GTK_WINDOW(background_data->background_window));
-
-  gtk_widget_show_all(background_data->background_window);
 
 #ifdef _WIN32
   /* in the gtk 2.16.6 used for windows the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
