@@ -331,7 +331,7 @@ main(gint argc, char *argv[])
 
   if (commandline->iwbfile)
     {
-       iwbfile = commandline->iwbfile;
+       iwbfile = g_strdup_printf("%s", commandline->iwbfile);
        int initpos = g_substrlastpos(commandline->iwbfile, G_DIR_SEPARATOR_S); 
        int endpos  = g_substrlastpos(commandline->iwbfile, ".");
        project_name = g_substr(commandline->iwbfile, initpos+1, endpos-1);   
@@ -396,8 +396,6 @@ main(gint argc, char *argv[])
       exit(EXIT_FAILURE);
     }
 
-  g_free(commandline);
-
   gtk_window_set_keep_above(GTK_WINDOW(ardesia_bar_window), TRUE);
   gtk_widget_show(ardesia_bar_window);
   gtk_main();
@@ -413,6 +411,8 @@ main(gint argc, char *argv[])
   g_free(project_name);
   g_free(project_dir);
   g_free(iwbfile);
+
+  g_free(commandline);
 
   return 0;
 }
