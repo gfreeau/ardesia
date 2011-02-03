@@ -753,15 +753,15 @@ static void create_savepoint_dir()
   gchar* images = "images";
   gchar* project_name = get_project_name();
 
-  gchar* ardesia_tmp_dir = g_strdup_printf("%s%s%s", tmpdir, G_DIR_SEPARATOR_S, PACKAGE_NAME);
-  gchar* project_tmp_dir = g_strdup_printf("%s%s%s", ardesia_tmp_dir, G_DIR_SEPARATOR_S, project_name);
+  gchar* ardesia_tmp_dir = g_build_filename(tmpdir, PACKAGE_NAME, (gchar *) 0);
+  gchar* project_tmp_dir = g_build_filename(ardesia_tmp_dir, project_name, (gchar *) 0);
   if (g_file_test(ardesia_tmp_dir, G_FILE_TEST_IS_DIR))
     { 
       /* the folder already exist; I delete it */
       rmdir_recursive(ardesia_tmp_dir);
     }
 
-  data->savepoint_dir = g_strdup_printf("%s%s%s", project_tmp_dir, G_DIR_SEPARATOR_S, images);
+  data->savepoint_dir = g_build_filename(project_tmp_dir, images, (gchar *) 0);
   g_mkdir_with_parents(data->savepoint_dir, 0777);
   g_free(ardesia_tmp_dir);
   g_free(project_tmp_dir);
@@ -1309,7 +1309,7 @@ void annotate_quit()
       annotate_coord_list_free();
       annotate_savelist_free();
 
-      gchar* ardesia_tmp_dir = g_strdup_printf("%s%s%s", g_get_tmp_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
+      gchar* ardesia_tmp_dir = g_build_filename(g_get_tmp_dir(), PACKAGE_NAME, (gchar *) 0);
       rmdir_recursive(ardesia_tmp_dir);
       g_free(ardesia_tmp_dir);
 

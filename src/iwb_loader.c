@@ -35,7 +35,7 @@ GSList* load_savepoint_by_reference(GSList* savelist, gchar* project_tmp_dir, xm
   xmlNodePtr node = result->nodesetval->nodeTab[0];
   xmlChar* href = xmlGetProp(node, (xmlChar*) "href");
   
-  savepoint->filename  = g_strdup_printf("%s%s%s", project_tmp_dir, G_DIR_SEPARATOR_S, href);
+  savepoint->filename  = g_build_filename(project_tmp_dir, href, (gchar *) 0);
   
   xmlFree(href);
 
@@ -118,13 +118,13 @@ GSList* load_iwb(gchar* iwbfile)
 {
   GSList* savelist = NULL;
   const gchar* tmpdir = g_get_tmp_dir();
-  gchar* ardesia_tmp_dir = g_strdup_printf("%s%s%s", tmpdir, G_DIR_SEPARATOR_S, PACKAGE_NAME);
+  gchar* ardesia_tmp_dir = g_build_filename(tmpdir, PACKAGE_NAME, (gchar *) 0);
   gchar* project_name = get_project_name();
 
-  gchar* project_tmp_dir = g_strdup_printf("%s%s%s", ardesia_tmp_dir, G_DIR_SEPARATOR_S, project_name);
+  gchar* project_tmp_dir = g_build_filename(ardesia_tmp_dir, project_name, (gchar *) 0);
 
   gchar* content_filename = "content.xml";
-  gchar* content_filepath = g_strdup_printf("%s%s%s", project_tmp_dir, G_DIR_SEPARATOR_S, content_filename);
+  gchar* content_filepath = g_build_filename(project_tmp_dir, content_filename, (gchar *) 0);
 
   decompress_iwb(iwbfile, project_tmp_dir);
   

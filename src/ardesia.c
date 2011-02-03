@@ -244,11 +244,11 @@ static void enable_localization_support()
  * it is useful to test the segmentation fault handler
  */
 /*
-static void create_segmentation_fault()
-{
+  static void create_segmentation_fault()
+  {
   int *f=NULL;
   *f = 0;
-}
+  }
 */
 
 
@@ -269,7 +269,7 @@ static void create_workspace_shortcut(gchar* workspace_dir)
 static gchar* configure_workspace(gchar* project_name)
 {
   /* The workspace dir is set in the documents ardesia folder */
-  gchar* workspace_dir = g_strdup_printf("%s%s%s", get_documents_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
+  gchar* workspace_dir = g_build_filename(get_documents_dir(), PACKAGE_NAME, (gchar *) 0);
 
   create_workspace_shortcut(workspace_dir);
   
@@ -279,13 +279,13 @@ static gchar* configure_workspace(gchar* project_name)
 
 static gchar* create_default_project_dir(gchar* workspace_dir, gchar* project_name)
 {
-  gchar* project_dir = g_strdup_printf("%s%s%s", workspace_dir, G_DIR_SEPARATOR_S, project_name);
+  gchar* project_dir = g_build_filename(workspace_dir, project_name, (gchar *) 0);
 
   if (!g_file_test(project_dir, G_FILE_TEST_EXISTS)) 
     {
       if (g_mkdir_with_parents(project_dir, 0700)==-1)
         {
-           g_warning("Unable to create folder %s\n", project_dir);
+	  g_warning("Unable to create folder %s\n", project_dir);
         } 
     }
   return project_dir;
@@ -331,23 +331,30 @@ main(gint argc, char *argv[])
 
   if (commandline->iwbfile)
     {
-       iwbfile = g_strdup_printf("%s", commandline->iwbfile);
-       int initpos = g_substrlastpos(commandline->iwbfile, G_DIR_SEPARATOR_S); 
-       int endpos  = g_substrlastpos(commandline->iwbfile, ".");
-       project_name = g_substr(commandline->iwbfile, initpos+1, endpos-1);   
-       project_dir = g_substr(commandline->iwbfile, 0, initpos-1); 
+      if (g_path_is_absolute(commandline->iwbfile)) {
+        iwbfile = g_strdup (commandline->iwbfile);
+      } else {
+        gchar *dir = g_get_current_dir ();
+        iwbfile = g_build_filename (dir, commandline->iwbfile, (gchar *) 0);
+        free (dir);
+      }
+
+      int initpos = g_substrlastpos(iwbfile, G_DIR_SEPARATOR_S); 
+      int endpos  = g_substrlastpos(iwbfile, ".");
+      project_name = g_substr(iwbfile, initpos+1, endpos-1);
+      project_dir = g_substr(iwbfile, 0, initpos-1); 
     }
   else
     {
-       /* show the project name wizard */
-       project_name = start_project_dialog(NULL);
-       gchar* workspace_dir = configure_workspace(project_name);
-       project_dir = create_default_project_dir(workspace_dir, project_name);
-       g_free(workspace_dir);
-       /* will be putted in the project dir */
-       gchar* extension = "iwb";
-       /* the zip is the iwb in the project inside the ardesia workspace */
-       iwbfile = g_strdup_printf("%s%s%s.%s", project_dir, G_DIR_SEPARATOR_S, project_name, extension);
+      /* show the project name wizard */
+      project_name = start_project_dialog(NULL);
+      gchar* workspace_dir = configure_workspace(project_name);
+      project_dir = create_default_project_dir(workspace_dir, project_name);
+      g_free(workspace_dir);
+      /* will be putted in the project dir */
+      gchar* extension = "iwb";
+      /* the zip is the iwb in the project inside the ardesia workspace */
+      iwbfile = g_strdup_printf("%s%s%s.%s", project_dir, G_DIR_SEPARATOR_S, project_name, extension);
     }
   set_project_name(project_name);
   set_project_dir(project_dir);
@@ -368,7 +375,7 @@ main(gint argc, char *argv[])
   set_background_window(background_window);
   
   /* init annotate */
-  annotate_init(background_window, commandline->iwbfile, commandline->debug); 
+  annotate_init(background_window, iwbfile, commandline->debug); 
 
   annotation_window = get_annotation_window();  
 
@@ -382,7 +389,6 @@ main(gint argc, char *argv[])
 
   /* annotation window is valid */
   gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
-
 
   gtk_widget_show(annotation_window);
   
@@ -404,8 +410,8 @@ main(gint argc, char *argv[])
 
   if (artifact_list)
     {  
-       start_share_dialog(NULL);
-       free_artifacts();  
+      start_share_dialog(NULL);
+      free_artifacts();  
     }
          
   g_free(project_name);

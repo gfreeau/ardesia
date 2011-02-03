@@ -28,7 +28,7 @@
    defined in the header are missing on all non-glibc platforms
 */
 #include <execinfo.h>
-
+#include <unistd.h>
 
 #define MAX_FRAMES (20)
 

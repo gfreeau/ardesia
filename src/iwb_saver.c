@@ -183,14 +183,14 @@ void export_iwb(gchar* iwb_location)
 {
   const gchar* tmpdir = g_get_tmp_dir();
   gchar* content_filename = "content.xml";
-  gchar* ardesia_tmp_dir = g_strdup_printf("%s%s%s", tmpdir, G_DIR_SEPARATOR_S, PACKAGE_NAME);
+  gchar* ardesia_tmp_dir = g_build_filename(tmpdir, PACKAGE_NAME, (gchar *) 0);
   gchar* project_name = get_project_name();
 
-  gchar* project_tmp_dir = g_strdup_printf("%s%s%s", ardesia_tmp_dir, G_DIR_SEPARATOR_S, project_name);
-  gchar* content_filepath = g_strdup_printf("%s%s%s", project_tmp_dir, G_DIR_SEPARATOR_S, content_filename); 
+  gchar* project_tmp_dir = g_build_filename(ardesia_tmp_dir, project_name, (gchar *) 0);
+  gchar* content_filepath = g_build_filename(project_tmp_dir, content_filename, (gchar *) 0); 
 
   gchar* images = "images";
-  gchar* img_dir_path = g_strdup_printf("%s%s%s", project_tmp_dir, G_DIR_SEPARATOR_S, images);
+  gchar* img_dir_path = g_build_filename(project_tmp_dir, images, (gchar *) 0);
 
   g_remove(content_filepath);
   create_xml_content(content_filepath, img_dir_path);
