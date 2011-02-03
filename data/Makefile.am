@@ -35,7 +35,9 @@ install-data-local:
 	mkdir -p $(DESTDIR)$(scriptsdir) 
 	cp -r scripts/* $(DESTDIR)$(scriptsdir) 
 	chmod a+x $(DESTDIR)$(scriptsdir)/*
-	xdg-icon-resource install --novendor --size 48 $(uipixmapsdir)/application-x-iwb.png 
+if !PLATFORM_WIN32
+	xdg-icon-resource install --novendor --size 48 $(uipixmapsdir)/application-x-iwb.png
+endif
 
 # Remove ui directory on uninstall
 uninstall-local:
