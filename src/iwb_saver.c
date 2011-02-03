@@ -181,6 +181,22 @@ static void create_iwb(gchar* zip_filename, gchar* working_dir, gchar* images_fo
 /* Export in iwb format */
 void export_iwb(gchar* iwb_location)
 {
+  gchar* iwb_file = NULL;
+
+  /* If the iwb location is null means that it is a new project */
+  if (iwb_location == NULL)
+    {
+      /* will be putted in the project dir */
+      gchar* extension = "iwb";
+      /* the zip is the iwb in the project inside the ardesia workspace */
+      iwb_file = g_strdup_printf("%s%s%s.%s", get_project_dir(), G_DIR_SEPARATOR_S, get_project_name(), extension);
+    }
+  else
+    {
+      g_remove(iwb_location);
+      iwb_file = g_strdup_printf("%s", iwb_location);
+    }
+
   const gchar* tmpdir = g_get_tmp_dir();
   gchar* content_filename = "content.xml";
   gchar* ardesia_tmp_dir = g_build_filename(tmpdir, PACKAGE_NAME, (gchar *) 0);
@@ -195,12 +211,12 @@ void export_iwb(gchar* iwb_location)
   g_remove(content_filepath);
   create_xml_content(content_filepath, img_dir_path);
 
-  g_remove(iwb_location);
-  create_iwb(iwb_location, project_tmp_dir, "images", content_filename);
+  create_iwb(iwb_file, project_tmp_dir, "images", content_filename);
 
   /* add to the list of the artifacts created in the session */
-  add_artifact(iwb_location);
+  add_artifact(iwb_file);
   
+  g_free(iwb_file);
   g_free(ardesia_tmp_dir);
   g_free(project_tmp_dir); 
   g_free(content_filepath);

@@ -299,7 +299,7 @@ main(gint argc, char *argv[])
   CommandLine *commandline = NULL;
   gchar* project_name = "";
   gchar* project_dir = "";
-  gchar* iwbfile = "";
+  gchar* iwbfile = NULL;
   GtkWidget* background_window = NULL; 
   GtkWidget* annotation_window = NULL; 
   GtkWidget* ardesia_bar_window = NULL; 
@@ -351,10 +351,6 @@ main(gint argc, char *argv[])
       gchar* workspace_dir = configure_workspace(project_name);
       project_dir = create_default_project_dir(workspace_dir, project_name);
       g_free(workspace_dir);
-      /* will be putted in the project dir */
-      gchar* extension = "iwb";
-      /* the zip is the iwb in the project inside the ardesia workspace */
-      iwbfile = g_strdup_printf("%s%s%s.%s", project_dir, G_DIR_SEPARATOR_S, project_name, extension);
     }
   set_project_name(project_name);
   set_project_dir(project_dir);
