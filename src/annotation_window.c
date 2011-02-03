@@ -185,7 +185,7 @@ static void get_invisible_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mas
 	{ 
 	  g_printerr ("Failed to allocate the cairo context to hide the cursor"); 
 	  annotate_quit(); 
-	  exit(1);
+	  exit(EXIT_FAILURE);
 	}
     }
   cairo_set_source_rgb(invisible_cr, 1, 1, 1);
@@ -200,7 +200,7 @@ static void get_invisible_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mas
 	{ 
 	  g_printerr ("Failed to allocate the cairo context for the surface to be restored\n"); 
 	  annotate_quit(); 
-	  exit(1);
+	  exit(EXIT_FAILURE);
 	}
     }
   clear_cairo_context(invisible_shape_cr);
@@ -244,7 +244,7 @@ static void get_eraser_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
     {
       g_printerr("Failed to allocate the eraser cursor cairo context"); 
       annotate_quit();
-      exit(1);
+      exit(EXIT_FAILURE);
     }
 
   cairo_paint(eraser_cr);
@@ -256,7 +256,7 @@ static void get_eraser_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
     {
       g_printerr("Failed to allocate the eraser shape cursor cairo context"); 
       annotate_quit(); 
-      exit(1);
+      exit(EXIT_FAILURE);
     }
 
   /* paint the eraser circle icon by code */
@@ -286,7 +286,7 @@ static void get_pen_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
     {
       g_printerr ("Failed to allocate the pen cursor cairo context"); 
       annotate_quit(); 
-      exit(1);
+      exit(EXIT_FAILURE);
     }
 
   cairo_set_operator(pen_cr, CAIRO_OPERATOR_SOURCE);
@@ -300,7 +300,7 @@ static void get_pen_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
     {
       g_printerr ("Failed to allocate the pen shape cursor cairo context"); 
       annotate_quit(); 
-      exit(1);
+      exit(EXIT_FAILURE);
     }
 
   /* Draw the pen cursor by code */
@@ -707,7 +707,7 @@ static void setup_app(GtkWidget* parent)
     {
       g_printerr ("Failed to allocate the shape cairo context");
       annotate_quit(); 
-      exit(1);
+      exit(EXIT_FAILURE);
     }
 
   clear_cairo_context(shape_cr);  

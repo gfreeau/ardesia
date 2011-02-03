@@ -339,7 +339,7 @@ exception_filter(LPEXCEPTION_POINTERS info)
   
   free(g_output);
 	  
-  exit(1);
+  exit(EXIT_FAILURE);
 
   return 0;
 }

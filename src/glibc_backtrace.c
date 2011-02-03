@@ -166,7 +166,7 @@ static void create_trace()
 static int sigsegv_handler(void *addr, int bad)
 {
   create_trace(); 
-  exit(2);
+  exit(EXIT_FAILURE);
 }
 
 
@@ -176,7 +176,7 @@ void glibc_backtrace_register()
   /* Install the SIGSEGV handler */
   if (sigsegv_install_handler(sigsegv_handler)<0)
     {
-      exit(2);
+      exit(EXIT_FAILURE);
     }
 #endif
 }

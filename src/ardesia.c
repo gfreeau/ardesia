@@ -43,7 +43,7 @@
 static void print_version()
 {
   g_printf("Ardesia %s; the free digital sketchpad\n\n", PACKAGE_VERSION);
-  exit(1);
+  exit(EXIT_FAILURE);
 }
 
 
@@ -68,7 +68,7 @@ static void print_help()
   g_printf("filename:\t  \t\tThe interactive Whiteboard Common File (iwb)\n");
   g_printf("\n");
   g_printf("%s (C) %s %s\n", PACKAGE_STRING, year, author);
-  exit(1);
+  exit(EXIT_SUCCESS);
 }
 
 
@@ -88,7 +88,7 @@ static void run_missing_composite_manager_dialog()
     {
       gtk_widget_destroy(msg_dialog);
     }
-  exit(0);
+  exit(EXIT_FAILURE);
 }
 
 
@@ -135,7 +135,7 @@ static void set_the_best_colormap()
 	{
 	  g_warning("The screen does not support the rgba visual!\n");
 #ifndef _WIN32
-	  exit(0);
+	  exit(EXIT_FAILURE);
 #endif
 	}
     }
@@ -359,7 +359,7 @@ main(gint argc, char *argv[])
     {
       destroy_background_window();
       g_free(commandline);
-      exit(0);
+      exit(EXIT_FAILURE);
     }
 
   gtk_window_set_keep_above(GTK_WINDOW(background_window), TRUE); 
@@ -377,7 +377,7 @@ main(gint argc, char *argv[])
       annotate_quit();
       destroy_background_window();
       g_free(commandline);
-      exit(0);
+      exit(EXIT_FAILURE);
     }
 
   /* annotation window is valid */
@@ -393,7 +393,7 @@ main(gint argc, char *argv[])
       annotate_quit();
       destroy_background_window();
       g_free(commandline);
-      exit(0);
+      exit(EXIT_FAILURE);
     }
 
   g_free(commandline);

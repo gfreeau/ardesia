@@ -52,7 +52,7 @@ static GdkPixbuf * load_png (gchar *filename)
     {
       /* @TODO Handle this in a visual way or avoid this */
       g_printerr("Failed to load the file %s as background\n", filename);
-      exit(0);
+      exit(EXIT_FAILURE);
     }
   pixbuf = scaled;
   return pixbuf;

@@ -61,7 +61,7 @@ static void calculate_position(GtkWidget *ardesia_bar_window,
         {  
           /* invalid position */
           perror ("Valid positions are NORTH, SOUTH, WEST or EAST\n");
-          exit(0);
+          exit(EXIT_FAILURE);
         }
     }
 }
