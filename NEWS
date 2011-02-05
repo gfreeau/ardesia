@@ -21,7 +21,7 @@ This file contain the news about the tool
 -------------
 
 Internationalization:
-- Add german translation
+- Added german translation
 
 Packaging
 - New windows packaging with the inno setup installer
@@ -33,15 +33,17 @@ Usability
 - Now to save an image you must push on the the camera photo icon
 
 Features
-- Open, save and reuse projects thanks to the Interactive Whiteboard 
-  Common File Format (iwbcff)
+- Now you can open, save and reuse projects thanks to the 
+  Interactive Whiteboard Common File Format (iwbcff)
 - At the closure of the the program you can send by email iwbcff, 
   screenshots and pdf created in session
-- Virtual keyboard shown each time that is focused an editable item
-- New crash dialog
+- Virtual keyboard shown each time that is focused an editable item;
+  this feature works only in Linux with the gnome environment and
+  in Windows 7 if you have installed the "Tablet PC Input Panel"
+- New crash report dialog
 
 Bug Fix:
-- Fix in the filler that caused a strange behaviour if is filled 
+- Fix in the filler that caused a strange behaviour if you try to fill 
   a not closed path
 
 

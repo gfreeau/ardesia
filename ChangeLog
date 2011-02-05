@@ -1,3 +1,49 @@
+
+
+2011-02-01 17:05 alpha@paranoici.org
+	* /trunk/ardesia/INSTALL,
+	* /trunk/ardesia/NEWS,
+	* /trunk/ardesia/README,
+	* /trunk/ardesia/TODO,
+	* /trunk/ardesia/configure.ac,
+	* /trunk/ardesia/data/ardesia.desktop.in.
+	* /trunk/ardesia/debian/control,
+	* /trunk/ardesia/src/Makefile.am,
+	* /trunk/ardesia/src/annotation_window.c,
+	* /trunk/ardesia/src/annotation_window.h,
+	* /trunk/ardesia/src/annotation_window_callbacks.c,
+	* /trunk/ardesia/src/ardesia.c,
+	* /trunk/ardesia/src/ardesia.h,
+	* /trunk/ardesia/src/background_window.c,
+	* /trunk/ardesia/src/bar.c,
+	* /trunk/ardesia/src/bar.h,
+	* /trunk/ardesia/src/bar_callbacks.c,
+	* /trunk/ardesia/src/bar_callbacks.h,
+	* /trunk/ardesia/src/iwb_loader.c,
+	* /trunk/ardesia/src/iwb_loader.h,
+	* /trunk/ardesia/src/iwb_saver.c,
+	* /trunk/ardesia/src/pdf_saver.c,
+	* /trunk/ardesia/src/pdf_saver.h,
+	* /trunk/ardesia/src/recorder.c,
+	* /trunk/ardesia/src/recorder.h,
+	*/trunk/ardesia/src/saver.c,
+	* /trunk/ardesia/src/saver.h,
+	* /trunk/ardesia/src/utils.c,
+	* /trunk/ardesia/src/utils.h:
+	- First version that is able to import iwb files;
+	  Now you can save and open iwb files with ardesia,
+          perhaps the tool is not compliant with the full
+          iwb specification but with a subset containing
+          only png references
+
+
+2011-01-31 13:39 alpha@paranoici.org
+	* /trunk/ardesia/po/LINGUAS,
+	* /trunk/ardesia/po/de.po:
+	- Adjust windows script in order to support 
+	  the german language
+
+
 2011-01-29 18:00  alpha@paranoici.org
 	* trunk/ardesia/src/annotation_window.c,
 	* trunk/ardesia/src/annotation_window.h,
