@@ -3,17 +3,16 @@
 -------
 
 This explain howto run Ardesia on windows.
-Simply click on the ardesia.exe file under
-the bin folder.
+Simply click on the ardesia under the menu.
+
+In the same position you can execute curtain
+and  spotlighter.exe.
 
 In oder to record on windows:
 - install vlc from http://www.videolan.org/vlc
 - add the folder with the vlc.exe executable
   to the PATH environment
 
-Under the bin foder you can click on the curtain.exe
-to run the curtain and on the spotlighter.exe to run
-the spotlight.
 
 -------
  Info
