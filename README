@@ -44,10 +44,6 @@ Ardesia works with all the pointing device; you can use a mouse, a touch screen,
 tablet, a cheap&professional wiimote whiteboard or a commercial whiteboard, interactive 
 projector and any other devices supported by your operating system. 
 
-Ardesia is pressure sensitive, if you are using properly configured your devices you can 
-draw lines with varying width. 
-It is possible to erase something with the other end of the (Wacom) pen.
-
 Ardesia has been designed with the Glade/GtkBuilder tool
 and it uses to draw the cairo graphics library.
 
@@ -78,15 +74,17 @@ Please read the INSTALL file located on the current folder.
   In order to run Ardesia on Linux you need to run a composite manager such as
   compiz, kwin or xcompmgr.
 
-  If you use Windows I remember that only Windows Vista and Windows 7 
-  are supported.
+  If you are a Windows "user" I remember you that only Windows Vista and 
+  Windows 7 are supported.
   Windows Xp and previous versions are not compliant because they have not
   a composite manager.
+
 
 - VLC
   To use the recording feature you must install the vlc multimedia player 
   and streamer.
   If you use Ubuntu you can install vlc with this command:
+
   #sudo apt-get install vlc
 
   If you use an other Linux distro please use your package manager
@@ -96,9 +94,17 @@ Please read the INSTALL file located on the current folder.
   After the installation add to the PATH environment
   variable the vlc installation folder.
 
+
 - xdg-utils (Linux only)
   If you use Ubuntu you can install the xdg-utils with this command:
+
   #sudo apt-get install xdg-utils
+  
+
+- Info-ZIP zip and unzip tools (Linux only in windows are included in the package)
+  If you use Ubuntu you can install theese with this command:
+
+  #sudo apt-get install zip unzip
   
 
 -------
@@ -110,8 +116,6 @@ Please read the INSTALL file located on the current folder.
 Start Ardesia clicking in the menu on Applications/Tools/Ardesia
 Now you can select colors and annotate the screen.
 
-You can annotate an image on your desktop right clicking it
-and selecting the "open with Ardesia" item
 
 Button explanation
 
@@ -143,21 +147,23 @@ Button explanation
 - Color selector: it allow to selects an other color through a palette
 - Unlock: it unlocks the grab to annotate on the desktop;
   after the unlock you can use as usual your desktop,
-  if do you want restart to annotate push a button belonging to the
-  Ardesia bar
+  if do you want restart to sketch push the lock icon
 - Clear: it erases all the desktop annotation
 - Undo: it reverses the annotation to the older state
 - Redo: it advances the annotation to the more current state 
-- Preferences: it allow to set same preference of the annotator;
-  you can select the background color or the background image
-  to sketch
+- Preferences: it allow to set some preference;
+  - you can select the background color 
+  - you can select the background image; 
+    - a set of useful backgrounds will be shown
+    - you can select an other image file also
 - Screenshoot: it exports in a picture file your desktop screenshot
 - Export as pdf: it export as pdf; the first time you must
   select a file name, then each time that you will click 
-  on the icon you will add a pdf page with your screen content
+  on the icon you will append to the pdf a new page with your 
+  screen content
 - Record: it records your desktop;
   it uses the vlc tool,
-  if do you want allow anyone to see your work 
+  if you want allow anyone to see your work 
   you can forward the stream to an icecast server
   (please see the instruction inside the file located 
    on $(prefix)/share/ardesia/scripts/screencast.sh or
@@ -166,16 +172,8 @@ Button explanation
 - Info: It shows the info about the tool
 - Quit: It allows to quit the program
 
-
-You can even select different background images and colors using the preference dialog.
-
-You can found some suitable backgrounds png examples under the folder
-backgrounds:
-
-e.g. /usr/local/share/ardesia/ui/backgrounds
-
-If you want unlock the mouse and came back to the normal mouse use
-point upon the ardesia bar or clicking upon the unlock icon. 
+You can reuse your iwb project going in the ardesia workspace and "open with Ardesia" 
+the iwb file
 
 
 - From Command Line
@@ -234,7 +232,7 @@ filename:	  		The interactive Whiteboard Common File (iwb)
     Now you can move the ardesia bar everywhere
 
 - Ardesia is not able to record my desktop
-  - verify that you audio driver works fine, recording some speach
+  - check that you audio driver works fine, recording some speach
     with an other program
   - install the vlc package (it's required)
     http://www.videolan.org/vlc/
@@ -268,8 +266,7 @@ filename:	  		The interactive Whiteboard Common File (iwb)
     - Open Ardesia
     - Push the record button
     - Select a name
-    - Enjoy the stream
-      at the uri 
+    - Enjoy the stream at the uri 
       http://ICECAST_LOCATION:ICECAST_PORT/ICECAST_MOUNTPOINT.ogg
     - Now you can put this link on a web page or publish it in an other way
     - For furthermore information about icecast2 server please 

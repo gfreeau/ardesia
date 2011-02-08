@@ -64,7 +64,7 @@ The compilation requires the following packages:
 - xdg-utils
 
 
-If you are using ubuntu lucid you can simply run this command: 
+If you are using ubuntu you can simply run this command: 
 
   # sudo apt-get install gcc make automake autoconf intltool libtool \
     libsigsegv-dev libsigsegv0 binutils-dev libxml2-dev zip unzip\
@@ -86,6 +86,9 @@ The creation of the packgage requires the following
 packages:
 
 - devscripts
+
+You can simply run this command: 
+
   # sudo apt-get install devscripts
 
 To build the deb package run:
