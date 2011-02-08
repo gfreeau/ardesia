@@ -396,7 +396,7 @@
               <object class="GtkToolButton" id="buttonScreenShoot">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Save</property>
+                <property name="tooltip_text" translatable="yes">Screenshot</property>
                 <property name="use_underline">True</property>
 		<property name="label_widget">screenshoot</property>
                 <signal name="clicked" handler="on_toolsScreenShot_activate"/>
