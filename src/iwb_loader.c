@@ -30,7 +30,7 @@ GSList* load_savepoint_by_reference(GSList* savelist, gchar* project_tmp_dir, xm
   xmlXPathObjectPtr result = xmlXPathEvalExpression(xpath, context); 
   g_free((gchar*) xpath);
  
-  AnnotateSavePoint *savepoint = g_malloc((gsize) sizeof(AnnotateSavePoint));
+  AnnotateSavepoint *savepoint = g_malloc((gsize) sizeof(AnnotateSavepoint));
    
   xmlNodePtr node = result->nodesetval->nodeTab[0];
   xmlChar* href = xmlGetProp(node, (xmlChar*) "href");

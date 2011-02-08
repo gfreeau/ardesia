@@ -23,6 +23,7 @@
 
 #include <background_window_callbacks.h>
 #include <background_window.h>
+#include <utils.h> 
 
 
 /* Expose event in background window occurs */
@@ -57,5 +58,6 @@ back_event_expose(GtkWidget *widget,
       clear_background_window();    
     }
 
+  drill_window_in_bar_area(widget->window);
   return TRUE;
 }

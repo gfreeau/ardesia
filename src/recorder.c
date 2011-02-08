@@ -32,7 +32,7 @@
 
 
 /* pid of the recording process */
-static GPid recorderpid;
+static GPid recorder_pid;
 
 /* is the recorder active */
 static gboolean is_active = FALSE;
@@ -104,9 +104,9 @@ void quit_recorder()
 {
   if (is_recording())
     {
-      g_spawn_close_pid(recorderpid);
-      recorderpid = call_recorder(NULL, "stop");
-      g_spawn_close_pid(recorderpid);
+      g_spawn_close_pid(recorder_pid);
+      recorder_pid = call_recorder(NULL, "stop");
+      g_spawn_close_pid(recorder_pid);
       is_active = FALSE;
     }  
 }
@@ -146,12 +146,14 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
 						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
-
+  gtk_window_set_modal(GTK_WINDOW(chooser), TRUE);
+  gtk_window_set_keep_above(GTK_WINDOW(chooser), TRUE); 
+  
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file"));
 
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), get_project_dir());
 
-  gchar* filename = get_default_file_name();
+  gchar* filename = get_default_filename();
 
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
 
@@ -195,8 +197,8 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
 	      return status; 
 	    } 
 	}
-      recorderpid = call_recorder(filename, "start");
-      status = (recorderpid > 0);
+      recorder_pid = call_recorder(filename, "start");
+      status = (recorder_pid > 0);
     }
   stop_virtual_keyboard();
   if (chooser)

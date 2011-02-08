@@ -35,7 +35,7 @@
 typedef struct
 {
   /* Preference dialog */
-  GtkBuilder*  projectDialogGtkBuilder;
+  GtkBuilder*  project_dialog_gtk_builder;
   gchar* project_name;
 }ProjectData;
 

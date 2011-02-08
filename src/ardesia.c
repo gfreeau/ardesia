@@ -149,7 +149,7 @@ static CommandLine* parse_options(gint argc, char *argv[])
   
   commandline->position = EAST;
   commandline->debug = FALSE;
-  commandline->iwbfile = NULL;
+  commandline->iwb_filename = NULL;
   commandline->decorated=FALSE;
 
   /* getopt_long stores the option index here. */
@@ -220,7 +220,7 @@ static CommandLine* parse_options(gint argc, char *argv[])
     }
   if (optind<argc)
     {
-      commandline->iwbfile = argv[optind];
+      commandline->iwb_filename = argv[optind];
     } 
   return commandline;
 }
@@ -299,7 +299,7 @@ main(gint argc, char *argv[])
   CommandLine *commandline = NULL;
   gchar* project_name = "";
   gchar* project_dir = "";
-  gchar* iwbfile = NULL;
+  gchar* iwb_filename = NULL;
   GtkWidget* background_window = NULL; 
   GtkWidget* annotation_window = NULL; 
   GtkWidget* ardesia_bar_window = NULL; 
@@ -307,8 +307,6 @@ main(gint argc, char *argv[])
   
   /* Enable the localization support with gettext */
   enable_localization_support();
-  
-  gtk_init(&argc, &argv);
 
 #ifdef HAVE_BACKTRACE
 #ifdef HAVE_LIBSIGSEGV
@@ -327,22 +325,24 @@ main(gint argc, char *argv[])
 
   commandline = parse_options(argc, argv);
 
+  gtk_init(&argc, &argv);
+	
   set_the_best_colormap();
 	
-  if (commandline->iwbfile)
+  if (commandline->iwb_filename)
     {
-      if (g_path_is_absolute(commandline->iwbfile)) {
-        iwbfile = g_strdup (commandline->iwbfile);
+      if (g_path_is_absolute(commandline->iwb_filename)) {
+        iwb_filename = g_strdup (commandline->iwb_filename);
       } else {
         gchar *dir = g_get_current_dir ();
-        iwbfile = g_build_filename (dir, commandline->iwbfile, (gchar *) 0);
+        iwb_filename = g_build_filename (dir, commandline->iwb_filename, (gchar *) 0);
         free (dir);
       }
 
-      int initpos = g_substrlastpos(iwbfile, G_DIR_SEPARATOR_S); 
-      int endpos  = g_substrlastpos(iwbfile, ".");
-      project_name = g_substr(iwbfile, initpos+1, endpos-1);
-      project_dir = g_substr(iwbfile, 0, initpos-1); 
+      int init_pos = g_substrlastpos(iwb_filename, G_DIR_SEPARATOR_S); 
+      int end_pos  = g_substrlastpos(iwb_filename, ".");
+      project_name = g_substr(iwb_filename, init_pos+1, end_pos-1);
+      project_dir = g_substr(iwb_filename, 0, init_pos-1); 
     }
   else
     {
@@ -354,7 +354,7 @@ main(gint argc, char *argv[])
     }
   set_project_name(project_name);
   set_project_dir(project_dir);
-  set_iwbfile(iwbfile);
+  set_iwb_filename(iwb_filename);
 
   background_window = create_background_window(); 
   
@@ -371,7 +371,7 @@ main(gint argc, char *argv[])
   set_background_window(background_window);
   
   /* init annotate */
-  annotate_init(background_window, iwbfile, commandline->debug); 
+  annotate_init(background_window, iwb_filename, commandline->debug); 
 
   annotation_window = get_annotation_window();  
 
@@ -412,7 +412,7 @@ main(gint argc, char *argv[])
          
   g_free(project_name);
   g_free(project_dir);
-  g_free(iwbfile);
+  g_free(iwb_filename);
 
   g_free(commandline);
 

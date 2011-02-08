@@ -59,13 +59,12 @@ static void create_trace_line(char *address, FILE *file)
   l = readlink("/proc/curproc/file", chrarray_Buffer, PATH_MAXLEN);
 #elif ( defined(__macos_x__) || defined(__macos_x) || defined(_macos_x) || defined(macos_x) || \
 	defined(__apple__) || defined(__apple) || defined(_apple) || defined(apple) )
-  u32 u32_BufferLength ;
-  if ( _NSGetExecutablePath( chrarray_Buffer, &u32_BufferLength ))
+  u32 u32_buffer_length ;
+  if ( _NSGetExecutablePath( chrarray_Buffer, &u32_buffer_length ))
     {
       printf("An error occured while reading the executable path. Program terminated.\n");
       // Error!
     }
-  intBufferLength = (int) u32_BufferLength ;
 #else // Linux
   l = readlink("/proc/self/exe",ename,sizeof(ename));
 #endif

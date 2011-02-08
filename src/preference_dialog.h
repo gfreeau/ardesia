@@ -37,7 +37,7 @@
 typedef struct
 {
   /* Preference dialog */
-  GtkBuilder*  preferenceDialogGtkBuilder;
+  GtkBuilder*  preference_dialog_gtk_builder;
 
   /* 0 no background, 1 background color, 2 png background, */
   gint 	     background;

@@ -81,7 +81,7 @@ typedef struct
 typedef struct _AnnotateSavePoint
 {
   gchar* filename;
-} AnnotateSavePoint;
+} AnnotateSavepoint;
 
 
 /* Annotation data used by the callsbacks */
@@ -89,7 +89,7 @@ typedef struct
 {
   
   /* Gtkbuilder for annotation window */
-  GtkBuilder *annotationWindowGtkBuilder;
+  GtkBuilder *annotation_window_gtk_builder;
 
   /* directory where store the save point */
   gchar* savepoint_dir;  
@@ -110,7 +110,7 @@ typedef struct
   GdkCursor *invisible_cursor;
  
   /* List of the savepoint */ 
-  GSList  *savelist;
+  GSList  *savepoint_list;
   
   /* the index of the position in the savelist of the current picture */
   gint    current_save_index;
@@ -151,7 +151,7 @@ typedef struct
   gboolean     debug;
 
   /* list of the coodinates of the last line drawn */
-  GSList       *coordlist;
+  GSList       *coord_list;
 
 } AnnotateData;
 
@@ -293,6 +293,6 @@ void annotate_shape_recognize(gboolean closed_path);
 
 
 /* Add a save point for the undo/redo */
-void annotate_add_save_point();
+void annotate_add_savepoint();
 
 

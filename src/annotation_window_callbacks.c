@@ -89,13 +89,10 @@ event_expose(GtkWidget *widget,
           exit(EXIT_FAILURE);
         }    
       annotate_acquire_grab();
-      if (data->savelist == NULL)
+      if (data->savepoint_list == NULL)
         {
 	  annotate_clear_screen();
-        }
-#ifndef _WIN32
-      gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1);
-#endif 		      
+        }      
     }
   /* data->annotation_cairo_context is not NULL */
   annotate_restore_surface();
@@ -116,7 +113,8 @@ paint(GtkWidget *win,
 { 
 
   AnnotateData *data = (AnnotateData *) func_data;
- 
+  gdouble pressure = 1.0; 
+  
   if (!ev)
     {
       g_printerr("Device '%s': Invalid event; I ungrab all\n",
@@ -157,7 +155,6 @@ paint(GtkWidget *win,
 
   annotate_reset_cairo();
 
-  gdouble pressure = 1.0; 
   if ((ev->device->source != GDK_SOURCE_MOUSE) && (data->cur_context->type != ANNOTATE_ERASER))
     {
       pressure = get_pressure((GdkEvent *) ev);
@@ -226,9 +223,9 @@ paintto(GtkWidget *win,
 	}
 
       /* If the point is already selected and higher pressure then print else jump it */
-      if (data->coordlist)
+      if (data->coord_list)
 	{
-	  AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data(data->coordlist, 0);
+	  AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data(data->coord_list, 0);
 	  gint tollerance = data->thickness;
 	  if (get_distance(last_point->x, last_point->y, ev->x, ev->y)<tollerance)
 	    {
@@ -301,18 +298,18 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
       return TRUE;
     }  
 
-  gint lenght = g_slist_length(data->coordlist);
+  gint lenght = g_slist_length(data->coord_list);
 
   if (lenght > 2)
     { 
       gint distance = -1;
-      AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data(data->coordlist, lenght-1);
+      AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data(data->coord_list, lenght-1);
        
       /* This is the tollerance to force to close the path in a magnetic way */
       gint tollerance = data->thickness * 2;
       distance = get_distance(ev->x, ev->y, first_point->x, first_point->y);
  
-      AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coordlist, 0);
+      AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coord_list, 0);
       gdouble pressure = last_point->pressure;      
 
       /* If the distance between two point lesser than tollerance they are the same point for me */
@@ -342,7 +339,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
     }
   cairo_stroke_preserve(data->annotation_cairo_context);
   
-  annotate_add_save_point();
+  annotate_add_savepoint();
    
   annotate_hide_cursor();  
  

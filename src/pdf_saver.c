@@ -38,7 +38,7 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, GdkPixbuf *pixbuf)
   GtkWidget*   preview = NULL;
   gint preview_width = 128;
   gint preview_height = 128;
-  GdkPixbuf*   previewPixbuf = NULL;
+  GdkPixbuf*   preview_pixbuf = NULL;
   gchar* filename = "";
   gchar* supported_extension = ".pdf";
   gint result = GTK_RESPONSE_NO;
@@ -50,20 +50,21 @@ static gboolean start_save_pdf_dialog(GtkWindow *parent, GdkPixbuf *pixbuf)
 						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
 						    NULL);
   gtk_window_set_modal(GTK_WINDOW(chooser), TRUE);
-   
+  gtk_window_set_keep_above(GTK_WINDOW(chooser), TRUE);  
+  
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file")); 
  
   /* saving preview */
   preview = gtk_image_new ();
-  previewPixbuf = gdk_pixbuf_scale_simple(pixbuf, preview_width, preview_height, GDK_INTERP_BILINEAR);
-  gtk_image_set_from_pixbuf (GTK_IMAGE (preview), previewPixbuf);
+  preview_pixbuf = gdk_pixbuf_scale_simple(pixbuf, preview_width, preview_height, GDK_INTERP_BILINEAR);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (preview), preview_pixbuf);
   
   gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);   
-  g_object_unref(previewPixbuf);
+  g_object_unref(preview_pixbuf);
 
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), get_project_dir());
    
-  filename = get_default_file_name();
+  filename = get_default_filename();
 
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   
@@ -189,7 +190,7 @@ void add_pdf_page(GtkWindow *parent)
   cairo_surface_t* saved_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gdk_screen_width(), gdk_screen_height());
   cairo_t *cr = cairo_create (saved_surface);
   const gchar* tmpdir = g_get_tmp_dir();
-  gchar* default_filename = get_default_file_name();
+  gchar* default_filename = get_default_filename();
   gchar* filename  = g_strdup_printf("%s%s%s_screenshoot.png",tmpdir, G_DIR_SEPARATOR_S, default_filename);
   GError           *err = NULL ;
   

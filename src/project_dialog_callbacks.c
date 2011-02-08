@@ -42,8 +42,8 @@ G_MODULE_EXPORT void
 on_projectOkButton_clicked(GtkButton *buton, gpointer data)
 {
   ProjectData* project_data = (ProjectData* ) data;
-  GtkWidget* dialogEntry = GTK_WIDGET(gtk_builder_get_object(project_data->projectDialogGtkBuilder,"projectDialogEntry"));
-  gchar* str = gtk_editable_get_chars(GTK_EDITABLE(dialogEntry), 0, -1);
+  GtkWidget* dialog_entry = GTK_WIDGET(gtk_builder_get_object(project_data->project_dialog_gtk_builder, "projectDialogEntry"));
+  gchar* str = gtk_editable_get_chars(GTK_EDITABLE(dialog_entry), 0, -1);
   g_free(project_data->project_name); 
   project_data->project_name = str;
   stop_virtual_keyboard(); 

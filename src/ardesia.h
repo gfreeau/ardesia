@@ -40,7 +40,7 @@
 
 typedef struct
 {
-  gchar* iwbfile;
+  gchar* iwb_filename;
   gboolean debug;
   gboolean decorated;
   gint position;

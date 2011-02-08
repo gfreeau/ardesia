@@ -38,18 +38,18 @@ gchar* start_project_dialog(GtkWindow *parent)
 {
   ProjectData *project_data = (ProjectData *) g_malloc((gsize) sizeof(ProjectData));
 
-  GtkWidget *projectDialog;
+  GtkWidget *project_dialog;
 
   /* Initialize the main window */
-  project_data->projectDialogGtkBuilder = gtk_builder_new();
+  project_data->project_dialog_gtk_builder = gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
-  gtk_builder_add_from_file(project_data->projectDialogGtkBuilder, PROJECT_UI_FILE, NULL);
+  gtk_builder_add_from_file(project_data->project_dialog_gtk_builder, PROJECT_UI_FILE, NULL);
  
   /* Fill the window by the gtk builder xml */
-  projectDialog = GTK_WIDGET(gtk_builder_get_object(project_data->projectDialogGtkBuilder,"projectDialog"));
-  gtk_window_set_transient_for(GTK_WINDOW(projectDialog), parent);
-  gtk_window_set_modal(GTK_WINDOW(projectDialog), TRUE);
+  project_dialog = GTK_WIDGET(gtk_builder_get_object(project_data->project_dialog_gtk_builder, "projectDialog"));
+  gtk_window_set_transient_for(GTK_WINDOW(project_dialog), parent);
+  gtk_window_set_modal(GTK_WINDOW(project_dialog), TRUE);
   
 #ifdef _WIN32
   /* 
@@ -59,23 +59,23 @@ gchar* start_project_dialog(GtkWindow *parent)
   gtk_window_set_keep_above(GTK_WINDOW(parent), FALSE);
 #endif 
   
-  GtkWidget* dialogEntry = GTK_WIDGET(gtk_builder_get_object(project_data->projectDialogGtkBuilder,"projectDialogEntry"));
+  GtkWidget* dialog_entry = GTK_WIDGET(gtk_builder_get_object(project_data->project_dialog_gtk_builder, "projectDialogEntry"));
   gint  pos = -1;
 
   project_data->project_name = g_strdup_printf("ardesia_project_%s", get_date());
-  gtk_editable_insert_text(GTK_EDITABLE(dialogEntry), project_data->project_name, -1, &pos ); 
+  gtk_editable_insert_text(GTK_EDITABLE(dialog_entry), project_data->project_name, -1, &pos ); 
 
   /* Connect all signals by reflection */
-  gtk_builder_connect_signals (project_data->projectDialogGtkBuilder, (gpointer) project_data);
+  gtk_builder_connect_signals (project_data->project_dialog_gtk_builder, (gpointer) project_data);
 
-  gtk_dialog_run(GTK_DIALOG(projectDialog));
+  gtk_dialog_run(GTK_DIALOG(project_dialog));
   
   //disalloc structure 
-  g_object_unref (project_data->projectDialogGtkBuilder);
+  g_object_unref (project_data->project_dialog_gtk_builder);
   gchar* ret = g_strdup_printf("%s", project_data->project_name);
   g_free(project_data->project_name);
   g_free(project_data);
 
-  gtk_widget_destroy(projectDialog);
+  gtk_widget_destroy(project_dialog);
   return ret; 
 }

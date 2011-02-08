@@ -29,12 +29,12 @@
  * Calculate the better position where put the bar
  */
 static void calculate_position(GtkWidget *ardesia_bar_window, 
-			       gint dwidth, gint dheight, 
+			       gint d_width, gint d_height, 
 			       gint *x, gint *y, 
-			       gint wwidth, gint wheight,
+			       gint w_width, gint w_height,
 			       gint position)
 {
-  *y = ((dheight - wheight)/2); 
+  *y = ((d_height - w_height)/2); 
   /* vertical layout */
   if (position==WEST)
     {
@@ -42,12 +42,12 @@ static void calculate_position(GtkWidget *ardesia_bar_window,
     }
   else if (position==EAST)
     {
-      *x = dwidth - wwidth;
+      *x = d_width - w_width;
     }
   else
     {
       /* horizontal layout */
-      *x = (dwidth - wwidth)/2;
+      *x = (d_width - w_width)/2;
       if (position==NORTH)
         {
           *y = SPACE_FROM_BORDER; 
@@ -55,7 +55,7 @@ static void calculate_position(GtkWidget *ardesia_bar_window,
       else if (position==SOUTH)
         {
 	  /* south */
-	  *y = dheight - SPACE_FROM_BORDER - wheight;
+	  *y = d_height - SPACE_FROM_BORDER - w_height;
         }
       else
         {  
@@ -73,28 +73,28 @@ static void calculate_position(GtkWidget *ardesia_bar_window,
  */
 static void calculate_initial_position(GtkWidget *ardesia_bar_window, 
 				       gint *x, gint *y, 
-				       gint wwidth, gint wheight, 
+				       gint w_width, gint w_height, 
 				       gint position)
 {
-  gint dwidth = gdk_screen_width();
-  gint dheight = gdk_screen_height();
+  gint d_width = gdk_screen_width();
+  gint d_height = gdk_screen_height();
 
   /* resize if larger that screen width */
-  if (wwidth>dwidth)
+  if (w_width>d_width)
     {
-      wwidth = dwidth;
-      gtk_window_resize(GTK_WINDOW(ardesia_bar_window), wwidth, wheight);       
+      w_width = d_width;
+      gtk_window_resize(GTK_WINDOW(ardesia_bar_window), w_width, w_height);       
     }
 
   /* resize if larger that screen height */
-  if (wheight>dheight)
+  if (w_height>d_height)
     {
       gint tollerance = 15;
-      wheight = dheight - tollerance;
-      gtk_widget_set_usize(ardesia_bar_window, wwidth, wheight);       
+      w_height = d_height - tollerance;
+      gtk_widget_set_usize(ardesia_bar_window, w_width, w_height);       
     }
 
-  calculate_position(ardesia_bar_window, dwidth, dheight, x, y, wwidth, wheight, position);
+  calculate_position(ardesia_bar_window, d_width, d_height, x, y, w_width, w_height, position);
 }
 
 
@@ -126,7 +126,7 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
   GError* error = NULL;
   gchar* file = UI_FILE;
 
-  gtkBuilder = gtk_builder_new();
+  bar_gtk_builder = gtk_builder_new();
   if (commandline->position>2)
     {
       /* north or south */
@@ -148,23 +148,23 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
     }
 
 
-  /* load the gtkbuilder file with the definition of the ardesia bar gui */
-  gtk_builder_add_from_file(gtkBuilder, file, &error);
+  /* load the bar_gtk_builder file with the definition of the ardesia bar gui */
+  gtk_builder_add_from_file(bar_gtk_builder, file, &error);
   if (error)
     {
       g_warning ("Failed to load builder file: %s", error->message);
       g_error_free (error);
-      g_object_unref (gtkBuilder);
-      gtkBuilder = NULL;
+      g_object_unref (bar_gtk_builder);
+      bar_gtk_builder = NULL;
       return bar_window;
     }  
   
   BarData *bar_data = init_bar_data();
 
-  /* connect all the callback from gtkbuilder xml file */
-  gtk_builder_connect_signals(gtkBuilder, (gpointer) bar_data);
+  /* connect all the callback from bar_gtk_builder xml file */
+  gtk_builder_connect_signals(bar_gtk_builder, (gpointer) bar_data);
 
-  bar_window = GTK_WIDGET (gtk_builder_get_object(gtkBuilder, "winMain"));
+  bar_window = GTK_WIDGET (gtk_builder_get_object(bar_gtk_builder, "winMain"));
   gtk_window_set_transient_for(GTK_WINDOW(bar_window), GTK_WINDOW(parent));
   if (commandline->decorated)
     {

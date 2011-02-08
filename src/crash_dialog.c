@@ -37,7 +37,7 @@ static CrashData* new_crash_data(gchar* crash_report)
   CrashData* crash_data = (CrashData *) g_malloc((gsize) sizeof(CrashData));
 
   /* Initialize the data */
-  crash_data->crashDialogGtkBuilder = gtk_builder_new();
+  crash_data->crash_dialog_gtk_builder = gtk_builder_new();
   crash_data->crash_report = crash_report;
   return crash_data;
 }
@@ -51,15 +51,15 @@ void start_crash_dialog(GtkWindow *parent, gchar* crash_report)
 {
   CrashData *crash_data = new_crash_data(crash_report);
 
-  GtkWidget *crashDialog;
+  GtkWidget *crash_dialog;
 
   /* Load the gtk builder file created with glade */
-  gtk_builder_add_from_file(crash_data->crashDialogGtkBuilder, CRASH_UI_FILE, NULL);
+  gtk_builder_add_from_file(crash_data->crash_dialog_gtk_builder, CRASH_UI_FILE, NULL);
  
   /* Fill the window by the gtk builder xml */
-  crashDialog = GTK_WIDGET(gtk_builder_get_object(crash_data->crashDialogGtkBuilder, "crashDialog"));
-  gtk_window_set_transient_for(GTK_WINDOW(crashDialog), parent);
-  gtk_window_set_modal(GTK_WINDOW(crashDialog), TRUE);
+  crash_dialog = GTK_WIDGET(gtk_builder_get_object(crash_data->crash_dialog_gtk_builder, "CrashDialog"));
+  gtk_window_set_transient_for(GTK_WINDOW(crash_dialog), parent);
+  gtk_window_set_modal(GTK_WINDOW(crash_dialog), TRUE);
   
 #ifdef _WIN32
   /* 
@@ -70,9 +70,9 @@ void start_crash_dialog(GtkWindow *parent, gchar* crash_report)
 #endif 
   
   /* Connect all signals by reflection */
-  gtk_builder_connect_signals (crash_data->crashDialogGtkBuilder, (gpointer) crash_data);
+  gtk_builder_connect_signals (crash_data->crash_dialog_gtk_builder, (gpointer) crash_data);
 
-  gtk_dialog_run(GTK_DIALOG(crashDialog));
+  gtk_dialog_run(GTK_DIALOG(crash_dialog));
 
-  gtk_widget_destroy(crashDialog);
+  gtk_widget_destroy(crash_dialog);
 }

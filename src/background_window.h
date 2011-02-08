@@ -39,7 +39,7 @@
 typedef struct
 {
   /* Gtkbuilder for background window */
-  GtkBuilder *backgroundWindowGtkBuilder;
+  GtkBuilder *background_window_gtk_builder;
 
   /* background color selected */
   gchar* background_color; 

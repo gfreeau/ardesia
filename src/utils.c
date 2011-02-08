@@ -39,7 +39,7 @@ static gchar* project_name = NULL;
 static gchar* project_dir = NULL;
 
 /* the name of the current project */
-static gchar* iwbfile = NULL;
+static gchar* iwb_filename = NULL;
 
 /* the list of the artfacts created in the current session */
 static GSList* artifacts = NULL;
@@ -74,16 +74,16 @@ void set_project_dir(gchar * dir)
 
 
 /* Get the iwb file of the current project */
-gchar* get_iwbfile()
+gchar* get_iwb_filename()
 {
-  return iwbfile;
+  return iwb_filename;
 }
 
 
 /* Set the iwb file of the current project */
-void set_iwbfile(gchar * file)
+void set_iwb_filename(gchar * file)
 {
-  iwbfile = file;
+  iwb_filename = file;
 }
 
 
@@ -167,7 +167,7 @@ void ungrab_pointer(GdkDisplay* display, GtkWidget* win)
 /* get bar window widget */
 GtkWidget* get_bar_window()
 {
-  return GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"winMain"));
+  return GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder,"winMain"));
 }
 
 
@@ -347,7 +347,7 @@ gboolean file_exists(gchar* filename)
  * the project name and the current date 
  *
  */
-gchar* get_default_file_name()
+gchar* get_default_filename()
 {
   gchar* date = get_date(); 
   gchar* filename = g_strdup_printf("%s_%s", project_name, date);
@@ -422,13 +422,13 @@ AnnotateStrokeCoordinate * allocate_point(gint x, gint y, gint width, gdouble pr
 
 
 /* Send an email */
-void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
+void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachment_list)
 {
 #ifdef _WIN32
-  windows_send_email(to, subject, body, attachmentList);
+  windows_send_email(to, subject, body, attachment_list);
 #else
 
-  gint attach_lenght = g_slist_length(attachmentList);
+  gint attach_lenght = g_slist_length(attachment_list);
 
   gint arg_lenght = (attach_lenght*2) + 7;
 
@@ -445,7 +445,7 @@ void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
 
   for (i=0; i<attach_lenght; i++)
     {
-      gchar* attachment = (gchar*) g_slist_nth_data (attachmentList, i);
+      gchar* attachment = (gchar*) g_slist_nth_data (attachment_list, i);
       argv[j] = "--attach";
       argv[j+1] = attachment;
       j = j+2;
@@ -470,12 +470,12 @@ void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
 
 
 /* Send artifacts with email */
-void send_artifacts_with_email(GSList* attachmentList)
+void send_artifacts_with_email(GSList* attachment_list)
 {
   gchar* to = "ardesia-developer@googlegroups.com";
   gchar* subject = "ardesia-contribution";
   gchar* body = "Dear ardesia developer group,\nI want share my work created with Ardesia with you, please for details see the attachment.";
-  send_email(to, subject, body, attachmentList);
+  send_email(to, subject, body, attachment_list);
 }
 
 
@@ -485,9 +485,9 @@ void send_trace_with_email(gchar* attachment)
   gchar* to = "ardesia-developer@googlegroups.com";
   gchar* subject = "ardesia-bug-report";
   gchar* body = "Dear ardesia developer group,\nAn unhandled application error occurred, please for details see the attachment with the stack trace.";
-  GSList* attachmentList = NULL;
-  attachmentList = g_slist_prepend (attachmentList, attachment);
-  send_email(to, subject, body, attachmentList);
+  GSList* attachment_list = NULL;
+  attachment_list = g_slist_prepend (attachment_list, attachment);
+  send_email(to, subject, body, attachment_list);
 
 }
 
@@ -568,8 +568,8 @@ gchar* g_substr (const gchar* string,
 		 gint         end)
 {
   gsize len = (end - start + 1);
-  gchar *output = g_malloc0 (len + 1);
-  return g_utf8_strncpy (output, &string[start], len);
+  gchar *output = g_malloc0(len + 1);
+  return g_utf8_strncpy(output, &string[start], len);
 }
 
 

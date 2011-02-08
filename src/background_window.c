@@ -146,9 +146,9 @@ void destroy_background_window()
 
       g_free(background_data->background_color);
       /* unref gtkbuilder */
-      if (background_data->backgroundWindowGtkBuilder)
+      if (background_data->background_window_gtk_builder)
 	{
-	  g_object_unref (background_data->backgroundWindowGtkBuilder);
+	  g_object_unref (background_data->background_window_gtk_builder);
 	}
       g_free(background_data);
     }
@@ -205,10 +205,10 @@ GtkWidget* create_background_window()
   background_data = allocate_background_data(); 
   
   /* Initialize the background window */
-  background_data->backgroundWindowGtkBuilder = gtk_builder_new();
+  background_data->background_window_gtk_builder = gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
-  gtk_builder_add_from_file(background_data->backgroundWindowGtkBuilder, BACKGROUND_UI_FILE, &error);
+  gtk_builder_add_from_file(background_data->background_window_gtk_builder, BACKGROUND_UI_FILE, &error);
 
   if (error)
     {
@@ -217,13 +217,13 @@ GtkWidget* create_background_window()
       return background_data->background_window;
     }  
  
-  background_data->background_window = GTK_WIDGET(gtk_builder_get_object(background_data->backgroundWindowGtkBuilder,"backgroundWindow")); 
+  background_data->background_window = GTK_WIDGET(gtk_builder_get_object(background_data->background_window_gtk_builder, "backgroundWindow")); 
   gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), BACKGROUND_OPACITY);
 
   gtk_widget_set_usize(background_data->background_window, gdk_screen_width(), gdk_screen_height());
 
   /* connect all the callback from gtkbuilder xml file */
-  gtk_builder_connect_signals(background_data->backgroundWindowGtkBuilder, (gpointer) background_data);
+  gtk_builder_connect_signals(background_data->background_window_gtk_builder, (gpointer) background_data);
 
   gtk_widget_show_all(background_data->background_window);
 

@@ -26,30 +26,30 @@
 
 #include <windows_utils.h>
  
-BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF crKey,
-					       BYTE bAlpha, DWORD dwFlags) = NULL;
+BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF cr_key,
+					       BYTE b_alpha, DWORD dw_flags) = NULL;
 	
 
 /* This is needed to wrap the setLayeredWindowAttributes throught the windows user32 dll */
-void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF crKey, BYTE bAlpha, DWORD dwFlags)
+void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF cr_key, BYTE b_alpha, DWORD dw_flags)
 {
   HWND hwnd = GDK_WINDOW_HWND(gdk_window);
   HINSTANCE hInstance = LoadLibraryA("user32");		
 
   setLayeredWindowAttributesProc = (BOOL (WINAPI*)(HWND hwnd,
-						   COLORREF crKey, BYTE bAlpha, DWORD dwFlags))
+						   COLORREF cr_key, BYTE b_alpha, DWORD dw_flags))
     GetProcAddress(hInstance,"SetLayeredWindowAttributes");
 
-  setLayeredWindowAttributesProc(hwnd, crKey, bAlpha, dwFlags);
+  setLayeredWindowAttributesProc(hwnd, cr_key, b_alpha, dw_flags);
 }
 
 
 /* Is the two color similar */
-static gboolean colors_too_similar(const GdkColor *colora, const GdkColor *colorb)
+static gboolean colors_too_similar(const GdkColor *color_a, const GdkColor *color_b)
 {
-  return (abs(colora->red - colorb->red) < 256 &&
-	  abs(colora->green - colorb->green) < 256 &&
-	  abs(colora->blue - colorb->blue) < 256);
+  return (abs(color_a->red - color_b->red) < 256 &&
+	  abs(color_a->green - color_b->green) < 256 &&
+	  abs(color_a->blue - color_b->blue) < 256);
 }
 
 
@@ -126,7 +126,7 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 
 
 /* Send an email with MAPI */
-void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList)
+void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachment_list)
 {
   HINSTANCE inst;
   LPMAPISENDMAIL MAPISendMail;
@@ -135,43 +135,43 @@ void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachme
 
   MAPISendMail = (LPMAPISENDMAIL) GetProcAddress(inst, "MAPISendMail");
 
-  MapiMessage M_MSG;
-  ZeroMemory(&M_MSG, sizeof(M_MSG));
+  MapiMessage m_msg;
+  ZeroMemory(&m_msg, sizeof(m_msg));
 
-  M_MSG.ulReserved = 0;
-  M_MSG.lpszSubject = subject;
-  M_MSG.lpszNoteText = body;
-  M_MSG.lpszMessageType = NULL;
-  M_MSG.lpszDateReceived = NULL;
-  M_MSG.lpszConversationID = NULL;
-  M_MSG.flFlags = 0;
-  M_MSG.lpOriginator = NULL;
+  m_msg.ulReserved = 0;
+  m_msg.lpszSubject = subject;
+  m_msg.lpszNoteText = body;
+  m_msg.lpszMessageType = NULL;
+  m_msg.lpszDateReceived = NULL;
+  m_msg.lpszConversationID = NULL;
+  m_msg.flFlags = 0;
+  m_msg.lpOriginator = NULL;
 
-  MapiRecipDesc M_RD[1];
-  ZeroMemory(&M_RD, sizeof(M_RD));
+  MapiRecipDesc m_rd[1];
+  ZeroMemory(&m_rd, sizeof(m_rd));
 
-  M_RD[0].ulRecipClass = MAPI_TO;
-  M_RD[0].lpszName = to;
+  m_rd[0].ulRecipClass = MAPI_TO;
+  m_rd[0].lpszName = to;
 
-  M_MSG.nRecipCount = sizeof(M_RD) / sizeof(M_RD[0]);
-  M_MSG.lpRecips = M_RD;
+  m_msg.nRecipCount = sizeof(m_rd) / sizeof(m_rd[0]);
+  m_msg.lpRecips = m_rd;
 
-  gint attach_lenght = g_slist_length(attachmentList);
+  gint attach_lenght = g_slist_length(attachment_list);
   
-  MapiFileDesc M_FD[attach_lenght];
+  MapiFileDesc m_fd[attach_lenght];
   
   gint i =0;
   for (i=0; i<attach_lenght; i++)
     { 
-	  gchar* attachment =  g_slist_nth_data (attachmentList, i);
-      M_FD[i].lpszPathName = attachment;
-      M_FD[i].lpszFileName = attachment;
+	  gchar* attachment =  g_slist_nth_data (attachment_list, i);
+      m_fd[i].lpszPathName = attachment;
+      m_fd[i].lpszFileName = attachment;
     }  
 
-  M_MSG.nFileCount = sizeof(M_FD) / sizeof(M_FD[0]);
-  M_MSG.lpFiles = M_FD;
+  m_msg.nFileCount = sizeof(m_fd) / sizeof(m_fd[0]);
+  m_msg.lpFiles = m_fd;
 
-  MAPISendMail(0, 0, &M_MSG, MAPI_LOGON_UI | MAPI_DIALOG, 0L);
+  MAPISendMail(0, 0, &m_msg, MAPI_LOGON_UI | MAPI_DIALOG, 0L);
 }
 
 

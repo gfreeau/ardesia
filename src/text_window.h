@@ -83,7 +83,7 @@ typedef struct
 typedef struct
 {
   /* Gtkbuilder to build the window */
-  GtkBuilder *gtk_builder;
+  GtkBuilder *text_window_gtk_builder;
   GtkWidget* window;
   GPid virtual_keyboard_pid;
   cairo_t *cr;

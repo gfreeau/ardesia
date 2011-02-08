@@ -66,8 +66,8 @@ void stop_virtual_keyboard()
     { 
       /* @TODO replace this with the cross plattform g_pid_terminate when it will available */
 #ifdef _WIN32
-      HWND hWnd = FindWindow(VIRTUALKEYBOARD_WINDOW_NAME, NULL);       
-      SendMessage(hWnd, WM_SYSCOMMAND, SC_CLOSE, 0);
+      HWND hwnd = FindWindow(VIRTUALKEYBOARD_WINDOW_NAME, NULL);       
+      SendMessage(hwnd, WM_SYSCOMMAND, SC_CLOSE, 0);
 #else
       kill (virtual_keyboard_pid, SIGTERM);
 #endif   

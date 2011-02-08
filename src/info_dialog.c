@@ -35,32 +35,33 @@
  */
 void start_info_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
 {
-  GtkWidget *infoDialog;
+  GtkWidget *info_dialog;
 
   /* Initialize the main window */
-  GtkBuilder*  infoDialogGtkBuilder = gtk_builder_new();
+  GtkBuilder*  info_dialog_gtk_builder = gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
-  gtk_builder_add_from_file(infoDialogGtkBuilder, INFO_UI_FILE, NULL);
+  gtk_builder_add_from_file(info_dialog_gtk_builder, INFO_UI_FILE, NULL);
 
   /* Fill the window by the gtk builder xml */
-  infoDialog = GTK_WIDGET(gtk_builder_get_object(infoDialogGtkBuilder,"aboutdialog"));
-  gtk_window_set_transient_for(GTK_WINDOW(infoDialog), parent);
-  gtk_window_set_modal(GTK_WINDOW(infoDialog), TRUE);
+  info_dialog = GTK_WIDGET(gtk_builder_get_object(info_dialog_gtk_builder, "aboutdialog"));
+  gtk_window_set_transient_for(GTK_WINDOW(info_dialog), parent);
+  gtk_window_set_modal(GTK_WINDOW(info_dialog), TRUE);
+  gtk_window_set_keep_above(GTK_WINDOW(info_dialog), TRUE); 
 
-  gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(infoDialog), PACKAGE_VERSION);   
+  gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(info_dialog), PACKAGE_VERSION);   
 
   /* Connect all signals by reflection */
-  gtk_builder_connect_signals (infoDialogGtkBuilder, NULL);
+  gtk_builder_connect_signals (info_dialog_gtk_builder, NULL);
 
-  gtk_dialog_run(GTK_DIALOG(infoDialog));
+  gtk_dialog_run(GTK_DIALOG(info_dialog));
   
-  if (infoDialog != NULL)
+  if (info_dialog != NULL)
     {
-      gtk_widget_destroy(infoDialog);
+      gtk_widget_destroy(info_dialog);
     }
 
-  g_object_unref (infoDialogGtkBuilder);
+  g_object_unref (info_dialog_gtk_builder);
 }
 
 

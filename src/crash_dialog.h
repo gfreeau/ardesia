@@ -35,7 +35,7 @@
 typedef struct
 {
   /* Preference dialog */
-  GtkBuilder*  crashDialogGtkBuilder;
+  GtkBuilder*  crash_dialog_gtk_builder;
   gchar*  crash_report;
 }CrashData;
 

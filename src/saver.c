@@ -41,7 +41,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
   GtkWidget*   preview = NULL;
   gint preview_width = 128;
   gint preview_height = 128;
-  GdkPixbuf*   previewPixbuf = NULL;
+  GdkPixbuf*   preview_pixbuf = NULL;
   gchar* filename = "";
   gchar* filenamecopy = "";
   gchar* supported_extension = ".pdf";
@@ -58,19 +58,21 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
 						    NULL);
   
   gtk_window_set_modal(GTK_WINDOW(chooser), TRUE); 
+  gtk_window_set_keep_above(GTK_WINDOW(chooser), TRUE);
+  
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file")); 
   
   /* preview of saving */
   preview = gtk_image_new();
-  previewPixbuf = gdk_pixbuf_scale_simple(buf, preview_width, preview_height, GDK_INTERP_BILINEAR);
-  gtk_image_set_from_pixbuf (GTK_IMAGE (preview), previewPixbuf);
+  preview_pixbuf = gdk_pixbuf_scale_simple(buf, preview_width, preview_height, GDK_INTERP_BILINEAR);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (preview), preview_pixbuf);
   
   gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(chooser), preview);   
-  g_object_unref (previewPixbuf);
+  g_object_unref (preview_pixbuf);
 
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(chooser), get_project_dir());
 
-  filename = get_default_file_name();
+  filename = get_default_filename();
   
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(chooser), filename);
   

@@ -69,9 +69,9 @@ static gboolean  quit(BarData *bar_data)
       g_free(bar_data);
     }
 
-  if (gtkBuilder)
+  if (bar_gtk_builder)
     {
-      g_object_unref (gtkBuilder); 
+      g_object_unref (bar_gtk_builder); 
     }
   gtk_main_quit();
   return TRUE;
@@ -95,8 +95,8 @@ static void add_alpha(BarData *bar_data)
 /* select the pen tool */
 static void take_pen_tool()
 {
-  GtkToggleToolButton* eraser_tool_button = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonEraser"));
-  GtkToggleToolButton* pencil_tool_button = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonPencil"));
+  GtkToggleToolButton* eraser_tool_button = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(bar_gtk_builder,"buttonEraser"));
+  GtkToggleToolButton* pencil_tool_button = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(bar_gtk_builder,"buttonPencil"));
   if (gtk_toggle_tool_button_get_active(eraser_tool_button))
     {
       gtk_toggle_tool_button_set_active(eraser_tool_button, FALSE); 
@@ -111,8 +111,8 @@ static void unlock(BarData *bar_data)
 {
   if (!bar_data->grab)
     {
-      GtkToggleToolButton* eraserToolButton = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(gtkBuilder,"buttonUnlock"));
-      gtk_toggle_tool_button_set_active(eraserToolButton, FALSE); 
+      GtkToggleToolButton* eraser_tool_button = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(bar_gtk_builder,"buttonUnlock"));
+      gtk_toggle_tool_button_set_active(eraser_tool_button, FALSE); 
     }
 }
 
@@ -322,14 +322,14 @@ on_toolsMode_activate          (GtkToolButton   *toolbutton,
       if (!bar_data->rounder)
 	{
 	  /* select rounder */
-	  gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"rounder")));
+	  gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder,"rounder")));
 	  bar_data->rounder = TRUE;
 	  bar_data->rectifier = FALSE;
 	}
       else
 	{
 	  /* select rectifier */
-	  gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"rectifier")));
+	  gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder,"rectifier")));
 	  bar_data->rectifier = TRUE;
 	  bar_data->rounder = FALSE;
 	}
@@ -337,7 +337,7 @@ on_toolsMode_activate          (GtkToolButton   *toolbutton,
   else
     {
       /* select free hand writing */
-      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"hand")));
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder,"hand")));
       bar_data->rectifier = FALSE;
       bar_data->rounder = FALSE; 
     }
@@ -352,20 +352,20 @@ on_toolsThick_activate          (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) func_data;
   if (bar_data->thickness== THICK_STEP*2)
     {
-      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thick")));
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder, "thick")));
       /* set thick icon */
       bar_data->thickness = THICK_STEP*3;
     }
   else if (bar_data->thickness==THICK_STEP*3)
     {
       /* set thin icon */
-      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"thin")));
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder, "thin")));
       bar_data->thickness = THICK_STEP;
     }
   else if (bar_data->thickness==THICK_STEP)
     {
       /* set medium icon */
-      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"medium")));
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder, "medium")));
       bar_data->thickness = THICK_STEP*2;
     }
 }
@@ -444,7 +444,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
     {
       visualize_missing_recorder_program_dialog(GTK_WINDOW(get_bar_window()));
       /* put an icon that remeber that the tool is not available */          
-      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"media-recorder-unavailable")));
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder,"media-recorder-unavailable")));
       bar_data->grab = grab_value;
       start_tool(bar_data);		
       return;
@@ -515,7 +515,7 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
 	  gtk_window_set_opacity(GTK_WINDOW(get_background_window()), BACKGROUND_OPACITY);
 	}
 #endif	
-      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"lock")));
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder, "lock")));
       /* set tooltip to unhide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Unlock"));
     }
@@ -527,7 +527,7 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
 #endif
       /* grab enabled */
       bar_data->grab = FALSE;
-      annotate_release_grab ();
+      annotate_release_grab();
 #ifdef _WIN32
       if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))!=0)
 	{
@@ -541,7 +541,7 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
 	  gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
 	}
 #endif	 
-      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(gtkBuilder,"unlock")));
+      gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder, "unlock")));
       /* set tooltip to hide */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Lock"));
     }  
@@ -582,16 +582,18 @@ on_buttonColor_activate	         (GtkToggleToolButton   *toolbutton,
 {
   BarData *bar_data = (BarData*) func_data;
   gboolean grab_value = bar_data->grab;
-  gchar* new_color = start_color_selector_dialog(GTK_TOOL_BUTTON(toolbutton), GTK_WINDOW(get_bar_window()), bar_data->color);
-
+  gchar* new_color = "";
+  
   if (!gtk_toggle_tool_button_get_active(toolbutton))
     {
        return;
     }
-
+  
   bar_data->grab = FALSE;
   bar_data->pencil = TRUE;
 
+  new_color = start_color_selector_dialog(GTK_TOOL_BUTTON(toolbutton), GTK_WINDOW(get_bar_window()), bar_data->color);
+  
   /* if it is a valid color */
   if (new_color)
     { 
@@ -652,5 +654,4 @@ on_colorWhite_activate           (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) func_data;
   set_color(bar_data, WHITE);
 }
-
 

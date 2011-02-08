@@ -76,7 +76,7 @@
 #endif
 
 
-GtkBuilder *gtkBuilder;
+GtkBuilder *bar_gtk_builder;
 
 		
 #define PROGRAM_NAME "Ardesia"
@@ -117,12 +117,12 @@ gchar* get_project_dir();
 void set_project_dir(gchar * dir);
 
 
-/* Get the iwb file of the current project */
-gchar* get_iwbfile();
+/* Get the iwb file name of the current project */
+gchar* get_iwb_filename();
 
 
-/* Set the iwb file of the current project */
-void set_iwbfile(gchar * file);
+/* Set the iwb file name of the current project */
+void set_iwb_filename(gchar * file);
 
 
 /* Get the list of the path of the artifacts created in the session */
@@ -199,7 +199,7 @@ GdkPixbuf* grab_screenshot();
  * the project name and the current date 
  *
  */
-gchar* get_default_file_name();
+gchar* get_default_filename();
 
 
 /* 

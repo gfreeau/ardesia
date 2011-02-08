@@ -46,13 +46,13 @@ static void create_text_window(GtkWindow *parent)
 {  
   GError* error = NULL;
 
-  if (!text_data->gtk_builder)
+  if (!text_data->text_window_gtk_builder)
     {
       /* Initialize the main window */
-      text_data->gtk_builder = gtk_builder_new();
+      text_data->text_window_gtk_builder = gtk_builder_new();
 
       /* Load the gtk builder file created with glade */
-      gtk_builder_add_from_file(text_data->gtk_builder, TEXT_UI_FILE, &error);
+      gtk_builder_add_from_file(text_data->text_window_gtk_builder, TEXT_UI_FILE, &error);
 
       if (error)
 	{
@@ -64,7 +64,7 @@ static void create_text_window(GtkWindow *parent)
 
   if (!text_data->window)
     {
-      text_data->window = GTK_WIDGET(gtk_builder_get_object(text_data->gtk_builder, "text_window"));   
+      text_data->window = GTK_WIDGET(gtk_builder_get_object(text_data->text_window_gtk_builder, "text_window"));   
 
       gtk_window_set_transient_for(GTK_WINDOW(text_data->window), GTK_WINDOW(parent));
 
@@ -122,23 +122,23 @@ static gboolean blink_cursor(gpointer data)
 /* Delete the last character printed */
 static void delete_character()
 {
-  CharInfo *charInfo = (CharInfo *) g_slist_nth_data (text_data->letterlist, 0);
+  CharInfo *char_info = (CharInfo *) g_slist_nth_data (text_data->letterlist, 0);
 
-  if (charInfo)
+  if (char_info)
     {  
       cairo_set_operator (text_data->cr, CAIRO_OPERATOR_CLEAR);
  
-      cairo_rectangle(text_data->cr, charInfo->x + charInfo->x_bearing -1, 
-		      charInfo->y + charInfo->y_bearing -1, 
+      cairo_rectangle(text_data->cr, char_info->x + char_info->x_bearing -1, 
+		      char_info->y + char_info->y_bearing -1, 
 		      gdk_screen_width()+2, 
 		      text_data->max_font_height + 2);
 
       cairo_fill(text_data->cr);
       cairo_stroke(text_data->cr);
       cairo_set_operator (text_data->cr, CAIRO_OPERATOR_SOURCE);
-      text_data->pos->x = charInfo->x;
-      text_data->pos->y = charInfo->y;
-      text_data->letterlist = g_slist_remove(text_data->letterlist,charInfo); 
+      text_data->pos->x = char_info->x;
+      text_data->pos->y = char_info->y;
+      text_data->letterlist = g_slist_remove(text_data->letterlist, char_info); 
     }
 }
 
@@ -201,12 +201,12 @@ static gboolean set_text_cursor(GtkWidget * window)
   GdkColor *background_color_p = rgba_to_gdkcolor(BLACK);
   GdkColor *foreground_color_p = rgba_to_gdkcolor(text_data->color);
   
-  GdkCursor* cursor = gdk_cursor_new_from_pixmap (pixmap, bitmap, foreground_color_p, background_color_p, TEXT_CURSOR_WIDTH, height-decoration_height);
-  gdk_window_set_cursor (text_data->window->window, cursor);
-  gdk_flush ();
+  GdkCursor* cursor = gdk_cursor_new_from_pixmap(pixmap, bitmap, foreground_color_p, background_color_p, TEXT_CURSOR_WIDTH, height-decoration_height);
+  gdk_window_set_cursor(text_data->window->window, cursor);
+  gdk_flush();
   gdk_cursor_unref(cursor);
-  g_object_unref (pixmap);
-  g_object_unref (bitmap);
+  g_object_unref(pixmap);
+  g_object_unref(bitmap);
   g_free(foreground_color_p);
   g_free(background_color_p);
   
@@ -323,18 +323,18 @@ key_snooper(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       /* The character is printable */
       gchar *utf8 = g_strdup_printf("%c", event->keyval);
       
-      CharInfo *charInfo = g_malloc((gsize) sizeof (CharInfo));
-      charInfo->x = text_data->pos->x;
-      charInfo->y = text_data->pos->y; 
+      CharInfo *char_info = g_malloc((gsize) sizeof (CharInfo));
+      char_info->x = text_data->pos->x;
+      char_info->y = text_data->pos->y; 
       
       cairo_text_extents (text_data->cr, utf8, &text_data->extents);
       cairo_show_text (text_data->cr, utf8); 
       cairo_stroke(text_data->cr);
  
-      charInfo->x_bearing = text_data->extents.x_bearing;
-      charInfo->y_bearing = text_data->extents.y_bearing;
+      char_info->x_bearing = text_data->extents.x_bearing;
+      char_info->y_bearing = text_data->extents.y_bearing;
      
-      text_data->letterlist = g_slist_prepend (text_data->letterlist, charInfo);
+      text_data->letterlist = g_slist_prepend (text_data->letterlist, char_info);
       
       /* move cursor to the x step */
       text_data->pos->x +=  text_data->extents.x_advance;
@@ -372,12 +372,12 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
 static gboolean is_above_virtual_keyboard(gint x, gint y)
 {
   RECT rect;
-  HWND hWnd = FindWindow(VIRTUALKEYBOARD_WINDOW_NAME, NULL);
-  if (!hWnd)
+  HWND hwnd = FindWindow(VIRTUALKEYBOARD_WINDOW_NAME, NULL);
+  if (!hwnd)
     {
       return FALSE;
     }  
-  if (!GetWindowRect(hWnd, &rect))
+  if (!GetWindowRect(hwnd, &rect))
     { 
       return FALSE;
     }
@@ -457,7 +457,7 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 {
   text_data = g_malloc((gsize) sizeof(TextData));
 
-  text_data->gtk_builder = NULL;
+  text_data->text_window_gtk_builder = NULL;
   text_data->window = NULL;
   text_data->cr = NULL;
   text_data->pos = NULL;
@@ -472,11 +472,11 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
   text_data->pen_width = tickness;
 
   create_text_window(parent);
-  
-  gtk_window_set_keep_above(GTK_WINDOW(text_data->window), TRUE);
 
+  gtk_window_set_keep_above(GTK_WINDOW(text_data->window), TRUE);
+  
   /* connect all the callback from gtkbuilder xml file */
-  gtk_builder_connect_signals(text_data->gtk_builder, (gpointer) text_data); 
+  gtk_builder_connect_signals(text_data->text_window_gtk_builder, (gpointer) text_data); 
 
   /* install a key snooper */
   text_data->snooper_handler_id = gtk_key_snooper_install(key_snooper, NULL);
@@ -518,14 +518,13 @@ void stop_text_widget()
 	  text_data->pos = NULL;
 	}
       /* unref gtkbuilder */
-      if (text_data->gtk_builder)
+      if (text_data->text_window_gtk_builder)
 	{
-	  g_object_unref(text_data->gtk_builder);
-          text_data->gtk_builder = NULL;
+	  g_object_unref(text_data->text_window_gtk_builder);
+          text_data->text_window_gtk_builder = NULL;
 	}
       g_free(text_data);
       text_data = NULL;
     }
 }
-
 
