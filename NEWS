@@ -1,24 +1,9 @@
-=================================
- #     # ####### #     #  #####
- ##    # #       #  #  # #     #
- # #   # #       #  #  # #
- #  #  # #####   #  #  #  #####
- #   # # #       #  #  #       #
- #    ## #       #  #  # #     #
- #     # #######  ## ##   #####
-=================================
+Ardesia free digital sketchpad 
 
 
-This file contain the news about the tool
-
-
-=================
-  RELEASE NOTES
-=================
-
--------------
+---------------
  ardesia 0.7
--------------
+---------------
 
 Internationalization:
 - Added german translation
@@ -48,9 +33,9 @@ Bug Fix:
   closed path shape
 
 
--------------
+---------------
  ardesia 0.6
--------------
+---------------
 
 Internationalization:
 - Add french translation
@@ -85,9 +70,9 @@ Features:
   tool (linux only)
 
 
--------------
+---------------
  ardesia 0.5
--------------
+---------------
 
 Dependencies:
 - gtk 2.16.6 included inside the windows package
@@ -120,9 +105,9 @@ Bug Fix:
   the text insertion tool
 
 
--------------
+---------------
  ardesia 0.4
--------------
+---------------
 
 Dependencies:
 - removed the gconf dependency
@@ -148,9 +133,9 @@ Bug Fix:
   on windows
 
 
--------------
+---------------
  ardesia 0.3
--------------
+---------------
 
 Dependencies:
 - ezstream to forward the live screencast
@@ -213,9 +198,9 @@ Usability:
 - fast responsivity
 
 
--------------
+---------------
  ardesia 0.2
--------------
+---------------
 
 The first public stable realease rewritten in C from scratch
 
@@ -252,9 +237,9 @@ Features:
   - Background color and opacity selection
 
 
--------------
+---------------
  ardesia 0.1
--------------
+---------------
 
 The initial protype written in python;
 this has not been distributed to the public.

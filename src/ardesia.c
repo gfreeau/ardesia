@@ -43,7 +43,7 @@
 static void print_version()
 {
   g_printf("Ardesia %s; the free digital sketchpad\n\n", PACKAGE_VERSION);
-  exit(EXIT_FAILURE);
+  exit(EXIT_SUCCESS);
 }
 
 
@@ -325,10 +325,10 @@ main(gint argc, char *argv[])
    */
   //create_segmentation_fault();
 
-  set_the_best_colormap();
-
   commandline = parse_options(argc, argv);
 
+  set_the_best_colormap();
+	
   if (commandline->iwbfile)
     {
       if (g_path_is_absolute(commandline->iwbfile)) {

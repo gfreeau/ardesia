@@ -19,9 +19,9 @@ In order to use the screencast on windows:
 - add the folder with the vlc.exe executable
   to the PATH environment
 
-------------
+----------------
  Known Bugs
-------------
+----------------
 
 - Ardesia on windows is not able to include the sound
   in the screencast:
@@ -31,9 +31,9 @@ In order to use the screencast on windows:
   http://code.google.com/p/ardesia/issues/detail?id=21
 
 
--------
+------
  Info
--------
+------
 
   * To get info about the tool, please contact:
 
