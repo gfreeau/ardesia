@@ -8,7 +8,6 @@
 AppId={{A4411884-989D-413D-9587-9966A6C559A5}
 AppName=Ardesia
 AppVersion=@VERSION@
-;AppVerName=Ardesia @VERSION@
 AppPublisher=Practix,  Srl.
 AppPublisherURL=http://code.google.com/p/ardesia/
 AppSupportURL=http://code.google.com/p/ardesia/
@@ -31,6 +30,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Name: "italian"; MessagesFile: "compiler:Languages\Italian.isl"
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "german"; MessagesFile: "compiler:Languages\German.isl"
+
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked

@@ -2,16 +2,33 @@
  Run
 -------
 
-This explain howto run Ardesia on windows.
+This document explains howto run Ardesia on windows.
 Simply click on the ardesia under the menu.
 
 In the same position you can execute curtain
-and  spotlighter.exe.
+and the spotlighter tool.
 
-In oder to record on windows:
+At the end of the session an iwb file will be created
+in the ardesia workspace located under the Documents
+folder. You can reopen the iwb file with ardesia clicking
+on it or right clicking and select the "Open with Ardesia"
+option.
+
+In order to use the screencast on windows:
 - install vlc from http://www.videolan.org/vlc
 - add the folder with the vlc.exe executable
   to the PATH environment
+
+------------
+ Known Bugs
+------------
+
+- Ardesia on windows is not able to include the sound
+  in the screencast:
+  http://code.google.com/p/ardesia/issues/detail?id=19
+
+- The highlighter does not work under windows:
+  http://code.google.com/p/ardesia/issues/detail?id=21
 
 
 -------
