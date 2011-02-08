@@ -9,17 +9,21 @@
 ========================================================
 
 
+----------
+ Abstract
+---------
+
+This howto explains howto build Ardesia on linux.
+If do you want try to build Ardesia
+on other operating system or architecture
+please refer to the nstruction on the wiki page:
+http://code.google.com/p/ardesia/w/list
+
 -------
  Build
 -------
 
-This explain howto build Ardesia on linux.
-If do you want try to build Ardesia
-on other operating system or architecture
-please refer to the wiki:
-http://code.google.com/p/ardesia/w/list
-
-The build use the autotools system
+The build system uses the autotools
 
 The compilation requires the following packages:
 

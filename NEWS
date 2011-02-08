@@ -24,27 +24,28 @@ Internationalization:
 - Added german translation
 
 Packaging
-- New windows packaging with the inno setup installer
+- New free windows installer created with an inno setup script
 
 Usability
 - The default folder where store the created files
-  called aredia workspace now is located under document diectory
+  called ardesia workspace now is located under the document folder
 - Created a shortcurt on desktop that links to the ardesia wokspace
 - Now to save an image you must push on the the camera photo icon
 
 Features
 - Now you can open, save and reuse projects thanks to the 
-  Interactive Whiteboard Common File Format (iwbcff)
-- At the closure of the the program you can send by email iwbcff, 
-  screenshots and pdf created in session
-- Virtual keyboard shown each time that is focused an editable item;
+  Interactive Whiteboard Common File Format (iwbcff); the artifact
+  will be saved under the ardesia workspace at the end of the session
+- At the end of the program you will be invited to send by email the
+  created artifacts created in session (iwb file, png screenshots and pdf)
+- The virtual keyboard is shown each time that is focused an editable item;
   this feature works only in Linux with the gnome environment and
   in Windows 7 if you have installed the "Tablet PC Input Panel"
 - New crash report dialog
 
 Bug Fix:
-- Fix in the filler that caused a strange behaviour if you try to fill 
-  a not closed path
+- Fix in the filler a strange behaviour when you try to fill a not 
+  closed path shape
 
 
 -------------

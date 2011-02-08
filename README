@@ -79,7 +79,8 @@ Please read the INSTALL file located on the current folder.
   compiz, kwin or xcompmgr.
 
   If you use Windows I remember that only Windows Vista and Windows 7 
-  are supported; Windows Xp and previous versions are not because they have not
+  are supported.
+  Windows Xp and previous versions are not compliant because they have not
   a composite manager.
 
 - VLC
@@ -116,22 +117,24 @@ Button explanation
 
 - Thickness: it selects the thin thickness for the selected tool;
   pressing the button you can select a thin, medium and thick thickness
-- Filler: it fills the last closed path drawn with the selected color;
-  this button can be pushed after a closed path sketch
-- Rectifier: it rectifies your sketch; 
-  if selected transforms the closed path in poligons,
-  if selected transforms the open path in broken lines
-- Rounder: it rounds your sketch; 
-  if selected transforms the closed path in ellipses,
-  if selected transforms the open path in smoothed lines with bezier spline
-- Highlighter: it allows to highlight on the desktop
+- Drawing mode: it selects the drawing mode to be used.
+  There are three different modes:
+  - Handwriting: allow you to draw withou assistance
+  - Rectifier: it rectifies your sketch; 
+    it transforms the closed path in poligons,
+    it is useful to paint straight lines,
+    it transforms the open path in broken lines.
+  - Rounder: it rounds your sketch; 
+    it transforms the closed path in ellipses or smoothed closed path,
+    it transforms the open path in smoothed lines with bezier spline
+- Filler: it fills the last closed path drawn with the selected color
 - Arrow: it puts an arrow at the end of the line sketched
 - Text: insert a text annotation;
-  you select the text tool and then click on the desktop,
-  now you can insert text with the keyboard, a virtual keyboard such as
-  florence-ramble or with the cellwriter hand-writing recognizer
-- Pen: it selects the pen tool
+  select the text tool and then click on the desktop,
+  now you can insert text with the real or virtual keyboard
+- Highlighter: it allows to highlight on the desktop
 - Eraser: it selects the eraser tool
+- Pen: it selects the pen tool
 - Blue: it selects the blue color
 - Green: it selects the green color
 - Yellow: it selects the yellow color
@@ -143,13 +146,12 @@ Button explanation
   if do you want restart to annotate push a button belonging to the
   Ardesia bar
 - Clear: it erases all the desktop annotation
-- Hide/Unhide: it hides or unhides the desktop annotations
 - Undo: it reverses the annotation to the older state
 - Redo: it advances the annotation to the more current state 
 - Preferences: it allow to set same preference of the annotator;
   you can select the background color or the background image
   to sketch
-- Save: it saves in a picture file you desktop screenshot
+- Screenshoot: it exports in a picture file your desktop screenshot
 - Export as pdf: it export as pdf; the first time you must
   select a file name, then each time that you will click 
   on the icon you will add a pdf page with your screen content
