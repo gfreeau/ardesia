@@ -99,7 +99,7 @@ end;
 
 [Registry]
 Root: HKCR; Subkey: ".iwb"; ValueType: string; ValueName: ""; ValueData: "ardesia"; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "ardesia"; ValueType: string; ValueName: ""; ValueData: "Ardesia Project File"; Flags: uninsdeletekeyifempty
-Root: HKCR; Subkey: "ardesia\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\share\ardesia\ui\pixmaps\iwb.ico" 
+Root: HKCR; Subkey: "ardesia"; ValueType: string; ValueName: ""; ValueData: "Ardesia Project File"; Flags: uninsdeletevalue
+Root: HKCR; Subkey: "ardesia\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\share\ardesia\ui\pixmaps\iwb.ico" Flags: uninsdeletevalue
 Root: HKCR; SubKey: ardesia\shell\open\command; ValueType: string; ValueName: ""; ValueData: """{app}\bin\ardesia_open.bat"" ""%1"""; Flags: uninsdeletevalue
 Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}\bin"; Check: NotOnPathAlready()
