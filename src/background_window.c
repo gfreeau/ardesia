@@ -90,8 +90,10 @@ static void load_color()
       cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_SOURCE);
       sscanf(background_data->background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
       /*
-       * @TODO Implement with a full opaque windows and use cairo_set_source_rgba function to paint
-       * I set the opacity with alpha and I use cairo_set_source_rgb to workaround the problem on windows with rgba. 
+       * @TODO Implement with a full opaque windows and use cairo_set_source_rgba 
+       * function to paint.
+       * I set the opacity with alpha and I use cairo_set_source_rgb to workaround 
+       * the problem on windows with rgba. 
        */
       gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), (gdouble) a/256);
       cairo_set_source_rgb(background_data->back_cr, (gdouble) r/256, (gdouble) g/256, (gdouble) b/256);
@@ -217,7 +219,9 @@ GtkWidget* create_background_window()
       return background_data->background_window;
     }  
  
-  background_data->background_window = GTK_WIDGET(gtk_builder_get_object(background_data->background_window_gtk_builder, "backgroundWindow")); 
+  background_data->background_window = GTK_WIDGET(gtk_builder_get_object(background_data->background_window_gtk_builder, 
+									 "backgroundWindow")); 
+
   gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), BACKGROUND_OPACITY);
 
   gtk_widget_set_usize(background_data->background_window, gdk_screen_width(), gdk_screen_height());
@@ -231,7 +235,9 @@ GtkWidget* create_background_window()
   gtk_window_fullscreen(GTK_WINDOW(background_data->background_window));
 
 #ifdef _WIN32
-  /* In the gtk 2.16.6 used for windows the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands. */
+  /* In the gtk 2.16.6 used for windows the gtkbuilder the double buffered property is not parsed from glade 
+   * and then I set this by hands. 
+   */
   gtk_widget_set_double_buffered(background_data->background_window, FALSE);
 #endif
   
@@ -239,7 +245,7 @@ GtkWidget* create_background_window()
 }
 
 
-/* Change the background image of ardesia.  */
+/* Change the background image of ardesia. */
 void change_background_image(gchar *name)
 {
   if (background_data->background_color)

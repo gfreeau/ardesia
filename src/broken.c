@@ -101,7 +101,12 @@ static gdouble calculate_medium_pression(GSList *list)
 
 
 /* Take the list and the rurn the minx miny maxx and maxy points. */
-static gboolean found_min_and_max(GSList* list, gdouble* minx, gdouble* miny, gdouble* maxx, gdouble* maxy, gdouble* total_pressure)
+static gboolean found_min_and_max(GSList* list, 
+				  gdouble* minx, 
+				  gdouble* miny, 
+				  gdouble* maxx, 
+				  gdouble* maxy, 
+				  gdouble* total_pressure)
 {
   gint lenght = 0;
   AnnotateStrokeCoordinate* out_point = NULL;
@@ -147,7 +152,6 @@ static gboolean is_similar_to_a_regular_poligon(GSList* list, gdouble pixel_toll
     {
       AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
       gdouble distance = get_distance(old_point->x, old_point->y, point->x, point->y);
-      // printf("(%f,%f); (%f,%f); |%f|\n", old_point->x, old_point->y, point->x, point->y, distance);
       total_distance = total_distance + distance;
       old_point = point;
     }
@@ -166,7 +170,6 @@ static gboolean is_similar_to_a_regular_poligon(GSList* list, gdouble pixel_toll
       gdouble distance = get_distance(point->x, point->y, old_point->x, old_point->y);
       if (!(is_similar(distance, ideal_distance, threshold)))
 	{
-	  // printf("%f not similar to ideal %f, differ %f that is greater than the threshold %f\n", distance, ideal_distance, fabs(distance - ideal_distance), threshold);
 	  return FALSE; 
 	}
       old_point = point;
@@ -250,7 +253,8 @@ static void puty(gpointer current, gpointer value)
 
 
 /* Return the degree of the rect beetween two point respect the axis. */
-static gfloat calculate_edge_degree(AnnotateStrokeCoordinate* point_a, AnnotateStrokeCoordinate* point_b)
+static gfloat calculate_edge_degree(AnnotateStrokeCoordinate* point_a, 
+				    AnnotateStrokeCoordinate* point_b)
 {
   gdouble deltax = abs(point_a->x-point_b->x);
   gdouble deltay = abs(point_a->y-point_b->y);
@@ -291,7 +295,11 @@ static GSList* straighten(GSList* list)
       if (delta_degree > degree_threshold)
         {
 	  /* Copy B it's a good point. */
-	  AnnotateStrokeCoordinate* point =  allocate_point(point_b->x, point_b->y, point_b->width, point_b->pressure);
+	  AnnotateStrokeCoordinate* point =  allocate_point(point_b->x, 
+							    point_b->y, 
+							    point_b->width, 
+							    point_b->pressure);
+
 	  list_out = g_slist_prepend (list_out, point); 
         } 
       /* Else: is three the difference degree is minor than the threshold I neglegt B. */
@@ -299,7 +307,10 @@ static GSList* straighten(GSList* list)
 
   /* Copy the last point; it is a good point. */
   last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, lenght-1);  
-  last_out_point =  allocate_point(last_point->x, last_point->y, last_point->width, last_point->pressure);
+  last_out_point =  allocate_point(last_point->x, 
+				   last_point->y, 
+				   last_point->width, 
+				   last_point->pressure);
 
   list_out = g_slist_prepend (list_out, last_out_point);
 
@@ -338,7 +349,9 @@ static GSList* straighten(GSList* list)
 }
 
 
-/* Return a subpath of list_inp containg only the meaningful points using the standard deviation. */
+/* Return a subpath of list_inp containg only the meaningful points 
+ * using the standard deviation algorithm. 
+ */
 GSList* extract_relevant_points(GSList *list_inp, gboolean close_path, gdouble pixel_tollerance)
 {
   gint lenght = g_slist_length(list_inp);

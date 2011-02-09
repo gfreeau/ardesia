@@ -257,9 +257,17 @@ static void enable_localization_support()
 /* Create a shorcut to the workspace on the desktop. */
 static void create_workspace_shortcut(gchar* workspace_dir)
 {
-  gchar* desktop_entry_filename = g_strdup_printf("%s%s%s_workspace", get_desktop_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
+  gchar* desktop_entry_filename = g_strdup_printf("%s%s%s_workspace", 
+						  get_desktop_dir(),
+						  G_DIR_SEPARATOR_S, 
+						  PACKAGE_NAME);
+
 #ifdef _WIN32
-  windows_create_link(workspace_dir , desktop_entry_filename, "%SystemRoot%\\system32\\imageres.dll", 123);
+  windows_create_link(workspace_dir,
+		      desktop_entry_filename,
+		      "%SystemRoot%\\system32\\imageres.dll",
+		      123);
+
 #else
   xdg_create_link(workspace_dir , desktop_entry_filename, "folder-documents");
 #endif
@@ -271,7 +279,9 @@ static void create_workspace_shortcut(gchar* workspace_dir)
 static gchar* configure_workspace(gchar* project_name)
 {
   /* The workspace dir is set in the documents ardesia folder. */
-  gchar* workspace_dir = g_build_filename(get_documents_dir(), PACKAGE_NAME, (gchar *) 0);
+  gchar* workspace_dir = g_build_filename(get_documents_dir(), 
+					  PACKAGE_NAME, 
+					  (gchar *) 0);
 
   create_workspace_shortcut(workspace_dir);
   

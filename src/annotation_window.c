@@ -106,7 +106,8 @@ static void select_color()
           cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
           if (data->cur_context->fg_color)
             {
-              cairo_set_source_color_from_string(data->annotation_cairo_context, data->cur_context->fg_color);
+              cairo_set_source_color_from_string(data->annotation_cairo_context, 
+						 data->cur_context->fg_color);
             }
         }
       else
@@ -174,7 +175,9 @@ static void update_cursor()
 }
 
 
-/* Create pixmap and mask for the invisible cursor; this is used to hide the cursor. */
+/* Create pixmap and mask for the invisible cursor; 
+ * this is used to hide the cursor. 
+ */
 static void get_invisible_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
   cairo_t *invisible_cr = NULL;
@@ -426,7 +429,9 @@ static void destroy_cairo()
 }
 
 
-/* This an ellipse taking the top left edge coordinates the width and the eight of the bounded rectangle. */
+/* This an ellipse taking the top left edge coordinates the width and the height 
+ * of the bounded rectangle. 
+ */
 static void annotate_draw_ellipse(gint x, gint y, gint width, gint height)
 {
   if (data->debug)
@@ -533,7 +538,8 @@ static void roundify(gboolean closed_path)
   gint tollerance = data->thickness * 2;
   GSList *out_ptr = extract_relevant_points(data->coord_list, closed_path, tollerance);  
   gint lenght = g_slist_length(out_ptr);
-  AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coord_list, lenght/2);
+  AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coord_list,
+										  lenght/2);
 
   /* Restore the surface withgout the last path handwritten. */
   annotate_restore_surface();
@@ -661,7 +667,8 @@ static GtkWidget* create_annotation_window()
       return widget;
     }  
  
-  widget = GTK_WIDGET(gtk_builder_get_object(data->annotation_window_gtk_builder,"annotationWindow")); 
+  widget = GTK_WIDGET(gtk_builder_get_object(data->annotation_window_gtk_builder, 
+					     "annotationWindow")); 
    
   return widget;
 }
@@ -721,11 +728,16 @@ static void setup_app(GtkWidget* parent)
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window));
   
 #ifdef _WIN32
-  /* In the gtk 2.16.6 the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands. */
+  /* In the gtk 2.16.6 the gtkbuilder property double-buffered is not parsed from the glade file 
+   * and then I set this by hands. 
+   */
   gtk_widget_set_double_buffered(data->annotation_window, FALSE); 
   /* @TODO Use RGBA colormap and avoid to use the layered window. */
   /* I use a layered window that use the black as transparent color. */
-  setLayeredGdkWindowAttributes(data->annotation_window->window, RGB(0,0,0), 0, LWA_COLORKEY );	
+  setLayeredGdkWindowAttributes(data->annotation_window->window, 
+				RGB(0,0,0), 
+				0,
+				LWA_COLORKEY );	
 #endif
 }
 
@@ -823,7 +835,11 @@ void annotate_add_savepoint()
 
   gint savepoint_index = g_slist_length(data->savepoint_list) + 1;
   
-  savepoint->filename = g_strdup_printf("%s%s%s_%d_vellum.png", data->savepoint_dir, G_DIR_SEPARATOR_S, PACKAGE_NAME, savepoint_index);
+  savepoint->filename = g_strdup_printf("%s%s%s_%d_vellum.png", 
+					data->savepoint_dir, 
+					G_DIR_SEPARATOR_S, 
+					PACKAGE_NAME,
+					savepoint_index);
 
   /* The story about the future is deleted. */
   annotate_redolist_free();
@@ -833,7 +849,10 @@ void annotate_add_savepoint()
   data->current_save_index = 0;
    
   /* Load a surface with the data->annotation_cairo_context content and write the file. */
-  cairo_surface_t* saved_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gdk_screen_width(), gdk_screen_height()); 
+  cairo_surface_t* saved_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 
+							      gdk_screen_width(), 
+							      gdk_screen_height());
+ 
   cairo_surface_t* source_surface = cairo_get_target(data->annotation_cairo_context);
   cairo_t *cr = cairo_create(saved_surface);
   cairo_set_source_surface(cr, source_surface, 0, 0);
@@ -973,7 +992,9 @@ void annotate_modify_color(AnnotateData* data, gdouble pressure)
   /* Pressure value is from 0 to 1; this value modify the RGBA gradient. */
   gint r,g,b,a;
   gdouble old_pressure = pressure;
-  /* If you put an highter value you will have more contrast beetween the lighter and darker color depending on pressure. */
+  /* If you put an highter value you will have more contrast
+   * beetween the lighter and darker color depending on pressure. 
+   */
   gdouble contrast = 96;
   gdouble corrective = 0;
   
@@ -997,7 +1018,10 @@ void annotate_modify_color(AnnotateData* data, gdouble pressure)
       old_pressure = last_point->pressure;      
     }
   corrective = (1-( 3 * pressure + old_pressure)/4) * contrast;
-  cairo_set_source_rgba (data->annotation_cairo_context, (r + corrective)/255, (g + corrective)/255, (b+corrective)/255, (gdouble) a/255);
+  cairo_set_source_rgba (data->annotation_cairo_context, (r + corrective)/255, 
+			 (g + corrective)/255, 
+			 (b+corrective)/255, 
+			 (gdouble) a/255);
 }
 
 
@@ -1329,18 +1353,21 @@ void annotate_release_input_grab()
   gdk_window_set_cursor(data->annotation_window->window, NULL);
 #ifndef _WIN32
   /* 
-   * @TODO implement correctly gdk_window_input_shape_combine_mask in the quartz gdkwindow or use an equivalent native function
+   * @TODO implement correctly gdk_window_input_shape_combine_mask 
+   * in the quartz gdkwindow or use an equivalent native function;
    * the current implementation in macosx this doesn't do nothing.
    */
   /*
-   * This allows the mouse event to be passed below the transparent annotation; at the moment this call works only on Linux  
+   * This allows the mouse event to be passed below the transparent annotation; 
+   * at the moment this call works only on Linux  
    */
   gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);
 #else
   /*
-   * @TODO WIN32 implement correctly gdk_window_input_shape_combine_mask in the win32 gdkwindow or use an equivalent native function
-   * now in the gtk implementation the gdk_window_input_shape_combine_mask call the gdk_window_shape_combine_mask
-   * that is not the desired behaviour.
+   * @TODO WIN32 implement correctly gdk_window_input_shape_combine_mask 
+   * in the win32 gdkwindow or use an equivalent native function.
+   * Now in the gtk implementation the gdk_window_input_shape_combine_mask
+   * call the gdk_window_shape_combine_mask that is not the desired behaviour.
    *
    */
   annotate_release_pointer_grab();

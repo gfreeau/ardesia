@@ -73,7 +73,8 @@ event_expose(GtkWidget *widget,
       /* The hdc has depth 32 and the technology is DT_RASDISPLAY. */
       HDC hdc = GetDC(GDK_WINDOW_HWND(data->annotation_window->window));
       /* 
-       * @TODO Use an HDC that support the ARGB32 format to support the alpha channel and the highlighter
+       * @TODO Use an HDC that support the ARGB32 format to support the alpha channel;
+       * this might fix the highlighter bug.
        * In the documentation is written that the now the resulting surface is in RGB24 format.
        * 
        */
@@ -157,7 +158,8 @@ paint(GtkWidget *win,
 
   annotate_reset_cairo();
 
-  if ((ev->device->source != GDK_SOURCE_MOUSE) && (data->cur_context->type != ANNOTATE_ERASER))
+  if ((ev->device->source != GDK_SOURCE_MOUSE) &&
+      (data->cur_context->type != ANNOTATE_ERASER))
     {
       pressure = get_pressure((GdkEvent *) ev);
       if (pressure <= 0)
@@ -168,7 +170,10 @@ paint(GtkWidget *win,
 
   annotate_draw_point(ev->x, ev->y, pressure);  
  
-  annotate_coord_list_prepend(ev->x, ev->y, annotate_get_thickness(), pressure);
+  annotate_coord_list_prepend(ev->x, ev->y, 
+			      annotate_get_thickness(), 
+			      pressure);
+
   return TRUE;
 }
 
@@ -215,7 +220,8 @@ paintto(GtkWidget *win,
     }
 
   gdouble pressure = 1.0; 
-  if ((ev->device->source != GDK_SOURCE_MOUSE) && (!(data->cur_context->type == ANNOTATE_ERASER)))
+  if ((ev->device->source != GDK_SOURCE_MOUSE) &&
+      (!(data->cur_context->type == ANNOTATE_ERASER)))
     {
 
       pressure = get_pressure((GdkEvent *) ev);
