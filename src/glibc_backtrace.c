@@ -129,7 +129,7 @@ static void create_trace()
   size_t size;
   size_t i;
   void *approx_text_end = (void*) ((128+100) * 2<<20);
-  gchar* default_filename = get_default_file_name();
+  gchar* default_filename = get_default_filename();
   gchar* filename  = g_strdup_printf("%s%s%s_stacktrace.txt", g_get_tmp_dir(), G_DIR_SEPARATOR_S, default_filename);
   FILE *file = fopen(filename, "w");
 
