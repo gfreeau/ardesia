@@ -21,48 +21,47 @@
  *
  */
 
+
 #include <gtk/gtk.h>
 
 
-/* Expose event: this occurs when the windows is show */
+/* Expose event: this occurs when the windows is show .*/
 G_MODULE_EXPORT gboolean
 event_expose (GtkWidget *widget, 
               GdkEventExpose *event, 
               gpointer func_data);
 
 
-/* This is called when the button is pushed */
+/* This is called when the button is pushed. */
 G_MODULE_EXPORT gboolean
 paint (GtkWidget *win,
        GdkEventButton *ev, 
        gpointer func_data);
 
 
-/* This shots when the ponter is moving */
+/* This shots when the ponter is moving. */
 G_MODULE_EXPORT gboolean
 paintto (GtkWidget *win, 
          GdkEventMotion *ev, 
          gpointer func_data);
 
 
-/* This shots when the button is realeased */
+/* This shots when the button is realeased. */
 G_MODULE_EXPORT gboolean
 paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data);
 
 
-/* Device touch */
+/* Device touch. */
 G_MODULE_EXPORT gboolean
 proximity_in (GtkWidget *win,
               GdkEventProximity *ev, 
               gpointer func_data);
 
 
-/* Device lease */
+/* Device lease. */
 G_MODULE_EXPORT gboolean
 proximity_out (GtkWidget *win, 
                GdkEventProximity *ev,
                gpointer func_data);
-
-
 
 

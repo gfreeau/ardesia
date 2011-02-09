@@ -21,12 +21,13 @@
  *
  */
 
+
 #include <utils.h>
 #include <bar.h>
 
 
 /* 
- * Calculate the better position where put the bar
+ * Calculate the better position where put the bar.
  */
 static void calculate_position(GtkWidget *ardesia_bar_window, 
 			       gint d_width, gint d_height, 
@@ -35,7 +36,7 @@ static void calculate_position(GtkWidget *ardesia_bar_window,
 			       gint position)
 {
   *y = ((d_height - w_height)/2); 
-  /* vertical layout */
+  /* Vertical layout. */
   if (position==WEST)
     {
       *x = 0;
@@ -46,7 +47,7 @@ static void calculate_position(GtkWidget *ardesia_bar_window,
     }
   else
     {
-      /* horizontal layout */
+      /* Horizontal layout. */
       *x = (d_width - w_width)/2;
       if (position==NORTH)
         {
@@ -54,12 +55,12 @@ static void calculate_position(GtkWidget *ardesia_bar_window,
         }
       else if (position==SOUTH)
         {
-	  /* south */
+	  /* South. */
 	  *y = d_height - SPACE_FROM_BORDER - w_height;
         }
       else
         {  
-          /* invalid position */
+          /* Invalid position. */
           perror ("Valid positions are NORTH, SOUTH, WEST or EAST\n");
           exit(EXIT_FAILURE);
         }
@@ -68,8 +69,7 @@ static void calculate_position(GtkWidget *ardesia_bar_window,
 
 
 /* 
- * Calculate the initial position
- * @TODO configuration file or wizard to decide the window position
+ * Calculate the initial position.
  */
 static void calculate_initial_position(GtkWidget *ardesia_bar_window, 
 				       gint *x, gint *y, 
@@ -79,14 +79,14 @@ static void calculate_initial_position(GtkWidget *ardesia_bar_window,
   gint d_width = gdk_screen_width();
   gint d_height = gdk_screen_height();
 
-  /* resize if larger that screen width */
+  /* Resize if larger that screen width. */
   if (w_width>d_width)
     {
       w_width = d_width;
       gtk_window_resize(GTK_WINDOW(ardesia_bar_window), w_width, w_height);       
     }
 
-  /* resize if larger that screen height */
+  /* Resize if larger that screen height. */
   if (w_height>d_height)
     {
       gint tollerance = 15;
@@ -99,7 +99,7 @@ static void calculate_initial_position(GtkWidget *ardesia_bar_window,
 
 
 
-/* Allocate and initialize the bar data structure */
+/* Allocate and initialize the bar data structure. */
 static BarData* init_bar_data()
 {
   BarData *bar_data = (BarData *) g_malloc((gsize) sizeof(BarData));
@@ -119,7 +119,7 @@ static BarData* init_bar_data()
 
 
 
-/* Create the ardesia bar window */
+/* Create the ardesia bar window. */
 GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
 {
   GtkWidget *bar_window = NULL;
@@ -129,18 +129,18 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
   bar_gtk_builder = gtk_builder_new();
   if (commandline->position>2)
     {
-      /* north or south */
+      /* North or south. */
       file = UI_HOR_FILE;
     }
   else
     {
-      /* east or west */
+      /* East or west. */
       if (gdk_screen_height() < 720)
         {
           /* 
-           * the bar is too long and then I use an horizontal layout; 
+           * The bar is too long and then I use an horizontal layout; 
            * this is done to have the full bar for netbook and screen
-           * with low vertical resolution
+           * with low vertical resolution.
            */
           file = UI_HOR_FILE;
           commandline->position=SOUTH;
@@ -148,7 +148,7 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
     }
 
 
-  /* load the bar_gtk_builder file with the definition of the ardesia bar gui */
+  /* Load the bar_gtk_builder file with the definition of the ardesia bar gui. */
   gtk_builder_add_from_file(bar_gtk_builder, file, &error);
   if (error)
     {
@@ -161,7 +161,7 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
   
   BarData *bar_data = init_bar_data();
 
-  /* connect all the callback from bar_gtk_builder xml file */
+  /* Connect all the callback from bar_gtk_builder xml file. */
   gtk_builder_connect_signals(bar_gtk_builder, (gpointer) bar_data);
 
   bar_window = GTK_WIDGET (gtk_builder_get_object(bar_gtk_builder, "winMain"));
@@ -173,18 +173,20 @@ GtkWidget* create_bar_window (CommandLine *commandline, GtkWidget *parent)
   gint width, height;
   gtk_window_get_size(GTK_WINDOW(bar_window) , &width, &height);
 
-  /* x and y are the ardesia bar left corner coords */
+  /* x and y are the ardesia bar left corner coords. */
   gint x, y;
   calculate_initial_position(bar_window, 
                              &x, &y, 
                              width, height,
                              commandline->position);
 
-  /* the position is calculated respect the top left corner and then I set the north west gravity */
+  /* The position is calculated respect the top left corner and then I set the north west gravity. */
   gtk_window_set_gravity(GTK_WINDOW(bar_window), GDK_GRAVITY_NORTH_WEST);
 
-  /* move the window in the desired position */
+  /* Move the window in the desired position. */
   gtk_window_move(GTK_WINDOW(bar_window), x, y);  
 
   return bar_window;
 }
+
+

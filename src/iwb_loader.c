@@ -17,13 +17,14 @@
  *
  */
 
+
 #include <utils.h>
 #include <iwb_loader.h>
 #include <annotation_window.h>
 
 
-/* Follow the ref and load the associated savepoint */
-GSList* load_savepoint_by_reference(GSList* savelist, gchar* project_tmp_dir, xmlXPathContextPtr context, xmlChar* ref)
+/* Follow the ref and load the associated savepoint. */
+GSList* load_savepoint_by_reference(GSList* savepoint_list, gchar* project_tmp_dir, xmlXPathContextPtr context, xmlChar* ref)
 {
   xmlChar* xpath = (xmlChar *) g_strdup_printf("/iwb/svg:svg/svg:image[@id='%s']", (gchar *) ref);
    
@@ -39,20 +40,20 @@ GSList* load_savepoint_by_reference(GSList* savelist, gchar* project_tmp_dir, xm
   
   xmlFree(href);
 
-  /* add to the savepoint list */
-  savelist = g_slist_prepend (savelist, savepoint);
+  /* Add to the savepoint list. */
+  savepoint_list = g_slist_prepend (savepoint_list, savepoint);
 
-  /* Cleanup of XPath data */
+  /* Cleanup of XPath data. */
   xmlXPathFreeObject(result);
 
-  return savelist;
+  return savepoint_list;
 }
 
 
-/* Decompress iwb */
+/* Decompress the iwb file; it is a zip file. */
 static void decompress_iwb(gchar* iwbfile, gchar* project_tmp_dir)
 {
-  /* Unzip the iwb file */
+  /* Unzip the iwb file spawing the Zip-Info process. */
   gchar* argv[5] = {"unzip", iwbfile, "-d", project_tmp_dir, (gchar*) 0};
 
   g_spawn_sync (project_tmp_dir /*working_directory*/,
@@ -68,7 +69,7 @@ static void decompress_iwb(gchar* iwbfile, gchar* project_tmp_dir)
 }
 
 
-/* Add iwb namespaces to the xmlXPathContext */
+/* Add iwb namespaces to the xmlXPathContext. */
 static xmlXPathContextPtr register_namespaces(xmlXPathContextPtr context)
 {
   xmlXPathRegisterNs(context, (xmlChar*) "iwb", (xmlChar*) "http://www.becta.org.uk/iwb");
@@ -79,16 +80,16 @@ static xmlXPathContextPtr register_namespaces(xmlXPathContextPtr context)
 
 
 /* Load savepoints from iwb */
-static GSList* load_savepoints_by_iwb(GSList* savelist, gchar* project_tmp_dir, xmlXPathContextPtr context)
+static GSList* load_savepoints_by_iwb(GSList* savepoint_list, gchar* project_tmp_dir, xmlXPathContextPtr context)
 {
   xmlChar* xpath_get_element = (xmlChar *) "/iwb/iwb:element";
   xmlXPathObjectPtr result = xmlXPathEvalExpression(xpath_get_element, context);
 
   if(xmlXPathNodeSetIsEmpty(result->nodesetval)){
-    return savelist;
+    return savepoint_list;
   }
 
-  /* surf for all the iwb element */
+  /* Surf for all the iwb element. */
   gint i =0;
   for (i=0; i < result->nodesetval->nodeNr; i++) {
     xmlNodePtr node = result->nodesetval->nodeTab[i];
@@ -103,20 +104,20 @@ static GSList* load_savepoints_by_iwb(GSList* savelist, gchar* project_tmp_dir, 
           }
       }
 
-    /* follow the ref and take xlink href filename */
-    savelist = load_savepoint_by_reference(savelist, project_tmp_dir, context, ref);
+    /* Follow the ref and take xlink href filename. */
+    savepoint_list = load_savepoint_by_reference(savepoint_list, project_tmp_dir, context, ref);
     xmlFree(ref);
   }
-  /* Cleanup of XPath data */
+  /* Cleanup of XPath data. */
   xmlXPathFreeObject(result);
-  return savelist;
+  return savepoint_list;
 }
 
 
-/* Load an iwb file and create the list of savepoint */
+/* Load an iwb file and create the list of savepoint. */
 GSList* load_iwb(gchar* iwbfile)
 {
-  GSList* savelist = NULL;
+  GSList* savepoint_list = NULL;
   const gchar* tmpdir = g_get_tmp_dir();
   gchar* ardesia_tmp_dir = g_build_filename(tmpdir, PACKAGE_NAME, (gchar *) 0);
   gchar* project_name = get_project_name();
@@ -128,20 +129,20 @@ GSList* load_iwb(gchar* iwbfile)
 
   decompress_iwb(iwbfile, project_tmp_dir);
   
-  /* Init libxml */     
+  /* Init libxml. */     
   xmlInitParser();
 
   /*
-   * this initialize the library and check potential ABI mismatches
+   * This initialize the library and check potential ABI mismatches
    * between the version it was compiled for and the actual shared
    * library used.
    */
   LIBXML_TEST_VERSION
 
-  xmlDocPtr doc; /* the resulting document tree */
+    xmlDocPtr doc; // the resulting document tree
 
   /*
-   * build an XML tree from a the file;
+   * Build an XML tree from a the file.
    */
   doc = xmlParseFile (content_filepath);
   if (doc == NULL) {
@@ -158,7 +159,7 @@ GSList* load_iwb(gchar* iwbfile)
 
   context = register_namespaces(context);
 
-  savelist = load_savepoints_by_iwb(savelist, project_tmp_dir, context);
+  savepoint_list = load_savepoints_by_iwb(savepoint_list, project_tmp_dir, context);
 
   g_remove(content_filepath);
 
@@ -175,5 +176,7 @@ GSList* load_iwb(gchar* iwbfile)
   g_free(project_tmp_dir); 
   g_free(content_filepath);
 
-  return savelist;   
+  return savepoint_list;   
 }
+
+

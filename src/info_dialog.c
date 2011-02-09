@@ -23,7 +23,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#  include <config.h>
 #endif
 
 #include <info_dialog.h>
@@ -31,19 +31,19 @@
  
 
 /*
- * Start the info dialog
+ * Start the info dialog.
  */
-void start_info_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
+void start_info_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
 {
   GtkWidget *info_dialog;
 
-  /* Initialize the main window */
+  /* Initialize the main window. */
   GtkBuilder*  info_dialog_gtk_builder = gtk_builder_new();
 
-  /* Load the gtk builder file created with glade */
+  /* Load the gtk builder file created with glade. */
   gtk_builder_add_from_file(info_dialog_gtk_builder, INFO_UI_FILE, NULL);
 
-  /* Fill the window by the gtk builder xml */
+  /* Fill the window by the gtk builder xml. */
   info_dialog = GTK_WIDGET(gtk_builder_get_object(info_dialog_gtk_builder, "aboutdialog"));
   gtk_window_set_transient_for(GTK_WINDOW(info_dialog), parent);
   gtk_window_set_modal(GTK_WINDOW(info_dialog), TRUE);
@@ -51,7 +51,7 @@ void start_info_dialog(GtkToolButton   *toolbutton, GtkWindow *parent)
 
   gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(info_dialog), PACKAGE_VERSION);   
 
-  /* Connect all signals by reflection */
+  /* Connect all signals by reflection. */
   gtk_builder_connect_signals (info_dialog_gtk_builder, NULL);
 
   gtk_dialog_run(GTK_DIALOG(info_dialog));

@@ -23,78 +23,78 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#  include <config.h>
 #endif
 
 #include <utils.h>
 
 #ifdef _WIN32
-#include <windows_utils.h>
+#  include <windows_utils.h>
 #endif
 
-/* the name of the current project */
+/* The name of the current project. */
 static gchar* project_name = NULL;
 
-/* the name of the current project */
+/* The name of the current project. */
 static gchar* project_dir = NULL;
 
-/* the name of the current project */
+/* The name of the current project. */
 static gchar* iwb_filename = NULL;
 
-/* the list of the artfacts created in the current session */
+/* The list of the artfacts created in the current session. */
 static GSList* artifacts = NULL;
 
 
-/* Get the name of the current project */
+/* Get the name of the current project. */
 gchar* get_project_name()
 {
   return project_name;
 }
 
 
-/* Set the name of the current project */
+/* Set the name of the current project. */
 void set_project_name(gchar * name)
 {
   project_name = name;
 }
 
 
-/* Get the dir of the current project */
+/* Get the dir of the current project. */
 gchar* get_project_dir()
 {
   return project_dir;
 }
 
 
-/* Set the dir of the current project */
+/* Set the dir of the current project. */
 void set_project_dir(gchar * dir)
 {
   project_dir = dir;
 }
 
 
-/* Get the iwb file of the current project */
+/* Get the iwb file of the current project. */
 gchar* get_iwb_filename()
 {
   return iwb_filename;
 }
 
 
-/* Set the iwb file of the current project */
+/* Set the iwb file of the current project. */
 void set_iwb_filename(gchar * file)
 {
   iwb_filename = file;
 }
 
 
-/* Get the list of the path of the artifacts created in the session */
+/* Get the list of the path of the artifacts created in the session. */
 GSList* get_artifacts()
 {
   return artifacts;
 }
 
 
-/* Add the path of an artifacts created in the session to the list */
+/* Add the path of an artifacts created in the session to the list. */
 void add_artifact(gchar* path)
 {
   gchar* copied_path = g_strdup_printf("%s", path);
@@ -102,14 +102,14 @@ void add_artifact(gchar* path)
 }
 
 
-/* Free the structure containing the artifact list created in the session */
+/* Free the structure containing the artifact list created in the session. */
 void free_artifacts()
 {
   g_slist_foreach(artifacts, (GFunc)g_free, NULL);
 }
 
 	
-/* Grab pointer */
+/* Grab pointer. */
 void grab_pointer(GtkWidget *win, GdkEventMask eventmask)
 {
   GdkGrabStatus result;
@@ -148,7 +148,7 @@ void grab_pointer(GtkWidget *win, GdkEventMask eventmask)
 }
 
 
-/* Ungrab pointer */
+/* Ungrab pointer. */
 void ungrab_pointer(GdkDisplay* display, GtkWidget* win)
 {
   gdk_error_trap_push ();
@@ -157,43 +157,43 @@ void ungrab_pointer(GdkDisplay* display, GtkWidget* win)
   if (gdk_error_trap_pop ())
     {
       /* this probably means the device table is outdated, 
-	 e.g. this device doesn't exist anymore 
-      */
+       * e.g. this device doesn't exist anymore. 
+       */
       g_printerr("Ungrab pointer device error\n");
     }
 }
 
 
-/* get bar window widget */
+/* Get the bar window widget. */
 GtkWidget* get_bar_window()
 {
   return GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder,"winMain"));
 }
 
 
-/** Get the distance beetween two points */
+/** Get the distance beetween two points. */
 gdouble get_distance(gdouble x1, gdouble y1, gdouble x2, gdouble y2)
 {
   if ((x1==x2) && (y1==y2))
     {
       return 0;
     }
-  /* apply the Pitagora theorem to calculate the distance */
+  /* Apply the Pitagora theorem to calculate the distance. */
   return (sqrtf(powf(x1-x2,2) + powf(y1-y2,2)));
 }
 
 
-/* Take a GdkColor and return the corrispondent RGBA string */
+/* Take a GdkColor and return the corrispondent RGBA string. */
 gchar* gdkcolor_to_rgb(GdkColor* gdkcolor)
 {
-  /* transform in the  RGB format e.g. FF0000 */ 
+  /* Transform in the  RGB format e.g. FF0000. */ 
   return g_strdup_printf("%02x%02x%02x", gdkcolor->red/257, gdkcolor->green/257, gdkcolor->blue/257);
 }
 
 
 /*
  * Take an rgb or a rgba string and return the pointer to the allocated GdkColor 
- * neglecting the alpha channel; the gtkColor doesn't support the rgba color
+ * neglecting the alpha channel; the gtkColor doesn't support the rgba color.
  */
 GdkColor* rgba_to_gdkcolor(gchar* rgba)
 {
@@ -207,7 +207,7 @@ GdkColor* rgba_to_gdkcolor(gchar* rgba)
 }
 
 
-/* Clear cairo context */
+/* Clear cairo context. */
 void clear_cairo_context(cairo_t* cr)
 {
   if (cr)
@@ -220,7 +220,7 @@ void clear_cairo_context(cairo_t* cr)
 }
 
 
-/* Set the cairo surface color to the RGBA string */
+/* Set the cairo surface color to the RGBA string. */
 void cairo_set_source_color_from_string( cairo_t * cr, gchar* color)
 {
   if (cr)
@@ -232,7 +232,7 @@ void cairo_set_source_color_from_string( cairo_t * cr, gchar* color)
 }
 
 
-/* Save the contents of the pixbuf in the file with name filename */
+/* Save the contents of the pixbuf in the file with name filename. */
 gboolean save_png (GdkPixbuf *pixbuf,const gchar *filename)
 {
   gint width = gdk_pixbuf_get_width (pixbuf);
@@ -243,7 +243,7 @@ gboolean save_png (GdkPixbuf *pixbuf,const gchar *filename)
   gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
   cairo_paint(cr);
   
-  /* write in png */
+  /* Write to the png surface. */
   cairo_surface_write_to_png(surface, filename);
   cairo_destroy(cr);
   cairo_surface_destroy(surface);
@@ -251,7 +251,7 @@ gboolean save_png (GdkPixbuf *pixbuf,const gchar *filename)
 }
 
 
-/* Grab the screenshoot and put it in the GdkPixbuf */
+/* Grab the screenshoot and put it in the GdkPixbuf. */
 GdkPixbuf* grab_screenshot()
 {
   gint height = gdk_screen_height();
@@ -264,7 +264,7 @@ GdkPixbuf* grab_screenshot()
 
 
 /*
- * This is function return if the point (x,y) in inside the ardesia bar window
+ * This is function return if the point (x,y) in inside the ardesia bar window.
  */
 gboolean inside_bar_window(gdouble xp, gdouble yp)
 {
@@ -284,14 +284,14 @@ gboolean inside_bar_window(gdouble xp, gdouble yp)
 }
 
 
-/* Drill the gdkwindow in the area where the ardesia bar is located */
+/* Drill the gdkwindow in the area where the ardesia bar is located. */
 void drill_window_in_bar_area(GdkWindow* window)
 {
-  /* Instantiate a trasparent pixmap with a black hole upon the bar area to be used as mask */
+  /* Instantiate a trasparent pixmap with a black hole upon the bar area to be used as mask. */
   GdkBitmap* shape = gdk_pixmap_new(NULL,  gdk_screen_width(), gdk_screen_height(), 1);
   cairo_t* shape_cr = gdk_cairo_create(shape);
   GtkWidget* bar= get_bar_window();
-  gint x,y,width,height;
+  gint x, y, width, height;
 
   cairo_set_operator(shape_cr,CAIRO_OPERATOR_SOURCE);
   cairo_set_source_rgba (shape_cr, 1, 1, 1, 1);
@@ -314,7 +314,7 @@ void drill_window_in_bar_area(GdkWindow* window)
 
 /* 
  * Get the current date and format in a printable format; 
- * the returned value must be free with the g_free 
+ * the returned value must be free with the g_free. 
  */
 gchar* get_date()
 {
@@ -323,11 +323,11 @@ gchar* get_date()
   gchar* hour_min_sep = ":";
   gchar* date = "";
   
-  time( &now );
-  t = localtime( &now );
+  time(&now);
+  t = localtime(&now);
 
 #ifdef _WIN32
-  /* The ":" character on windows is avoided in file name and then I use the "." character instead */
+  /* The ":" character on windows is avoided in file name and then I use the "." character instead. */
   hour_min_sep = ".";
 #endif
   date = g_strdup_printf("%d-%d-%d_%d%s%d-%d", t->tm_mday, t->tm_mon+1,t->tm_year+1900, t->tm_hour, hour_min_sep, t->tm_min, t->tm_sec);
@@ -335,7 +335,7 @@ gchar* get_date()
 }
 
 
-/* Return if a file exists */
+/* Return if a file exists. */
 gboolean file_exists(gchar* filename)
 {
   return g_file_test(filename, G_FILE_TEST_EXISTS);
@@ -344,8 +344,7 @@ gboolean file_exists(gchar* filename)
 
 /* 
  * Return a file name containing 
- * the project name and the current date 
- *
+ * the project name and the current date. 
  */
 gchar* get_default_filename()
 {
@@ -357,7 +356,7 @@ gchar* get_default_filename()
 
 
 /*
- * Get the desktop directory
+ * Get the desktop directory.
  */
 const gchar* get_desktop_dir (void)
 {
@@ -366,7 +365,7 @@ const gchar* get_desktop_dir (void)
 
 
 /*
- * Get the documents directory
+ * Get the documents directory.
  */
 const gchar* get_documents_dir (void)
 {
@@ -374,7 +373,7 @@ const gchar* get_documents_dir (void)
 }
 
 
-/* Delete a directory recursively */
+/* Delete a directory recursively. */
 void rmdir_recursive (gchar *path)
 {
   GDir *cur_dir;
@@ -409,7 +408,7 @@ void rmdir_recursive (gchar *path)
 }
 
 
-/* Allocate a new point belonging to the stroke passing the values */
+/* Allocate a new point belonging to the stroke passing the values. */
 AnnotateStrokeCoordinate * allocate_point(gint x, gint y, gint width, gdouble pressure)
 {
   AnnotateStrokeCoordinate* point =  g_malloc ((gsize) sizeof (AnnotateStrokeCoordinate));
@@ -421,7 +420,7 @@ AnnotateStrokeCoordinate * allocate_point(gint x, gint y, gint width, gdouble pr
 }
 
 
-/* Send an email */
+/* Send an email. */
 void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachment_list)
 {
 #ifdef _WIN32
@@ -469,7 +468,7 @@ void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachment_list)
 }
 
 
-/* Send artifacts with email */
+/* Send artifacts with email. */
 void send_artifacts_with_email(GSList* attachment_list)
 {
   gchar* to = "ardesia-developer@googlegroups.com";
@@ -479,7 +478,7 @@ void send_artifacts_with_email(GSList* attachment_list)
 }
 
 
-/* Send trace with email */
+/* Send trace with email. */
 void send_trace_with_email(gchar* attachment)
 {
   gchar* to = "ardesia-developer@googlegroups.com";
@@ -488,11 +487,10 @@ void send_trace_with_email(gchar* attachment)
   GSList* attachment_list = NULL;
   attachment_list = g_slist_prepend (attachment_list, attachment);
   send_email(to, subject, body, attachment_list);
-
 }
 
 
-/* Is the desktop manager gnome */
+/* Is the desktop manager gnome. */
 gboolean is_gnome()
 {
 #ifdef _WIN32
@@ -510,7 +508,7 @@ gboolean is_gnome()
 }
 
 
-/* Create desktop entry passing value */
+/* Create desktop entry passing value. */
 void xdg_create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* lang, gchar* icon, gchar* exec)
 {
   FILE *fp = fopen(filename, "w");
@@ -527,7 +525,7 @@ void xdg_create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* 
 }
 
 
-/* Create a desktop link */
+/* Create a desktop link. */
 void xdg_create_link(gchar* src, gchar* dest, gchar* icon)
 {
   gchar* extension = "desktop";
@@ -546,7 +544,7 @@ void xdg_create_link(gchar* src, gchar* dest, gchar* icon)
 }
 
 
-/* Get the last position where substr occurs in str */
+/* Get the last position where substr occurs in str. */
 int g_substrlastpos(const char *str, const char *substr)
 {
   gint len = strlen (str);
@@ -562,7 +560,7 @@ int g_substrlastpos(const char *str, const char *substr)
 }
 
 
-/* Substring of string from start to end position */
+/* Substring of string from start to end position. */
 gchar* g_substr (const gchar* string,
 		 gint         start,
 		 gint         end)

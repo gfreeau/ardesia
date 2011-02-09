@@ -21,6 +21,7 @@
  *
  */
 
+
 #include <utils.h>
 
 #ifdef HAVE_BACKTRACE
@@ -29,26 +30,25 @@
 #include <crash_dialog.h>
 
 #ifdef HAVE_LIBSIGSEGV
-#include <sigsegv.h>
+#  include <sigsegv.h>
 #endif
 
 #ifdef HAVE_LIBBFD
-#include <bfd.h>
-
-
-#if ( defined(__macos_x__) || defined(__macos_x) || defined(_macos_x) || defined(macos_x) || \
-      defined(__apple__) || defined(__apple) || defined(_apple) || defined(apple) )
-#include <sys/param.h>
-#include <mach-o/dyld.h>
+#  include <bfd.h>
+#  if ( defined(__macos_x__) || defined(__macos_x) || defined(_macos_x) || defined(macos_x) || \
+	defined(__apple__) || defined(__apple) || defined(_apple) || defined(apple) )
+#  include <sys/param.h>
+#  include <mach-o/dyld.h>
 #endif 
 
-/* globals retained across calls to resolve. */
+
+/* Globals retained across calls to resolve. */
 static bfd* abfd = 0;
 static asymbol **syms = 0;
 static asection *text = 0;
 
 
-/* Put a trace line in the file giving the address */
+/* Put a trace line in the file giving the address. */
 static void create_trace_line(char *address, FILE *file) 
 {
   char ename[1024];
@@ -63,7 +63,6 @@ static void create_trace_line(char *address, FILE *file)
   if ( _NSGetExecutablePath( chrarray_Buffer, &u32_buffer_length ))
     {
       printf("An error occured while reading the executable path. Program terminated.\n");
-      // Error!
     }
 #else // Linux
   l = readlink("/proc/self/exe",ename,sizeof(ename));
@@ -87,7 +86,7 @@ static void create_trace_line(char *address, FILE *file)
       return;
     }
    
-  /* oddly, this is required for it to work... */
+  /* Oddly, this is required for it to work... */
   if (!bfd_check_format(abfd,bfd_object))
     {
       fprintf(stderr, "bfd_check_format failed\n");
@@ -122,6 +121,8 @@ static void create_trace_line(char *address, FILE *file)
 
 
 #ifdef HAVE_BACKTRACE
+
+/* Create the trace to be printed. */
 static void create_trace() 
 {
 
@@ -134,7 +135,7 @@ static void create_trace()
   FILE *file = fopen(filename, "w");
 
   /* 
-   * the glibc functions backtrace is missing on all non-glibc platforms
+   * The glibc functions backtrace is missing on all non-glibc platforms.
    */
   
   size = backtrace (array, MAX_FRAMES);
@@ -161,7 +162,7 @@ static void create_trace()
 #endif
 
 
-/* Is called when occurs a sigsegv */
+/* Is called when occurs a sigsegv. */
 static int sigsegv_handler(void *addr, int bad)
 {
   create_trace(); 
@@ -169,10 +170,11 @@ static int sigsegv_handler(void *addr, int bad)
 }
 
 
+/* Register the backtrace handler. */
 void glibc_backtrace_register()
 {
 #ifdef HAVE_LIBSIGSEGV
-  /* Install the SIGSEGV handler */
+  /* Install the SIGSEGV handler. */
   if (sigsegv_install_handler(sigsegv_handler)<0)
     {
       exit(EXIT_FAILURE);
@@ -181,4 +183,5 @@ void glibc_backtrace_register()
 }
 
 #endif
+
 

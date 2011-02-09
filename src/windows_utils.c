@@ -21,30 +21,33 @@
  *
  */
 
+
 /* All this file will be build only on windows */
 #ifdef _WIN32
 
 #include <windows_utils.h>
+
  
 BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF cr_key,
 					       BYTE b_alpha, DWORD dw_flags) = NULL;
 	
 
-/* This is needed to wrap the setLayeredWindowAttributes throught the windows user32 dll */
+
+/* This is needed to wrap the setLayeredWindowAttributes throught the windows user32 dll. */
 void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF cr_key, BYTE b_alpha, DWORD dw_flags)
 {
   HWND hwnd = GDK_WINDOW_HWND(gdk_window);
-  HINSTANCE hInstance = LoadLibraryA("user32");		
+  h_instance h_instance = LoadLibraryA("user32");		
 
   setLayeredWindowAttributesProc = (BOOL (WINAPI*)(HWND hwnd,
 						   COLORREF cr_key, BYTE b_alpha, DWORD dw_flags))
-    GetProcAddress(hInstance,"SetLayeredWindowAttributes");
+    GetProcAddress(h_instance,"SetLayeredWindowAttributes");
 
   setLayeredWindowAttributesProc(hwnd, cr_key, b_alpha, dw_flags);
 }
 
 
-/* Is the two color similar */
+/* Is the two color similar. */
 static gboolean colors_too_similar(const GdkColor *color_a, const GdkColor *color_b)
 {
   return (abs(color_a->red - color_b->red) < 256 &&
@@ -56,7 +59,7 @@ static gboolean colors_too_similar(const GdkColor *color_a, const GdkColor *colo
 /* 
  * The function gdk_cursor_new_from_pixmap is broken on Windows.
  * this is a workaround using gdk_cursor_new_from_pixbuf. 
- * Thanks to Dirk Gerrits for this contribution 
+ * Thanks to Dirk Gerrits for this contribution .
  */
 GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 					    const GdkColor *fg, const GdkColor *bg,
@@ -88,13 +91,13 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
           trans = &candidates[2];
         }
     }
-  /* trans is now guaranteed to be unique from fg and bg */
+  /* Trans is now guaranteed to be unique from fg and bg. */
 
-  /* create an empty pixmap to hold the cursor image */
+  /* Create an empty pixmap to hold the cursor image. */
   gdk_drawable_get_size(source, &width, &height);
   rgb_pixmap = gdk_pixmap_new(NULL, width, height, 24);
 
-  /* blit the bitmaps defining the cursor onto a <b style="color: black; background-color: rgb(255, 153, 153);">transparent</b> background */
+  /* Blit the bitmaps defining the cursor onto a transparent background. */
   gc = gdk_gc_new(rgb_pixmap);
   gdk_gc_set_fill(gc, GDK_SOLID);
   gdk_gc_set_rgb_fg_color(gc, trans);
@@ -107,7 +110,7 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
   gdk_draw_rectangle(rgb_pixmap, gc, TRUE, 0, 0, width, height);
   gdk_gc_unref(gc);
 
-  /* create a cursor out of the created pixmap */
+  /* Create a cursor out of the created pixmap. */
   rgb_pixbuf = gdk_pixbuf_get_from_drawable(
 					    NULL, 
 					    rgb_pixmap, 
@@ -125,10 +128,10 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 }
 
 
-/* Send an email with MAPI */
+/* Send an email with MAPI. */
 void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachment_list)
 {
-  HINSTANCE inst;
+  h_instance inst;
   LPMAPISENDMAIL MAPISendMail;
 
   inst = LoadLibrary("MAPI32.DLL");
@@ -163,7 +166,7 @@ void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachme
   gint i =0;
   for (i=0; i<attach_lenght; i++)
     { 
-	  gchar* attachment =  g_slist_nth_data (attachment_list, i);
+      gchar* attachment =  g_slist_nth_data (attachment_list, i);
       m_fd[i].lpszPathName = attachment;
       m_fd[i].lpszFileName = attachment;
     }  
@@ -175,7 +178,7 @@ void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachme
 }
 
 
-/* Create a link with icon */
+/* Create a link with icon. */
 void windows_create_link(gchar* src, gchar* dest, gchar* icon_path, int icon_index)
 {  
 

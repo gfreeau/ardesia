@@ -26,15 +26,15 @@
 
 
 #ifdef _WIN32
-#define SHARE_UI_FILE "..\\share\\ardesia\\ui\\share_confirmation_dialog.glade"
+#  define SHARE_UI_FILE "..\\share\\ardesia\\ui\\share_confirmation_dialog.glade"
 #else
-#define SHARE_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/share_confirmation_dialog.glade"
+#  define SHARE_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/share_confirmation_dialog.glade"
 #endif
 
 
 /*
  * Start the dialog that ask to the user
- * if he wants share your work
+ * if he wants share your work.
  */
 void start_share_dialog(GtkWindow *parent);
 

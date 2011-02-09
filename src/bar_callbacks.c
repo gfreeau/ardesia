@@ -23,7 +23,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#  include <config.h>
 #endif
 
 #include <utils.h>
@@ -40,11 +40,16 @@
 #include <pdf_saver.h>
 
 
-
 #ifndef _WIN32
+
+/* Timer used to uprise the window. */
 static gint timer = -1;
 
-/* Try to uprise the window */
+
+/* Try to uprise the window; 
+ * this is used for the window manager 
+ * that does not support the stay above directive.  
+ */
 static gboolean bar_to_top(gpointer data)
 {
   gtk_window_present(GTK_WINDOW(data));
@@ -52,17 +57,18 @@ static gboolean bar_to_top(gpointer data)
   gdk_window_lower(GTK_WIDGET(data)->window);
   return TRUE;
 }
+
 #endif
 
 
-/* Called when close the program */
+/* Called when close the program. */
 static gboolean  quit(BarData *bar_data)
 {
   annotate_quit();
   quit_pdf_saver();
   quit_recorder();
 
-  /* Disallocate all the BarData */
+  /* Disallocate all the BarData structure. */
   if (bar_data)
     {
       g_free(bar_data->color);
@@ -78,7 +84,7 @@ static gboolean  quit(BarData *bar_data)
 }
 
 
-/* Add alpha channel to build the RGBA string */
+/* Add alpha channel to build the RGBA string. */
 static void add_alpha(BarData *bar_data)
 {
   if (bar_data->highlighter)
@@ -92,7 +98,7 @@ static void add_alpha(BarData *bar_data)
 }
 
 
-/* select the pen tool */
+/* Select the pen tool. */
 static void take_pen_tool()
 {
   GtkToggleToolButton* eraser_tool_button = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(bar_gtk_builder,"buttonEraser"));
@@ -100,13 +106,13 @@ static void take_pen_tool()
   if (gtk_toggle_tool_button_get_active(eraser_tool_button))
     {
       gtk_toggle_tool_button_set_active(eraser_tool_button, FALSE); 
-      /* may be that the user expect to use the old tool for example the arrow */
+      /* Select the pen as default tool to be used with colors. */
       gtk_toggle_tool_button_set_active(pencil_tool_button, TRUE); 
     }
 }
 
 
-/* Unlock the tool */
+/* Unlock the tool. */
 static void unlock(BarData *bar_data)
 {
   if (!bar_data->grab)
@@ -117,7 +123,7 @@ static void unlock(BarData *bar_data)
 }
 
 
-/* Set color; this is called each time that the user want change color */
+/* Set color; this is called each time that the user want change color. */
 static void set_color(BarData *bar_data, gchar* selected_color)
 {
   unlock(bar_data);
@@ -127,7 +133,7 @@ static void set_color(BarData *bar_data, gchar* selected_color)
 }
 
 
-/* Pass the options to annotate */
+/* Pass the options to the annotation window. */
 static void set_options(BarData* bar_data)
 {
   annotate_set_rectifier(bar_data->rectifier);
@@ -150,14 +156,14 @@ static void set_options(BarData* bar_data)
 }
 
 
-/* Start to paint with the selected tool */
+/* Start to paint with the selected tool. */
 static void start_tool(BarData *bar_data)
 {
   if (bar_data->grab)
     {
       if (bar_data->text)
         {
-	  /* text button then start the text widget */
+	  /* Text button then start the text widget. */
 	  annotate_release_grab();
 	  start_text_widget(GTK_WINDOW(get_annotation_window()), bar_data->color, bar_data->thickness);
 	}
@@ -170,7 +176,7 @@ static void start_tool(BarData *bar_data)
 }
 
 
-/* Configure events occurs */
+/* Configure events occurs. */
 G_MODULE_EXPORT gboolean 
 on_window_configure_event (GtkWidget *widget,
 			   GdkEvent *event,
@@ -182,7 +188,7 @@ on_window_configure_event (GtkWidget *widget,
 }
 
 
-/* Called when the main window is destroyed */
+/* Called when the main window is destroyed. */
 G_MODULE_EXPORT void
 on_winMain_destroy_event (GtkWidget *widget, gpointer func_data)
 {
@@ -196,13 +202,13 @@ G_MODULE_EXPORT gboolean
 on_quit                          (GtkToolButton   *toolbutton,
 				  gpointer         func_data)
 {
-  /* destroy the backgound window this will call the destroy of all windows */
+  /* Destroy the backgound window this will call the destroy of all windows. */
   destroy_background_window();
   return FALSE;
 }
 
 
-/* Called when push the info button */
+/* Called when push the info button. */
 G_MODULE_EXPORT gboolean
 on_info                         (GtkToolButton   *toolbutton,
 			         gpointer         func_data)
@@ -211,7 +217,7 @@ on_info                         (GtkToolButton   *toolbutton,
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
 
-  /* start the info dialog */
+  /* Start the info dialog. */
   start_info_dialog(toolbutton, GTK_WINDOW(get_bar_window()));
 
   bar_data->grab = grab_value;
@@ -220,7 +226,7 @@ on_info                         (GtkToolButton   *toolbutton,
 }
 
 
-/* Called when leave the window */
+/* Called when leave the window. */
 G_MODULE_EXPORT gboolean
 on_winMain_leave_notify_event   (GtkWidget       *widget,
 			         GdkEvent        *event,
@@ -233,7 +239,7 @@ on_winMain_leave_notify_event   (GtkWidget       *widget,
 }
 
 
-/* Called when enter the window */
+/* Called when enter the window. */
 G_MODULE_EXPORT gboolean
 on_winMain_enter_notify_event   (GtkWidget       *widget,
 				 GdkEvent        *event,
@@ -249,7 +255,7 @@ on_winMain_enter_notify_event   (GtkWidget       *widget,
 }
 
 
-/* Delete event occurs and then I quit the program */
+/* Delete event occurs and then I quit the program. */
 G_MODULE_EXPORT gboolean
 on_winMain_delete_event          (GtkWidget       *widget,
                                   GdkEvent        *event,
@@ -261,7 +267,7 @@ on_winMain_delete_event          (GtkWidget       *widget,
 }
 
 
-/* Push filler button */
+/* Push filler button. */
 G_MODULE_EXPORT void
 on_toolsFiller_activate          (GtkToolButton   *toolbutton,
 				  gpointer         func_data)
@@ -270,7 +276,7 @@ on_toolsFiller_activate          (GtkToolButton   *toolbutton,
 }
 
 
-/* Push arrow button */
+/* Push arrow button. */
 G_MODULE_EXPORT void
 on_toolsArrow_activate           (GtkToolButton   *toolbutton,
 				  gpointer         func_data)
@@ -284,7 +290,7 @@ on_toolsArrow_activate           (GtkToolButton   *toolbutton,
 }
 
 
-/* Push text button */
+/* Push text button. */
 G_MODULE_EXPORT void
 on_toolsText_activate            (GtkToolButton   *toolbutton,
 		                  gpointer         func_data)
@@ -297,7 +303,7 @@ on_toolsText_activate            (GtkToolButton   *toolbutton,
 }
 
 
-/* Push highlighter button */
+/* Push highlighter button. */
 G_MODULE_EXPORT void
 on_toolsHighlighter_activate     (GtkToolButton   *toolbutton,
 				  gpointer         func_data)
@@ -311,7 +317,7 @@ on_toolsHighlighter_activate     (GtkToolButton   *toolbutton,
 }
 
 
-/* Push mode button */
+/* Push mode button. */
 G_MODULE_EXPORT void
 on_toolsMode_activate          (GtkToolButton   *toolbutton,
 				gpointer         func_data)
@@ -321,14 +327,14 @@ on_toolsMode_activate          (GtkToolButton   *toolbutton,
     {
       if (!bar_data->rounder)
 	{
-	  /* select rounder */
+	  /* Select the rounder mode. */
 	  gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder,"rounder")));
 	  bar_data->rounder = TRUE;
 	  bar_data->rectifier = FALSE;
 	}
       else
 	{
-	  /* select rectifier */
+	  /* Select the rectifier mode. */
 	  gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder,"rectifier")));
 	  bar_data->rectifier = TRUE;
 	  bar_data->rounder = FALSE;
@@ -336,7 +342,7 @@ on_toolsMode_activate          (GtkToolButton   *toolbutton,
     }  
   else
     {
-      /* select free hand writing */
+      /* Select the free hand writing mode. */
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder,"hand")));
       bar_data->rectifier = FALSE;
       bar_data->rounder = FALSE; 
@@ -344,7 +350,7 @@ on_toolsMode_activate          (GtkToolButton   *toolbutton,
 }
 
 
-/* Push thickness button */
+/* Push thickness button. */
 G_MODULE_EXPORT void
 on_toolsThick_activate          (GtkToolButton   *toolbutton,
 				 gpointer         func_data)
@@ -353,25 +359,25 @@ on_toolsThick_activate          (GtkToolButton   *toolbutton,
   if (bar_data->thickness== THICK_STEP*2)
     {
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder, "thick")));
-      /* set thick icon */
+      /* Set the thick icon. */
       bar_data->thickness = THICK_STEP*3;
     }
   else if (bar_data->thickness==THICK_STEP*3)
     {
-      /* set thin icon */
+      /* Set the thin icon. */
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder, "thin")));
       bar_data->thickness = THICK_STEP;
     }
   else if (bar_data->thickness==THICK_STEP)
     {
-      /* set medium icon */
+      /* Set the medium icon. */
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder, "medium")));
       bar_data->thickness = THICK_STEP*2;
     }
 }
 
 
-/* Push pencil button */
+/* Push pencil button. */
 G_MODULE_EXPORT void
 on_toolsPencil_activate          (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
@@ -386,7 +392,7 @@ on_toolsPencil_activate          (GtkToolButton   *toolbutton,
 }
 
 
-/* Push eraser button */
+/* Push eraser button. */
 G_MODULE_EXPORT void
 on_toolsEraser_activate          (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
@@ -399,7 +405,7 @@ on_toolsEraser_activate          (GtkToolButton   *toolbutton,
 }
 
 
-/* Push save (screenshoot) button */
+/* Push save (screenshoot) button. */
 G_MODULE_EXPORT void
 on_toolsScreenShot_activate	 (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
@@ -413,7 +419,7 @@ on_toolsScreenShot_activate	 (GtkToolButton   *toolbutton,
 }
 
 
-/* Add page to pdf */
+/* Add page to pdf. */
 G_MODULE_EXPORT void
 on_toolsAddPdf_activate	 (GtkToolButton   *toolbutton,
                           gpointer         func_data)
@@ -427,7 +433,7 @@ on_toolsAddPdf_activate	 (GtkToolButton   *toolbutton,
 }
 
 
-/* Push recorder button */
+/* Push recorder button. */
 G_MODULE_EXPORT void
 on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
@@ -435,7 +441,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) func_data;	
   gboolean grab_value = bar_data->grab;
   
-  /* Release grab */
+  /* Release grab. */
   annotate_release_grab ();
   
   bar_data->grab = FALSE;
@@ -443,7 +449,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
   if (!is_recorder_available())	
     {
       visualize_missing_recorder_program_dialog(GTK_WINDOW(get_bar_window()));
-      /* put an icon that remeber that the tool is not available */          
+      /* Put an icon that remeber that the tool is not available. */          
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder,"media-recorder-unavailable")));
       bar_data->grab = grab_value;
       start_tool(bar_data);		
@@ -453,20 +459,20 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
   if (is_recording())
     {
       quit_recorder();
-      /* set stop tooltip */ 
+      /* Set the stop tooltip. */ 
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Record"));
-      /* put icon to record */
+      /* Put the record icon. */
       gtk_tool_button_set_stock_id (toolbutton, "gtk-media-record");
     }
   else
     { 
-      /* the recording is not active */ 
+      /* The recording is not active. */ 
       gboolean status = start_save_video_dialog(toolbutton, GTK_WINDOW(get_bar_window()));
       if (status)
         {
-          /* set stop tooltip */ 
+          /* Set the stop tooltip. */ 
           gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Stop"));
-          /* put icon to stop */
+          /* Put the stop icon. */
           gtk_tool_button_set_stock_id (toolbutton, "gtk-media-stop");
         }
     }
@@ -475,7 +481,7 @@ on_toolsRecorder_activate        (GtkToolButton   *toolbutton,
 }
 
 
-/* Push preference button */
+/* Push preference button. */
 G_MODULE_EXPORT void
 on_toolsPreferences_activate	 (GtkToolButton   *toolbutton,
 			          gpointer         func_data)
@@ -489,7 +495,7 @@ on_toolsPreferences_activate	 (GtkToolButton   *toolbutton,
 }
 
 
-/* Push lock/unlock button */
+/* Push lock/unlock button. */
 G_MODULE_EXPORT void
 on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
 				  gpointer         func_data)
@@ -508,7 +514,7 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
 #ifdef _WIN32
       /* 
        * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
-       * @TODO remove the opacity hack when will be solved the next todo 
+       * @TODO remove the opacity hack when will be solved the next todo. 
        */
       if (gtk_window_get_opacity(GTK_WINDOW(get_background_window()))==0)
 	{
@@ -516,16 +522,16 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
 	}
 #endif	
       gtk_tool_button_set_label_widget(toolbutton, GTK_WIDGET(gtk_builder_get_object(bar_gtk_builder, "lock")));
-      /* set tooltip to unhide */
+      /* Set tooltip to unhide. */
       gtk_tool_item_set_tooltip_text((GtkToolItem *) toolbutton, gettext("Unlock"));
     }
   else
     {
 #ifndef _WIN32
-      /* try to uprise the window */
+      /* Try to uprise the window. */
       timer = g_timeout_add(BAR_TO_TOP_TIMEOUT, bar_to_top, get_background_window());
 #endif
-      /* grab enabled */
+      /* Grab enabled. */
       bar_data->grab = FALSE;
       annotate_release_grab();
 #ifdef _WIN32
@@ -534,9 +540,9 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
 	  /* 
 	   * @HACK This allow the mouse input go below the window putting the opacity to 0 
 	   * if will be found a better way to see to the window to be transparent
-	   * the the pointer input can be removed the previous hack 
+	   * the the pointer input can be removed the previous hack. 
 	   *
-	   * @TODO transparent window to the pointer input in a better way 
+	   * @TODO Transparent window to the pointer input in a better way. 
 	   */
 	  gtk_window_set_opacity(GTK_WINDOW(get_background_window()), 0);
 	}
@@ -548,7 +554,7 @@ on_buttonUnlock_activate         (GtkToolButton   *toolbutton,
 }
 
 
-/* Push undo button */
+/* Push undo button. */
 G_MODULE_EXPORT void
 on_buttonUndo_activate           (GtkToolButton   *toolbutton,
 			          gpointer         func_data)
@@ -557,7 +563,7 @@ on_buttonUndo_activate           (GtkToolButton   *toolbutton,
 }
 
 
-/* Push redo button */
+/* Push redo button. */
 G_MODULE_EXPORT void
 on_buttonRedo_activate           (GtkToolButton   *toolbutton,
 			          gpointer         func_data)
@@ -566,7 +572,7 @@ on_buttonRedo_activate           (GtkToolButton   *toolbutton,
 }
 
 
-/* Push clear button */
+/* Push clear button. */
 G_MODULE_EXPORT void
 on_buttonClear_activate          (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
@@ -575,7 +581,7 @@ on_buttonClear_activate          (GtkToolButton   *toolbutton,
 }
 
 
-/* Push color selector button */
+/* Push color selector button. */
 G_MODULE_EXPORT void
 on_buttonColor_activate	         (GtkToggleToolButton   *toolbutton,
 			          gpointer         func_data)
@@ -586,7 +592,7 @@ on_buttonColor_activate	         (GtkToggleToolButton   *toolbutton,
   
   if (!gtk_toggle_tool_button_get_active(toolbutton))
     {
-       return;
+      return;
     }
   
   bar_data->grab = FALSE;
@@ -594,8 +600,7 @@ on_buttonColor_activate	         (GtkToggleToolButton   *toolbutton,
 
   new_color = start_color_selector_dialog(GTK_TOOL_BUTTON(toolbutton), GTK_WINDOW(get_bar_window()), bar_data->color);
   
-  /* if it is a valid color */
-  if (new_color)
+  if (new_color)  // if it is a valid color
     { 
       set_color(bar_data, new_color);
       g_free(new_color);
@@ -606,7 +611,7 @@ on_buttonColor_activate	         (GtkToggleToolButton   *toolbutton,
 }
 
 
-/* Push blue color button */
+/* Push blue color button. */
 G_MODULE_EXPORT void
 on_colorBlue_activate            (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
@@ -616,7 +621,7 @@ on_colorBlue_activate            (GtkToolButton   *toolbutton,
 }
 
 
-/* Push red color button */
+/* Push red color button. */
 G_MODULE_EXPORT void
 on_colorRed_activate             (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
@@ -626,7 +631,7 @@ on_colorRed_activate             (GtkToolButton   *toolbutton,
 }
 
 
-/* Push green color button */
+/* Push green color button. */
 G_MODULE_EXPORT void
 on_colorGreen_activate           (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
@@ -636,7 +641,7 @@ on_colorGreen_activate           (GtkToolButton   *toolbutton,
 }
 
 
-/* Push yellow color button */
+/* Push yellow color button. */
 G_MODULE_EXPORT void
 on_colorYellow_activate          (GtkToolButton   *toolbutton,
                                   gpointer         func_data)
@@ -646,7 +651,7 @@ on_colorYellow_activate          (GtkToolButton   *toolbutton,
 }
 
 
-/* Push white color button */
+/* Push white color button. */
 G_MODULE_EXPORT void
 on_colorWhite_activate           (GtkToolButton   *toolbutton,
 	       			  gpointer         func_data)
@@ -654,4 +659,5 @@ on_colorWhite_activate           (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData*) func_data;
   set_color(bar_data, WHITE);
 }
+
 

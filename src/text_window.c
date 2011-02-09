@@ -25,7 +25,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#  include <config.h>
 #endif
 
 #include <utils.h>
@@ -34,24 +34,25 @@
 #include <keyboard.h>
 
 #ifdef _WIN32
-#include <windows_utils.h>
+#  include <windows_utils.h>
 #endif
 
 
+/* The structure used internally to store the status. */
 static TextData* text_data = NULL;
 
 
-/* Create the text window */
+/* Create the text window. */
 static void create_text_window(GtkWindow *parent)
 {  
   GError* error = NULL;
 
   if (!text_data->text_window_gtk_builder)
     {
-      /* Initialize the main window */
+      /* Initialize the main window. */
       text_data->text_window_gtk_builder = gtk_builder_new();
 
-      /* Load the gtk builder file created with glade */
+      /* Load the gtk builder file created with glade. */
       gtk_builder_add_from_file(text_data->text_window_gtk_builder, TEXT_UI_FILE, &error);
 
       if (error)
@@ -75,7 +76,7 @@ static void create_text_window(GtkWindow *parent)
 }
 
 
-/* Move the pen cursor */
+/* Move the pen cursor. */
 static void move_editor_cursor()
 {
   if (text_data->cr)
@@ -85,7 +86,7 @@ static void move_editor_cursor()
 }
 
 
-/* Blink cursor */
+/* Blink cursor. */
 static gboolean blink_cursor(gpointer data)
 {
   if ((text_data->window)&&(text_data->pos))
@@ -119,7 +120,7 @@ static gboolean blink_cursor(gpointer data)
 }
 
 
-/* Delete the last character printed */
+/* Delete the last character printed. */
 static void delete_character()
 {
   CharInfo *char_info = (CharInfo *) g_slist_nth_data (text_data->letterlist, 0);
@@ -143,7 +144,7 @@ static void delete_character()
 }
 
 
-/* Stop the timer to handle the bloking cursor */
+/* Stop the timer to handle the bloking cursor. */
 static void stop_timer()
 {
   if (text_data->timer>0)
@@ -154,7 +155,7 @@ static void stop_timer()
 }
 
 
-/* Set the text cursor */
+/* Set the text cursor. */
 static gboolean set_text_cursor(GtkWidget * window)
 {
   gdouble decoration_height = 4;     
@@ -214,7 +215,7 @@ static gboolean set_text_cursor(GtkWidget * window)
 }
 
 
-/* Initialization routine */
+/* Initialization routine. */
 static void init_text_widget(GtkWidget *widget)
 {
   if (text_data->cr==NULL)
@@ -224,7 +225,7 @@ static void init_text_widget(GtkWidget *widget)
       cairo_set_line_width(text_data->cr, text_data->pen_width);
       cairo_set_source_color_from_string(text_data->cr, text_data->color);
       cairo_set_font_size (text_data->cr, text_data->pen_width * 2);
-      /* This is a trick we must found the maximum height of the font */
+      /* This is a trick we must found the maximum height of the font. */
       cairo_text_extents (text_data->cr, "|" , &text_data->extents);
       text_data->max_font_height = text_data->extents.height;
       set_text_cursor(widget);
@@ -251,7 +252,7 @@ static void init_text_widget(GtkWidget *widget)
 }
 
 
-/* Add a savepoint with the text */
+/* Add a savepoint with the text. */
 static void save_text()
 {
   if (text_data)
@@ -270,7 +271,7 @@ static void save_text()
 }
 
 
-/* Destroy text window */
+/* Destroy text window. */
 static void destroy_text_window()
 {
   if (text_data->window)
@@ -287,7 +288,7 @@ static void destroy_text_window()
 }
 
 
-/* keyboard event snooper */
+/* keyboard event snooper. */
 G_MODULE_EXPORT gboolean
 key_snooper(GtkWidget *widget, GdkEventKey *event, gpointer user_data)  
 {
@@ -302,10 +303,9 @@ key_snooper(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
   if ((event->keyval == GDK_BackSpace) ||
       (event->keyval == GDK_Delete))
     {
-      // undo
-      delete_character();
+      delete_character(); // undo the last character inserted
     }
-  /* is finished the line or the letter is near to the bar window */
+  /* It is the end of the line or the letter is closed to the window bar. */
   else if ((text_data->pos->x + text_data->extents.x_advance >= gdk_screen_width()) ||
 	   (inside_bar_window(text_data->pos->x + text_data->extents.x_advance, text_data->pos->y-text_data->max_font_height/2)) ||
 	   (event->keyval == GDK_Return) ||
@@ -316,11 +316,10 @@ key_snooper(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
       text_data->pos->x = 0;
       text_data->pos->y +=  text_data->max_font_height;
     }
-  /* is the character printable? */
+  /* Is the character printable? */
   else if (isprint(event->keyval))
     {
-      
-      /* The character is printable */
+      /* Postcondition: the character is printable. */
       gchar *utf8 = g_strdup_printf("%c", event->keyval);
       
       CharInfo *char_info = g_malloc((gsize) sizeof (CharInfo));
@@ -336,7 +335,7 @@ key_snooper(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
      
       text_data->letterlist = g_slist_prepend (text_data->letterlist, char_info);
       
-      /* move cursor to the x step */
+      /* Move cursor to the x step */
       text_data->pos->x +=  text_data->extents.x_advance;
       
       g_free(utf8);
@@ -351,7 +350,7 @@ key_snooper(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 }
 
 
-/* The windows has been exposed */
+/* The windows has been exposed. */
 G_MODULE_EXPORT gboolean
 on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
@@ -369,6 +368,7 @@ on_window_text_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer d
 
 
 #ifdef _WIN32
+/* Is the point (x,y) above the virtual keyboard? */
 static gboolean is_above_virtual_keyboard(gint x, gint y)
 {
   RECT rect;
@@ -390,7 +390,7 @@ static gboolean is_above_virtual_keyboard(gint x, gint y)
 #endif
 
   
-/* This is called when the button is lease */
+/* This is called when the button is leased. */
 G_MODULE_EXPORT gboolean
 on_window_text_button_release (GtkWidget *win,
 			       GdkEventButton *ev, 
@@ -405,9 +405,9 @@ on_window_text_button_release (GtkWidget *win,
   gboolean above = is_above_virtual_keyboard(ev->x_root, ev->y_root);
   if (above)
     {
-      /* You have lost the focus; re get it */
+      /* You have lost the focus; re grab it. */
       grab_pointer(text_data->window, TEXT_MOUSE_EVENTS);
-      /* ignore the data; the event wil be passed to the virtual keyboard */
+      /* Ignore the data; the event wil be passed to the virtual keyboard. */
       return TRUE;
     }
 #endif
@@ -423,7 +423,7 @@ on_window_text_button_release (GtkWidget *win,
       stop_virtual_keyboard();
       start_virtual_keyboard();
   
-      /* This present the ardesia bar and the panels */
+      /* This present the ardesia bar and the panels. */
       gtk_window_present(GTK_WINDOW(get_bar_window()));
 
       gtk_window_present(GTK_WINDOW(text_data->window));
@@ -436,7 +436,7 @@ on_window_text_button_release (GtkWidget *win,
 }
 
 
-/* This shots when the text ponter is moving */
+/* This shots when the text ponter is moving. */
 G_MODULE_EXPORT gboolean
 on_window_text_cursor_motion(GtkWidget *win, 
 			     GdkEventMotion *ev, 
@@ -452,7 +452,7 @@ on_window_text_cursor_motion(GtkWidget *win,
 }
 
 
-/* Start the widget for the text insertion */
+/* Start the widget for the text insertion. */
 void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 {
   text_data = g_malloc((gsize) sizeof(TextData));
@@ -475,26 +475,26 @@ void start_text_widget(GtkWindow *parent, gchar* color, gint tickness)
 
   gtk_window_set_keep_above(GTK_WINDOW(text_data->window), TRUE);
   
-  /* connect all the callback from gtkbuilder xml file */
+  /* Connect all the callback from gtkbuilder xml file. */
   gtk_builder_connect_signals(text_data->text_window_gtk_builder, (gpointer) text_data); 
 
-  /* install a key snooper */
+  /* Install the key snooper. */
   text_data->snooper_handler_id = gtk_key_snooper_install(key_snooper, NULL);
 
-  /* This put the window in fullscreen generating an exposure */
+  /* This put the window in fullscreen generating an exposure. */
   gtk_window_fullscreen(GTK_WINDOW(text_data->window));
  
   gtk_widget_show_all(text_data->window);  
 #ifdef _WIN32 
-  /* in the gtk 2.16.6 the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
+  /* In the gtk 2.16.6 the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands. */
   gtk_widget_set_double_buffered(text_data->window, FALSE); 
-  // I use a layered window that use the black as transparent color
+  /* I use a layered window that use the black as transparent color. */
   setLayeredGdkWindowAttributes(text_data->window->window, RGB(0,0,0), 0, LWA_COLORKEY);	
 #endif
 }
 
 
-/* Stop the text insertion widget */
+/* Stop the text insertion widget. */
 void stop_text_widget()
 {
   if (text_data)
@@ -517,7 +517,7 @@ void stop_text_widget()
 	  g_free(text_data->pos);
 	  text_data->pos = NULL;
 	}
-      /* unref gtkbuilder */
+      /* Unref the gtkbuilder object. */
       if (text_data->text_window_gtk_builder)
 	{
 	  g_object_unref(text_data->text_window_gtk_builder);
@@ -527,4 +527,5 @@ void stop_text_widget()
       text_data = NULL;
     }
 }
+
 

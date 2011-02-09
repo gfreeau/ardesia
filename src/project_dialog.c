@@ -23,7 +23,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#  include <config.h>
 #endif
 
 #include <project_dialog.h>
@@ -32,7 +32,7 @@
 
 /*
  * Start the dialog that ask to the user
- * the project settings
+ * the project settings.
  */
 gchar* start_project_dialog(GtkWindow *parent)
 {
@@ -40,7 +40,7 @@ gchar* start_project_dialog(GtkWindow *parent)
 
   GtkWidget *project_dialog;
 
-  /* Initialize the main window */
+  /* Initialize the main window. */
   project_data->project_dialog_gtk_builder = gtk_builder_new();
 
   /* Load the gtk builder file created with glade */
@@ -54,7 +54,7 @@ gchar* start_project_dialog(GtkWindow *parent)
 #ifdef _WIN32
   /* 
    * In Windows the parent bar go above the dialog;
-   * to avoid this behaviour I put the parent keep above to false
+   * to avoid this behaviour I put the parent keep above to false.
    */
   gtk_window_set_keep_above(GTK_WINDOW(parent), FALSE);
 #endif 
@@ -65,12 +65,12 @@ gchar* start_project_dialog(GtkWindow *parent)
   project_data->project_name = g_strdup_printf("ardesia_project_%s", get_date());
   gtk_editable_insert_text(GTK_EDITABLE(dialog_entry), project_data->project_name, -1, &pos ); 
 
-  /* Connect all signals by reflection */
+  /* Connect all signals by reflection. */
   gtk_builder_connect_signals (project_data->project_dialog_gtk_builder, (gpointer) project_data);
 
   gtk_dialog_run(GTK_DIALOG(project_dialog));
   
-  //disalloc structure 
+  /* disalloc structures */ 
   g_object_unref (project_data->project_dialog_gtk_builder);
   gchar* ret = g_strdup_printf("%s", project_data->project_name);
   g_free(project_data->project_name);
@@ -79,3 +79,5 @@ gchar* start_project_dialog(GtkWindow *parent)
   gtk_widget_destroy(project_dialog);
   return ret; 
 }
+
+

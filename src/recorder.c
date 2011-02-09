@@ -23,7 +23,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#  include <config.h>
 #endif
 
 #include <recorder.h>
@@ -31,7 +31,7 @@
 #include <keyboard.h>
 
 
-/* pid of the recording process */
+/* pid of the recording process. */
 static GPid recorder_pid;
 
 /* is the recorder active */
@@ -61,7 +61,7 @@ static GPid call_recorder(gchar* filename, gchar* option)
 }
 
 
-/* Is the recorder available */
+/* Is the recorder available. */
 gboolean is_recorder_available()
 {
 #ifdef _WIN32
@@ -92,14 +92,14 @@ gboolean is_recorder_available()
 }
 
 
-/* Return if the recording is active */
+/* Return if the recording is active. */
 gboolean is_recording()
 {
   return is_active;
 }
 
 
-/* Quit to record */
+/* Quit the recorder. */
 void quit_recorder()
 {
   if (is_recording())
@@ -112,7 +112,7 @@ void quit_recorder()
 }
 
 
-/* Missing program dialog */
+/* Missing program dialog. */
 void visualize_missing_recorder_program_dialog(GtkWindow* parent_window)
 {
   GtkWidget *miss_dialog;
@@ -134,9 +134,9 @@ void visualize_missing_recorder_program_dialog(GtkWindow* parent_window)
 
 /*
  * Start the dialog that ask to the user where save the video
- * containing the screencast
+ * containing the screencast.
  * This function take as input the recor toolbutton in ardesia bar
- * return true is the recorder is started
+ * return true is the recorder is started.
  */
 gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
 {
@@ -166,15 +166,15 @@ gboolean start_save_video_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
 
       g_free(filename);
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      gchar* filenamecopy = g_strdup_printf("%s",filename); 
+      gchar* filename_copy = g_strdup_printf("%s", filename); 
       
       if (!g_str_has_suffix(filename, supported_extension))
         {
-          g_free(filenamecopy);
-          filenamecopy = g_strdup_printf("%s%s",filename,supported_extension);
+          g_free(filename_copy);
+          filename_copy = g_strdup_printf("%s%s", filename,supported_extension);
         }      
       g_free(filename);   
-      filename = filenamecopy;  
+      filename = filename_copy;  
  
       if (file_exists(filename))
 	{

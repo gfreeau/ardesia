@@ -26,16 +26,15 @@
 
 
 #ifdef _WIN32
-#define INFO_UI_FILE "..\\share\\ardesia\\ui\\info_dialog.glade"
+#  define INFO_UI_FILE "..\\share\\ardesia\\ui\\info_dialog.glade"
 #else
-#define INFO_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/info_dialog.glade"
+#  define INFO_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/info_dialog.glade"
 #endif
 
 
 /*
- * Start the dialog that give 
- * to the user the program'info
+ * Start the dialog that give to the user the info about the tool.
  */
-void start_info_dialog(GtkToolButton   *toolbutton, GtkWindow *parent);
+void start_info_dialog(GtkToolButton *toolbutton, GtkWindow *parent);
 
 

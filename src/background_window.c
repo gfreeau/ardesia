@@ -23,7 +23,7 @@
  
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#  include <config.h>
 #endif
 
 #include <utils.h> 
@@ -31,10 +31,11 @@
 #include <annotation_window.h>
 
 
+/* The background data used internally and by the callbacks. */
 static BackGroundData* background_data;
 
 
-/* Load the "filename" file content into the pixbuf */
+/* Load the "filename" file content into the pixbuf. */
 static GdkPixbuf * load_png (gchar *filename)
 {
   GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
@@ -50,7 +51,7 @@ static GdkPixbuf * load_png (gchar *filename)
     }
   else
     {
-      /* @TODO Handle this in a visual way or avoid this */
+      /* @TODO Handle this in a visual way or avoid this. */
       g_printerr("Failed to load the file %s as background\n", filename);
       exit(EXIT_FAILURE);
     }
@@ -59,7 +60,7 @@ static GdkPixbuf * load_png (gchar *filename)
 }
 
 
-/* Load a file image in the window */
+/* Load a file image in the window. */
 static void load_file()
 {
   if (background_data->back_cr)
@@ -80,7 +81,7 @@ static void load_file()
 }
 
 
-/* The windows has been exposed after the show_all request to change the background color */
+/* The windows has been exposed after the show_all request to change the background color. */
 static void load_color()
 {
   gint r,g,b,a;
@@ -89,10 +90,9 @@ static void load_color()
       cairo_set_operator(background_data->back_cr, CAIRO_OPERATOR_SOURCE);
       sscanf(background_data->background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
       /*
-       * @TODO implement with a full opaque windows and use cairo_set_source_rgba function to paint
-       * I set the opacity with alpha and I use cairo_set_source_rgb to workaround the problem on windows with rgba 
-       *
-       d*/
+       * @TODO Implement with a full opaque windows and use cairo_set_source_rgba function to paint
+       * I set the opacity with alpha and I use cairo_set_source_rgb to workaround the problem on windows with rgba. 
+       */
       gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), (gdouble) a/256);
       cairo_set_source_rgb(background_data->back_cr, (gdouble) r/256, (gdouble) g/256, (gdouble) b/256);
       cairo_paint(background_data->back_cr);
@@ -108,7 +108,7 @@ static void load_color()
 }
 
 
-/* Allocate internal structure */
+/* Allocate internal structure. */
 static BackGroundData* allocate_background_data()
 {
   BackGroundData* background_data = g_malloc((gsize) sizeof(BackGroundData));
@@ -122,7 +122,7 @@ static BackGroundData* allocate_background_data()
 }
 
 
-/* Destroy the background window */
+/* Destroy the background window. */
 void destroy_background_window()
 {
   if (background_data)
@@ -134,7 +134,7 @@ void destroy_background_window()
 
       if (background_data->background_window != NULL)
 	{ 
-	  /* destroy brutally the background window */
+	  /* Destroy brutally the background window. */
 	  gtk_widget_destroy(background_data->background_window);
 	  background_data->background_window = NULL;
 	}
@@ -145,19 +145,19 @@ void destroy_background_window()
 	}
 
       g_free(background_data->background_color);
-      /* unref gtkbuilder */
+      /* Unref gtkbuilder. */
       if (background_data->background_window_gtk_builder)
 	{
 	  g_object_unref (background_data->background_window_gtk_builder);
 	}
       g_free(background_data);
     }
-  /* quit gtk */
+  /* Quit the gtk engine. */
   gtk_main_quit();
 }
 
 
-/* Clear the background */
+/* Clear the background. */
 void clear_background_window()
 {
   gint height = -1;
@@ -173,7 +173,7 @@ void clear_background_window()
   /* 
    * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
    * I avoid a complete transparent window because in some operating system this would become
-   * transparent to the pointer input also
+   * transparent to the pointer input also.
    *
    */
   gtk_window_set_opacity(GTK_WINDOW(background_data->background_window), BACKGROUND_OPACITY);
@@ -182,13 +182,13 @@ void clear_background_window()
   
   gdk_drawable_get_size(background_data->background_window->window, &width, &height);
 
-  /* Instantiate a trasparent pixmap to be used as mask */
+  /* Instantiate a trasparent pixmap to be used as mask. */
   background_data->background_shape = gdk_pixmap_new(NULL, width, height, 1); 
   shape_cr = gdk_cairo_create(background_data->background_shape);
   clear_cairo_context(shape_cr); 
   cairo_destroy(shape_cr);
 
-  /* This allows the mouse event to be passed to the window below */
+  /* This allows the mouse event to be passed to the window below. */
 #ifndef _WIN32
   gdk_window_input_shape_combine_mask(background_data->background_window->window,
 				      background_data->background_shape,
@@ -197,17 +197,17 @@ void clear_background_window()
 }
 
 
-/* Create the background window */
+/* Create the background window. */
 GtkWidget* create_background_window()
 {
   GError* error = NULL;
   
   background_data = allocate_background_data(); 
   
-  /* Initialize the background window */
+  /* Initialize the background window. */
   background_data->background_window_gtk_builder = gtk_builder_new();
 
-  /* Load the gtk builder file created with glade */
+  /* Load the gtk builder file created with glade. */
   gtk_builder_add_from_file(background_data->background_window_gtk_builder, BACKGROUND_UI_FILE, &error);
 
   if (error)
@@ -222,16 +222,16 @@ GtkWidget* create_background_window()
 
   gtk_widget_set_usize(background_data->background_window, gdk_screen_width(), gdk_screen_height());
 
-  /* connect all the callback from gtkbuilder xml file */
+  /* Connect all the callback from gtkbuilder xml file. */
   gtk_builder_connect_signals(background_data->background_window_gtk_builder, (gpointer) background_data);
 
   gtk_widget_show_all(background_data->background_window);
 
-  /* This put in fullscreen and generate an exposure */
+  /* This put in fullscreen; this will generate an exposure. */
   gtk_window_fullscreen(GTK_WINDOW(background_data->background_window));
 
 #ifdef _WIN32
-  /* in the gtk 2.16.6 used for windows the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
+  /* In the gtk 2.16.6 used for windows the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands. */
   gtk_widget_set_double_buffered(background_data->background_window, FALSE);
 #endif
   
@@ -239,7 +239,7 @@ GtkWidget* create_background_window()
 }
 
 
-/* Change the background image of ardesia  */
+/* Change the background image of ardesia.  */
 void change_background_image(gchar *name)
 {
   if (background_data->background_color)
@@ -253,7 +253,7 @@ void change_background_image(gchar *name)
 }
 
 
-/* Change the background color of ardesia  */
+/* Change the background color of ardesia. */
 void change_background_color(gchar* rgba)
 {
   if (background_data->background_image)
@@ -271,15 +271,17 @@ void change_background_color(gchar* rgba)
 }
 
 
-/* Get the background window */
+/* Get the background window. */
 GtkWidget* get_background_window()
 {
   return background_data->background_window;
 }
 
 
-/* Set the background window */
+/* Set the background window. */
 void set_background_window(GtkWidget* widget)
 {
   background_data->background_window = widget;
 }
+
+

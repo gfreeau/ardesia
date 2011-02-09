@@ -42,7 +42,7 @@
 
   
 /* Set layered window atrributes to a gdk window */
-void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF crKey, BYTE bAlpha, DWORD dwFlags);
+void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF cr_key, BYTE b_alpha, DWORD dw_flags);
 
   
 /* 
@@ -54,15 +54,15 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 					    gint x, gint y);
 						
 						
-/* Override the with the gdk_cursor_new_from_pixmap with the fixed version */						
+/* Override the with the gdk_cursor_new_from_pixmap with the fixed version. */						
 #define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
 
 
-/* Send an email with MAPI */
-void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList);
+/* Send an email with MAPI. */
+void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachment_list);
 
 
-/* Create a link with icon */
+/* Create a link with icon. */
 void windows_create_link(gchar* src, gchar* dest, gchar* icon_path, int icon_index);
 
 #endif

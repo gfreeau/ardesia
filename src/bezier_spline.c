@@ -27,7 +27,7 @@
 #include <utils.h>
 
 
-/* Spline the lines with a bezier curves */
+/* Spline the lines with a bezier curves. */
 GSList* spline (GSList *list)
 {
   GSList* ret = NULL;
@@ -49,7 +49,7 @@ GSList* spline (GSList *list)
     }
 
 
-  /* Pi, Qi are control points for curve (Xi, Xi+1) */
+  /* Pi, Qi are control points for curve (Xi, Xi+1). */
   gdouble matrix_p[lenght-1][2];
   gdouble matrix_q[lenght-1][2];
 
@@ -78,12 +78,12 @@ GSList* spline (GSList *list)
   gsl_vector *bx, *by, *x;
   gsl_permutation *perm;
    
-  /* allocate matrix and vectors */
+  /* Allocate matrix and vectors. */
   m  = gsl_matrix_calloc(2*(lenght-1), 2*(lenght-1)); 
   bx = gsl_vector_calloc(2*(lenght-1)); 
   by = gsl_vector_calloc(2*(lenght-1)); 
   
-  /* fill-in matrix */
+  /* Fill-in matrix. */
   for ( i = 0; i < lenght-2; i++ ) 
     {
       gsl_matrix_set(m, eq, i+1, 1);        // Pi+1
@@ -100,7 +100,7 @@ GSList* spline (GSList *list)
   gsl_matrix_set(m, eq++, 2*(lenght-1)-1, 1);    // Qn-1 = Xn
 
   
-  /* fill-in vectors */
+  /* Fill-in vectors. */
   for ( i = 0; i < lenght-2; i++ ) 
     {
       gsl_vector_set(bx, 2*i, 2*matrix_x[i+1][0]);
@@ -112,11 +112,11 @@ GSList* spline (GSList *list)
   gsl_vector_set(by, 2*(lenght-1)-2, matrix_x[0][1]);
   gsl_vector_set(by, 2*(lenght-1)-1, matrix_x[lenght-1][1]);
     
-  /* caluclate LU decomposition, solve lin. systems... */  
+  /* Caluclate LU decomposition, solve lin. systems... */  
   perm = gsl_permutation_alloc(2*(lenght-1));
   gsl_linalg_LU_decomp(m, perm, &s);
 
-  /* solve for bx */
+  /* Solve for bx. */
   x  = gsl_vector_calloc(2*(lenght-1));
   gsl_linalg_LU_solve( m, perm, bx, x ); 
   /* copy solution (@FIXME: should be avoided!) */
@@ -127,7 +127,7 @@ GSList* spline (GSList *list)
     }
   gsl_vector_free(x);
 
-  /* solve for by */
+  /* Solve for by. */
   x  = gsl_vector_calloc(2*(lenght-1));
   gsl_linalg_LU_solve( m, perm, by, x ); 
   /* copy solution (@FIXME: should be avoided!) */
@@ -142,13 +142,13 @@ GSList* spline (GSList *list)
 
   gsl_permutation_free (perm);
   
-  /* free matrix and vectors */
+  /* Free matrix and vectors. */
   gsl_matrix_free (m);
   gsl_vector_free (bx);
   gsl_vector_free (by);
 
 
-  /* Now paint the smoothed line */
+  /* Now paint the smoothed line. */
   for ( i = 0; i < lenght-1; i++ )
     {
 

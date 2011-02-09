@@ -28,57 +28,63 @@
 
 #define BACKGROUND_OPACITY 0.01
 
-#ifdef _WIN32
-  
-#define BACKGROUND_UI_FILE "..\\share\\ardesia\\ui\\background_window.glade"
-
+#ifdef _WIN32  
+#  define BACKGROUND_UI_FILE "..\\share\\ardesia\\ui\\background_window.glade"
 #else
-#define BACKGROUND_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/background_window.glade"
+#  define BACKGROUND_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/background_window.glade"
 #endif 
 
+
+/* Structure that contains the info passed to the callbacks. */
 typedef struct
 {
-  /* Gtkbuilder for background window */
+
+  /* Gtkbuilder for background window. */
   GtkBuilder *background_window_gtk_builder;
 
-  /* background color selected */
+  /* Background color selected. */
   gchar* background_color; 
-  /* background image selected */
-  gchar* background_image; 
-  /* the background widget that represent the full window*/
+
+  /* Background image selected. */
+  gchar* background_image;
+ 
+  /* The background widget that represent the full window. */
   GtkWidget* background_window;
-  /* cairo context to draw on the background window*/
+
+  /* cairo context to draw on the background window. */
   cairo_t *back_cr;
-  /* used by the input shape mask */
-  GdkPixmap* background_shape; 
+
+  /* Used by the input shape mask. */
+  GdkPixmap* background_shape;
+ 
 }BackGroundData;
 
 
-/* Create the background window */
+/* Create the background window. */
 GtkWidget* create_background_window();
 
 
-/* Change the background image */
-void change_background_image(gchar *backgroundimage);
+/* Change the background image. */
+void change_background_image(gchar *background_image);
 
 
-/* Change the background color */
+/* Change the background color. */
 void change_background_color(gchar *rgba);
 
 
-/* Clear the background */
+/* Clear the background. */
 void clear_background_window();
 
 
-/** Destroy background window */
+/* Destroy background window. */
 void destroy_background_window();
 
 
-/* Get the background window */
+/* Get the background window. */
 GtkWidget* get_background_window();
 
 
-/* Set the background window */
+/* Set the background window. */
 void set_background_window(GtkWidget* widget);
 
 

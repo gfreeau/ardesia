@@ -31,15 +31,15 @@
 
 
 #ifdef HAVE_BACKTRACE
-#include <glibc_backtrace.h>
+#  include <glibc_backtrace.h>
 #endif
 
 #ifdef _WIN32
-#include <windows_backtrace.h>
+#  include <windows_backtrace.h>
 #endif
 
 
-/* Print the version of the tool and exit */
+/* Print the version of the tool and exit. */
 static void print_version()
 {
   g_printf("Ardesia %s; the free digital sketchpad\n\n", PACKAGE_VERSION);
@@ -47,7 +47,7 @@ static void print_version()
 }
 
 
-/* Print the command line help */
+/* Print the command line help. */
 static void print_help()
 {
   gchar* year = "2009-2010";
@@ -73,7 +73,7 @@ static void print_help()
 
 
 #ifndef _WIN32
-/* Call the dialog that inform the user to enable a composite manager */
+/* Call the dialog that inform the user to enable a composite manager. */
 static void run_missing_composite_manager_dialog()
 {
   GtkWidget *msg_dialog; 
@@ -92,32 +92,32 @@ static void run_missing_composite_manager_dialog()
 }
 
 
-/* Check if a composite manager is active */
+/* Check if a composite manager is active. */
 static void check_composite_manager(GdkScreen* screen)
 {
   gboolean composite = gdk_screen_is_composited(screen);
   if (!composite)
     {
-      /* start the enable composite manager dialog */
+      /* start the enable composite manager dialog. */
       run_missing_composite_manager_dialog();
     }
 }
 #endif
 
 
-/* Set the best colormap available on the system */
+/* Set the best colormap available on the system. */
 static void set_the_best_colormap()
 {
   GdkDisplay *display = gdk_display_get_default();
   GdkScreen   *screen = gdk_display_get_default_screen(display);
   GdkVisual* visual = NULL;
 
-  /* In FreeBSD operating system you might have a composite manager */
+  /* In FreeBSD operating system you might have a composite manager. */
 #if ( defined(__freebsd__) || defined(__freebsd) || defined(_freebsd) || defined(freebsd) )
   check_composite_manager(screen);
 #endif
 
-  /* In linux operating system you must have a composite manager */
+  /* In linux operating system you must have a composite manager. */
 #ifdef linux
   check_composite_manager(screen);
 #endif
@@ -142,7 +142,7 @@ static void set_the_best_colormap()
 }
 
 
-/* Parse the command line in the standar getopt way */
+/* Parse the command line in the standar getopt way. */
 static CommandLine* parse_options(gint argc, char *argv[])
 {
   CommandLine* commandline = g_malloc((gsize) sizeof(CommandLine)); 
@@ -152,7 +152,7 @@ static CommandLine* parse_options(gint argc, char *argv[])
   commandline->iwb_filename = NULL;
   commandline->decorated=FALSE;
 
-  /* getopt_long stores the option index here. */
+  /* Getopt_long stores the option index here. */
   while (1)
     {
       gint c;
@@ -163,8 +163,10 @@ static CommandLine* parse_options(gint argc, char *argv[])
           {"decorated", no_argument,  0, 'd'},
 	  {"verbose", no_argument,    0, 'V' },
           {"version", no_argument,    0, 'v'},
-	  /* These options don't set a flag.
-	     We distinguish them by their indices. */
+	  /* 
+           * These options don't set a flag.
+	   * We distinguish them by their indices.
+           */
 	  {"gravity", required_argument, 0, 'g'},
 	  {0, 0, 0, 0}
 	};
@@ -226,7 +228,7 @@ static CommandLine* parse_options(gint argc, char *argv[])
 }
 
 
-/* Enable the localization support with gettext */
+/* Enable the localization support with gettext. */
 static void enable_localization_support()
 {
 #ifdef ENABLE_NLS
@@ -241,7 +243,7 @@ static void enable_localization_support()
 
 /* 
  * This function create a segmentation fault; 
- * it is useful to test the segmentation fault handler
+ * it is useful to test the segmentation fault handler.
  */
 /*
   static void create_segmentation_fault()
@@ -252,7 +254,7 @@ static void enable_localization_support()
 */
 
 
-/* Create a shorcut to the workspace on the desktop */
+/* Create a shorcut to the workspace on the desktop. */
 static void create_workspace_shortcut(gchar* workspace_dir)
 {
   gchar* desktop_entry_filename = g_strdup_printf("%s%s%s_workspace", get_desktop_dir(), G_DIR_SEPARATOR_S, PACKAGE_NAME);
@@ -265,10 +267,10 @@ static void create_workspace_shortcut(gchar* workspace_dir)
 }
 
 
-/* Setup the workspace */
+/* Setup the workspace. */
 static gchar* configure_workspace(gchar* project_name)
 {
-  /* The workspace dir is set in the documents ardesia folder */
+  /* The workspace dir is set in the documents ardesia folder. */
   gchar* workspace_dir = g_build_filename(get_documents_dir(), PACKAGE_NAME, (gchar *) 0);
 
   create_workspace_shortcut(workspace_dir);
@@ -277,6 +279,7 @@ static gchar* configure_workspace(gchar* project_name)
 }
 
 
+/* Create the default project dir under the workspace_dir. */
 static gchar* create_default_project_dir(gchar* workspace_dir, gchar* project_name)
 {
   gchar* project_dir = g_build_filename(workspace_dir, project_name, (gchar *) 0);
@@ -292,7 +295,7 @@ static gchar* create_default_project_dir(gchar* workspace_dir, gchar* project_na
 } 
 
 
-/* This is the starting point */
+/* This is the starting point of the program. */
 int
 main(gint argc, char *argv[])
 {
@@ -305,7 +308,7 @@ main(gint argc, char *argv[])
   GtkWidget* ardesia_bar_window = NULL; 
   GSList * artifact_list = NULL;
   
-  /* Enable the localization support with gettext */
+  /* Enable the localization support with gettext. */
   enable_localization_support();
 
 #ifdef HAVE_BACKTRACE
@@ -346,7 +349,7 @@ main(gint argc, char *argv[])
     }
   else
     {
-      /* show the project name wizard */
+      /* Show the project name wizard. */
       project_name = start_project_dialog(NULL);
       gchar* workspace_dir = configure_workspace(project_name);
       project_dir = create_default_project_dir(workspace_dir, project_name);
@@ -370,7 +373,7 @@ main(gint argc, char *argv[])
   
   set_background_window(background_window);
   
-  /* init annotate */
+  /* Init the annotation window. */
   annotate_init(background_window, iwb_filename, commandline->debug); 
 
   annotation_window = get_annotation_window();  
@@ -383,7 +386,7 @@ main(gint argc, char *argv[])
       exit(EXIT_FAILURE);
     }
 
-  /* annotation window is valid */
+  /* Postcondition: the annotation window is valid. */
   gtk_window_set_keep_above(GTK_WINDOW(annotation_window), TRUE);
 
   gtk_widget_show(annotation_window);

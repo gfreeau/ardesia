@@ -21,11 +21,13 @@
  *
  */
 
+
 #include <utils.h>
 #include <preference_dialog.h>
 #include <background_window.h>
 
-/* Update the preview image */
+
+/* Update the preview image. */
 G_MODULE_EXPORT void
 on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer data)
 {
@@ -53,7 +55,7 @@ on_imageChooserButton_update_preview (GtkFileChooser *file_chooser, gpointer dat
 }
 
 
-/* Shot when the selected folder change in the file browser */
+/* Shot when the selected folder change in the file browser. */
 G_MODULE_EXPORT void
 on_imageChooserButton_file_set (GtkButton *buton, gpointer data)
 {
@@ -64,18 +66,18 @@ on_imageChooserButton_file_set (GtkButton *buton, gpointer data)
 }
 
 
-/* Shot when is pushed the background color button */
+/* Shot when is pushed the background color button. */
 G_MODULE_EXPORT void
 on_backgroundColorButton_color_set (GtkButton *buton, gpointer data)
 {
   PreferenceData *preference_data = (PreferenceData*) data;
   GObject* color_obj = gtk_builder_get_object(preference_data->preference_dialog_gtk_builder, "color");
-  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(color_obj);
-  gtk_toggle_button_set_active(colorToolButton, TRUE);
+  GtkToggleButton* color_tool_button = GTK_TOGGLE_BUTTON(color_obj);
+  gtk_toggle_button_set_active(color_tool_button, TRUE);
 }
 
 
-/* Shot when the ok button in preference dialog is pushed */
+/* Shot when the ok button in preference dialog is pushed. */
 G_MODULE_EXPORT void
 on_preferenceOkButton_clicked(GtkButton *buton, gpointer data)
 {
@@ -84,9 +86,9 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer data)
   gchar* a = NULL;
   gchar* rgba = NULL;
   GObject* color_tool_obj = gtk_builder_get_object(preference_data->preference_dialog_gtk_builder, "color");
-  GtkToggleButton* colorToolButton = GTK_TOGGLE_BUTTON(color_tool_obj);
+  GtkToggleButton* color_tool_button = GTK_TOGGLE_BUTTON(color_tool_obj);
   
-  if (gtk_toggle_button_get_active(colorToolButton))
+  if (gtk_toggle_button_get_active(color_tool_button))
     {
       /* background color */
       GObject* background_color_obj = gtk_builder_get_object(preference_data->preference_dialog_gtk_builder, "backgroundColorButton");
@@ -139,11 +141,12 @@ on_preferenceOkButton_clicked(GtkButton *buton, gpointer data)
 }
 
 
-/* Shot when is pushed the cancel button */
+/* Shot when is pushed the cancel button. */
 G_MODULE_EXPORT void
 on_preferenceCancelButton_clicked    (GtkButton *buton,
 				      gpointer data)
 {
   /* do nothing */
 }
+
 

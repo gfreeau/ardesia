@@ -27,7 +27,15 @@
 /* full opaque alpha */
 #define OPAQUE_ALPHA "FF"
 
-/* semi opaque (and then semi transparent) alpha */
+/* Semi opaque (and then semi transparent) alpha;
+ * this is used to make the highlighter effect.
+ */
 #define SEMI_OPAQUE_ALPHA "66"
 
+/* The timeout after that the tool try to uprise the window;
+ * this is done to prevent the window lowering in the case that
+ * the window manager does not support the stay above directive.
+ */
 #define  BAR_TO_TOP_TIMEOUT 1000
+
+

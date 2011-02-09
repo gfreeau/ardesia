@@ -23,7 +23,7 @@
 
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#  include <config.h>
 #endif
 
 #include <saver.h>
@@ -33,7 +33,7 @@
 
 /*
  * Start the dialog that ask to the user where save the image
- * containing the screenshot
+ * containing the screenshot.
  */
 void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
 {
@@ -43,7 +43,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
   gint preview_height = 128;
   GdkPixbuf*   preview_pixbuf = NULL;
   gchar* filename = "";
-  gchar* filenamecopy = "";
+  gchar* filename_copy = "";
   gchar* supported_extension = ".pdf";
   gint result = GTK_RESPONSE_NO;
   gint run_status = GTK_RESPONSE_NO;
@@ -62,7 +62,7 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
   
   gtk_window_set_title (GTK_WINDOW (chooser), gettext("Choose a file")); 
   
-  /* preview of saving */
+  /* Save the preview in a buffer. */
   preview = gtk_image_new();
   preview_pixbuf = gdk_pixbuf_scale_simple(buf, preview_width, preview_height, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (preview), preview_pixbuf);
@@ -82,18 +82,18 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
     {   
       g_free(filename);
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      filenamecopy = g_strdup_printf("%s",filename); 
+      filename_copy = g_strdup_printf("%s",filename); 
 
       screenshot = TRUE;
       supported_extension = ".png";
      
       if (!g_str_has_suffix(filename, supported_extension))
         {
-          g_free(filenamecopy);
-          filenamecopy = g_strdup_printf("%s%s",filename,supported_extension);
+          g_free(filename_copy);
+          filename_copy = g_strdup_printf("%s%s",filename,supported_extension);
         }      
       g_free(filename);   
-      filename = filenamecopy;  
+      filename = filename_copy;  
 
       if (file_exists(filename))
         {
@@ -122,11 +122,11 @@ void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent)
     }
   if (screenshot)
     {
-      /* store the pixbuf grabbed on file */
+      /* Store the pixbuf grabbed on file. */
       save_png (buf, filename);
     }
   
-  /* add to the list of the artifacts created in the session */
+  /* Add to the list of the artifacts created in the session. */
   add_artifact(filename);
 
   g_free(filename);

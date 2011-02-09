@@ -28,22 +28,21 @@
 
 
 #ifdef _WIN32
-#include <cairo-win32.h>
-#include <winuser.h>  
+#  include <cairo-win32.h>
+#  include <winuser.h>  
 #else
-#ifdef __APPLE__
-#include <cairo-quartz.h>
-#else
-#include <cairo-xlib.h>
+#  ifdef __APPLE__
+#    include <cairo-quartz.h>
+#  else
+#    include <cairo-xlib.h>
+#  endif
 #endif
-#endif
-
 
 
 /*
  * Start the dialog that ask to the user where save the image
- * containing the screenshot
+ * containing the screenshot.
  */
-void start_save_image_dialog(GtkToolButton   *toolbutton, GtkWindow *parent);
+void start_save_image_dialog(GtkToolButton *toolbutton, GtkWindow *parent);
 
 

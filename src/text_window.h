@@ -32,78 +32,97 @@
 
 
 #ifdef _WIN32
-#include <cairo-win32.h>
+#  include <cairo-win32.h>
 #else
-#ifdef __APPLE__
-#include <cairo-quartz.h>
-#define VIRTUALKEYBOARD_NAME "florence"
-#else
-#include <cairo-xlib.h>
+#  ifdef __APPLE__
+#    include <cairo-quartz.h>
+#    define VIRTUALKEYBOARD_NAME "florence"
+#  else
+#    include <cairo-xlib.h>
+#  endif
 #endif
-#endif
-
 
 #define TEXT_CURSOR_WIDTH 4
 
 
 #ifdef _WIN32
+#  define TEXT_MOUSE_EVENTS         ( GDK_POINTER_MOTION_MASK |	\
+   				      GDK_BUTTON_PRESS_MASK   |	\
+				      GDK_BUTTON_RELEASE_MASK |	\
+				      GDK_PROXIMITY_IN |	\
+				      GDK_PROXIMITY_OUT |	\
+				      GDK_MOTION_NOTIFY|	\
+				      GDK_BUTTON_PRESS		\
+				      )
 
-#define TEXT_MOUSE_EVENTS         ( GDK_POINTER_MOTION_MASK |	\
-				    GDK_BUTTON_PRESS_MASK   |	\
-				    GDK_BUTTON_RELEASE_MASK |	\
-				    GDK_PROXIMITY_IN |		\
-				    GDK_PROXIMITY_OUT |		\
-				    GDK_MOTION_NOTIFY|		\
-				    GDK_BUTTON_PRESS		\
-				    )
-
-#define TEXT_UI_FILE "..\\share\\ardesia\\ui\\text_window.glade"
-
+#  define TEXT_UI_FILE "..\\share\\ardesia\\ui\\text_window.glade"
 #else
-#define TEXT_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/text_window.glade"
+#  define TEXT_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/text_window.glade"
 #endif 
 
 
 typedef struct
 {
+
   gdouble x;
+
   gdouble y;
+
   gdouble x_bearing;
+
   gdouble y_bearing;
+
 } CharInfo;
 
 
 typedef struct
 {
+
   gdouble x;
+
   gdouble y;
+
 } Pos;
 
 
 typedef struct
 {
-  /* Gtkbuilder to build the window */
+
+  /* Gtkbuilder to build the window. */
   GtkBuilder *text_window_gtk_builder;
+
   GtkWidget* window;
+
   GPid virtual_keyboard_pid;
+
   cairo_t *cr;
+
   Pos* pos;
+
   GSList *letterlist; 
+
   gchar* color;
+
   gint pen_width;
+
   gdouble max_font_height;
+
   cairo_text_extents_t extents;
+
   gint timer;
+
   gboolean blink_show;
+
   guint snooper_handler_id;
+
 }TextData;
 
 
-/* Start text widget */
+/* Start text widget. */
 void start_text_widget(GtkWindow *parent, gchar* color, gint tickness);
 
 
-/* Stop text widget */
+/* Stop text widget. */
 void stop_text_widget();
 
 

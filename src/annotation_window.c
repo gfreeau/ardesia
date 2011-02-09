@@ -17,9 +17,11 @@
  *
  */
 
+
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#  include <config.h>
 #endif
+
 
 #include <annotation_window.h>
 #include <annotation_window_callbacks.h>
@@ -30,15 +32,17 @@
 #include <iwb_loader.h>
 #include <iwb_saver.h>
 
+
 #ifdef _WIN32
-#include <windows_utils.h>
+#  include <windows_utils.h>
 #endif
 
 
+/* Internal data for the annotation window. */
 static AnnotateData* data;
 
 
-/* Create a new paint context */
+/* Create a new paint context. */
 static AnnotatePaintContext* annotate_paint_context_new(AnnotatePaintType type)
 {
   AnnotatePaintContext *context = g_malloc ((gsize) sizeof(AnnotatePaintContext));
@@ -48,10 +52,10 @@ static AnnotatePaintContext* annotate_paint_context_new(AnnotatePaintType type)
 }
 
 
-/* Calculate the direction in radiants */
+/* Calculate the direction in radiants. */
 static gdouble annotate_get_arrow_direction()
 {
-  /* the list must be not null and the lenght might be greater than two */
+  /* The list must be not null and the lenght might be greater than two. */
   GSList *out_ptr = data->coord_list;   
   gdouble delta = 2.0;
 
@@ -62,13 +66,13 @@ static gdouble annotate_get_arrow_direction()
   AnnotateStrokeCoordinate* old_point = NULL;
   if (g_slist_length(out_ptr) >= 3)
     {
-      /* extract the relevant point with the standard deviation */
+      /* Extract the relevant point with the standard deviation. */
       GSList *relevantpoint_list = extract_relevant_points(out_ptr, FALSE, tollerance);
       old_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (relevantpoint_list, 1);
       point = (AnnotateStrokeCoordinate*) g_slist_nth_data (relevantpoint_list, 0);
-      /* give the direction using the last two point */
+      /* Give the direction using the last two point. */
       ret = atan2 (point->y-old_point->y, point->x-old_point->x);
-      /* free the relevant point list */
+      /* Free the relevant point list. */
       g_slist_foreach(relevantpoint_list, (GFunc)g_free, NULL);
       g_slist_free(relevantpoint_list);
     }  
@@ -76,14 +80,14 @@ static gdouble annotate_get_arrow_direction()
     {
       old_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (out_ptr, 1);
       point = (AnnotateStrokeCoordinate*) g_slist_nth_data (out_ptr, 0);
-      // calculate the tan beetween the last two point directly
+      /* Calculate the tan beetween the last two point directly. */
       ret = atan2 (point->y-old_point->y, point->x-old_point->x);
     }
   return ret;
 }
 
 
-/* Color selector; if eraser than select the transparent color else alloc the right color */ 
+/* Color selector; if eraser than select the transparent color else alloc the right color. */ 
 static void select_color()
 {
   if (!data->annotation_cairo_context)
@@ -94,7 +98,7 @@ static void select_color()
     {
       if (!(data->cur_context->type == ANNOTATE_ERASER))
         {
-          /* pen or arrow tool */
+          /* Pen or arrow tool. */
           if (data->debug)
 	    { 
 	      g_printerr("Select color %s\n", data->cur_context->fg_color);
@@ -107,7 +111,7 @@ static void select_color()
         }
       else
         {
-          /* it is the eraser tool */
+          /* It is the eraser tool. */
           if (data->debug)
 	    { 
 	      g_printerr("The eraser tool has been selected\n");
@@ -118,7 +122,7 @@ static void select_color()
 }
 
 
-/* Configure pen option for cairo context */
+/* Configure pen option for cairo context. */
 static void configure_pen_options()
 {
   if (data->annotation_cairo_context)
@@ -132,15 +136,16 @@ static void configure_pen_options()
 
 
 #ifdef _WIN32
+
   
-/* Acquire the grab pointer */
+/* Acquire the grab pointer. */
 static void annotate_acquire_pointer_grab()
 {
   grab_pointer(data->annotation_window, ANNOTATE_MOUSE_EVENTS);
 }
 
 
-/* Release the grab pointer */
+/* Release the grab pointer. */
 static void annotate_release_pointer_grab()
 {
   ungrab_pointer(gdk_display_get_default(), data->annotation_window);
@@ -149,7 +154,7 @@ static void annotate_release_pointer_grab()
 #endif
 
 
-/* Update the cursor icon */
+/* Update the cursor icon. */
 static void update_cursor()
 {
   if (!data->annotation_window)
@@ -169,7 +174,7 @@ static void update_cursor()
 }
 
 
-/* Create pixmap and mask for the invisible cursor; this is used to hide the cursor */
+/* Create pixmap and mask for the invisible cursor; this is used to hide the cursor. */
 static void get_invisible_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
   cairo_t *invisible_cr = NULL;
@@ -209,7 +214,7 @@ static void get_invisible_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mas
 }
 
 
-/* Allocate a invisible cursor that can be used to hide the cursor icon */
+/* Allocate a invisible cursor that can be used to hide the cursor icon. */
 static void allocate_invisible_cursor()
 {
   GdkPixmap *pixmap, *mask;
@@ -229,7 +234,7 @@ static void allocate_invisible_cursor()
 }
 
 
-/* Create pixmap and mask for the eraser cursor */
+/* Create pixmap and mask for the eraser cursor. */
 static void get_eraser_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
   gint circle_width = 2; 
@@ -259,7 +264,7 @@ static void get_eraser_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
       exit(EXIT_FAILURE);
     }
 
-  /* paint the eraser circle icon by code */
+  /* Paint the eraser circle icon by code. */
   clear_cairo_context(eraser_shape_cr);
   cairo_set_operator(eraser_shape_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(eraser_shape_cr, circle_width);
@@ -270,7 +275,7 @@ static void get_eraser_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 }
 
 
-/* Create pixmap and mask for the pen cursor */
+/* Create pixmap and mask for the pen cursor. */
 static void get_pen_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 {
   gint side_lenght = (size*3) + data->thickness;
@@ -303,7 +308,7 @@ static void get_pen_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
       exit(EXIT_FAILURE);
     }
 
-  /* Draw the pen cursor by code */
+  /* Draw the pen cursor by code. */
   clear_cairo_context(pen_shape_cr);
   cairo_set_operator(pen_shape_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(pen_shape_cr, circle_width);
@@ -320,7 +325,7 @@ static void get_pen_pixmaps(gint size, GdkPixmap** pixmap, GdkPixmap** mask)
 }
 
 
-/* Disallocate cursor */
+/* Disallocate cursor. */
 static void disallocate_cursor()
 {
   if (data->cursor)
@@ -331,7 +336,7 @@ static void disallocate_cursor()
 }
 
 
-/* Set the cursor patching the xpm with the selected color */
+/* Set the cursor patching the xpm with the selected color. */
 static void annotate_set_pen_cursor()
 {
   gint size=12;
@@ -362,7 +367,7 @@ static void annotate_set_pen_cursor()
 }
 
 
-/* Set the eraser cursor */
+/* Set the eraser cursor. */
 static void annotate_set_eraser_cursor()
 {   
   gint size = annotate_get_thickness();
@@ -388,9 +393,10 @@ static void annotate_set_eraser_cursor()
 }
 
 
-/* Take the input mouse focus */
+/* Take the input mouse focus. */
 static void annotate_acquire_input_grab()
 {
+
 #ifdef _WIN32
   annotate_acquire_pointer_grab();
 #endif
@@ -398,19 +404,16 @@ static void annotate_acquire_input_grab()
  
 #ifndef _WIN32
   /* 
-   * LINUX 
-   * remove the input shape; all the input event will stay above the window
-   */
-  /* 
    * MACOSX
    * in mac this will do nothing 
    */
   gtk_widget_input_shape_combine_mask(data->annotation_window, NULL, 0, 0); 
 #endif
+
 }
 
 
-/* Destroy cairo context */
+/* Destroy cairo context. */
 static void destroy_cairo()
 {
   gint refcount = cairo_get_reference_count(data->annotation_cairo_context);
@@ -423,7 +426,7 @@ static void destroy_cairo()
 }
 
 
-/* This an ellipse taking the top left edge coordinates the width and the eight of the bounded rectangle */
+/* This an ellipse taking the top left edge coordinates the width and the eight of the bounded rectangle. */
 static void annotate_draw_ellipse(gint x, gint y, gint width, gint height)
 {
   if (data->debug)
@@ -433,7 +436,7 @@ static void annotate_draw_ellipse(gint x, gint y, gint width, gint height)
 
   cairo_save(data->annotation_cairo_context);
 
-  /* the ellipse is done as a 360 degree arc translated */
+  /* The ellipse is done as a 360 degree arc translated. */
   cairo_translate(data->annotation_cairo_context, x + width / 2., y + height / 2.);
   cairo_scale(data->annotation_cairo_context, width / 2., height / 2.);
   cairo_arc(data->annotation_cairo_context, 0., 0., 1., 0., 2 * M_PI);
@@ -441,7 +444,7 @@ static void annotate_draw_ellipse(gint x, gint y, gint width, gint height)
 }
 
 
-/** Draw the point list */
+/* Draw the point list. */
 static void annotate_draw_point_list(GSList* list)
 {
 
@@ -454,7 +457,7 @@ static void annotate_draw_point_list(GSList* list)
           gdouble cur_y = out_point->y;
 
           annotate_modify_color(data, out_point->pressure); 
-	  /* draw line beetween the two points */
+	  /* Draw line beetween the two points. */
 	  annotate_draw_line(cur_x, cur_y, FALSE);
 	  list = list->next;   
 	}
@@ -462,7 +465,7 @@ static void annotate_draw_point_list(GSList* list)
 }
 
 
-/* Draw a curve using a cubic bezier splines passing to the list's coordinate */
+/* Draw a curve using a cubic bezier splines passing to the list's coordinate. */
 static void annotate_draw_curve(GSList* list)
 {
   gint lenght = g_slist_length(list);
@@ -499,7 +502,7 @@ static void annotate_draw_curve(GSList* list)
 }
 
 
-/* Rectify the line */
+/* Rectify the line. */
 static void rectify(gboolean closed_path)
 {
   gint tollerance = data->thickness;
@@ -510,7 +513,7 @@ static void rectify(gboolean closed_path)
       g_printerr("rectify\n");
     }
 
-  /* Restore the surface withgout the last path handwritten */
+  /* Restore the surface withgout the last path handwritten. */
   annotate_restore_surface();
 
   annotate_coord_list_free();
@@ -524,7 +527,7 @@ static void rectify(gboolean closed_path)
 }
 
 
-/* Roundify the line */
+/* Roundify the line. */
 static void roundify(gboolean closed_path)
 {
   gint tollerance = data->thickness * 2;
@@ -532,7 +535,7 @@ static void roundify(gboolean closed_path)
   gint lenght = g_slist_length(out_ptr);
   AnnotateStrokeCoordinate* point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coord_list, lenght/2);
 
-  /* Restore the surface withgout the last path handwritten */
+  /* Restore the surface withgout the last path handwritten. */
   annotate_restore_surface();
      
   annotate_coord_list_free();
@@ -541,21 +544,21 @@ static void roundify(gboolean closed_path)
  
   if (lenght == 1)
     {
-      /* It is a point */ 
+      /* It is a point. */ 
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)out_ptr->data;
       annotate_draw_point(out_point->x, out_point->y, out_point->pressure);
       return;
     }
   if (lenght <= 3)
     {
-      /* Draw the point line as is and jump the rounding */
+      /* Draw the point line as is and jump the rounding. */
       annotate_draw_point_list(out_ptr);
       return; 
     }
 
   if (closed_path)
     {
-      /* It could be an ellipse or a closed curve path */  
+      /* It could be an ellipse or a closed curve path. */  
       GSList* list_out_n = extract_outbounded_rectangle(out_ptr);
 
       AnnotateStrokeCoordinate* out_point = (AnnotateStrokeCoordinate*)list_out_n->data;
@@ -564,8 +567,8 @@ static void roundify(gboolean closed_path)
       AnnotateStrokeCoordinate* point3 = (AnnotateStrokeCoordinate*) g_slist_nth_data (list_out_n, 2);
 
       /* 
-       * if in one point the sum of the distance by focus F1 and F2 differer more than the tollerance value
-       * the curve line will not be considered an eclipse 
+       * If in one point the sum of the distance by focus F1 and F2 differer more than 
+       * the tollerance value the curve line will not be considered an eclipse. 
        */
       gdouble tollerance = (fabs(point3->x-lastx)+fabs(point3->y-lasty)) /4;
 
@@ -575,20 +578,20 @@ static void roundify(gboolean closed_path)
 	}
       else
 	{
-	  /* it is a closed path but it is not an eclipse; I use bezier to spline the path */
+	  /* It is a closed path but it is not an eclipse; I use bezier to spline the path. */
 	  GSList* splined_list = spline(out_ptr);
 	  annotate_coord_list_free();
 	  data->coord_list = splined_list;
 	  annotate_draw_curve(splined_list);
 	}
 
-      /* disallocate the outbounded rectangle */
+      /* Disallocate the outbounded rectangle. */
       g_slist_foreach(list_out_n, (GFunc)g_free, NULL);
       g_slist_free(list_out_n);
     }   
   else
     {
-      /* It's a not closed path than I use bezier to spline the path */
+      /* It's a not closed path than I use bezier to spline the path. */
       GSList* splined_list = spline(out_ptr);
       annotate_coord_list_free();
       data->coord_list = splined_list;
@@ -597,7 +600,7 @@ static void roundify(gboolean closed_path)
 }
 
 
-/* Is the device the "Eraser"-Type device */
+/* Is the device the "Eraser"-Type device. */
 static gboolean is_eraser(GdkDevice *device)
 {
   if (strstr(device->name, "raser") || 
@@ -609,7 +612,7 @@ static gboolean is_eraser(GdkDevice *device)
 }
 
 
-/* Setup input device */
+/* Setup input device. */
 static void setup_input_devices()
 {
   GList     *devices, *d;
@@ -619,13 +622,13 @@ static void setup_input_devices()
     {
       GdkDevice *device = (GdkDevice *) d->data;
 
-      /* Guess "Eraser"-Type devices */
+      /* Guess "Eraser"-Type devices. */
       if (is_eraser(device))
         {
 	  gdk_device_set_source(device, GDK_SOURCE_ERASER);
         }
 
-      /* Dont touch devices with lesser than two axis */
+      /* Dont touch devices with lesser than two axis. */
       if (device->num_axes >= 2)
         {
 	  if (device->source != GDK_SOURCE_MOUSE)
@@ -639,16 +642,16 @@ static void setup_input_devices()
 }
 
 
-/* Create the annotation window */
+/* Create the annotation window. */
 static GtkWidget* create_annotation_window()
 {
   GtkWidget* widget = NULL;
   GError* error = NULL;
 
-  /* Initialize the main window */
+  /* Initialize the main window. */
   data->annotation_window_gtk_builder = gtk_builder_new();
 
-  /* Load the gtk builder file created with glade */
+  /* Load the gtk builder file created with glade. */
   gtk_builder_add_from_file(data->annotation_window_gtk_builder, ANNOTATION_UI_FILE, &error);
 
   if (error)
@@ -664,10 +667,10 @@ static GtkWidget* create_annotation_window()
 }
 
 
-/* Setup the application */
+/* Setup the application. */
 static void setup_app(GtkWidget* parent)
 {
-  /* initialize the pen context */
+  /* Initialize the pen context. */
   data->default_pen = annotate_paint_context_new(ANNOTATE_PEN);
   data->default_eraser = annotate_paint_context_new(ANNOTATE_ERASER);
   data->cur_context = data->default_pen;
@@ -675,10 +678,10 @@ static void setup_app(GtkWidget* parent)
   
   setup_input_devices();
   
-  /* create the annotation window */
+  /* Create the annotation window. */
   data->annotation_window = create_annotation_window();
 
-  /* put the opacity to 0 to avoid the initial flickering */
+  /* Put the opacity to 0 to avoid the initial flickering. */
   gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 0);
   
   if (data->annotation_window == NULL)
@@ -695,7 +698,7 @@ static void setup_app(GtkWidget* parent)
   gtk_widget_set_usize(data->annotation_window, width, height);
 
    
-  /* Initialize a transparent pixmap with depth 1 to be used as input shape */
+  /* Initialize a transparent pixmap with depth 1 to be used as input shape. */
   data->shape = gdk_pixmap_new(NULL, width, height, 1); 
 
   cairo_t *shape_cr = gdk_cairo_create(data->shape);
@@ -709,28 +712,28 @@ static void setup_app(GtkWidget* parent)
   clear_cairo_context(shape_cr);  
   cairo_destroy(shape_cr);
 
-  /* connect all the callback from gtkbuilder xml file */
+  /* Connect all the callback from gtkbuilder xml file. */
   gtk_builder_connect_signals(data->annotation_window_gtk_builder, (gpointer) data); 
 
   gtk_widget_show_all(data->annotation_window);
 
-  /* This put the window in fullscreen generating an exposure */
+  /* This put the window in fullscreen generating an exposure. */
   gtk_window_fullscreen(GTK_WINDOW(data->annotation_window));
   
 #ifdef _WIN32
-  /* in the gtk 2.16.6 the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands */
+  /* In the gtk 2.16.6 the gtkbuilder property GtkWindow.double-buffered doesn't exist and then I set this by hands. */
   gtk_widget_set_double_buffered(data->annotation_window, FALSE); 
-  /* @TODO use RGBA colormap and avoid to use the layered window */
-  /* I use a layered window that use the black as transparent color */
+  /* @TODO Use RGBA colormap and avoid to use the layered window. */
+  /* I use a layered window that use the black as transparent color. */
   setLayeredGdkWindowAttributes(data->annotation_window->window, RGB(0,0,0), 0, LWA_COLORKEY );	
 #endif
 }
 
 
-/* Return if it is a closed path */
+/* Return if it is a closed path. */
 static gboolean is_a_closed_path(GSList* list)
 {
-  /* Check if it is a closed path */
+  /* Check if it is a closed path. */
   gint lenght = g_slist_length(list);
   AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, 0);
   AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, lenght-1);
@@ -742,7 +745,7 @@ static gboolean is_a_closed_path(GSList* list)
 }
 
 
-/* Create the directory where put the savepoint files */
+/* Create the directory where put the savepoint files. */
 static void create_savepoint_dir()
 {
   const gchar* tmpdir = g_get_tmp_dir();
@@ -753,7 +756,7 @@ static void create_savepoint_dir()
   gchar* project_tmp_dir = g_build_filename(ardesia_tmp_dir, project_name, (gchar *) 0);
   if (g_file_test(ardesia_tmp_dir, G_FILE_TEST_IS_DIR))
     { 
-      /* the folder already exist; I delete it */
+      /* The folder already exist; I delete it. */
       rmdir_recursive(ardesia_tmp_dir);
     }
 
@@ -764,7 +767,7 @@ static void create_savepoint_dir()
 }
 
 
-/* Delete savepoint */
+/* Delete the savepoint. */
 static void delete_savepoint(AnnotateSavepoint* savepoint)
 {
   if (savepoint)
@@ -785,7 +788,7 @@ static void delete_savepoint(AnnotateSavepoint* savepoint)
 }
 
 
-/* Free the list of the  savepoint for the redo */
+/* Free the list of the  savepoint for the redo. */
 void static annotate_redolist_free()
 {
   gint i = data->current_save_index;
@@ -799,7 +802,7 @@ void static annotate_redolist_free()
 }
 
 
-/* Free the list of all the savepoint */
+/* Free the list of all the savepoint. */
 static void annotate_savepoint_list_free()
 {
   while (data->savepoint_list!=NULL)
@@ -812,7 +815,7 @@ static void annotate_savepoint_list_free()
 
 /* 
  * Add a save point for the undo/redo; 
- * this code must be called at the end of each painting action
+ * this code must be called at the end of each painting action.
  */
 void annotate_add_savepoint()
 {
@@ -822,23 +825,23 @@ void annotate_add_savepoint()
   
   savepoint->filename = g_strdup_printf("%s%s%s_%d_vellum.png", data->savepoint_dir, G_DIR_SEPARATOR_S, PACKAGE_NAME, savepoint_index);
 
-  /* the story about the future is deleted */
+  /* The story about the future is deleted. */
   annotate_redolist_free();
 
-  /* add new savepoint */
+  /* Add a new savepoint. */
   data->savepoint_list = g_slist_prepend(data->savepoint_list, savepoint);
   data->current_save_index = 0;
    
-  /* Load a surface with the data->annotation_cairo_context content and write the file */
+  /* Load a surface with the data->annotation_cairo_context content and write the file. */
   cairo_surface_t* saved_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gdk_screen_width(), gdk_screen_height()); 
   cairo_surface_t* source_surface = cairo_get_target(data->annotation_cairo_context);
   cairo_t *cr = cairo_create(saved_surface);
   cairo_set_source_surface(cr, source_surface, 0, 0);
   cairo_paint(cr);
-  /* the saved_surface contain the savepoint image */  
+  /* The saved_surface now contains the savepoint image. */  
   
 
-  /*  will be create a file in the savepoint folder with format PACKAGE_NAME_1.png */
+  /*  Will be create a file in the savepoint folder with format PACKAGE_NAME_1.png. */
   cairo_surface_write_to_png(saved_surface, savepoint->filename);
   cairo_surface_destroy(saved_surface); 
   if (data->debug)
@@ -846,13 +849,11 @@ void annotate_add_savepoint()
       g_printerr("The save point %s has been stored in file\n", savepoint->filename);
     }
     
-
-
   cairo_destroy(cr);
 }
 
 
-/* Draw the last save point on the window restoring the surface */
+/* Draw the last save point on the window restoring the surface. */
 void annotate_restore_surface()
 {
   if (data->annotation_cairo_context)
@@ -873,7 +874,8 @@ void annotate_restore_surface()
 	    {
 	      g_printerr("The savepoint %s has been loaded from file\n", savepoint->filename);
 	    }
-	  // load the file in the annotation surface
+
+	  /* Load the file in the annotation surface. */
 	  GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (savepoint->filename, NULL);
 	  if (pixbuf)
 	    {
@@ -887,49 +889,49 @@ void annotate_restore_surface()
 }
 
 
-/* Get the annotation window */
+/* Get the annotation window. */
 GtkWidget* get_annotation_window()
 {
   return data->annotation_window;
 }
 
 
-/* Set color */
+/* Set color. */
 void annotate_set_color(gchar* color)
 {
   data->cur_context->fg_color = color;
 }
 
 
-/* Set rectifier */
+/* Set rectifier. */
 void annotate_set_rectifier(gboolean rectify)
 {
   data->rectify = rectify;
 }
 
 
-/* Set rounder */
+/* Set rounder. */
 void annotate_set_rounder(gboolean roundify)
 {
   data->roundify = roundify;
 }
 
 
-/* Set arrow */
+/* Set arrow. */
 void annotate_set_arrow(gboolean arrow)
 {
   data->arrow = arrow;
 }
 
 
-/* Set the line thickness */
+/* Set the line thickness. */
 void annotate_set_thickness(gdouble thickness)
 {
   data->thickness = thickness;
 }
 
 
-/* Get the line thickness */
+/* Get the line thickness. */
 gdouble annotate_get_thickness()
 {
   if (data->cur_context->type != ANNOTATE_ERASER)
@@ -940,7 +942,7 @@ gdouble annotate_get_thickness()
 }
 
 
-/* Add to the list of the painted point the point (x,y) */
+/* Add to the list of the painted point the point (x,y). */
 void annotate_coord_list_prepend (gdouble x, gdouble y, gint width, gdouble pressure)
 {
   AnnotateStrokeCoordinate *point;
@@ -953,7 +955,7 @@ void annotate_coord_list_prepend (gdouble x, gdouble y, gint width, gdouble pres
 }
 
 
-/* Free the list of the painted point */
+/* Free the list of the painted point. */
 void annotate_coord_list_free()
 {
   if (data->coord_list)
@@ -965,17 +967,17 @@ void annotate_coord_list_free()
 }
 
 
-/* Modify color according to the pressure */
+/* Modify color according to the pressure. */
 void annotate_modify_color(AnnotateData* data, gdouble pressure)
 {
-  /* pressure value is from 0 to 1; this value modify the RGBA gradient */
+  /* Pressure value is from 0 to 1; this value modify the RGBA gradient. */
   gint r,g,b,a;
   gdouble old_pressure = pressure;
-  /* if you put an highter value you will have more contrast beetween the lighter and darker color depending on pressure */
+  /* If you put an highter value you will have more contrast beetween the lighter and darker color depending on pressure. */
   gdouble contrast = 96;
   gdouble corrective = 0;
   
-  /* the pressure is greater than 0 */
+  /* The pressure is greater than 0. */
   if ((!data->annotation_cairo_context)||(!data->cur_context->fg_color))
     {
       return;
@@ -999,7 +1001,7 @@ void annotate_modify_color(AnnotateData* data, gdouble pressure)
 }
 
 
-/* Set a new cairo path with the new options */
+/* Set a new cairo path with the new options. */
 void annotate_reset_cairo()
 {
   if (data->annotation_cairo_context)
@@ -1010,7 +1012,7 @@ void annotate_reset_cairo()
 }
 
 
-/* Paint the context over the annotation window */
+/* Paint the context over the annotation window. */
 void annotate_push_context(cairo_t * cr)
 {
   if (data->debug)
@@ -1026,7 +1028,7 @@ void annotate_push_context(cairo_t * cr)
    * The over operator might put the new layer on the top of the old one 
    * overriding the intersections
    * Seems that this operator does not work on windows
-   * in this operating system only the new layer remain after the merge
+   * in this operating system only the new layer remain after the merge.
    *
    */
   cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_OVER);
@@ -1036,10 +1038,10 @@ void annotate_push_context(cairo_t * cr)
    * I do this to use the text widget in windows 
    * I use the CAIRO_OPERATOR_ADD that put the new layer
    * on the top of the old; this function does not preserve the color of
-   * the second layer but modify it respecting the firts layer
+   * the second layer but modify it respecting the firts layer.
    *
    * Seems that the CAIRO_OPERATOR_OVER does not work because in the
-   * gtk cairo implementation the ARGB32 format is not supported
+   * gtk cairo implementation the ARGB32 format is not supported.
    *
    */
   cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_ADD);
@@ -1052,7 +1054,7 @@ void annotate_push_context(cairo_t * cr)
 }
 
 
-/* Select the default pen tool */
+/* Select the default pen tool. */
 void annotate_select_pen()
 {
   if (data->debug)
@@ -1065,7 +1067,7 @@ void annotate_select_pen()
 }
 
 
-/* Select the default eraser tool */
+/* Select the default eraser tool. */
 void annotate_select_eraser()
 {
   if (data->debug)
@@ -1078,7 +1080,7 @@ void annotate_select_eraser()
 }
 
 
-/* Unhide the cursor */
+/* Unhide the cursor. */
 void annotate_unhide_cursor()
 {
   if (data->is_cursor_hidden)
@@ -1089,7 +1091,7 @@ void annotate_unhide_cursor()
 }
 
  
-/* Hide the cursor icon */
+/* Hide the cursor icon. */
 void annotate_hide_cursor()
 {
   gdk_window_set_cursor(data->annotation_window->window, data->invisible_cursor);
@@ -1097,7 +1099,7 @@ void annotate_hide_cursor()
 }
 
 
-/* acquire the grab  */
+/* acquire the grab. */
 void annotate_acquire_grab()
 {
   if  (!data->is_grabbed)
@@ -1112,7 +1114,7 @@ void annotate_acquire_grab()
 }
 
 
-/* Draw line from the last point drawn to (x2,y2) */
+/* Draw line from the last point drawn to (x2,y2). */
 void annotate_draw_line(gdouble x2, gdouble y2, gboolean stroke)
 {
   if (!stroke)
@@ -1128,7 +1130,7 @@ void annotate_draw_line(gdouble x2, gdouble y2, gboolean stroke)
 }
 
 
-/* Draw an arrow using some polygons */
+/* Draw an arrow using some polygons. */
 void annotate_draw_arrow(gint distance)
 {
   gint arrow_minimum_size = data->thickness * 2;
@@ -1148,11 +1150,11 @@ void annotate_draw_arrow(gint distance)
 
   if (lenght < 2)
     {
-      /* if it has lenght lesser then two then is a point and it has no sense draw the arrow */
+      /* If it has lenght lesser then two then is a point and it has no sense draw the arrow. */
       return;
     }
   
-  /* lenght >= 2 */
+  /* Postcondition lenght >= 2 */
   direction = annotate_get_arrow_direction();
   if (data->debug)
     {
@@ -1166,31 +1168,31 @@ void annotate_draw_arrow(gint distance)
   gdouble width_cos = pen_width * cos(direction);
   gdouble width_sin = pen_width * sin(direction);
 
-  /* Vertex of the arrow */
+  /* Vertex of the arrow. */
   gdouble arrow_head_0_x = point->x + width_cos;
   gdouble arrow_head_0_y = point->y + width_sin;
 
-  /* left point */
+  /* Left point. */
   gdouble arrow_head_1_x = point->x - width_cos + width_sin ;
   gdouble arrow_head_1_y = point->y -  width_cos - width_sin ;
 
-  /* origin */
+  /* Origin. */
   gdouble arrow_head_2_x = point->x - 0.8 * width_cos ;
   gdouble arrow_head_2_y = point->y - 0.8 * width_sin ;
 
-  /* right point */
+  /* Right point. */
   gdouble arrow_head_3_x = point->x - width_cos - width_sin ;
   gdouble arrow_head_3_y = point->y +  width_cos - width_sin ;
 
   cairo_stroke(data->annotation_cairo_context); 
   cairo_save(data->annotation_cairo_context);
 
-  /* init cairo properties */
+  /* Init cairo properties. */
   cairo_set_line_join(data->annotation_cairo_context, CAIRO_LINE_JOIN_MITER); 
   cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width(data->annotation_cairo_context, pen_width);
 
-  /* draw the arrow */
+  /* Draw the arrow. */
   cairo_move_to(data->annotation_cairo_context, arrow_head_2_x, arrow_head_2_y); 
   cairo_line_to(data->annotation_cairo_context, arrow_head_1_x, arrow_head_1_y);
   cairo_line_to(data->annotation_cairo_context, arrow_head_0_x, arrow_head_0_y);
@@ -1208,20 +1210,20 @@ void annotate_draw_arrow(gint distance)
 }
 
 
-/* Draw a point in x,y respecting the context */
+/* Draw a point in x,y respecting the context. */
 void annotate_draw_point(gdouble x, gdouble y, gdouble pressure)
 {
-  /* modify a little bit the color depending on pressure */
+  /* Modify a little bit the color depending on pressure. */
   annotate_modify_color(data, pressure); 
   cairo_move_to(data->annotation_cairo_context, x, y);
   cairo_line_to(data->annotation_cairo_context, x, y);
 }
 
 
-/* Call the geometric shape recognizer */
+/* Call the geometric shape recognizer. */
 void annotate_shape_recognize(gboolean closed_path)
 {
-  /* rectify only if the list is greater that 3 */
+  /* Rectify only if the list is greater that 3. */
   if ( g_slist_length(data->coord_list)>3)
     {
       if (data->rectify)
@@ -1236,7 +1238,7 @@ void annotate_shape_recognize(gboolean closed_path)
 }
 
 
-/* Select eraser, pen or other tool for tablet */
+/* Select eraser, pen or other tool for tablet. */
 void annotate_select_tool(AnnotateData* data, GdkDevice *device, guint state)
 {
   if (device)
@@ -1269,14 +1271,14 @@ void annotate_paint_context_free(AnnotatePaintContext *context)
 }
 
 
-/* Quit the annotation */
+/* Quit the annotation. */
 void annotate_quit()
 {
   export_iwb(get_iwb_filename());
   if (data)
     {   
 
-      /* unref gtkbuilder */
+      /* Unref gtkbuilder. */
       if (data->annotation_window_gtk_builder)
 	{
 	  g_object_unref(data->annotation_window_gtk_builder);
@@ -1287,10 +1289,10 @@ void annotate_quit()
 	  g_object_unref(data->shape);
 	}
 	
-      /* destroy cairo */  
+      /* Destroy cairo. */  
       destroy_cairo();
 
-      /* destroy cursors */  
+      /* Destroy cursors. */  
       disallocate_cursor();
   
       if (data->invisible_cursor)
@@ -1298,7 +1300,7 @@ void annotate_quit()
 	  gdk_cursor_unref(data->invisible_cursor);
 	}
 
-      /* free all */
+      /* Free all. */
       if (data->annotation_window)
 	{
 	  gtk_widget_destroy(data->annotation_window); 
@@ -1321,14 +1323,14 @@ void annotate_quit()
 }
 
 
-/* Release input grab; the input event will be passed below the window */
+/* Release input grab; the input event will be passed below the window. */
 void annotate_release_input_grab()
 {
   gdk_window_set_cursor(data->annotation_window->window, NULL);
 #ifndef _WIN32
   /* 
    * @TODO implement correctly gdk_window_input_shape_combine_mask in the quartz gdkwindow or use an equivalent native function
-   * the current implementation in macosx this doesn't do nothing
+   * the current implementation in macosx this doesn't do nothing.
    */
   /*
    * This allows the mouse event to be passed below the transparent annotation; at the moment this call works only on Linux  
@@ -1338,7 +1340,7 @@ void annotate_release_input_grab()
   /*
    * @TODO WIN32 implement correctly gdk_window_input_shape_combine_mask in the win32 gdkwindow or use an equivalent native function
    * now in the gtk implementation the gdk_window_input_shape_combine_mask call the gdk_window_shape_combine_mask
-   * that is not the desired behaviour
+   * that is not the desired behaviour.
    *
    */
   annotate_release_pointer_grab();
@@ -1346,7 +1348,7 @@ void annotate_release_input_grab()
 }
 
 
-/* Release the pointer pointer */
+/* Release the pointer pointer. */
 void annotate_release_grab ()
 {      
   if (data->is_grabbed)
@@ -1362,7 +1364,7 @@ void annotate_release_grab ()
 }
 
 
-/* Fill the last shape */
+/* Fill the last shape. */
 void annotate_fill()
 {
   if (data->debug)
@@ -1393,7 +1395,7 @@ void annotate_fill()
 }
 
 
-/* Undo reverting to the last save point */
+/* Undo reverting to the last save point. */
 void annotate_undo()
 {
   if (data->savepoint_list)
@@ -1411,7 +1413,7 @@ void annotate_undo()
 }
 
 
-/* Redo to the last save point */
+/* Redo to the last save point. */
 void annotate_redo()
 {
   if (data->savepoint_list)
@@ -1429,7 +1431,7 @@ void annotate_redo()
 }
 
 
-/* Clear the annotations windows */
+/* Clear the annotations windows. */
 void annotate_clear_screen()
 {
   if (data->debug)
@@ -1443,13 +1445,13 @@ void annotate_clear_screen()
 }
 
 
-/* Init the annotation */
+/* Init the annotation. */
 gint annotate_init(GtkWidget* parent, gchar* iwb_file, gboolean debug)
 
 {
   data = g_malloc ((gsize) sizeof(AnnotateData));
  
-  /* init the data structure */ 
+  /* Init the data structure. */ 
   data->annotation_cairo_context = NULL;
   data->coord_list = NULL;
   data->savepoint_list = NULL;

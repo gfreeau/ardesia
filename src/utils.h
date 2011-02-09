@@ -38,20 +38,22 @@
 
 
 #ifdef _WIN32
-#include <cairo-win32.h>
+#  include <cairo-win32.h>
 #else
-#ifdef __APPLE__
-#include <cairo-quartz.h>
-#else
-#include <cairo-xlib.h>
-#endif
+#  ifdef __APPLE__
+#    include <cairo-quartz.h>
+#  else
+#    include <cairo-xlib.h>
+#  endif
 #endif
 
 
 #include <config.h>
 
-/* The thick step define the minimum thick the you have 2*thick and 3*thick lines */
+
+/* The thick step define the minimum thick the you have 2*thick and 3*thick lines. */
 #define THICK_STEP 7
+
 
 /*
  * Standard gettext macros.
@@ -76,12 +78,13 @@
 #endif
 
 
+/* The gtk builder object of the bar window */
 GtkBuilder *bar_gtk_builder;
 
 		
 #define PROGRAM_NAME "Ardesia"
 
-/* Color definition in RGB */
+/* Color definition in RGB. */
 #define BLACK "000000"
 #define WHITE "FFFFFF"
 #define RED   "FF0000"
@@ -91,7 +94,7 @@ GtkBuilder *bar_gtk_builder;
 
 
 
-/* Struct to store the painted point */
+/* Struct to store the painted point. */
 typedef struct
 {
   gdouble x;
@@ -101,102 +104,102 @@ typedef struct
 } AnnotateStrokeCoordinate;
 
 
-/* Get the name of the current project */
+/* Get the name of the current project. */
 gchar* get_project_name();
 
 
-/* Set the name of the current project */
+/* Set the name of the current project. */
 void set_project_name(gchar * name);
 
 
-/* Get the dir of the current project */
+/* Get the dir of the current project. */
 gchar* get_project_dir();
 
 
-/* Set the dir of the current project */
+/* Set the dir of the current project. */
 void set_project_dir(gchar * dir);
 
 
-/* Get the iwb file name of the current project */
+/* Get the iwb file name of the current project. */
 gchar* get_iwb_filename();
 
 
-/* Set the iwb file name of the current project */
+/* Set the iwb file name of the current project. */
 void set_iwb_filename(gchar * file);
 
 
-/* Get the list of the path of the artifacts created in the session */
+/* Get the list of the path of the artifacts created in the session. */
 GSList* get_artifacts();
 
 
-/* Add the path of an artifacts created in the session to the list */
+/* Add the path of an artifacts created in the session to the list. */
 void add_artifact(gchar* path);
 
 
-/* Free the structure containing the artifact list created in the session */
+/* Free the structure containing the artifact list created in the session. */
 void free_artifacts();
 
 
-/* Ungrab pointer */
+/* Ungrab pointer. */
 void ungrab_pointer(GdkDisplay* display, GtkWidget *win);
 
 
-/* Grab pointer */
+/* Grab pointer. */
 void grab_pointer(GtkWidget *win, GdkEventMask eventmask);
   
 				
-/* get bar window widget */
+/* get bar window widget. */
 GtkWidget* get_bar_window();
 
 
-/* Take a GdkColor and return the RGB string */
+/* Take a GdkColor and return the RGB string. */
 gchar* gdkcolor_to_rgb(GdkColor* gdkcolor);
 
 
-/* Set the cairo surface color to the RGBA string */
+/* Set the cairo surface color to the RGBA string. */
 void cairo_set_source_color_from_string( cairo_t * cr, gchar* color);
 
 
-/* Set the cairo surface color to transparent */
+/* Set the cairo surface color to transparent. */
 void  cairo_set_transparent_color(cairo_t * cr);
 
 
-/* Distance beetween two points using the Pitagora theorem */
+/* Distance beetween two points using the Pitagora theorem. */
 gdouble get_distance(gdouble x1, gdouble y1, gdouble x2, gdouble y2);
 
 
-/* Clear cairo context */
+/* Clear cairo context. */
 void clear_cairo_context(cairo_t* cr);
 
 
 /*
- * This is function return if the point (x,y) in inside the ardesia bar window
+ * This is function return if the point (x,y) in inside the ardesia bar window.
  */
 gboolean inside_bar_window(gdouble xp, gdouble yp);
 
 
-/* Drill the gdkwindow in the area where the ardesia bar is located */
+/* Drill the gdkwindow in the area where the ardesia bar is located. */
 void drill_window_in_bar_area(GdkWindow* window);
 
 
 /*
  * Take a rgba string and return the pointer to the allocated GdkColor 
- * neglecting the alpha channel
+ * neglecting the alpha channel.
  */
 GdkColor* rgba_to_gdkcolor(gchar* rgb);
 
 
-/* Save the contents of the pixbuf in the file with name filename */
+/* Save the contents of the pixbuf in the file with name filename. */
 gboolean save_png(GdkPixbuf *pixbuf,const gchar *filename);
 
 
-/* Grab the screenshoot and put it in the GdkPixbuf */
+/* Grab the screenshoot and put it in the GdkPixbuf. */
 GdkPixbuf* grab_screenshot();
 
 
 /* 
  * Return a file name containing 
- * the project name and the current date 
+ * the project name and the current date. 
  *
  */
 gchar* get_default_filename();
@@ -204,64 +207,64 @@ gchar* get_default_filename();
 
 /* 
  * Get the current date and format in a printable format; 
- * the returned value must be free with the g_free 
+ * the returned value must be free with the g_free. 
  */
 gchar* get_date();
 
 
-/* Return if a file exists */
+/* Return if a file exists. */
 gboolean file_exists(gchar* filename);
 
 
 /*
- * Get the desktop directory
+ * Get the desktop directory.
  */
 const gchar* get_desktop_dir(void);
 
 
 /*
- * Get the documents directory
+ * Get the documents directory.
  */
 const gchar* get_documents_dir(void);
 
 
-/* Remove recursive a directory */
+/* Remove recursive a directory. */
 void rmdir_recursive(gchar *path);
 
 
-/* Allocate a new point belonging to the stroke passing the values */
+/* Allocate a new point belonging to the stroke passing the values. */
 AnnotateStrokeCoordinate* allocate_point(gint x, gint y, gint width, gdouble pressure);
 
 
-/* Send an email */
-void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachmentList);
+/* Send an email. */
+void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachment_list);
 
 
-/* Send artifacts with email */
-void send_artifacts_with_email(GSList* attachmentList);
+/* Send artifacts with email. */
+void send_artifacts_with_email(GSList* attachment_list);
 
 
-/* Send trace with email */
+/* Send trace with email. */
 void send_trace_with_email(gchar* attachment);
 
 
-/* Is the desktop manager gnome */
+/* Is the desktop manager gnome. */
 gboolean is_gnome();
 
 
-/* Create desktop entry passing value */
+/* Create desktop entry passing value. */
 void xdg_create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* lang, gchar* icon, gchar* exec);
 
 
-/* Create a desktop link */
+/* Create a desktop link. */
 void xdg_create_link(gchar* src_filename, gchar* dest, gchar* icon);
 
 
-/* Get the last position where substr occurs in str */
+/* Get the last position where substr occurs in str. */
 int g_substrlastpos(const char *str, const char *substr);
 
 
-/* Substring of string from start to end position */
+/* Substring of string from start to end position. */
 gchar* g_substr (const gchar* string,
 		 gint         start,
 		 gint         end);

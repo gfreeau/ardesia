@@ -21,21 +21,25 @@
  *
  */
 
+
 #include <utils.h>
 #include <crash_dialog.h>
 
-/* Shot when the ok button in crash dialog is pushed */
+
+/* Shot when the ok button in crash dialog is pushed. */
 G_MODULE_EXPORT void
 on_crashOkButton_clicked(GtkButton *buton, gpointer data)
 {
-   CrashData* crash_data = (CrashData*) data;
-   send_trace_with_email(crash_data->crash_report);
+  CrashData* crash_data = (CrashData*) data;
+  send_trace_with_email(crash_data->crash_report);
 }
 
 
-/* Shot when the ok button in preference dialog is pushed */
+/* Shot when the ok button in preference dialog is pushed. */
 G_MODULE_EXPORT void
 on_crashCancelButton_clicked(GtkButton *buton, gpointer data)
 {
-   /* Do nothing */
+  /* Do nothing. */
 }
+
+

@@ -26,39 +26,35 @@
 
 
 #ifdef _WIN32
-#include <windows.h>
-#endif
-
-
-#ifdef _WIN32
-#define RECORDER_FILE "..\\share\\ardesia\\scripts\\screencast.bat"
+#  include <windows.h>
+#  define RECORDER_FILE "..\\share\\ardesia\\scripts\\screencast.bat"
 #else  
-#define RECORDER_FILE PACKAGE_DATA_DIR"/ardesia/scripts/screencast.sh"
+#  define RECORDER_FILE PACKAGE_DATA_DIR"/ardesia/scripts/screencast.sh"
 #endif 
 
 
 /*
  * Start the dialog that ask to the user where save the video
- * containing the screencast
+ * containing the screencast.
  * This function take as input the recor toolbutton in ardesia bar
- * return true is the recorder is started
+ * return true is the recorder is started.
  */
 gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent);
 
 
-/* Quit to record */
+/* Quit to record. */
 void quit_recorder();
 
 
-/* Return if the recording is active */
+/* Return if the recording is active. */
 gboolean is_recording();
 
 
-/* Is the recorder available */
+/* Is the recorder available. */
 gboolean is_recorder_available();
 
 
-/* Missing program dialog */
+/* Missing program dialog. */
 void visualize_missing_recorder_program_dialog(GtkWindow* parent_window);
 
 

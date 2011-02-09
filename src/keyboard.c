@@ -21,16 +21,20 @@
  *
  */
 
+
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#  include <config.h>
 #endif
 
 #include <utils.h>
 #include <keyboard.h>
 
+
+/* The pid of the virtual keyboard process. */
 static GPid virtual_keyboard_pid;
 
-/* Start the virtual keyboard */
+
+/* Start the virtual keyboard. */
 void start_virtual_keyboard()
 {
 #ifdef linux
@@ -53,7 +57,7 @@ void start_virtual_keyboard()
 }
 
 
-/* Stop the virtual keyboard */
+/* Stop the virtual keyboard. */
 void stop_virtual_keyboard()
 {
 #ifdef linux
@@ -75,3 +79,5 @@ void stop_virtual_keyboard()
       virtual_keyboard_pid = (GPid) 0;
     }
 }
+
+

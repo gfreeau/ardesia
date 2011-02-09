@@ -21,6 +21,7 @@
  *
  */
 
+
 /* 
    Copyright (c) 2010 ,
    Cloud Wu . All rights reserved.
@@ -32,6 +33,7 @@
 
 */
 
+
 /* All this file will be build only on windows */
 #ifdef _WIN32
 
@@ -40,8 +42,10 @@
 #include <utils.h>
 
 
+/* The buffer used to put the trace. */
 static char * g_output = NULL;
 
+/* Init the buffer. */
 static void
 output_init(struct output_buffer *ob, char * buf, size_t sz)
 {
@@ -52,6 +56,7 @@ output_init(struct output_buffer *ob, char * buf, size_t sz)
 }
 
 
+/* Print on buffer. */
 static void
 output_print(struct output_buffer *ob, const char * format, ...)
 {
@@ -67,6 +72,7 @@ output_print(struct output_buffer *ob, const char * format, ...)
 }
 
 
+/* Lookup a section code. */
 static void 
 lookup_section(bfd *abfd, asection *sec, void *opaque_data)
 {
@@ -86,6 +92,7 @@ lookup_section(bfd *abfd, asection *sec, void *opaque_data)
 }
 
 
+/* Find. */
 static void
 find(struct bfd_ctx * b, DWORD offset, const char **file, const char **func, unsigned *line)
 {
@@ -113,6 +120,7 @@ find(struct bfd_ctx * b, DWORD offset, const char **file, const char **func, uns
 }
 
 
+/* Init the bfd context. */
 static int
 init_bfd_ctx(struct bfd_ctx *bc, const char * procname, struct output_buffer *ob)
 {
@@ -158,6 +166,7 @@ init_bfd_ctx(struct bfd_ctx *bc, const char * procname, struct output_buffer *ob
 }
 
 
+/* Close the bfd context. */
 static void
 close_bfd_ctx(struct bfd_ctx *bc)
 {
@@ -345,7 +354,7 @@ exception_filter(LPEXCEPTION_POINTERS info)
 }
 
 
-/* Register the windows backtrace handler */
+/* Register the windows backtrace handler. */
 void
 windows_backtrace_register()
 {
@@ -356,5 +365,6 @@ windows_backtrace_register()
     }
 }
 
-
 #endif
+
+

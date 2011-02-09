@@ -21,6 +21,7 @@
  *
  */
 
+
 #include <config.h>
 #include <locale.h>
 #include <glib.h>
@@ -32,17 +33,28 @@
 #include <gtk/gtk.h>
 
 
+/* The position used to localize the bar. */
 #define EAST 1
 #define WEST 2
 #define NORTH 3
 #define SOUTH 4
 
 
+/* The structure that contains the command line info. */
 typedef struct
 {
+
+  /* The file name of the iwb. */
   gchar* iwb_filename;
+
+  /* Is the debug mode enabled? */
   gboolean debug;
+  
+  /* Is the bar windows decorated? */
   gboolean decorated;
+
+  /* Where is located the ardesia bar? */
   gint position;
 } CommandLine;
- 
+
+

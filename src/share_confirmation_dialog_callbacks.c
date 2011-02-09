@@ -21,21 +21,25 @@
  *
  */
 
+
 #include <utils.h>
 #include <share_confirmation_dialog.h>
 
-/* Shot when the ok button in share dialog is pushed */
+
+/* Shot when the ok button in share dialog is pushed. */
 G_MODULE_EXPORT void
 on_shareOkButton_clicked(GtkButton *buton, gpointer data)
 {
-   GSList * artifact_list = get_artifacts();
-   send_artifacts_with_email(artifact_list);
+  GSList * artifact_list = get_artifacts();
+  send_artifacts_with_email(artifact_list);
 }
 
 
-/* Shot when the ok button in preference dialog is pushed */
+/* Shot when the ok button in preference dialog is pushed. */
 G_MODULE_EXPORT void
 on_shareCancelButton_clicked(GtkButton *buton, gpointer data)
 {
-   /* do nothing */
+  /* do nothing */
 }
+
+

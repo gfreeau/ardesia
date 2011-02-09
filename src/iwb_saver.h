@@ -21,10 +21,11 @@
  *
  */
 
+
 #include <zlib.h>
 
 
-/* export in iwb format */
+/* Export in iwb format. */
 void export_iwb(gchar * folder);
 
 

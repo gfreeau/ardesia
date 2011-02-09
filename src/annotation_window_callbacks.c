@@ -21,16 +21,18 @@
  *
  */
 
+
 /*
- * Functions for handling various (GTK+)-Events
+ * Functions for handling various (GTK+)-Events.
  */
+
 
 #include <annotation_window_callbacks.h>
 #include <annotation_window.h>
 #include <utils.h>
 
 
-/* Return the pressure passing the event */
+/* Return the pressure passing the event. */
 static gdouble get_pressure(GdkEvent* ev)
 {
   gdouble default_value = 1.0;
@@ -44,7 +46,7 @@ static gdouble get_pressure(GdkEvent* ev)
 }
 
 
-/* Expose event: this occurs when the window is shown */
+/* Expose event: this occurs when the window is shown. */
 G_MODULE_EXPORT gboolean
 event_expose(GtkWidget *widget, 
 	     GdkEventExpose *event, 
@@ -66,13 +68,13 @@ event_expose(GtkWidget *widget,
 
   if (data->annotation_cairo_context == NULL)
     {
-      /* initialize a transparent window */	  
+      /* Initialize a transparent window. */	  
 #ifdef _WIN32
-      /* The hdc has depth 32 and the technology is DT_RASDISPLAY */
+      /* The hdc has depth 32 and the technology is DT_RASDISPLAY. */
       HDC hdc = GetDC(GDK_WINDOW_HWND(data->annotation_window->window));
       /* 
        * @TODO Use an HDC that support the ARGB32 format to support the alpha channel and the highlighter
-       * In the documentation is written that the now the resulting surface is in RGB24 format
+       * In the documentation is written that the now the resulting surface is in RGB24 format.
        * 
        */
       cairo_surface_t* surface = cairo_win32_surface_create(hdc);
@@ -94,18 +96,18 @@ event_expose(GtkWidget *widget,
 	  annotate_clear_screen();
         }      
     }
-  /* data->annotation_cairo_context is not NULL */
+  /* Postcondition; data->annotation_cairo_context is not NULL. */
   annotate_restore_surface();
   return TRUE;
 }
 
 
 /*
- * Event-Handlers to perform the drawing
+ * Event-Handlers to perform the drawing.
  */
 
 
-/* This is called when the button is pushed */
+/* This is called when the button is pushed. */
 G_MODULE_EXPORT gboolean
 paint(GtkWidget *win,
       GdkEventButton *ev, 
@@ -132,7 +134,7 @@ paint(GtkWidget *win,
 #ifdef _WIN32
   if (inside_bar_window(ev->x_root, ev->y_root))
     {
-      /* the point is inside the ardesia bar then ungrab */
+      /* The point is inside the ardesia bar then ungrab. */
       annotate_release_grab();
       return TRUE;
     }   
@@ -142,7 +144,7 @@ paint(GtkWidget *win,
  
   annotate_unhide_cursor();
  
-  /* only button1 allowed */
+  /* Only button1 allowed. */
   if (!(ev->button == 1))
     {
       if (data->debug)
@@ -171,7 +173,7 @@ paint(GtkWidget *win,
 }
 
 
-/* This shots when the ponter is moving */
+/* This shots when the ponter is moving. */
 G_MODULE_EXPORT gboolean
 paintto(GtkWidget *win, 
         GdkEventMotion *ev, 
@@ -195,7 +197,7 @@ paintto(GtkWidget *win,
 	  g_printerr("Device '%s': Move on the bar then ungrab\n",
 		     ev->device->name);
 	}
-      /* the point is inside the ardesia bar then ungrab */
+      /* The point is inside the ardesia bar then ungrab. */
       annotate_release_grab();
       return TRUE;
     }
@@ -205,10 +207,10 @@ paintto(GtkWidget *win,
  
   GdkModifierType state = (GdkModifierType) ev->state;  
   gint selected_width = 0;
-  /* only button1 allowed */
+  /* Only button1 allowed. */
   if (!(state & GDK_BUTTON1_MASK))
     {
-      /* the button is not pressed */
+      /* The button is not pressed. */
       return TRUE;
     }
 
@@ -222,30 +224,30 @@ paintto(GtkWidget *win,
 	  return TRUE;
 	}
 
-      /* If the point is already selected and higher pressure then print else jump it */
+      /* If the point is already selected and higher pressure then print else jump it. */
       if (data->coord_list)
 	{
 	  AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data(data->coord_list, 0);
 	  gint tollerance = data->thickness;
 	  if (get_distance(last_point->x, last_point->y, ev->x, ev->y)<tollerance)
 	    {
-	      /* seems that you are uprising the pen */
+	      /* Seems that you are uprising the pen. */
 	      if (pressure < last_point->pressure)
 		{
-		  /* jump the point you are uprising the hand */
+		  /* Jump the point you are uprising the hand. */
 		  return TRUE;
 		}
 	      else if (pressure == last_point->pressure)
 		{
-		  /* ignore the point; do nothing */
+		  /* Ignore the point; do nothing. */
 		  return TRUE;
 		}
 	      else // pressure >= last_point->pressure
 		{
-		  /* seems that you are pressing the pen more */
+		  /* Seems that you are pressing the pen more. */
 		  annotate_modify_color(data, pressure);
 		  annotate_draw_line(ev->x, ev->y, TRUE);
-		  /* store the new pressure without allocate a new coord */
+		  /* Store the new pressure without allocate a new coord. */
 		  last_point->pressure = pressure;
 		  return TRUE;
 		}
@@ -262,7 +264,7 @@ paintto(GtkWidget *win,
 }
 
 
-/* This shots when the button is realeased */
+/* This shots when the button is realeased. */
 G_MODULE_EXPORT gboolean
 paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
 {
@@ -284,15 +286,15 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
 
 #ifdef _WIN32
   if (inside_bar_window(ev->x_root, ev->y_root))
-    /* point is in the ardesia bar */
+    /* Point is in the ardesia bar. */
     {
-      /* the last point was outside the bar then ungrab */
+      /* The last point was outside the bar then ungrab. */
       annotate_release_grab();
       return TRUE;
     }
 #endif 
 	
-  /* only button1 allowed */
+  /* Only button1 allowed. */
   if (!(ev->button == 1))
     {
       return TRUE;
@@ -305,14 +307,14 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
       gint distance = -1;
       AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data(data->coord_list, lenght-1);
        
-      /* This is the tollerance to force to close the path in a magnetic way */
+      /* This is the tollerance to force to close the path in a magnetic way. */
       gint tollerance = data->thickness * 2;
       distance = get_distance(ev->x, ev->y, first_point->x, first_point->y);
  
       AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coord_list, 0);
       gdouble pressure = last_point->pressure;      
 
-      /* If the distance between two point lesser than tollerance they are the same point for me */
+      /* If the distance between two point lesser than tollerance they are the same point for me. */
       if (distance <= tollerance)
         {
           distance=0;
@@ -329,10 +331,10 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
         { 
           gboolean closed_path = (distance == 0); 
           annotate_shape_recognize(closed_path);
-          /* If is selected an arrowtype then I draw the arrow */
+          /* If is selected an arrowtype then I draw the arrow. */
           if (data->arrow)
             {
-	      /* print arrow at the end of the path */
+	      /* Print arrow at the end of the path. */
 	      annotate_draw_arrow(distance);
 	    }
 	}
@@ -347,16 +349,15 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
 }
 
 
-/* Device touch */
+/* Device touch. */
 G_MODULE_EXPORT gboolean
 proximity_in(GtkWidget *win,
              GdkEventProximity *ev, 
              gpointer func_data)
 {
   /*
-   * @TODO this message doesn't arrive on windows; why? 
-   * is it a driver problem, gtk or what
-   *
+   * @TODO This message doesn't arrive on windows; why? 
+   * is it a driver problem, gtk or what.
    */
   AnnotateData *data = (AnnotateData *) func_data;
   if (data->debug)
@@ -381,7 +382,7 @@ proximity_in(GtkWidget *win,
 }
 
 
-/* Device lease */
+/* Device lease. */
 G_MODULE_EXPORT gboolean
 proximity_out(GtkWidget *win, 
               GdkEventProximity *ev,
@@ -389,9 +390,8 @@ proximity_out(GtkWidget *win,
 {
 
   /*
-   * @TODO this message doesn't arrive on windows; why? 
-   * is it a driver problem, gtk or what
-   *
+   * @TODO This message doesn't arrive on windows; why? 
+   * is it a driver problem, gtk or what.
    */
   AnnotateData *data = (AnnotateData *) func_data;
   if (data->debug)

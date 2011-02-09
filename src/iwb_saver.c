@@ -21,13 +21,16 @@
  *
  */
 
+
 #include <utils.h>
 #include <iwb_saver.h>
 
+
+/* The file pointer to the iwb file. */
 static FILE* fp = NULL;
 
 
-/* Add the xml header */
+/* Add the xml header. */
 static void add_header()
 {
   gchar* becta_ns = "http://www.becta.org.uk/iwb";
@@ -38,14 +41,14 @@ static void add_header()
 }
 
 
-/* Close the iwb xml tag */
+/* Close the iwb xml tag. */
 void close_iwb()
 {
   fprintf(fp, "</iwb>\n");
 }
 
 
-/* Open the svg tag */
+/* Open the svg tag. */
 static void open_svg()
 {
   gint width = gdk_screen_width();
@@ -54,14 +57,14 @@ static void open_svg()
 }
 
 
-/* Close the svg tag */
+/* Close the svg tag. */
 static void close_svg()
 {
   fprintf(fp,"\t</svg:svg>\n");
 }
 
 
-/* Add the background element */
+/* Add the background element. */
 static void add_background()
 {
   gint width = gdk_screen_width();
@@ -75,14 +78,14 @@ static void add_background()
 }
 
 
-/* Add the background reference */
+/* Add the background reference. */
 static void add_background_reference()
 {
   fprintf(fp,"\t<iwb:element ref=\"id1\" background=\"true\"/>\n");
 }
 
 
-/* Add the savepoint element */
+/* Add the savepoint element. */
 static void add_savepoint(gint index)
 {
   gint width = gdk_screen_width();
@@ -99,10 +102,10 @@ static void add_savepoint(gint index)
 }
 
 
-/* Add the savepoint elements */
+/* Add the savepoint elements. */
 static void add_savepoints(gint savepoint_number)
 {
-  /* for each i call add_savepoint */
+  /* For each i call add_savepoint. */
   gint i=1;
   for (i=1; i<=savepoint_number; i++)
     {
@@ -111,7 +114,7 @@ static void add_savepoints(gint savepoint_number)
 }
 
 
-/* Add the savepoint reference */
+/* Add the savepoint reference. */
 static void add_savepoint_reference(gint index)
 {
   gchar* id = g_strdup_printf("id%d", index +1);
@@ -120,10 +123,10 @@ static void add_savepoint_reference(gint index)
 }
 
 
-/* Add the savepoint references */
+/* Add the savepoint references. */
 static void add_savepoint_references(gint savepoint_number)
 {
-  /* for each i call add_savepoint_reference */
+  /* For each i call add_savepoint_reference. */
   gint i=1;
   for (i=1; i<=savepoint_number; i++)
     {
@@ -132,7 +135,7 @@ static void add_savepoint_references(gint savepoint_number)
 }
 
 
-/* Create the iwb xml content file */
+/* Create the iwb xml content file. */
 static void create_xml_content(gchar* content_filename, gchar* img_dir_path)
 {
   int savepoint_number = 0;
@@ -159,10 +162,12 @@ static void create_xml_content(gchar* content_filename, gchar* img_dir_path)
 }
 
 
-/* Create iwb file */
+/* Create the iwb file. */
 static void create_iwb(gchar* zip_filename, gchar* working_dir, gchar* images_folder, gchar* content_filename)
 {
- /* create zip, add all the file inside images to the zip and the content.xml */
+  /* Create the zip archive, add all the file inside images to the zip and the content.xml;
+   * this is done spawing the info-Zip process
+   */
   gchar* argv[6] = {"zip", "-r", zip_filename, images_folder, content_filename, (gchar*) 0};
 
   g_spawn_sync (working_dir /*working_directory*/,
@@ -178,17 +183,17 @@ static void create_iwb(gchar* zip_filename, gchar* working_dir, gchar* images_fo
 }
 
 
-/* Export in iwb format */
+/* Export in the iwb format. */
 void export_iwb(gchar* iwb_location)
 {
   gchar* iwb_file = NULL;
 
-  /* If the iwb location is null means that it is a new project */
+  /* If the iwb location is null means that it is a new project. */
   if (iwb_location == NULL)
     {
-      /* will be putted in the project dir */
+      /* It will be putted in the project dir. */
       gchar* extension = "iwb";
-      /* the zip is the iwb in the project inside the ardesia workspace */
+      /* The zip file is the iwb file located in the ardesia workspace. */
       iwb_file = g_strdup_printf("%s%s%s.%s", get_project_dir(), G_DIR_SEPARATOR_S, get_project_name(), extension);
     }
   else
@@ -213,7 +218,7 @@ void export_iwb(gchar* iwb_location)
 
   create_iwb(iwb_file, project_tmp_dir, "images", content_filename);
 
-  /* add to the list of the artifacts created in the session */
+  /* Add to the list of the artifacts created in the session. */
   add_artifact(iwb_file);
   
   g_free(iwb_file);
@@ -222,4 +227,5 @@ void export_iwb(gchar* iwb_location)
   g_free(content_filepath);
   g_free(img_dir_path);
 }
+
 

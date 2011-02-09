@@ -21,12 +21,13 @@
  *
  */
 
+
 #include <background_window_callbacks.h>
 #include <background_window.h>
 #include <utils.h> 
 
 
-/* Expose event in background window occurs */
+/* Expose event in background window occurs. */
 G_MODULE_EXPORT gboolean
 back_event_expose(GtkWidget *widget, 
 		  GdkEventExpose *event, 
@@ -61,3 +62,5 @@ back_event_expose(GtkWidget *widget,
   drill_window_in_bar_area(widget->window);
   return TRUE;
 }
+
+

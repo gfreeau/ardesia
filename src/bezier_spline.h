@@ -28,7 +28,8 @@
 
 #include <gsl/gsl_linalg.h>
 
-/* Spline the lines */
+
+/* Spline the lines. */
 GSList* spline (GSList *list);
 
 

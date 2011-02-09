@@ -21,19 +21,23 @@
  *
  */
 
-#ifdef HAVE_BACKTRACE
 
-/* 
-   the glibc functions backtrace, backtrace_symbols, backtrace_symbols_fd
-   defined in the header are missing on all non-glibc platforms
-*/
-#include <execinfo.h>
-#include <unistd.h>
+#ifdef HAVE_BACKTRACE
 
 #define MAX_FRAMES (20)
 
 
+/* 
+   The glibc functions backtrace, backtrace_symbols, backtrace_symbols_fd
+   defined in the header are missing on all non-glibc platforms.
+*/
+#include <execinfo.h>
+#include <unistd.h>
+
+
+/* Register the nacktrace handler in system with glibc. */
 void glibc_backtrace_register();
 
-
 #endif
+
+

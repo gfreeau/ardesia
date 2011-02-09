@@ -21,62 +21,65 @@
  *
  */
 
+
 #include <config.h>
 #include <glib.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include <ardesia.h>
 
+
 #ifdef _WIN32
-#include <windows_utils.h>
-#define UI_FILE "..\\share\\ardesia\\ui\\vertical_bar.glade"
-#define UI_HOR_FILE "..\\share\\ardesia\\ui\\horizontal_bar.glade"
+#  include <windows_utils.h>
+#  define UI_FILE "..\\share\\ardesia\\ui\\vertical_bar.glade"
+#  define UI_HOR_FILE "..\\share\\ardesia\\ui\\horizontal_bar.glade"
 #else
-#define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/vertical_bar.glade"
-#define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/horizontal_bar.glade"
+#  define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/vertical_bar.glade"
+#  define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/horizontal_bar.glade"
 #endif  
 
-
-/* distance space from border to the ardesia bar in pixel unit */
+/* Distance space from border to the ardesia bar in pixel unit. */
 #define SPACE_FROM_BORDER 25
 
 
+/* Structure that contains the info passed to the callbacks. */
 typedef struct
 {
-  /* Is the text tool enabled */
+
+  /* Is the text tool enabled. */
   gboolean text;
 
-  /* pencil is selected */
+  /* pencil is selected. */
   gboolean pencil;
 
-  /* highlighter flag */
+  /* highlighter flag. */
   gboolean highlighter;
 
-  /* rectifier flag */
+  /* rectifier flag. */
   gboolean rectifier;
 
-  /* rounder flag */
+  /* rounder flag. */
   gboolean rounder;
 
-  /* arrow flag */
+  /* arrow flag. */
   gboolean arrow;
 
-  /* selected color in RGBA format */
+  /* selected color in RGBA format. */
   gchar* color;
 
-  /* selected line thickness */
+  /* selected line thickness. */
   gint thickness;
 
-  /* annotation is visible */
+  /* annotation is visible. */
   gboolean annotation_is_visible;
 
-  /* grab when leave */
+  /* grab when leave. */
   gboolean grab;
    
 }BarData;
 
 
-/* Create the ardesia bar window */
+/* Create the ardesia bar window. */
 GtkWidget* create_bar_window(CommandLine *commandline, GtkWidget *parent);
 
 

@@ -26,23 +26,27 @@
 
 
 #ifdef _WIN32
-#define PROJECT_UI_FILE "..\\share\\ardesia\\ui\\project_dialog.glade"
+#  define PROJECT_UI_FILE "..\\share\\ardesia\\ui\\project_dialog.glade"
 #else
-#define PROJECT_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/project_dialog.glade"
+#  define PROJECT_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/project_dialog.glade"
 #endif 
 
 
 typedef struct
 {
-  /* Preference dialog */
+
+  /* Preference dialog. */
   GtkBuilder*  project_dialog_gtk_builder;
+
+  /* The project name. */
   gchar* project_name;
+
 }ProjectData;
 
 
 /*
  * Start the dialog that ask to the user
- * the project settings
+ * the project settings.
  */
 gchar* start_project_dialog(GtkWindow *parent);
 
