@@ -27,41 +27,43 @@
 
 /* Expose event: this occurs when the windows is show .*/
 G_MODULE_EXPORT gboolean
-event_expose (GtkWidget *widget, 
-              GdkEventExpose *event, 
-              gpointer func_data);
+event_expose                    (GtkWidget *widget,
+				 GdkEventExpose *event,
+				 gpointer func_data);
 
 
 /* This is called when the button is pushed. */
 G_MODULE_EXPORT gboolean
-paint (GtkWidget *win,
-       GdkEventButton *ev, 
-       gpointer func_data);
+paint                           (GtkWidget *win,
+				 GdkEventButton *ev,
+				 gpointer func_data);
 
 
-/* This shots when the ponter is moving. */
+/* This shots when the pointer is moving. */
 G_MODULE_EXPORT gboolean
-paintto (GtkWidget *win, 
-         GdkEventMotion *ev, 
-         gpointer func_data);
+paintto                         (GtkWidget *win,
+				 GdkEventMotion *ev,
+				 gpointer func_data);
 
 
-/* This shots when the button is realeased. */
+/* This shots when the button is released. */
 G_MODULE_EXPORT gboolean
-paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data);
+paintend                        (GtkWidget *win,
+				 GdkEventButton *ev,
+				 gpointer func_data);
 
 
 /* Device touch. */
 G_MODULE_EXPORT gboolean
-proximity_in (GtkWidget *win,
-              GdkEventProximity *ev, 
-              gpointer func_data);
+proximity_in                    (GtkWidget *win,
+				 GdkEventProximity *ev,
+				 gpointer func_data);
 
 
 /* Device lease. */
 G_MODULE_EXPORT gboolean
-proximity_out (GtkWidget *win, 
-               GdkEventProximity *ev,
-               gpointer func_data);
+proximity_out                   (GtkWidget *win,
+				 GdkEventProximity *ev,
+				 gpointer func_data);
 
 

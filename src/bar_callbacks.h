@@ -32,7 +32,7 @@
  */
 #define SEMI_OPAQUE_ALPHA "66"
 
-/* The timeout after that the tool try to uprise the window;
+/* The time-out after that the tool try to up-rise the window;
  * this is done to prevent the window lowering in the case that
  * the window manager does not support the stay above directive.
  */

@@ -25,7 +25,8 @@
 #include <libxml/xpathInternals.h>
 
 
-/* Load an iwb file and create the list of savepoint. */
-GSList* load_iwb(gchar* iwb_filename);
+/* Load an iwb file and create the list of save-point. */
+GSList *
+load_iwb (gchar *iwb_filename);
 
 

@@ -35,6 +35,8 @@
 /*
  * Start the dialog that give to the user the info about the tool.
  */
-void start_info_dialog(GtkToolButton *toolbutton, GtkWindow *parent);
+void
+start_info_dialog (GtkToolButton *toolbutton,
+		   GtkWindow *parent);
 
 

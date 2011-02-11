@@ -35,16 +35,17 @@ static GPid virtual_keyboard_pid;
 
 
 /* Start the virtual keyboard. */
-void start_virtual_keyboard()
+void
+start_virtual_keyboard ()
 {
 #ifdef linux
-  if (!(is_gnome()))
+  if (! (is_gnome ()))
     {
       return;
     }
 #endif
    
-  gchar* argv[2] = {VIRTUALKEYBOARD_NAME, (gchar*) 0};
+  gchar* argv[2] = {VIRTUALKEYBOARD_NAME, (gchar *) 0};
 
   g_spawn_async (NULL /*working_directory*/,
 		 argv,
@@ -58,24 +59,27 @@ void start_virtual_keyboard()
 
 
 /* Stop the virtual keyboard. */
-void stop_virtual_keyboard()
+void
+stop_virtual_keyboard ()
 {
 #ifdef linux
-  if (!(is_gnome()))
+  if (!(is_gnome ()))
     {
       return;
     }
 #endif
   if (virtual_keyboard_pid > 0)
     { 
-      /* @TODO replace this with the cross plattform g_pid_terminate when it will available */
+      /* @TODO replace this with the cross platform g_pid_terminate 
+       * when it will available 
+       */
 #ifdef _WIN32
-      HWND hwnd = FindWindow(VIRTUALKEYBOARD_WINDOW_NAME, NULL);       
-      SendMessage(hwnd, WM_SYSCOMMAND, SC_CLOSE, 0);
+      HWND hwnd = FindWindow (VIRTUALKEYBOARD_WINDOW_NAME, NULL);       
+      SendMessage (hwnd, WM_SYSCOMMAND, SC_CLOSE, 0);
 #else
       kill (virtual_keyboard_pid, SIGTERM);
 #endif   
-      g_spawn_close_pid(virtual_keyboard_pid); 
+      g_spawn_close_pid (virtual_keyboard_pid); 
       virtual_keyboard_pid = (GPid) 0;
     }
 }

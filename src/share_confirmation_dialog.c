@@ -34,10 +34,11 @@
  * Start the dialog that ask to the user
  * if he wants share you work.
  */
-void start_share_dialog(GtkWindow *parent)
+void
+start_share_dialog (GtkWindow *parent)
 {
   GtkWidget *share_dialog;
-  GSList * artifact_list = get_artifacts();
+  GSList *artifact_list = get_artifacts ();
 
   if (!artifact_list)
     {
@@ -45,22 +46,25 @@ void start_share_dialog(GtkWindow *parent)
     }  
 
   /* Initialize the main window. */
-  GtkBuilder* share_dialog_gtk_builder = gtk_builder_new();
+  GtkBuilder *share_dialog_gtk_builder = gtk_builder_new ();
 
   /* Load the gtk builder file created with glade. */
-  gtk_builder_add_from_file(share_dialog_gtk_builder, SHARE_UI_FILE, NULL);
+  gtk_builder_add_from_file (share_dialog_gtk_builder, SHARE_UI_FILE, NULL);
  
   /* Fill the window by the gtk builder xml. */
-  share_dialog = GTK_WIDGET(gtk_builder_get_object(share_dialog_gtk_builder, "shareDialog"));
-  gtk_window_set_transient_for(GTK_WINDOW(share_dialog), parent);
-  gtk_window_set_modal(GTK_WINDOW(share_dialog), TRUE);
+  share_dialog = GTK_WIDGET (gtk_builder_get_object (share_dialog_gtk_builder, "shareDialog"));
+
+  gtk_window_set_transient_for (GTK_WINDOW (share_dialog), parent);
+  gtk_window_set_modal (GTK_WINDOW (share_dialog), TRUE);
+  gtk_window_set_keep_above (GTK_WINDOW (share_dialog), TRUE);
   
   /* Connect all signals by reflection. */
   gtk_builder_connect_signals (share_dialog_gtk_builder, (gpointer) NULL);
 
-  gtk_dialog_run(GTK_DIALOG(share_dialog));
+  gtk_dialog_run (GTK_DIALOG (share_dialog));
 
-  gtk_widget_destroy(share_dialog);
+  gtk_widget_destroy (share_dialog);
+  share_dialog = NULL;
 }
 
 

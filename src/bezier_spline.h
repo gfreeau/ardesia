@@ -30,6 +30,7 @@
 
 
 /* Spline the lines. */
-GSList* spline (GSList *list);
+GSList *
+spline (GSList *list);
 
 

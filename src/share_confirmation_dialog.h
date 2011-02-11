@@ -36,6 +36,7 @@
  * Start the dialog that ask to the user
  * if he wants share your work.
  */
-void start_share_dialog(GtkWindow *parent);
+void
+start_share_dialog (GtkWindow *parent);
 
 

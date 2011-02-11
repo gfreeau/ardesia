@@ -36,25 +36,31 @@
 /*
  * Start the dialog that ask to the user where save the video
  * containing the screencast.
- * This function take as input the recor toolbutton in ardesia bar
+ * This function take as input the recorder tool button in ardesia bar
  * return true is the recorder is started.
  */
-gboolean start_save_video_dialog(GtkToolButton   *toolbutton, GtkWindow *parent);
+gboolean
+start_save_video_dialog (GtkToolButton *toolbutton,
+			 GtkWindow *parent);
 
 
 /* Quit to record. */
-void quit_recorder();
+void
+quit_recorder ();
 
 
 /* Return if the recording is active. */
-gboolean is_recording();
+gboolean
+is_recording ();
 
 
 /* Is the recorder available. */
-gboolean is_recorder_available();
+gboolean
+is_recorder_available ();
 
 
 /* Missing program dialog. */
-void visualize_missing_recorder_program_dialog(GtkWindow* parent_window);
+void
+visualize_missing_recorder_program_dialog (GtkWindow *parent_window);
 
 

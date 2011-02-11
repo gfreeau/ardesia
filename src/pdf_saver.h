@@ -34,22 +34,24 @@ typedef struct
 {
 
   /* The current pdf save thread. */
-  GThread  * thread;  
+  GThread  *thread;  
 
   /* The list contains the file name of all the input pdf pages saved. */
-  GSList* input_filelist;
+  GSList *input_filelist;
 
   /* The file name where store the pdf. */
-  gchar*  filename;
+  gchar *filename;
 
 }PdfData;
 
 
 /* Add the screenshot to pdf. */
-void add_pdf_page(GtkWindow *parent);
+void
+add_pdf_page (GtkWindow *parent);
 
 
 /* Quit the pdf saver. */
-void quit_pdf_saver();
+void
+quit_pdf_saver ();
 
 

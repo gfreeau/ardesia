@@ -29,7 +29,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
-                <signal name="focus_in_event" handler="on_projectDialogEntry_focus_in_event"/>
+                <signal name="focus_in_event" handler="on_project_dialog_entry_focus_in_event"/>
               </object>
               <packing>
                 <property name="position">1</property>
@@ -54,7 +54,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
-                <signal name="clicked" handler="on_projectOkButton_clicked"/>
+                <signal name="clicked" handler="on_project_ok_button_clicked"/>
               </object>
               <packing>
                 <property name="expand">False</property>

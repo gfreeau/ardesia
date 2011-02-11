@@ -96,8 +96,9 @@ struct output_buffer {
 };
 
 
-/* Register the backtrace handler on windows */
-void windows_backtrace_register();
+/* Register the back-trace handler on windows */
+void
+windows_backtrace_register ();
 
 #endif
 

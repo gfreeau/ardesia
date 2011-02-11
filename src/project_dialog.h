@@ -36,10 +36,10 @@ typedef struct
 {
 
   /* Preference dialog. */
-  GtkBuilder*  project_dialog_gtk_builder;
+  GtkBuilder *project_dialog_gtk_builder;
 
   /* The project name. */
-  gchar* project_name;
+  gchar *project_name;
 
 }ProjectData;
 
@@ -48,6 +48,7 @@ typedef struct
  * Start the dialog that ask to the user
  * the project settings.
  */
-gchar* start_project_dialog(GtkWindow *parent);
+gchar *
+start_project_dialog (GtkWindow *parent);
 
 

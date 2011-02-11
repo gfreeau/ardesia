@@ -37,10 +37,10 @@ typedef struct
 {
 
   /* Preference dialog. */
-  GtkBuilder*  crash_dialog_gtk_builder;
+  GtkBuilder *crash_dialog_gtk_builder;
   
   /* The text that will contain the crash report. */
-  gchar*  crash_report;
+  gchar *crash_report;
 
 }CrashData;
 
@@ -48,6 +48,8 @@ typedef struct
 /*
  * Start the dialog that inform that a crash is occurred.
  */
-void start_crash_dialog(GtkWindow *parent, gchar* crash_report);
+void
+start_crash_dialog (GtkWindow *parent,
+		    gchar *crash_report);
 
 

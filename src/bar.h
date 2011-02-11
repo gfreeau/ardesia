@@ -64,7 +64,7 @@ typedef struct
   /* arrow flag. */
   gboolean arrow;
 
-  /* selected color in RGBA format. */
+  /* selected colour in RGBA format. */
   gchar* color;
 
   /* selected line thickness. */
@@ -80,6 +80,8 @@ typedef struct
 
 
 /* Create the ardesia bar window. */
-GtkWidget* create_bar_window(CommandLine *commandline, GtkWidget *parent);
+GtkWidget *
+create_bar_window (CommandLine *commandline,
+		   GtkWidget *parent);
 
 

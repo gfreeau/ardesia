@@ -41,17 +41,25 @@
 #define LWA_COLORKEY	0x00000001
 
   
-/* Set layered window atrributes to a gdk window */
-void setLayeredGdkWindowAttributes(GdkWindow* gdk_window, COLORREF cr_key, BYTE b_alpha, DWORD dw_flags);
+/* Set layered window attributes to a gdk window */
+void
+setLayeredGdkWindowAttributes (GdkWindow *gdk_window,
+			       COLORREF cr_key,
+			       BYTE b_alpha,
+			       DWORD dw_flags);
 
   
 /* 
  * gdk_cursor_new_from_pixmap is broken on Windows.
  * this is a workaround using gdk_cursor_new_from_pixbuf. 
  */
-GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
-					    const GdkColor *fg, const GdkColor *bg,
-					    gint x, gint y);
+GdkCursor *
+fixed_gdk_cursor_new_from_pixmap (GdkPixmap *source,
+				  GdkPixmap *mask,
+				  const GdkColor *fg,
+				  const GdkColor *bg,
+				  gint x,
+				  gint y);
 						
 						
 /* Override the with the gdk_cursor_new_from_pixmap with the fixed version. */						
@@ -59,11 +67,19 @@ GdkCursor* fixed_gdk_cursor_new_from_pixmap(GdkPixmap *source, GdkPixmap *mask,
 
 
 /* Send an email with MAPI. */
-void windows_send_email(gchar* to, gchar* subject, gchar* body, GSList* attachment_list);
+void
+windows_send_email (gchar *to,
+		    gchar *subject,
+		    gchar *body,
+		    GSList *attachment_list);
 
 
 /* Create a link with icon. */
-void windows_create_link(gchar* src, gchar* dest, gchar* icon_path, int icon_index);
+void
+windows_create_link (gchar *src,
+		     gchar *dest,
+		     gchar *icon_path,
+		     int icon_index);
 
 #endif
 

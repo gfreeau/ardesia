@@ -42,49 +42,56 @@ typedef struct
   /* Gtkbuilder for background window. */
   GtkBuilder *background_window_gtk_builder;
 
-  /* Background color selected. */
-  gchar* background_color; 
+  /* Background colour selected. */
+  gchar *background_color; 
 
   /* Background image selected. */
-  gchar* background_image;
+  gchar *background_image;
  
   /* The background widget that represent the full window. */
-  GtkWidget* background_window;
+  GtkWidget *background_window;
 
   /* cairo context to draw on the background window. */
   cairo_t *back_cr;
 
   /* Used by the input shape mask. */
-  GdkPixmap* background_shape;
+  GdkPixmap *background_shape;
  
 }BackGroundData;
 
 
 /* Create the background window. */
-GtkWidget* create_background_window();
+GtkWidget *
+create_background_window ();
 
 
 /* Change the background image. */
-void change_background_image(gchar *background_image);
+void
+change_background_image (gchar *background_image);
 
 
-/* Change the background color. */
-void change_background_color(gchar *rgba);
+/* Change the background colour. */
+void
+change_background_color (gchar *rgba);
 
 
 /* Clear the background. */
-void clear_background_window();
+void
+clear_background_window ();
 
 
 /* Destroy background window. */
-void destroy_background_window();
+void
+destroy_background_window ();
 
 
 /* Get the background window. */
-GtkWidget* get_background_window();
+GtkWidget * 
+get_background_window ();
 
 
 /* Set the background window. */
-void set_background_window(GtkWidget* widget);
+void
+set_background_window (GtkWidget *widget);
 
 

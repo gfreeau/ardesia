@@ -45,7 +45,7 @@ typedef struct
 {
 
   /* The file name of the iwb. */
-  gchar* iwb_filename;
+  gchar *iwb_filename;
 
   /* Is the debug mode enabled? */
   gboolean debug;

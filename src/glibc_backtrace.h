@@ -35,8 +35,9 @@
 #include <unistd.h>
 
 
-/* Register the nacktrace handler in system with glibc. */
-void glibc_backtrace_register();
+/* Register the back-trace handler in system with glibc. */
+void
+glibc_backtrace_register ();
 
 #endif
 

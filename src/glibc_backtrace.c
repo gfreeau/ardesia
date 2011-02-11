@@ -35,87 +35,91 @@
 
 #ifdef HAVE_LIBBFD
 #  include <bfd.h>
-#  if ( defined(__macos_x__) || defined(__macos_x) || defined(_macos_x) || defined(macos_x) || \
-	defined(__apple__) || defined(__apple) || defined(_apple) || defined(apple) )
+#  if ( defined (__macos_x__) || defined (__macos_x) || defined (_macos_x) || defined (macos_x) || \
+	defined (__apple__) || defined (__apple) || defined (_apple) || defined (apple) )
 #  include <sys/param.h>
 #  include <mach-o/dyld.h>
 #endif 
 
 
 /* Globals retained across calls to resolve. */
-static bfd* abfd = 0;
+static bfd *abfd = 0;
 static asymbol **syms = 0;
 static asection *text = 0;
 
 
 /* Put a trace line in the file giving the address. */
-static void create_trace_line(char *address, FILE *file) 
+static void
+create_trace_line (char *address, 
+		   FILE *file) 
 {
   char ename[1024];
   ssize_t l = -1;
   long storage_needed = 0;
   unsigned long offset = 0;
-#if ( defined(__freebsd__) || defined(__freebsd) || defined(_freebsd) || defined(freebsd) )
-  l = readlink("/proc/curproc/file", chrarray_Buffer, PATH_MAXLEN);
-#elif ( defined(__macos_x__) || defined(__macos_x) || defined(_macos_x) || defined(macos_x) || \
-	defined(__apple__) || defined(__apple) || defined(_apple) || defined(apple) )
+#if ( defined (__freebsd__) || defined (__freebsd) || defined (_freebsd) || defined (freebsd) )
+  l = readlink ("/proc/curproc/file", chrarray_Buffer, PATH_MAXLEN);
+#elif ( defined (__macos_x__) || defined (__macos_x) || defined (_macos_x) || defined (macos_x) || \
+	defined (__apple__) || defined (__apple) || defined (_apple) || defined (apple) )
   u32 u32_buffer_length ;
-  if ( _NSGetExecutablePath( chrarray_Buffer, &u32_buffer_length ))
+  if ( _NSGetExecutablePath ( chrarray_Buffer, &u32_buffer_length ))
     {
-      printf("An error occured while reading the executable path. Program terminated.\n");
+      printf ("An error occured while reading the executable path. Program terminated.\n");
     }
 #else // Linux
-  l = readlink("/proc/self/exe",ename,sizeof(ename));
+  l = readlink ("/proc/self/exe",ename,sizeof (ename));
 #endif
   
   if (l == -1) 
     {
-      fprintf(stderr, "failed to find executable\n");
+      fprintf (stderr, "failed to find executable\n");
       return;
     }
  	
   ename[l] = 0;
 
-  bfd_init();
+  bfd_init ();
 
-  abfd = bfd_openr(ename, 0);
+  abfd = bfd_openr (ename, 0);
    
   if (!abfd)
     {
-      fprintf(stderr, "bfd_openr failed: ");
+      fprintf (stderr, "bfd_openr failed: ");
       return;
     }
    
   /* Oddly, this is required for it to work... */
-  if (!bfd_check_format(abfd,bfd_object))
+  if (!bfd_check_format (abfd,bfd_object))
     {
-      fprintf(stderr, "bfd_check_format failed\n");
+      fprintf (stderr, "bfd_check_format failed\n");
       return;
     }
 
-  storage_needed = bfd_get_symtab_upper_bound(abfd);
-  syms = (asymbol **) malloc(storage_needed);
+  storage_needed = bfd_get_symtab_upper_bound (abfd);
+  syms = (asymbol **) malloc (storage_needed);
 
-  text = bfd_get_section_by_name(abfd, ".text");
+  text = bfd_get_section_by_name (abfd, ".text");
 
-  offset = ((unsigned long)address) - text->vma;
+  offset = ( (unsigned long) address) - text->vma;
    
   if (offset > 0) 
     {
       const char *filen;
       const char *func;
       unsigned line;
-      if (bfd_find_nearest_line(abfd, text, syms, offset, &filen, &func, &line) && file)
+      if (bfd_find_nearest_line (abfd, text, syms, offset, &filen, &func, &line) && file)
 	{
-	  fprintf(stderr, "file: %s, line: %u, func %s\n",filen,line,func);
-          fprintf(file, "file: %s, line: %u, func %s\n",filen,line,func);
+	  fprintf (stderr, "file: %s, line: %u, func %s\n", filen, line, func);
+	  fprintf (file, "file: %s, line: %u, func %s\n", filen, line, func);
 	}
     }
 }
 #else
-static void create_trace_line(char *address, FILE *file) 
+static void
+create_trace_line (char *address,
+		   FILE *file) 
 {
-  fprintf(stderr, "Unable to create the stacktrace line bfd library is not build or supported on your system\n");
+  fprintf (stderr, "Unable to create the stacktrace line; check the bfd library installation\n");
 }
 #endif
 
@@ -123,61 +127,71 @@ static void create_trace_line(char *address, FILE *file)
 #ifdef HAVE_BACKTRACE
 
 /* Create the trace to be printed. */
-static void create_trace() 
+static void
+create_trace () 
 {
 
-  void *array[MAX_FRAMES];
+  void  *array[MAX_FRAMES];
+  void  *approx_text_end = (void*) ( (128+100) * 2<<20);
+  gchar *default_filename = get_default_filename ();
+  gchar *backtrace_name = g_strdup_printf ("%s_stacktrace.txt", default_filename);
+  gchar *filename  = g_build_filename ( g_get_tmp_dir (), backtrace_name, (gchar *) 0);
   size_t size;
   size_t i;
-  void *approx_text_end = (void*) ((128+100) * 2<<20);
-  gchar* default_filename = get_default_filename();
-  gchar* filename  = g_strdup_printf("%s%s%s_stacktrace.txt", g_get_tmp_dir(), G_DIR_SEPARATOR_S, default_filename);
-  FILE *file = fopen(filename, "w");
+
+  g_free (default_filename);
+  g_free (backtrace_name);
+
+  FILE *file = fopen (filename, "w");
 
   /* 
    * The glibc functions backtrace is missing on all non-glibc platforms.
    */
   
   size = backtrace (array, MAX_FRAMES);
-  g_free(default_filename);
+  g_free (default_filename);
 
   for (i = 0; i < size; i++)
     {
       if (array[i] < approx_text_end)
 	{
-	  create_trace_line(array[i], file);      
+	  create_trace_line (array[i], file);      
 	}
     }
 
-  fclose(file);
-  start_crash_dialog(NULL, filename);
-  g_free(filename);
+  fclose (file);
+  start_crash_dialog (NULL, filename);
+  g_free (filename);
 }
 #else
-static void create_trace() 
+static void
+create_trace () 
 {
-  fprintf(stderr, "Unable to create the stacktrace the glibc backtrace function is not supported by your system\n");
-  fprintf(stderr, "Please use the gdb and the bt command to create the trace\n");
+  fprintf (stderr, "Unable to create the stack-trace the glibc back-trace function is not supported by your system\n");
+  fprintf (stderr, "Please use the gdb and the bt command to create the trace\n");
 }
 #endif
 
 
 /* Is called when occurs a sigsegv. */
-static int sigsegv_handler(void *addr, int bad)
+static int
+sigsegv_handler (void *addr,
+		 int bad)
 {
-  create_trace(); 
-  exit(EXIT_FAILURE);
+  create_trace (); 
+  exit (EXIT_FAILURE);
 }
 
 
-/* Register the backtrace handler. */
-void glibc_backtrace_register()
+/* Register the back-trace handler. */
+void
+glibc_backtrace_register ()
 {
 #ifdef HAVE_LIBSIGSEGV
   /* Install the SIGSEGV handler. */
-  if (sigsegv_install_handler(sigsegv_handler)<0)
+  if (sigsegv_install_handler (sigsegv_handler)<0)
     {
-      exit(EXIT_FAILURE);
+      exit (EXIT_FAILURE);
     }
 #endif
 }

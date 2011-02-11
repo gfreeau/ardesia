@@ -34,10 +34,12 @@
 
 
 /* Start the virtual keyboard. */
-void start_virtual_keyboard();
+void
+start_virtual_keyboard ();
 
 
 /* Stop the virtual keyboard. */
-void stop_virtual_keyboard();
+void
+stop_virtual_keyboard ();
 
 

@@ -61,20 +61,20 @@
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
-#  define _(String) dgettext (PACKAGE, String)
+#  define _ (String) dgettext (PACKAGE, String)
 #  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
+#    define N_ (String) gettext_noop (String)
 #  else
-#    define N_(String) (String)
+#    define N_ (String) (String)
 #  endif
 #else
-#  define textdomain(String) (String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory) (Domain)
-#  define _(String) (String)
-#  define N_(String) (String)
+#  define textdomain (String) (String)
+#  define gettext (String) (String)
+#  define dgettext (Domain,Message) (Message)
+#  define dcgettext (Domain,Message,Type) (Message)
+#  define bindtextdomain (Domain,Directory) (Domain)
+#  define _ (String) (String)
+#  define N_ (String) (String)
 #endif
 
 
@@ -105,96 +105,125 @@ typedef struct
 
 
 /* Get the name of the current project. */
-gchar* get_project_name();
+gchar*
+get_project_name ();
 
 
 /* Set the name of the current project. */
-void set_project_name(gchar * name);
+void
+set_project_name (gchar *name);
 
 
-/* Get the dir of the current project. */
-gchar* get_project_dir();
+/* Get the directory of the current project. */
+gchar *
+get_project_dir ();
 
 
-/* Set the dir of the current project. */
-void set_project_dir(gchar * dir);
+/* Set the directory of the current project. */
+void
+set_project_dir (gchar *dir);
 
 
 /* Get the iwb file name of the current project. */
-gchar* get_iwb_filename();
+gchar *
+get_iwb_filename ();
 
 
 /* Set the iwb file name of the current project. */
-void set_iwb_filename(gchar * file);
+void
+set_iwb_filename (gchar *file);
 
 
-/* Get the list of the path of the artifacts created in the session. */
-GSList* get_artifacts();
+/* Get the list of the path of the artefacts created in the session. */
+GSList *
+get_artifacts ();
 
 
-/* Add the path of an artifacts created in the session to the list. */
-void add_artifact(gchar* path);
+/* Add the path of an artefacts created in the session to the list. */
+void add_artifact (gchar* path);
 
 
-/* Free the structure containing the artifact list created in the session. */
-void free_artifacts();
+/* Free the structure containing the artefact list created in the session. */
+void
+free_artifacts ();
 
 
-/* Ungrab pointer. */
-void ungrab_pointer(GdkDisplay* display, GtkWidget *win);
+/* Un-grab pointer. */
+void
+ungrab_pointer (GdkDisplay *display,
+		GtkWidget *win);
 
 
 /* Grab pointer. */
-void grab_pointer(GtkWidget *win, GdkEventMask eventmask);
+void
+grab_pointer (GtkWidget *win,
+	      GdkEventMask eventmask);
   
 				
 /* get bar window widget. */
-GtkWidget* get_bar_window();
+GtkWidget *
+get_bar_window ();
 
 
 /* Take a GdkColor and return the RGB string. */
-gchar* gdkcolor_to_rgb(GdkColor* gdkcolor);
+gchar *
+gdkcolor_to_rgb (GdkColor *gdkcolor);
 
 
 /* Set the cairo surface color to the RGBA string. */
-void cairo_set_source_color_from_string( cairo_t * cr, gchar* color);
+void
+cairo_set_source_color_from_string (cairo_t *cr,
+				    gchar *color);
 
 
 /* Set the cairo surface color to transparent. */
-void  cairo_set_transparent_color(cairo_t * cr);
+void
+cairo_set_transparent_color (cairo_t *cr);
 
 
-/* Distance beetween two points using the Pitagora theorem. */
-gdouble get_distance(gdouble x1, gdouble y1, gdouble x2, gdouble y2);
+/* Distance between two points using the Pitagora theorem. */
+gdouble
+get_distance (gdouble x1,
+	      gdouble y1,
+	      gdouble x2,
+	      gdouble y2);
 
 
 /* Clear cairo context. */
-void clear_cairo_context(cairo_t* cr);
+void
+clear_cairo_context (cairo_t *cr);
 
 
 /*
  * This is function return if the point (x,y) in inside the ardesia bar window.
  */
-gboolean inside_bar_window(gdouble xp, gdouble yp);
+gboolean
+inside_bar_window (gdouble xp,
+		   gdouble yp);
 
 
 /* Drill the gdkwindow in the area where the ardesia bar is located. */
-void drill_window_in_bar_area(GdkWindow* window);
+void
+drill_window_in_bar_area (GdkWindow *window);
 
 
 /*
  * Take a rgba string and return the pointer to the allocated GdkColor 
  * neglecting the alpha channel.
  */
-GdkColor* rgba_to_gdkcolor(gchar* rgb);
+GdkColor *
+rgba_to_gdkcolor (gchar *rgb);
 
 
-/* Save the contents of the pixbuf in the file with name filename. */
-gboolean save_png(GdkPixbuf *pixbuf,const gchar *filename);
+/* Save the contents of the pixbuf in the file with name file name. */
+gboolean
+save_png (GdkPixbuf *pixbuf,
+	  const gchar *filename);
 
 
-/* Grab the screenshoot and put it in the GdkPixbuf. */
-GdkPixbuf* grab_screenshot();
+/* Grab the screenshoot and put it in the image buffer. */
+GdkPixbuf *
+grab_screenshot ();
 
 
 /* 
@@ -202,71 +231,100 @@ GdkPixbuf* grab_screenshot();
  * the project name and the current date. 
  *
  */
-gchar* get_default_filename();
+gchar *
+get_default_filename ();
 
 
 /* 
  * Get the current date and format in a printable format; 
  * the returned value must be free with the g_free. 
  */
-gchar* get_date();
+gchar *
+get_date ();
 
 
 /* Return if a file exists. */
-gboolean file_exists(gchar* filename);
+gboolean
+file_exists (gchar* filename);
 
 
 /*
  * Get the desktop directory.
  */
-const gchar* get_desktop_dir(void);
+const gchar *
+get_desktop_dir (void);
 
 
 /*
  * Get the documents directory.
  */
-const gchar* get_documents_dir(void);
+const gchar *
+get_documents_dir (void);
 
 
 /* Remove recursive a directory. */
-void rmdir_recursive(gchar *path);
+void
+rmdir_recursive (gchar *path);
 
 
 /* Allocate a new point belonging to the stroke passing the values. */
-AnnotateStrokeCoordinate* allocate_point(gint x, gint y, gint width, gdouble pressure);
+AnnotateStrokeCoordinate *
+allocate_point (gint x,
+		gint y,
+		gint width,
+		gdouble pressure);
 
 
 /* Send an email. */
-void send_email(gchar* to, gchar* subject, gchar* body, GSList* attachment_list);
+void
+send_email (gchar *to,
+	    gchar *subject,
+	    gchar *body,
+	    GSList *attachment_list);
 
 
-/* Send artifacts with email. */
-void send_artifacts_with_email(GSList* attachment_list);
+/* Send artefacts with email. */
+void
+send_artifacts_with_email (GSList *attachment_list);
 
 
 /* Send trace with email. */
-void send_trace_with_email(gchar* attachment);
+void
+send_trace_with_email (gchar *attachment);
 
 
 /* Is the desktop manager gnome. */
-gboolean is_gnome();
+gboolean
+is_gnome ();
 
 
 /* Create desktop entry passing value. */
-void xdg_create_desktop_entry(gchar* filename, gchar* type, gchar* name, gchar* lang, gchar* icon, gchar* exec);
+void
+xdg_create_desktop_entry (gchar *filename,
+			  gchar *type,
+			  gchar *name, 
+			  gchar *lang,
+			  gchar *icon,
+			  gchar *exec);
 
 
 /* Create a desktop link. */
-void xdg_create_link(gchar* src_filename, gchar* dest, gchar* icon);
+void
+xdg_create_link (gchar *src_filename,
+		 gchar *dest,
+		 gchar *icon);
 
 
-/* Get the last position where substr occurs in str. */
-int g_substrlastpos(const char *str, const char *substr);
+/* Get the last position where sub-string occurs in string. */
+int
+g_substrlastpos (const char *str,
+		 const char *substr);
 
 
-/* Substring of string from start to end position. */
-gchar* g_substr (const gchar* string,
-		 gint         start,
-		 gint         end);
+/* Sub-string of string from start to end position. */
+gchar * 
+g_substr (const gchar *string,
+	  gint start,
+	  gint end);
 
 

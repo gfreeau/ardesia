@@ -38,13 +38,13 @@ typedef struct
 {
 
   /* Preference dialog. */
-  GtkBuilder*  preference_dialog_gtk_builder;
+  GtkBuilder *preference_dialog_gtk_builder;
 
   /* 0 no background, 1 background color, 2 png background, */
   gint 	     background;
 
   /* Preview of background file. */
-  GtkWidget*   preview;
+  GtkWidget *preview;
 
 }PreferenceData;
 
@@ -53,6 +53,7 @@ typedef struct
  * Start the dialog that ask to the user
  * the background setting.
  */
-void start_preference_dialog(GtkWindow *parent);
+void
+start_preference_dialog (GtkWindow *parent);
 
 

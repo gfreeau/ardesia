@@ -13,11 +13,11 @@
     <property name="gravity">center</property>
     <property name="opacity">0.9</property>
     <property name="startup_id">Ardesia</property>
-    <signal name="destroy" handler="on_winMain_destroy_event"/>
-    <signal name="leave_notify_event" handler="on_winMain_leave_notify_event"/>
-    <signal name="configure_event" handler="on_window_configure_event"/>
-    <signal name="enter_notify_event" handler="on_winMain_enter_notify_event"/>
-    <signal name="delete_event" handler="on_winMain_delete_event"/>
+    <signal name="destroy" handler="on_bar_destroy_event"/>
+    <signal name="leave_notify_event" handler="on_bar_leave_notify_event"/>
+    <signal name="configure_event" handler="on_bar_configure_event"/>
+    <signal name="enter_notify_event" handler="on_bar_enter_notify_event"/>
+    <signal name="delete_event" handler="on_bar_delete_event"/>
     <child>
       <object class="GtkHBox" id="toolboxMain">
         <property name="visible">True</property>
@@ -36,7 +36,7 @@
                 <property name="tooltip_text" translatable="yes">Thickness</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">medium</property>
-                <signal name="clicked" handler="on_toolsThick_activate"/>
+                <signal name="clicked" handler="on_bar_thick_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -63,7 +63,7 @@
                 <property name="tooltip_text" translatable="yes">Drawing Mode</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">hand</property>
-                <signal name="clicked" handler="on_toolsMode_activate"/>
+                <signal name="clicked" handler="on_bar_mode_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -90,7 +90,7 @@
                 <property name="tooltip_text" translatable="yes">Filler</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">filler</property>
-                <signal name="clicked" handler="on_toolsFiller_activate"/>
+                <signal name="clicked" handler="on_bar_filler_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -118,7 +118,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">arrow</property>
                 <property name="group">buttonPencil</property>
-                <signal name="clicked" handler="on_toolsArrow_activate"/>
+                <signal name="clicked" handler="on_bar_arrow_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -133,14 +133,13 @@
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-italic</property>
                 <property name="group">buttonPencil</property>
-                <signal name="clicked" handler="on_toolsText_activate"/>
+                <signal name="clicked" handler="on_bar_text_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="homogeneous">True</property>
               </packing>
             </child>
-          
             <child>
               <object class="GtkRadioToolButton" id="buttonHighlighter">
                 <property name="height_request">27</property>
@@ -149,7 +148,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">highlighter</property>
                 <property name="group">buttonPencil</property>
-                <signal name="clicked" handler="on_toolsHighlighter_activate"/>
+                <signal name="clicked" handler="on_bar_highlighter_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -164,7 +163,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">eraser</property>
                 <property name="group">buttonPencil</property>
-                <signal name="clicked" handler="on_toolsEraser_activate"/>
+                <signal name="clicked" handler="on_bar_eraser_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -178,7 +177,7 @@
                 <property name="tooltip_text" translatable="yes">Pencil</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">pencil</property>
-                <signal name="clicked" handler="on_toolsPencil_activate"/>
+                <signal name="clicked" handler="on_bar_pencil_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -206,7 +205,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">blue</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_colorBlue_activate"/>
+                <signal name="clicked" handler="on_bar_blue_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -221,7 +220,7 @@
                 <property name="use_underline">True</property>
                 <property name="icon_widget">green</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_colorGreen_activate"/>
+                <signal name="clicked" handler="on_bar_green_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -236,7 +235,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">yellow</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_colorYellow_activate"/>
+                <signal name="clicked" handler="on_bar_yellow_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -250,7 +249,7 @@
                 <property name="tooltip_text" translatable="yes">Red</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">red</property>
-                <signal name="clicked" handler="on_colorRed_activate"/>
+                <signal name="clicked" handler="on_bar_red_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -265,7 +264,7 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">white</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_colorWhite_activate"/>
+                <signal name="clicked" handler="on_bar_white_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -279,7 +278,7 @@
                 <property name="tooltip_text" translatable="yes">Color Chooser</property>
                 <property name="stock_id">gtk-select-color</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_buttonColor_activate"/>
+                <signal name="clicked" handler="on_bar_color_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -306,7 +305,7 @@
                 <property name="tooltip_text" translatable="yes">Unlock</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">lock</property>
-                <signal name="clicked" handler="on_buttonUnlock_activate"/>
+                <signal name="clicked" handler="on_bar_unlock_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -319,7 +318,7 @@
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Clear</property>
                 <property name="stock_id">gtk-clear</property>
-                <signal name="clicked" handler="on_buttonClear_activate"/>
+                <signal name="clicked" handler="on_bar_clear_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -345,7 +344,7 @@
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Undo</property>
                 <property name="stock_id">gtk-undo</property>
-                <signal name="clicked" handler="on_buttonUndo_activate"/>
+                <signal name="clicked" handler="on_bar_undo_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -358,7 +357,7 @@
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Redo</property>
                 <property name="stock_id">gtk-redo</property>
-                <signal name="clicked" handler="on_buttonRedo_activate"/>
+                <signal name="clicked" handler="on_bar_redo_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -385,7 +384,7 @@
                 <property name="tooltip_text" translatable="yes">Preferences</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-preferences</property>
-                <signal name="clicked" handler="on_toolsPreferences_activate"/>
+                <signal name="clicked" handler="on_bar_preferences_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -399,7 +398,7 @@
                 <property name="tooltip_text" translatable="yes">Screenshot</property>
                 <property name="use_underline">True</property>
 		<property name="label_widget">screenshoot</property>
-                <signal name="clicked" handler="on_toolsScreenShot_activate"/>
+                <signal name="clicked" handler="on_bar_screenshot_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -413,7 +412,7 @@
                 <property name="tooltip_text" translatable="yes">Add to pdf</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">addpdf</property>
-                <signal name="clicked" handler="on_toolsAddPdf_activate"/>
+                <signal name="clicked" handler="on_bar_add_pdf_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -427,7 +426,7 @@
                 <property name="tooltip_text" translatable="yes">Record</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">media-record</property>
-                <signal name="clicked" handler="on_toolsRecorder_activate"/>
+                <signal name="clicked" handler="on_bar_recorder_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -442,7 +441,7 @@
                 <property name="label" translatable="yes">info</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-info</property>
-                <signal name="clicked" handler="on_info"/>
+                <signal name="clicked" handler="on_bar_info"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -456,7 +455,7 @@
                 <property name="tooltip_text" translatable="yes">Quit</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-quit</property>
-                <signal name="clicked" handler="on_quit"/>
+                <signal name="clicked" handler="on_bar_quit"/>
               </object>
               <packing>
                 <property name="expand">False</property>

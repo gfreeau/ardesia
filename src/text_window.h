@@ -91,13 +91,13 @@ typedef struct
   /* Gtkbuilder to build the window. */
   GtkBuilder *text_window_gtk_builder;
 
-  GtkWidget* window;
+  GtkWidget  *window;
 
   GPid virtual_keyboard_pid;
 
   cairo_t *cr;
 
-  Pos* pos;
+  Pos *pos;
 
   GSList *letterlist; 
 
@@ -119,10 +119,14 @@ typedef struct
 
 
 /* Start text widget. */
-void start_text_widget(GtkWindow *parent, gchar* color, gint tickness);
+void
+start_text_widget (GtkWindow *parent,
+		   gchar *color,
+		   gint tickness);
 
 
 /* Stop text widget. */
-void stop_text_widget();
+void
+stop_text_widget ();
 
 

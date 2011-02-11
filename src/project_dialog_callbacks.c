@@ -29,25 +29,27 @@
 
 /* This shot when the text entry is in focus. */
 G_MODULE_EXPORT gboolean 
-on_projectDialogEntry_focus_in_event (GtkWidget *widget,
-				      GdkEvent *event,
-				      gpointer func_data)
+on_project_dialog_entry_focus_in_event (GtkWidget *widget,
+					GdkEvent *event,
+					gpointer func_data)
 {
-  start_virtual_keyboard();
+  start_virtual_keyboard ();
   return TRUE;
 }
 
 
 /* Shot when the ok button in preference dialog is pushed. */
 G_MODULE_EXPORT void
-on_projectOkButton_clicked(GtkButton *buton, gpointer data)
+on_project_ok_button_clicked (GtkButton *buton,
+			      gpointer data)
 {
-  ProjectData* project_data = (ProjectData* ) data;
-  GtkWidget* dialog_entry = GTK_WIDGET(gtk_builder_get_object(project_data->project_dialog_gtk_builder, "projectDialogEntry"));
-  gchar* str = gtk_editable_get_chars(GTK_EDITABLE(dialog_entry), 0, -1);
-  g_free(project_data->project_name); 
+  ProjectData *project_data = (ProjectData *) data;
+  GObject *dialog_obj = gtk_builder_get_object (project_data->project_dialog_gtk_builder, "projectDialogEntry");
+  GtkWidget *dialog_entry = GTK_WIDGET (dialog_obj);
+  gchar* str = gtk_editable_get_chars (GTK_EDITABLE (dialog_entry), 0, -1);
+  g_free (project_data->project_name); 
   project_data->project_name = str;
-  stop_virtual_keyboard(); 
+  stop_virtual_keyboard (); 
 }
 
 

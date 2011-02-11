@@ -33,7 +33,7 @@ back_event_expose(GtkWidget *widget,
 		  GdkEventExpose *event, 
 		  gpointer user_data)
 {
-  BackGroundData* background_data = (BackGroundData*) user_data;
+  BackGroundData *background_data = (BackGroundData*) user_data;
   
   gint is_fullscreen = gdk_window_get_state(widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
   if (!is_fullscreen)
@@ -59,7 +59,6 @@ back_event_expose(GtkWidget *widget,
       clear_background_window();    
     }
 
-  drill_window_in_bar_area(widget->window);
   return TRUE;
 }
 
