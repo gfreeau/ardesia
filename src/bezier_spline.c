@@ -37,9 +37,10 @@ spline (GSList *list)
   gdouble m_x[lenght][2]; 
   gint width = 12;
   gdouble pressure = 1;
+
   for  (i=0; i<lenght; i++)
     {
-      AnnotateStrokeCoordinate *point = (AnnotateStrokeCoordinate*) g_slist_nth_data (list, i);
+      AnnotatePoint *point = (AnnotatePoint*) g_slist_nth_data (list, i);
       m_x[i][0] = point->x;
       m_x[i][1] = point->y;
       if (i==0)
@@ -72,18 +73,18 @@ spline (GSList *list)
               x = inv (A)*b
 
        Pi, Qi and Xi are (x,y) pairs!
-  
+
   *****************************************************************************/
   gint s, eq = 0;
   gsl_matrix *m;
   gsl_vector *bx, *by, *x;
   gsl_permutation *perm;
-   
+
   /* Allocate matrix and vectors. */
   m  = gsl_matrix_calloc (2* (lenght-1), 2* (lenght-1)); 
   bx = gsl_vector_calloc (2* (lenght-1)); 
   by = gsl_vector_calloc (2* (lenght-1)); 
-  
+
   /* Fill-in matrix. */
   for ( i = 0; i < lenght-2; i++ ) 
     {
@@ -97,6 +98,7 @@ spline (GSList *list)
       gsl_matrix_set (m, eq, (lenght-1)+i, -2);   // - 2*Qi
       eq++;                                 // = 0
     }
+
   gsl_matrix_set (m, eq++, 0, 1);            // P0   = X0
   gsl_matrix_set (m, eq++, 2* (lenght-1)-1, 1);    // Qn-1 = Xn
 
@@ -112,8 +114,8 @@ spline (GSList *list)
 
   gsl_vector_set (by, 2* (lenght-1)-2, m_x[0][1]);
   gsl_vector_set (by, 2* (lenght-1)-1, m_x[lenght-1][1]);
-    
-  /* Calculate LU decomposition, solve lin. systems... */  
+
+  /* Calculate LU decomposition, solve lin. systems... */
   perm = gsl_permutation_alloc (2* (lenght-1));
   gsl_linalg_LU_decomp (m, perm, &s);
 
@@ -137,9 +139,8 @@ spline (GSList *list)
       m_p[i][1] = gsl_vector_get (x, i);
       m_q[i][1] = gsl_vector_get (x, i+ (lenght-1));
     }
-  
-  gsl_vector_free (x);
 
+  gsl_vector_free (x);
 
   gsl_permutation_free (perm);
   
@@ -147,7 +148,6 @@ spline (GSList *list)
   gsl_matrix_free (m);
   gsl_vector_free (bx);
   gsl_vector_free (by);
-
 
   /* Now paint the smoothed line. */
   for ( i = 0; i < lenght-1; i++ )
@@ -161,27 +161,27 @@ spline (GSList *list)
       // printf ("%d: Bx' (0) = %lf\n", i+1, -3*m_x[i][0]+3*m_p[i][0]);
       // printf ("%d: Bx' (1) = %lf\n", i+1, -3*m_q[i][0]+3*m_x[i+1][0]);
 
-      AnnotateStrokeCoordinate* first_point =  allocate_point ( m_p[i][0],
-								m_p[i][1],
-								width,
-								pressure);
+      AnnotatePoint *first_point =  allocate_point ( m_p[i][0],
+						     m_p[i][1],
+						     width,
+						     pressure);
 
       ret = g_slist_prepend (ret, first_point);
 
-      AnnotateStrokeCoordinate* second_point =  allocate_point (m_q[i][0],
-								m_q[i][1],
-								width,
-								pressure);
+      AnnotatePoint *second_point =  allocate_point (m_q[i][0],
+						     m_q[i][1],
+						     width,
+						     pressure);
 
       ret = g_slist_prepend (ret, second_point);
 
-      AnnotateStrokeCoordinate* third_point =  allocate_point (m_x[i+1][0],
-							       m_x[i+1][1],
-							       width,
-							       pressure);
+      AnnotatePoint *third_point =  allocate_point (m_x[i+1][0],
+						    m_x[i+1][1],
+						    width,
+						    pressure);
 
       ret = g_slist_prepend (ret, third_point);
-              
+
     }
 
   ret = g_slist_reverse (ret);

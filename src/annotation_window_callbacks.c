@@ -33,31 +33,34 @@
 
 
 /* Return the pressure passing the event. */
-static gdouble get_pressure (GdkEvent* ev)
+static gdouble get_pressure (GdkEvent *ev)
 {
-  gdouble default_value = 1.0;
-  gdouble pressure = default_value;
+  gdouble ret_value = 1.0;
+  gdouble pressure = ret_value;
+
   gboolean ret = gdk_event_get_axis (ev, GDK_AXIS_PRESSURE, &pressure);
+
   if (ret)
     {
-      return pressure;
+      ret_value = pressure;
     }
-  return default_value;
+
+  return ret_value;
 }
 
 
 /* Expose event: this occurs when the window is shown. */
 G_MODULE_EXPORT gboolean
 event_expose (GtkWidget *widget,
-	      GdkEventExpose *event, 
+	      GdkEventExpose *event,
 	      gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
 
   gint is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
+
   if (!is_fullscreen)
     {
-      
       return TRUE;
     }
 
@@ -68,7 +71,7 @@ event_expose (GtkWidget *widget,
 
   if (data->annotation_cairo_context == NULL)
     {
-      /* Initialize a transparent window. */	  
+      /* Initialize a transparent window. */
 #ifdef _WIN32
       /* The hdc has depth 32 and the technology is DT_RASDISPLAY. */
       HDC hdc = GetDC (GDK_WINDOW_HWND (data->annotation_window->window));
@@ -78,11 +81,11 @@ event_expose (GtkWidget *widget,
        * In the documentation is written that the now the resulting surface is in RGB24 format.
        * 
        */
-      cairo_surface_t* surface = cairo_win32_surface_create (hdc);
+      cairo_surface_t *surface = cairo_win32_surface_create (hdc);
 
       data->annotation_cairo_context = cairo_create (surface);
 #else
-      data->annotation_cairo_context = gdk_cairo_create (data->annotation_window->window);  
+      data->annotation_cairo_context = gdk_cairo_create (data->annotation_window->window);
 #endif
 
       if (cairo_status (data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
@@ -90,12 +93,14 @@ event_expose (GtkWidget *widget,
           g_printerr ("Failed to allocate the annotation cairo context"); 
           annotate_quit (); 
           exit (EXIT_FAILURE);
-        }    
+        }
+
       annotate_acquire_grab ();
+
       if (data->savepoint_list == NULL)
         {
 	  annotate_clear_screen ();
-        }      
+        }
     }
   /* Postcondition; data->annotation_cairo_context is not NULL. */
   annotate_restore_surface ();
@@ -117,17 +122,18 @@ paint (GtkWidget *win,
 
   AnnotateData *data = (AnnotateData *) func_data;
   gdouble pressure = 1.0; 
-  
+
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
 		  ev->device->name);
+
       annotate_release_grab ();
       return TRUE;
     }
 
   if (data->debug)
-    {    
+    {
       g_printerr ("Device '%s': Button %i Down at (x,y)= (%f : %f)\n",
 		  ev->device->name, ev->button, ev->x, ev->y);
     }
@@ -138,38 +144,42 @@ paint (GtkWidget *win,
       /* The point is inside the ardesia bar then ungrab. */
       annotate_release_grab ();
       return TRUE;
-    }   
+    }
 #endif
 
   annotate_coord_list_free ();
- 
+
   annotate_unhide_cursor ();
- 
+
   /* Only button1 allowed. */
   if (ev->button != 1)
     {
+
       if (data->debug)
-	{    
+	{
 	  g_printerr ("Device '%s': Invalid pressure event\n",
 		      ev->device->name);
 	}
+
       return TRUE;
-    }  
+    }
 
   annotate_reset_cairo ();
 
-  if ((ev->device->source != GDK_SOURCE_MOUSE) && 
+  if ((ev->device->source != GDK_SOURCE_MOUSE) &&
       (data->cur_context->type != ANNOTATE_ERASER))
     {
       pressure = get_pressure ( (GdkEvent *) ev);
+
       if (pressure <= 0)
 	{
 	  return TRUE;
 	}
+
     }
 
-  annotate_draw_point (ev->x, ev->y, pressure);  
- 
+  annotate_draw_point (ev->x, ev->y, pressure);
+
   annotate_coord_list_prepend (ev->x, ev->y,
 			       annotate_get_thickness (),
 			       pressure);
@@ -185,7 +195,7 @@ paintto (GtkWidget *win,
 	 gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
- 
+
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
@@ -197,11 +207,13 @@ paintto (GtkWidget *win,
 #ifdef _WIN32
   if (inside_bar_window (ev->x_root, ev->y_root))
     {
+
       if (data->debug)
-	{    
+	{
 	  g_printerr ("Device '%s': Move on the bar then ungrab\n",
 		      ev->device->name);
 	}
+
       /* The point is inside the ardesia bar then ungrab. */
       annotate_release_grab ();
       return TRUE;
@@ -209,9 +221,10 @@ paintto (GtkWidget *win,
 #endif
 
   annotate_unhide_cursor ();
- 
-  GdkModifierType state = (GdkModifierType) ev->state;  
+
+  GdkModifierType state = (GdkModifierType) ev->state;
   gint selected_width = 0;
+
   /* Only button1 allowed. */
   if (! (state & GDK_BUTTON1_MASK))
     {
@@ -223,8 +236,8 @@ paintto (GtkWidget *win,
   if ( (ev->device->source != GDK_SOURCE_MOUSE) &&
        (data->cur_context->type != ANNOTATE_ERASER))
     {
-
       pressure = get_pressure ( (GdkEvent *) ev);
+
       if (pressure <= 0)
 	{
 	  return TRUE;
@@ -233,10 +246,11 @@ paintto (GtkWidget *win,
       /* If the point is already selected and higher pressure then print else jump it. */
       if (data->coord_list)
 	{
-	  AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coord_list, 0);
+	  AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, 0);
 	  gint tollerance = data->thickness;
 	  if (get_distance (last_point->x, last_point->y, ev->x, ev->y)<tollerance)
 	    {
+
 	      /* Seems that you are uprising the pen. */
 	      if (pressure < last_point->pressure)
 		{
@@ -257,13 +271,14 @@ paintto (GtkWidget *win,
 		  last_point->pressure = pressure;
 		  return TRUE;
 		}
+
 	    }
 	  annotate_modify_color (data, pressure);
 	}
     }
 
   annotate_draw_line (ev->x, ev->y, TRUE);
-   
+
   annotate_coord_list_prepend (ev->x, ev->y, selected_width, pressure);
 
   return TRUE;
@@ -272,10 +287,12 @@ paintto (GtkWidget *win,
 
 /* This shots when the button is released. */
 G_MODULE_EXPORT gboolean
-paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
+paintend (GtkWidget *win,
+	  GdkEventButton *ev,
+	  gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
-  
+
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
@@ -283,7 +300,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
       annotate_release_grab ();
       return TRUE;
     }
-  
+
   if (data->debug)
     {
       g_printerr ("Device '%s': Button %i Up at (x,y)= (%.2f : %.2f)\n",
@@ -291,6 +308,7 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
     }
 
 #ifdef _WIN32
+
   if (inside_bar_window (ev->x_root, ev->y_root))
     /* Point is in the ardesia bar. */
     {
@@ -298,26 +316,27 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
       annotate_release_grab ();
       return TRUE;
     }
+
 #endif 
 	
   /* Only button1 allowed. */
   if (! (ev->button == 1))
     {
       return TRUE;
-    }  
+    }
 
   gint lenght = g_slist_length (data->coord_list);
 
   if (lenght > 2)
     { 
       gint distance = -1;
-      AnnotateStrokeCoordinate* first_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coord_list, lenght-1);
+      AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, lenght-1);
        
       /* This is the tolerance to force to close the path in a magnetic way. */
       gint tollerance = data->thickness * 2;
       distance = get_distance (ev->x, ev->y, first_point->x, first_point->y);
- 
-      AnnotateStrokeCoordinate* last_point = (AnnotateStrokeCoordinate*) g_slist_nth_data (data->coord_list, 0);
+
+      AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, 0);
       gdouble pressure = last_point->pressure;      
 
       /* If the distance between two point lesser than tolerance they are the same point for me. */
@@ -333,24 +352,26 @@ paintend (GtkWidget *win, GdkEventButton *ev, gpointer func_data)
           annotate_coord_list_prepend (ev->x, ev->y, data->thickness, pressure);
         }
    
-      if (! (data->cur_context->type == ANNOTATE_ERASER))
+      if (data->cur_context->type != ANNOTATE_ERASER)
         { 
           gboolean closed_path = (distance == 0); 
           annotate_shape_recognize (closed_path);
+
           /* If is selected an arrow type then I draw the arrow. */
           if (data->arrow)
             {
 	      /* Print arrow at the end of the path. */
 	      annotate_draw_arrow (distance);
 	    }
+
 	}
     }
   cairo_stroke_preserve (data->annotation_cairo_context);
   
   annotate_add_savepoint ();
-   
-  annotate_hide_cursor ();  
- 
+
+  annotate_hide_cursor ();
+
   return TRUE;
 }
 
@@ -362,10 +383,11 @@ proximity_in (GtkWidget *win,
 	      gpointer func_data)
 {
   /*
-   * @TODO This message does not arrive on windows; why? 
-   * is it a driver problem, gtk or what.
+   * @TODO This message does not arrive on windows; why?
+   * is it a driver problem, gtk or what is happening.
    */
   AnnotateData *data = (AnnotateData *) func_data;
+
   if (data->debug)
     {
       g_printerr ("Proximity in device %s\n", ev->device->name);
@@ -396,10 +418,11 @@ proximity_out (GtkWidget *win,
 {
 
   /*
-   * @TODO This message does not arrive on windows; why? 
-   * is it a driver problem, gtk or what.
+   * @TODO This message does not arrive on windows; why?
+   * is it a driver problem, gtk or what is happening.
    */
   AnnotateData *data = (AnnotateData *) func_data;
+
   if (data->debug)
     {
       g_printerr ("Proximity out device %s\n", ev->device->name);

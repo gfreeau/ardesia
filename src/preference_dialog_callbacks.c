@@ -38,7 +38,7 @@ on_image_chooser_button_update_preview (GtkFileChooser *file_chooser,
   gboolean have_preview;
 
   filename = gtk_file_chooser_get_preview_filename (file_chooser);
-  
+
   if (filename)
     {
       pixbuf = gdk_pixbuf_new_from_file_at_size (filename, 128, 128, NULL);
@@ -47,9 +47,11 @@ on_image_chooser_button_update_preview (GtkFileChooser *file_chooser,
       filename = NULL;
 
       gtk_image_set_from_pixbuf (GTK_IMAGE (preference_data->preview), pixbuf);
+
       if (pixbuf)
-        {  
+        {
           gdk_pixbuf_unref (pixbuf);
+          pixbuf = NULL;
         }
 
       gtk_file_chooser_set_preview_widget_active (file_chooser, have_preview);
@@ -74,8 +76,8 @@ G_MODULE_EXPORT void
 on_background_color_button_color_set (GtkButton *buton,
 				      gpointer data)
 {
-  PreferenceData *preference_data = (PreferenceData*) data;
-  GObject *color_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "colour");
+  PreferenceData *preference_data = (PreferenceData *) data;
+  GObject *color_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "color");
   GtkToggleButton *color_tool_button = GTK_TOGGLE_BUTTON (color_obj);
   gtk_toggle_button_set_active (color_tool_button, TRUE);
 }
@@ -92,7 +94,7 @@ on_preference_ok_button_clicked (GtkButton *buton,
   gchar *rgba = NULL;
   GObject *color_tool_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "color");
   GtkToggleButton *color_tool_button = GTK_TOGGLE_BUTTON (color_tool_obj);
-  
+
   if (gtk_toggle_button_get_active (color_tool_button))
     {
       /* background colour */
@@ -100,7 +102,7 @@ on_preference_ok_button_clicked (GtkButton *buton,
 						      "backgroundColorButton");
 
       GtkColorButton *background_color_button = GTK_COLOR_BUTTON (bg_color_obj);
-      GdkColor *gdkcolor = g_malloc ( (gsize) sizeof (GdkColor)); 
+      GdkColor *gdkcolor = g_malloc ( (gsize) sizeof (GdkColor));
       gtk_color_button_get_color (background_color_button, gdkcolor);
 
       rgb = gdkcolor_to_rgb (gdkcolor);
@@ -108,13 +110,14 @@ on_preference_ok_button_clicked (GtkButton *buton,
       rgba = g_strdup_printf ("%s%s", rgb, a);
       
       change_background_color (rgba);
+
       g_free (a);
       g_free (rgb);
       g_free (rgba);
       g_free (gdkcolor);
-      preference_data->background = 1;  
+      preference_data->background = 1;
     }
-  else 
+  else
     {
       GObject *file_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "file");
       GtkToggleButton *image_tool_button = GTK_TOGGLE_BUTTON (file_obj);
@@ -125,11 +128,12 @@ on_preference_ok_button_clicked (GtkButton *buton,
 						       "imageChooserButton");
 
 	  GtkFileChooserButton *image_chooser_button = GTK_FILE_CHOOSER_BUTTON (image_obj);
-	  gchar* file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (image_chooser_button)); 
+	  gchar *file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (image_chooser_button));
+
 	  if (file)
             {
               change_background_image (file);
-              preference_data->background = 2;  
+              preference_data->background = 2;
             }
           else
             {
@@ -137,14 +141,16 @@ on_preference_ok_button_clicked (GtkButton *buton,
 	      clear_background_window ();
               preference_data->background = 0;
             }
+
 	}
       else
 	{
 	  /* none */
-	  clear_background_window ();  
-          preference_data->background = 0;  
-	} 
-    }        
+	  clear_background_window ();
+          preference_data->background = 0;
+	}
+    }
+
 }
 
 

@@ -78,7 +78,7 @@ set_project_dir (gchar *dir)
 
 
 /* Get the iwb file of the current project. */
-gchar*
+gchar *
 get_iwb_filename ()
 {
   return iwb_filename;
@@ -124,18 +124,19 @@ grab_pointer (GtkWidget *win,
 	      GdkEventMask eventmask)
 {
   GdkGrabStatus result;
-  gdk_error_trap_push ();    
-  result = gdk_pointer_grab (win->window, FALSE,
+  gdk_error_trap_push ();
+  result = gdk_pointer_grab (win->window,
+			     FALSE,
 			     eventmask, 0,
 			     NULL,
-			     GDK_CURRENT_TIME); 
+			     GDK_CURRENT_TIME);
 
   gdk_flush ();
   if (gdk_error_trap_pop ())
     {
       g_printerr ("Grab pointer error\n");
     }
-   
+
   switch (result)
     {
     case GDK_GRAB_SUCCESS:
@@ -154,7 +155,7 @@ grab_pointer (GtkWidget *win,
       break;
     default:
       g_printerr ("Grab Pointer failed: Unknown error\n");
-    }       
+    }
 
 }
 
@@ -169,7 +170,7 @@ ungrab_pointer (GdkDisplay *display,
   gdk_flush ();
   if (gdk_error_trap_pop ())
     {
-      /* this probably means the device table is outdated, 
+      /* this probably means the device table is outdated,
        * e.g. this device doesn't exist anymore. 
        */
       g_printerr ("Ungrab pointer device error\n");
@@ -178,7 +179,7 @@ ungrab_pointer (GdkDisplay *display,
 
 
 /* Get the bar window widget. */
-GtkWidget*
+GtkWidget *
 get_bar_window ()
 {
   return GTK_WIDGET (gtk_builder_get_object (bar_gtk_builder, "winMain"));
@@ -211,7 +212,7 @@ gdkcolor_to_rgb (GdkColor *gdkcolor)
 				    gdkcolor->green/257,
 				    gdkcolor->blue/257);
 
-  return ret_str; 
+  return ret_str;
 }
 
 
@@ -275,7 +276,7 @@ gboolean save_png (GdkPixbuf *pixbuf,
   cairo_t *cr = cairo_create (surface);
   gdk_cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
   cairo_paint (cr);
-  
+
   /* Write to the png surface. */
   cairo_surface_write_to_png (surface, filename);
   cairo_destroy (cr);
@@ -313,37 +314,40 @@ gboolean inside_bar_window (gdouble xp, gdouble yp)
   gint x, y, width, height;
   GtkWindow *bar = GTK_WINDOW (get_bar_window ());
   gtk_window_get_position (bar, &x, &y);
-  gtk_window_get_size (bar, &width, &height);   
-  
+  gtk_window_get_size (bar, &width, &height);
+
   if ( (yp>=y)&& (yp<y+height))
     {
+
       if ( (xp>=x)&& (xp<x+width))
 	{
 	  return 1;
 	}
+
     }
+
   return 0;
 }
 
 
-/* Drill the gdkwindow in the area where the ardesia bar is located. */
+/* Drill the gdk window in the area where the ardesia bar is located. */
 void
 drill_window_in_bar_area (GdkWindow *window)
 {
   /* Instantiate a transparent pixmap with a black hole upon the bar area to be used as mask. */
   GdkBitmap *shape = gdk_pixmap_new (NULL,  gdk_screen_width (), gdk_screen_height (), 1);
   cairo_t *shape_cr = gdk_cairo_create (shape);
-  GtkWidget* bar= get_bar_window ();
+  GtkWidget *bar= get_bar_window ();
   gint x, y, width, height;
 
   cairo_set_operator (shape_cr,CAIRO_OPERATOR_SOURCE);
   cairo_set_source_rgba (shape_cr, 1, 1, 1, 1);
   cairo_paint (shape_cr);
 
-  gtk_window_get_position (GTK_WINDOW (bar),&x,&y);
-  gtk_window_get_size (GTK_WINDOW (bar),&width,&height);
+  gtk_window_get_position (GTK_WINDOW (bar), &x, &y);
+  gtk_window_get_size (GTK_WINDOW (bar), &width, &height);
 
-  cairo_set_operator (shape_cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_operator (shape_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_source_rgba (shape_cr, 0, 0, 0, 0);
   cairo_rectangle (shape_cr, x, y, width, height);
   cairo_fill (shape_cr);	
@@ -357,9 +361,9 @@ drill_window_in_bar_area (GdkWindow *window)
 }
 
 
-/* 
- * Get the current date and format in a printable format; 
- * the returned value must be free with the g_free. 
+/*
+ * Get the current date and format in a printable format;
+ * the returned value must be free with the g_free.
  */
 gchar *
 get_date ()
@@ -368,13 +372,13 @@ get_date ()
   time_t now;
   gchar *hour_min_sep = ":";
   gchar *date = "";
-  
+
   time (&now);
   t = localtime (&now);
 
 #ifdef _WIN32
-  /* The ":" character on windows is avoided in file name and then 
-   * I use the "." character instead. 
+  /* The ":" character on windows is avoided in file name and then
+   * I use the "." character instead.
    */
   hour_min_sep = ".";
 #endif
@@ -399,13 +403,13 @@ file_exists (gchar *filename)
 
 
 /* 
- * Return a file name containing 
- * the project name and the current date. 
+ * Return a file name containing
+ * the project name and the current date.
  */
 gchar *
 get_default_filename ()
 {
-  gchar *date = get_date (); 
+  gchar *date = get_date ();
   gchar *filename = g_strdup_printf ("%s_%s", project_name, date);
   g_free (date); 
   return filename;
@@ -440,25 +444,26 @@ rmdir_recursive (gchar *path)
   const gchar *dir_file;
 			
   cur_dir = g_dir_open (path, 0, NULL);
-  
+
   if (cur_dir)
     {
       while ( (dir_file = g_dir_read_name (cur_dir)))
 	{
 	  gchar *fpath = g_build_filename (path, dir_file, NULL);
 	
-	  if (fpath) 
+	  if (fpath)
 	    {
 	      if (g_file_test (fpath, G_FILE_TEST_IS_DIR))
 		{
 		  rmdir_recursive (fpath);
-		} 
-	      else 
+		}
+	      else
 		{
 		  g_unlink (fpath);
 		}
 	      g_free (fpath);
 	    }
+
 	}
 			
       g_dir_close (cur_dir);
@@ -469,13 +474,13 @@ rmdir_recursive (gchar *path)
 
 
 /* Allocate a new point belonging to the stroke passing the values. */
-AnnotateStrokeCoordinate *
+AnnotatePoint *
 allocate_point (gint x,
 		gint y,
 		gint width,
 		gdouble pressure)
 {
-  AnnotateStrokeCoordinate *point =  g_malloc ( (gsize) sizeof (AnnotateStrokeCoordinate));
+  AnnotatePoint *point =  g_malloc ( (gsize) sizeof (AnnotatePoint));
   point->x = x;
   point->y = y;
   point->width = width;
@@ -499,11 +504,11 @@ send_email (gchar *to,
 
   gint arg_lenght = (attach_lenght*2) + 7;
 
-  gchar **argv = g_malloc ((arg_lenght+1) * sizeof (gchar*)); 
-  
+  gchar **argv = g_malloc ((arg_lenght+1) * sizeof (gchar *));
+
   gint i=0;
   gint j=5;
-  
+
   argv[0] = "xdg-email";
   argv[1] = "--subject";
   argv[2] = subject;
@@ -517,20 +522,21 @@ send_email (gchar *to,
       argv[j+1] = attachment;
       j = j+2;
     }
-  
+
   argv[arg_lenght-2] = to;
   argv[arg_lenght-1] = NULL;
 
-  g_spawn_sync (NULL /*working_directory*/,
-		argv,
-		NULL /*envp*/,
-		G_SPAWN_SEARCH_PATH,
-		NULL /*child_setup*/,
-		NULL /*user_data*/,
-		NULL /*child_pid*/,
-		NULL /*error*/,
-		NULL,
-		NULL);
+  g_spawn_async (NULL /*working_directory*/,
+		 argv,
+		 NULL /*envp*/,
+		 G_SPAWN_SEARCH_PATH,
+		 NULL /*child_setup*/,
+		 NULL /*user_data*/,
+		 NULL /*child_pid*/,
+		 NULL /*error*/);
+
+  g_strfreev (argv);
+
 
 #endif
 }
@@ -582,7 +588,7 @@ is_gnome ()
   gchar *current_desktop = getenv ("XDG_CURRENT_DESKTOP");
   if (current_desktop)
     {
-      if (strcmp (current_desktop,"GNOME")!=0) {
+      if (strcmp (current_desktop, "GNOME")!=0) {
 	return FALSE;
       }
     }
@@ -592,21 +598,21 @@ is_gnome ()
 
 /* Create desktop entry passing value. */
 void
-xdg_create_desktop_entry (gchar* filename, 
-			  gchar* type,
-			  gchar* name,
-			  gchar* lang,
-			  gchar* icon,
-			  gchar* exec)
+xdg_create_desktop_entry (gchar *filename,
+			  gchar *type,
+			  gchar *name,
+			  gchar *lang,
+			  gchar *icon,
+			  gchar *exec)
 {
   FILE *fp = fopen (filename, "w");
-  if (fp) 
+  if (fp)
     {
-      fprintf (fp, "[Desktop Entry]\n"); 
+      fprintf (fp, "[Desktop Entry]\n");
       fprintf (fp, "Type=%s\n", type);
       fprintf (fp, "Name=%s\n", name);
-      fprintf (fp, "Icon=%s\n", icon); 
-      fprintf (fp, "Exec=%s", exec); 
+      fprintf (fp, "Icon=%s\n", icon);
+      fprintf (fp, "Exec=%s", exec);
       fclose (fp);
       chmod (filename, 0751);
     }
@@ -622,7 +628,7 @@ xdg_create_link (gchar *src,
   gchar *extension = "desktop";
   gchar *exec = g_strdup_printf ("xdg-open %s\n", src);
   gchar *link_filename = g_strdup_printf ("%s.%s", dest, extension);
-  
+
   if (g_file_test (link_filename, G_FILE_TEST_EXISTS))
     {
       g_free (link_filename);
@@ -644,10 +650,12 @@ g_substrlastpos (const char *str,
   int i;
   for (i = len-1; i >= 0; --i)
     {
+
       if (str[i] == *substr)
         {
           return i;
         }
+
     }
   return -1;
 }

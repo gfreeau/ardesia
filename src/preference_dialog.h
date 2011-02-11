@@ -31,7 +31,7 @@
 #else
 #  define PREFERENCE_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/preference_dialog.glade"
 #  define BACKGROUNDS_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/backgrounds"
-#endif 
+#endif
 
 
 typedef struct

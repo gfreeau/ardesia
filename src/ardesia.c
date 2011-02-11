@@ -52,8 +52,8 @@ print_version ()
 static void
 print_help ()
 {
-  gchar* year = "2009-2010";
-  gchar* author = "Pietro Pilolli";
+  gchar *year = "2009-2010";
+  gchar *author = "Pietro Pilolli";
   g_printf ("Usage: %s [options] [filename]\n\n", PACKAGE_NAME);
   g_printf ("Ardesia the free digital sketchpad\n\n");
   g_printf ("options:\n");
@@ -79,7 +79,7 @@ print_help ()
 static void
 run_missing_composite_manager_dialog ()
 {
-  GtkWidget *msg_dialog; 
+  GtkWidget *msg_dialog;
   msg_dialog = gtk_message_dialog_new (NULL,
 				       GTK_DIALOG_MODAL,
 				       GTK_MESSAGE_ERROR,
@@ -87,18 +87,20 @@ run_missing_composite_manager_dialog ()
 				       gettext ("In order to run Ardesia you need to enable a composite manager"));
 
   gtk_dialog_run (GTK_DIALOG (msg_dialog));
-   
+
   if (msg_dialog != NULL)
     {
       gtk_widget_destroy (msg_dialog);
+      msg_dialog = NULL;
     }
+
   exit (EXIT_FAILURE);
 }
 
 
 /* Check if a composite manager is active. */
 static void
-check_composite_manager (GdkScreen* screen)
+check_composite_manager (GdkScreen *screen)
 {
   gboolean composite = gdk_screen_is_composited (screen);
   if (!composite)
@@ -115,8 +117,8 @@ static void
 set_the_best_colormap ()
 {
   GdkDisplay *display = gdk_display_get_default ();
-  GdkScreen   *screen = gdk_display_get_default_screen (display);
-  GdkVisual* visual = NULL;
+  GdkScreen  *screen  = gdk_display_get_default_screen (display);
+  GdkVisual  *visual  = NULL;
 
   /* In FreeBSD operating system you might have a composite manager. */
 #if ( defined (__freebsd__) || defined (__freebsd) || defined (_freebsd) || defined (freebsd) )
@@ -129,6 +131,7 @@ set_the_best_colormap ()
 #endif
 
   GdkColormap *colormap = gdk_screen_get_rgba_colormap (screen);
+
   if (colormap)
     {
       gtk_widget_set_default_colormap (colormap);
@@ -137,6 +140,7 @@ set_the_best_colormap ()
     {
       g_warning ("The screen does not support the alpha channel\n");
       visual = gdk_screen_get_rgba_visual (screen);
+
       if (visual == NULL)
 	{
 	  g_warning ("The screen does not support the rgba visual!\n");
@@ -144,7 +148,9 @@ set_the_best_colormap ()
 	  exit (EXIT_FAILURE);
 #endif
 	}
+
     }
+
 }
 
 
@@ -153,8 +159,8 @@ static CommandLine *
 parse_options (gint argc,
 	       char *argv[])
 {
-  CommandLine *commandline = g_malloc ((gsize) sizeof (CommandLine)); 
-  
+  CommandLine *commandline = g_malloc ((gsize) sizeof (CommandLine));
+
   commandline->position = EAST;
   commandline->debug = FALSE;
   commandline->iwb_filename = NULL;
@@ -169,7 +175,7 @@ parse_options (gint argc,
 	  /* These options set a flag. */
 	  {"help", no_argument,       0, 'h'},
           {"decorated", no_argument,  0, 'd'},
-	  {"verbose", no_argument,    0, 'V' },
+	  {"verbose", no_argument,    0, 'V'},
           {"version", no_argument,    0, 'v'},
 	  /* 
            * These options don't set a flag.
@@ -185,7 +191,7 @@ parse_options (gint argc,
 		       "hdvVg:",
 		       long_options,
 		       &option_index);
-     
+
       /* Detect the end of the options. */
       if (c == -1)
 	break;
@@ -231,10 +237,12 @@ parse_options (gint argc,
 	  break;
 	} 
     }
+
   if (optind<argc)
     {
       commandline->iwb_filename = argv[optind];
-    } 
+    }
+
   return commandline;
 }
 
@@ -268,9 +276,9 @@ enable_localization_support ()
 
 /* Create a shorcut to the workspace on the desktop. */
 static void
-create_workspace_shortcut (gchar* workspace_dir)
+create_workspace_shortcut (gchar *workspace_dir)
 {
-  gchar* desktop_entry_filename = g_strdup_printf ("%s%s%s_workspace",
+  gchar *desktop_entry_filename = g_strdup_printf ("%s%s%s_workspace",
 						   get_desktop_dir (),
 						   G_DIR_SEPARATOR_S,
 						   PACKAGE_NAME);
@@ -284,41 +292,44 @@ create_workspace_shortcut (gchar* workspace_dir)
 #else
   xdg_create_link (workspace_dir , desktop_entry_filename, "folder-documents");
 #endif
-  g_free (desktop_entry_filename);  
+  g_free (desktop_entry_filename);
 }
 
 
 /* Configure the workspace. */
-static gchar*
-configure_workspace (gchar* project_name)
+static gchar *
+configure_workspace (gchar *project_name)
 {
   /* The workspace directory is set in the documents ardesia folder. */
-  gchar* workspace_dir = g_build_filename (get_documents_dir (),
+  gchar *workspace_dir = g_build_filename (get_documents_dir (),
 					   PACKAGE_NAME,
 					   (gchar *) 0);
 
   create_workspace_shortcut (workspace_dir);
-  
+
   return workspace_dir;
 }
 
 
 /* Create the default project dir under the workspace_dir. */
-static gchar*
-create_default_project_dir (gchar* workspace_dir,
-			    gchar* project_name)
+static gchar *
+create_default_project_dir (gchar *workspace_dir,
+			    gchar *project_name)
 {
-  gchar* project_dir = g_build_filename (workspace_dir, project_name, (gchar *) 0);
+  gchar *project_dir = g_build_filename (workspace_dir, project_name, (gchar *) 0);
 
   if (!g_file_test (project_dir, G_FILE_TEST_EXISTS)) 
     {
+
       if (g_mkdir_with_parents (project_dir, 0700)==-1)
         {
 	  g_warning ("Unable to create folder %s\n", project_dir);
-        } 
+        }
+
     }
+
   return project_dir;
-} 
+}
 
 
 /* This is the starting point of the program. */
@@ -348,8 +359,8 @@ main (gint argc,
 #endif
 
   /*
-   * Uncomment this and the create_segmentation_fault function 
-   * to create a segmentation fault 
+   * Uncomment this and the create_segmentation_fault function
+   * to create a segmentation fault
    */
   //create_segmentation_fault ();
 
@@ -361,18 +372,22 @@ main (gint argc,
 	
   if (commandline->iwb_filename)
     {
-      if (g_path_is_absolute (commandline->iwb_filename)) {
-        iwb_filename = g_strdup (commandline->iwb_filename);
-      } else {
-        gchar *dir = g_get_current_dir ();
-        iwb_filename = g_build_filename (dir, commandline->iwb_filename, (gchar *) 0);
-        free (dir);
-      }
 
-      int init_pos = g_substrlastpos (iwb_filename, G_DIR_SEPARATOR_S); 
+      if (g_path_is_absolute (commandline->iwb_filename))
+	{
+	  iwb_filename = g_strdup (commandline->iwb_filename);
+	}
+      else
+	{
+	  gchar *dir = g_get_current_dir ();
+	  iwb_filename = g_build_filename (dir, commandline->iwb_filename, (gchar *) 0);
+	  free (dir);
+	}
+
+      int init_pos = g_substrlastpos (iwb_filename, G_DIR_SEPARATOR_S);
       int end_pos  = g_substrlastpos (iwb_filename, ".");
       project_name = g_substr (iwb_filename, init_pos+1, end_pos-1);
-      project_dir = g_substr (iwb_filename, 0, init_pos-1); 
+      project_dir = g_substr (iwb_filename, 0, init_pos-1);
     }
   else
     {
@@ -387,8 +402,8 @@ main (gint argc,
   set_project_dir (project_dir);
   set_iwb_filename (iwb_filename);
 
-  background_window = create_background_window (); 
-  
+  background_window = create_background_window ();
+
   if (background_window == NULL)
     {
       destroy_background_window ();
@@ -396,15 +411,15 @@ main (gint argc,
       exit (EXIT_FAILURE);
     }
 
-  gtk_window_set_keep_above (GTK_WINDOW (background_window), TRUE); 
+  gtk_window_set_keep_above (GTK_WINDOW (background_window), TRUE);
   gtk_widget_show (background_window);
   
   set_background_window (background_window);
   
-  /* Init the annotation window. */
-  annotate_init (background_window, iwb_filename, commandline->debug); 
+  /* Initialize the annotation window. */
+  annotate_init (background_window, iwb_filename, commandline->debug);
 
-  annotation_window = get_annotation_window ();  
+  annotation_window = get_annotation_window ();
 
   if (annotation_window == NULL)
     {
@@ -418,9 +433,9 @@ main (gint argc,
   gtk_window_set_keep_above (GTK_WINDOW (annotation_window), TRUE);
 
   gtk_widget_show (annotation_window);
-  
+
   ardesia_bar_window = create_bar_window (commandline, annotation_window);
-  
+
   if (ardesia_bar_window == NULL)
     {
       annotate_quit ();
@@ -432,20 +447,26 @@ main (gint argc,
   gtk_window_set_keep_above (GTK_WINDOW (ardesia_bar_window), TRUE);
   gtk_widget_show (ardesia_bar_window);
   gtk_main ();
-  
+
   artifact_list = get_artifacts ();
 
   if (artifact_list)
-    {  
+    {
       start_share_dialog (NULL);
-      free_artifacts ();  
+      free_artifacts ();
     }
-         
+
   g_free (project_name);
+  project_name = NULL;
+
   g_free (project_dir);
+  project_dir = NULL;
+
   g_free (iwb_filename);
+  iwb_filename = NULL;
 
   g_free (commandline);
+  commandline = NULL;
 
   return 0;
 }

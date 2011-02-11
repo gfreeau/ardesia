@@ -101,7 +101,7 @@ typedef struct
   gdouble y;
   gint width;
   gdouble pressure;
-} AnnotateStrokeCoordinate;
+} AnnotatePoint;
 
 
 /* Get the name of the current project. */
@@ -158,7 +158,7 @@ ungrab_pointer (GdkDisplay *display,
 void
 grab_pointer (GtkWidget *win,
 	      GdkEventMask eventmask);
-  
+
 				
 /* get bar window widget. */
 GtkWidget *
@@ -227,17 +227,17 @@ grab_screenshot ();
 
 
 /* 
- * Return a file name containing 
- * the project name and the current date. 
+ * Return a file name containing
+ * the project name and the current date.
  *
  */
 gchar *
 get_default_filename ();
 
 
-/* 
- * Get the current date and format in a printable format; 
- * the returned value must be free with the g_free. 
+/*
+ * Get the current date and format in a printable format;
+ * the returned value must be free with the g_free.
  */
 gchar *
 get_date ();
@@ -267,8 +267,8 @@ void
 rmdir_recursive (gchar *path);
 
 
-/* Allocate a new point belonging to the stroke passing the values. */
-AnnotateStrokeCoordinate *
+/* Allocate a new point belonging to the path passing the values. */
+AnnotatePoint *
 allocate_point (gint x,
 		gint y,
 		gint width,
@@ -302,7 +302,7 @@ is_gnome ();
 void
 xdg_create_desktop_entry (gchar *filename,
 			  gchar *type,
-			  gchar *name, 
+			  gchar *name,
 			  gchar *lang,
 			  gchar *icon,
 			  gchar *exec);
@@ -322,7 +322,7 @@ g_substrlastpos (const char *str,
 
 
 /* Sub-string of string from start to end position. */
-gchar * 
+gchar *
 g_substr (const gchar *string,
 	  gint start,
 	  gint end);

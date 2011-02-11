@@ -45,7 +45,7 @@ static TextData *text_data = NULL;
 /* Create the text window. */
 static void
 create_text_window (GtkWindow *parent)
-{  
+{
   GError *error = NULL;
 
   if (!text_data->text_window_gtk_builder)
@@ -61,20 +61,21 @@ create_text_window (GtkWindow *parent)
 	  g_warning ("Failed to load builder file: %s", error->message);
 	  g_error_free (error);
 	  return;
-	}  
+	}
+
     }
 
   if (!text_data->window)
     {
       GObject *text_obj = gtk_builder_get_object (text_data->text_window_gtk_builder, "text_window");
-      text_data->window = GTK_WIDGET (text_obj);   
+      text_data->window = GTK_WIDGET (text_obj);
 
       gtk_window_set_transient_for (GTK_WINDOW (text_data->window), GTK_WINDOW (parent));
 
       gtk_window_set_opacity (GTK_WINDOW (text_data->window), 1);
       gtk_widget_set_usize (GTK_WIDGET (text_data->window), gdk_screen_width (), gdk_screen_height ());
     }
-     
+
 }
 
 
@@ -117,7 +118,8 @@ static gboolean blink_cursor (gpointer data)
 			   height + 2);
   
 	  text_data->blink_show=TRUE;
-	}  
+	}
+
       cairo_fill (cr);
       cairo_stroke (cr);
       cairo_destroy (cr);
@@ -148,6 +150,7 @@ static void delete_character ()
       text_data->pos->y = char_info->y;
       text_data->letterlist = g_slist_remove (text_data->letterlist, char_info);
     }
+
 }
 
 
@@ -241,7 +244,7 @@ init_text_widget (GtkWidget *widget)
       cairo_set_line_width (text_data->cr, text_data->pen_width);
       cairo_set_source_color_from_string (text_data->cr, text_data->color);
       cairo_set_font_size (text_data->cr, text_data->pen_width * 2);
-      /* This is a trick we must found the maximum height of the font. */
+      /* This is a trick; we must found the maximum height of the font. */
       cairo_text_extents (text_data->cr, "|" , &text_data->extents);
       text_data->max_font_height = text_data->extents.height;
       set_text_cursor (widget);
@@ -268,7 +271,7 @@ init_text_widget (GtkWidget *widget)
 }
 
 
-/* Add a savepoint with the text. */
+/* Add a save-point with the text. */
 static void
 save_text ()
 {
@@ -277,6 +280,7 @@ save_text ()
       stop_timer (); 
       text_data->blink_show=FALSE;
       blink_cursor (NULL);   
+
       if (text_data->letterlist)
 	{
 	  annotate_push_context (text_data->cr);
@@ -284,6 +288,7 @@ save_text ()
 	  g_slist_free (text_data->letterlist);
 	  text_data->letterlist = NULL;
 	}
+
     } 
 }
 
@@ -312,6 +317,7 @@ key_snooper (GtkWidget *widget,
 	     GdkEventKey *event,
 	     gpointer user_data)  
 {
+
   if (event->type != GDK_KEY_PRESS) {
     return TRUE;
   }
@@ -379,14 +385,17 @@ on_window_text_expose_event (GtkWidget *widget,
 			     gpointer data)
 {
   gint is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
+
   if (!is_fullscreen)
     {
       return TRUE;
     }
+
   if (widget)
     {
       init_text_widget (widget);
     }
+
   return TRUE;
 }
 
@@ -427,8 +436,10 @@ on_window_text_button_release (GtkWidget *win,
     {
       return TRUE;
     }
+
 #ifdef _WIN32
   gboolean above = is_above_virtual_keyboard (ev->x_root, ev->y_root);
+
   if (above)
     {
       /* You have lost the focus; re grab it. */
@@ -436,9 +447,10 @@ on_window_text_button_release (GtkWidget *win,
       /* Ignore the data; the event will be passed to the virtual keyboard. */
       return TRUE;
     }
+
 #endif
 
-  if ( (text_data) && (text_data->pos))
+  if ((text_data) && (text_data->pos))
     {
       save_text ();
   
@@ -546,7 +558,7 @@ stop_text_widget ()
 	  g_free (text_data->pos);
 	  text_data->pos = NULL;
 	}
-      /* Free the gtkbuilder object. */
+      /* Free the gtk builder object. */
       if (text_data->text_window_gtk_builder)
 	{
 	  g_object_unref (text_data->text_window_gtk_builder);

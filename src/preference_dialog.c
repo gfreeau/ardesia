@@ -38,10 +38,16 @@
 void
 start_preference_dialog (GtkWindow *parent)
 {
-  PreferenceData *preference_data = (PreferenceData *) g_malloc ((gsize) sizeof (PreferenceData));
   GObject *preference_obj = NULL;
   GtkWidget *preference_dialog = NULL;
-  
+  GObject *img_obj = NULL;
+  GtkFileChooser *chooser = NULL;
+  GtkFileFilter *filter = NULL;
+  GObject *bg_color_obj = NULL;
+  GtkWidget *color_button = NULL;
+
+  PreferenceData *preference_data = (PreferenceData *) g_malloc ((gsize) sizeof (PreferenceData));
+
   start_virtual_keyboard ();
 
   /* 0 no background, 1 background colour, 2 png background. */
@@ -61,34 +67,34 @@ start_preference_dialog (GtkWindow *parent)
   gtk_window_set_modal (GTK_WINDOW (preference_dialog), TRUE);
   
 #ifdef _WIN32
-  /* 
+  /*
    * In Windows the parent bar go above the dialog;
    * to avoid this behaviour I put the parent keep above to false.
    */
   gtk_window_set_keep_above (GTK_WINDOW (parent), FALSE);
-#endif 
-   
-  GObject *img_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "imageChooserButton");
-  GtkFileChooser *chooser = GTK_FILE_CHOOSER (img_obj);
+#endif
+
+  img_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "imageChooserButton");
+  chooser = GTK_FILE_CHOOSER (img_obj);
 
   gtk_file_chooser_set_current_folder (chooser, BACKGROUNDS_FOLDER);
- 
+
   /* Put the file filter for the supported formats. */
-  GtkFileFilter *filter = gtk_file_filter_new ();
+  filter = gtk_file_filter_new ();
   gtk_file_filter_set_name (filter, "PNG and JPEG");
   gtk_file_filter_add_mime_type (filter, "image/jpeg");
   gtk_file_filter_add_mime_type (filter, "image/png");
   gtk_file_chooser_add_filter (chooser, filter);
- 
+
   preference_data->preview = gtk_image_new ();
   gtk_file_chooser_set_preview_widget (chooser, preference_data->preview);
- 
-  GObject *bg_color_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, 
-						  "backgroundColorButton");
 
-  GtkWidget *color_button = GTK_WIDGET (bg_color_obj);
+  bg_color_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder,
+					 "backgroundColorButton");
+
+  color_button = GTK_WIDGET (bg_color_obj);
   gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON (color_button), TRUE);
- 
+
   /* Connect all signals by reflection. */
   gtk_builder_connect_signals (preference_data->preference_dialog_gtk_builder, (gpointer) preference_data);
    
@@ -119,12 +125,12 @@ start_preference_dialog (GtkWindow *parent)
   preference_data = NULL;
 
 #ifdef _WIN32
-  /* 
+  /*
    * Re-put the keep above flag at the parent window bar.
    */
   gtk_window_set_keep_above (GTK_WINDOW (parent), TRUE);
 #endif
-  stop_virtual_keyboard ();   
+  stop_virtual_keyboard ();
 }
 
 

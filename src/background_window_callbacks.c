@@ -30,11 +30,11 @@
 /* Expose event in background window occurs. */
 G_MODULE_EXPORT gboolean
 back_event_expose(GtkWidget *widget, 
-		  GdkEventExpose *event, 
+		  GdkEventExpose *event,
 		  gpointer user_data)
 {
-  BackGroundData *background_data = (BackGroundData*) user_data;
-  
+  BackGroundData *background_data = (BackGroundData *) user_data;
+
   gint is_fullscreen = gdk_window_get_state(widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
   if (!is_fullscreen)
     {
@@ -43,7 +43,7 @@ back_event_expose(GtkWidget *widget,
 
   if (!background_data->back_cr)
     {
-      background_data->back_cr = gdk_cairo_create(widget->window); 
+      background_data->back_cr = gdk_cairo_create(widget->window);
     }
 
   if (background_data->background_image)
@@ -56,7 +56,7 @@ back_event_expose(GtkWidget *widget,
     }
   else
     {
-      clear_background_window();    
+      clear_background_window();
     }
 
   return TRUE;

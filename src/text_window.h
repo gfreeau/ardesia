@@ -46,11 +46,11 @@
 
 
 #ifdef _WIN32
-#  define TEXT_MOUSE_EVENTS         ( GDK_POINTER_MOTION_MASK |	\
-   				      GDK_BUTTON_PRESS_MASK   |	\
-				      GDK_BUTTON_RELEASE_MASK |	\
-				      GDK_PROXIMITY_IN |	\
-				      GDK_PROXIMITY_OUT |	\
+#  define TEXT_MOUSE_EVENTS         ( GDK_POINTER_MOTION_MASK|	\
+   				      GDK_BUTTON_PRESS_MASK|	\
+				      GDK_BUTTON_RELEASE_MASK|	\
+				      GDK_PROXIMITY_IN|		\
+				      GDK_PROXIMITY_OUT|	\
 				      GDK_MOTION_NOTIFY|	\
 				      GDK_BUTTON_PRESS		\
 				      )
@@ -99,9 +99,9 @@ typedef struct
 
   Pos *pos;
 
-  GSList *letterlist; 
+  GSList *letterlist;
 
-  gchar* color;
+  gchar *color;
 
   gint pen_width;
 

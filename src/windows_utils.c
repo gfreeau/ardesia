@@ -27,9 +27,11 @@
 
 #include <windows_utils.h>
 
- 
-BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd, COLORREF cr_key,
-					       BYTE b_alpha, DWORD dw_flags) = NULL;
+
+BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd,
+					       COLORREF cr_key,
+					       BYTE b_alpha,
+					       DWORD dw_flags) = NULL;
 	
 
 
@@ -89,12 +91,12 @@ fixed_gdk_cursor_new_from_pixmap (GdkPixmap *source,
    * and bg, and use that as the transparent colour'.
    * We do this using colors_too_similar (see above) because two colors could be
    * unequal in GdkColor's 16-bit/sample, but equal in GdkPixbuf's
-   * 8-bit/sample. 
+   * 8-bit/sample.
    *
    */
   GdkColor candidates[3] = {{0,65535,0,0}, {0,0,65535,0}, {0,0,0,65535}};
   GdkColor *trans = &candidates[0];
-  if (colors_too_similar (trans, fg) || colors_too_similar (trans, bg)) 
+  if (colors_too_similar (trans, fg) || colors_too_similar (trans, bg))
     {
       trans = &candidates[1];
       if (colors_too_similar (trans, fg) || colors_too_similar (trans, bg))
@@ -184,11 +186,11 @@ windows_send_email (gchar *to,
   
   gint i =0;
   for (i=0; i<attach_lenght; i++)
-    { 
-      gchar* attachment =  g_slist_nth_data (attachment_list, i);
+    {
+      gchar *attachment =  g_slist_nth_data (attachment_list, i);
       m_fd[i].lpszPathName = attachment;
       m_fd[i].lpszFileName = attachment;
-    }  
+    }
 
   m_msg.nFileCount = sizeof (m_fd) / sizeof (m_fd[0]);
   m_msg.lpFiles = m_fd;
@@ -203,10 +205,11 @@ windows_create_link (gchar *src,
 		     gchar *dest,
 		     gchar *icon_path,
 		     int icon_index)
-{  
+{
 
   gchar *extension = "lnk";
   gchar *link_filename = g_strdup_printf ("%s.%s", dest, extension);
+
   if (g_file_test (link_filename, G_FILE_TEST_EXISTS))
     {
       g_free (link_filename);
@@ -216,7 +219,7 @@ windows_create_link (gchar *src,
   IShellLink *shell_link;
   IPersistFile *persist_file;
   WCHAR wsz[MAX_PATH];
-  
+
   CoCreateInstance (&CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, &IID_IShellLink, (LPVOID *) &shell_link);
 
   shell_link->lpVtbl->SetPath (shell_link, (LPCTSTR) src);

@@ -36,7 +36,7 @@
 #else
 #  define UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/vertical_bar.glade"
 #  define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/horizontal_bar.glade"
-#endif  
+#endif
 
 /* Distance space from border to the ardesia bar in pixel unit. */
 #define SPACE_FROM_BORDER 25
@@ -75,7 +75,7 @@ typedef struct
 
   /* grab when leave. */
   gboolean grab;
-   
+
 }BarData;
 
 

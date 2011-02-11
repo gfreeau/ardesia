@@ -32,7 +32,7 @@
 #  define BACKGROUND_UI_FILE "..\\share\\ardesia\\ui\\background_window.glade"
 #else
 #  define BACKGROUND_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/background_window.glade"
-#endif 
+#endif
 
 
 /* Structure that contains the info passed to the callbacks. */

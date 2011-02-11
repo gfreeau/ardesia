@@ -50,8 +50,8 @@ static asection *text = 0;
 
 /* Put a trace line in the file giving the address. */
 static void
-create_trace_line (char *address, 
-		   FILE *file) 
+create_trace_line (char *address,
+		   FILE *file)
 {
   char ename[1024];
   ssize_t l = -1;
@@ -69,27 +69,27 @@ create_trace_line (char *address,
 #else // Linux
   l = readlink ("/proc/self/exe",ename,sizeof (ename));
 #endif
-  
-  if (l == -1) 
+
+  if (l == -1)
     {
       fprintf (stderr, "failed to find executable\n");
       return;
     }
- 	
+	
   ename[l] = 0;
 
   bfd_init ();
 
   abfd = bfd_openr (ename, 0);
-   
+
   if (!abfd)
     {
       fprintf (stderr, "bfd_openr failed: ");
       return;
     }
-   
+
   /* Oddly, this is required for it to work... */
-  if (!bfd_check_format (abfd,bfd_object))
+  if (!bfd_check_format (abfd, bfd_object))
     {
       fprintf (stderr, "bfd_check_format failed\n");
       return;
@@ -101,7 +101,7 @@ create_trace_line (char *address,
   text = bfd_get_section_by_name (abfd, ".text");
 
   offset = ( (unsigned long) address) - text->vma;
-   
+
   if (offset > 0) 
     {
       const char *filen;
@@ -117,7 +117,7 @@ create_trace_line (char *address,
 #else
 static void
 create_trace_line (char *address,
-		   FILE *file) 
+		   FILE *file)
 {
   fprintf (stderr, "Unable to create the stacktrace line; check the bfd library installation\n");
 }
@@ -128,11 +128,11 @@ create_trace_line (char *address,
 
 /* Create the trace to be printed. */
 static void
-create_trace () 
+create_trace ()
 {
 
   void  *array[MAX_FRAMES];
-  void  *approx_text_end = (void*) ( (128+100) * 2<<20);
+  void  *approx_text_end = (void *) ( (128+100) * 2<<20);
   gchar *default_filename = get_default_filename ();
   gchar *backtrace_name = g_strdup_printf ("%s_stacktrace.txt", default_filename);
   gchar *filename  = g_build_filename ( g_get_tmp_dir (), backtrace_name, (gchar *) 0);
@@ -144,10 +144,10 @@ create_trace ()
 
   FILE *file = fopen (filename, "w");
 
-  /* 
+  /*
    * The glibc functions backtrace is missing on all non-glibc platforms.
    */
-  
+
   size = backtrace (array, MAX_FRAMES);
   g_free (default_filename);
 
@@ -155,7 +155,7 @@ create_trace ()
     {
       if (array[i] < approx_text_end)
 	{
-	  create_trace_line (array[i], file);      
+	  create_trace_line (array[i], file);
 	}
     }
 
@@ -165,7 +165,7 @@ create_trace ()
 }
 #else
 static void
-create_trace () 
+create_trace ()
 {
   fprintf (stderr, "Unable to create the stack-trace the glibc back-trace function is not supported by your system\n");
   fprintf (stderr, "Please use the gdb and the bt command to create the trace\n");
@@ -178,7 +178,7 @@ static int
 sigsegv_handler (void *addr,
 		 int bad)
 {
-  create_trace (); 
+  create_trace ();
   exit (EXIT_FAILURE);
 }
 
@@ -188,11 +188,13 @@ void
 glibc_backtrace_register ()
 {
 #ifdef HAVE_LIBSIGSEGV
+
   /* Install the SIGSEGV handler. */
   if (sigsegv_install_handler (sigsegv_handler)<0)
     {
       exit (EXIT_FAILURE);
     }
+
 #endif
 }
 

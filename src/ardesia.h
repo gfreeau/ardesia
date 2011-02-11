@@ -55,6 +55,7 @@ typedef struct
 
   /* Where is located the ardesia bar? */
   gint position;
+
 } CommandLine;
 
 

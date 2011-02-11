@@ -36,10 +36,16 @@ add_header ()
 {
   gchar *becta_ns    = "http://www.becta.org.uk/iwb";
   gchar *svg_ns      = "http://www.w3.org/2000/svg";
-  gchar *xlink_ns    = "http://www.w3.org/1999/xlink"; 
+  gchar *xlink_ns    = "http://www.w3.org/1999/xlink";
   gchar *iwb_version = "1.0";
 
-  fprintf (fp,"<iwb xmlns:iwb=\"%s\" xmlns:svg=\"%s\" xmlns:xlink=\"%s\" version=\"%s\">\n", becta_ns, svg_ns, xlink_ns, iwb_version);  
+  fprintf (fp,
+	   "<iwb xmlns:iwb=\"%s\" xmlns:svg=\"%s\" xmlns:xlink=\"%s\" version=\"%s\">\n",
+	   becta_ns,
+	   svg_ns,
+	   xlink_ns,
+	   iwb_version);
+
 }
 
 
@@ -58,7 +64,13 @@ open_svg ()
   gint width  = gdk_screen_width ();
   gint height = gdk_screen_height ();
 
-  fprintf (fp,"\t<svg:svg width=\"%d\" height=\"%d\" viewbox=\"0 0 %d %d\">\n", width, height, width, height);
+  fprintf (fp,
+	   "\t<svg:svg width=\"%d\" height=\"%d\" viewbox=\"0 0 %d %d\">\n",
+	   width,
+	   height,
+	   width,
+	   height);
+
 }
 
 
@@ -76,11 +88,17 @@ add_background ()
 {
   gint width  = gdk_screen_width ();
   gint height = gdk_screen_height ();
-  gchar* rgb  = "rgb (0,0,0)";
-  gchar* opacity = "0";
-  
+  gchar *rgb  = "rgb (0,0,0)";
+  gchar *opacity = "0";
+
   open_svg ();
-  fprintf (fp,"\t\t<svg:rect id=\"id1\" x=\"0\" y=\"0\" width=\"%d\" height=\"%d\" fill=\"%s\" fill-opacity=\"%s\"/>\n", width, height, rgb, opacity);
+
+  fprintf (fp,
+	   "\t\t<svg:rect id=\"id1\" x=\"0\" y=\"0\" width=\"%d\" height=\"%d\" fill=\"%s\" fill-opacity=\"%s\"/>\n",
+	   width,
+	   height,
+	   rgb,opacity);
+
   close_svg ();
 }
 
@@ -89,7 +107,8 @@ add_background ()
 static void
 add_background_reference ()
 {
-  fprintf (fp,"\t<iwb:element ref=\"id1\" background=\"true\"/>\n");
+  fprintf (fp,
+	   "\t<iwb:element ref=\"id1\" background=\"true\"/>\n");
 }
 
 
@@ -99,13 +118,19 @@ add_savepoint (gint index)
 {
   gint width = gdk_screen_width ();
   gint height = gdk_screen_height ();
-  gchar* id = g_strdup_printf ("id%d", index +1);
-  gchar* file = g_strdup_printf ("images/%s_%d_vellum.png", PACKAGE_NAME, index);
-  
+  gchar *id = g_strdup_printf ("id%d", index +1);
+  gchar *file = g_strdup_printf ("images/%s_%d_vellum.png", PACKAGE_NAME, index);
+
   open_svg ();
 
-  fprintf (fp,"\t\t<svg:image id=\"%s\" xlink:href=\"%s\" x=\"0\" y=\"0\" width=\"%d\" height=\"%d\"/>\n", id, file, width, height);
+  fprintf (fp,
+	   "\t\t<svg:image id=\"%s\" xlink:href=\"%s\" x=\"0\" y=\"0\" width=\"%d\" height=\"%d\"/>\n",
+	   id,
+	   file,
+	   width,height);
+
   g_free (file);
+  file = NULL;
   g_free (id);
   close_svg ();
 }
@@ -129,7 +154,7 @@ static void
 add_savepoint_reference (gint index)
 {
   gchar *id = g_strdup_printf ("id%d", index +1);
-  fprintf (fp,"\t<iwb:element ref=\"%s\" locked=\"true\"/>\n", id);   
+  fprintf (fp,"\t<iwb:element ref=\"%s\" locked=\"true\"/>\n", id);
   g_free (id);
 }
 
@@ -149,7 +174,7 @@ add_savepoint_references (gint savepoint_number)
 
 /* Create the iwb xml content file. */
 static void
-create_xml_content (gchar* content_filename,
+create_xml_content (gchar *content_filename,
 		    gchar *img_dir_path)
 {
   int savepoint_number = 0;
@@ -159,16 +184,16 @@ create_xml_content (gchar* content_filename,
 
   img_dir = g_dir_open (img_dir_path, 0, NULL);
 
-  while ( (g_dir_read_name (img_dir)))
+  while (g_dir_read_name (img_dir))
     {
       savepoint_number++;
     }
-  
+
   g_dir_close (img_dir);
 
   add_header ();
   add_background ();
-  add_savepoints (savepoint_number);  
+  add_savepoints (savepoint_number);
   add_background_reference ();
   add_savepoint_references (savepoint_number);
   close_iwb ();
@@ -184,9 +209,9 @@ create_iwb (gchar *zip_filename,
 	    gchar *content_filename)
 {
   /* Create the zip archive, add all the file inside images to the zip and the content.xml;
-   * this is done spawing the info-Zip process
+   * this is done spawning the info-Zip process
    */
-  gchar* argv[6] = {"zip", "-r", zip_filename, images_folder, content_filename, (gchar *) 0};
+  gchar *argv[6] = {"zip", "-r", zip_filename, images_folder, content_filename, (gchar *) 0};
 
   g_spawn_sync (working_dir /*working_directory*/,
 		argv,
@@ -206,31 +231,32 @@ void
 export_iwb (gchar *iwb_location)
 {
   gchar *iwb_file = NULL;
-
-  /* If the iwb location is null means that it is a new project. */
-  if (iwb_location == NULL)
-    {
-      /* It will be putted in the project dir. */
-      gchar *extension = "iwb";
-      /* The zip file is the iwb file located in the ardesia workspace. */
-      iwb_file = g_strdup_printf ("%s%s%s.%s", get_project_dir (), G_DIR_SEPARATOR_S, get_project_name (), extension);
-    }
-  else
-    {
-      g_remove (iwb_location);
-      iwb_file = g_strdup_printf ("%s", iwb_location);
-    }
-
   const gchar *tmpdir = g_get_tmp_dir ();
   gchar *content_filename = "content.xml";
   gchar *ardesia_tmp_dir = g_build_filename (tmpdir, PACKAGE_NAME, (gchar *) 0);
   gchar *project_name = get_project_name ();
 
   gchar *project_tmp_dir = g_build_filename (ardesia_tmp_dir, project_name, (gchar *) 0);
-  gchar *content_filepath = g_build_filename (project_tmp_dir, content_filename, (gchar *) 0); 
+  gchar *content_filepath = g_build_filename (project_tmp_dir, content_filename, (gchar *) 0);
 
   gchar *images = "images";
   gchar *img_dir_path = g_build_filename (project_tmp_dir, images, (gchar *) 0);
+
+  /* If the iwb location is null means that it is a new project. */
+  if (iwb_location == NULL)
+    {
+      /* It will be putted in the project dir. */
+      gchar *extension = "iwb";
+      gchar *iwb_name =  g_strdup_printf("%s.%s", get_project_name (), extension);
+      /* The zip file is the iwb file located in the ardesia workspace. */
+      iwb_file = g_build_filename (get_project_dir (), iwb_name, (gchar *) 0);
+      g_free(iwb_name);
+    }
+  else
+    {
+      g_remove (iwb_location);
+      iwb_file = g_strdup_printf ("%s", iwb_location);
+    }
 
   g_remove (content_filepath);
   create_xml_content (content_filepath, img_dir_path);
@@ -239,10 +265,10 @@ export_iwb (gchar *iwb_location)
 
   /* Add to the list of the artefacts created in the session. */
   add_artifact (iwb_file);
-  
+
   g_free (iwb_file);
   g_free (ardesia_tmp_dir);
-  g_free (project_tmp_dir); 
+  g_free (project_tmp_dir);
   g_free (content_filepath);
   g_free (img_dir_path);
 }

@@ -25,9 +25,9 @@
 /* 
    Copyright (c) 2010 ,
    Cloud Wu . All rights reserved.
- 
+
    http://www.codingnow.com
- 
+
    Use, modification and distribution are subject to the "New BSD License"
    as listed at <url: http://www.opensource.org/licenses/bsd-license.php >.
 
@@ -65,7 +65,9 @@ output_print (struct output_buffer *ob,
 	      const char *format, ...)
 {
   if (ob->sz == ob->ptr)
-    return;
+    {
+      return;
+    }
   ob->buf[ob->ptr] = '\0';
   va_list ap;
   va_start (ap,format);
@@ -87,17 +89,20 @@ lookup_section (bfd *abfd,
   if (data->func)
     return;
 
-  if (! (bfd_get_section_flags (abfd, sec) & SEC_ALLOC)) 
+  if (! (bfd_get_section_flags (abfd, sec) & SEC_ALLOC))
     return;
 
   bfd_vma vma = bfd_get_section_vma (abfd, sec);
-  if (data->counter < vma || vma + bfd_get_section_size (sec) <= data->counter) 
-    return;
+  if (data->counter < vma || vma + bfd_get_section_size (sec) <= data->counter)
+    {
+      return;
+    }
 
-  bfd_find_nearest_line (abfd, 
+  bfd_find_nearest_line (abfd,
 			 sec,
 			 data->symbol,
-			 data->counter - vma, & (data->file),
+			 data->counter - vma,
+			 & (data->file),
 			 & (data->func),
 			 & (data->line));
 
@@ -121,15 +126,15 @@ find (struct bfd_ctx *b,
   data.line = 0;
 
   bfd_map_over_sections (b->handle, &lookup_section, &data);
-  if (file) 
+  if (file)
     {
       *file = data.file;
     }
-  if (func) 
+  if (func)
     {
       *func = data.func;
     }
-  if (line) 
+  if (line)
     {
       *line = data.line;
     }
@@ -146,9 +151,9 @@ init_bfd_ctx (struct bfd_ctx *bc,
   bc->symbol = NULL;
 
   bfd *b = bfd_openr (procname, 0);
-  if (!b) 
+  if (!b)
     {
-      output_print (ob,"Failed to open bfd from (%s)\n" , procname);
+      output_print (ob, "Failed to open bfd from (%s)\n", procname);
       return 1;
     }
 
@@ -156,23 +161,23 @@ init_bfd_ctx (struct bfd_ctx *bc,
   int r2 = bfd_check_format_matches (b, bfd_object, NULL);
   int r3 = bfd_get_file_flags (b) & HAS_SYMS;
 
-  if (! (r1 && r2 && r3)) 
+  if (! (r1 && r2 && r3))
     {
       bfd_close (b);
-      output_print (ob,"Failed to initialize bfd from (%s)\n", procname);
+      output_print (ob, "Failed to initialize bfd from (%s)\n", procname);
       return 1;
     }
 
   void *symbol_table;
 
   unsigned dummy = 0;
-  if (bfd_read_minisymbols (b, FALSE, &symbol_table, &dummy) == 0) 
+  if (bfd_read_minisymbols (b, FALSE, &symbol_table, &dummy) == 0)
     {
-      if (bfd_read_minisymbols (b, TRUE, &symbol_table, &dummy) < 0) 
+      if (bfd_read_minisymbols (b, TRUE, &symbol_table, &dummy) < 0)
 	{
 	  free (symbol_table);
 	  bfd_close (b);
-	  output_print (ob,"Failed to read symbols from (%s)\n", procname);
+	  output_print (ob, "Failed to read symbols from (%s)\n", procname);
 	  return 1;
 	}
     }
@@ -206,14 +211,14 @@ get_bc (struct output_buffer *ob,
 {
   while (set->name) 
     {
-      if (strcmp (set->name , procname) == 0) 
+      if (strcmp (set->name, procname) == 0)
 	{
 	  return set->bc;
 	}
       set = set->next;
     }
   struct bfd_ctx bc;
-  if (init_bfd_ctx (&bc, procname , ob)) 
+  if (init_bfd_ctx (&bc, procname, ob))
     {
       return NULL;
     }
@@ -229,7 +234,7 @@ get_bc (struct output_buffer *ob,
 static void
 release_set (struct bfd_set *set)
 {
-  while (set) 
+  while (set)
     {
       struct bfd_set *temp = set->next;
       free (set->name);
@@ -252,7 +257,7 @@ _backtrace (struct output_buffer *ob,
   struct bfd_ctx *bc = NULL;
 
   STACKFRAME frame;
-  memset (&frame,0,sizeof (frame));
+  memset (&frame, 0, sizeof (frame));
 
   frame.AddrPC.Offset = context->Eip;
   frame.AddrPC.Mode = AddrModeFlat;
@@ -274,7 +279,7 @@ _backtrace (struct output_buffer *ob,
 		    context,
 		    0,
 		    SymFunctionTableAccess,
-		    SymGetModuleBase, 0)) 
+		    SymGetModuleBase, 0))
     {
 
       --depth;
@@ -287,25 +292,25 @@ _backtrace (struct output_buffer *ob,
 
       DWORD module_base = SymGetModuleBase (process, frame.AddrPC.Offset);
 
-      const char * module_name = "[unknown module]";
+      const char *module_name = "[unknown module]";
       if (module_base && 
-	  GetModuleFileNameA ( (HINSTANCE)module_base, module_name_raw, MAX_PATH)) 
+	  GetModuleFileNameA ( (HINSTANCE)module_base, module_name_raw, MAX_PATH))
 	{
 	  module_name = module_name_raw;
 	  bc = get_bc (ob, set, module_name);
 	}
 
-      const char * file = NULL;
-      const char * func = NULL;
+      const char *file = NULL;
+      const char *func = NULL;
       unsigned line = 0;
 
-      if (bc) 
+      if (bc)
 	{
-	  find (bc,frame.AddrPC.Offset,&file,&func,&line);
+	  find (bc, frame.AddrPC.Offset, &file, &func, &line);
 	}
 
       if (file == NULL
-	  ) 
+	  )
 	{
 	  DWORD dummy = 0;
 	  if (SymGetSymFromAddr (process, frame.AddrPC.Offset, &dummy, symbol))
@@ -319,14 +324,16 @@ _backtrace (struct output_buffer *ob,
 	}
       if (func == NULL)
 	{
-	  output_print (ob,"0x%x : %s : %s \n",
+	  output_print (ob,
+			"0x%x : %s : %s \n",
 			frame.AddrPC.Offset,
 			module_name,
 			file);
 	}
-      else 
+      else
 	{
-	  output_print (ob,"0x%x : %s : %s (%d) : in function (%s) \n",
+	  output_print (ob,
+			"0x%x : %s : %s (%d) : in function (%s) \n",
 			frame.AddrPC.Offset,
 			module_name,
 			file,
@@ -343,21 +350,21 @@ exception_filter (LPEXCEPTION_POINTERS info)
   struct output_buffer ob;
   output_init (&ob, g_output, BUFFER_MAX);
 
-  if (!SymInitialize (GetCurrentProcess (), 0, TRUE)) 
+  if (!SymInitialize (GetCurrentProcess (), 0, TRUE))
     {
-      output_print (&ob,"Failed to init symbol context\n");
+      output_print (&ob, "Failed to init symbol context\n");
     }
-  else 
+  else
     {
       bfd_init ();
-      struct bfd_set *set = calloc (1,sizeof (*set));
-      _backtrace (&ob , set , 128 , info->ContextRecord);
+      struct bfd_set *set = calloc (1, sizeof (*set));
+      _backtrace (&ob, set, 128, info->ContextRecord);
       release_set (set);
 
       SymCleanup (GetCurrentProcess ());
     }
 
-  fputs (g_output , stderr);
+  fputs (g_output, stderr);
 
 
 
@@ -372,9 +379,9 @@ exception_filter (LPEXCEPTION_POINTERS info)
   fclose (file);
   start_crash_dialog (NULL, filename);
   g_free (filename);
-  
+
   free (g_output);
-	  
+	
   exit (EXIT_FAILURE);
 
   return 0;
@@ -385,7 +392,7 @@ exception_filter (LPEXCEPTION_POINTERS info)
 void
 windows_backtrace_register ()
 {
-  if (g_output == NULL) 
+  if (g_output == NULL)
     {
       g_output = malloc (BUFFER_MAX);
       SetUnhandledExceptionFilter (exception_filter);

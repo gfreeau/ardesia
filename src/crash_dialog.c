@@ -49,27 +49,27 @@ new_crash_data (gchar *crash_report)
  */
 void start_crash_dialog (GtkWindow *parent, gchar *crash_report)
 {
-  CrashData *crash_data = new_crash_data (crash_report);
-
   GtkWidget *crash_dialog = NULL;
+  GObject *crash_obj = NULL;
+  CrashData *crash_data = new_crash_data (crash_report);
 
   /* Load the gtk builder file created with glade. */
   gtk_builder_add_from_file (crash_data->crash_dialog_gtk_builder, CRASH_UI_FILE, NULL);
- 
+
   /* Fill the window by the gtk builder xml. */
-  GObject *crash_obj = gtk_builder_get_object (crash_data->crash_dialog_gtk_builder, "CrashDialog");
+  crash_obj = gtk_builder_get_object (crash_data->crash_dialog_gtk_builder, "CrashDialog");
   crash_dialog = GTK_WIDGET (crash_obj);
   gtk_window_set_transient_for (GTK_WINDOW (crash_dialog), parent);
   gtk_window_set_modal (GTK_WINDOW (crash_dialog), TRUE);
-  
+
 #ifdef _WIN32
   /* 
    * In Windows the parent bar go above the dialog;
    * to avoid this behaviour I put the parent keep above to false.
    */
   gtk_window_set_keep_above (GTK_WINDOW (parent), FALSE);
-#endif 
-  
+#endif
+
   /* Connect all signals by reflection. */
   gtk_builder_connect_signals (crash_data->crash_dialog_gtk_builder, (gpointer) crash_data);
 

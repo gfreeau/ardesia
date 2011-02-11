@@ -29,9 +29,11 @@
 #define BROKEN_FILE
 
 
-/* Return a sub-path of list_inp that contains only the meaningful points using the standard deviation. */
+/* Return a new list containing a sub-path of list_inp that contains
+ * the meaningful points using the standard deviation.
+ */
 GSList *
-extract_relevant_points         (GSList *list_inp,
+build_relevant_list             (GSList *list_inp,
 				 gboolean rectify,
 				 gdouble pixel_tollerance);
 
@@ -41,14 +43,15 @@ GSList *
 extract_outbounded_rectangle    (GSList *list_in);
 
 
-/* The path list is similar to an ellipse, unbounded_rect is the out-bounded rectangle to the shape. */
-gboolean 
+/* Is the path similar to an ellipse;
+ * unbounded_rect is the out-bounded rectangle to the shape. */
+gboolean
 is_similar_to_an_ellipse        (GSList  *list,
 				 GSList *unbounded_rect,
-				 gdouble pixel_tollerance); 
+				 gdouble pixel_tollerance);
 
 
-/* Take a list of point and return magically the new recognized path. */        
+/* Take a list of point and return magically the new recognized path. */
 GSList *
 broken                          (GSList *inp,
 				 gboolean close_path,

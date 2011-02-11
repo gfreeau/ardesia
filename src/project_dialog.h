@@ -29,7 +29,7 @@
 #  define PROJECT_UI_FILE "..\\share\\ardesia\\ui\\project_dialog.glade"
 #else
 #  define PROJECT_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/project_dialog.glade"
-#endif 
+#endif
 
 
 typedef struct

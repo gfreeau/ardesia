@@ -50,8 +50,8 @@ start_save_image_dialog (GtkToolButton *toolbutton,
   gint result = GTK_RESPONSE_NO;
   gint run_status = GTK_RESPONSE_NO;
   gboolean screenshot = FALSE;
-  GdkPixbuf *buf = grab_screenshot (); 
-   
+  GdkPixbuf *buf = grab_screenshot ();
+
   GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext ("Export as pdf"),
 						    parent,
 						    GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -60,57 +60,59 @@ start_save_image_dialog (GtkToolButton *toolbutton,
 						    GTK_STOCK_SAVE_AS,
 						    GTK_RESPONSE_ACCEPT,
 						    NULL);
-  
-  gtk_window_set_modal (GTK_WINDOW (chooser), TRUE); 
+
+  gtk_window_set_modal (GTK_WINDOW (chooser), TRUE);
   gtk_window_set_keep_above (GTK_WINDOW (chooser), TRUE);
-  
-  gtk_window_set_title (GTK_WINDOW (chooser), gettext ("Choose a file")); 
-  
+
+  gtk_window_set_title (GTK_WINDOW (chooser), gettext ("Choose a file"));
+
   /* Save the preview in a buffer. */
   preview = gtk_image_new ();
   preview_pixbuf = gdk_pixbuf_scale_simple (buf, preview_width, preview_height, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (preview), preview_pixbuf);
   
-  gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER (chooser), preview);   
+  gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER (chooser), preview);
   g_object_unref (preview_pixbuf);
+  preview_pixbuf = NULL;
 
   gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser), get_project_dir ());
 
   filename = get_default_filename ();
-  
+
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (chooser), filename);
-  
+
   start_virtual_keyboard ();
   run_status = gtk_dialog_run (GTK_DIALOG (chooser));
   if (run_status == GTK_RESPONSE_ACCEPT)
-    {   
+    {
       g_free (filename);
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      filename_copy = g_strdup_printf ("%s",filename); 
+      filename_copy = g_strdup_printf ("%s", filename);
 
       screenshot = TRUE;
       supported_extension = ".png";
-     
+
       if (!g_str_has_suffix (filename, supported_extension))
         {
           g_free (filename_copy);
-          filename_copy = g_strdup_printf ("%s%s",filename,supported_extension);
-        }      
-      g_free (filename);   
-      filename = filename_copy;  
+          filename_copy = g_strdup_printf ("%s%s", filename, supported_extension);
+        }
+
+      g_free (filename);
+      filename = filename_copy;
 
       if (file_exists (filename))
         {
-	  GtkWidget *msg_dialog; 
-	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (chooser), 
-					       GTK_DIALOG_MODAL, 
+	  GtkWidget *msg_dialog;
+	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (chooser),
+					       GTK_DIALOG_MODAL,
                                                GTK_MESSAGE_WARNING,
                                                GTK_BUTTONS_YES_NO,
 					       gettext ("File Exists. Overwrite"));
-	  
+	
           result = gtk_dialog_run (GTK_DIALOG (msg_dialog));
           if (msg_dialog)
-            { 
+            {
 	      gtk_widget_destroy (msg_dialog);
 	      msg_dialog = NULL;
             }
@@ -133,7 +135,7 @@ start_save_image_dialog (GtkToolButton *toolbutton,
       /* Store the buffer on file. */
       save_png (buf, filename);
     }
-  
+
   /* Add to the list of the artefacts created in the session. */
   add_artifact (filename);
 

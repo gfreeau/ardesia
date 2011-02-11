@@ -31,7 +31,7 @@
 #ifdef _WIN32
 #  include <cairo-win32.h>
 #  include <gdkwin32.h>
-#  include <winuser.h> 
+#  include <winuser.h>
 #else
 #  ifdef __APPLE__
 #    include <cairo-quartz.h>
@@ -43,20 +43,20 @@
 
 #ifdef _WIN32
 #  define ANNOTATION_UI_FILE "..\\share\\ardesia\\ui\\annotation_window.glade"
-  
+
 /* User for grab the pointer on win32. */
-#  define ANNOTATE_MOUSE_EVENTS    ( GDK_POINTER_MOTION_MASK |  \
-	         		     GDK_BUTTON_PRESS_MASK   |  \
-				     GDK_BUTTON_RELEASE_MASK |	\
-				     GDK_PROXIMITY_IN |		\
-				     GDK_PROXIMITY_OUT |	\
+#  define ANNOTATE_MOUSE_EVENTS    ( GDK_POINTER_MOTION_MASK|	\
+				     GDK_BUTTON_PRESS_MASK|	\
+				     GDK_BUTTON_RELEASE_MASK|	\
+				     GDK_PROXIMITY_IN|		\
+				     GDK_PROXIMITY_OUT|		\
 				     GDK_MOTION_NOTIFY|		\
 				     GDK_BUTTON_PRESS		\
 				     )
 
 #else
 #  define ANNOTATION_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/annotation_window.glade"
-#endif 
+#endif
 
 
 /* Enumeration containing tools. */
@@ -94,56 +94,56 @@ typedef struct _AnnotateSavePoint
 /* Annotation data used by the callbacks. */
 typedef struct
 {
-  
+
   /* Gtkbuilder for annotation window. */
   GtkBuilder *annotation_window_gtk_builder;
 
   /* Directory where store the save-point. */
-  gchar* savepoint_dir;  
+  gchar* savepoint_dir;
 
-  /* The annotation window. */   
+  /* The annotation window. */
   GtkWidget *annotation_window;
 
   /* cairo context attached to the window. */
   cairo_t *annotation_cairo_context;
 
-  /* The shape pixmap used as input shaping mask. */   
+  /* The shape pixmap used as input shaping mask. */
   GdkPixmap   *shape;
 
-  /* Mouse cursor to be used. */ 
+  /* Mouse cursor to be used. */
   GdkCursor *cursor;
- 
-  /* Mouse invisible cursor. */ 
+
+  /* Mouse invisible cursor. */
   GdkCursor *invisible_cursor;
- 
-  /* List of the savepoint. */ 
+
+  /* List of the savepoint. */
   GSList  *savepoint_list;
-  
-  /* The index of the position in the save-point list 
+
+  /* The index of the position in the save-point list
    * of the current picture shown. 
    */
   gint    current_save_index;
 
-  /* Paint context for the pen. */ 
+  /* Paint context for the pen. */
   AnnotatePaintContext *default_pen;
 
-  /* Paint context for the eraser. */ 
+  /* Paint context for the eraser. */
   AnnotatePaintContext *default_eraser;
 
-  /* Point to the current context. */  
+  /* Point to the current context. */
   AnnotatePaintContext *cur_context;
 
-  /* 
-   * This store the old paint type tool; 
-   * it is used to switch from/to eraser/pen 
+  /*
+   * This store the old paint type tool;
+   * it is used to switch from/to eraser/pen
    * using a tablet pen.
    */
   AnnotatePaintType old_paint_type;
 
   /* Tool thickness. */
-  gdouble thickness; 
- 
-  /* Is the rectify mode enabled? */ 
+  gdouble thickness;
+
+  /* Is the rectify mode enabled? */
   gboolean     rectify;
   
   /* Is the roundify mode enabled?*/
@@ -151,13 +151,13 @@ typedef struct
 
   /* Arrow. */
   gboolean     arrow;
-  
+
   /* Is the cursor grabbed. */
   gboolean     is_grabbed;
-  
+
   /* Is the cursor hidden. */
   gboolean     is_cursor_hidden;
-  
+
   /* Is the debug enabled. */
   gboolean     debug;
 
@@ -168,19 +168,19 @@ typedef struct
 
 
 /* Initialize the annotation window. */
-gint 
+gint
 annotate_init (GtkWidget *parent,
 	       gchar *iwb_filename,
 	       gboolean debug);
 
 
 /* Get the annotation window. */
-GtkWidget * 
+GtkWidget *
 get_annotation_window ();
 
 
 /* Set the cairo context that contains the background. */
-void 
+void
 set_annotation_cairo_background_context (cairo_t *background_cr);
 
 
@@ -226,7 +226,7 @@ annotate_set_color (gchar *color);
 
 /* Modify colour according to the pressure. */
 void
-annotate_modify_color (AnnotateData* data,
+annotate_modify_color (AnnotateData *data,
 		       gdouble pressure);
 
 

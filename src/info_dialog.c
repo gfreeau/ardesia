@@ -28,7 +28,7 @@
 
 #include <info_dialog.h>
 #include <utils.h>
- 
+
 
 /*
  * Start the info dialog.
@@ -49,21 +49,21 @@ start_info_dialog (GtkToolButton *toolbutton,
   info_dialog = GTK_WIDGET (gtk_builder_get_object (info_dialog_gtk_builder, "aboutdialog"));
   gtk_window_set_transient_for (GTK_WINDOW (info_dialog), parent);
   gtk_window_set_modal (GTK_WINDOW (info_dialog), TRUE);
-  gtk_window_set_keep_above (GTK_WINDOW (info_dialog), TRUE); 
+  gtk_window_set_keep_above (GTK_WINDOW (info_dialog), TRUE);
 
-  gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (info_dialog), PACKAGE_VERSION);   
+  gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (info_dialog), PACKAGE_VERSION);
 
   /* Connect all signals by reflection. */
   gtk_builder_connect_signals (info_dialog_gtk_builder, NULL);
 
   gtk_dialog_run (GTK_DIALOG (info_dialog));
-  
+
   if (info_dialog != NULL)
     {
       gtk_widget_destroy (info_dialog);
       info_dialog = NULL;
     }
-  
+
   if (info_dialog_gtk_builder)
     {
       g_object_unref (info_dialog_gtk_builder);

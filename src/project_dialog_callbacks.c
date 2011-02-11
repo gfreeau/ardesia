@@ -46,7 +46,8 @@ on_project_ok_button_clicked (GtkButton *buton,
   ProjectData *project_data = (ProjectData *) data;
   GObject *dialog_obj = gtk_builder_get_object (project_data->project_dialog_gtk_builder, "projectDialogEntry");
   GtkWidget *dialog_entry = GTK_WIDGET (dialog_obj);
-  gchar* str = gtk_editable_get_chars (GTK_EDITABLE (dialog_entry), 0, -1);
+  gchar *str = gtk_editable_get_chars (GTK_EDITABLE (dialog_entry), 0, -1);
+
   g_free (project_data->project_name); 
   project_data->project_name = str;
   stop_virtual_keyboard (); 

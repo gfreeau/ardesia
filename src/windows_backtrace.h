@@ -52,9 +52,9 @@
 
 struct bfd_ctx {
 
-  bfd * handle;
+  bfd *handle;
 
-  asymbol ** symbol;
+  asymbol **symbol;
 
 };
 
@@ -63,7 +63,7 @@ struct bfd_set {
 
   char * name;
 
-  struct bfd_ctx * bc;
+  struct bfd_ctx *bc;
 
   struct bfd_set *next;
 

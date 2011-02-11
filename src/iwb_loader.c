@@ -25,21 +25,18 @@
 
 /* Follow the ref and load the associated save-point. */
 GSList *
-load_savepoint_by_reference (GSList* savepoint_list,
-			     gchar* project_tmp_dir,
+load_savepoint_by_reference (GSList *savepoint_list,
+			     gchar *project_tmp_dir,
 			     xmlXPathContextPtr context,
-			     xmlChar* ref)
+			     xmlChar *ref)
 {
   xmlChar *xpath = (xmlChar *) g_strdup_printf ("/iwb/svg:svg/svg:image[@id='%s']", (gchar *) ref);
-   
   xmlXPathObjectPtr result = xmlXPathEvalExpression (xpath, context); 
-  g_free ((gchar *) xpath);
- 
-  AnnotateSavepoint *savepoint = g_malloc ( (gsize) sizeof (AnnotateSavepoint));
-   
+  AnnotateSavepoint *savepoint = g_malloc ( (gsize) sizeof (AnnotateSavepoint));   
   xmlNodePtr node = result->nodesetval->nodeTab[0];
-  xmlChar *href = xmlGetProp (node, (xmlChar*) "href");
-  
+  xmlChar *href = xmlGetProp (node, (xmlChar *) "href");
+  g_free ((gchar *) xpath);
+
   savepoint->filename  = g_build_filename (project_tmp_dir, href, (gchar *) 0);
   
   xmlFree (href);
@@ -60,7 +57,7 @@ decompress_iwb (gchar *iwbfile,
 		gchar *project_tmp_dir)
 {
   /* Unzip the iwb file spawing the Zip-Info process. */
-  gchar* argv[5] = {"unzip", iwbfile, "-d", project_tmp_dir, (gchar*) 0};
+  gchar *argv[5] = {"unzip", iwbfile, "-d", project_tmp_dir, (gchar*) 0};
 
   g_spawn_sync (project_tmp_dir /*working_directory*/,
 		argv,
@@ -78,45 +75,48 @@ decompress_iwb (gchar *iwbfile,
 /* Add iwb name spaces to the xmlXPathContext. */
 static xmlXPathContextPtr register_namespaces (xmlXPathContextPtr context)
 {
-  xmlXPathRegisterNs (context, (xmlChar*) "iwb", (xmlChar*) "http://www.becta.org.uk/iwb");
-  xmlXPathRegisterNs (context, (xmlChar*) "xlink", (xmlChar*) "http://www.w3.org/1999/xlink");
-  xmlXPathRegisterNs (context, (xmlChar*) "svg", (xmlChar*) "http://www.w3.org/2000/svg");
+  xmlXPathRegisterNs (context, (xmlChar *) "iwb", (xmlChar *) "http://www.becta.org.uk/iwb");
+  xmlXPathRegisterNs (context, (xmlChar *) "xlink", (xmlChar *) "http://www.w3.org/1999/xlink");
+  xmlXPathRegisterNs (context, (xmlChar *) "svg", (xmlChar *) "http://www.w3.org/2000/svg");
   return context;
 }
 
 
 /* Load save-points from iwb */
-static GSList*
-load_savepoints_by_iwb (GSList* savepoint_list,
-			gchar* project_tmp_dir,
+static GSList *
+load_savepoints_by_iwb (GSList *savepoint_list,
+			gchar *project_tmp_dir,
 			xmlXPathContextPtr context)
 {
   xmlChar *xpath_get_element = (xmlChar *) "/iwb/iwb:element";
   xmlXPathObjectPtr result = xmlXPathEvalExpression (xpath_get_element, context);
+  gint i =0;
 
   if (xmlXPathNodeSetIsEmpty (result->nodesetval)){
     return savepoint_list;
   }
 
   /* Surf for all the iwb element. */
-  gint i =0;
-  for (i=0; i < result->nodesetval->nodeNr; i++) {
-    xmlNodePtr node = result->nodesetval->nodeTab[i];
-    xmlChar* ref = xmlGetProp (node, (xmlChar*) "ref");
-    xmlChar* background = xmlGetProp (node, (xmlChar*) "background");
-    if (background!=NULL)
-      {
-        if (g_strcmp0 ( (gchar *) background,"true")==0)
-          { 
-            xmlFree (background);
-	    continue;
-          }
-      }
+  for (i=0; i < result->nodesetval->nodeNr; i++)
+    {
+      xmlNodePtr node = result->nodesetval->nodeTab[i];
+      xmlChar *ref = xmlGetProp (node, (xmlChar *) "ref");
+      xmlChar *background = xmlGetProp (node, (xmlChar *) "background");
 
-    /* Follow the ref and take xlink href filename. */
-    savepoint_list = load_savepoint_by_reference (savepoint_list, project_tmp_dir, context, ref);
-    xmlFree (ref);
-  }
+      if (background)
+	{
+	  if (g_strcmp0 ( (gchar *) background, "true") == 0)
+	    { 
+	      xmlFree (background);
+	      continue;
+	    }
+	}
+
+      /* Follow the ref and take xlink href filename. */
+      savepoint_list = load_savepoint_by_reference (savepoint_list, project_tmp_dir, context, ref);
+      xmlFree (ref);
+    }
+
   /* Cleanup of XPath data. */
   xmlXPathFreeObject (result);
   return savepoint_list;
@@ -134,10 +134,11 @@ load_iwb (gchar *iwbfile)
   gchar  *project_tmp_dir = g_build_filename (ardesia_tmp_dir, project_name, (gchar *) 0);
   gchar  *content_filename = "content.xml";
   gchar  *content_filepath = g_build_filename (project_tmp_dir, content_filename, (gchar *) 0);
+  xmlDocPtr doc = NULL; // the resulting document tree
 
   decompress_iwb (iwbfile, project_tmp_dir);
   
-  /* Initialize libxml. */     
+  /* Initialize libxml. */
   xmlInitParser ();
 
   /*
@@ -147,23 +148,24 @@ load_iwb (gchar *iwbfile)
    */
   LIBXML_TEST_VERSION
 
-    xmlDocPtr doc; // the resulting document tree
+    /*
+     * Build an XML tree from a the file.
+     */
+    doc = xmlParseFile (content_filepath);
 
-  /*
-   * Build an XML tree from a the file.
-   */
-  doc = xmlParseFile (content_filepath);
-  if (doc == NULL) {
-    g_error ("Failed to parse %s\n", content_filepath);
-  } 
+  if (doc == NULL)
+    {
+      g_error ("Failed to parse %s\n", content_filepath);
+    }
 
   xmlXPathContextPtr context = xmlXPathNewContext (doc);
 
-  if (context == NULL) {
-    g_error ("Error: unable to create new XPath context\n");
-    xmlFreeDoc (doc); 
-    exit (EXIT_FAILURE);
-  }
+  if (context == NULL)
+    {
+      xmlFreeDoc (doc); 
+      g_error ("Error: unable to create new XPath context\n");
+      exit (EXIT_FAILURE);
+    }
 
   context = register_namespaces (context);
 
@@ -171,9 +173,10 @@ load_iwb (gchar *iwbfile)
 
   g_remove (content_filepath);
 
-  xmlXPathFreeContext (context); 
- 
+  xmlXPathFreeContext (context);
+
   xmlFreeDoc (doc);
+  doc = NULL;
 
   /*
    * Cleanup function for the XML library.
@@ -181,10 +184,15 @@ load_iwb (gchar *iwbfile)
   xmlCleanupParser ();
 
   g_free (ardesia_tmp_dir);
-  g_free (project_tmp_dir); 
-  g_free (content_filepath);
+  ardesia_tmp_dir = NULL;
 
-  return savepoint_list;   
+  g_free (project_tmp_dir);
+  project_tmp_dir = NULL;
+
+  g_free (content_filepath);
+  content_filepath = NULL;
+
+  return savepoint_list;
 }
 
 

@@ -38,7 +38,7 @@ static GPid recorder_pid;
 static gboolean is_active = FALSE;
 
 
-/* 
+/*
  * Create a recorder process; it return the pid
  */
 static GPid
@@ -47,6 +47,7 @@ call_recorder (gchar *filename,
 {
   GPid pid = (GPid) 0;
   gchar *argv[4] = {RECORDER_FILE, option, filename, (gchar *) 0};
+
   if (
       g_spawn_async (NULL /*working_directory*/,
 		     argv,
@@ -57,8 +58,9 @@ call_recorder (gchar *filename,
 		     &pid /*child_pid*/,
 		     NULL /*error*/))
     {
-      is_active = TRUE;	   
+      is_active = TRUE;
     }
+
   return pid;
 }
 
@@ -72,7 +74,11 @@ is_recorder_available ()
   gchar *programfile= getenv ("PROGRAMFILES");
   gchar *file = g_strdup_printf ("%s\\%s", programfile, videolan);
   gboolean ret = file_exists (file);
-  if (ret) return TRUE;
+
+  if (ret) {
+    return TRUE;
+  }
+
   g_free (programfile);
   g_free (file);
   programfile = getenv ("PROGRAMFILES (X86)");
@@ -80,10 +86,14 @@ is_recorder_available ()
   ret = file_exists (file);
   g_free (programfile);
   g_free (file);
-  if (ret) return TRUE;
+
+  if (ret)
+    {
+      return TRUE;
+    }
 #endif
-  gchar* argv[5] = {"vlc", "-I", "dummy", "--dummy-quiet", (gchar*) 0};
-  
+  gchar *argv[5] = {"vlc", "-I", "dummy", "--dummy-quiet", (gchar *) 0};
+
   return g_spawn_async (NULL /*working_directory*/,
                         argv,
                         NULL /*envp*/,
@@ -113,29 +123,31 @@ quit_recorder ()
       recorder_pid = call_recorder (NULL, "stop");
       g_spawn_close_pid (recorder_pid);
       is_active = FALSE;
-    }  
+    }
 }
 
 
 /* Missing program dialog. */
 void
-visualize_missing_recorder_program_dialog (GtkWindow* parent_window)
+visualize_missing_recorder_program_dialog (GtkWindow *parent_window)
 {
   GtkWidget *miss_dialog;
   miss_dialog = gtk_message_dialog_new (parent_window,
-					GTK_DIALOG_MODAL, 
+					GTK_DIALOG_MODAL,
                                         GTK_MESSAGE_ERROR,
-                                        GTK_BUTTONS_OK, 
+                                        GTK_BUTTONS_OK,
                                         gettext ("In order to record with Ardesia you must install the vlc program and add it to the PATH environment variable"));
 
   gtk_window_set_modal (GTK_WINDOW (miss_dialog), TRUE);
- 
+
   gtk_dialog_run (GTK_DIALOG (miss_dialog));
-  
+
   if (miss_dialog != NULL)
     {
       gtk_widget_destroy (miss_dialog);
+      miss_dialog = NULL;
     }
+
 }
 
 
@@ -148,6 +160,8 @@ visualize_missing_recorder_program_dialog (GtkWindow* parent_window)
 gboolean start_save_video_dialog (GtkToolButton *toolbutton, GtkWindow *parent)
 {
   gboolean status = FALSE;
+
+  gchar *filename = get_default_filename ();
 
   GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext ("Save video as ogv"),
 						    parent,
@@ -165,37 +179,35 @@ gboolean start_save_video_dialog (GtkToolButton *toolbutton, GtkWindow *parent)
 
   gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser), get_project_dir ());
 
-  gchar* filename = get_default_filename ();
-
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (chooser), filename);
 
-  start_virtual_keyboard ();  
+  start_virtual_keyboard ();
+
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
-      filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-     
-      gchar* supported_extension = ".ogv";
-
+      gchar *supported_extension = ".ogv";
       g_free (filename);
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      gchar* filename_copy = g_strdup_printf ("%s", filename); 
-      
+      gchar *filename_copy = g_strdup_printf ("%s", filename); 
+
       if (!g_str_has_suffix (filename, supported_extension))
         {
           g_free (filename_copy);
-          filename_copy = g_strdup_printf ("%s%s", filename,supported_extension);
-        }      
-      g_free (filename);   
-      filename = filename_copy;  
- 
+          filename_copy = g_strdup_printf ("%s%s", filename, supported_extension);
+        }
+
+      g_free (filename);
+      filename = filename_copy;
+
       if (file_exists (filename))
 	{
-	  GtkWidget *msg_dialog; 
-                   
-	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (chooser), 
-					       GTK_DIALOG_MODAL, 
-                                               GTK_MESSAGE_WARNING,  
-                                               GTK_BUTTONS_YES_NO, gettext ("File Exists. Overwrite"));
+	  GtkWidget *msg_dialog;
+
+	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (chooser),
+					       GTK_DIALOG_MODAL,
+                                               GTK_MESSAGE_WARNING,
+                                               GTK_BUTTONS_YES_NO,
+					       gettext ("File Exists. Overwrite"));
 	  gint result = gtk_dialog_run (GTK_DIALOG (msg_dialog));
 	  if (msg_dialog)
 	    {
@@ -203,26 +215,29 @@ gboolean start_save_video_dialog (GtkToolButton *toolbutton, GtkWindow *parent)
 	      msg_dialog = NULL;
 	    }
 	  if ( result  == GTK_RESPONSE_NO)
-	    { 
+	    {
 	      g_free (filename);
 	      filename = NULL;
               gtk_widget_destroy (chooser);
               chooser = NULL;
-	      return status; 
-	    } 
+	      return status;
+	    }
 	}
+
       recorder_pid = call_recorder (filename, "start");
       status = (recorder_pid > 0);
     }
   stop_virtual_keyboard ();
+
   if (chooser)
-    { 
+    {
       gtk_widget_destroy (chooser);
       chooser = NULL;
-    } 
+    }
+
   g_free (filename);
   filename = NULL;
   return status;
-} 
+}
 
 
