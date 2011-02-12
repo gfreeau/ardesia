@@ -158,7 +158,7 @@ annotate_acquire_pointer_grab ()
 static void
 annotate_release_pointer_grab ()
 {
-  ungrab_pointer (gdk_display_get_default (), data->annotation_window);
+  ungrab_pointer (gdk_display_get_default ());
 }
 
 #endif
@@ -591,7 +591,7 @@ annotate_draw_curve (GSList *list)
 static void
 rectify (gboolean closed_path)
 {
-  gdouble tollerance = data->thickness * 2;
+  gdouble tollerance = data->thickness;
   GSList *out_ptr = broken (data->coord_list, closed_path, TRUE, tollerance);
 
   if (data->debug)
@@ -618,7 +618,7 @@ rectify (gboolean closed_path)
 static void
 roundify (gboolean closed_path)
 {
-  gdouble tollerance = data->thickness * 2;
+  gdouble tollerance = data->thickness;
   /* Build the relevant point list with the standard deviation algorithm. */
   GSList *out_ptr = build_relevant_list (data->coord_list, closed_path, tollerance);
   guint lenght = g_slist_length (out_ptr);
@@ -645,9 +645,11 @@ roundify (gboolean closed_path)
 
       if (is_similar_to_an_ellipse (out_ptr, tollerance))
 	{
+          AnnotatePoint *point1 = NULL;
+          AnnotatePoint *point3 = NULL;
 	  out_ptr = extract_outbounded_rectangle (out_ptr);
-	  AnnotatePoint *point1 = (AnnotatePoint *) g_slist_nth_data (out_ptr, 0);
-	  AnnotatePoint *point3 = (AnnotatePoint *) g_slist_nth_data (out_ptr, 2);
+	  point1 = (AnnotatePoint *) g_slist_nth_data (out_ptr, 0);
+	  point3 = (AnnotatePoint *) g_slist_nth_data (out_ptr, 2);
 	  annotate_draw_ellipse (point1->x, point1->y, point3->x-point1->x, point3->y-point1->y);
 	}
       else

@@ -162,8 +162,7 @@ grab_pointer (GtkWidget *win,
 
 /* Ungrab pointer. */
 void
-ungrab_pointer (GdkDisplay *display,
-		GtkWidget *win)
+ungrab_pointer (GdkDisplay *display)
 {
   gdk_error_trap_push ();
   gdk_display_pointer_ungrab (display, GDK_CURRENT_TIME);
@@ -193,12 +192,12 @@ get_distance (gdouble x1,
 	      gdouble x2,
 	      gdouble y2)
 {
-  if ( (x1==x2) && (y1==y2))
-    {
-      return 0;
-    }
   /* Apply the Pitagora theorem to calculate the distance. */
-  return (sqrtf (powf (x1-x2,2) + powf (y1-y2,2)));
+  gdouble x_delta = fabs(x2-x1);
+  gdouble y_delta = fabs(y2-y1);
+  gdouble quad_sum = pow (x_delta, 2);
+  quad_sum = quad_sum + pow (y_delta, 2);
+  return sqrt (quad_sum);
 }
 
 
@@ -226,9 +225,14 @@ rgba_to_gdkcolor (gchar *rgba)
   GdkColor *gdkcolor = g_malloc ((gsize) sizeof (GdkColor));
   gchar *rgb = g_strndup (rgba, 6);
   gchar *color = g_strdup_printf ("%s%s", "#", rgb);
-  gdk_color_parse (color, gdkcolor);
+  gboolean ret = gdk_color_parse (color, gdkcolor);
   g_free (color);
   g_free (rgb);
+  if (!ret)
+    {
+      g_warning("Unable to parse the color %s", color);
+      return NULL;
+    }
   return gdkcolor;
 }
 
@@ -254,7 +258,7 @@ cairo_set_source_color_from_string ( cairo_t *cr,
 {
   if (cr)
     {
-      gint r,g,b,a;
+      guint r,g,b,a;
       sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
       cairo_set_source_rgba (cr,
 			     (gdouble) r/255,
@@ -316,10 +320,10 @@ gboolean inside_bar_window (gdouble xp, gdouble yp)
   gtk_window_get_position (bar, &x, &y);
   gtk_window_get_size (bar, &width, &height);
 
-  if ( (yp>=y)&& (yp<y+height))
+  if ((yp>=y) && (yp<y+height))
     {
 
-      if ( (xp>=x)&& (xp<x+width))
+      if ((xp>=x) && (xp<x+width))
 	{
 	  return 1;
 	}
@@ -340,16 +344,16 @@ drill_window_in_bar_area (GdkWindow *window)
   GtkWidget *bar= get_bar_window ();
   gint x, y, width, height;
 
-  cairo_set_operator (shape_cr,CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgba (shape_cr, 1, 1, 1, 1);
+  cairo_set_operator (shape_cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_rgba (shape_cr, 1.0, 1.0, 1.0, 1.0);
   cairo_paint (shape_cr);
 
   gtk_window_get_position (GTK_WINDOW (bar), &x, &y);
   gtk_window_get_size (GTK_WINDOW (bar), &width, &height);
 
   cairo_set_operator (shape_cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgba (shape_cr, 0, 0, 0, 0);
-  cairo_rectangle (shape_cr, x, y, width, height);
+  cairo_set_source_rgba (shape_cr, 0.0, 0.0, 0.0, 0.0);
+  cairo_rectangle (shape_cr, (double) x, (double) y, (double) width, (double) height);
   cairo_fill (shape_cr);	
 
   gdk_window_input_shape_combine_mask (window,
@@ -475,8 +479,8 @@ rmdir_recursive (gchar *path)
 
 /* Allocate a new point belonging to the stroke passing the values. */
 AnnotatePoint *
-allocate_point (gint x,
-		gint y,
+allocate_point (gdouble x,
+		gdouble y,
 		gint width,
 		gdouble pressure)
 {
@@ -506,8 +510,8 @@ send_email (gchar *to,
 
   gchar **argv = g_malloc ((arg_lenght+1) * sizeof (gchar *));
 
-  gint i=0;
-  gint j=5;
+  guint i=0;
+  guint j=5;
 
   argv[0] = "xdg-email";
   argv[1] = "--subject";
@@ -601,7 +605,6 @@ void
 xdg_create_desktop_entry (gchar *filename,
 			  gchar *type,
 			  gchar *name,
-			  gchar *lang,
 			  gchar *icon,
 			  gchar *exec)
 {
@@ -635,19 +638,20 @@ xdg_create_link (gchar *src,
       return;
     }
 
-  xdg_create_desktop_entry (link_filename, "Application", PACKAGE_NAME, "it", icon, exec);
+  xdg_create_desktop_entry (link_filename, "Application", PACKAGE_NAME, icon, exec);
   g_free (link_filename);
   g_free (exec);
 }
 
 
 /* Get the last position where sub-string occurs in the string. */
-int
+gint
 g_substrlastpos (const char *str,
 		 const char *substr)
 {
-  gint len = strlen (str);
-  int i;
+  gint len = (gint) strlen (str);
+  gint i = 0;
+
   for (i = len-1; i >= 0; --i)
     {
 
@@ -667,9 +671,9 @@ g_substr (const gchar *string,
 	  gint         start,
 	  gint         end)
 {
-  gsize len = (end - start + 1);
-  gchar *output = g_malloc0 (len + 1);
-  return g_utf8_strncpy (output, &string[start], len);
+  gint number_of_char = (end - start + 1);
+  gsize size = (gsize) sizeof (gchar) * number_of_char;
+  return g_strndup (&string[start], size);
 }
 
 

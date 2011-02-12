@@ -33,7 +33,7 @@ is_similar (gdouble x,
 	    gdouble y,
 	    gdouble pixel_tollerance)
 {
-  gdouble delta = abs (x-y);
+  gdouble delta = fabs (x-y);
 
   if (delta <= pixel_tollerance)
     {
@@ -139,11 +139,11 @@ static gboolean
 is_similar_to_a_regular_polygon (GSList *list,
 				 gdouble pixel_tollerance)
 {
-  gint i = 0;
+  guint i = 0;
   gdouble ideal_distance = -1;
   gdouble total_distance = 0;
 
-  gint lenght = g_slist_length (list);
+  guint lenght = g_slist_length (list);
   AnnotatePoint *old_point = (AnnotatePoint *) g_slist_nth_data (list, i);
 
   for (i=1; i<lenght; i++)
@@ -182,34 +182,36 @@ is_similar_to_a_regular_polygon (GSList *list,
 
 /* Take a path and return the regular polygon path. */
 static GSList *
-extract_polygon (GSList *list_in)
+extract_polygon (GSList *list)
 {
-  gdouble cx, cy;
-  gdouble radius;
-  gdouble minx;
-  gdouble miny;
-  gdouble maxx;
-  gdouble maxy;
+  gdouble cx = -1;
+  gdouble cy = -1;
+  gdouble radius = -1;
+  gdouble minx = -1;
+  gdouble miny = -1;
+  gdouble maxx = -1;
+  gdouble maxy = -1;
   gdouble angle_off = M_PI/2;
-  gdouble x1, y1;
-  gint i;
-  gint lenght = 0;
+  gdouble x1 = -1;
+  gdouble y1 = -1;
+  guint i = 0;
+  guint lenght = 0;
   gdouble angle_step = 0;
   AnnotatePoint *last_point = NULL;
   AnnotatePoint *first_point = NULL;
 
-  found_min_and_max (list_in, &minx, &miny, &maxx, &maxy);
+  found_min_and_max (list, &minx, &miny, &maxx, &maxy);
 
   cx = (maxx + minx)/2;
   cy = (maxy + miny)/2;
   radius = ((maxx-minx)+ (maxy-miny))/4;
-  lenght = g_slist_length (list_in);
+  lenght = g_slist_length (list);
   angle_step = 2 * M_PI / (lenght-1);
   angle_off += angle_step/2;
 
   for (i=0; i<lenght-1; i++)
     {
-      AnnotatePoint *point = (AnnotatePoint *) g_slist_nth_data (list_in, i);
+      AnnotatePoint *point = (AnnotatePoint *) g_slist_nth_data (list, i);
       x1 = radius * cos (angle_off) + cx;
       y1 = radius * sin (angle_off) + cy;
       point->x = x1;
@@ -217,12 +219,12 @@ extract_polygon (GSList *list_in)
       angle_off += angle_step;
     }
 
-  last_point = (AnnotatePoint *) g_slist_nth_data (list_in, lenght -1);
-  first_point = (AnnotatePoint *) g_slist_nth_data (list_in, 0);
+  last_point = (AnnotatePoint *) g_slist_nth_data (list, lenght -1);
+  first_point = (AnnotatePoint *) g_slist_nth_data (list, 0);
   last_point->x = first_point->x;
   last_point->y = first_point->y;
 
-  return list_in;
+  return list;
 }
 
 
@@ -248,13 +250,13 @@ point_put_y (gpointer current,
 
 
 /* Return the degree of the rectangle between two point respect the axis. */
-static gfloat
+static gdouble
 calculate_edge_degree (AnnotatePoint *point_a,
 		       AnnotatePoint *point_b)
 {
-  gdouble deltax = abs (point_a->x-point_b->x);
-  gdouble deltay = abs (point_a->y-point_b->y);
-  gfloat direction_ab = atan2 (deltay, deltax)/M_PI*180;
+  gdouble deltax = fabs (point_a->x-point_b->x);
+  gdouble deltay = fabs (point_a->y-point_b->y);
+  gdouble direction_ab = atan2 (deltay, deltax)/M_PI*180;
   return direction_ab;
 }
 
@@ -267,11 +269,11 @@ straighten (GSList *list)
   AnnotatePoint *first_point =  NULL;
   AnnotatePoint *last_point = NULL;
   AnnotatePoint *last_out_point =  NULL;
-  gint degree_threshold = 15;
+  gdouble degree_threshold = 15;
   GSList *list_out = NULL;
-  gint lenght = 0;
-  gint i;
-  gfloat direction;
+  guint lenght = 0;
+  guint i;
+  gdouble direction;
 
   lenght = g_slist_length (list);
   
@@ -285,9 +287,9 @@ straighten (GSList *list)
       AnnotatePoint *point_a = (AnnotatePoint *) g_slist_nth_data (list, i);
       AnnotatePoint *point_b = (AnnotatePoint *) g_slist_nth_data (list, i+1);
       AnnotatePoint *point_c = (AnnotatePoint *) g_slist_nth_data (list, i+2);
-      gfloat direction_ab = calculate_edge_degree (point_a, point_b);
-      gfloat direction_bc = calculate_edge_degree (point_b, point_c);
-      gfloat delta_degree = abs (direction_ab-direction_bc);
+      gdouble direction_ab = calculate_edge_degree (point_a, point_b);
+      gdouble direction_bc = calculate_edge_degree (point_b, point_c);
+      gdouble delta_degree = fabs (direction_ab-direction_bc);
 
       if (delta_degree > degree_threshold)
         {
@@ -355,8 +357,8 @@ build_relevant_list (GSList *list_inp,
 		     gboolean close_path,
 		     gdouble pixel_tollerance)
 {
-  gint lenght = g_slist_length (list_inp);
-  gint i = 0;
+  guint lenght = g_slist_length (list_inp);
+  guint i = 0;
   AnnotatePoint *point_a = (AnnotatePoint *) g_slist_nth_data (list_inp, i);
   AnnotatePoint *point_b = (AnnotatePoint *) g_slist_nth_data (list_inp, i+1);
   AnnotatePoint *point_c = NULL;
@@ -377,12 +379,11 @@ build_relevant_list (GSList *list_inp,
   /* Initialize the list. */
   GSList *list_out = NULL;
 
-
   AnnotatePoint *first_point =  allocate_point (a_x, a_y, a_width, pressure);
   /* add a point with the coordinates of point_a. */
   list_out = g_slist_prepend (list_out, first_point);
 
-  if (lenght ==2)
+  if (lenght == 2)
     {
       AnnotatePoint *second_point =  allocate_point (b_x, b_y, b_width, pressure);
       /* add a point with the coordinates of point_a. */
@@ -390,14 +391,14 @@ build_relevant_list (GSList *list_inp,
     }
   else
     {
-      point_c = (AnnotatePoint *) g_slist_nth_data (list_inp, lenght-1);
-
-      gdouble area = 0.;
-      gdouble h = 0;
-
-      gdouble x1, y1, x2, y2;
-
-      AnnotatePoint *last_point =  NULL;
+      gdouble area = 0.0;
+      gdouble h = 0.0;
+      gdouble x1 = 0.0;
+      gdouble y1 = 0.0;
+      gdouble x2 = 0.0;
+      gdouble y2 = 0.0;
+      AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (list_inp, lenght-1);
+      AnnotatePoint *last_point_copy = NULL;
 
       for (i = i+2; i<lenght; i++)
 	{
@@ -413,7 +414,7 @@ build_relevant_list (GSList *list_inp,
 
 	  area += (gdouble) (x1 * y2 - x2 * y1);
 
-	  h = (2*area)/sqrtf (x2*x2 + y2*y2);
+	  h = (2*area)/sqrt (x2*x2 + y2*y2);
 
 	  if (fabs (h) >= (pixel_tollerance))
 	    {
@@ -432,8 +433,12 @@ build_relevant_list (GSList *list_inp,
 	}
 
       /* Add the last point with the coordinates. */
-      last_point =  allocate_point (c_x, c_y, c_width, pressure);
-      list_out = g_slist_prepend (list_out, last_point);
+      last_point_copy =  allocate_point (last_point->x,
+                                         last_point->y,
+                                         last_point->width,
+                                         last_point->pressure);
+
+      list_out = g_slist_prepend (list_out, last_point_copy);
     }
 
   /* I reverse the list to preserve the initial order. */
@@ -478,41 +483,64 @@ gboolean
 is_similar_to_an_ellipse (GSList *list,
 			  gdouble pixel_tollerance)
 {
-  gint i=0;
+  guint i = 0;
   gdouble minx = 0;
   gdouble miny = 0;
   gdouble maxx = 0;
   gdouble maxy = 0;
   gdouble tollerance = 0;
 
-  gint lenght = g_slist_length (list);
+  /* Semi x-axis */
+  gdouble a = 0;
 
+  /* Semi y-axis */
+  gdouble b = 0;
+
+  gdouble c = 0.0;
+
+  /* x coordinate of the origin */
+  gdouble originx = 0;
+
+  /* y coordinate of the origin */
+  gdouble originy = 0;
+
+  /* x coordinate of focus1 */
+  gdouble f1x = 0;
+
+  /* y coordinate of focus1 */
+  gdouble f1y = 0;
+
+  /* x coordinate of focus2 */
+  gdouble f2x = 0;
+
+  /* y coordinate of focus2 */
+  gdouble f2y = 0;
+
+  gdouble distance_p1f1 = 0;
+  gdouble distance_p1f2 = 0;
+  gdouble sump1 = 0;
+
+  gdouble aq = 0;
+  gdouble bq = 0;
+
+  guint lenght = g_slist_length (list);
 
   found_min_and_max (list, &minx, &miny, &maxx, &maxy);
 
-  gdouble a = (maxx-minx)/2;
-  gdouble b = (maxy-miny)/2;
+  a = (maxx-minx)/2;
+  b = (maxy-miny)/2;
+
+  aq = pow (a,2);
+  bq = pow (b,2);
 
   /* 
    * If in one point the sum of the distance by focus F1 and F2 differer more than
-   * the tolerance value the curve line will not be considered an eclipse.
+   * the tolerance value the curve line will not be considered an ellipse.
    */
-  tollerance = pixel_tollerance + (a + b) /4;
+  tollerance = pixel_tollerance + (a + b) /2;
 
-  gdouble originx = minx + a;
-  gdouble originy = miny + b;
-  gdouble c = 0.0;
-  gdouble f1x;
-  gdouble f1y;
-  gdouble f2x;
-  gdouble f2y;
-
-  gdouble aq = powf (a,2);
-  gdouble bq = powf (b,2);
-
-  gdouble distance_p1f1;
-  gdouble distance_p1f2;
-  gdouble sump1;
+  originx = minx + a;
+  originy = miny + b;
 
   if (aq>bq)
     {
@@ -526,7 +554,7 @@ is_similar_to_an_ellipse (GSList *list,
     }
   else
     {
-      c = sqrtf (bq-aq);
+      c = sqrt (bq-aq);
       // F1 (x0, y0-c)
       f1x = originx;
       f1y = originy-c;

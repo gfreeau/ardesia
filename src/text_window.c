@@ -300,7 +300,7 @@ destroy_text_window ()
   if (text_data->window)
     {
 #ifdef _WIN32
-      ungrab_pointer (gdk_display_get_default (), text_data->window);
+      ungrab_pointer (gdk_display_get_default ());
 #endif
       if (text_data->window)
 	{

@@ -150,8 +150,7 @@ free_artifacts ();
 
 /* Un-grab pointer. */
 void
-ungrab_pointer (GdkDisplay *display,
-		GtkWidget *win);
+ungrab_pointer (GdkDisplay *display);
 
 
 /* Grab pointer. */
@@ -269,8 +268,8 @@ rmdir_recursive (gchar *path);
 
 /* Allocate a new point belonging to the path passing the values. */
 AnnotatePoint *
-allocate_point (gint x,
-		gint y,
+allocate_point (gdouble x,
+		gdouble y,
 		gint width,
 		gdouble pressure);
 
@@ -303,7 +302,6 @@ void
 xdg_create_desktop_entry (gchar *filename,
 			  gchar *type,
 			  gchar *name,
-			  gchar *lang,
 			  gchar *icon,
 			  gchar *exec);
 
