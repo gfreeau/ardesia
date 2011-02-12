@@ -17,7 +17,8 @@
   - Investigate about the status and make a plan
   
 - Reengineering
-  - Gui revision
+  - man page
+  - Gui and icon revision
   - Use a layered canvas instead use a set of window
   - Store and load the savepoints using svg files
   - Create the iwb without spawn the zip/unzip process
@@ -25,7 +26,8 @@
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
-  - Image gallery (sticky notes...)
+  - Import images
+  - Make an image gallery (sticky notes...)
   - Deploy the artifact online
     - video; youtube upload
   - full filler implementation (flood filler algorithm)
