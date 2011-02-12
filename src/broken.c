@@ -110,39 +110,27 @@ calculate_medium_pression (GSList *list)
 
 
 /* Take the list and found the minx miny maxx and maxy points. */
-static gboolean found_min_and_max (GSList *list,
-				   gdouble *minx,
-				   gdouble *miny,
-				   gdouble *maxx,
-				   gdouble *maxy,
-				   gdouble *total_pressure)
+static void found_min_and_max (GSList *list,
+			       gdouble *minx,
+			       gdouble *miny,
+			       gdouble *maxx,
+			       gdouble *maxy)
 {
-  /* This function has sense only for the list with length greater than two. */
-  if (g_slist_length (list) < 3)
-    {
-      return FALSE;
-    }
-  else
-    {
-      AnnotatePoint *out_point = (AnnotatePoint *)list->data;
-      *minx = out_point->x;
-      *miny = out_point->y;
-      *maxx = out_point->x;
-      *maxy = out_point->y;
-      *total_pressure = out_point->pressure;
+  AnnotatePoint *out_point = (AnnotatePoint *)list->data;
+  *minx = out_point->x;
+  *miny = out_point->y;
+  *maxx = out_point->x;
+  *maxy = out_point->y;
 
-      while (list)
-	{
-	  AnnotatePoint *cur_point = (AnnotatePoint *)list->data;
-	  *minx = MIN (*minx, cur_point->x);
-	  *miny = MIN (*miny, cur_point->y);
-	  *maxx = MAX (*maxx, cur_point->x);
-	  *maxy = MAX (*maxy, cur_point->y);
-	  *total_pressure = *total_pressure + cur_point->pressure;
-	  list = list->next; 
-	}
+  while (list)
+    {
+      AnnotatePoint *cur_point = (AnnotatePoint *)list->data;
+      *minx = MIN (*minx, cur_point->x);
+      *miny = MIN (*miny, cur_point->y);
+      *maxx = MAX (*maxx, cur_point->x);
+      *maxy = MAX (*maxy, cur_point->y);
+      list = list->next; 
     }
-  return TRUE;
 }
 
 
@@ -202,23 +190,15 @@ extract_polygon (GSList *list_in)
   gdouble miny;
   gdouble maxx;
   gdouble maxy;
-  gdouble total_pressure;
-  gboolean status = FALSE;  
   gdouble angle_off = M_PI/2;
   gdouble x1, y1;
   gint i;
   gint lenght = 0;
   gdouble angle_step = 0;
-  gdouble medium_pressure = 1.0;
-  AnnotatePoint *last_point = NULL; 
-  AnnotatePoint *first_point = NULL; 
+  AnnotatePoint *last_point = NULL;
+  AnnotatePoint *first_point = NULL;
 
-  status = found_min_and_max (list_in, &minx, &miny, &maxx, &maxy, &total_pressure);
-
-  if (!status)
-    {
-      return NULL;
-    }
+  found_min_and_max (list_in, &minx, &miny, &maxx, &maxy);
 
   cx = (maxx + minx)/2;
   cy = (maxy + miny)/2;
@@ -226,7 +206,6 @@ extract_polygon (GSList *list_in)
   lenght = g_slist_length (list_in);
   angle_step = 2 * M_PI / (lenght-1);
   angle_off += angle_step/2;
-  medium_pressure = total_pressure/lenght;
 
   for (i=0; i<lenght-1; i++)
     {
@@ -235,7 +214,6 @@ extract_polygon (GSList *list_in)
       y1 = radius * sin (angle_off) + cy;
       point->x = x1;
       point->y = y1;
-      point->pressure = medium_pressure;
       angle_off += angle_step;
     }
 
@@ -243,7 +221,6 @@ extract_polygon (GSList *list_in)
   first_point = (AnnotatePoint *) g_slist_nth_data (list_in, 0);
   last_point->x = first_point->x;
   last_point->y = first_point->y;
-  last_point->pressure = medium_pressure;
 
   return list_in;
 }
@@ -251,7 +228,7 @@ extract_polygon (GSList *list_in)
 
 /* Set x-axis of the point. */
 void
-putx (gpointer current, gpointer value)
+point_put_x (gpointer current, gpointer value)
 {
   AnnotatePoint *current_point = (AnnotatePoint *) current;
   gdouble *valuex = (gdouble *) value;
@@ -261,8 +238,8 @@ putx (gpointer current, gpointer value)
 
 /* Set y-axis of the point. */
 static void
-puty (gpointer current,
-      gpointer value)
+point_put_y (gpointer current,
+             gpointer value)
 {
   AnnotatePoint *current_point = ( AnnotatePoint *) current;
   gdouble *value_y = (gdouble *) value;
@@ -288,7 +265,7 @@ straighten (GSList *list)
 {
   AnnotatePoint *inp_point = NULL;
   AnnotatePoint *first_point =  NULL;
-  AnnotatePoint *last_point = NULL;  
+  AnnotatePoint *last_point = NULL;
   AnnotatePoint *last_out_point =  NULL;
   gint degree_threshold = 15;
   GSList *list_out = NULL;
@@ -354,8 +331,8 @@ straighten (GSList *list)
       /* y is the average */
       gdouble y = (first_point->y+last_point->y)/2;
       /* Put this y for each element in the list. */
-      g_slist_foreach (list_out, (GFunc)puty, &y);
-    } 
+      g_slist_foreach (list_out, (GFunc) point_put_y, &y);
+    }
 
   /* It is closed to 90 degree I draw a vertical line. */
   if ( (90-degree_threshold<=direction)&& (direction<=90+degree_threshold))
@@ -363,7 +340,7 @@ straighten (GSList *list)
       /* x is the average */
       gdouble x = (first_point->x+last_point->x)/2;
       /* put this x for each element in the list. */
-      g_slist_foreach (list_out, (GFunc)putx, &x);
+      g_slist_foreach (list_out, (GFunc) point_put_x, &x);
     }
 
   return list_out;
@@ -375,8 +352,8 @@ straighten (GSList *list)
  */
 GSList *
 build_relevant_list (GSList *list_inp,
-			 gboolean close_path,
-			 gdouble pixel_tollerance)
+		     gboolean close_path,
+		     gdouble pixel_tollerance)
 {
   gint lenght = g_slist_length (list_inp);
   gint i = 0;
@@ -461,71 +438,69 @@ build_relevant_list (GSList *list_inp,
 
   /* I reverse the list to preserve the initial order. */
   list_out = g_slist_reverse (list_out);
-    
+
   return list_out;
 }
 
 
 /* Return the out-bounded rectangle outside the path described to list_in. */
 GSList *
-extract_outbounded_rectangle (GSList *list_in)
+extract_outbounded_rectangle (GSList *list)
 {
-  AnnotatePoint *point0 = NULL;
-  AnnotatePoint *point1 = NULL;
-  AnnotatePoint *point2 = NULL;
-  AnnotatePoint *point3 = NULL;
-  GSList *list_out                 = NULL;
-  gdouble total_pressure = 1.0;
-  gdouble media_pressure = 1.0; 
-  gint lenght = g_slist_length (list_in);
+  AnnotatePoint *point0 = (AnnotatePoint *) g_slist_nth_data (list, 0);
+  AnnotatePoint *point1 = (AnnotatePoint *) g_slist_nth_data (list, 1);
+  AnnotatePoint *point2 = (AnnotatePoint *) g_slist_nth_data (list, 2);
+  AnnotatePoint *point3 = (AnnotatePoint *) g_slist_nth_data (list, 3);
+
   gdouble minx = 0;
   gdouble miny = 0;
   gdouble maxx = 0;
   gdouble maxy = 0;
+  found_min_and_max (list, &minx, &miny, &maxx, &maxy);
 
-  AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (list_in, 0);
-  gint width = first_point->width;
+  point0->x = minx;
+  point0->y = miny;
 
-  gboolean status = found_min_and_max (list_in, &minx, &miny, &maxx, &maxy, &total_pressure);
-  if (!status)
-    {
-      return NULL;
-    }
+  point1->x = maxx;
+  point1->y = miny;
 
-  media_pressure = total_pressure/lenght;
+  point2->x = maxx;
+  point2->y = maxy;
 
-  point0 = allocate_point (minx, miny, width, media_pressure);
-  list_out = g_slist_prepend (list_out, point0);
-
-  point1 =  allocate_point (maxx, miny, width, media_pressure);
-  list_out = g_slist_prepend (list_out, point1);
-
-  point2 =  allocate_point (maxx, maxy, width, media_pressure);
-  list_out = g_slist_prepend (list_out, point2);
-
-  point3 =  allocate_point (minx, maxy, width, media_pressure);
-  list_out = g_slist_prepend (list_out, point3);
-
-  return list_out;
+  point3->x = minx;
+  point3->y = maxy;
+  return list;
 }
 
 
-/* The path in list is similar to an ellipse, unbounded_rect is the outbounded rectangle to the shape. */
+/* The path in list is similar to an ellipse. */
 gboolean
 is_similar_to_an_ellipse (GSList *list,
-			  GSList *unbounded_rect,
 			  gdouble pixel_tollerance)
 {
-  gint lenght = g_slist_length (list);
   gint i=0;
+  gdouble minx = 0;
+  gdouble miny = 0;
+  gdouble maxx = 0;
+  gdouble maxy = 0;
+  gdouble tollerance = 0;
 
-  AnnotatePoint *point1 = (AnnotatePoint *) g_slist_nth_data (unbounded_rect, 2);
-  AnnotatePoint *point3 = (AnnotatePoint *) g_slist_nth_data (unbounded_rect, 0);
+  gint lenght = g_slist_length (list);
 
-  gdouble a = (point3->x-point1->x)/2;
-  gdouble b = (point3->y-point1->y)/2;
-  gdouble originx = point1->x + a;
-  gdouble originy = point1->y + b;
+
+  found_min_and_max (list, &minx, &miny, &maxx, &maxy);
+
+  gdouble a = (maxx-minx)/2;
+  gdouble b = (maxy-miny)/2;
+
+  /* 
+   * If in one point the sum of the distance by focus F1 and F2 differer more than
+   * the tolerance value the curve line will not be considered an eclipse.
+   */
+  tollerance = pixel_tollerance + (a + b) /4;
+
+  gdouble originx = minx + a;
+  gdouble originy = miny + b;
   gdouble c = 0.0;
   gdouble f1x;
   gdouble f1y;
@@ -560,8 +535,8 @@ is_similar_to_an_ellipse (GSList *list,
       f2y = originy+c;
     }
 
-  distance_p1f1 = get_distance (point1->x, point1->y, f1x, f1y);
-  distance_p1f2 = get_distance (point1->x, point1->y, f2x, f2y);
+  distance_p1f1 = get_distance (minx, miny, f1x, f1y);
+  distance_p1f2 = get_distance (minx, miny, f2x, f2y);
   sump1 = distance_p1f1 + distance_p1f2;
 
   /* In the ellipse the sum of the distance (p,f1)+distance (p,f2) must be constant. */
@@ -574,7 +549,7 @@ is_similar_to_an_ellipse (GSList *list,
       gdouble sum = distancef1 + distancef2;
       gdouble difference = fabs (sum-sump1);
 
-      if (difference>pixel_tollerance)
+      if (difference>tollerance)
         {  
 	  /* The sum is too different from the ideal one;
            * I do not approximate the shape to an ellipse.
@@ -591,18 +566,18 @@ is_similar_to_an_ellipse (GSList *list,
 /* Return a list rectified */
 GSList*
 build_rectified_list(GSList *list_inp,
-		       gboolean close_path,
-		       gdouble pixel_tollerance)
+		     gboolean close_path,
+		     gdouble pixel_tollerance)
 {
   GSList *ret_list = NULL;
   if (close_path)
     {
-     
-      gint lenght = g_slist_length (list_inp);
-      gint i = 0;
+
+      guint lenght = g_slist_length (list_inp);
+      guint i = 0;
 
       /* Copy the input list */
-      for (i=0; i<lenght-1; i++)
+      for (i=0; i<lenght; i++)
 	{
 	  AnnotatePoint *point = (AnnotatePoint *) g_slist_nth_data (list_inp, i);
 	  AnnotatePoint *point_copy =  allocate_point (point->x, point->y, point->width, point->pressure);
@@ -652,7 +627,7 @@ broken (GSList *list_inp,
 	gdouble pixel_tollerance)
 {
   GSList *relevant_list = build_relevant_list (list_inp, close_path, pixel_tollerance);
-   
+
   if (relevant_list)
     {
 

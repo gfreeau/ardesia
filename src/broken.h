@@ -40,14 +40,13 @@ build_relevant_list             (GSList *list_inp,
 
 /* Return the out-bounded rectangle outside the path described to list_in. */
 GSList *
-extract_outbounded_rectangle    (GSList *list_in);
+extract_outbounded_rectangle (GSList *list);
 
 
 /* Is the path similar to an ellipse;
  * unbounded_rect is the out-bounded rectangle to the shape. */
 gboolean
 is_similar_to_an_ellipse        (GSList  *list,
-				 GSList *unbounded_rect,
 				 gdouble pixel_tollerance);
 
 
