@@ -145,6 +145,7 @@ cp @prefix@/share/ardesia/ui/pixmaps/pencil.png $DESTDIR/share/ardesia/ui/pixmap
 cp @prefix@/share/ardesia/ui/pixmaps/rectifier.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/red.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/rounder.png $DESTDIR/share/ardesia/ui/pixmaps
+cp @prefix@/share/ardesia/ui/pixmaps/text.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/thick.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/thin.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/unhide.png $DESTDIR/share/ardesia/ui/pixmaps

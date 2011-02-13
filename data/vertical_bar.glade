@@ -131,7 +131,7 @@
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">Insert Text</property>
                 <property name="use_underline">True</property>
-                <property name="stock_id">gtk-italic</property>
+                <property name="label_widget">text</property>
                 <property name="group">buttonPencil</property>
                 <signal name="clicked" handler="on_bar_text_activate"/>
               </object>
@@ -506,6 +506,10 @@
   <object class="GtkImage" id="arrow">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/arrow.png</property>
+  </object>
+  <object class="GtkImage" id="text">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/text.png</property>
   </object>
   <object class="GtkImage" id="pencil">
     <property name="visible">True</property>
