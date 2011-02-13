@@ -18,7 +18,6 @@
   
 - Reengineering
   - man page
-  - Gui and icon revision
   - Use a layered canvas instead use a set of window
   - Store and load the savepoints using svg files
   - Create the iwb without spawn the zip/unzip process
