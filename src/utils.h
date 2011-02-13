@@ -99,7 +99,7 @@ typedef struct
 {
   gdouble x;
   gdouble y;
-  gint width;
+  gdouble width;
   gdouble pressure;
 } AnnotatePoint;
 
@@ -270,7 +270,7 @@ rmdir_recursive (gchar *path);
 AnnotatePoint *
 allocate_point (gdouble x,
 		gdouble y,
-		gint width,
+		gdouble width,
 		gdouble pressure);
 
 

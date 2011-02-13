@@ -1,4 +1,4 @@
-Ardesia free digital sketchpad 
+Ardesia free digital sketchpad
 
 
 ---------------
@@ -18,7 +18,7 @@ Usability
 - Now to save an image you must push on the the camera photo icon
 
 Features
-- Now you can open, save and reuse projects thanks to the 
+- Now you can open, save and reuse projects thanks to the
   Interactive Whiteboard Common File Format (iwbcff); the artifact
   will be saved under the ardesia workspace at the end of the session
 - At the end of the program you will be invited to send by email the
@@ -29,7 +29,7 @@ Features
 - New crash report dialog
 
 Bug Fix:
-- Fix in the filler a strange behaviour when you try to fill a not 
+- Fix in the filler a strange behaviour when you try to fill a not
   closed path shape
 
 
@@ -56,17 +56,17 @@ Usability:
 
 Features:
 - Ardesia stay above all windows; you can open a program
-  in fullscreen and annotate on it 
+  in fullscreen and annotate on it
 - When a fault occurs it logs the backtrace in tour TMP folder
 - Email support
-- Pdf email sender; when you quit the program if you have made 
-  a pdf Ardesia opens your defaul mailer with a new stub mail 
+- Pdf email sender; when you quit the program if you have made
+  a pdf Ardesia opens your defaul mailer with a new stub mail
   and it attachs your artifact
-- Bug Tracking: If the program is able to found a misbehaviour 
-  it open an email stub with the log to be sended 
+- Bug Tracking: If the program is able to found a misbehaviour
+  it open an email stub with the log to be sended
   to the ardesia developers staff
 - Florence virtual keyboard integration: if you have it
-  installed, will be show/hide when you select the text 
+  installed, will be show/hide when you select the text
   tool (linux only)
 
 
@@ -83,10 +83,10 @@ Usability:
 - enhancement in the pressure support
 
 Features:
-- Ardesia now works with Kwin and xcompmgr 
-  composite managers also 
+- Ardesia now works with Kwin and xcompmgr
+  composite managers also
 - Better shape recognition with the roundifier tool;
-  now a new bezier alghorithm and ellipse detection 
+  now a new bezier alghorithm and ellipse detection
   has been implemented
 - low memory usage; the save point are stored on files
 - add system that print the backtrace in the case that
@@ -94,13 +94,13 @@ Features:
 
 Bug Fix:
 - fix the sound recording on Linux using pulse audio
-- fix a bug that caused the conjunction of the new drawn point 
-  with the last point belong to the old line; 
+- fix a bug that caused the conjunction of the new drawn point
+  with the last point belong to the old line;
   this problem occurred only using the xtest virtaul device
-  (this is used by the python-whiteboard wiimote driver also) 
-- fix the opening image file as ardesia background right clicking 
+  (this is used by the python-whiteboard wiimote driver also)
+- fix the opening image file as ardesia background right clicking
   on file icon end selecting "open with ardesia"
-- fix the missing savepoint after the text insertion that 
+- fix the missing savepoint after the text insertion that
   caused a wrong behaviour with undo and redo when was used
   the text insertion tool
 
@@ -119,13 +119,13 @@ Usability:
 - added Spanish translation
 
 Features:
-- Implemented cross plattform recorder and stream forwarder 
+- Implemented cross plattform recorder and stream forwarder
 - Added the pen pressure support  for the drawing tablet
 - Added the eraser support for the drawing tablet on Linux
 - Export as pdf
 
 Bug Fix:
-- Fix the file name suggestion in the 
+- Fix the file name suggestion in the
   record and save wizard on windows
 - Solve the bug in the hide/show button
   on windows
@@ -159,17 +159,17 @@ Features:
 - build on windows plattform
 
 Bug fix:
-- fill now works after a close path drawn 
+- fill now works after a close path drawn
   with or within the highlighter selected
-- fix the behaviour of recorder 
+- fix the behaviour of recorder
   Now if the recordmydesktop tool
-  is missed a dialog shows the problem 
+  is missed a dialog shows the problem
   (issue 9)
 - solved some memory leaks
 - solve a critical bug that froze the cursor
   when the window loose the focus
 - solve a bug that froze the application
-  when the roundifier was enabled 
+  when the roundifier was enabled
   and short a lines was drawn
 
 Usability:
@@ -178,22 +178,22 @@ Usability:
 - added unlock button
 - increase the painting performance
 - enanchment in the shape recognizer
-- Dynamic change of eraser and pen cursor 
+- Dynamic change of eraser and pen cursor
   depending on the selected width
-- hide the cursor after a paint to avoid that the cursor 
+- hide the cursor after a paint to avoid that the cursor
   overlap the annotations
-- lighter recording using subsampling; this allow to have 
+- lighter recording using subsampling; this allow to have
   a good video for busier machines too
 - Added text insertion using keyboard
 - Added text insertion using external text input program
   This feature is tested using
-  - the "onboard" virtual keyboard 
-  - the "florence-ramble" virtual keyboard 
+  - the "onboard" virtual keyboard
+  - the "florence-ramble" virtual keyboard
   - the "cellwriter" handwriting recognizer
 - Using a horizontal and vertical layout
-  (see the --gravity option) 
+  (see the --gravity option)
 - Use a only one button to configure the line widthness (thin, medium, thick);
-  this seems compact and more usable with the whiteboard than the slide 
+  this seems compact and more usable with the whiteboard than the slide
 - better shape recognizer
 - fast responsivity
 
@@ -205,7 +205,7 @@ Usability:
 The first public stable realease rewritten in C from scratch
 
 Dependencies:
-  - libgtk-2 > 2.14; interface rewritten using 
+  - libgtk-2 > 2.14; interface rewritten using
     the new "gtk builder" glade format
   - recordmydesktop used at runtime for the on the fly recording
 

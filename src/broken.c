@@ -366,18 +366,18 @@ build_relevant_list (GSList *list_inp,
 
   gdouble a_x = point_a->x;
   gdouble a_y = point_a->y;
-  gint a_width = point_a->width;
+  gdouble a_width = point_a->width;
 
   gdouble b_x = point_b->x;
   gdouble b_y = point_b->y;
-  gint b_width = point_b->width;
+  gdouble b_width = point_b->width;
 
   gdouble c_x = point_b->x;
   gdouble c_y = point_b->y;
-  gint c_width = point_b->width;
+  gdouble c_width = point_b->width;
 
   /* Initialize the list. */
-  GSList *list_out = NULL;
+  GSList *list_out = (GSList *) NULL;
 
   AnnotatePoint *first_point =  allocate_point (a_x, a_y, a_width, pressure);
   /* add a point with the coordinates of point_a. */
@@ -398,7 +398,7 @@ build_relevant_list (GSList *list_inp,
       gdouble x2 = 0.0;
       gdouble y2 = 0.0;
       AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (list_inp, lenght-1);
-      AnnotatePoint *last_point_copy = NULL;
+      AnnotatePoint *last_point_copy = (AnnotatePoint *) NULL;
 
       for (i = i+2; i<lenght; i++)
 	{
@@ -544,7 +544,7 @@ is_similar_to_an_ellipse (GSList *list,
 
   if (aq>bq)
     {
-      c = sqrtf (aq-bq);
+      c = sqrt (aq-bq);
       // F1 (x0-c,y0)
       f1x = originx-c;
       f1y = originy;
@@ -616,7 +616,7 @@ build_rectified_list(GSList *list_inp,
       ret_list = g_slist_reverse (ret_list);
 
       /* jump the algorithm and return the list as is */
-      if (g_slist_length (ret_list)<=3)
+      if (g_slist_length (ret_list) <= 3)
         {
           return ret_list;
         }

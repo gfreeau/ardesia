@@ -122,7 +122,7 @@ typedef struct
   /* The index of the position in the save-point list
    * of the current picture shown. 
    */
-  gint    current_save_index;
+  guint    current_save_index;
 
   /* Paint context for the pen. */
   AnnotatePaintContext *default_pen;
@@ -302,7 +302,7 @@ annotate_unhide_cursor ();
 void
 annotate_coord_list_prepend (gdouble x,
 			     gdouble y,
-			     gint width,
+			     gdouble width,
 			     gdouble pressure);
 
 
@@ -322,7 +322,7 @@ annotate_draw_point (gdouble x,
 
 /* Draw an arrow using some polygons. */
 void
-annotate_draw_arrow (gint distance);
+annotate_draw_arrow (gdouble distance);
 
 
 /* Select eraser, pen or other tool for tablet; code inherited by gromit. */

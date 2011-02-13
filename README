@@ -2,9 +2,9 @@
                       ##     #####    #####    ######   ####    #     ##
                      #  #    #    #   #    #   #       #        #    #  #
                     #    #   #    #   #    #   #####    ####    #   #    #
-                    ######   #####    #    #   #            #   #   ######    
+                    ######   #####    #    #   #            #   #   ######
                     #    #   #   #    #    #   #       #    #   #   #    #
-                    #    #   #    #   #####    ######   ####    #   #    #    
+                    #    #   #    #   #####    ######   ####    #   #    #
 ===============================================================================================
 
 
@@ -12,42 +12,42 @@
  Introduction
 --------------
 
-Ardesia is the free digital sketchpad software that help you to make colored free-hand 
+Ardesia is the free digital sketchpad software that help you to make colored free-hand
 annotations with digital ink everywhere, record it and share on the network.
-It is easy to use and impressively fast and reactive. 
-You can draw upon the desktop or import an image and annotate it and redistribute your work 
+It is easy to use and impressively fast and reactive.
+You can draw upon the desktop or import an image and annotate it and redistribute your work
 to the world.
 Let's create quick sketch and artwork.
 
-Thanks to Ardesia you are free to open any application and fix your ideas and comments as if 
+Thanks to Ardesia you are free to open any application and fix your ideas and comments as if
 you wrote on a classic chalkboard. Tradition and innovation are living together in simplicity
-thanks to a natural user interface that reproduce the natural feeling of the free hand 
+thanks to a natural user interface that reproduce the natural feeling of the free hand
 painting.
 Reduce the traditional whiteboard and paper usage; Ardesia is smooth and fuzzy!
 
 You can use the tool to make effective on-screen presentation, highlight things or point out
-things of interest. 
-The tool facilitates the online presentations and demos showing in real time your computer 
+things of interest.
+The tool facilitates the online presentations and demos showing in real time your computer
 screen to anyone in the network.
 
-You can use this tool to enhance your lessons or courses working with your preferred 
+You can use this tool to enhance your lessons or courses working with your preferred
 applications and your preferred operating system.
 
 Create nice tutorial and demos saving the desktop images with your free hand annotations.
 
-Ardesia includes a sketchpad software that allow to free-hand draw geometrical shapes using 
+Ardesia includes a sketchpad software that allow to free-hand draw geometrical shapes using
 the shape recognizer.
 
-Ardesia respects the interoperability standards, it imports and exports artifact using common 
-file open formats. 
-Ardesia works with all the pointing device; you can use a mouse, a touch screen, a drawing 
-tablet, a cheap&professional wiimote whiteboard or a commercial whiteboard, interactive 
-projector and any other devices supported by your operating system. 
+Ardesia respects the interoperability standards, it imports and exports artifact using common
+file open formats.
+Ardesia works with all the pointing device; you can use a mouse, a touch screen, a drawing
+tablet, a cheap&professional wiimote whiteboard or a commercial whiteboard, interactive
+projector and any other devices supported by your operating system.
 
 Ardesia has been designed with the Glade/GtkBuilder tool
 and it uses to draw the cairo graphics library.
 
-For more info about annotate and the new feature, please read the NEWS file located in the 
+For more info about annotate and the new feature, please read the NEWS file located in the
 current folder.
 
 
@@ -74,14 +74,14 @@ Please read the INSTALL file located on the current folder.
   In order to run Ardesia on Linux you need to run a composite manager such as
   compiz, kwin or xcompmgr.
 
-  If you are a Windows "user" I remember you that only Windows Vista and 
+  If you are a Windows "user" I remember you that only Windows Vista and
   Windows 7 are supported.
   Windows Xp and previous versions are not compliant because they have not
   a composite manager.
 
 
 - VLC
-  To use the recording feature you must install the vlc multimedia player 
+  To use the recording feature you must install the vlc multimedia player
   and streamer.
   If you use Ubuntu you can install vlc with this command:
 
@@ -99,13 +99,13 @@ Please read the INSTALL file located on the current folder.
   If you use Ubuntu you can install the xdg-utils with this command:
 
   #sudo apt-get install xdg-utils
-  
+
 
 - Info-ZIP zip and unzip tools (Linux only in windows are included in the package)
   If you use Ubuntu you can install theese with this command:
 
   #sudo apt-get install zip unzip
-  
+
 
 -------
  Usage
@@ -124,7 +124,7 @@ Button explanation
 - Drawing mode: it selects the drawing mode to be used.
   There are three different modes:
   - Handwriting: allow you to draw withou assistance
-  - Rectifier: it rectifies your sketch; 
+  - Rectifier: it rectifies your sketch;
     it transforms the closed path in poligons,
     it is useful to paint straight lines,
     it transforms the open path in broken lines.
@@ -150,29 +150,29 @@ Button explanation
   if do you want restart to sketch push the lock icon
 - Clear: it erases all the desktop annotation
 - Undo: it reverses the annotation to the older state
-- Redo: it advances the annotation to the more current state 
+- Redo: it advances the annotation to the more current state
 - Preferences: it allow to set some preference;
-  - you can select the background color 
-  - you can select the background image; 
+  - you can select the background color
+  - you can select the background image;
     - a set of useful backgrounds will be shown
     - you can select an other image file also
 - Screenshoot: it exports in a picture file your desktop screenshot
 - Export as pdf: it export as pdf; the first time you must
   select a file name, then each time that you will click 
-  on the icon you will append to the pdf a new page with your 
+  on the icon you will append to the pdf a new page with your
   screen content
 - Record: it records your desktop;
   it uses the vlc tool,
-  if you want allow anyone to see your work 
+  if you want allow anyone to see your work
   you can forward the stream to an icecast server
-  (please see the instruction inside the file located 
+  (please see the instruction inside the file located
    on $(prefix)/share/ardesia/scripts/screencast.sh or
    if you use Windows on bin\screencast.bat).
   After a correct configuration when you push the record the streaming will start
 - Info: It shows the info about the tool
 - Quit: It allows to quit the program
 
-You can reuse your iwb project going in the ardesia workspace and "open with Ardesia" 
+You can reuse your iwb project going in the ardesia workspace and "open with Ardesia"
 the iwb file
 
 
@@ -214,7 +214,7 @@ filename:	  		The interactive Whiteboard Common File (iwb)
     - intel graphics card might work with the free driver
     - nvidia graphics driver you must install the proprietary driver
     - ati you must install the propietary driver
-  - if you are using Gnome go in the panel under System/Preference/Appereance and put 
+  - if you are using Gnome go in the panel under System/Preference/Appereance and put
     the visuals effect to normal
   - if you are using kde enable the kwin composite manager
 
@@ -223,7 +223,7 @@ filename:	  		The interactive Whiteboard Common File (iwb)
     e.g. ardesia -g south
 
 - I can not move the Ardesia Bar. Why?
-  - I have put the bar in the right of the screen because is the best 
+  - I have put the bar in the right of the screen because is the best
     position to be accessible with the hand and it does not hide
     important thinks on the desktop
     Anyway you can choose the position starting the Ardesia bar
@@ -237,17 +237,17 @@ filename:	  		The interactive Whiteboard Common File (iwb)
   - install the vlc package (it's required)
     http://www.videolan.org/vlc/
   - if you use Windows add the vlc folder to the PATH environment variable
-  - if you have other problems try to customize the 
+  - if you have other problems try to customize the
     $PREFIX/share/ardesia/scripts/screencast.sh
     or share\ardesia\scripts\screencast.bat if you use Windows
 
 - I have read that with Ardesia I can put my presentation on the web.
   How I can do this?
-  - Ardesia supports the live screencast streaming 
+  - Ardesia supports the live screencast streaming
     only after that you have configured the file
     properly
     In order to make a presentation you must have:
-    - A running icecast2 server 
+    - A running icecast2 server
       (if you want to be reachable from Internet this machine must have
        a public IP address and a domain name)
     - A local machine that you use to make the presentation
@@ -258,18 +258,18 @@ filename:	  		The interactive Whiteboard Common File (iwb)
       or share\ardesia\scripts\screencast.bat if you use Windows
       - Uncomment the line
         - ICECAST="TRUE";
-      - Set these variable   
+      - Set these variable
         - ICECAST_PASSWORD
         - ICECAST_ADDRESS
-        - ICECAST_PORT 
+        - ICECAST_PORT
         - ICECAST_MOUNTPOINT
     - Open Ardesia
     - Push the record button
     - Select a name
-    - Enjoy the stream at the uri 
+    - Enjoy the stream at the uri
       http://ICECAST_LOCATION:ICECAST_PORT/ICECAST_MOUNTPOINT.ogg
     - Now you can put this link on a web page or publish it in an other way
-    - For furthermore information about icecast2 server please 
+    - For furthermore information about icecast2 server please
       visit http://www.icecast.org/
 
 

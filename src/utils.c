@@ -33,16 +33,16 @@
 #endif
 
 /* The name of the current project. */
-static gchar *project_name = NULL;
+static gchar *project_name = (gchar *) NULL;
 
 /* The name of the current project. */
-static gchar *project_dir = NULL;
+static gchar *project_dir = (gchar *) NULL;
 
 /* The name of the current project. */
-static gchar *iwb_filename = NULL;
+static gchar *iwb_filename = (gchar *) NULL;
 
 /* The list of the artefacts created in the current session. */
-static GSList *artifacts = NULL;
+static GSList *artifacts = (GSList *) NULL;
 
 
 /* Get the name of the current project. */
@@ -315,15 +315,23 @@ grab_screenshot ()
  */
 gboolean inside_bar_window (gdouble xp, gdouble yp)
 {
-  gint x, y, width, height;
+  gint x = 0;
+  gint y =0;
+  gint width =0 ;
+  gint height = 0;
+  gdouble xd = 0;
+  gdouble yd = 0;
   GtkWindow *bar = GTK_WINDOW (get_bar_window ());
   gtk_window_get_position (bar, &x, &y);
+  xd = (gdouble) x;
+  yd = (gdouble) y;
+
   gtk_window_get_size (bar, &width, &height);
 
-  if ((yp>=y) && (yp<y+height))
+  if ((yp>=yd) && (yp<yd+height))
     {
 
-      if ((xp>=x) && (xp<x+width))
+      if ((xp>=xd) && (xp<xd+width))
 	{
 	  return 1;
 	}
@@ -481,7 +489,7 @@ rmdir_recursive (gchar *path)
 AnnotatePoint *
 allocate_point (gdouble x,
 		gdouble y,
-		gint width,
+		gdouble width,
 		gdouble pressure)
 {
   AnnotatePoint *point =  g_malloc ( (gsize) sizeof (AnnotatePoint));
@@ -504,9 +512,9 @@ send_email (gchar *to,
   windows_send_email (to, subject, body, attachment_list);
 #else
 
-  gint attach_lenght = g_slist_length (attachment_list);
+  guint attach_lenght = g_slist_length (attachment_list);
 
-  gint arg_lenght = (attach_lenght*2) + 7;
+  guint arg_lenght = (attach_lenght*2) + 7;
 
   gchar **argv = g_malloc ((arg_lenght+1) * sizeof (gchar *));
 

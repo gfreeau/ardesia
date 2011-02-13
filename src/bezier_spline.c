@@ -32,28 +32,32 @@ GSList *
 spline (GSList *list)
 {
   GSList *ret = NULL;
-  guint i;
+  guint i = 0;
   guint lenght = g_slist_length (list);
-  gdouble m_x[lenght][2]; 
-  gint width = 12;
+  gdouble mx[lenght][2]; 
+  gdouble width = 12;
   gdouble pressure = 1;
+
+  /* Pi, Qi are control points for curve (Xi, Xi+1). */
+  gdouble mp[lenght-1][2];
+  gdouble mq[lenght-1][2];
+
+  gint s, eq = 0;
+  gsl_matrix *m;
+  gsl_vector *bx, *by, *x;
+  gsl_permutation *perm;
 
   for  (i=0; i<lenght; i++)
     {
       AnnotatePoint *point = (AnnotatePoint*) g_slist_nth_data (list, i);
-      m_x[i][0] = point->x;
-      m_x[i][1] = point->y;
+      mx[i][0] = point->x;
+      mx[i][1] = point->y;
       if (i==0)
         {
 	  width = point->width;
 	  pressure = point->pressure;
         }
     }
-
-
-  /* Pi, Qi are control points for curve (Xi, Xi+1). */
-  gdouble m_p[lenght-1][2];
-  gdouble m_q[lenght-1][2];
 
   /*****************************************************************************
   
@@ -75,10 +79,6 @@ spline (GSList *list)
        Pi, Qi and Xi are (x,y) pairs!
 
   *****************************************************************************/
-  gint s, eq = 0;
-  gsl_matrix *m;
-  gsl_vector *bx, *by, *x;
-  gsl_permutation *perm;
 
   /* Allocate matrix and vectors. */
   m  = gsl_matrix_calloc (2* (lenght-1), 2* (lenght-1)); 
@@ -106,14 +106,14 @@ spline (GSList *list)
   /* Fill-in vectors. */
   for ( i = 0; i < lenght-2; i++ ) 
     {
-      gsl_vector_set (bx, 2*i, 2*m_x[i+1][0]);
-      gsl_vector_set (by, 2*i, 2*m_x[i+1][1]);
+      gsl_vector_set (bx, 2*i, 2*mx[i+1][0]);
+      gsl_vector_set (by, 2*i, 2*mx[i+1][1]);
     }
-  gsl_vector_set (bx, 2* (lenght-1)-2, m_x[0][0]);
-  gsl_vector_set (bx, 2* (lenght-1)-1, m_x[lenght-1][0]);
+  gsl_vector_set (bx, 2* (lenght-1)-2, mx[0][0]);
+  gsl_vector_set (bx, 2* (lenght-1)-1, mx[lenght-1][0]);
 
-  gsl_vector_set (by, 2* (lenght-1)-2, m_x[0][1]);
-  gsl_vector_set (by, 2* (lenght-1)-1, m_x[lenght-1][1]);
+  gsl_vector_set (by, 2* (lenght-1)-2, mx[0][1]);
+  gsl_vector_set (by, 2* (lenght-1)-1, mx[lenght-1][1]);
 
   /* Calculate LU decomposition, solve lin. systems... */
   perm = gsl_permutation_alloc (2* (lenght-1));
@@ -125,8 +125,8 @@ spline (GSList *list)
   /* copy solution (@FIXME: should be avoided!) */
   for ( i = 0; i < lenght-1; i++ )
     {
-      m_p[i][0] = gsl_vector_get (x, i);
-      m_q[i][0] = gsl_vector_get (x, i+ (lenght-1));
+      mp[i][0] = gsl_vector_get (x, i);
+      mq[i][0] = gsl_vector_get (x, i+ (lenght-1));
     }
   gsl_vector_free (x);
 
@@ -136,8 +136,8 @@ spline (GSList *list)
   /* copy solution (@FIXME: should be avoided!) */
   for ( i = 0; i < lenght-1; i++ )
     {
-      m_p[i][1] = gsl_vector_get (x, i);
-      m_q[i][1] = gsl_vector_get (x, i+ (lenght-1));
+      mp[i][1] = gsl_vector_get (x, i);
+      mq[i][1] = gsl_vector_get (x, i+ (lenght-1));
     }
 
   gsl_vector_free (x);
@@ -154,32 +154,30 @@ spline (GSList *list)
     {
 
       /* B second derivates */  
-      // printf ("%d: Bx'' (0) = %lf\n", i+1, 6*m_x[i][0]-12*m_p[i][0]+6*m_q[i][0]);
-      // printf ("%d: Bx'' (1) = %lf\n\n", i+1, 6*m_p[i][0]-12*m_q[i][0]+6*m_x[i+1][0]);
+      // printf ("%d: Bx'' (0) = %lf\n", i+1, 6*mx[i][0]-12*mp[i][0]+6*mq[i][0]);
+      // printf ("%d: Bx'' (1) = %lf\n\n", i+1, 6*mp[i][0]-12*mq[i][0]+6*mx[i+1][0]);
 
       /* B first derivates */
-      // printf ("%d: Bx' (0) = %lf\n", i+1, -3*m_x[i][0]+3*m_p[i][0]);
-      // printf ("%d: Bx' (1) = %lf\n", i+1, -3*m_q[i][0]+3*m_x[i+1][0]);
+      // printf ("%d: Bx' (0) = %lf\n", i+1, -3*mx[i][0]+3*mp[i][0]);
+      // printf ("%d: Bx' (1) = %lf\n", i+1, -3*mq[i][0]+3*mx[i+1][0]);
 
-      AnnotatePoint *first_point =  allocate_point ( m_p[i][0],
-						     m_p[i][1],
+      AnnotatePoint *first_point =  allocate_point ( mp[i][0],
+						     mp[i][1],
 						     width,
 						     pressure);
 
-      ret = g_slist_prepend (ret, first_point);
-
-      AnnotatePoint *second_point =  allocate_point (m_q[i][0],
-						     m_q[i][1],
+      AnnotatePoint *second_point =  allocate_point (mq[i][0],
+						     mq[i][1],
 						     width,
 						     pressure);
 
-      ret = g_slist_prepend (ret, second_point);
-
-      AnnotatePoint *third_point =  allocate_point (m_x[i+1][0],
-						    m_x[i+1][1],
+      AnnotatePoint *third_point =  allocate_point (mx[i+1][0],
+						    mx[i+1][1],
 						    width,
 						    pressure);
 
+      ret = g_slist_prepend (ret, first_point);
+      ret = g_slist_prepend (ret, second_point);
       ret = g_slist_prepend (ret, third_point);
 
     }

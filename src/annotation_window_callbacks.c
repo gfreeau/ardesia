@@ -195,6 +195,9 @@ paintto (GtkWidget *win,
 	 gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
+  GdkModifierType state = (GdkModifierType) ev->state;
+  gdouble selected_width = 0.0;
+  gdouble pressure = 1.0; 
 
   if (!ev)
     {
@@ -222,9 +225,6 @@ paintto (GtkWidget *win,
 
   annotate_unhide_cursor ();
 
-  GdkModifierType state = (GdkModifierType) ev->state;
-  gint selected_width = 0;
-
   /* Only button1 allowed. */
   if (! (state & GDK_BUTTON1_MASK))
     {
@@ -232,7 +232,6 @@ paintto (GtkWidget *win,
       return TRUE;
     }
 
-  gdouble pressure = 1.0; 
   if ( (ev->device->source != GDK_SOURCE_MOUSE) &&
        (data->cur_context->type != ANNOTATE_ERASER))
     {
@@ -247,19 +246,14 @@ paintto (GtkWidget *win,
       if (data->coord_list)
 	{
 	  AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, 0);
-	  gint tollerance = data->thickness;
+	  gdouble tollerance = data->thickness;
 	  if (get_distance (last_point->x, last_point->y, ev->x, ev->y)<tollerance)
 	    {
 
 	      /* Seems that you are uprising the pen. */
-	      if (pressure < last_point->pressure)
+	      if (pressure <= last_point->pressure)
 		{
 		  /* Jump the point you are uprising the hand. */
-		  return TRUE;
-		}
-	      else if (pressure == last_point->pressure)
-		{
-		  /* Ignore the point; do nothing. */
 		  return TRUE;
 		}
 	      else // pressure >= last_point->pressure
@@ -292,6 +286,7 @@ paintend (GtkWidget *win,
 	  gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
+  guint lenght = g_slist_length (data->coord_list);
 
   if (!ev)
     {
@@ -317,7 +312,7 @@ paintend (GtkWidget *win,
       return TRUE;
     }
 
-#endif 
+#endif
 	
   /* Only button1 allowed. */
   if (! (ev->button == 1))
@@ -325,36 +320,37 @@ paintend (GtkWidget *win,
       return TRUE;
     }
 
-  gint lenght = g_slist_length (data->coord_list);
-
   if (lenght > 2)
     { 
-      gint distance = -1;
       AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, lenght-1);
-       
-      /* This is the tolerance to force to close the path in a magnetic way. */
-      gint tollerance = data->thickness * 2;
-      distance = get_distance (ev->x, ev->y, first_point->x, first_point->y);
-
       AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, 0);
-      gdouble pressure = last_point->pressure;      
 
+      gdouble distance = get_distance (ev->x, ev->y, first_point->x, first_point->y);
+ 
+      /* This is the tolerance to force to close the path in a magnetic way. */
+      gdouble tollerance = data->thickness * 2;
+      gdouble pressure = last_point->pressure;   
+
+      gboolean closed_path = FALSE;
+         
       /* If the distance between two point lesser than tolerance they are the same point for me. */
-      if (distance <= tollerance)
+      if (distance > tollerance)
         {
-          distance=0;
-	  cairo_line_to (data->annotation_cairo_context, first_point->x, first_point->y);
-	  annotate_coord_list_prepend (first_point->x, first_point->y, data->thickness, pressure);
+          /* Different point. */
+          cairo_line_to (data->annotation_cairo_context, ev->x, ev->y);
+          annotate_coord_list_prepend (ev->x, ev->y, data->thickness, pressure);
 	}
       else
         {
-          cairo_line_to (data->annotation_cairo_context, ev->x, ev->y);
-          annotate_coord_list_prepend (ev->x, ev->y, data->thickness, pressure);
+          /* Rounded to be tha same point. */
+          closed_path = TRUE; // this seems to be a closed path
+
+	  cairo_line_to (data->annotation_cairo_context, first_point->x, first_point->y);
+	  annotate_coord_list_prepend (first_point->x, first_point->y, data->thickness, pressure);
         }
-   
+
       if (data->cur_context->type != ANNOTATE_ERASER)
         { 
-          gboolean closed_path = (distance == 0); 
           annotate_shape_recognize (closed_path);
 
           /* If is selected an arrow type then I draw the arrow. */
@@ -395,15 +391,16 @@ proximity_in (GtkWidget *win,
 
   if (data->cur_context->type == ANNOTATE_PEN)
     {
-      gint x, y;
-      GdkModifierType state;
-      gdk_window_get_pointer (win->window, &x, &y, &state);
+      GdkModifierType state = (GdkModifierType) NULL;
+
+      /* Get the modifier state. */
+      gdk_window_get_pointer (win->window, (gint *) NULL, (gint *) NULL, &state);
       annotate_select_tool (data, ev->device, state);
       data->old_paint_type = ANNOTATE_PEN; 
     }
   else
     {
-      data->old_paint_type = ANNOTATE_ERASER; 
+      data->old_paint_type = ANNOTATE_ERASER;
     }
 
   return TRUE;
