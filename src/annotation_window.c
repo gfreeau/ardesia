@@ -70,7 +70,7 @@ annotate_get_arrow_direction ()
   gdouble tollerance = data->thickness * delta;
 
   /* Build the relevant point list with the standard deviation algorithm. */
-  GSList *relevantpoint_list = build_relevant_list (out_ptr, FALSE, tollerance);
+  GSList *relevantpoint_list = build_meaningful_point_list (out_ptr, FALSE, tollerance);
 
   old_point = (AnnotatePoint *) g_slist_nth_data (relevantpoint_list, 1);
   point = (AnnotatePoint *) g_slist_nth_data (relevantpoint_list, 0);
@@ -619,7 +619,7 @@ static void
 rectify (gboolean closed_path)
 {
   gdouble tollerance = data->thickness;
-  GSList *out_ptr = broken (data->coord_list, closed_path, TRUE, tollerance);
+  GSList *broken_list = broken (data->coord_list, closed_path, TRUE, tollerance);
 
   if (data->debug)
     {
@@ -629,11 +629,10 @@ rectify (gboolean closed_path)
   /* Restore the surface without the last path handwritten. */
   annotate_restore_surface ();
 
-  annotate_coord_list_free ();
-  data->coord_list = out_ptr;
-
-  annotate_draw_point_list (out_ptr);
-
+  annotate_draw_point_list (broken_list);
+  
+  g_slist_foreach (broken_list, (GFunc) g_free, (gpointer) NULL);
+  g_slist_free (broken_list); 
 }
 
 
@@ -644,8 +643,8 @@ roundify (gboolean closed_path)
   gdouble tollerance = data->thickness;
   gint lenght = g_slist_length (data->coord_list);
 
-  /* Build the relevant point list with the standard deviation algorithm. */
-  GSList *out_ptr = (GSList *) NULL;
+  /* Build the meaningful point list with the standard deviation algorithm. */
+  GSList *meaningful_point_list = (GSList *) NULL;
 
   /* Restore the surface without the last path handwritten. */
   annotate_restore_surface ();
@@ -657,35 +656,28 @@ roundify (gboolean closed_path)
       return;
     }
 
-  out_ptr = build_relevant_list (data->coord_list, closed_path, tollerance);
-  if (closed_path)
+  meaningful_point_list = build_meaningful_point_list (data->coord_list, closed_path, tollerance);
+  if ((closed_path) && (is_similar_to_an_ellipse (meaningful_point_list, tollerance)))
     {
+      AnnotatePoint *point1 = (AnnotatePoint *) NULL;
+      AnnotatePoint *point3 = (AnnotatePoint *) NULL;
 
-      if (is_similar_to_an_ellipse (out_ptr, tollerance))
-	{
-          AnnotatePoint *point1 = (AnnotatePoint *) NULL;
-          AnnotatePoint *point3 = (AnnotatePoint *) NULL;
-
-	  out_ptr = extract_outbounded_rectangle (out_ptr);
-	  point1 = (AnnotatePoint *) g_slist_nth_data (out_ptr, 0);
-	  point3 = (AnnotatePoint *) g_slist_nth_data (out_ptr, 2);
-	  annotate_draw_ellipse (point1->x, point1->y, point3->x-point1->x, point3->y-point1->y, point1->pressure);
-	}
-      else
-	{
-	  /* It is a closed path but it is not an eclipse;I use bezier to spline the path. */
-	  GSList *splined_list = spline (out_ptr);
-
-	  annotate_draw_curve (splined_list);
-	}
-
+      meaningful_point_list = extract_outbounded_rectangle (meaningful_point_list);
+      point1 = (AnnotatePoint *) g_slist_nth_data (meaningful_point_list, 0);
+      point3 = (AnnotatePoint *) g_slist_nth_data (meaningful_point_list, 2);
+      annotate_draw_ellipse (point1->x, point1->y, point3->x-point1->x, point3->y-point1->y, point1->pressure);
     }
   else
     {
-      /* It's a not closed path than I use bezier to spline the path. */
-      GSList *splined_list = spline (out_ptr);
+      /* It is not an ellipse; I use bezier to spline the path. */
+      GSList *splined_list = spline (meaningful_point_list);
       annotate_draw_curve (splined_list);
+      g_slist_foreach (splined_list, (GFunc) g_free, (gpointer) NULL);
+      g_slist_free (splined_list);
     }
+
+  g_slist_foreach (meaningful_point_list, (GFunc) g_free, (gpointer) NULL);
+  g_slist_free (meaningful_point_list);
 }
 
 

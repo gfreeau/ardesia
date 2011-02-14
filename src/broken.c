@@ -351,13 +351,13 @@ straighten (GSList *list)
 }
 
 
-/* Return a subpath of list_inp containg only the meaningful points
- * using the standard deviation algorithm.
+/* Return a new list containing a sub-path of list_inp that contains
+ * the meaningful points using the standard deviation algorithm.
  */
 GSList *
-build_relevant_list (GSList *list_inp,
-		     gboolean close_path,
-		     gdouble pixel_tollerance)
+build_meaningful_point_list     (GSList *list_inp,
+				 gboolean rectify,
+				 gdouble pixel_tollerance)
 {
   guint lenght = g_slist_length (list_inp);
   guint i = 0;
@@ -656,25 +656,25 @@ broken (GSList *list_inp,
 	gboolean rectify,
 	gdouble pixel_tollerance)
 {
-  GSList *relevant_list = build_relevant_list (list_inp, close_path, pixel_tollerance);
+  GSList *meaningful_point_list = build_meaningful_point_list (list_inp, close_path, pixel_tollerance);
 
-  if (relevant_list)
+  if (meaningful_point_list)
     {
 
       if (rectify)
 	{
-	  GSList * rectified_list = build_rectified_list(relevant_list, close_path, pixel_tollerance);
+	  GSList * rectified_list = build_rectified_list(meaningful_point_list, close_path, pixel_tollerance);
 
-          /* Free the relevant_list. */
-          g_slist_foreach (relevant_list, (GFunc)g_free, NULL);
-          g_slist_free (relevant_list);
+          /* Free the meaningful_point_list. */
+          g_slist_foreach (meaningful_point_list, (GFunc)g_free, NULL);
+          g_slist_free (meaningful_point_list);
 
           return rectified_list;
 	}
 
     }
 
-  return relevant_list;
+  return meaningful_point_list;
 }
 
 

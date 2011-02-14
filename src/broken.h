@@ -30,10 +30,10 @@
 
 
 /* Return a new list containing a sub-path of list_inp that contains
- * the meaningful points using the standard deviation.
+ * the meaningful points using the standard deviation algorithm.
  */
 GSList *
-build_relevant_list             (GSList *list_inp,
+build_meaningful_point_list     (GSList *list_inp,
 				 gboolean rectify,
 				 gdouble pixel_tollerance);
 
