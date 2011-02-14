@@ -489,13 +489,15 @@ static void
 annotate_draw_ellipse (gdouble x,
 		       gdouble y,
 		       gdouble width,
-		       gdouble height)
+		       gdouble height,
+                       gdouble pressure)
 {
   if (data->debug)
     {
       g_printerr ("Draw ellipse\n");
     }
 
+  annotate_modify_color (data, pressure);
   cairo_save (data->annotation_cairo_context);
 
   /* The ellipse is done as a 360 degree arc translated. */
@@ -546,7 +548,7 @@ annotate_draw_point_list (GSList* list)
 	      break;
 	    }
 
-           annotate_modify_color (data, point->pressure);
+          annotate_modify_color (data, point->pressure);
        
 	  /* Draw line between the two points. */
 	  annotate_draw_line (point->x, point->y, FALSE);
@@ -596,6 +598,8 @@ annotate_draw_curve (GSList *list)
 		      return;
 		    }
 
+                  annotate_modify_color (data, second_point->pressure);
+
 		  cairo_curve_to (data->annotation_cairo_context,
 				  first_point->x,
 				  first_point->y,
@@ -638,24 +642,22 @@ static void
 roundify (gboolean closed_path)
 {
   gdouble tollerance = data->thickness;
+  gint lenght = g_slist_length (data->coord_list);
+
   /* Build the relevant point list with the standard deviation algorithm. */
-  GSList *out_ptr = build_relevant_list (data->coord_list, closed_path, tollerance);
-  guint lenght = g_slist_length (out_ptr);
-  AnnotatePoint *point = (AnnotatePoint *) g_slist_nth_data (data->coord_list,
-							     lenght/2);
+  GSList *out_ptr = (GSList *) NULL;
 
   /* Restore the surface without the last path handwritten. */
   annotate_restore_surface ();
 
-  annotate_modify_color (data, point->pressure);
-
-  if (lenght <= 3)
+  if ( lenght <= 3)
     {
       /* Draw the point line as is and jump the rounding. */
-      annotate_draw_point_list (out_ptr);
+      annotate_draw_point_list (data->coord_list);
       return;
     }
 
+  out_ptr = build_relevant_list (data->coord_list, closed_path, tollerance);
   if (closed_path)
     {
 
@@ -667,7 +669,7 @@ roundify (gboolean closed_path)
 	  out_ptr = extract_outbounded_rectangle (out_ptr);
 	  point1 = (AnnotatePoint *) g_slist_nth_data (out_ptr, 0);
 	  point3 = (AnnotatePoint *) g_slist_nth_data (out_ptr, 2);
-	  annotate_draw_ellipse (point1->x, point1->y, point3->x-point1->x, point3->y-point1->y);
+	  annotate_draw_ellipse (point1->x, point1->y, point3->x-point1->x, point3->y-point1->y, point1->pressure);
 	}
       else
 	{
