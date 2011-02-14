@@ -266,13 +266,13 @@ enable_localization_support ()
  * This function create a segmentation fault; 
  * it is useful to test the segmentation fault handler.
  */
-/*
+
   static void create_segmentation_fault ()
   {
   int *f=NULL;
   *f = 0;
   }
-*/
+
 
 
 /* Create a shorcut to the workspace on the desktop. */
@@ -363,7 +363,7 @@ main (int argc,
    * Uncomment this and the create_segmentation_fault function
    * to create a segmentation fault
    */
-  //create_segmentation_fault ();
+  create_segmentation_fault ();
 
   commandline = parse_options (argc, argv);
 

@@ -188,7 +188,7 @@ void
 glibc_backtrace_register ()
 {
 #ifdef HAVE_LIBSIGSEGV
-
+  g_type_init();
   /* Install the SIGSEGV handler. */
   if (sigsegv_install_handler (sigsegv_handler)<0)
     {
