@@ -485,6 +485,28 @@ rmdir_recursive (gchar *path)
 }
 
 
+/* Remove directory if it is empty */
+void
+remove_dir_if_empty(gchar* dir_path)
+{
+  GDir        *dir = (GDir *) NULL;
+  gint         file_occurrence = 0;
+
+  /* if the project dir is empty delete it */
+  dir  = g_dir_open (dir_path, 0, NULL);
+
+  while (g_dir_read_name (dir))
+    {
+      file_occurrence++;
+    }
+
+  if (file_occurrence == 0)
+   {
+     rmdir_recursive(dir_path);
+   }
+}
+
+
 /* Allocate a new point belonging to the stroke passing the values. */
 AnnotatePoint *
 allocate_point (gdouble x,

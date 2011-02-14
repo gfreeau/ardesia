@@ -69,6 +69,8 @@ call_recorder (gchar *filename,
 gboolean
 is_recorder_available ()
 {
+  gchar *argv[5] = {"vlc", "-I", "dummy", "--dummy-quiet", (gchar *) 0};
+
 #ifdef _WIN32
   gchar *videolan = "\\VideoLAN\\VLC";
   gchar *programfile= getenv ("PROGRAMFILES");
@@ -92,7 +94,6 @@ is_recorder_available ()
       return TRUE;
     }
 #endif
-  gchar *argv[5] = {"vlc", "-I", "dummy", "--dummy-quiet", (gchar *) 0};
 
   return g_spawn_async (NULL /*working_directory*/,
                         argv,
@@ -131,7 +132,8 @@ quit_recorder ()
 void
 visualize_missing_recorder_program_dialog (GtkWindow *parent_window)
 {
-  GtkWidget *miss_dialog;
+  GtkWidget *miss_dialog = (GtkWidget *) NULL;
+
   miss_dialog = gtk_message_dialog_new (parent_window,
 					GTK_DIALOG_MODAL,
                                         GTK_MESSAGE_ERROR,
@@ -186,9 +188,10 @@ gboolean start_save_video_dialog (GtkToolButton *toolbutton, GtkWindow *parent)
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
       gchar *supported_extension = ".ogv";
+      gchar *filename_copy = (gchar *) NULL;
       g_free (filename);
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-      gchar *filename_copy = g_strdup_printf ("%s", filename); 
+      filename_copy = g_strdup_printf ("%s", filename); 
 
       if (!g_str_has_suffix (filename, supported_extension))
         {
@@ -201,14 +204,15 @@ gboolean start_save_video_dialog (GtkToolButton *toolbutton, GtkWindow *parent)
 
       if (file_exists (filename))
 	{
-	  GtkWidget *msg_dialog;
+	  GtkWidget *msg_dialog = (GtkWidget *) NULL;
+          gint result = -1;
 
 	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (chooser),
 					       GTK_DIALOG_MODAL,
                                                GTK_MESSAGE_WARNING,
                                                GTK_BUTTONS_YES_NO,
 					       gettext ("File Exists. Overwrite"));
-	  gint result = gtk_dialog_run (GTK_DIALOG (msg_dialog));
+	  result = gtk_dialog_run (GTK_DIALOG (msg_dialog));
 	  if (msg_dialog)
 	    {
 	      gtk_widget_destroy (msg_dialog);

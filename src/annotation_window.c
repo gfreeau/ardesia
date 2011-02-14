@@ -46,7 +46,7 @@ static AnnotateData *data;
 static AnnotatePaintContext *
 annotate_paint_context_new (AnnotatePaintType type)
 {
-  AnnotatePaintContext *context = NULL;
+  AnnotatePaintContext *context = (AnnotatePaintContext *) NULL;
   gchar* color = g_strdup_printf ("FF0000FF");
 
   context = g_malloc ((gsize) sizeof (AnnotatePaintContext));
@@ -62,8 +62,8 @@ static gdouble
 annotate_get_arrow_direction ()
 {
   /* Precondition: the list must be not null and the length might be greater than two. */
-  AnnotatePoint *point = NULL;
-  AnnotatePoint *old_point = NULL;
+  AnnotatePoint *point = (AnnotatePoint *) NULL;
+  AnnotatePoint *old_point = (AnnotatePoint *) NULL;
   gdouble delta = 2.0;
   gdouble ret = 0.0;
   GSList *out_ptr = data->coord_list;
@@ -71,6 +71,7 @@ annotate_get_arrow_direction ()
 
   /* Build the relevant point list with the standard deviation algorithm. */
   GSList *relevantpoint_list = build_relevant_list (out_ptr, FALSE, tollerance);
+
   old_point = (AnnotatePoint *) g_slist_nth_data (relevantpoint_list, 1);
   point = (AnnotatePoint *) g_slist_nth_data (relevantpoint_list, 0);
   /* Give the direction using the last two point. */
@@ -79,7 +80,7 @@ annotate_get_arrow_direction ()
   /* Free the relevant point list. */
   g_slist_foreach (relevantpoint_list, (GFunc) g_free, (gpointer) NULL);
   g_slist_free (relevantpoint_list);
-  relevantpoint_list = NULL; 
+  relevantpoint_list = (GSList *) NULL;
 
   return ret;
 }
@@ -193,8 +194,8 @@ static void
 get_invisible_pixmaps (gint size,
 		       GdkPixmap **pixmap,GdkPixmap **mask)
 {
-  cairo_t *invisible_cr = NULL;
-  cairo_t *invisible_shape_cr = NULL;
+  cairo_t *invisible_cr = (cairo_t *) NULL;
+  cairo_t *invisible_shape_cr = (cairo_t *) NULL;
 
   *pixmap = gdk_pixmap_new ((GdkDrawable *) NULL, size, size, 1);
   *mask =  gdk_pixmap_new ((GdkDrawable *) NULL, size, size, 1);
@@ -261,8 +262,8 @@ get_eraser_pixmaps (gdouble size,
 		    GdkPixmap **mask)
 {
   gdouble circle_width = 2.0;
-  cairo_t *eraser_cr = NULL;
-  cairo_t *eraser_shape_cr = NULL;
+  cairo_t *eraser_cr = (cairo_t *) NULL;
+  cairo_t *eraser_shape_cr = (cairo_t *) NULL;
 
   *pixmap = gdk_pixmap_new ((GdkDrawable *) NULL, (gint) size, (gint) size, 1);
   *mask =  gdk_pixmap_new ((GdkDrawable *) NULL, (gint) size, (gint) size, 1);
@@ -304,8 +305,8 @@ get_pen_pixmaps (gdouble size,
 		 GdkPixmap **pixmap,
 		 GdkPixmap **mask)
 {
-  cairo_t *pen_cr = NULL;
-  cairo_t *pen_shape_cr = NULL;
+  cairo_t *pen_cr = (cairo_t *) NULL;
+  cairo_t *pen_shape_cr = (cairo_t *) NULL;
   gdouble circle_width = 2.0;
   gdouble side_lenght = (size*3) + data->thickness;
   
@@ -313,6 +314,7 @@ get_pen_pixmaps (gdouble size,
   *mask =  gdk_pixmap_new ((GdkDrawable *) NULL, (gint) side_lenght, (gint) side_lenght, 1);
 
   pen_cr = gdk_cairo_create (*pixmap);
+
   if (cairo_status (pen_cr) != CAIRO_STATUS_SUCCESS)
     {
       g_printerr ("Failed to allocate the pen cursor cairo context");
@@ -327,6 +329,7 @@ get_pen_pixmaps (gdouble size,
   cairo_destroy (pen_cr);
 
   pen_shape_cr = gdk_cairo_create (*mask);
+
   if (cairo_status (pen_shape_cr) != CAIRO_STATUS_SUCCESS)
     {
       g_printerr ("Failed to allocate the pen shape cursor cairo context");
@@ -339,11 +342,13 @@ get_pen_pixmaps (gdouble size,
   cairo_set_operator (pen_shape_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_line_width (pen_shape_cr, circle_width);
   cairo_set_source_rgb (pen_shape_cr, 1, 1, 1);
+
   cairo_arc (pen_shape_cr,
 	     5* size/2 + data->thickness/2,
 	     size/2,
 	     (size/2)-circle_width, M_PI * 5/4,
 	     M_PI/4);
+
   cairo_arc (pen_shape_cr,
 	     size/2 + data->thickness/2,
 	     5 * size/2,
@@ -554,14 +559,12 @@ annotate_draw_curve (GSList *list)
 	    }
 	  else
 	    {
-
 	      AnnotatePoint *second_point = (AnnotatePoint *) g_slist_nth_data (list, i+1);
 
 	      if (!second_point)
 		{
 		  return;
 		}
-
 	      else
 		{
 		  AnnotatePoint *third_point = (AnnotatePoint *) g_slist_nth_data (list, i+2);
@@ -645,8 +648,9 @@ roundify (gboolean closed_path)
 
       if (is_similar_to_an_ellipse (out_ptr, tollerance))
 	{
-          AnnotatePoint *point1 = NULL;
-          AnnotatePoint *point3 = NULL;
+          AnnotatePoint *point1 = (AnnotatePoint *) NULL;
+          AnnotatePoint *point3 = (AnnotatePoint *) NULL;
+
 	  out_ptr = extract_outbounded_rectangle (out_ptr);
 	  point1 = (AnnotatePoint *) g_slist_nth_data (out_ptr, 0);
 	  point3 = (AnnotatePoint *) g_slist_nth_data (out_ptr, 2);
@@ -656,6 +660,7 @@ roundify (gboolean closed_path)
 	{
 	  /* It is a closed path but it is not an eclipse;I use bezier to spline the path. */
 	  GSList *splined_list = spline (out_ptr);
+
 	  annotate_coord_list_free ();
 	  data->coord_list = splined_list;
 	  annotate_draw_curve (splined_list);
@@ -666,6 +671,7 @@ roundify (gboolean closed_path)
     {
       /* It's a not closed path than I use bezier to spline the path. */
       GSList *splined_list = spline (out_ptr);
+
       annotate_coord_list_free ();
       data->coord_list = splined_list;
       annotate_draw_curve (splined_list);
@@ -691,10 +697,12 @@ is_eraser (GdkDevice *device)
 static void
 setup_input_devices ()
 {
-  GList     *devices, *d;
+  GList *devices = (GList *) NULL;
+  GList *d = (GList *) NULL;
 
   devices = gdk_display_list_devices (gdk_display_get_default ());
-  for (d = devices;d;d = d->next)
+
+  for (d = devices; d; d = d->next)
     {
       GdkDevice *device = (GdkDevice *) d->data;
 
@@ -712,10 +720,12 @@ setup_input_devices ()
 	    {
               g_printerr ("Enabled Device. %p: \"%s\" (Type: %d)\n",
 			  device, device->name, device->source);
+
               if (!gdk_device_set_mode (device, GDK_MODE_SCREEN))
                 {
                   g_warning ("Unable to set the device %s to the screen mode\n", device->name);
                 }
+
 	    }
 
         }
@@ -727,8 +737,8 @@ setup_input_devices ()
 static GtkWidget *
 create_annotation_window ()
 {
-  GtkWidget* widget = NULL;
-  GError* error = NULL;
+  GtkWidget* widget = (GtkWidget *) NULL;
+  GError* error = (GError *) NULL;
 
   /* Initialize the main window. */
   data->annotation_window_gtk_builder = gtk_builder_new ();
@@ -786,6 +796,7 @@ setup_app (GtkWidget* parent)
   data->shape = gdk_pixmap_new ((GdkDrawable *) NULL, width, height, 1);
 
   shape_cr = gdk_cairo_create (data->shape);
+
   if (cairo_status (shape_cr) != CAIRO_STATUS_SUCCESS)
     {
       g_printerr ("Failed to allocate the shape cairo context");
@@ -876,11 +887,11 @@ delete_savepoint (AnnotateSavepoint *savepoint)
 	{
 	  g_remove (savepoint->filename);
 	  g_free (savepoint->filename);
-          savepoint->filename = NULL;
+          savepoint->filename = (gchar *) NULL;
 	}
       data->savepoint_list = g_slist_remove (data->savepoint_list, savepoint);
       g_free (savepoint);
-      savepoint = NULL;
+      savepoint = (AnnotateSavepoint *) NULL;
     }
 }
 
@@ -984,9 +995,9 @@ void
 annotate_add_savepoint ()
 {
   AnnotateSavepoint *savepoint = g_malloc ((gsize) sizeof (AnnotateSavepoint));
-  cairo_surface_t *saved_surface = NULL;
-  cairo_surface_t *source_surface = NULL;
-  cairo_t *cr = NULL;
+  cairo_surface_t *saved_surface = (cairo_surface_t *) NULL;
+  cairo_surface_t *source_surface = (cairo_surface_t *) NULL;
+  cairo_t *cr = (cairo_t *) NULL;
 
   guint savepoint_index = g_slist_length (data->savepoint_list) + 1;
   
@@ -1012,7 +1023,7 @@ annotate_add_savepoint ()
   cr = cairo_create (saved_surface);
   cairo_set_source_surface (cr, source_surface, 0, 0);
   cairo_paint (cr);
-  /* The saved_surface now contains the save-point image. */
+  /* Postcondition: the saved_surface now contains the save-point image. */
 
 
   /*  Will be create a file in the save-point folder with format PACKAGE_NAME_1.png. */
@@ -1155,7 +1166,7 @@ annotate_coord_list_free ()
     {
       g_slist_foreach (data->coord_list, (GFunc) g_free, (gpointer) NULL);
       g_slist_free (data->coord_list);
-      data->coord_list = NULL;
+      data->coord_list = (GSList *) NULL;
     }
 }
 
@@ -1168,6 +1179,7 @@ annotate_modify_color (AnnotateData *data,
   /* Pressure value is from 0 to 1;this value modify the RGBA gradient. */
   guint r,g,b,a;
   gdouble old_pressure = pressure;
+
   /* If you put an higher value you will have more contrast
    * between the lighter and darker colour depending on pressure.
    */
@@ -1321,10 +1333,12 @@ annotate_acquire_grab ()
 {
   if  (!data->is_grabbed)
     {
+
       if (data->debug)
         {
 	  g_printerr ("Acquire grab\n");
 	}
+
       annotate_acquire_input_grab ();
       data->is_grabbed = TRUE;
     }
@@ -1380,6 +1394,7 @@ annotate_draw_arrow (gdouble distance)
 
   /* Postcondition length >= 2 */
   direction = annotate_get_arrow_direction ();
+
   if (data->debug)
     {
       g_printerr ("Arrow direction %f\n", direction/M_PI*180);
@@ -1449,7 +1464,7 @@ annotate_paint_context_free (AnnotatePaintContext *context)
   if (context)
     {
       g_free (context);
-      context=NULL;
+      context = (AnnotatePaintContext *) NULL;
     }
 }
 
@@ -1466,13 +1481,13 @@ annotate_quit ()
       if (data->annotation_window_gtk_builder)
 	{
 	  g_object_unref (data->annotation_window_gtk_builder);
-	  data->annotation_window_gtk_builder = NULL;
+	  data->annotation_window_gtk_builder = (GtkBuilder *) NULL;
 	}
 
       if (data->shape)
 	{
 	  g_object_unref (data->shape);
-	  data->shape = NULL;
+	  data->shape = (GdkPixmap *) NULL;
 	}
 	
       /* Destroy cairo object. */
@@ -1484,14 +1499,14 @@ annotate_quit ()
       if (data->invisible_cursor)
 	{
 	  gdk_cursor_unref (data->invisible_cursor);
-	  data->invisible_cursor = NULL;
+	  data->invisible_cursor = (GdkCursor *) NULL;
 	}
 
       /* Free all. */
       if (data->annotation_window)
 	{
 	  gtk_widget_destroy (data->annotation_window);
-	  data->annotation_window = NULL;
+	  data->annotation_window = (GtkWidget *) NULL;
 	}
 
       annotate_coord_list_free ();
@@ -1500,16 +1515,16 @@ annotate_quit ()
       delete_ardesia_tmp_dir();
 
       g_free (data->savepoint_dir);
-      data->savepoint_dir = NULL;
+      data->savepoint_dir = (gchar *) NULL;
 
       annotate_paint_context_free (data->default_pen);
-      data->default_pen = NULL;
+      data->default_pen = (AnnotatePaintContext *) NULL;
 
       annotate_paint_context_free (data->default_eraser);
-      data->default_eraser = NULL;
+      data->default_eraser = (AnnotatePaintContext *) NULL;
 
       g_free (data);
-      data = NULL;
+      data = (AnnotateData *) NULL;
     }
 }
 
@@ -1518,7 +1533,7 @@ annotate_quit ()
 void
 annotate_release_input_grab ()
 {
-  gdk_window_set_cursor (data->annotation_window->window, NULL);
+  gdk_window_set_cursor (data->annotation_window->window, (GdkCursor *) NULL);
 #ifndef _WIN32
   /*
    * @TODO implement correctly gdk_window_input_shape_combine_mask
@@ -1557,7 +1572,7 @@ annotate_release_grab ()
 
       annotate_release_input_grab ();
       gtk_window_present (GTK_WINDOW (get_bar_window ()));
-      data->is_grabbed=FALSE;
+      data->is_grabbed = FALSE;
     }
 }
 
@@ -1663,11 +1678,11 @@ annotate_init (GtkWidget *parent,
   data = g_malloc ((gsize) sizeof (AnnotateData));
 
   /* Initialize the data structure. */
-  data->annotation_cairo_context = NULL;
-  data->coord_list = NULL;
-  data->savepoint_list = NULL;
+  data->annotation_cairo_context = (cairo_t *) NULL;
+  data->coord_list = (GSList *) NULL;
+  data->savepoint_list = (GSList *) NULL;
   data->current_save_index = 0;
-  data->cursor = NULL;
+  data->cursor = (GdkCursor *) NULL;
 
   data->is_grabbed = FALSE;
   data->arrow = FALSE;

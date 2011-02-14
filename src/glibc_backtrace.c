@@ -39,13 +39,13 @@
 	defined (__apple__) || defined (__apple) || defined (_apple) || defined (apple) )
 #  include <sys/param.h>
 #  include <mach-o/dyld.h>
-#endif 
+#endif
 
 
 /* Globals retained across calls to resolve. */
-static bfd *abfd = 0;
-static asymbol **syms = 0;
-static asection *text = 0;
+static bfd *abfd = (bfd *) NULL;
+static asymbol **syms = (asymbol ** ) NULL;
+static asection *text = (asection *) NULL;
 
 
 /* Put a trace line in the file giving the address. */
@@ -102,7 +102,7 @@ create_trace_line (char *address,
 
   offset = ( (unsigned long) address) - text->vma;
 
-  if (offset > 0) 
+  if (offset > 0)
     {
       const char *filen;
       const char *func;
@@ -136,13 +136,13 @@ create_trace ()
   gchar *default_filename = get_default_filename ();
   gchar *backtrace_name = g_strdup_printf ("%s_stacktrace.txt", default_filename);
   gchar *filename  = g_build_filename ( g_get_tmp_dir (), backtrace_name, (gchar *) 0);
+  FILE *file = fopen (filename, "w");
   size_t size;
   size_t i;
 
   g_free (default_filename);
   g_free (backtrace_name);
 
-  FILE *file = fopen (filename, "w");
 
   /*
    * The glibc functions backtrace is missing on all non-glibc platforms.

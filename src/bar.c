@@ -133,9 +133,15 @@ GtkWidget *
 create_bar_window (CommandLine *commandline,
 		   GtkWidget *parent)
 {
-  GtkWidget *bar_window = NULL;
-  GError *error = NULL;
+  GtkWidget *bar_window = (GtkWidget *) NULL;
+  BarData *bar_data = (BarData *) NULL;
+  GError *error = (GError *) NULL;
   gchar *file = UI_FILE;
+  gint x = 0;
+  gint y = 0;
+  gint width = 0;
+  gint height = 0;
+
   bar_gtk_builder = gtk_builder_new ();
 
   if (commandline->position>2)
@@ -172,7 +178,7 @@ create_bar_window (CommandLine *commandline,
       return bar_window;
     }
 
-  BarData *bar_data = init_bar_data ();
+  bar_data = init_bar_data ();
 
   /* Connect all the callback from bar_gtk_builder xml file. */
   gtk_builder_connect_signals (bar_gtk_builder, (gpointer) bar_data);
@@ -185,11 +191,9 @@ create_bar_window (CommandLine *commandline,
       gtk_window_set_decorated (GTK_WINDOW (bar_window), TRUE);
     }
 
-  gint width, height;
   gtk_window_get_size (GTK_WINDOW (bar_window) , &width, &height);
 
-  /* x and y are the ardesia bar left corner coordinates. */
-  gint x, y;
+  /* x and y will be the bar left corner coordinates. */
   calculate_initial_position (bar_window,
 			      &x,
 			      &y,

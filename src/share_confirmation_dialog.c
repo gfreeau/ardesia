@@ -45,7 +45,7 @@ start_share_dialog (GtkWindow *parent)
     }
   else
     {
-      GtkWidget *share_dialog;
+      GtkWidget *share_dialog = (GtkWidget *) NULL;
       /* Initialize the main window. */
       GtkBuilder *share_dialog_gtk_builder = gtk_builder_new ();
 
@@ -65,9 +65,7 @@ start_share_dialog (GtkWindow *parent)
       gtk_dialog_run (GTK_DIALOG (share_dialog));
 
       gtk_widget_destroy (share_dialog);
-      share_dialog = NULL;
+      share_dialog = (GtkWidget *) NULL;
     }
 
 }
-
-

@@ -56,8 +56,8 @@ typedef struct
 
   /* Used by the input shape mask. */
   GdkPixmap *background_shape;
- 
-}BackGroundData;
+
+}BackgroundData;
 
 
 /* Create the background window. */

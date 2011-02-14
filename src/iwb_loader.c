@@ -128,13 +128,14 @@ GSList *
 load_iwb (gchar *iwbfile)
 {
   const gchar *tmpdir = g_get_tmp_dir ();
-  GSList *savepoint_list = NULL;
+  GSList *savepoint_list = (GSList *) NULL;
   gchar  *ardesia_tmp_dir = g_build_filename (tmpdir, PACKAGE_NAME, (gchar *) 0);
   gchar  *project_name = get_project_name ();
   gchar  *project_tmp_dir = g_build_filename (ardesia_tmp_dir, project_name, (gchar *) 0);
   gchar  *content_filename = "content.xml";
   gchar  *content_filepath = g_build_filename (project_tmp_dir, content_filename, (gchar *) 0);
-  xmlDocPtr doc = NULL; // the resulting document tree
+  xmlDocPtr doc = (xmlDocPtr) NULL; // the resulting document tree
+  xmlXPathContextPtr context = (xmlXPathContextPtr) NULL;
 
   decompress_iwb (iwbfile, project_tmp_dir);
   
@@ -158,7 +159,7 @@ load_iwb (gchar *iwbfile)
       g_error ("Failed to parse %s\n", content_filepath);
     }
 
-  xmlXPathContextPtr context = xmlXPathNewContext (doc);
+  context = xmlXPathNewContext (doc);
 
   if (context == NULL)
     {

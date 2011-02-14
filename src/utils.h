@@ -266,6 +266,11 @@ void
 rmdir_recursive (gchar *path);
 
 
+/* Remove directory if it is empty */
+void
+remove_dir_if_empty(gchar* dir_path);
+
+
 /* Allocate a new point belonging to the path passing the values. */
 AnnotatePoint *
 allocate_point (gdouble x,

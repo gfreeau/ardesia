@@ -103,11 +103,13 @@ static void
 check_composite_manager (GdkScreen *screen)
 {
   gboolean composite = gdk_screen_is_composited (screen);
+
   if (!composite)
     {
       /* start the enable composite manager dialog. */
       run_missing_composite_manager_dialog ();
     }
+
 }
 #endif
 
@@ -119,6 +121,7 @@ set_the_best_colormap ()
   GdkDisplay *display = gdk_display_get_default ();
   GdkScreen  *screen  = gdk_display_get_default_screen (display);
   GdkVisual  *visual  = NULL;
+  GdkColormap *colormap = gdk_screen_get_rgba_colormap (screen);
 
   /* In FreeBSD operating system you might have a composite manager. */
 #if ( defined (__freebsd__) || defined (__freebsd) || defined (_freebsd) || defined (freebsd) )
@@ -129,8 +132,6 @@ set_the_best_colormap ()
 #ifdef linux
   check_composite_manager (screen);
 #endif
-
-  GdkColormap *colormap = gdk_screen_get_rgba_colormap (screen);
 
   if (colormap)
     {
@@ -334,18 +335,18 @@ create_default_project_dir (gchar *workspace_dir,
 
 /* This is the starting point of the program. */
 int
-main (gint argc,
+main (int argc,
       char *argv[])
 {
-  CommandLine *commandline = NULL;
-  gchar       *project_name = "";
-  gchar       *project_dir = "";
-  gchar       *iwb_filename = NULL;
-  GtkWidget   *background_window = NULL; 
-  GtkWidget   *annotation_window = NULL; 
-  GtkWidget   *ardesia_bar_window = NULL; 
-  GSList      *artifact_list = NULL;
-  
+  CommandLine *commandline = (CommandLine *) NULL;
+  gchar       *project_name = (gchar *) NULL;
+  gchar       *project_dir = (gchar *) NULL;
+  gchar       *iwb_filename = (gchar *) NULL;
+  GtkWidget   *background_window = (GtkWidget *) NULL;
+  GtkWidget   *annotation_window = (GtkWidget *) NULL;
+  GtkWidget   *ardesia_bar_window = (GtkWidget *) NULL;
+  GSList      *artifact_list = (GSList *) NULL;
+
   /* Enable the localization support with gettext. */
   enable_localization_support ();
 
@@ -372,6 +373,8 @@ main (gint argc,
 	
   if (commandline->iwb_filename)
     {
+      gint init_pos = -1;
+      gint end_pos = -1;
 
       if (g_path_is_absolute (commandline->iwb_filename))
 	{
@@ -384,16 +387,18 @@ main (gint argc,
 	  free (dir);
 	}
 
-      int init_pos = g_substrlastpos (iwb_filename, G_DIR_SEPARATOR_S);
-      int end_pos  = g_substrlastpos (iwb_filename, ".");
+      init_pos = g_substrlastpos (iwb_filename, G_DIR_SEPARATOR_S);
+      end_pos  = g_substrlastpos (iwb_filename, ".");
       project_name = g_substr (iwb_filename, init_pos+1, end_pos-1);
       project_dir = g_substr (iwb_filename, 0, init_pos-1);
     }
   else
     {
+      gchar *workspace_dir = (gchar *) NULL;
+
       /* Show the project name wizard. */
-      project_name = start_project_dialog (NULL);
-      gchar *workspace_dir = configure_workspace (project_name);
+      project_name = start_project_dialog ((GtkWindow *) NULL);
+      workspace_dir = configure_workspace (project_name);
       project_dir = create_default_project_dir (workspace_dir, project_name);
       g_free (workspace_dir);
     }
@@ -452,21 +457,19 @@ main (gint argc,
 
   if (artifact_list)
     {
-      start_share_dialog (NULL);
+      start_share_dialog ((GtkWindow *) NULL);
       free_artifacts ();
     }
 
   g_free (project_name);
-  project_name = NULL;
+
+  remove_dir_if_empty(project_dir);
 
   g_free (project_dir);
-  project_dir = NULL;
-
+  
   g_free (iwb_filename);
-  iwb_filename = NULL;
 
   g_free (commandline);
-  commandline = NULL;
 
   return 0;
 }

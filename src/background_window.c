@@ -32,7 +32,7 @@
 
 
 /* The background data used internally and by the callbacks. */
-static BackGroundData *background_data;
+static BackgroundData *background_data;
 
 
 /* Load the "filename" file content into the image buffer. */
@@ -44,8 +44,8 @@ load_png (gchar *filename)
 
   if (pixbuf)
     {
-      gint height;
-      gint width;
+      gint height = 0;
+      gint width = 0;
       gdk_drawable_get_size (background_data->background_window->window, &width, &height);
       scaled = gdk_pixbuf_scale_simple (pixbuf, width, height, GDK_INTERP_BILINEAR);
       g_object_unref (G_OBJECT (pixbuf));
@@ -70,15 +70,16 @@ load_file ()
     {
       GdkPixbuf *pixbuf = load_png (background_data->background_image);
       cairo_set_operator (background_data->back_cr, CAIRO_OPERATOR_SOURCE);
-      gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), 1);
+      gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), 1.0);
       gdk_cairo_set_source_pixbuf (background_data->back_cr, pixbuf, 0.0, 0.0);
       cairo_paint (background_data->back_cr);
       cairo_stroke (background_data->back_cr);
       g_object_unref (G_OBJECT (pixbuf));
 #ifndef _WIN32
       gdk_window_input_shape_combine_mask (background_data->background_window->window,
-					   NULL, 
-					   0, 0);
+					   NULL,
+					   0,
+                                           0);
 #endif
     }
 }
@@ -88,11 +89,15 @@ load_file ()
 static void
 load_color ()
 {
-  gint r,g,b,a;
+  gint r = 0;
+  gint g = 0;
+  gint b = 0;
+  gint a = 0;
+
   if (background_data->back_cr)
     {
-      cairo_set_operator (background_data->back_cr, CAIRO_OPERATOR_SOURCE);
       sscanf (background_data->background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+
       /*
        * @TODO Implement with a full opaque windows and use cairo_set_source_rgba
        * function to paint.
@@ -100,6 +105,8 @@ load_color ()
        * the problem on windows with rgba. 
        */
       gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), (gdouble) a/256);
+
+      cairo_set_operator (background_data->back_cr, CAIRO_OPERATOR_SOURCE);
       cairo_set_source_rgb (background_data->back_cr, (gdouble) r/256, (gdouble) g/256, (gdouble) b/256);
       cairo_paint (background_data->back_cr);
       cairo_stroke (background_data->back_cr);
@@ -111,21 +118,20 @@ load_color ()
 					   0);
 #endif
 
-    }  
+    }
 }
 
 
 /* Allocate internal structure. */
-static BackGroundData *
+static BackgroundData *
 allocate_background_data ()
 {
-  BackGroundData *background_data   = g_malloc ((gsize) sizeof (BackGroundData));
-  background_data->background_color = NULL;
-  background_data->background_image = NULL;
-  background_data->back_cr          = NULL;
-  background_data->background_shape = NULL;
-  background_data->background_image = NULL;
-  background_data->background_window = NULL;
+  BackgroundData *background_data   = g_malloc ((gsize) sizeof (BackgroundData));
+  background_data->background_color = (gchar *) NULL;
+  background_data->background_image = (gchar *) NULL;
+  background_data->back_cr          = (cairo_t *) NULL;
+  background_data->background_shape = (GdkPixmap *) NULL;
+  background_data->background_window = (GtkWidget *) NULL;
   return background_data;
 }
 
@@ -139,39 +145,39 @@ destroy_background_window ()
       if (background_data->background_shape)
 	{
 	  g_object_unref (background_data->background_shape);
-          background_data->background_shape = NULL;
+          background_data->background_shape = (GdkPixmap *) NULL;
 	}
 
       if (background_data->background_window)
 	{ 
 	  /* Destroy brutally the background window. */
 	  gtk_widget_destroy (background_data->background_window);
-	  background_data->background_window = NULL;
+	  background_data->background_window = (GtkWidget *) NULL;
 	}
 
       if (background_data->back_cr)
 	{
 	  cairo_destroy (background_data->back_cr);
-          background_data->back_cr = NULL;
+          background_data->back_cr = (cairo_t *) NULL;
 	}
 
       if (background_data->background_color)
 	{
 	  g_free (background_data->background_color);
-	  background_data->background_color = NULL;
+	  background_data->background_color = (gchar *) NULL;
 	}
 
       /* Delete reference to the gtk builder object. */
       if (background_data->background_window_gtk_builder)
 	{
 	  g_object_unref (background_data->background_window_gtk_builder);
-	  background_data->background_window_gtk_builder = NULL;
+	  background_data->background_window_gtk_builder = (GtkBuilder *) NULL;
 	}
 
       if (background_data)
 	{
 	  g_free (background_data);
-	  background_data = NULL;
+	  background_data = (BackgroundData *) NULL;
 	}
 
     }
@@ -185,18 +191,18 @@ void clear_background_window ()
 {
   gint height       = -1;
   gint width        = -1;
-  cairo_t *shape_cr = NULL;
+  cairo_t *shape_cr = (cairo_t *) NULL;
 
   if (background_data->background_color)
     {
       g_free (background_data->background_color);
-      background_data->background_color = NULL;
+      background_data->background_color = (gchar *) NULL;
     }
 
   if (background_data->background_image)
     {
       g_free (background_data->background_image);
-      background_data->background_image = NULL;
+      background_data->background_image = (gchar *) NULL;
     }
 
   /*
@@ -208,13 +214,13 @@ void clear_background_window ()
   gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), BACKGROUND_OPACITY);
 
   clear_cairo_context (background_data->back_cr);
-  
+
   gdk_drawable_get_size (background_data->background_window->window, &width, &height);
 
   /* Instantiate a transparent pixmap to be used as mask. */
-  background_data->background_shape = gdk_pixmap_new (NULL, width, height, 1);
+  background_data->background_shape = gdk_pixmap_new ((GdkDrawable *) NULL, width, height, 1);
   shape_cr = gdk_cairo_create (background_data->background_shape);
-  clear_cairo_context (shape_cr); 
+  clear_cairo_context (shape_cr);
   cairo_destroy (shape_cr);
 
   /* This allows the mouse event to be passed to the window below. */
@@ -228,10 +234,11 @@ void clear_background_window ()
 
 
 /* Create the background window. */
-GtkWidget* 
+GtkWidget *
 create_background_window ()
 {
-  GError *error = NULL;
+  GError *error = (GError *) NULL;
+  GObject *background_obj = (GObject *) NULL;
 
   background_data = allocate_background_data ();
 
@@ -248,7 +255,7 @@ create_background_window ()
       return background_data->background_window;
     }
 
-  GObject *background_obj = gtk_builder_get_object (background_data->background_window_gtk_builder, "backgroundWindow");
+  background_obj = gtk_builder_get_object (background_data->background_window_gtk_builder, "backgroundWindow");
   background_data->background_window = GTK_WIDGET (background_obj);
 
   gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), BACKGROUND_OPACITY);
@@ -281,7 +288,7 @@ change_background_image (gchar *name)
   if (background_data->background_color)
     {
       g_free (background_data->background_color);
-      background_data->background_color = NULL;
+      background_data->background_color = (gchar *) NULL;
     }
 
   background_data->background_image = name;
@@ -296,8 +303,8 @@ change_background_color (gchar* rgba)
   if (background_data->background_image)
     {
       g_free (background_data->background_image);
-      background_data->background_image = NULL;
-    }  
+      background_data->background_image = (gchar *) NULL;
+    }
 
   if (!background_data->background_color)
     {

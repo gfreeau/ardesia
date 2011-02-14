@@ -242,30 +242,39 @@ export_iwb (gchar *iwb_location)
   gchar *images = "images";
   gchar *img_dir_path = g_build_filename (project_tmp_dir, images, (gchar *) 0);
 
-  /* If the iwb location is null means that it is a new project. */
-  if (iwb_location == NULL)
+  gchar *first_savepoint_file = g_strdup_printf ("%s%s%s_2_vellum.png", img_dir_path, G_DIR_SEPARATOR_S, PACKAGE_NAME);
+  /* if exist the file I continue to save */
+  if (file_exists(first_savepoint_file))  
     {
-      /* It will be putted in the project dir. */
-      gchar *extension = "iwb";
-      gchar *iwb_name =  g_strdup_printf("%s.%s", get_project_name (), extension);
-      /* The zip file is the iwb file located in the ardesia workspace. */
-      iwb_file = g_build_filename (get_project_dir (), iwb_name, (gchar *) 0);
-      g_free(iwb_name);
+
+      /* If the iwb location is null means that it is a new project. */
+      if (iwb_location == NULL)
+	{
+	  /* It will be putted in the project dir. */
+	  gchar *extension = "iwb";
+	  gchar *iwb_name =  g_strdup_printf("%s.%s", get_project_name (), extension);
+
+	  /* The zip file is the iwb file located in the ardesia workspace. */
+	  iwb_file = g_build_filename (get_project_dir (), iwb_name, (gchar *) 0);
+
+	  g_free(iwb_name);
+	}
+      else
+	{
+	  g_remove (iwb_location);
+	  iwb_file = g_strdup_printf ("%s", iwb_location);
+	}
+
+      g_remove (content_filepath);
+      create_xml_content (content_filepath, img_dir_path);
+
+      create_iwb (iwb_file, project_tmp_dir, "images", content_filename);
+
+      /* Add to the list of the artefacts created in the session. */
+      add_artifact (iwb_file);
     }
-  else
-    {
-      g_remove (iwb_location);
-      iwb_file = g_strdup_printf ("%s", iwb_location);
-    }
 
-  g_remove (content_filepath);
-  create_xml_content (content_filepath, img_dir_path);
-
-  create_iwb (iwb_file, project_tmp_dir, "images", content_filename);
-
-  /* Add to the list of the artefacts created in the session. */
-  add_artifact (iwb_file);
-
+  g_free (first_savepoint_file); 
   g_free (iwb_file);
   g_free (ardesia_tmp_dir);
   g_free (project_tmp_dir);
