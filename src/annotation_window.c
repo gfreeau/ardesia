@@ -506,6 +506,24 @@ annotate_draw_ellipse (gdouble x,
 }
 
 
+/* Return if it is a closed path. */
+static gboolean
+is_a_closed_path (GSList* list)
+{
+  /* Check if it is a closed path. */
+  guint lenght = g_slist_length (list);
+  AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (list, 0);
+  AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (list, lenght-1);
+
+  if (get_distance (first_point->x, first_point->y, last_point->x, last_point->y) == 0)
+    {
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+
 /* Draw the point list;the cairo path is not forgotten */
 static void 
 annotate_draw_point_list (GSList* list)
@@ -527,7 +545,9 @@ annotate_draw_point_list (GSList* list)
 	      annotate_draw_point (point->x, point->y, point->pressure);
 	      break;
 	    }
-	  annotate_modify_color (data, point->pressure);
+
+           annotate_modify_color (data, point->pressure);
+       
 	  /* Draw line between the two points. */
 	  annotate_draw_line (point->x, point->y, FALSE);
         }
@@ -610,10 +630,6 @@ rectify (gboolean closed_path)
 
   annotate_draw_point_list (out_ptr);
 
-  if (closed_path)
-    {
-      cairo_close_path (data->annotation_cairo_context);
-    }
 }
 
 
@@ -630,9 +646,6 @@ roundify (gboolean closed_path)
 
   /* Restore the surface without the last path handwritten. */
   annotate_restore_surface ();
-
-  annotate_coord_list_free ();
-  data->coord_list = out_ptr;
 
   annotate_modify_color (data, point->pressure);
 
@@ -661,8 +674,6 @@ roundify (gboolean closed_path)
 	  /* It is a closed path but it is not an eclipse;I use bezier to spline the path. */
 	  GSList *splined_list = spline (out_ptr);
 
-	  annotate_coord_list_free ();
-	  data->coord_list = splined_list;
 	  annotate_draw_curve (splined_list);
 	}
 
@@ -671,9 +682,6 @@ roundify (gboolean closed_path)
     {
       /* It's a not closed path than I use bezier to spline the path. */
       GSList *splined_list = spline (out_ptr);
-
-      annotate_coord_list_free ();
-      data->coord_list = splined_list;
       annotate_draw_curve (splined_list);
     }
 }
@@ -827,24 +835,6 @@ setup_app (GtkWidget* parent)
 				 0,
 				 LWA_COLORKEY );	
 #endif
-}
-
-
-/* Return if it is a closed path. */
-static gboolean
-is_a_closed_path (GSList* list)
-{
-  /* Check if it is a closed path. */
-  guint lenght = g_slist_length (list);
-  AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (list, 0);
-  AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (list, lenght-1);
-
-  if (get_distance (first_point->x, first_point->y, last_point->x, last_point->y) > 0)
-    {
-      return TRUE;
-    }
-
-  return FALSE;
 }
 
 
@@ -1588,13 +1578,13 @@ void annotate_fill ()
   if (data->coord_list)
     {
 
-      if (is_a_closed_path (data->coord_list))
+      /* if is not a closed path I prevent to fill it */
+      if (!is_a_closed_path (data->coord_list))
         {
-          cairo_stroke (data->annotation_cairo_context);
           return;
         }
 
-      if (! (data->roundify)&& (! (data->rectify)))
+      if ( !(data->roundify) && (!(data->rectify)))
 	{
 	  annotate_draw_point_list (data->coord_list);
 	  cairo_close_path (data->annotation_cairo_context);
