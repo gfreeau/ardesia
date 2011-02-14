@@ -116,20 +116,22 @@ static void found_min_and_max (GSList *list,
 			       gdouble *maxx,
 			       gdouble *maxy)
 {
-  AnnotatePoint *out_point = (AnnotatePoint *)list->data;
-  *minx = out_point->x;
-  *miny = out_point->y;
-  *maxx = out_point->x;
-  *maxy = out_point->y;
+  guint i =0;
+  AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (list, i);
+  *minx = first_point->x;
+  *miny = first_point->y;
+  *maxx = first_point->x;
+  *maxy = first_point->y;
 
-  while (list)
-    {
-      AnnotatePoint *cur_point = (AnnotatePoint *)list->data;
+  guint lenght = g_slist_length (list);
+
+  for (i=1; i<lenght; i++)
+     {
+      AnnotatePoint *cur_point = (AnnotatePoint *) g_slist_nth_data (list, i);
       *minx = MIN (*minx, cur_point->x);
       *miny = MIN (*miny, cur_point->y);
       *maxx = MAX (*maxx, cur_point->x);
       *maxy = MAX (*maxy, cur_point->y);
-      list = list->next; 
     }
 }
 
