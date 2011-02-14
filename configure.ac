@@ -124,6 +124,8 @@ PKG_CHECK_MODULES(ARDESIA, [$pkg_modules])
 AC_CONFIG_FILES([
 Makefile
 src/Makefile
+docs/Makefile
+docs/ardesia.1
 po/Makefile.in
 data/Makefile
 win32/build_installer

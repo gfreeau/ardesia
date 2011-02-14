@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = src po data 
+SUBDIRS = src po data docs 
 
 ardesiadocdir = ${prefix}/doc/ardesia
 ardesiadoc_DATA = \
