@@ -535,42 +535,34 @@ send_email (gchar *to,
 #else
 
   guint attach_lenght = g_slist_length (attachment_list);
+  guint i = 0;
 
-  guint arg_lenght = (attach_lenght*2) + 7;
+  gchar* mailer = "xdg-email";
+  gchar* subject_param = "--subject";
+  gchar* body_param = "--body";
+  gchar* attach_param = "--attach";
 
-  gchar **argv = g_malloc ((arg_lenght+1) * sizeof (gchar *));
-
-  guint i=0;
-  guint j=5;
-
-  argv[0] = "xdg-email";
-  argv[1] = "--subject";
-  argv[2] = subject;
-  argv[3] = "--body";
-  argv[4] = body;
+  gchar* args = g_strdup_printf("%s %s %s %s '%s'", mailer, subject_param, subject, body_param, body);
 
   for (i=0; i<attach_lenght; i++)
     {
-      gchar *attachment = (gchar *) g_slist_nth_data (attachment_list, i);
-      argv[j] = "--attach";
-      argv[j+1] = attachment;
-      j = j+2;
+      gchar* attachment = (gchar*) g_slist_nth_data (attachment_list, i);
+      gchar* attachment_str = g_strdup_printf("%s '%s'", attach_param, attachment);
+      gchar* new_args = g_strdup_printf("%s %s", args, attachment_str);
+      g_free(args);
+      args = new_args;
+      g_free(attachment_str);
     }
 
-  argv[arg_lenght-2] = to;
-  argv[arg_lenght-1] = NULL;
+  gchar* new_args = g_strdup_printf("%s %s&", args, to);
+  g_free(args);
 
-  g_spawn_async (NULL /*working_directory*/,
-		 argv,
-		 NULL /*envp*/,
-		 G_SPAWN_SEARCH_PATH,
-		 NULL /*child_setup*/,
-		 NULL /*user_data*/,
-		 NULL /*child_pid*/,
-		 NULL /*error*/);
+  if (system (new_args)<0)
+    {
+       g_warning("Problem running command: %s", new_args);
+    }
 
-  g_strfreev (argv);
-
+  g_free(new_args);
 
 #endif
 }
