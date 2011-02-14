@@ -501,9 +501,9 @@ remove_dir_if_empty(gchar* dir_path)
     }
 
   if (file_occurrence == 0)
-   {
-     rmdir_recursive(dir_path);
-   }
+    {
+      rmdir_recursive(dir_path);
+    }
 }
 
 
@@ -559,7 +559,7 @@ send_email (gchar *to,
 
   if (system (new_args)<0)
     {
-       g_warning("Problem running command: %s", new_args);
+      g_warning("Problem running command: %s", new_args);
     }
 
   g_free(new_args);
@@ -699,3 +699,12 @@ g_substr (const gchar *string,
 }
 
 
+/* 
+ * This function create a segmentation fault; 
+ * it is useful to test the segmentation fault handler.
+ */
+void create_segmentation_fault ()
+{
+  int *f=NULL;
+  *f = 0;
+}

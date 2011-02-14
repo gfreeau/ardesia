@@ -331,3 +331,8 @@ g_substr (const gchar *string,
 	  gint end);
 
 
+/* 
+ * This function create a segmentation fault; 
+ * it is useful to test the segmentation fault handler.
+ */
+void create_segmentation_fault ();
