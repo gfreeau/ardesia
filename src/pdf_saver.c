@@ -158,11 +158,12 @@ pdf_save ()
   gint width = gdk_screen_width ();
 
   /* create the cairo surface for pdf */
-  cairo_surface_t *pdf_surface = cairo_pdf_surface_create (pdf_data->filename, (gdouble) width, (gdouble) height);
+  cairo_surface_t *pdf_surface = cairo_pdf_surface_create (pdf_data->filename, width, height);
   cairo_t *pdf_cr = cairo_create (pdf_surface);
 
-  guint lenght = g_slist_length (pdf_data->input_filelist);
-  guint i = 0;
+  gint lenght = g_slist_length (pdf_data->input_filelist);
+  
+  gint i;
 
   for (i=lenght-1; i>=0; i--)
     {
