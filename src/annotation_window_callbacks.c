@@ -100,6 +100,9 @@ event_expose (GtkWidget *widget,
       if (data->savepoint_list == NULL)
         {
 	  annotate_clear_screen ();
+#ifndef _WIN32
+      gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1);
+#endif 		  
         }
     }
   /* Postcondition; data->annotation_cairo_context is not NULL. */
