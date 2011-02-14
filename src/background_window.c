@@ -98,6 +98,9 @@ load_color ()
     {
       sscanf (background_data->background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
 
+      cairo_set_operator (background_data->back_cr, CAIRO_OPERATOR_SOURCE);
+      cairo_set_source_rgb (background_data->back_cr, (gdouble) r/256, (gdouble) g/256, (gdouble) b/256);
+
       /*
        * @TODO Implement with a full opaque windows and use cairo_set_source_rgba
        * function to paint.
@@ -106,8 +109,6 @@ load_color ()
        */
       gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), (gdouble) a/256);
 
-      cairo_set_operator (background_data->back_cr, CAIRO_OPERATOR_SOURCE);
-      cairo_set_source_rgb (background_data->back_cr, (gdouble) r/256, (gdouble) g/256, (gdouble) b/256);
       cairo_paint (background_data->back_cr);
       cairo_stroke (background_data->back_cr);
 
@@ -303,13 +304,9 @@ change_background_color (gchar* rgba)
   if (background_data->background_image)
     {
       g_free (background_data->background_image);
-      background_data->background_image = (gchar *) NULL;
     }
 
-  if (!background_data->background_color)
-    {
-      background_data->background_color = g_strdup_printf ("%s", rgba);
-    }
+  background_data->background_color = g_strdup_printf ("%s", rgba);
 
   load_color ();
 }
