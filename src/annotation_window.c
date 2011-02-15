@@ -1466,13 +1466,6 @@ annotate_quit ()
   if (data)
     {
 
-      /* Delete the reference to the gtk builder object. */
-      if (data->annotation_window_gtk_builder)
-	{
-	  g_object_unref (data->annotation_window_gtk_builder);
-	  data->annotation_window_gtk_builder = (GtkBuilder *) NULL;
-	}
-
       if (data->shape)
 	{
 	  g_object_unref (data->shape);
@@ -1512,8 +1505,6 @@ annotate_quit ()
       annotate_paint_context_free (data->default_eraser);
       data->default_eraser = (AnnotatePaintContext *) NULL;
 
-      g_free (data);
-      data = (AnnotateData *) NULL;
     }
 }
 

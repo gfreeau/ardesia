@@ -78,14 +78,6 @@ quit (BarData *bar_data)
           g_free (bar_data->color);
           bar_data->color = NULL;
         }
-      g_free (bar_data);
-      bar_data = NULL;
-    }
-
-  if (bar_gtk_builder)
-    {
-      g_object_unref (bar_gtk_builder);
-      bar_gtk_builder = NULL; 
     }
 
   gtk_main_quit ();
