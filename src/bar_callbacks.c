@@ -135,7 +135,7 @@ unlock (BarData *bar_data)
     {
       GObject *unlock_obj = gtk_builder_get_object (bar_gtk_builder, "buttonUnlock");
       GtkToggleToolButton *eraser_tool_button = GTK_TOGGLE_TOOL_BUTTON (unlock_obj);
-      gtk_toggle_tool_button_set_active (eraser_tool_button, FALSE); 
+      gtk_toggle_tool_button_set_active (eraser_tool_button, FALSE);
     }
 }
 
@@ -145,8 +145,8 @@ static void
 set_color (BarData *bar_data,
 	   gchar *selected_color)
 {
-  unlock (bar_data);
   take_pen_tool ();
+  unlock (bar_data);
   strncpy (bar_data->color, selected_color, 6);
   annotate_set_color (bar_data->color);
 }

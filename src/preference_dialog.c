@@ -66,6 +66,14 @@ start_preference_dialog (GtkWindow *parent)
   gtk_window_set_transient_for (GTK_WINDOW (preference_dialog), parent);
   gtk_window_set_modal (GTK_WINDOW (preference_dialog), TRUE);
   gtk_window_set_keep_above (GTK_WINDOW (preference_dialog), TRUE);
+  
+#ifdef _WIN32
+  /*
+   * In Windows the parent bar go above the dialog;
+   * to avoid this behaviour I put the parent keep above to false.
+   */
+  gtk_window_set_keep_above (GTK_WINDOW (parent), FALSE);
+#endif
 
   img_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "imageChooserButton");
   chooser = GTK_FILE_CHOOSER (img_obj);
@@ -118,6 +126,15 @@ start_preference_dialog (GtkWindow *parent)
   preference_data = NULL;
 
   stop_virtual_keyboard ();
+  
+  #ifdef _WIN32
+  /*
+   * In Windows the parent bar go above the dialog;
+   * to avoid this behaviour I have put the parent keep above to false,
+   * and now I restore it.
+   */
+  gtk_window_set_keep_above (GTK_WINDOW (parent), TRUE);
+#endif
 }
 
 
