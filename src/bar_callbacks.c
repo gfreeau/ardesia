@@ -73,8 +73,11 @@ quit (BarData *bar_data)
   /* Dis-allocate all the BarData structure. */
   if (bar_data)
     {
-      g_free (bar_data->color);
-      bar_data->color = NULL;
+      if (bar_data->color)
+        {
+          g_free (bar_data->color);
+          bar_data->color = NULL;
+        }
       g_free (bar_data);
       bar_data = NULL;
     }

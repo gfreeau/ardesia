@@ -94,15 +94,14 @@ is_a_rectangle (GSList *list,
 static gdouble
 calculate_medium_pression (GSList *list)
 {
-  gint i = 0;
+  guint i = 0;
   gdouble total_pressure = 0;
+  guint lenght = g_slist_length (list);
 
-  while (list)
+  for (i=0; i<lenght; i++)
     {
-      AnnotatePoint *cur_point = (AnnotatePoint *)list->data;
+      AnnotatePoint *cur_point = (AnnotatePoint *) g_slist_nth_data (list, i);
       total_pressure = total_pressure + cur_point->pressure;
-      i = i +1;
-      list=list->next;
     }
 
   return total_pressure/i;
@@ -116,7 +115,9 @@ static void found_min_and_max (GSList *list,
 			       gdouble *maxx,
 			       gdouble *maxy)
 {
-  guint i =0;
+  guint i = 0;
+
+  /* Initialize the min and max to the first point coordinates */
   AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (list, i);
   *minx = first_point->x;
   *miny = first_point->y;
@@ -125,6 +126,7 @@ static void found_min_and_max (GSList *list,
 
   guint lenght = g_slist_length (list);
 
+  /* Search the min and max coordinates */
   for (i=1; i<lenght; i++)
      {
       AnnotatePoint *cur_point = (AnnotatePoint *) g_slist_nth_data (list, i);
@@ -463,6 +465,7 @@ extract_outbounded_rectangle (GSList *list)
   gdouble miny = 0;
   gdouble maxx = 0;
   gdouble maxy = 0;
+
   found_min_and_max (list, &minx, &miny, &maxx, &maxy);
 
   point0->x = minx;
@@ -676,6 +679,5 @@ broken (GSList *list_inp,
 
   return meaningful_point_list;
 }
-
 
 

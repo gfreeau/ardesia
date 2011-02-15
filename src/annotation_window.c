@@ -475,10 +475,13 @@ destroy_cairo ()
   guint refcount =  (guint) cairo_get_reference_count (data->annotation_cairo_context);
 
   guint i = 0;
+
   for  (i=0; i<refcount; i++)
     {
       cairo_destroy (data->annotation_cairo_context);
     }
+
+  data->annotation_cairo_context = (cairo_t *) NULL;
 }
 
 
@@ -904,6 +907,8 @@ annotate_savepoint_list_free ()
       AnnotateSavepoint *savepoint = (AnnotateSavepoint *) g_slist_nth_data (data->savepoint_list, 0);
       delete_savepoint (savepoint);
     }
+
+  data->savepoint_list = NULL;
 }
 
 
