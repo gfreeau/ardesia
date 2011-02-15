@@ -164,7 +164,7 @@
 	* trunk/ardesia/win32/build_installer: 
         - Add ardesia.iss AC_CONFIG_FILES 
         - Use @version@ instead of 0.7 in this way the
-	  version number will resolved throught autotools and specified in
+	  version number will resolved through autotools and specified in
 	  the ardesia_version m4 define inside the configure.ac - deleted
 	  deprecated macro AC_OUTPUT ([file]..., [extra-cmds],
 	  [init-cmds]) following the gnu documentation
@@ -174,10 +174,10 @@
 2011-01-24 21:18  alpha@paranoici.org
 	* trunk/ardesia/win32/build_installer: 
         - The script now auto builds the ardesia iscc file 
-          Now is not required anymore to open and
+          Now is not required any more to open and
 	  run the ardesia iscc file You also need InnoSetup
 	  (http://www.innosetup.org) with iscc in your PATH In order to
-	  add iscc in the PATH msys enviroment you must add something like
+	  add iscc in the PATH msys environment you must add something like
 	  this in the .profile file located in your home directory: export
 	  IS_DIR=$PROGRAMFILES/Inno\ Setup\ 5 export PATH=$IS_DIR:$PATH
 	  where IS_DIR is the Inno Setup installation folder
@@ -246,7 +246,7 @@
 2011-01-21 16:59  alpha@paranoici.org
 	* trunk/ardesia/data/ardesia.iss: 
         - Add an inno setup file written by hands, 
-          this will be integraded with autotools to be generated
+          this will be integrated with autotools
 
 
 2011-01-21 10:19  alpha@paranoici.org
@@ -277,14 +277,14 @@
         - Skip the translation of the horizontal bar this has the same contents 
           of the vertical one; this fix the intltool-update -m command under the
           po folder
-	- Reindent file and adjust comments
+	- Re-indent file and adjust comments
       
 
 
 2011-01-20 15:01  alpha@paranoici.org
 	* trunk/ardesia/src/iwb_saver.c: 
         - Fix the iwb export under windows; 
-          the referced file use the separator / 
+          the referenced files use the separator / 
           and not the operating system file separator
 
 
@@ -364,7 +364,7 @@
 
 2011-01-16 23:45  alpha@paranoici.org
 	* trunk/ardesia/src/ardesia.c: 
-        - Terminate the program in the case that it doesn't support the 
+        - Terminate the program in the case that it does not support the 
           RGBA colormap and it is not windows
 
 
@@ -385,7 +385,7 @@
 	* trunk/ardesia/src/utils.c,
 	* trunk/ardesia/src/windows_utils.c,
 	* trunk/ardesia/src/windows_utils.h: 
-        - Create a new Ardesia folder on desktop where put the artifacts
+        - Create a new Ardesia folder on desktop where put the artefacts
 
 
 2011-01-14 15:43  alpha@paranoici.org
@@ -512,8 +512,8 @@
 	* trunk/ardesia/src/horizontal_bar.glade,
 	* trunk/ardesia/src/vertical_bar.glade: 
         - The hightlighter is put as a tool, this give a better gui
-          REGARDS: With the new interface is not possible anymore select 
-                   a semiopaque color with the arrow and the text tools
+          REGARDS: With the new interface is not possible any more select 
+                   a semi-opaque colour with the arrow and the text tools
 
 
 2011-01-13 01:12  alpha@paranoici.org
@@ -553,9 +553,9 @@
         - The location of the pointer is taken from GdkEventButton used 
           to see if the pointer is above the bar in taken through 
           the x_root and y_root instead of x and y ones. 
-          In this way we have the coord respect the root screen
-	  instead of the coordinate to the relative window. - gtk 2.22
-	  upgrade in windows (work in progress) 
+          In this way we have the coordinates respect the root screen
+	  instead of the coordinate to the relative window. 
+        - gtk 2.22 upgrade in windows (work in progress) 
         - Rescheduled TODO
 
 

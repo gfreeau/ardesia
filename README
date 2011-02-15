@@ -12,7 +12,7 @@
  Introduction
 --------------
 
-Ardesia is the free digital sketchpad software that help you to make colored free-hand
+Ardesia is the free digital sketchpad software that help you to make coloured free-hand
 annotations with digital ink everywhere, record it and share on the network.
 It is easy to use and impressively fast and reactive.
 You can draw upon the desktop or import an image and annotate it and redistribute your work
@@ -38,7 +38,7 @@ Create nice tutorial and demos saving the desktop images with your free hand ann
 Ardesia includes a sketchpad software that allow to free-hand draw geometrical shapes using
 the shape recognizer.
 
-Ardesia respects the interoperability standards, it imports and exports artifact using common
+Ardesia respects the interoperability standards, it imports and exports artefact using common
 file open formats.
 Ardesia works with all the pointing device; you can use a mouse, a touch screen, a drawing
 tablet, a cheap&professional wiimote whiteboard or a commercial whiteboard, interactive
@@ -114,7 +114,7 @@ Please read the INSTALL file located on the current folder.
 - From Gui
 
 Start Ardesia clicking in the menu on Applications/Tools/Ardesia
-Now you can select colors and annotate the screen.
+Now you can select colours and annotate the screen.
 
 
 Button explanation
@@ -131,7 +131,7 @@ Button explanation
   - Rounder: it rounds your sketch; 
     it transforms the closed path in ellipses or smoothed closed path,
     it transforms the open path in smoothed lines with bezier spline
-- Filler: it fills the last closed path drawn with the selected color
+- Filler: it fills the last closed path drawn with the selected colour
 - Arrow: it puts an arrow at the end of the line sketched
 - Text: insert a text annotation;
   select the text tool and then click on the desktop,
@@ -139,12 +139,12 @@ Button explanation
 - Highlighter: it allows to highlight on the desktop
 - Eraser: it selects the eraser tool
 - Pen: it selects the pen tool
-- Blue: it selects the blue color
+- Blue: it selects the blue colour
 - Green: it selects the green color
-- Yellow: it selects the yellow color
-- Red: it selects the red color
-- White: it selects the white color
-- Color selector: it allow to selects an other color through a palette
+- Yellow: it selects the yellow colour
+- Red: it selects the red colour
+- White: it selects the white colour
+- Colour selector: it allow to selects an other colour through a palette
 - Unlock: it unlocks the grab to annotate on the desktop;
   after the unlock you can use as usual your desktop,
   if do you want restart to sketch push the lock icon
@@ -152,7 +152,7 @@ Button explanation
 - Undo: it reverses the annotation to the older state
 - Redo: it advances the annotation to the more current state
 - Preferences: it allow to set some preference;
-  - you can select the background color
+  - you can select the background colour
   - you can select the background image;
     - a set of useful backgrounds will be shown
     - you can select an other image file also
@@ -213,13 +213,13 @@ filename:	  		The interactive Whiteboard Common File (iwb)
   - setup your computer to use the accelerated graphic drivers
     - intel graphics card might work with the free driver
     - nvidia graphics driver you must install the proprietary driver
-    - ati you must install the propietary driver
-  - if you are using Gnome go in the panel under System/Preference/Appereance and put
+    - ati you must install the proprietary driver
+  - if you are using Gnome go in the panel under System/Preference/Appearance and put
     the visuals effect to normal
   - if you are using kde enable the kwin composite manager
 
 - Ardesia bar is not full visible, it is greater than my desktop
-  - try to put the bar in orizontal position with the gravity option
+  - try to put the bar in horizontal position with the gravity option
     e.g. ardesia -g south
 
 - I can not move the Ardesia Bar. Why?
@@ -232,7 +232,7 @@ filename:	  		The interactive Whiteboard Common File (iwb)
     Now you can move the ardesia bar everywhere
 
 - Ardesia is not able to record my desktop
-  - check that you audio driver works fine, recording some speach
+  - check that you audio driver works fine, recording some speak
     with an other program
   - install the vlc package (it's required)
     http://www.videolan.org/vlc/

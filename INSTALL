@@ -13,10 +13,10 @@
  Abstract
 ---------
 
-This howto explains howto build Ardesia on linux.
+This document explains howto build Ardesia on linux.
 If do you want try to build Ardesia
 on other operating system or architecture
-please refer to the nstruction on the wiki page:
+please refer to the instruction on the wiki page:
 http://code.google.com/p/ardesia/w/list
 
 -------
@@ -82,8 +82,7 @@ You can compile the tool in the standard way:
  Make the DEBIAN/UBUNTU package
 --------------------------------
 
-The creation of the packgage requires the following
-packages:
+The build of the deb package has these requirements:
 
 - devscripts
 

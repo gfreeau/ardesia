@@ -14,15 +14,15 @@ Packaging
 Usability
 - The default folder where store the created files
   called ardesia workspace now is located under the document folder
-- Created a shortcurt on desktop that links to the ardesia wokspace
+- Created a shortcurt on desktop that links to the ardesia workspace
 - Now to save an image you must push on the the camera photo icon
 
 Features
 - Now you can open, save and reuse projects thanks to the
-  Interactive Whiteboard Common File Format (iwbcff); the artifact
+  Interactive Whiteboard Common File Format (iwbcff); the artefact
   will be saved under the ardesia workspace at the end of the session
 - At the end of the program you will be invited to send by email the
-  created artifacts created in session (iwb file, png screenshots and pdf)
+  artefacts created in session (iwb file, png screenshots and pdf)
 - The virtual keyboard is shown each time that is focused an editable item;
   this feature works only in Linux with the gnome environment and
   in Windows 7 if you have installed the "Tablet PC Input Panel"
@@ -60,11 +60,11 @@ Features:
 - When a fault occurs it logs the backtrace in tour TMP folder
 - Email support
 - Pdf email sender; when you quit the program if you have made
-  a pdf Ardesia opens your defaul mailer with a new stub mail
-  and it attachs your artifact
+  a pdf Ardesia opens your default mailer with a new stub mail
+  and it attaches your artefact
 - Bug Tracking: If the program is able to found a misbehaviour
-  it open an email stub with the log to be sended
-  to the ardesia developers staff
+  it open an email stub with the log to be sent to the ardesia 
+  developers staff
 - Florence virtual keyboard integration: if you have it
   installed, will be show/hide when you select the text
   tool (linux only)
@@ -86,7 +86,7 @@ Features:
 - Ardesia now works with Kwin and xcompmgr
   composite managers also
 - Better shape recognition with the roundifier tool;
-  now a new bezier alghorithm and ellipse detection
+  now a new bezier algorithm and ellipse detection
   has been implemented
 - low memory usage; the save point are stored on files
 - add system that print the backtrace in the case that
@@ -119,7 +119,7 @@ Usability:
 - added Spanish translation
 
 Features:
-- Implemented cross plattform recorder and stream forwarder
+- Implemented cross platform recorder and stream forwarder
 - Added the pen pressure support  for the drawing tablet
 - Added the eraser support for the drawing tablet on Linux
 - Export as pdf
@@ -129,7 +129,7 @@ Bug Fix:
   record and save wizard on windows
 - Solve the bug in the hide/show button
   on windows
-- Fix the color of the pen cursor synchronization
+- Fix the colour of the pen cursor synchronization
   on windows
 
 
@@ -156,7 +156,7 @@ Features:
 - now you can different ardesia instances
   one for each workspace
 - set the ardesia windows to stay always on the top
-- build on windows plattform
+- build on windows platform
 
 Bug fix:
 - fill now works after a close path drawn
@@ -177,7 +177,7 @@ Usability:
 - better arrow painting
 - added unlock button
 - increase the painting performance
-- enanchment in the shape recognizer
+- enhancement in the shape recognizer
 - Dynamic change of eraser and pen cursor
   depending on the selected width
 - hide the cursor after a paint to avoid that the cursor
@@ -192,10 +192,10 @@ Usability:
   - the "cellwriter" handwriting recognizer
 - Using a horizontal and vertical layout
   (see the --gravity option)
-- Use a only one button to configure the line widthness (thin, medium, thick);
+- Use a only one button to configure the line thickness (thin, medium, thick);
   this seems compact and more usable with the whiteboard than the slide
 - better shape recognizer
-- fast responsivity
+- fast responsiveness
 
 
 ---------------
@@ -212,7 +212,7 @@ Dependencies:
 Usability:
   - Multiple language support
   - English and Italian translations
-  - Added the color selector dialog
+  - Added the colour selector dialog
   - Added a button to clear all the screen
   - New pen and eraser cursor
   - Add the preference dialog that allow to change the background
@@ -220,7 +220,7 @@ Usability:
 Features:
   - Draw rect lines
   - Draw broken lines
-  - Smoothing alghoritm for curves
+  - Smoothing algorithm for curves
   - Draw rectangles
   - Draw ellipses
   - Add text insertion
@@ -228,20 +228,20 @@ Features:
   - Save in jpeg or png format
   - Make screencast
   - Width selection
-  - Color selection 
+  - Colour selection 
   - Highlighter
   - Undo/redo
   - Draw Text
   - Realtime recorder 
   - Open png, jpeg and svg images as background
-  - Background color and opacity selection
+  - Background colour and opacity selection
 
 
 ---------------
  ardesia 0.1
 ---------------
 
-The initial protype written in python;
+The initial prototype written in python;
 this has not been distributed to the public.
 I have put this version in the trash.
 
