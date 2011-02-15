@@ -346,6 +346,11 @@ main (int argc,
   windows_backtrace_register ();
 #endif
 
+
+  gtk_init (&argc, &argv);
+	
+  set_the_best_colormap ();
+
   /*
    * Uncomment this and the create_segmentation_fault function
    * to create a segmentation fault
@@ -368,12 +373,12 @@ main (int argc,
 	{
 	  gchar *dir = g_get_current_dir ();
 	  iwb_filename = g_build_filename (dir, commandline->iwb_filename, (gchar *) 0);
-	  free (dir);
+	  g_free (dir);
 	}
 
       if (!file_exists(iwb_filename))
         {
-          g_error("No such file %s\n", iwb_filename);          
+          printf("No such file %s\n", iwb_filename);          
           exit (EXIT_FAILURE);          
         }
 
@@ -397,9 +402,6 @@ main (int argc,
   set_project_dir (project_dir);
   set_iwb_filename (iwb_filename);
 
-  gtk_init (&argc, &argv);
-	
-  set_the_best_colormap ();
 
   background_window = create_background_window ();
 
