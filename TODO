@@ -17,11 +17,10 @@
   - Investigate about the status and make a plan
   
 - Reengineering
-  - man page
   - Store and load the savepoints using svg files
-  - Use a layered canvas instead use a set of window
-  - Create the iwb without spawn the zip/unzip process
+  - Use a layered canvas instead a set of windows
   - Text insertion consolidation
+  - Create the iwb without spawn the zip/unzip process
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
