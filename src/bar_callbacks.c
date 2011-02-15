@@ -220,8 +220,8 @@ G_MODULE_EXPORT void
 on_bar_destroy_event            (GtkWidget *widget,
 				 gpointer func_data)
 {
-  BarData *bar_data = (BarData *) func_data;
-  quit (bar_data);
+  /* Destroy the background window this will call the destroy of all windows. */
+  destroy_background_window ();
 }
 
 
