@@ -6,6 +6,7 @@
     <property name="width_request">715</property>
     <property name="events">GDK_LEAVE_NOTIFY_MASK</property>
     <property name="title">Ardesia</property>
+    <property name="resizable">False</property>
     <property name="destroy_with_parent">True</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="skip_pager_hint">True</property>
