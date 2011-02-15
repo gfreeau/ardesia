@@ -46,7 +46,7 @@ load_png (gchar *filename)
     {
       gint height = 0;
       gint width = 0;
-      gdk_drawable_get_size (background_data->background_window->window, &width, &height);
+      gdk_drawable_get_size (gtk_widget_get_window (background_data->background_window), &width, &height);
       scaled = gdk_pixbuf_scale_simple (pixbuf, width, height, GDK_INTERP_BILINEAR);
       g_object_unref (G_OBJECT (pixbuf));
       pixbuf = scaled;
@@ -76,7 +76,7 @@ load_file ()
       cairo_stroke (background_data->back_cr);
       g_object_unref (G_OBJECT (pixbuf));
 #ifndef _WIN32
-      gdk_window_input_shape_combine_mask (background_data->background_window->window,
+      gdk_window_input_shape_combine_mask (gtk_widget_get_window (background_data->background_window),
 					   NULL,
 					   0,
                                            0);
@@ -113,7 +113,7 @@ load_color ()
       cairo_stroke (background_data->back_cr);
 
 #ifndef _WIN32
-      gdk_window_input_shape_combine_mask (background_data->background_window->window,
+      gdk_window_input_shape_combine_mask (gtk_widget_get_window (background_data->background_window),
 					   NULL,
 					   0,
 					   0);
@@ -216,7 +216,7 @@ void clear_background_window ()
 
   clear_cairo_context (background_data->back_cr);
 
-  gdk_drawable_get_size (background_data->background_window->window, &width, &height);
+  gdk_drawable_get_size (gtk_widget_get_window (background_data->background_window), &width, &height);
 
   /* Instantiate a transparent pixmap to be used as mask. */
   background_data->background_shape = gdk_pixmap_new ((GdkDrawable *) NULL, width, height, 1);
@@ -226,7 +226,7 @@ void clear_background_window ()
 
   /* This allows the mouse event to be passed to the window below. */
 #ifndef _WIN32
-  gdk_window_input_shape_combine_mask (background_data->background_window->window,
+  gdk_window_input_shape_combine_mask (gtk_widget_get_window (background_data->background_window),
 				       background_data->background_shape,
 				       0,
 				       0);

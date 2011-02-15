@@ -178,7 +178,7 @@ update_cursor ()
   annotate_release_pointer_grab ();
 #endif
 
-  gdk_window_set_cursor (data->annotation_window->window, data->cursor);
+  gdk_window_set_cursor (gtk_widget_get_window (data->annotation_window), data->cursor);
 
 #ifdef _WIN32
   annotate_acquire_pointer_grab ();
@@ -269,6 +269,7 @@ get_eraser_pixmaps (gdouble size,
   *mask =  gdk_pixmap_new ((GdkDrawable *) NULL, (gint) size, (gint) size, 1);
 
   eraser_cr = gdk_cairo_create (*pixmap);
+
   if (cairo_status (eraser_cr) != CAIRO_STATUS_SUCCESS)
     {
       g_printerr ("Failed to allocate the eraser cursor cairo context");
@@ -827,7 +828,7 @@ setup_app (GtkWidget* parent)
   gtk_widget_set_double_buffered (data->annotation_window, FALSE);
   /* @TODO Use RGBA colormap and avoid to use the layered window. */
   /* I use a layered window that use the black as transparent colour. */
-  setLayeredGdkWindowAttributes (data->annotation_window->window,
+  setLayeredGdkWindowAttributes (gtk_widget_get_window(data->annotation_window),
 				 RGB (0,0,0),
 				 0,
 				 LWA_COLORKEY );	
@@ -1311,7 +1312,7 @@ annotate_unhide_cursor ()
 void
 annotate_hide_cursor ()
 {
-  gdk_window_set_cursor (data->annotation_window->window, data->invisible_cursor);
+  gdk_window_set_cursor (gtk_widget_get_window (data->annotation_window), data->invisible_cursor);
   data->is_cursor_hidden = TRUE;
 }
 
@@ -1513,7 +1514,7 @@ annotate_quit ()
 void
 annotate_release_input_grab ()
 {
-  gdk_window_set_cursor (data->annotation_window->window, (GdkCursor *) NULL);
+  gdk_window_set_cursor (gtk_widget_get_window (data->annotation_window), (GdkCursor *) NULL);
 #ifndef _WIN32
   /*
    * @TODO implement correctly gdk_window_input_shape_combine_mask
@@ -1524,7 +1525,7 @@ annotate_release_input_grab ()
    * This allows the mouse event to be passed below the transparent annotation;
    * at the moment this call works only on Linux
    */
-  gdk_window_input_shape_combine_mask (data->annotation_window->window, data->shape, 0, 0);
+  gdk_window_input_shape_combine_mask (gtk_widget_get_window (data->annotation_window), data->shape, 0, 0);
 #else
   /*
    * @TODO WIN32 implement correctly gdk_window_input_shape_combine_mask

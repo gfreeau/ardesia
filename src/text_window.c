@@ -94,7 +94,7 @@ static gboolean blink_cursor (gpointer data)
 {
   if ((text_data->window) && (text_data->pos))
     {
-      cairo_t *cr = gdk_cairo_create (text_data->window->window);
+      cairo_t *cr = gdk_cairo_create (gtk_widget_get_window  (text_data->window));
       gint height = text_data->max_font_height;
 
       cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
@@ -224,7 +224,7 @@ set_text_cursor (GtkWidget *window)
 						  TEXT_CURSOR_WIDTH,
 						  height-decoration_height);
 
-  gdk_window_set_cursor (text_data->window->window, cursor);
+  gdk_window_set_cursor (gtk_widget_get_window  (text_data->window), cursor);
   gdk_flush ();
   gdk_cursor_unref (cursor);
 
@@ -254,7 +254,7 @@ init_text_widget (GtkWidget *widget)
       set_text_cursor (widget);
     }
 
-  drill_window_in_bar_area (text_data->window->window);
+  drill_window_in_bar_area (gtk_widget_get_window  (text_data->window));
 
 #ifdef _WIN32
   grab_pointer (text_data->window, TEXT_MOUSE_EVENTS);
@@ -469,7 +469,7 @@ on_window_text_button_release (GtkWidget *win,
       gtk_window_present (GTK_WINDOW (get_bar_window ()));
 
       gtk_window_present (GTK_WINDOW (text_data->window));
-      gdk_window_raise (text_data->window->window);
+      gdk_window_raise (gtk_widget_get_window  (text_data->window));
 
       text_data->timer = g_timeout_add (1000, blink_cursor, NULL);
     }
@@ -533,7 +533,7 @@ void start_text_widget (GtkWindow *parent, gchar* color, gint tickness)
    */
   gtk_widget_set_double_buffered (text_data->window, FALSE); 
   /* I use a layered window that use the black as transparent color. */
-  setLayeredGdkWindowAttributes (text_data->window->window, RGB (0,0,0), 0, LWA_COLORKEY);	
+  setLayeredGdkWindowAttributes (gtk_widget_get_window  (text_data->window), RGB (0,0,0), 0, LWA_COLORKEY);	
 #endif
 }
 

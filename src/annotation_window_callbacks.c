@@ -57,7 +57,7 @@ event_expose (GtkWidget *widget,
 {
   AnnotateData *data = (AnnotateData *) func_data;
 
-  gint is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
+  gint is_fullscreen = gdk_window_get_state (gtk_widget_get_window (widget)) & GDK_WINDOW_STATE_FULLSCREEN;
 
   if (!is_fullscreen)
     {
@@ -74,7 +74,7 @@ event_expose (GtkWidget *widget,
       /* Initialize a transparent window. */
 #ifdef _WIN32
       /* The hdc has depth 32 and the technology is DT_RASDISPLAY. */
-      HDC hdc = GetDC (GDK_WINDOW_HWND (data->annotation_window->window));
+      HDC hdc = GetDC (GDK_WINDOW_HWND (gtk_widget_get_window (data->annotation_window)));
       /* 
        * @TODO Use an HDC that support the ARGB32 format to support the alpha channel;
        * this might fix the highlighter bug.
@@ -85,7 +85,7 @@ event_expose (GtkWidget *widget,
 
       data->annotation_cairo_context = cairo_create (surface);
 #else
-      data->annotation_cairo_context = gdk_cairo_create (data->annotation_window->window);
+      data->annotation_cairo_context = gdk_cairo_create (gtk_widget_get_window (data->annotation_window));
 #endif
 
       if (cairo_status (data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
@@ -377,7 +377,7 @@ paintend (GtkWidget *win,
 
 /* Device touch. */
 G_MODULE_EXPORT gboolean
-proximity_in (GtkWidget *win,
+proximity_in (GtkWidget *widget,
 	      GdkEventProximity *ev,
 	      gpointer func_data)
 {
@@ -397,7 +397,7 @@ proximity_in (GtkWidget *win,
       GdkModifierType state = (GdkModifierType) NULL;
 
       /* Get the modifier state. */
-      gdk_window_get_pointer (win->window, (gint *) NULL, (gint *) NULL, &state);
+      gdk_window_get_pointer (gtk_widget_get_window (widget), (gint *) NULL, (gint *) NULL, &state);
       annotate_select_tool (data, ev->device, state);
       data->old_paint_type = ANNOTATE_PEN; 
     }

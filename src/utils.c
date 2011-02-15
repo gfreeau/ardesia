@@ -120,12 +120,12 @@ free_artifacts ()
 	
 /* Grab pointer. */
 void
-grab_pointer (GtkWidget *win,
+grab_pointer (GtkWidget *widget,
 	      GdkEventMask eventmask)
 {
   GdkGrabStatus result;
   gdk_error_trap_push ();
-  result = gdk_pointer_grab (win->window,
+  result = gdk_pointer_grab (gtk_widget_get_window (widget),
 			     FALSE,
 			     eventmask, 0,
 			     NULL,

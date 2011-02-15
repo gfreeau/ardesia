@@ -55,7 +55,7 @@ bar_to_top (gpointer data)
 {
   gtk_window_present (GTK_WINDOW (data));
   gtk_widget_grab_focus (data);
-  gdk_window_lower (GTK_WIDGET (data)->window);
+  gdk_window_lower (gtk_widget_get_window(GTK_WIDGET(data)));
   return TRUE;
 }
 
