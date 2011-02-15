@@ -9,7 +9,6 @@
 ==========================================================================
 
 - Management
-  - Write the man page
   - Make a video tutorial
   - Make a pdf user manual
 
@@ -18,7 +17,7 @@
   
 - Reengineering
   - Store and load the savepoints using svg files
-  - Use a layered canvas instead a set of windows
+  - Use a layered canvas instead a windows set
   - Text insertion consolidation
   - Create the iwb without spawn the zip/unzip process
   - Screencast recorder using lib instead spawn processes
