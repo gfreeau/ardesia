@@ -43,13 +43,13 @@ setLayeredGdkWindowAttributes (GdkWindow* gdk_window,
 			       DWORD dw_flags)
 {
   HWND hwnd = GDK_WINDOW_HWND (gdk_window);
-  h_instance h_instance = LoadLibraryA ("user32");		
+  HINSTANCE h_instance = LoadLibraryA ("user32");		
 
   setLayeredWindowAttributesProc = (BOOL (WINAPI*) (HWND hwnd,
 						    COLORREF cr_key,
 						    BYTE b_alpha,
 						    DWORD dw_flags))
-    GetProcAddress (h_instance,"SetLayeredWindowAttributes");
+    GetProcAddress (h_instance, "SetLayeredWindowAttributes");
 
   setLayeredWindowAttributesProc (hwnd, cr_key, b_alpha, dw_flags);
 }
@@ -152,7 +152,7 @@ windows_send_email (gchar *to,
 		    gchar *body,
 		    GSList *attachment_list)
 {
-  h_instance inst;
+  HINSTANCE inst;
   LPMAPISENDMAIL MAPISendMail;
 
   inst = LoadLibrary ("MAPI32.DLL");
