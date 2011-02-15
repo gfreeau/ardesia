@@ -353,15 +353,12 @@ main (int argc,
   //create_segmentation_fault ();
 
   commandline = parse_options (argc, argv);
-
-  gtk_init (&argc, &argv);
-	
-  set_the_best_colormap ();
 	
   if (commandline->iwb_filename)
     {
       gint init_pos = -1;
       gint end_pos = -1;
+
 
       if (g_path_is_absolute (commandline->iwb_filename))
 	{
@@ -373,6 +370,12 @@ main (int argc,
 	  iwb_filename = g_build_filename (dir, commandline->iwb_filename, (gchar *) 0);
 	  free (dir);
 	}
+
+      if (!file_exists(iwb_filename))
+        {
+          g_error("No such file %s\n", iwb_filename);          
+          exit (EXIT_FAILURE);          
+        }
 
       init_pos = g_substrlastpos (iwb_filename, G_DIR_SEPARATOR_S);
       end_pos  = g_substrlastpos (iwb_filename, ".");
@@ -393,6 +396,10 @@ main (int argc,
   set_project_name (project_name);
   set_project_dir (project_dir);
   set_iwb_filename (iwb_filename);
+
+  gtk_init (&argc, &argv);
+	
+  set_the_best_colormap ();
 
   background_window = create_background_window ();
 
