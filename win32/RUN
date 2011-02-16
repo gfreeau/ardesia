@@ -10,14 +10,16 @@ and the spotlighter tool.
 
 At the end of the session an iwb file will be created
 in the ardesia workspace located under the Documents
-folder. You can reopen the iwb file with ardesia clicking
+folder; a shortcurt will be created on the desktop.
+You can reopen the iwb file with ardesia clicking
 on it or right clicking and select the "Open with Ardesia"
 option.
 
 In order to use the screencast on windows:
 - install vlc from http://www.videolan.org/vlc
-- add the folder with the vlc.exe executable
-  to the PATH environment
+  in the standar folder or install in an other location
+  and add the vlc installation folder that contains 
+  the vlc.exe executable to the PATH environment variable
 
 ----------------
  Known Bugs
