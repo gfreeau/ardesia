@@ -32,7 +32,7 @@
   defined in the header are missing on all non-glibc platforms.
 */
 #include <execinfo.h>
-
+#include <unistd.h>
 
 /* Register the back-trace handler in system with glibc. */
 void

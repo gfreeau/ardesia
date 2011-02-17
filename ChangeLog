@@ -1,4 +1,75 @@
+2011-02-13 12:28  alpha@paranoici.org
+	* trunk/ardesia/TODO,
+        * trunk/ardesia/data/pixmaps/ardesia.png,
+	* trunk/ardesia/data/background_window.glade:
+        - Add the ardesia icon to the background window 
+          in order to show the ardesia icon in the desktop environment
+          panel tab
+        - New icons
 
+
+2011-02-03 16:58  alpha@paranoici.org
+	* trunk/ardesia/src/annotation_window.c,
+	* trunk/ardesia/src/annotation_window_callbacks.c,
+	* trunk/ardesia/src/background_window.c,
+        * trunk/ardesia/src/ardesia.c,
+	* trunk/ardesia/src/background_window.c,
+        * trunk/ardesia/src/bar.c,
+	* trunk/ardesia/src/glibc_backtrace.c,
+	* trunk/ardesia/src/windows_backtrace.c
+        * trunk/ardesia/src/iwb_loader.c,
+        * trunk/ardesia/src/iwb_saver.c::
+        - Reduce initial window flickering
+        - Use EXIT_SUCCESS and EXIT_FAILURE macros for the
+	  exit() status to encrease portability
+	- Fix the opening of the iwb in the current directory or
+          with relative path
+        - Use of g_build_filename function to create filename 
+          instead of make the filename with printf
+
+
+2011-02-02 01:01  alpha@paranoici.org
+	* trunk/ardesia/TODO,
+        * trunk/ardesia/data/Makefile.am
+        * trunk/ardesia/win32/ardesia.iss.in,
+	* trunk/ardesia/win32/ardesia_open.bat,
+	* trunk/ardesia/win32/build_installer.in,
+	* trunk/ardesia/win32/iwb.ico: 
+        - Associated iwb.ico to iwb file in windows
+        - Fix open with featrure on Windows using a batch script that run ardesia
+	  from the installed "bin" folder; now clicking on a iwb will be open
+	  ardesia with the project info 
+        - Add the iwb mime type association with the iwb icon in the autotools 
+          install target for linux
+
+2011-02-02 12:55  alpha@paranoici.org
+
+	* trunk/ardesia/data/pixmaps/application-x-iwb.png,
+	  trunk/ardesia/debian/changelog, trunk/ardesia/debian/postinst:
+	  Add icon association for mime x-iwb files in the debian
+	  postinstall script REGARDS: This might be done in the autotools
+	  install target also
+
+2011-02-01 23:29  alpha@paranoici.org
+	* trunk/ardesia/src/windows_backtrace.c,
+	* trunk/ardesia/win32/ardesia.iss.in,
+	* trunk/ardesia/win32/build_installer.in:
+        - add in the inno setup the Info'zip and unzip
+	  command; this is needed to handle the iwb file
+        - add to environment PATH the ardesia binary folder with
+          the inno setup registry (if it is not already in the path)
+        - add with inno setup some registry key to associate a file to a command
+
+
+2011-02-01 17:57  alpha@paranoici.org
+	* trunk/ardesia/TODO,
+        * trunk/ardesia/src/annotation_window.c,
+	* trunk/ardesia/src/annotation_window.h,
+	* trunk/ardesia/src/annotation_window_callbacks.c,
+	* trunk/ardesia/src/iwb_loader.c: 
+        - Purge the code for the savepoint caching in memory;
+          seems that the system is reactive without a caching system and
+          this might enanche using svg instead png as savepoint image
 
 2011-02-01 17:05 alpha@paranoici.org
 	* /trunk/ardesia/INSTALL,
