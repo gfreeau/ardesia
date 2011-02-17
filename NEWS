@@ -14,19 +14,21 @@ Packaging
 Usability
 - The default folder where store the created files
   called ardesia workspace now is located under the document folder
-- Created a shortcurt on desktop that links to the ardesia workspace
+- Created a shortcut on desktop that links to the ardesia workspace
 - Now to save an image you must push on the the camera photo icon
 
 Features
 - Now you can open, save and reuse projects thanks to the
-  Interactive Whiteboard Common File Format (iwbcff); the artefact
-  will be saved under the ardesia workspace at the end of the session
+  Interactive Whiteboard Common File Format (iwbcff);
+  the artefacts will be saved under the ardesia workspace at the end 
+  of the session
 - At the end of the program you will be invited to send by email the
   artefacts created in session (iwb file, png screenshots and pdf)
 - The virtual keyboard is shown each time that is focused an editable item;
   this feature works only in Linux with the gnome environment and
-  in Windows 7 if you have installed the "Tablet PC Input Panel"
+  in Windows 7 if you have the "Tablet PC Input Panel"
 - New crash report dialog
+- Improments in the shape recognizer
 
 Bug Fix:
 - Fix in the filler a strange behaviour when you try to fill a not
