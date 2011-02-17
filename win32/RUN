@@ -3,23 +3,38 @@
 -------
 
 This document explains howto run Ardesia on windows.
-Simply click on the ardesia under the menu.
 
-In the same position you can execute curtain
-and the spotlighter tool.
+The windows version are supported:
+- Windows 7 Ultimate, Enterprise, Professional and Home Premium
+- Windows Vista Business, Enterprise, Ultimate and Home Premium Editions 
+
+If you have one of this versions click on the ardesia icon under the menu.
+
+In the same position you can found curtain and the spotlighter tool.
 
 At the end of the session an iwb file will be created
 in the ardesia workspace located under the Documents
-folder; a shortcurt will be created on the desktop.
+folder; a shortcut pointing to the Ardesia Documents folder
+will be created on the desktop.
 You can reopen the iwb file with ardesia clicking
 on it or right clicking and select the "Open with Ardesia"
 option.
 
 In order to use the screencast on windows:
 - install vlc from http://www.videolan.org/vlc
-  in the standar folder or install in an other location
-  and add the vlc installation folder that contains 
-  the vlc.exe executable to the PATH environment variable
+  in the standar folder.
+  If you have already install it in an other location
+  you need to add to the environment variable PATH
+  (http://support.microsoft.com/default.aspx?scid=kb;en-us;310519)
+  the vlc installation folder that contains the vlc.exe executable.
+ 
+
+----------------
+ Uninstall
+----------------  
+
+You can uninstall Ardesia in the standard way:
+http://windows.microsoft.com/en-US/windows7/Uninstall-or-change-a-program
 
 ----------------
  Known Bugs

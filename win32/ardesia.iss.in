@@ -8,7 +8,7 @@
 AppId={{A4411884-989D-413D-9587-9966A6C559A5}
 AppName=Ardesia
 AppVersion=@VERSION@
-AppPublisher=Practix,  Srl.
+AppPublisher=The Ardesia Team
 AppPublisherURL=http://code.google.com/p/ardesia/
 AppSupportURL=http://code.google.com/p/ardesia/
 AppUpdatesURL=http://code.google.com/p/ardesia/
@@ -24,6 +24,7 @@ OutputBaseFilename=ardesia_@VERSION@-setup-1
 SetupIconFile=ardesia_@VERSION@-windows-1_i386\share\ardesia\ui\pixmaps\ardesia.ico
 Compression=lzma
 SolidCompression=yes
+UninstallDisplayIcon={app}\share\ardesia\ui\pixmaps\ardesia.ico
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
