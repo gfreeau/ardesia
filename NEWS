@@ -28,7 +28,7 @@ Features
   this feature works only in Linux with the gnome environment and
   in Windows 7 if you have the "Tablet PC Input Panel"
 - New crash report dialog
-- Improments in the shape recognizer
+- Improvements in the shape recognizer
 
 Bug Fix:
 - Fix in the filler a strange behaviour when you try to fill a not

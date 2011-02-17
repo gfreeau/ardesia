@@ -74,10 +74,9 @@ Please read the INSTALL file located on the current folder.
   In order to run Ardesia on Linux you need to run a composite manager such as
   compiz, kwin or xcompmgr.
 
-  If you are a Windows "user" I remember you that only Windows Vista and
-  Windows 7 are supported.
-  Windows Xp and previous versions are not compliant because they have not
-  a composite manager.
+  If you are a Windows "user" I remember you that only these flavours are supported:
+  - Windows 7 Ultimate, Enterprise, Professional and Home Premium
+  - Windows Vista Business, Enterprise, Ultimate and Home Premium Editions 
 
 
 - VLC
