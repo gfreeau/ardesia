@@ -56,6 +56,7 @@ start_project_dialog (GtkWindow *parent)
   project_dialog = GTK_WIDGET (project_obj);
   gtk_window_set_transient_for (GTK_WINDOW (project_dialog), parent);
   gtk_window_set_modal (GTK_WINDOW (project_dialog), TRUE);
+  gtk_window_set_keep_above (GTK_WINDOW (project_dialog), TRUE);
 
 #ifdef _WIN32
   /* 
