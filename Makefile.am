@@ -1,14 +1,18 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = src po data docs 
+SUBDIRS = \
+	data   \
+	docs   \
+	po     \
+	src 
 
 ardesiadocdir = ${prefix}/doc/ardesia
 ardesiadoc_DATA = \
-	README\
-	COPYING\
-	AUTHORS\
-	ChangeLog\
-	INSTALL\
+	README    \
+	COPYING   \
+	AUTHORS   \
+	ChangeLog \
+	INSTALL   \
 	NEWS
 
 autogen_FILE = autogen.sh
@@ -16,15 +20,19 @@ autogen_FILE = autogen.sh
 @INTLTOOL_DESKTOP_RULE@
 
 INTLTOOL_FILES = intltool-extract.in \
-	intltool-merge.in \
+	intltool-merge.in            \
 	intltool-update.in
 
 EXTRA_DIST = $(ardesiadoc_DATA) \
-	$(INTLTOOL_FILES) $(autogen_FILE) data docs 
+	$(INTLTOOL_FILES)       \
+	$(autogen_FILE)         \
+	data                    \
+        docs                    \
+	win32 
 
 DISTCLEANFILES = intltool-extract \
-	intltool-merge \
-	intltool-update \
+	intltool-merge            \
+	intltool-update           \
 	po/.intltool-merge-cache
 
 
@@ -46,8 +54,8 @@ update-po:
 	(cd po; $(MAKE) update-po)
 
 clean:
-	@for i in $(SUBDIRS); do \
-        echo "Clearing in $$i..."; \
+	@for i in $(SUBDIRS); do       \
+        echo "Clearing in $$i...";     \
         (cd $$i; $(MAKE) clean); done
 	rm -fr debian/tmp
 	rm -fr debian/files

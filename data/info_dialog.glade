@@ -9,7 +9,7 @@
     <property name="program_name">Ardesia</property>
     <property name="copyright" translatable="yes">   Copyright (C) 2009 Pilolli Pietro &lt;pilolli@fbk.eu&gt;
     </property>
-    <property name="website">http://code.google.com/p/ardesia/</property>
+    <property name="website">http://ardesia.googlecode.com</property>
     <property name="license" translatable="yes">
     Ardesia -- a program for painting on the screen
     with this program you can play, draw, learn and teach
