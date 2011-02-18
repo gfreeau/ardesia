@@ -1,20 +1,26 @@
 ## Process this file with automake to produce Makefile.in
 
-EXTRA_DIST = scripts pixmaps backgrounds $(ui_DATA)
+EXTRA_DIST = \
+	ardesia.desktop.in                \
+	scripts                           \
+	pixmaps                           \
+	backgrounds                       \
+	$(ui_DATA)
 
 uidir = $(datadir)/ardesia/ui
 scriptsdir = $(datadir)/ardesia/scripts
 uipixmapsdir = $(uidir)/pixmaps
 uibackgroundsdir = $(uidir)/backgrounds
-ui_DATA = vertical_bar.glade \
-	  horizontal_bar.glade \
-	  preference_dialog.glade \
-	  project_dialog.glade \
-	  crash_dialog.glade \
-	  annotation_window.glade \
-	  background_window.glade \
+
+ui_DATA = vertical_bar.glade              \
+	  horizontal_bar.glade            \
+	  preference_dialog.glade         \
+	  project_dialog.glade            \
+	  crash_dialog.glade              \
+	  annotation_window.glade         \
+	  background_window.glade         \
 	  share_confirmation_dialog.glade \
-	  text_window.glade \
+	  text_window.glade               \
 	  info_dialog.glade
 
 desktopdir = $(datadir)/applications

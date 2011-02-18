@@ -26,8 +26,6 @@ INTLTOOL_FILES = intltool-extract.in \
 EXTRA_DIST = $(ardesiadoc_DATA) \
 	$(INTLTOOL_FILES)       \
 	$(autogen_FILE)         \
-	data                    \
-        docs                    \
 	win32 
 
 DISTCLEANFILES = intltool-extract \
