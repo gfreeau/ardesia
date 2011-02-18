@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-08 11:41+0100\n"
+"POT-Creation-Date: 2011-02-18 17:25+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli@fbk.eu>\n"
 "Language-Team: Ardesia Team <pilolli@fbk.eu>\n"
@@ -14,11 +14,11 @@ msgstr ""
 "X-Poedit-Country: SPAIN\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../data/crash_dialog.glade.h:1
+#: ../desktop/crash_dialog.glade.h:1
 msgid "An error is occurred. Do you want send the crash report?"
 msgstr "Un error se produjo. Desea enviar el informe de accidente?"
 
-#: ../data/info_dialog.glade.h:1
+#: ../desktop/info_dialog.glade.h:1
 msgid ""
 "\n"
 "    Ardesia -- a program for painting on the screen\n"
@@ -68,7 +68,7 @@ msgstr ""
 "USA.\n"
 "   "
 
-#: ../data/info_dialog.glade.h:23
+#: ../desktop/info_dialog.glade.h:23
 msgid ""
 "   Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
 "    "
@@ -76,133 +76,136 @@ msgstr ""
 "   Copyright (C) 2009 Pilolli Pietro <pilolli@fbk.eu>\n"
 "    "
 
-#: ../data/preference_dialog.glade.h:1
+#: ../desktop/preference_dialog.glade.h:1
 msgid "Choose the background"
 msgstr "Elegir de fondo"
 
-#: ../data/preference_dialog.glade.h:2
+#: ../desktop/preference_dialog.glade.h:2
 msgid "Choose the background color"
 msgstr "Elegir color de fondo"
 
-#: ../data/preference_dialog.glade.h:3
+#: ../desktop/preference_dialog.glade.h:3
 msgid "background color"
 msgstr "color de fondo"
 
-#: ../data/preference_dialog.glade.h:4
+#: ../desktop/preference_dialog.glade.h:4
 msgid "image"
 msgstr "immagine"
 
-#: ../data/preference_dialog.glade.h:5
+#: ../desktop/preference_dialog.glade.h:5
 msgid "none"
 msgstr "ninguna"
 
-#: ../data/project_dialog.glade.h:1
+#: ../desktop/project_dialog.glade.h:1
 msgid "Choose a project name"
 msgstr "Elegir el nombre del proyecto"
 
-#: ../data/share_confirmation_dialog.glade.h:1
+#: ../desktop/share_confirmation_dialog.glade.h:1
 msgid "Do you want to share your work by email?"
 msgstr "Quieres compartir tu trabajo por correo electronico?"
 
-#: ../data/vertical_bar.glade.h:1
+#: ../desktop/vertical_bar.glade.h:1
 msgid "Add to pdf"
 msgstr "Anadir a pdf"
 
-#: ../data/vertical_bar.glade.h:2
+#: ../desktop/vertical_bar.glade.h:2
 msgid "Arrow"
 msgstr "Flecha"
 
-#: ../data/vertical_bar.glade.h:3
+#: ../desktop/vertical_bar.glade.h:3
 msgid "Blue"
 msgstr "Azul"
 
-#: ../data/vertical_bar.glade.h:4
+#: ../desktop/vertical_bar.glade.h:4
 msgid "Clear"
 msgstr "Limpio"
 
-#: ../data/vertical_bar.glade.h:5
+#: ../desktop/vertical_bar.glade.h:5
 msgid "Color Chooser"
 msgstr "Elegir un color"
 
-#: ../data/vertical_bar.glade.h:6
+#: ../desktop/vertical_bar.glade.h:6
 msgid "Drawing Mode"
 msgstr "Modo del dibujo"
 
-#: ../data/vertical_bar.glade.h:7
+#: ../desktop/vertical_bar.glade.h:7
 msgid "Eraser"
 msgstr "Goma de borrar"
 
-#: ../data/vertical_bar.glade.h:8
+#: ../desktop/vertical_bar.glade.h:8
 msgid "Filler"
 msgstr "Relleno"
 
-#: ../data/vertical_bar.glade.h:9
+#: ../desktop/vertical_bar.glade.h:9
 msgid "Green"
 msgstr "Verde"
 
-#: ../data/vertical_bar.glade.h:10
+#: ../desktop/vertical_bar.glade.h:10
 msgid "Highlighter"
 msgstr "Resaltador"
 
-#: ../data/vertical_bar.glade.h:11
+#: ../desktop/vertical_bar.glade.h:11
 msgid "Info"
 msgstr "Info"
 
-#: ../data/vertical_bar.glade.h:12
+#: ../desktop/vertical_bar.glade.h:12
 msgid "Insert Text"
 msgstr "Insertar tesxto"
 
-#: ../data/vertical_bar.glade.h:13
+#: ../desktop/vertical_bar.glade.h:13
+msgid "Mouse"
+msgstr "Raton"
+
+#: ../desktop/vertical_bar.glade.h:14
 msgid "Pencil"
 msgstr "Lapiz"
 
-#: ../data/vertical_bar.glade.h:14
+#: ../desktop/vertical_bar.glade.h:15
 msgid "Preferences"
 msgstr "Preferencias"
 
-#: ../data/vertical_bar.glade.h:15
+#: ../desktop/vertical_bar.glade.h:16
 msgid "Quit"
 msgstr "Cerrar"
 
-#: ../data/vertical_bar.glade.h:16
+#: ../desktop/vertical_bar.glade.h:17
 msgid "Record"
 msgstr "Grabar"
 
-#: ../data/vertical_bar.glade.h:17
+#: ../desktop/vertical_bar.glade.h:18
 msgid "Red"
 msgstr "Rojo"
 
-#: ../data/vertical_bar.glade.h:18
+#: ../desktop/vertical_bar.glade.h:19
 msgid "Redo"
 msgstr "Rehacer"
 
-#: ../data/vertical_bar.glade.h:19
+#: ../desktop/vertical_bar.glade.h:20
 msgid "Screenshot"
 msgstr "Captura de pantalla"
 
-#: ../data/vertical_bar.glade.h:20
+#: ../desktop/vertical_bar.glade.h:21
 msgid "Thickness"
 msgstr "Espesor"
 
-#: ../data/vertical_bar.glade.h:21
+#: ../desktop/vertical_bar.glade.h:22
 msgid "Undo"
 msgstr "Deshacer"
 
-#: ../data/vertical_bar.glade.h:22
-msgid "Unlock"
-msgstr "Desbloquear"
-
-#: ../data/vertical_bar.glade.h:23
+#: ../desktop/vertical_bar.glade.h:23
 msgid "White"
 msgstr "Blanco"
 
-#: ../data/vertical_bar.glade.h:24
+#: ../desktop/vertical_bar.glade.h:24
 msgid "Yellow"
 msgstr "Amarillo"
 
-#: ../data/vertical_bar.glade.h:25
+#: ../desktop/vertical_bar.glade.h:25
 msgid "info"
 msgstr "informacion"
+
+#~ msgid "Unlock"
+#~ msgstr "Desbloquear"
 
 #~ msgid "Save"
 #~ msgstr "Guardar"

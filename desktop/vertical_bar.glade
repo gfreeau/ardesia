@@ -168,7 +168,7 @@
               <object class="GtkRadioToolButton" id="buttonPointer">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Pointer</property>
+                <property name="tooltip_text" translatable="yes">Mouse</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">pointer</property>
                 <property name="group">buttonPencil</property>

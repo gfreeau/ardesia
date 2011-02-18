@@ -3,15 +3,15 @@
 
 [encoding: UTF-8]
 
-data/annotation_window.glade
-data/background_window.glade
-data/crash_dialog.glade
-data/info_dialog.glade
-data/preference_dialog.glade
-data/project_dialog.glade
-data/share_confirmation_dialog.glade
-data/text_window.glade
-data/vertical_bar.glade
+desktop/annotation_window.glade
+desktop/background_window.glade
+desktop/crash_dialog.glade
+desktop/info_dialog.glade
+desktop/preference_dialog.glade
+desktop/project_dialog.glade
+desktop/share_confirmation_dialog.glade
+desktop/text_window.glade
+desktop/vertical_bar.glade
                                                     
 src/utils.c
 src/windows_backtrace.c

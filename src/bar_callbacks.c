@@ -118,6 +118,8 @@ take_pen_tool ()
 
 }
 
+
+/* Release to lock the mouse */
 static void
 release_lock(BarData *bar_data)
 {
