@@ -4,6 +4,7 @@
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
     <property name="height_request">670</property>
+    <property name="width_request">38</property>
     <property name="events">GDK_LEAVE_NOTIFY_MASK</property>
     <property name="title">Ardesia</property>
     <property name="resizable">False</property>
@@ -72,10 +73,49 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolItem" id="modeSeparatorItem">
+              <object class="GtkToolItem" id="undoItem">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkHSeparator" id="modeSeparator">
+                  <object class="GtkHSeparator" id="undoSeparator">
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="buttonUndo">
+                <property name="height_request">27</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Undo</property>
+                <property name="stock_id">gtk-undo</property>
+                <signal name="clicked" handler="on_bar_undo_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="buttonRedo">
+                <property name="height_request">27</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Redo</property>
+                <property name="stock_id">gtk-redo</property>
+                <signal name="clicked" handler="on_bar_redo_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolItem" id="otherSeparatorItem">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkHSeparator" id="otherSeparator">
                     <property name="visible">True</property>
                   </object>
                 </child>
@@ -92,6 +132,19 @@
                 <property name="use_underline">True</property>
                 <property name="label_widget">filler</property>
                 <signal name="clicked" handler="on_bar_filler_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="buttonClear">
+                <property name="height_request">27</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Clear</property>
+                <property name="stock_id">gtk-clear</property>
+                <signal name="clicked" handler="on_bar_clear_activate"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -306,71 +359,6 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkHSeparator" id="screenSeparator">
-                    <property name="visible">True</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="buttonClear">
-                <property name="height_request">27</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Clear</property>
-                <property name="stock_id">gtk-clear</property>
-                <signal name="clicked" handler="on_bar_clear_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolItem" id="undoItem">
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkHSeparator" id="undoSeparator">
-                    <property name="visible">True</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="buttonUndo">
-                <property name="height_request">27</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Undo</property>
-                <property name="stock_id">gtk-undo</property>
-                <signal name="clicked" handler="on_bar_undo_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="buttonRedo">
-                <property name="height_request">27</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Redo</property>
-                <property name="stock_id">gtk-redo</property>
-                <signal name="clicked" handler="on_bar_redo_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolItem" id="otherSeparatorItem">
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkHSeparator" id="otherSeparator">
                     <property name="visible">True</property>
                   </object>
                 </child>
