@@ -3,7 +3,7 @@
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">715</property>
+    <property name="width_request">700</property>
     <property name="events">GDK_LEAVE_NOTIFY_MASK</property>
     <property name="title">Ardesia</property>
     <property name="resizable">False</property>
@@ -108,6 +108,21 @@
               </object>
               <packing>
                 <property name="expand">False</property>
+              </packing>
+            </child>
+	        <child>
+              <object class="GtkRadioToolButton" id="buttonPointer">
+                <property name="width_request">27</property>
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Pointer</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">pointer</property>
+                <property name="group">buttonPencil</property>
+                <signal name="clicked" handler="on_bar_pointer_activate"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>
@@ -299,20 +314,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToggleToolButton" id="buttonUnlock">
-                <property name="height_request">27</property>
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Unlock</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">lock</property>
-                <signal name="clicked" handler="on_bar_unlock_activate"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkToolButton" id="buttonClear">
                 <property name="width_request">27</property>
                 <property name="visible">True</property>
@@ -499,6 +500,10 @@
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/filler.png</property>
   </object>
+  <object class="GtkImage" id="pointer">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/pointer.png</property>
+  </object>
   <object class="GtkImage" id="highlighter">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/highlighter.png</property>
@@ -538,14 +543,6 @@
   <object class="GtkImage" id="white">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/white.png</property>
-  </object>
-  <object class="GtkImage" id="unlock">
-    <property name="visible">True</property>
-    <property name="pixbuf">pixmaps/unlock.png</property>
-  </object>
-  <object class="GtkImage" id="lock">
-    <property name="visible">True</property>
-    <property name="pixbuf">pixmaps/lock.png</property>
   </object>
   <object class="GtkImage" id="screenshoot">
     <property name="visible">True</property>

@@ -118,16 +118,65 @@ take_pen_tool ()
 
 }
 
-
-/* Unlock the tool. */
 static void
-unlock (BarData *bar_data)
+release_lock(BarData *bar_data)
+{
+  if (bar_data->grab)
+    {
+      /* Lock enabled. */
+      bar_data->grab = FALSE;
+      annotate_release_grab ();
+
+#ifndef _WIN32
+      /* Try to up-rise the window. */
+      timer = g_timeout_add (BAR_TO_TOP_TIMEOUT, bar_to_top, get_background_window ());
+#else // WIN32
+
+      if (gtk_window_get_opacity (GTK_WINDOW (get_background_window ()))!=0)
+	{
+	  /* 
+	   * @HACK This allow the mouse input go below the window putting 
+           * the opacity to 0; when will be found a better way to make
+           * the window transparent to the the pointer input we might
+           * remove the previous hack.
+           * @TODO Transparent window to the pointer input in a better way. 
+	   */
+	  gtk_window_set_opacity (GTK_WINDOW (get_background_window ()), 0);
+	}
+#endif
+
+    }
+}
+
+
+/* Lock the mouse. */
+static void
+lock (BarData *bar_data)
 {
   if (!bar_data->grab)
     {
-      GObject *unlock_obj = gtk_builder_get_object (bar_gtk_builder, "buttonUnlock");
-      GtkToggleToolButton *eraser_tool_button = GTK_TOGGLE_TOOL_BUTTON (unlock_obj);
-      gtk_toggle_tool_button_set_active (eraser_tool_button, FALSE);
+      // Unlock
+      bar_data->grab = TRUE;
+#ifndef _WIN32
+
+      /* delete the old timer */
+      if (timer!=-1)
+        { 
+	  g_source_remove (timer);
+	  timer = -1;
+        }
+
+#else // WIN32
+
+      /* 
+       * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
+       * @TODO remove the opacity hack when will be solved the next todo. 
+       */
+      if (gtk_window_get_opacity (GTK_WINDOW (get_background_window ()))==0)
+	{
+	  gtk_window_set_opacity (GTK_WINDOW (get_background_window ()), BACKGROUND_OPACITY);
+	}
+#endif
     }
 }
 
@@ -138,7 +187,7 @@ set_color (BarData *bar_data,
 	   gchar *selected_color)
 {
   take_pen_tool ();
-  unlock (bar_data);
+  lock (bar_data);
   strncpy (bar_data->color, selected_color, 6);
   annotate_set_color (bar_data->color);
 }
@@ -156,7 +205,7 @@ static void set_options (BarData *bar_data)
   annotate_set_arrow (bar_data->arrow);
  
   if ( (bar_data->pencil)|| (bar_data->arrow))
-    {  
+    {
       annotate_set_color (bar_data->color);
       annotate_select_pen ();
     }
@@ -297,6 +346,16 @@ on_bar_filler_activate          (GtkToolButton   *toolbutton,
 }
 
 
+/* Push pointer button. */
+G_MODULE_EXPORT void
+on_bar_pointer_activate           (GtkToolButton   *toolbutton,
+				   gpointer         func_data)
+{
+  BarData *bar_data = (BarData *) func_data;
+  release_lock(bar_data);
+}
+
+
 /* Push arrow button. */
 G_MODULE_EXPORT void
 on_bar_arrow_activate           (GtkToolButton   *toolbutton,
@@ -317,7 +376,7 @@ on_bar_text_activate            (GtkToolButton   *toolbutton,
 				 gpointer         func_data)
 {
   BarData *bar_data = (BarData *) func_data;
-  unlock (bar_data);
+  lock (bar_data);
   bar_data->text = TRUE;
   bar_data->arrow = FALSE;
   bar_data->highlighter = FALSE;
@@ -330,7 +389,7 @@ on_bar_highlighter_activate     (GtkToolButton   *toolbutton,
 				 gpointer         func_data)
 {
   BarData *bar_data = (BarData *) func_data;
-  unlock (bar_data);
+  lock (bar_data);
   bar_data->text = FALSE;
   bar_data->pencil = TRUE;
   bar_data->arrow = FALSE;
@@ -414,7 +473,7 @@ on_bar_pencil_activate          (GtkToolButton   *toolbutton,
 				 gpointer         func_data)
 {
   BarData *bar_data = (BarData *) func_data;
-  unlock (bar_data);
+  lock (bar_data);
   bar_data->text = FALSE;
   bar_data->pencil = TRUE;
   bar_data->arrow = FALSE;
@@ -429,7 +488,7 @@ on_bar_eraser_activate          (GtkToolButton   *toolbutton,
 				 gpointer         func_data)
 {
   BarData *bar_data = (BarData *) func_data;
-  unlock (bar_data);
+  lock (bar_data);
   bar_data->text = FALSE;
   bar_data->pencil = FALSE;
   bar_data->arrow = FALSE;
@@ -525,74 +584,6 @@ on_bar_preferences_activate	(GtkToolButton   *toolbutton,
   start_preference_dialog (GTK_WINDOW (get_bar_window ()));
   bar_data->grab = grab_value;
   start_tool (bar_data);
-}
-
-
-/* Push lock/unlock button. */
-G_MODULE_EXPORT void
-on_bar_unlock_activate          (GtkToolButton   *toolbutton,
-				 gpointer         func_data)
-{
-  BarData *bar_data = (BarData *) func_data;
-
-  if (bar_data->grab == FALSE)
-    {
-      GObject *lock_obj = gtk_builder_get_object (bar_gtk_builder, "lock");
-      bar_data->grab = TRUE;
-#ifndef _WIN32
-
-      /* delete the old timer */
-      if (timer!=-1)
-        { 
-	  g_source_remove (timer); 
-	  timer = -1;
-        }
-
-#else // WIN32
-
-      /* 
-       * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
-       * @TODO remove the opacity hack when will be solved the next todo. 
-       */
-      if (gtk_window_get_opacity (GTK_WINDOW (get_background_window ()))==0)
-	{
-	  gtk_window_set_opacity (GTK_WINDOW (get_background_window ()), BACKGROUND_OPACITY);
-	}
-
-#endif	
-      gtk_tool_button_set_label_widget (toolbutton, GTK_WIDGET (lock_obj));
-      /* Set tool-tip to un-hide. */
-      gtk_tool_item_set_tooltip_text ( (GtkToolItem *) toolbutton, gettext ("Unlock"));
-    }
-  else
-    {
-      GObject *unlock_obj = gtk_builder_get_object (bar_gtk_builder, "unlock");
-      /* Grab enabled. */
-      bar_data->grab = FALSE;
-      annotate_release_grab ();
-#ifndef _WIN32
-      /* Try to up-rise the window. */
-      timer = g_timeout_add (BAR_TO_TOP_TIMEOUT, bar_to_top, get_background_window ());
-#else // WIN32
-
-      if (gtk_window_get_opacity (GTK_WINDOW (get_background_window ()))!=0)
-	{
-	  /* 
-	   * @HACK This allow the mouse input go below the window putting 
-           * the opacity to 0; when will be found a better way to make
-           * the window transparent to the the pointer input we might
-           * remove the previous hack.
-           * @TODO Transparent window to the pointer input in a better way. 
-	   */
-	  gtk_window_set_opacity (GTK_WINDOW (get_background_window ()), 0);
-	}
-
-#endif
-      gtk_tool_button_set_label_widget (toolbutton, GTK_WIDGET (unlock_obj));
-      /* set tool-tip to hide */
-      gtk_tool_item_set_tooltip_text ( (GtkToolItem *) toolbutton, gettext ("Lock"));
-    }  
-
 }
 
 
