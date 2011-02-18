@@ -16,8 +16,7 @@
   - Investigate about the status and make a plan
   
 - Reengineering
-  - Gui revision: add a mouse tool istead of 
-    lock/unlock, each tool will have a different
+  - Gui revision: each tool will have a different
     pointer icon
   - Store and load the savepoints using svg files
   - Use a layered canvas instead a windows set
