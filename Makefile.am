@@ -1,36 +1,36 @@
 ## Process this file with automake to produce Makefile.in
 
 SUBDIRS = \
-	data   \
-	docs   \
-	po     \
+	desktop                        \
+	docs                           \
+	po                             \
 	src 
 
 ardesiadocdir = ${prefix}/doc/ardesia
-ardesiadoc_DATA = \
-	README    \
-	COPYING   \
-	AUTHORS   \
-	ChangeLog \
-	INSTALL   \
+ardesiadoc_DATA =                      \
+	README                         \
+	COPYING                        \
+	AUTHORS                        \
+	ChangeLog                      \
+	INSTALL                        \
 	NEWS
 
 autogen_FILE = autogen.sh
 
 @INTLTOOL_DESKTOP_RULE@
 
-INTLTOOL_FILES = intltool-extract.in \
-	intltool-merge.in            \
+INTLTOOL_FILES = intltool-extract.in   \
+	intltool-merge.in              \
 	intltool-update.in
 
-EXTRA_DIST = $(ardesiadoc_DATA) \
-	$(INTLTOOL_FILES)       \
-	$(autogen_FILE)         \
+EXTRA_DIST = $(ardesiadoc_DATA)        \
+	$(INTLTOOL_FILES)              \
+	$(autogen_FILE)                \
 	win32 
 
-DISTCLEANFILES = intltool-extract \
-	intltool-merge            \
-	intltool-update           \
+DISTCLEANFILES = intltool-extract      \
+	intltool-merge                 \
+	intltool-update                \
 	po/.intltool-merge-cache
 
 
