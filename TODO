@@ -16,6 +16,9 @@
   - Investigate about the status and make a plan
   
 - Reengineering
+  - Gui revision: add a mouse tool istead of 
+    lock/unlock, each tool will have a different
+    pointer icon
   - Store and load the savepoints using svg files
   - Use a layered canvas instead a windows set
   - Text insertion consolidation
@@ -23,6 +26,7 @@
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
+  - background saving in iwb
   - Import images
   - Make an image gallery (sticky notes...)
   - Deploy the artefact online
