@@ -20,7 +20,7 @@ INTLTOOL_FILES = intltool-extract.in \
 	intltool-update.in
 
 EXTRA_DIST = $(ardesiadoc_DATA) \
-	$(INTLTOOL_FILES) $(autogen_FILE) 
+	$(INTLTOOL_FILES) $(autogen_FILE) data docs 
 
 DISTCLEANFILES = intltool-extract \
 	intltool-merge \
