@@ -1030,6 +1030,49 @@ annotate_add_savepoint ()
 }
 
 
+/* Initialize the annotation cairo context */
+void
+initialize_annotation_cairo_context(AnnotateData *data)
+{
+  if (data->annotation_cairo_context == NULL)
+    {
+      /* Initialize a transparent window. */
+#ifdef _WIN32
+      /* The hdc has depth 32 and the technology is DT_RASDISPLAY. */
+      HDC hdc = GetDC (GDK_WINDOW_HWND (gtk_widget_get_window (data->annotation_window)));
+      /* 
+       * @TODO Use an HDC that support the ARGB32 format to support the alpha channel;
+       * this might fix the highlighter bug.
+       * In the documentation is written that the now the resulting surface is in RGB24 format.
+       * 
+       */
+      cairo_surface_t *surface = cairo_win32_surface_create (hdc);
+
+      data->annotation_cairo_context = cairo_create (surface);
+#else
+      data->annotation_cairo_context = gdk_cairo_create (gtk_widget_get_window (data->annotation_window));
+#endif
+
+      if (cairo_status (data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
+        {
+          g_printerr ("Failed to allocate the annotation cairo context"); 
+          annotate_quit (); 
+          exit (EXIT_FAILURE);
+        }
+
+      annotate_acquire_grab ();
+
+      if (data->savepoint_list == NULL)
+        {
+	  annotate_clear_screen ();
+        }
+#ifndef _WIN32
+      gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1.0);
+#endif 		  
+    }
+}
+
+
 /* Draw the last save point on the window restoring the surface. */
 void
 annotate_restore_surface ()

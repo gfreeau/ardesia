@@ -167,6 +167,10 @@ typedef struct
 } AnnotateData;
 
 
+/* Initialize the annotation cairo context */
+void
+initialize_annotation_cairo_context(AnnotateData *data);
+
 /* Initialize the annotation window. */
 gint
 annotate_init (GtkWidget *parent,

@@ -69,42 +69,8 @@ event_expose (GtkWidget *widget,
       g_printerr ("Expose event\n");
     }
 
-  if (data->annotation_cairo_context == NULL)
-    {
-      /* Initialize a transparent window. */
-#ifdef _WIN32
-      /* The hdc has depth 32 and the technology is DT_RASDISPLAY. */
-      HDC hdc = GetDC (GDK_WINDOW_HWND (gtk_widget_get_window (data->annotation_window)));
-      /* 
-       * @TODO Use an HDC that support the ARGB32 format to support the alpha channel;
-       * this might fix the highlighter bug.
-       * In the documentation is written that the now the resulting surface is in RGB24 format.
-       * 
-       */
-      cairo_surface_t *surface = cairo_win32_surface_create (hdc);
+  initialize_annotation_cairo_context(data);
 
-      data->annotation_cairo_context = cairo_create (surface);
-#else
-      data->annotation_cairo_context = gdk_cairo_create (gtk_widget_get_window (data->annotation_window));
-#endif
-
-      if (cairo_status (data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
-        {
-          g_printerr ("Failed to allocate the annotation cairo context"); 
-          annotate_quit (); 
-          exit (EXIT_FAILURE);
-        }
-
-      annotate_acquire_grab ();
-
-      if (data->savepoint_list == NULL)
-        {
-	  annotate_clear_screen ();
-        }
-#ifndef _WIN32
-      gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1.0);
-#endif 		  
-    }
   /* Postcondition; data->annotation_cairo_context is not NULL. */
   annotate_restore_surface ();
   return TRUE;
@@ -125,6 +91,8 @@ paint (GtkWidget *win,
 
   AnnotateData *data = (AnnotateData *) func_data;
   gdouble pressure = 1.0; 
+
+  initialize_annotation_cairo_context(data);
 
   if (!ev)
     {
@@ -201,6 +169,8 @@ paintto (GtkWidget *win,
   GdkModifierType state = (GdkModifierType) ev->state;
   gdouble selected_width = 0.0;
   gdouble pressure = 1.0; 
+
+  initialize_annotation_cairo_context(data);
 
   if (!ev)
     {
@@ -290,6 +260,8 @@ paintend (GtkWidget *win,
 {
   AnnotateData *data = (AnnotateData *) func_data;
   guint lenght = g_slist_length (data->coord_list);
+
+  initialize_annotation_cairo_context(data);
 
   if (!ev)
     {
@@ -387,6 +359,8 @@ proximity_in (GtkWidget *widget,
    */
   AnnotateData *data = (AnnotateData *) func_data;
 
+  initialize_annotation_cairo_context(data);
+
   if (data->debug)
     {
       g_printerr ("Proximity in device %s\n", ev->device->name);
@@ -423,6 +397,8 @@ proximity_out (GtkWidget *win,
    */
   AnnotateData *data = (AnnotateData *) func_data;
 
+  initialize_annotation_cairo_context(data);
+
   if (data->debug)
     {
       g_printerr ("Proximity out device %s\n", ev->device->name);
@@ -433,7 +409,7 @@ proximity_out (GtkWidget *win,
       annotate_select_pen ();
     }
 
-  return FALSE;
+  return TRUE;
 }
 
 
