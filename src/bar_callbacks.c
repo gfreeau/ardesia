@@ -354,6 +354,10 @@ on_bar_pointer_activate           (GtkToolButton   *toolbutton,
 				   gpointer         func_data)
 {
   BarData *bar_data = (BarData *) func_data;
+  bar_data->text = FALSE;
+  bar_data->pencil = FALSE;
+  bar_data->arrow = FALSE;
+  bar_data->highlighter = FALSE;
   release_lock(bar_data);
 }
 

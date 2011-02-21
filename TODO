@@ -25,6 +25,7 @@
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
+  - add a 1 pixel thickness
   - background saving in iwb
   - Import images
   - Make an image gallery (sticky notes...)
