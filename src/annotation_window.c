@@ -785,6 +785,11 @@ setup_app (GtkWidget* parent)
   /* Create the annotation window. */
   data->annotation_window = create_annotation_window ();
 
+  /* In the gtk 2.16.6 the gtkbuilder property double-buffered is not parsed from the glade file
+   * and then I set this by hands.
+   */
+  gtk_widget_set_double_buffered (data->annotation_window, FALSE);
+
   /* Put the opacity to 0 to avoid the initial flickering. */
   gtk_window_set_opacity (GTK_WINDOW (data->annotation_window), 0.0);
 
@@ -821,11 +826,8 @@ setup_app (GtkWidget* parent)
   /* This put the window in fullscreen generating an exposure. */
   gtk_window_fullscreen (GTK_WINDOW (data->annotation_window));
 
+
 #ifdef _WIN32
-  /* In the gtk 2.16.6 the gtkbuilder property double-buffered is not parsed from the glade file
-   * and then I set this by hands.
-   */
-  gtk_widget_set_double_buffered (data->annotation_window, FALSE);
   /* @TODO Use RGBA colormap and avoid to use the layered window. */
   /* I use a layered window that use the black as transparent colour. */
   setLayeredGdkWindowAttributes (gtk_widget_get_window(data->annotation_window),

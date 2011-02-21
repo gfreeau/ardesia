@@ -515,6 +515,11 @@ void start_text_widget (GtkWindow *parent, gchar* color, gint tickness)
 
   create_text_window (parent);
 
+  /* In the gtk 2.16.6 the gtkbuilder property double-buffered is not parsed
+   * from the glade file and then I set this by hands. 
+   */
+  gtk_widget_set_double_buffered (text_data->window, FALSE); 
+
   gtk_window_set_keep_above (GTK_WINDOW (text_data->window), TRUE);
   
   /* Connect all the callback from gtkbuilder xml file. */
@@ -528,10 +533,6 @@ void start_text_widget (GtkWindow *parent, gchar* color, gint tickness)
 
   gtk_widget_show_all (text_data->window);  
 #ifdef _WIN32 
-  /* In the gtk 2.16.6 the gtkbuilder property double-buffered is not parsed
-   * from the glade file and then I set this by hands. 
-   */
-  gtk_widget_set_double_buffered (text_data->window, FALSE); 
   /* I use a layered window that use the black as transparent color. */
   setLayeredGdkWindowAttributes (gtk_widget_get_window  (text_data->window), RGB (0,0,0), 0, LWA_COLORKEY);	
 #endif

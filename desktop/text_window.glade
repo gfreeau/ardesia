@@ -8,7 +8,6 @@
         <property name="extension_events">cursor</property>
     <property name="events">GDK_EXPOSURE_MASK | GDK_POINTER_MOTION_MASK | GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_STRUCTURE_MASK | GDK_PROXIMITY_IN_MASK | GDK_PROXIMITY_OUT_MASK</property>
     <property name="app_paintable">True</property>
-    <property name="double_buffered">False</property>
     <signal name="expose_event" handler="on_window_text_expose_event"/>
     <signal name="motion_notify_event" handler="on_window_text_cursor_motion"/>
     <signal name="button_release_event" handler="on_window_text_button_release"/>

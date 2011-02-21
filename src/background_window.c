@@ -259,6 +259,11 @@ create_background_window ()
   background_obj = gtk_builder_get_object (background_data->background_window_gtk_builder, "backgroundWindow");
   background_data->background_window = GTK_WIDGET (background_obj);
 
+  /* In the gtk 2.16.6 used for windows the gtkbuilder the double buffered property
+   * is not parsed from glade and then I set this by hands. 
+   */
+  gtk_widget_set_double_buffered (background_data->background_window, FALSE);
+
   gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), BACKGROUND_OPACITY);
 
   gtk_widget_set_usize (background_data->background_window, gdk_screen_width (), gdk_screen_height ());
@@ -270,13 +275,6 @@ create_background_window ()
 
   /* This put in full screen; this will generate an exposure. */
   gtk_window_fullscreen (GTK_WINDOW (background_data->background_window));
-
-#ifdef _WIN32
-  /* In the gtk 2.16.6 used for windows the gtkbuilder the double buffered property
-   * is not parsed from glade and then I set this by hands. 
-   */
-  gtk_widget_set_double_buffered (background_data->background_window, FALSE);
-#endif
   
   return  background_data->background_window;
 }
