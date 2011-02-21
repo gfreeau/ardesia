@@ -1060,15 +1060,14 @@ initialize_annotation_cairo_context(AnnotateData *data)
           exit (EXIT_FAILURE);
         }
 
-      annotate_acquire_grab ();
-
       if (data->savepoint_list == NULL)
         {
 	  annotate_clear_screen ();
         }
 #ifndef _WIN32
       gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1.0);
-#endif 		  
+#endif 	
+      annotate_acquire_grab ();	  
     }
 }
 
