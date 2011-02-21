@@ -47,7 +47,6 @@ Source: "ardesia_@VERSION@-windows-1_i386\RUN"; DestDir: "{app}"; Flags: ignorev
 Source: "ardesia_@VERSION@-windows-1_i386\bin\*"; DestDir: "{app}\bin\"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\etc\gtk-2.0\*"; DestDir: "{app}\etc\gtk-2.0"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\lib\gtk-2.0\2.10.0\engines\*"; DestDir: "{app}\lib\gtk-2.0\2.10.0\engines"; Flags: ignoreversion
-Source: "ardesia_@VERSION@-windows-1_i386\lib\gtk-2.0\2.10.0\loaders\*"; DestDir: "{app}\lib\gtk-2.0\2.10.0\loaders"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\share\ardesia\scripts\screencast.bat"; DestDir: "{app}\share\ardesia\scripts"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\share\ardesia\ui\*"; DestDir: "{app}\share\ardesia\ui"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\share\ardesia\ui\backgrounds\*"; DestDir: "{app}\share\ardesia\ui\backgrounds"; Flags: ignoreversion

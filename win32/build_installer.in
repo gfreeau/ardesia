@@ -29,7 +29,6 @@ echo Prepare the $DESTDIR directory
 mkdir -p $DESTDIR/bin
 
 cp $WIN32_DIR/ardesia_open.bat $DESTDIR/bin
-cp $WIN32_DIR/iwb.ico $DESTDIR/share/ardesia/ui/pixmaps
 
 cp /bin/zip.exe $DESTDIR/bin
 cp /bin/unzip.exe $DESTDIR/bin
@@ -62,7 +61,6 @@ cp /mingw/bin/zlib1.dll $DESTDIR/bin
 mkdir -p $DESTDIR/etc/gtk-2.0
 
 cp /mingw/etc/gtk-2.0/gdk-pixbuf.loaders $DESTDIR/etc/gtk-2.0
-cp /mingw/etc/gtk-2.0/gtkrc $DESTDIR/etc/gtk-2.0
 
 mkdir -p $DESTDIR/lib/gtk-2.0/2.10.0/engines
 
@@ -70,22 +68,6 @@ cp /mingw/lib/gtk-2.0/2.10.0/engines/libpixmap.dll $DESTDIR/lib/gtk-2.0/2.10.0/e
 cp /mingw/lib/gtk-2.0/2.10.0/engines/libwimp.dll $DESTDIR/lib/gtk-2.0/2.10.0/engines
 
 mkdir -p $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-ani.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-bmp.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-gif.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-icns.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-ico.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-jpeg.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-pcx.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-png.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-pnm.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-ras.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-tga.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-tiff.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-wbmp.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-xbm.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
-cp /mingw/lib/gtk-2.0/2.10.0/loaders/libpixbufloader-xpm.dll $DESTDIR/lib/gtk-2.0/2.10.0/loaders
 
 
 cp @prefix@/bin/ardesia.exe $DESTDIR/bin
@@ -99,12 +81,11 @@ cp @prefix@/share/ardesia/scripts/screencast.bat $DESTDIR/share/ardesia/scripts
 mkdir -p $DESTDIR/share/ardesia/ui
 
 cp @prefix@/share/ardesia/ui/annotation_window.glade $DESTDIR/share/ardesia/ui
-cp @prefix@/share/ardesia/ui/ardesia.glade $DESTDIR/share/ardesia/ui
-cp @prefix@/share/ardesia/ui/ardesia_horizontal.glade $DESTDIR/share/ardesia/ui
 cp @prefix@/share/ardesia/ui/background_window.glade $DESTDIR/share/ardesia/ui
+cp @prefix@/share/ardesia/ui/horizontal_bar.glade $DESTDIR/share/ardesia/ui
+cp @prefix@/share/ardesia/ui/info_dialog.glade $DESTDIR/share/ardesia/ui
 cp @prefix@/share/ardesia/ui/preference_dialog.glade $DESTDIR/share/ardesia/ui
 cp @prefix@/share/ardesia/ui/project_dialog.glade $DESTDIR/share/ardesia/ui
-cp @prefix@/share/ardesia/ui/text.glade $DESTDIR/share/ardesia/ui
 cp @prefix@/share/ardesia/ui/text_window.glade $DESTDIR/share/ardesia/ui
 cp @prefix@/share/ardesia/ui/vertical_bar.glade $DESTDIR/share/ardesia/ui
 
@@ -119,11 +100,11 @@ cp @prefix@/share/ardesia/ui/backgrounds/squared_paper.png $DESTDIR/share/ardesi
 cp @prefix@/share/ardesia/ui/backgrounds/whiteboard.png $DESTDIR/share/ardesia/ui/backgrounds
 cp @prefix@/share/ardesia/ui/backgrounds/world_map.png $DESTDIR/share/ardesia/ui/backgrounds
 
-cp @prefix@/share/ardesia/ui/horizontal_bar.glade $DESTDIR/share/ardesia/ui
-cp @prefix@/share/ardesia/ui/info_dialog.glade $DESTDIR/share/ardesia/ui
 
 
 mkdir -p $DESTDIR/share/ardesia/ui/pixmaps
+
+cp $WIN32_DIR/iwb.ico $DESTDIR/share/ardesia/ui/pixmaps
 
 cp @prefix@/share/ardesia/ui/pixmaps/add-pdf.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/ardesia_logo.png $DESTDIR/share/ardesia/ui/pixmaps
@@ -135,12 +116,11 @@ cp @prefix@/share/ardesia/ui/pixmaps/eraser.png $DESTDIR/share/ardesia/ui/pixmap
 cp @prefix@/share/ardesia/ui/pixmaps/filler.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/green.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/hand.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/hide.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/highlighter.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/lock.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/media-record.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/media-recorder-unavailable.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/medium.png $DESTDIR/share/ardesia/ui/pixmaps
+cp @prefix@/share/ardesia/ui/pixmaps/pointer.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/pencil.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/rectifier.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/red.png $DESTDIR/share/ardesia/ui/pixmaps
@@ -148,8 +128,6 @@ cp @prefix@/share/ardesia/ui/pixmaps/rounder.png $DESTDIR/share/ardesia/ui/pixma
 cp @prefix@/share/ardesia/ui/pixmaps/text.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/thick.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/thin.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/unhide.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/unlock.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/white.png $DESTDIR/share/ardesia/ui/pixmaps
 cp @prefix@/share/ardesia/ui/pixmaps/yellow.png $DESTDIR/share/ardesia/ui/pixmaps
 
