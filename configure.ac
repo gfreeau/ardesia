@@ -71,7 +71,7 @@ esac
 # Internationalisation
 ######################
 
-IT_PROG_INTLTOOL(0.40.1)
+IT_PROG_INTLTOOL([0.35.0],[no-xml])
 AM_GLIB_GNU_GETTEXT
 
 AM_PROG_LIBTOOL
