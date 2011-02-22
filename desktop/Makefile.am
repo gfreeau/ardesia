@@ -41,9 +41,11 @@ install-data-local:
 	mkdir -p $(DESTDIR)$(scriptsdir) 
 	cp -r scripts/* $(DESTDIR)$(scriptsdir) 
 	chmod a+x $(DESTDIR)$(scriptsdir)/*
-if !PLATFORM_WIN32
-	xdg-icon-resource install --novendor --size 48 $(uipixmapsdir)/application-x-iwb.png
-endif
+
+	@if test x"$(XDG_UTILS)" != x; then \
+		echo "Register iwb mimetype"; \
+		xdg-icon-resource install --novendor --size 48 $(DESTDIR)$(uipixmapsdir)/application-x-iwb.png; \
+	fi
 
 # Remove ui directory on uninstall
 uninstall-local:

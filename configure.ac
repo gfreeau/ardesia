@@ -121,6 +121,8 @@ pkg_modules="	glib-2.0
 
 PKG_CHECK_MODULES(ARDESIA, [$pkg_modules])
 
+AC_CHECK_PROGS(XDG_UTILS, [xdg-mime xdg-icon-resource], [])
+
 AC_CONFIG_FILES([
 Makefile
 src/Makefile
