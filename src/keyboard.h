@@ -22,14 +22,11 @@
  */
 
 
-#ifdef linux
-#  define VIRTUALKEYBOARD_NAME "florence"
-#endif
-
-
 #ifdef _WIN32
 #  define VIRTUALKEYBOARD_NAME "C:\\Program Files\\Common Files\\Microsoft Shared\\ink\\TabTip.exe"
 #  define VIRTUALKEYBOARD_WINDOW_NAME "IPTip_Main_Window"
+#else
+#  define VIRTUALKEYBOARD_NAME "florence"
 #endif
 
 
