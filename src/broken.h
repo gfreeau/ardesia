@@ -38,9 +38,9 @@ build_meaningful_point_list     (GSList *list_inp,
 				 gdouble pixel_tollerance);
 
 
-/* Return the out-bounded rectangle outside the path described to list_in. */
+/* Return a new out-bounded rectangle outside the path described to list_in. */
 GSList *
-extract_outbounded_rectangle (GSList *list);
+build_outbounded_rectangle (GSList *list);
 
 
 /* Is the path similar to an ellipse;

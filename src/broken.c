@@ -454,12 +454,11 @@ build_meaningful_point_list     (GSList *list_inp,
 
 /* Return the out-bounded rectangle outside the path described to list_in. */
 GSList *
-extract_outbounded_rectangle (GSList *list)
+build_outbounded_rectangle (GSList *list)
 {
-  AnnotatePoint *point0 = (AnnotatePoint *) g_slist_nth_data (list, 0);
-  AnnotatePoint *point1 = (AnnotatePoint *) g_slist_nth_data (list, 1);
-  AnnotatePoint *point2 = (AnnotatePoint *) g_slist_nth_data (list, 2);
-  AnnotatePoint *point3 = (AnnotatePoint *) g_slist_nth_data (list, 3);
+  guint lenght = g_slist_length (list);
+  AnnotatePoint *point = (AnnotatePoint *) g_slist_nth_data (list, lenght/2);
+  GSList *ret_list = (GSList *) NULL;
 
   gdouble minx = 0;
   gdouble miny = 0;
@@ -468,18 +467,21 @@ extract_outbounded_rectangle (GSList *list)
 
   found_min_and_max (list, &minx, &miny, &maxx, &maxy);
 
-  point0->x = minx;
-  point0->y = miny;
 
-  point1->x = maxx;
-  point1->y = miny;
+AnnotatePoint *point3 =  allocate_point (minx, maxy, point->width, point->pressure);
+ret_list = g_slist_prepend (ret_list, point3);
 
-  point2->x = maxx;
-  point2->y = maxy;
+AnnotatePoint *point2 =  allocate_point (maxx, maxy, point->width, point->pressure);
+ret_list = g_slist_prepend (ret_list, point2);
 
-  point3->x = minx;
-  point3->y = maxy;
-  return list;
+AnnotatePoint *point1 =  allocate_point (maxx, miny, point->width, point->pressure);
+ret_list = g_slist_prepend (ret_list, point1);
+
+  AnnotatePoint *point0 =  allocate_point (minx, miny, point->width, point->pressure);
+
+ret_list = g_slist_prepend (ret_list, point0);
+
+  return ret_list;
 }
 
 
@@ -602,7 +604,7 @@ build_rectified_list(GSList *list_inp,
 		     gboolean close_path,
 		     gdouble pixel_tollerance)
 {
-  GSList *ret_list = NULL;
+  GSList *ret_list = (GSList *) NULL;
   if (close_path)
     {
 
@@ -637,7 +639,10 @@ build_rectified_list(GSList *list_inp,
 	  if (is_a_rectangle (ret_list, pixel_tollerance))
 	    {
 	      /* It is a rectangle. */
-	      ret_list = extract_outbounded_rectangle (ret_list);
+	      GSList *rect_list = build_outbounded_rectangle (ret_list);
+              g_slist_foreach (ret_list, (GFunc)g_free, NULL);
+              g_slist_free (ret_list);
+              ret_list = rect_list;
 	    }
 
 	}

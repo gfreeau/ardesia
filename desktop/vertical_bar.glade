@@ -461,6 +461,10 @@
       </object>
     </child>
   </object>
+  <object class="GtkImage" id="micro">
+    <property name="visible">True</property>
+    <property name="pixbuf">pixmaps/micro.png</property>
+  </object>
   <object class="GtkImage" id="thin">
     <property name="visible">True</property>
     <property name="pixbuf">pixmaps/thin.png</property>

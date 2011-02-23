@@ -51,10 +51,6 @@
 #include <config.h>
 
 
-/* The thick step define the minimum thick the you have 2*thick and 3*thick lines. */
-#define THICK_STEP 7
-
-
 /*
  * Standard gettext macros.
  */

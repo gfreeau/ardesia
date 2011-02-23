@@ -448,26 +448,33 @@ on_bar_thick_activate           (GtkToolButton   *toolbutton,
 {
   BarData *bar_data = (BarData *) func_data;
 
-  if (bar_data->thickness== THICK_STEP*2)
-    {
-      /* Set the thick icon. */
-      GObject *thick_obj = gtk_builder_get_object (bar_gtk_builder, "thick");
-      gtk_tool_button_set_label_widget (toolbutton, GTK_WIDGET (thick_obj));
-      bar_data->thickness = THICK_STEP*3;
-    }
-  else if (bar_data->thickness==THICK_STEP*3)
+  if (bar_data->thickness == MICRO_THICKNESS)
     {
       /* Set the thin icon. */
       GObject *thin_obj = gtk_builder_get_object (bar_gtk_builder, "thin");
       gtk_tool_button_set_label_widget (toolbutton, GTK_WIDGET (thin_obj));
-      bar_data->thickness = THICK_STEP;
+      bar_data->thickness = THIN_THICKNESS;
     }
-  else if (bar_data->thickness==THICK_STEP)
+  else if (bar_data->thickness == THIN_THICKNESS)
     {
       /* Set the medium icon. */
       GObject *medium_obj = gtk_builder_get_object (bar_gtk_builder, "medium");
       gtk_tool_button_set_label_widget (toolbutton, GTK_WIDGET (medium_obj));
-      bar_data->thickness = THICK_STEP*2;
+      bar_data->thickness = MEDIUM_THICKNESS;
+    }
+  else if (bar_data->thickness==MEDIUM_THICKNESS)
+    {
+      /* Set the thick icon. */
+      GObject *thick_obj = gtk_builder_get_object (bar_gtk_builder, "thick");
+      gtk_tool_button_set_label_widget (toolbutton, GTK_WIDGET (thick_obj));
+      bar_data->thickness = THICK_THICKNESS;
+    }
+  else if (bar_data->thickness==THICK_THICKNESS)
+    {
+      /* Set the micro icon. */
+      GObject *micro_obj = gtk_builder_get_object (bar_gtk_builder, "micro");
+      gtk_tool_button_set_label_widget (toolbutton, GTK_WIDGET (micro_obj));
+      bar_data->thickness = MICRO_THICKNESS;
     }
 
 }

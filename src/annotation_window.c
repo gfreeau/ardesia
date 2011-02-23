@@ -386,8 +386,9 @@ rectify (gboolean closed_path)
 
   annotate_draw_point_list (broken_list);
   
-  g_slist_foreach (broken_list, (GFunc) g_free, (gpointer) NULL);
-  g_slist_free (broken_list); 
+  annotate_coord_list_free ();
+  data->coord_list = broken_list;
+  
 }
 
 
@@ -417,18 +418,22 @@ roundify (gboolean closed_path)
       AnnotatePoint *point1 = (AnnotatePoint *) NULL;
       AnnotatePoint *point3 = (AnnotatePoint *) NULL;
 
-      meaningful_point_list = extract_outbounded_rectangle (meaningful_point_list);
-      point1 = (AnnotatePoint *) g_slist_nth_data (meaningful_point_list, 0);
-      point3 = (AnnotatePoint *) g_slist_nth_data (meaningful_point_list, 2);
+      GSList *rect_list = build_outbounded_rectangle (meaningful_point_list);
+      point1 = (AnnotatePoint *) g_slist_nth_data (rect_list, 0);
+      point3 = (AnnotatePoint *) g_slist_nth_data (rect_list, 2);
       annotate_draw_ellipse (point1->x, point1->y, point3->x-point1->x, point3->y-point1->y, point1->pressure);
+      g_slist_foreach (rect_list, (GFunc)g_free, NULL);
+      g_slist_free (rect_list);
     }
   else
     {
       /* It is not an ellipse; I use bezier to spline the path. */
       GSList *splined_list = spline (meaningful_point_list);
       annotate_draw_curve (splined_list);
-      g_slist_foreach (splined_list, (GFunc) g_free, (gpointer) NULL);
-      g_slist_free (splined_list);
+
+      annotate_coord_list_free ();
+      data->coord_list = splined_list;
+
     }
 
   g_slist_foreach (meaningful_point_list, (GFunc) g_free, (gpointer) NULL);

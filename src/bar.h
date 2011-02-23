@@ -38,8 +38,14 @@
 #  define UI_HOR_FILE PACKAGE_DATA_DIR"/ardesia/ui/horizontal_bar.glade"
 #endif
 
+
 /* Distance space from border to the ardesia bar in pixel unit. */
 #define SPACE_FROM_BORDER 25
+
+#define MICRO_THICKNESS   3
+#define THIN_THICKNESS    6
+#define MEDIUM_THICKNESS  12
+#define THICK_THICKNESS   18    
 
 
 /* Structure that contains the info passed to the callbacks. */
@@ -75,6 +81,8 @@ typedef struct
 
   /* grab when leave. */
   gboolean grab;
+
+  GSList *thick_list;
 
 }BarData;
 
