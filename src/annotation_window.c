@@ -257,18 +257,28 @@ allocate_invisible_cursor ()
 
 /* Create pixmap and mask for the eraser cursor. */
 static void
-get_eraser_pixmaps (gdouble size,
-		    GdkPixmap **pixmap,
-		    GdkPixmap **mask)
+get_eraser_pixbuf (gdouble size,
+		   GdkPixbuf **pixbuf)
 {
   gdouble circle_width = 2.0;
   cairo_t *eraser_cr = (cairo_t *) NULL;
-  cairo_t *eraser_shape_cr = (cairo_t *) NULL;
+   
+  cairo_surface_t *image_surface = cairo_image_surface_create_from_png(ERASER_ICON);
 
-  *pixmap = gdk_pixmap_new ((GdkDrawable *) NULL, (gint) size, (gint) size, 1);
-  *mask =  gdk_pixmap_new ((GdkDrawable *) NULL, (gint) size, (gint) size, 1);
+  gint width = size + cairo_image_surface_get_width (image_surface);
+  gint height = size + cairo_image_surface_get_height (image_surface);
 
-  eraser_cr = gdk_cairo_create (*pixmap);
+  *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, width, height);
+
+
+  cairo_surface_t *surface = cairo_image_surface_create_for_data(gdk_pixbuf_get_pixels(*pixbuf),
+								 CAIRO_FORMAT_RGB24,
+								 width,
+								 height,
+								 gdk_pixbuf_get_rowstride(*pixbuf));
+
+
+  eraser_cr = cairo_create(surface);
 
   if (cairo_status (eraser_cr) != CAIRO_STATUS_SUCCESS)
     {
@@ -277,97 +287,102 @@ get_eraser_pixmaps (gdouble size,
       exit (EXIT_FAILURE);
     }
 
+  clear_cairo_context (eraser_cr);
+
+  cairo_set_line_width (eraser_cr, circle_width);
+
+  cairo_set_source_surface(eraser_cr, image_surface, 0, 0);
+
   cairo_paint (eraser_cr);
-  cairo_stroke (eraser_cr);
+  cairo_stroke(eraser_cr);
+
+  cairo_set_source_rgba (eraser_cr, 0, 0, 1, 1);
+  cairo_arc (eraser_cr, width/2, height/2, (size/2)-circle_width, 0, 2 * M_PI);
+  cairo_stroke(eraser_cr);
+
+  cairo_surface_destroy(surface);
   cairo_destroy (eraser_cr);
 
-  eraser_shape_cr = gdk_cairo_create (*mask);
-  if (cairo_status (eraser_shape_cr) != CAIRO_STATUS_SUCCESS)
-    {
-      g_printerr ("Failed to allocate the eraser shape cursor cairo context");
-      annotate_quit ();
-      exit (EXIT_FAILURE);
-    }
-
-  /* Paint the eraser circle icon by code. */
-  clear_cairo_context (eraser_shape_cr);
-  cairo_set_operator (eraser_shape_cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_line_width (eraser_shape_cr, circle_width);
-  cairo_set_source_rgb (eraser_shape_cr, 1, 1, 1);
-  cairo_arc (eraser_shape_cr, size/2, size/2, (size/2)-circle_width, 0, 2 * M_PI);
-  cairo_stroke (eraser_shape_cr);
-  cairo_destroy (eraser_shape_cr);
+  gdk_pixbuf_swap_blue_with_red (pixbuf);
 }
 
 
 /* Create pixmap and mask for the pen cursor. */
 static void
-get_pen_pixmaps (gdouble size,
-		 GdkPixmap **pixmap,
-		 GdkPixmap **mask)
+get_pen_pixbuf (gdouble size,
+		GdkPixbuf **pixbuf)
 {
   cairo_t *pen_cr = (cairo_t *) NULL;
-  cairo_t *pen_shape_cr = (cairo_t *) NULL;
   gdouble circle_width = 2.0;
-  gdouble side_lenght = (size*3) + data->thickness;
   
-  *pixmap = gdk_pixmap_new ((GdkDrawable *) NULL, (gint) side_lenght, (gint) side_lenght, 1);
-  *mask =  gdk_pixmap_new ((GdkDrawable *) NULL, (gint) side_lenght, (gint) side_lenght, 1);
+  gdouble side_lenght = (size*3) + data->thickness;
 
-  pen_cr = gdk_cairo_create (*pixmap);
+  *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, (gint) side_lenght, (gint) side_lenght);
+
+  gint pixbuf_width = gdk_pixbuf_get_width(*pixbuf);
+  gint pixbuf_height = gdk_pixbuf_get_height(*pixbuf);
+
+
+  cairo_surface_t *surface = cairo_image_surface_create_for_data(gdk_pixbuf_get_pixels(*pixbuf),
+								 CAIRO_FORMAT_RGB24,
+								 pixbuf_width,
+								 pixbuf_height,
+								 gdk_pixbuf_get_rowstride(*pixbuf));
+
+
+  pen_cr = cairo_create(surface);
 
   if (cairo_status (pen_cr) != CAIRO_STATUS_SUCCESS)
     {
-      g_printerr ("Failed to allocate the pen cursor cairo context");
+      g_printerr ("Failed to allocate the eraser cursor cairo context");
       annotate_quit ();
       exit (EXIT_FAILURE);
     }
+
+  clear_cairo_context (pen_cr);
 
   cairo_set_operator (pen_cr, CAIRO_OPERATOR_SOURCE);
   cairo_set_source_rgb (pen_cr, 1, 1, 1);
   cairo_paint (pen_cr);
   cairo_stroke (pen_cr);
-  cairo_destroy (pen_cr);
 
-  pen_shape_cr = gdk_cairo_create (*mask);
+  pen_cr = cairo_create(surface);
 
-  if (cairo_status (pen_shape_cr) != CAIRO_STATUS_SUCCESS)
+  clear_cairo_context (pen_cr);
+
+  cairo_set_line_width (pen_cr, circle_width);
+
+  cairo_surface_t *image_surface = (cairo_surface_t *) NULL;
+
+  /* Take the opacity */
+  gchar* alpha = g_substr (data->cur_context->fg_color, 6, 8);
+  
+  if (g_strcmp0(alpha, "FF")==0)
     {
-      g_printerr ("Failed to allocate the pen shape cursor cairo context");
-      annotate_quit ();
-      exit (EXIT_FAILURE);
+      image_surface = cairo_image_surface_create_from_png(PENCIL_ICON);
+    }
+  else
+    {
+      image_surface = cairo_image_surface_create_from_png(HIGHLIGHTER_ICON);
     }
 
-  /* Draw the pen cursor by code. */
-  clear_cairo_context (pen_shape_cr);
-  cairo_set_operator (pen_shape_cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_line_width (pen_shape_cr, circle_width);
-  cairo_set_source_rgb (pen_shape_cr, 1, 1, 1);
+  cairo_set_source_surface(pen_cr, image_surface, data->thickness/2, size);
 
-  cairo_arc (pen_shape_cr,
-	     5* size/2 + data->thickness/2,
-	     size/2,
-	     (size/2)-circle_width, M_PI * 5/4,
-	     M_PI/4);
+  cairo_paint (pen_cr);
+  cairo_stroke(pen_cr);
 
-  cairo_arc (pen_shape_cr,
-	     size/2 + data->thickness/2,
-	     5 * size/2,
-	     (size/2)-circle_width,
-	     M_PI/4,
-	     M_PI * 5/4);
-
-  cairo_fill (pen_shape_cr);
-
-  cairo_arc (pen_shape_cr,
+  cairo_set_source_color_from_string ( pen_cr, data->cur_context->fg_color);
+ 
+  cairo_arc (pen_cr,
 	     size/2 + data->thickness/2,
 	     5 * size/2,
 	     data->thickness/2,
 	     0,
 	     2 * M_PI);
 
-  cairo_stroke (pen_shape_cr);
-  cairo_destroy (pen_shape_cr);
+  cairo_stroke (pen_cr);
+  cairo_destroy (pen_cr);
+  gdk_pixbuf_swap_blue_with_red (pixbuf);
 }
 
 
@@ -387,33 +402,26 @@ disallocate_cursor ()
 static void
 annotate_set_pen_cursor ()
 {
-  GdkColor *background_color_p = rgba_to_gdkcolor (BLACK);
-  GdkColor *foreground_color_p = rgba_to_gdkcolor (data->cur_context->fg_color);
-  GdkPixmap *pixmap = (GdkPixmap *) NULL;
-  GdkPixmap *mask = (GdkPixmap *) NULL;
+  GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
   gint size= 12;
   gint thickness = (gint) data->thickness;
 
   disallocate_cursor ();
 
-  get_pen_pixmaps ((gdouble) size, &pixmap, &mask);
+  get_pen_pixbuf ((gdouble) size, &pixbuf);
 
   if (data->debug)
     {
       g_printerr ("The colour %s has been selected\n", data->cur_context->fg_color);
     }
 
-  data->cursor = gdk_cursor_new_from_pixmap (pixmap,
-					     mask,
-                                             foreground_color_p,
-                                             background_color_p,
-                                             size/2 + thickness/2,
+  data->cursor = gdk_cursor_new_from_pixbuf (gdk_display_get_default (),
+					     pixbuf,
+					     size/2 + thickness/2,
 					     5* size/2);
 
-  g_object_unref (pixmap);
-  g_object_unref (mask);
-  g_free (foreground_color_p);
-  g_free (background_color_p);
+  g_object_unref (pixbuf);
+
   update_cursor ();
 }
 
@@ -423,27 +431,19 @@ static void
 annotate_set_eraser_cursor ()
 {
   gdouble size = annotate_get_thickness ();
-  GdkPixmap *pixmap = (GdkPixmap *) NULL;
-  GdkPixmap *mask   = (GdkPixmap *) NULL;
-  GdkColor *background_color_p = rgba_to_gdkcolor (BLACK);
-  GdkColor *foreground_color_p = rgba_to_gdkcolor (RED);
+  GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
 
   disallocate_cursor ();
 
-  get_eraser_pixmaps (size, &pixmap, &mask);
+  get_eraser_pixbuf (size, &pixbuf);
 
+  data->cursor = gdk_cursor_new_from_pixbuf (gdk_display_get_default (),
+					     pixbuf,
+					     gdk_pixbuf_get_width(pixbuf)/2,
+					     gdk_pixbuf_get_height(pixbuf)/2);
 
-  data->cursor = gdk_cursor_new_from_pixmap (pixmap,
-					     mask,
-					     foreground_color_p,
-					     background_color_p,
-					     (gint) size/2,
-					     (gint) size/2);
+  g_object_unref (pixbuf);
 
-  g_object_unref (pixmap);
-  g_object_unref (mask);
-  g_free (foreground_color_p);
-  g_free (background_color_p);
   update_cursor ();
 }
 
@@ -494,7 +494,7 @@ annotate_draw_ellipse (gdouble x,
 		       gdouble y,
 		       gdouble width,
 		       gdouble height,
-                       gdouble pressure)
+		       gdouble pressure)
 {
   if (data->debug)
     {
@@ -539,7 +539,7 @@ annotate_draw_point_list (GSList* list)
       guint i = 0;
       guint lenght = g_slist_length (list);
       for (i=0; i<lenght; i=i+1)
-        {
+	{
 	  AnnotatePoint *point = (AnnotatePoint *) g_slist_nth_data (list, i);
 	  if (!point)
 	    {
@@ -552,11 +552,11 @@ annotate_draw_point_list (GSList* list)
 	      break;
 	    }
 
-          annotate_modify_color (data, point->pressure);
+	  annotate_modify_color (data, point->pressure);
        
 	  /* Draw line between the two points. */
 	  annotate_draw_line (point->x, point->y, FALSE);
-        }
+	}
     }
 }
 
@@ -571,7 +571,7 @@ annotate_draw_curve (GSList *list)
     {
       guint i = 0; 
       for (i=0; i<lenght; i=i+3)
-        {
+	{
 	  AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (list, i);
 	  
 	  if (!first_point)
@@ -602,7 +602,7 @@ annotate_draw_curve (GSList *list)
 		      return;
 		    }
 
-                  annotate_modify_color (data, second_point->pressure);
+		  annotate_modify_color (data, second_point->pressure);
 
 		  cairo_curve_to (data->annotation_cairo_context,
 				  first_point->x,
@@ -714,27 +714,27 @@ setup_input_devices ()
 
       /* Guess "Eraser"-Type devices. */
       if (is_eraser (device))
-        {
+	{
 	  gdk_device_set_source (device, GDK_SOURCE_ERASER);
-        }
+	}
 
       /* Don’t touch devices with lesser than two axis. */
       if (device->num_axes >= 2)
-        {
+	{
 
 	  if (device->source != GDK_SOURCE_MOUSE)
 	    {
-              g_printerr ("Enabled Device. %p: \"%s\" (Type: %d)\n",
+	      g_printerr ("Enabled Device. %p: \"%s\" (Type: %d)\n",
 			  device, device->name, device->source);
 
-              if (!gdk_device_set_mode (device, GDK_MODE_SCREEN))
-                {
-                  g_warning ("Unable to set the device %s to the screen mode\n", device->name);
-                }
+	      if (!gdk_device_set_mode (device, GDK_MODE_SCREEN))
+		{
+		  g_warning ("Unable to set the device %s to the screen mode\n", device->name);
+		}
 
 	    }
 
-        }
+	}
     }
 }
 
@@ -877,7 +877,7 @@ delete_savepoint (AnnotateSavepoint *savepoint)
 	{
 	  g_remove (savepoint->filename);
 	  g_free (savepoint->filename);
-          savepoint->filename = (gchar *) NULL;
+	  savepoint->filename = (gchar *) NULL;
 	}
       data->savepoint_list = g_slist_remove (data->savepoint_list, savepoint);
       g_free (savepoint);
@@ -1054,16 +1054,16 @@ initialize_annotation_cairo_context(AnnotateData *data)
 #endif
 
       if (cairo_status (data->annotation_cairo_context) != CAIRO_STATUS_SUCCESS)
-        {
-          g_printerr ("Failed to allocate the annotation cairo context"); 
-          annotate_quit (); 
-          exit (EXIT_FAILURE);
-        }
+	{
+	  g_printerr ("Failed to allocate the annotation cairo context"); 
+	  annotate_quit (); 
+	  exit (EXIT_FAILURE);
+	}
 
       if (data->savepoint_list == NULL)
-        {
+	{
 	  annotate_clear_screen ();
-        }
+	}
 #ifndef _WIN32
       gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1.0);
 #endif 	
@@ -1091,8 +1091,8 @@ annotate_restore_surface ()
 
       if (savepoint->filename)
 	{
-          /* Load the file in the annotation surface. */
-          cairo_surface_t *image_surface = cairo_image_surface_create_from_png(savepoint->filename);
+	  /* Load the file in the annotation surface. */
+	  cairo_surface_t *image_surface = cairo_image_surface_create_from_png(savepoint->filename);
 
 	  if (data->debug)
 	    {
@@ -1369,7 +1369,7 @@ annotate_acquire_grab ()
     {
 
       if (data->debug)
-        {
+	{
 	  g_printerr ("Acquire grab\n");
 	}
 
@@ -1615,9 +1615,9 @@ void annotate_fill ()
 
       /* if is not a closed path I prevent to fill it */
       if (!is_a_closed_path (data->coord_list))
-        {
-          return;
-        }
+	{
+	  return;
+	}
 
       if ( !(data->roundify) && (!(data->rectify)))
 	{
@@ -1630,9 +1630,9 @@ void annotate_fill ()
       cairo_stroke (data->annotation_cairo_context);
 
       if (data->debug)
-        {
+	{
 	  g_printerr ("Fill\n");
-        }
+	}
 
       annotate_add_savepoint ();
     }
@@ -1646,7 +1646,7 @@ annotate_undo ()
   if (data->savepoint_list)
     {
       if (data->current_save_index != g_slist_length (data->savepoint_list)-1)
-        {
+	{
 
 	  if (data->debug)
 	    {
@@ -1655,7 +1655,7 @@ annotate_undo ()
 
 	  data->current_save_index = data->current_save_index + 1;
 	  annotate_restore_surface ();
-        }
+	}
     }
 }
 
@@ -1666,7 +1666,7 @@ void annotate_redo ()
   if (data->savepoint_list)
     {
       if (data->current_save_index != 0)
-        {
+	{
 
 	  if (data->debug)
 	    {
@@ -1675,7 +1675,7 @@ void annotate_redo ()
 
 	  data->current_save_index = data->current_save_index - 1;
 	  annotate_restore_surface ();
-        }
+	}
     }
 }
 

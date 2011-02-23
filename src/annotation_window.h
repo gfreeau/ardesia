@@ -42,7 +42,12 @@
 
 
 #ifdef _WIN32
-#  define ANNOTATION_UI_FILE "..\\share\\ardesia\\ui\\annotation_window.glade"
+#  define ANNOTATION_UI_FOLDER "..\\share\\ardesia\\ui"
+#  define ANNOTATION_UI_FILE ANNOTATION_UI_FOLDER"\\annotation_window.glade"
+#  define ANNOTATION_PIXMAPS_FOLDER ANNOTATION_UI_FOLDER"\\pixmaps"
+#  define ERASER_ICON ANNOTATION_PIXMAPS_FOLDER"\\eraser.png"
+#  define PENCIL_ICON ANNOTATION_PIXMAPS_FOLDER"\\pencil.png"
+#  define HIGHLIGHTER_ICON ANNOTATION_PIXMAPS_FOLDER"\\highlighter.png"
 
 /* User for grab the pointer on win32. */
 #  define ANNOTATE_MOUSE_EVENTS    ( GDK_POINTER_MOTION_MASK|	\
@@ -55,7 +60,12 @@
 				     )
 
 #else
-#  define ANNOTATION_UI_FILE PACKAGE_DATA_DIR"/ardesia/ui/annotation_window.glade"
+#  define ANNOTATION_UI_FOLDER PACKAGE_DATA_DIR"/ardesia/ui"
+#  define ANNOTATION_UI_FILE ANNOTATION_UI_FOLDER"/annotation_window.glade"
+#  define ANNOTATION_PIXMAPS_FOLDER ANNOTATION_UI_FOLDER"/pixmaps"
+#  define ERASER_ICON ANNOTATION_PIXMAPS_FOLDER"/eraser.png"
+#  define PENCIL_ICON ANNOTATION_PIXMAPS_FOLDER"/pencil.png"
+#  define HIGHLIGHTER_ICON ANNOTATION_PIXMAPS_FOLDER"/highlighter.png"
 #endif
 
 

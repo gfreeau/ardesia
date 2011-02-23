@@ -323,3 +323,9 @@ g_substr (const gchar *string,
  * it is useful to test the segmentation fault handler.
  */
 void create_segmentation_fault ();
+
+
+/* Swap blue with red in pibxbuf */
+void gdk_pixbuf_swap_blue_with_red (GdkPixbuf **pixbuf);
+
+

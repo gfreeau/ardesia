@@ -16,9 +16,8 @@
   - Investigate about the status and make a plan
   
 - Reengineering
-  - Gui revision: each tool will have a different
-    pointer icon
   - Store and load the savepoints using svg files
+  - Arrow icon
   - Use a layered canvas instead a windows set
   - Text insertion consolidation
   - Create the iwb without spawn the zip/unzip process

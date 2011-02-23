@@ -170,7 +170,7 @@ ungrab_pointer (GdkDisplay *display)
   if (gdk_error_trap_pop ())
     {
       /* this probably means the device table is outdated,
-       * e.g. this device doesn't exist anymore. 
+       * e.g. this device doesn't exist anymore.
        */
       g_printerr ("Ungrab pointer device error\n");
     }
@@ -247,7 +247,7 @@ clear_cairo_context (cairo_t *cr)
       cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
       cairo_paint (cr);
       cairo_restore (cr);
-    } 
+    }
 }
 
 
@@ -707,4 +707,33 @@ void create_segmentation_fault ()
 {
   int *f=NULL;
   *f = 0;
+}
+
+
+/* Swap blue with red in pibxbuf */
+void gdk_pixbuf_swap_blue_with_red (GdkPixbuf **pixbuf)
+{
+  gint  n_channels = gdk_pixbuf_get_n_channels (*pixbuf);
+
+  gint pixbuf_width = gdk_pixbuf_get_width(*pixbuf);
+  gint pixbuf_height = gdk_pixbuf_get_height(*pixbuf);
+  gint rowstride = gdk_pixbuf_get_rowstride (*pixbuf);
+  guchar *pixels = gdk_pixbuf_get_pixels (*pixbuf);
+
+  gint x =0;
+
+  for( x = 0; x < pixbuf_height; x++ )
+    {
+      gint y =0;
+
+      for( y = 0; y < pixbuf_width; y++ )
+	{
+	  guchar* p = pixels + y * rowstride + x * n_channels;
+	  guchar p0 = p[0];
+
+	  p[0] = p[2];
+	  p[2] = p0;
+	}
+    }
+
 }
