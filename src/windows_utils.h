@@ -47,24 +47,7 @@ setLayeredGdkWindowAttributes (GdkWindow *gdk_window,
 			       COLORREF cr_key,
 			       BYTE b_alpha,
 			       DWORD dw_flags);
-
   
-/* 
- * gdk_cursor_new_from_pixmap is broken on Windows.
- * this is a workaround using gdk_cursor_new_from_pixbuf. 
- */
-GdkCursor *
-fixed_gdk_cursor_new_from_pixmap (GdkPixmap *source,
-				  GdkPixmap *mask,
-				  const GdkColor *fg,
-				  const GdkColor *bg,
-				  gint x,
-				  gint y);
-						
-						
-/* Override the with the gdk_cursor_new_from_pixmap with the fixed version. */						
-#define gdk_cursor_new_from_pixmap fixed_gdk_cursor_new_from_pixmap
-
 
 /* Send an email with MAPI. */
 void
