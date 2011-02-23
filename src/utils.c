@@ -729,6 +729,7 @@ void gdk_pixbuf_swap_blue_with_red (GdkPixbuf **pixbuf)
       for( y = 0; y < pixbuf_width; y++ )
 	{
 	  guchar* p = pixels + y * rowstride + x * n_channels;
+          /* swap the pixel red value with the blue */
 	  guchar p0 = p[0];
 
 	  p[0] = p[2];

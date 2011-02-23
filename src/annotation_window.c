@@ -263,22 +263,22 @@ get_eraser_pixbuf (gdouble size,
   gdouble circle_width = 2.0;
   cairo_t *eraser_cr = (cairo_t *) NULL;
    
-  cairo_surface_t *image_surface = cairo_image_surface_create_from_png(ERASER_ICON);
+  cairo_surface_t *image_surface = cairo_image_surface_create_from_png (ERASER_ICON);
 
   gint width = size + cairo_image_surface_get_width (image_surface);
   gint height = size + cairo_image_surface_get_height (image_surface);
 
+  cairo_surface_t *surface = (cairo_surface_t *) NULL;
+
   *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, width, height);
 
+  surface = cairo_image_surface_create_for_data (gdk_pixbuf_get_pixels (*pixbuf),
+						 CAIRO_FORMAT_RGB24,
+						 width,
+						 height,
+						 gdk_pixbuf_get_rowstride (*pixbuf));
 
-  cairo_surface_t *surface = cairo_image_surface_create_for_data(gdk_pixbuf_get_pixels(*pixbuf),
-								 CAIRO_FORMAT_RGB24,
-								 width,
-								 height,
-								 gdk_pixbuf_get_rowstride(*pixbuf));
-
-
-  eraser_cr = cairo_create(surface);
+  eraser_cr = cairo_create (surface);
 
   if (cairo_status (eraser_cr) != CAIRO_STATUS_SUCCESS)
     {
@@ -291,18 +291,22 @@ get_eraser_pixbuf (gdouble size,
 
   cairo_set_line_width (eraser_cr, circle_width);
 
-  cairo_set_source_surface(eraser_cr, image_surface, 0, 0);
+  cairo_set_source_surface (eraser_cr, image_surface, 0, 0);
 
   cairo_paint (eraser_cr);
-  cairo_stroke(eraser_cr);
+  cairo_stroke (eraser_cr);
 
+  /* Add a circle with the desired width. */
   cairo_set_source_rgba (eraser_cr, 0, 0, 1, 1);
   cairo_arc (eraser_cr, width/2, height/2, (size/2)-circle_width, 0, 2 * M_PI);
-  cairo_stroke(eraser_cr);
+  cairo_stroke (eraser_cr);
 
-  cairo_surface_destroy(surface);
+  cairo_surface_destroy (surface);
   cairo_destroy (eraser_cr);
 
+  cairo_surface_destroy (image_surface);
+
+  /* The pixbuf created by cairo has the r and b color inverted. */
   gdk_pixbuf_swap_blue_with_red (pixbuf);
 }
 
@@ -313,24 +317,21 @@ get_pen_pixbuf (gdouble size,
 		GdkPixbuf **pixbuf)
 {
   cairo_t *pen_cr = (cairo_t *) NULL;
+  cairo_surface_t *surface = (cairo_surface_t *) NULL;
   gdouble circle_width = 2.0;
-  
   gdouble side_lenght = (size*3) + data->thickness;
 
   *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, (gint) side_lenght, (gint) side_lenght);
 
-  gint pixbuf_width = gdk_pixbuf_get_width(*pixbuf);
-  gint pixbuf_height = gdk_pixbuf_get_height(*pixbuf);
+
+  surface = cairo_image_surface_create_for_data (gdk_pixbuf_get_pixels (*pixbuf),
+						 CAIRO_FORMAT_RGB24,
+						 gdk_pixbuf_get_width (*pixbuf),
+						 gdk_pixbuf_get_height (*pixbuf),
+						 gdk_pixbuf_get_rowstride (*pixbuf));
 
 
-  cairo_surface_t *surface = cairo_image_surface_create_for_data(gdk_pixbuf_get_pixels(*pixbuf),
-								 CAIRO_FORMAT_RGB24,
-								 pixbuf_width,
-								 pixbuf_height,
-								 gdk_pixbuf_get_rowstride(*pixbuf));
-
-
-  pen_cr = cairo_create(surface);
+  pen_cr = cairo_create (surface);
 
   if (cairo_status (pen_cr) != CAIRO_STATUS_SUCCESS)
     {
@@ -346,7 +347,7 @@ get_pen_pixbuf (gdouble size,
   cairo_paint (pen_cr);
   cairo_stroke (pen_cr);
 
-  pen_cr = cairo_create(surface);
+  pen_cr = cairo_create (surface);
 
   clear_cairo_context (pen_cr);
 
@@ -354,23 +355,26 @@ get_pen_pixbuf (gdouble size,
 
   cairo_surface_t *image_surface = (cairo_surface_t *) NULL;
 
-  /* Take the opacity */
+  /* Take the opacity. */
   gchar* alpha = g_substr (data->cur_context->fg_color, 6, 8);
   
-  if (g_strcmp0(alpha, "FF")==0)
+  if (g_strcmp0 (alpha, "FF") == 0)
     {
-      image_surface = cairo_image_surface_create_from_png(PENCIL_ICON);
+      /* load the pencil icon. */
+      image_surface = cairo_image_surface_create_from_png (PENCIL_ICON);
     }
   else
     {
-      image_surface = cairo_image_surface_create_from_png(HIGHLIGHTER_ICON);
+      /* load the highlighter icon. */
+      image_surface = cairo_image_surface_create_from_png (HIGHLIGHTER_ICON);
     }
 
-  cairo_set_source_surface(pen_cr, image_surface, data->thickness/2, size);
+  cairo_set_source_surface (pen_cr, image_surface, data->thickness/2, size);
 
   cairo_paint (pen_cr);
-  cairo_stroke(pen_cr);
+  cairo_stroke (pen_cr);
 
+  /* Add a circle that respect the width and the selected colour. */
   cairo_set_source_color_from_string ( pen_cr, data->cur_context->fg_color);
  
   cairo_arc (pen_cr,
@@ -381,7 +385,12 @@ get_pen_pixbuf (gdouble size,
 	     2 * M_PI);
 
   cairo_stroke (pen_cr);
+
+  cairo_surface_destroy (surface);
   cairo_destroy (pen_cr);
+  cairo_surface_destroy (image_surface);
+
+  /* The pixbuf created by cairo has the r and b color inverted. */
   gdk_pixbuf_swap_blue_with_red (pixbuf);
 }
 
