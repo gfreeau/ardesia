@@ -41,6 +41,11 @@
 #endif
 
 
+/* Initialize the cursors variables. */
+void 
+cursors_main ();
+
+
 /* Allocate a invisible cursor that can be used to hide the cursor icon. */
 void
 allocate_invisible_cursor (GdkCursor **cursor);
@@ -48,13 +53,22 @@ allocate_invisible_cursor (GdkCursor **cursor);
 
 /* Set the pen cursor. */
 void
-annotate_set_pen_cursor (GdkCursor **cursor,
-			 gdouble thickness,
-			 gchar* color);
+set_pen_cursor (GdkCursor **cursor,
+		gdouble thickness,
+		gchar *color);
 
 
 /* Set the eraser cursor. */
 void
-annotate_set_eraser_cursor (GdkCursor **cursor,
-			    gint size);
+set_eraser_cursor (GdkCursor **cursor,
+		   gint size);
+
+
+
+/* Quit the cursors and free the inners variables. */
+void 
+cursors_main_quit ();
+
+
+
 

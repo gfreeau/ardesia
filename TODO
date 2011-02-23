@@ -16,7 +16,6 @@
   - Investigate about the status and make a plan
   
 - Reengineering
-  - cursor the cairo image surfaces from the png will be cached
   - Store and load the savepoints using svg files
   - Use a layered canvas instead a windows set
   - Text insertion consolidation

@@ -710,31 +710,3 @@ void create_segmentation_fault ()
 }
 
 
-/* Swap blue with red in pibxbuf */
-void gdk_pixbuf_swap_blue_with_red (GdkPixbuf **pixbuf)
-{
-  gint  n_channels = gdk_pixbuf_get_n_channels (*pixbuf);
-
-  gint pixbuf_width = gdk_pixbuf_get_width(*pixbuf);
-  gint pixbuf_height = gdk_pixbuf_get_height(*pixbuf);
-  gint rowstride = gdk_pixbuf_get_rowstride (*pixbuf);
-  guchar *pixels = gdk_pixbuf_get_pixels (*pixbuf);
-
-  gint x =0;
-
-  for( x = 0; x < pixbuf_height; x++ )
-    {
-      gint y =0;
-
-      for( y = 0; y < pixbuf_width; y++ )
-	{
-	  guchar* p = pixels + y * rowstride + x * n_channels;
-          /* swap the pixel red value with the blue */
-	  guchar p0 = p[0];
-
-	  p[0] = p[2];
-	  p[2] = p0;
-	}
-    }
-
-}

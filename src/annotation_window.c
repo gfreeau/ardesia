@@ -194,7 +194,7 @@ disallocate_cursor ()
   if (data->cursor)
     {
       gdk_cursor_unref (data->cursor);
-      data->cursor = NULL;
+      data->cursor = (GdkCursor *) NULL;
     }
 }
 
@@ -304,7 +304,7 @@ annotate_draw_point_list (GSList* list)
 	    }
 
 	  annotate_modify_color (data, point->pressure);
-       
+
 	  /* Draw line between the two points. */
 	  annotate_draw_line (point->x, point->y, FALSE);
 	}
@@ -320,7 +320,7 @@ annotate_draw_curve (GSList *list)
 
   if (list)
     {
-      guint i = 0; 
+      guint i = 0;
       for (i=0; i<lenght; i=i+3)
 	{
 	  AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (list, i);
@@ -662,7 +662,7 @@ annotate_savepoint_list_free ()
       delete_savepoint (savepoint);
     }
 
-  data->savepoint_list = NULL;
+  data->savepoint_list = (GSList *) NULL;
 }
 
 
@@ -818,7 +818,7 @@ initialize_annotation_cairo_context(AnnotateData *data)
 #ifndef _WIN32
       gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1.0);
 #endif 	
-      annotate_acquire_grab ();	  
+      annotate_acquire_grab ();
     }
 }
 
@@ -980,7 +980,7 @@ annotate_modify_color (AnnotateData *data,
   if (pressure >= 1)
     {
       cairo_set_source_color_from_string (data->annotation_cairo_context,
-data->cur_context->fg_color);
+					  data->cur_context->fg_color);
     }
   else if (pressure <= 0.1)
     {
@@ -992,7 +992,7 @@ data->cur_context->fg_color);
   if (data->coord_list)
     {
       AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, 0);
-      old_pressure = last_point->pressure;     
+      old_pressure = last_point->pressure;
     }
 
   corrective = (1- ( 3 * pressure + old_pressure)/4) * contrast;
@@ -1076,7 +1076,7 @@ annotate_select_pen ()
 
   disallocate_cursor ();
 
-  annotate_set_pen_cursor (&data->cursor, data->thickness, data->cur_context->fg_color);
+  set_pen_cursor (&data->cursor, data->thickness, data->cur_context->fg_color);
 
   update_cursor ();
 }
@@ -1096,7 +1096,7 @@ annotate_select_eraser ()
 
   disallocate_cursor ();
 
-  annotate_set_eraser_cursor (&data->cursor, annotate_get_thickness ());
+  set_eraser_cursor (&data->cursor, annotate_get_thickness ());
 
   update_cursor ();
 }
@@ -1284,6 +1284,7 @@ annotate_quit ()
 
       /* Destroy cursors. */
       disallocate_cursor ();
+      cursors_main_quit ();
 
       if (data->invisible_cursor)
 	{
@@ -1462,6 +1463,7 @@ annotate_init (GtkWidget *parent,
 	       gchar *iwb_file,
 	       gboolean debug)
 {
+  cursors_main ();
   data = g_malloc ((gsize) sizeof (AnnotateData));
 
   /* Initialize the data structure. */

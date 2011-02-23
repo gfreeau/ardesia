@@ -25,13 +25,24 @@
 #include <utils.h>
 
 
+/* The image surface that will contain the pen icon. */
+static cairo_surface_t *pen_image_surface         = (cairo_surface_t*) NULL;
+
+/* The image surface that will contain the highlighter icon. */
+static cairo_surface_t *highlighter_image_surface = (cairo_surface_t*) NULL;
+
+/* The image surface that will contain the eraser icon. */
+static cairo_surface_t *eraser_image_surface      = (cairo_surface_t*) NULL;
+
+
 /*
  * Create pixmap and mask for the invisible cursor;
  * this is used to hide the cursor.
  */
 static void
 get_invisible_pixmaps (gint size,
-		       GdkPixmap **pixmap,GdkPixmap **mask)
+		       GdkPixmap **pixmap,
+                       GdkPixmap **mask)
 {
   cairo_t *invisible_cr = (cairo_t *) NULL;
   cairo_t *invisible_shape_cr = (cairo_t *) NULL;
@@ -54,6 +65,112 @@ get_invisible_pixmaps (gint size,
 }
 
 
+/* Get the eraser image surface. */
+static cairo_surface_t *
+get_eraser_image_surface ()
+{
+  if (eraser_image_surface)
+    {
+      return eraser_image_surface;
+    }
+
+  eraser_image_surface = cairo_image_surface_create_from_png (ERASER_ICON);
+  return eraser_image_surface;
+}
+
+
+/* Get the highlighter image surface. */
+static cairo_surface_t *
+get_highlighter_image_surface ()
+{
+  if (highlighter_image_surface)
+    {
+      return highlighter_image_surface;
+    }
+
+  highlighter_image_surface = cairo_image_surface_create_from_png (HIGHLIGHTER_ICON);
+  return highlighter_image_surface;
+}
+
+
+/* Get the pen image surface. */
+static cairo_surface_t *
+get_pen_image_surface ()
+{
+  if (pen_image_surface)
+    {
+      return pen_image_surface;
+    }
+
+  pen_image_surface = cairo_image_surface_create_from_png (PENCIL_ICON);
+  return pen_image_surface;
+}
+
+
+/* Destroy the eraser image surface. */
+static
+void destroy_eraser_image_surface ()
+{
+  if (eraser_image_surface)
+    {
+      cairo_surface_destroy (eraser_image_surface);
+    }
+}
+
+
+/* Destroy the highlighter image surface. */
+static
+void destroy_highlighter_image_surface ()
+{
+  if (highlighter_image_surface)
+    {
+      cairo_surface_destroy (highlighter_image_surface);
+    }
+}
+
+
+/* Destroy the pen image surface. */
+static
+void destroy_pen_image_surface ()
+{
+  if (pen_image_surface)
+    {
+      cairo_surface_destroy (pen_image_surface);
+    }
+}
+
+
+/* Swap blue with red in pibxbuf. */
+static void
+gdk_pixbuf_swap_blue_with_red (GdkPixbuf **pixbuf)
+{
+  gint  n_channels = gdk_pixbuf_get_n_channels (*pixbuf);
+
+  gint pixbuf_width = gdk_pixbuf_get_width(*pixbuf);
+  gint pixbuf_height = gdk_pixbuf_get_height(*pixbuf);
+  gint rowstride = gdk_pixbuf_get_rowstride (*pixbuf);
+  guchar *pixels = gdk_pixbuf_get_pixels (*pixbuf);
+
+  gint x =0;
+
+  for( x = 0; x < pixbuf_height; x++ )
+    {
+      gint y =0;
+
+      for( y = 0; y < pixbuf_width; y++ )
+	{
+	  guchar* p = pixels + y * rowstride + x * n_channels;
+          /* swap the pixel red value with the blue */
+	  guchar p0 = p[0];
+
+	  p[0] = p[2];
+	  p[2] = p0;
+	}
+    }
+
+}
+
+
 /* Create pixmap and mask for the eraser cursor. */
 static void
 get_eraser_pixbuf (gdouble size,
@@ -61,8 +178,7 @@ get_eraser_pixbuf (gdouble size,
 {
   gdouble circle_width = 2.0;
   cairo_t *eraser_cr = (cairo_t *) NULL;
-   
-  cairo_surface_t *image_surface = cairo_image_surface_create_from_png (ERASER_ICON);
+  cairo_surface_t *image_surface = get_eraser_image_surface ();
 
   gint width = size + cairo_image_surface_get_width (image_surface);
   gint height = size + cairo_image_surface_get_height (image_surface);
@@ -96,8 +212,6 @@ get_eraser_pixbuf (gdouble size,
   cairo_surface_destroy (surface);
   cairo_destroy (eraser_cr);
 
-  cairo_surface_destroy (image_surface);
-
   /* The pixbuf created by cairo has the r and b color inverted. */
   gdk_pixbuf_swap_blue_with_red (pixbuf);
 }
@@ -108,8 +222,7 @@ static void
 get_pen_pixbuf (GdkPixbuf **pixbuf,
 		gdouble size,
 		gchar *color,
-		gdouble thickness
-		)
+		gdouble thickness)
 {
   cairo_t *pen_cr = (cairo_t *) NULL;
   cairo_surface_t *surface = (cairo_surface_t *) NULL;
@@ -149,12 +262,12 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
   if (g_strcmp0 (alpha, "FF") == 0)
     {
       /* load the pencil icon. */
-      image_surface = cairo_image_surface_create_from_png (PENCIL_ICON);
+      image_surface = get_pen_image_surface ();
     }
   else
     {
       /* load the highlighter icon. */
-      image_surface = cairo_image_surface_create_from_png (HIGHLIGHTER_ICON);
+      image_surface = get_highlighter_image_surface ();
     }
 
   cairo_set_source_surface (pen_cr, image_surface, thickness/2, size);
@@ -163,7 +276,7 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
   cairo_stroke (pen_cr);
 
   /* Add a circle that respect the width and the selected colour. */
-  cairo_set_source_color_from_string ( pen_cr, color);
+  cairo_set_source_color_from_string (pen_cr, color);
  
   cairo_arc (pen_cr,
 	     size/2 + thickness/2,
@@ -176,10 +289,27 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
 
   cairo_surface_destroy (surface);
   cairo_destroy (pen_cr);
-  cairo_surface_destroy (image_surface);
 
   /* The pixbuf created by cairo has the r and b color inverted. */
   gdk_pixbuf_swap_blue_with_red (pixbuf);
+}
+
+
+/* Destroy the image surfaces used for the cursors. */
+static void
+destroy_cached_image_surfaces ()
+{
+  destroy_eraser_image_surface ();
+  destroy_pen_image_surface ();
+  destroy_highlighter_image_surface ();
+}
+
+
+/* Initialize the cursors variables. */
+void 
+cursors_main ()
+{
+  // The data will be loaded on runtime.
 }
 
 
@@ -199,8 +329,9 @@ allocate_invisible_cursor (GdkCursor **cursor)
 					mask,
 					foreground_color_p,
 					background_color_p,
-					0, 0);
- 
+					0,
+                                        0);
+
   g_object_unref (pixmap);
   g_object_unref (mask);
   g_free (foreground_color_p);
@@ -210,15 +341,14 @@ allocate_invisible_cursor (GdkCursor **cursor)
 
 /* Set the cursor patching the pixmap with the selected colour. */
 void
-annotate_set_pen_cursor (GdkCursor **cursor,
-			 gdouble thickness,
-			 gchar* color)
+set_pen_cursor (GdkCursor **cursor,
+		gdouble thickness,
+		gchar* color)
 {
-
   GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
-  gint size= 12;
+  gint size = 12;
 
-  get_pen_pixbuf ( &pixbuf, (gdouble) size, color, thickness);
+  get_pen_pixbuf (&pixbuf, (gdouble) size, color, thickness);
 
   *cursor = gdk_cursor_new_from_pixbuf (gdk_display_get_default (),
 					pixbuf,
@@ -226,26 +356,32 @@ annotate_set_pen_cursor (GdkCursor **cursor,
 					5* size/2);
 
   g_object_unref (pixbuf);
-
 }
 
 
 /* Set the eraser cursor. */
 void
-annotate_set_eraser_cursor (GdkCursor **cursor,
-			    gint size)
+set_eraser_cursor (GdkCursor **cursor,
+		   gint size)
 {
-
   GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
-
 
   get_eraser_pixbuf (size, &pixbuf);
 
   *cursor = gdk_cursor_new_from_pixbuf (gdk_display_get_default (),
 					pixbuf,
-					gdk_pixbuf_get_width(pixbuf)/2,
-					gdk_pixbuf_get_height(pixbuf)/2);
+					gdk_pixbuf_get_width (pixbuf)/2,
+					gdk_pixbuf_get_height (pixbuf)/2);
 
   g_object_unref (pixbuf);
-
 }
+
+
+/* Quit the cursors and free the inners variables. */
+void
+cursors_main_quit ()
+{
+  destroy_cached_image_surfaces ();
+}
+
+
