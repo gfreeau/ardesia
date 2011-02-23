@@ -128,7 +128,7 @@ static void found_min_and_max (GSList *list,
 
   /* Search the min and max coordinates */
   for (i=1; i<lenght; i++)
-     {
+    {
       AnnotatePoint *cur_point = (AnnotatePoint *) g_slist_nth_data (list, i);
       *minx = MIN (*minx, cur_point->x);
       *miny = MIN (*miny, cur_point->y);
@@ -468,18 +468,18 @@ build_outbounded_rectangle (GSList *list)
   found_min_and_max (list, &minx, &miny, &maxx, &maxy);
 
 
-AnnotatePoint *point3 =  allocate_point (minx, maxy, point->width, point->pressure);
-ret_list = g_slist_prepend (ret_list, point3);
+  AnnotatePoint *point3 =  allocate_point (minx, maxy, point->width, point->pressure);
+  ret_list = g_slist_prepend (ret_list, point3);
 
-AnnotatePoint *point2 =  allocate_point (maxx, maxy, point->width, point->pressure);
-ret_list = g_slist_prepend (ret_list, point2);
+  AnnotatePoint *point2 =  allocate_point (maxx, maxy, point->width, point->pressure);
+  ret_list = g_slist_prepend (ret_list, point2);
 
-AnnotatePoint *point1 =  allocate_point (maxx, miny, point->width, point->pressure);
-ret_list = g_slist_prepend (ret_list, point1);
+  AnnotatePoint *point1 =  allocate_point (maxx, miny, point->width, point->pressure);
+  ret_list = g_slist_prepend (ret_list, point1);
 
   AnnotatePoint *point0 =  allocate_point (minx, miny, point->width, point->pressure);
 
-ret_list = g_slist_prepend (ret_list, point0);
+  ret_list = g_slist_prepend (ret_list, point0);
 
   return ret_list;
 }
