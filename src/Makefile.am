@@ -36,6 +36,8 @@ ardesia_SOURCES = \
 	crash_dialog.h                            \
 	crash_dialog_callbacks.c                  \
 	crash_dialog_callbacks.h                  \
+	cursors.c                                 \
+	cursors.h                                 \
         pdf_saver.c                               \
 	pdf_saver.h                               \
         annotation_window.c                       \

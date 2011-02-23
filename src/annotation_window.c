@@ -29,6 +29,7 @@
 #include <broken.h>
 #include <background_window.h>
 #include <bezier_spline.h>
+#include <cursors.h>
 #include <iwb_loader.h>
 #include <iwb_saver.h>
 
@@ -186,215 +187,6 @@ update_cursor ()
 }
 
 
-/*
- * Create pixmap and mask for the invisible cursor;
- * this is used to hide the cursor.
- */
-static void
-get_invisible_pixmaps (gint size,
-		       GdkPixmap **pixmap,GdkPixmap **mask)
-{
-  cairo_t *invisible_cr = (cairo_t *) NULL;
-  cairo_t *invisible_shape_cr = (cairo_t *) NULL;
-
-  *pixmap = gdk_pixmap_new ((GdkDrawable *) NULL, size, size, 1);
-  *mask =  gdk_pixmap_new ((GdkDrawable *) NULL, size, size, 1);
-
-  invisible_cr = gdk_cairo_create (*pixmap);
-  
-  if (cairo_status (invisible_cr) != CAIRO_STATUS_SUCCESS)
-    {
-
-      if (data->debug)
-	{ 
-	  g_printerr ("Failed to allocate the cairo context to hide the cursor");
-	  annotate_quit ();
-	  exit (EXIT_FAILURE);
-	}
-
-    }
-
-  cairo_set_source_rgb (invisible_cr, 1, 1, 1);
-  cairo_paint (invisible_cr);
-  cairo_stroke (invisible_cr);
-  cairo_destroy (invisible_cr);
-
-  invisible_shape_cr = gdk_cairo_create (*mask);
-
-  if (cairo_status (invisible_shape_cr) != CAIRO_STATUS_SUCCESS)
-    {
-      g_printerr ("Failed to allocate the cairo context for the surface to be restored\n");
-      annotate_quit ();
-      exit (EXIT_FAILURE);
-    }
-  clear_cairo_context (invisible_shape_cr);
-  cairo_stroke (invisible_shape_cr);
-  cairo_destroy (invisible_shape_cr);
-}
-
-
-/* Allocate a invisible cursor that can be used to hide the cursor icon. */
-static void
-allocate_invisible_cursor ()
-{
-  GdkPixmap *pixmap = (GdkPixmap *) NULL;
-  GdkPixmap *mask = (GdkPixmap *) NULL;
-  GdkColor *background_color_p = rgba_to_gdkcolor (BLACK);
-  GdkColor *foreground_color_p = rgba_to_gdkcolor (WHITE);
-
-  get_invisible_pixmaps (1, &pixmap, &mask);
-  
-  data->invisible_cursor = gdk_cursor_new_from_pixmap (pixmap, mask,
-						       foreground_color_p,
-						       background_color_p,
-						       0, 0);
-  g_object_unref (pixmap);
-  g_object_unref (mask);
-  g_free (foreground_color_p);
-  g_free (background_color_p);			
-}
-
-
-/* Create pixmap and mask for the eraser cursor. */
-static void
-get_eraser_pixbuf (gdouble size,
-		   GdkPixbuf **pixbuf)
-{
-  gdouble circle_width = 2.0;
-  cairo_t *eraser_cr = (cairo_t *) NULL;
-   
-  cairo_surface_t *image_surface = cairo_image_surface_create_from_png (ERASER_ICON);
-
-  gint width = size + cairo_image_surface_get_width (image_surface);
-  gint height = size + cairo_image_surface_get_height (image_surface);
-
-  cairo_surface_t *surface = (cairo_surface_t *) NULL;
-
-  *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, width, height);
-
-  surface = cairo_image_surface_create_for_data (gdk_pixbuf_get_pixels (*pixbuf),
-						 CAIRO_FORMAT_RGB24,
-						 width,
-						 height,
-						 gdk_pixbuf_get_rowstride (*pixbuf));
-
-  eraser_cr = cairo_create (surface);
-
-  if (cairo_status (eraser_cr) != CAIRO_STATUS_SUCCESS)
-    {
-      g_printerr ("Failed to allocate the eraser cursor cairo context");
-      annotate_quit ();
-      exit (EXIT_FAILURE);
-    }
-
-  clear_cairo_context (eraser_cr);
-
-  cairo_set_line_width (eraser_cr, circle_width);
-
-  cairo_set_source_surface (eraser_cr, image_surface, 0, 0);
-
-  cairo_paint (eraser_cr);
-  cairo_stroke (eraser_cr);
-
-  /* Add a circle with the desired width. */
-  cairo_set_source_rgba (eraser_cr, 0, 0, 1, 1);
-  cairo_arc (eraser_cr, width/2, height/2, (size/2)-circle_width, 0, 2 * M_PI);
-  cairo_stroke (eraser_cr);
-
-  cairo_surface_destroy (surface);
-  cairo_destroy (eraser_cr);
-
-  cairo_surface_destroy (image_surface);
-
-  /* The pixbuf created by cairo has the r and b color inverted. */
-  gdk_pixbuf_swap_blue_with_red (pixbuf);
-}
-
-
-/* Create pixmap and mask for the pen cursor. */
-static void
-get_pen_pixbuf (gdouble size,
-		GdkPixbuf **pixbuf)
-{
-  cairo_t *pen_cr = (cairo_t *) NULL;
-  cairo_surface_t *surface = (cairo_surface_t *) NULL;
-  gdouble circle_width = 2.0;
-  gdouble side_lenght = (size*3) + data->thickness;
-
-  *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, (gint) side_lenght, (gint) side_lenght);
-
-
-  surface = cairo_image_surface_create_for_data (gdk_pixbuf_get_pixels (*pixbuf),
-						 CAIRO_FORMAT_RGB24,
-						 gdk_pixbuf_get_width (*pixbuf),
-						 gdk_pixbuf_get_height (*pixbuf),
-						 gdk_pixbuf_get_rowstride (*pixbuf));
-
-
-  pen_cr = cairo_create (surface);
-
-  if (cairo_status (pen_cr) != CAIRO_STATUS_SUCCESS)
-    {
-      g_printerr ("Failed to allocate the eraser cursor cairo context");
-      annotate_quit ();
-      exit (EXIT_FAILURE);
-    }
-
-  clear_cairo_context (pen_cr);
-
-  cairo_set_operator (pen_cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgb (pen_cr, 1, 1, 1);
-  cairo_paint (pen_cr);
-  cairo_stroke (pen_cr);
-
-  pen_cr = cairo_create (surface);
-
-  clear_cairo_context (pen_cr);
-
-  cairo_set_line_width (pen_cr, circle_width);
-
-  cairo_surface_t *image_surface = (cairo_surface_t *) NULL;
-
-  /* Take the opacity. */
-  gchar* alpha = g_substr (data->cur_context->fg_color, 6, 8);
-  
-  if (g_strcmp0 (alpha, "FF") == 0)
-    {
-      /* load the pencil icon. */
-      image_surface = cairo_image_surface_create_from_png (PENCIL_ICON);
-    }
-  else
-    {
-      /* load the highlighter icon. */
-      image_surface = cairo_image_surface_create_from_png (HIGHLIGHTER_ICON);
-    }
-
-  cairo_set_source_surface (pen_cr, image_surface, data->thickness/2, size);
-
-  cairo_paint (pen_cr);
-  cairo_stroke (pen_cr);
-
-  /* Add a circle that respect the width and the selected colour. */
-  cairo_set_source_color_from_string ( pen_cr, data->cur_context->fg_color);
- 
-  cairo_arc (pen_cr,
-	     size/2 + data->thickness/2,
-	     5 * size/2,
-	     data->thickness/2,
-	     0,
-	     2 * M_PI);
-
-  cairo_stroke (pen_cr);
-
-  cairo_surface_destroy (surface);
-  cairo_destroy (pen_cr);
-  cairo_surface_destroy (image_surface);
-
-  /* The pixbuf created by cairo has the r and b color inverted. */
-  gdk_pixbuf_swap_blue_with_red (pixbuf);
-}
-
-
 /* Dis-allocate cursor. */
 static void
 disallocate_cursor ()
@@ -404,56 +196,6 @@ disallocate_cursor ()
       gdk_cursor_unref (data->cursor);
       data->cursor = NULL;
     }
-}
-
-
-/* Set the cursor patching the pixmap with the selected colour. */
-static void
-annotate_set_pen_cursor ()
-{
-  GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
-  gint size= 12;
-  gint thickness = (gint) data->thickness;
-
-  disallocate_cursor ();
-
-  get_pen_pixbuf ((gdouble) size, &pixbuf);
-
-  if (data->debug)
-    {
-      g_printerr ("The colour %s has been selected\n", data->cur_context->fg_color);
-    }
-
-  data->cursor = gdk_cursor_new_from_pixbuf (gdk_display_get_default (),
-					     pixbuf,
-					     size/2 + thickness/2,
-					     5* size/2);
-
-  g_object_unref (pixbuf);
-
-  update_cursor ();
-}
-
-
-/* Set the eraser cursor. */
-static void
-annotate_set_eraser_cursor ()
-{
-  gdouble size = annotate_get_thickness ();
-  GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
-
-  disallocate_cursor ();
-
-  get_eraser_pixbuf (size, &pixbuf);
-
-  data->cursor = gdk_cursor_new_from_pixbuf (gdk_display_get_default (),
-					     pixbuf,
-					     gdk_pixbuf_get_width(pixbuf)/2,
-					     gdk_pixbuf_get_height(pixbuf)/2);
-
-  g_object_unref (pixbuf);
-
-  update_cursor ();
 }
 
 
@@ -1237,7 +979,8 @@ annotate_modify_color (AnnotateData *data,
 
   if (pressure >= 1)
     {
-      cairo_set_source_color_from_string (data->annotation_cairo_context, data->cur_context->fg_color);
+      cairo_set_source_color_from_string (data->annotation_cairo_context,
+data->cur_context->fg_color);
     }
   else if (pressure <= 0.1)
     {
@@ -1325,12 +1068,17 @@ annotate_select_pen ()
 {
   if (data->debug)
     {
-      g_printerr ("The pen has been selected\n");
+      g_printerr ("The pen with colour %s has been selected\n", data->cur_context->fg_color);
     }
 
   data->cur_context = data->default_pen;
   data->old_paint_type = ANNOTATE_PEN;
-  annotate_set_pen_cursor ();
+
+  disallocate_cursor ();
+
+  annotate_set_pen_cursor (&data->cursor, data->thickness, data->cur_context->fg_color);
+
+  update_cursor ();
 }
 
 
@@ -1345,7 +1093,12 @@ annotate_select_eraser ()
 
   data->cur_context = data->default_eraser;
   data->old_paint_type = ANNOTATE_ERASER;
-  annotate_set_eraser_cursor ();
+
+  disallocate_cursor ();
+
+  annotate_set_eraser_cursor (&data->cursor, annotate_get_thickness ());
+
+  update_cursor ();
 }
 
 
@@ -1727,7 +1480,7 @@ annotate_init (GtkWidget *parent,
 
   data->debug = debug;
   
-  allocate_invisible_cursor ();
+  allocate_invisible_cursor (&data->invisible_cursor);
   
   create_savepoint_dir ();
 
