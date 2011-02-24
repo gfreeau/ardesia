@@ -16,6 +16,8 @@
   - Investigate about the status and make a plan
   
 - Reengineering
+  - See if the intltool is really required by the build
+    sistem; this cause a perl dependency
   - Store and load the savepoints using svg files
   - Use a layered canvas instead a windows set
   - Text insertion consolidation
