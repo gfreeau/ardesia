@@ -17,8 +17,8 @@
   
 - Reengineering
   - Store and load the savepoints using svg files
-  - Use a layered canvas instead a windows set
   - Text insertion consolidation
+  - Use a layered canvas instead a windows set
   - Create the iwb without spawn the zip/unzip process
   - Screencast recorder using lib instead spawn processes
 
@@ -33,7 +33,6 @@
   - Move
   - Copy/paste
   - Multi pointer support
-  - Configurable thickness size
   - Zoom
   - Not parallel to the axis polygon recognition
   - Rotate the shapes

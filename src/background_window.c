@@ -99,6 +99,9 @@ load_color ()
       sscanf (background_data->background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
 
       cairo_set_operator (background_data->back_cr, CAIRO_OPERATOR_SOURCE);
+
+
+#ifdef WIN32
       cairo_set_source_rgb (background_data->back_cr, (gdouble) r/256, (gdouble) g/256, (gdouble) b/256);
 
       /*
@@ -108,6 +111,14 @@ load_color ()
        * the problem on windows with rgba. 
        */
       gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), (gdouble) a/256);
+#else
+      gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), 1);
+      cairo_set_source_rgba (background_data->back_cr,
+                             (gdouble) r/256,
+			     (gdouble) g/256,
+			     (gdouble) b/256,
+			     (gdouble) a/256);
+#endif
 
       cairo_paint (background_data->back_cr);
       cairo_stroke (background_data->back_cr);
