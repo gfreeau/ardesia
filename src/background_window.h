@@ -65,14 +65,24 @@ GtkWidget *
 create_background_window ();
 
 
-/* Change the background image. */
+/* Set the background image. */
 void
-change_background_image (gchar *background_image);
+set_background_image (gchar *background_image);
 
 
-/* Change the background colour. */
+/* Get the background image */
+gchar * 
+get_background_image();
+
+
+/* Set the background colour. */
 void
-change_background_color (gchar *rgba);
+set_background_color (gchar *rgba);
+
+
+/* Get the background colour */
+gchar * 
+get_background_color();
 
 
 /* Clear the background. */
@@ -93,5 +103,10 @@ get_background_window ();
 /* Set the background window. */
 void
 set_background_window (GtkWidget *widget);
+
+
+/* Upgrade the background window */
+void 
+update_background();
 
 

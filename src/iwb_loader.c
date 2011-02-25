@@ -21,6 +21,109 @@
 #include <utils.h>
 #include <iwb_loader.h>
 #include <annotation_window.h>
+#include <background_window.h>
+
+
+/* Add the background image reference. */
+static void
+add_background_image_reference (gchar *project_tmp_dir,
+                                xmlChar *href)
+{
+  /* It is an image */
+  gchar *background_path = "";
+  background_path = g_build_filename (project_tmp_dir, href, (gchar *) 0);
+  set_background_image (background_path);
+}
+
+
+/* Add the background color reference. */
+static void
+add_background_color_reference (xmlXPathContextPtr context,
+                                xmlChar *ref)
+{
+  xmlChar *xpath = (xmlChar *) g_strdup_printf ("/iwb/svg:svg/svg:rect[@id='%s']", (gchar *) ref);
+  xmlXPathObjectPtr result = xmlXPathEvalExpression (xpath, context);
+  xmlNodePtr node = result->nodesetval->nodeTab[0];
+
+  /* e.g. rbg(255,255,255) */
+  xmlChar *fill = xmlGetProp (node, (xmlChar *) "fill");
+  gint open_bracket_index = g_substrlastpos ((const gchar *)fill, "(");
+  gint comma_index = g_substrlastpos ((const gchar *)fill, ",");
+  gint close_bracket_index = g_substrlastpos ((const gchar *)fill, ")");
+
+  gchar *blue = g_substr ((const gchar *)fill, comma_index+1, close_bracket_index-1);
+
+  guint16 bd =  (guint16) g_ascii_strtoull (blue, NULL, 10);
+  g_free(blue);
+
+  gchar *remain_string = g_substr ((const gchar *)fill, open_bracket_index+1, comma_index-1);
+
+  g_free ( (gchar*) fill);
+
+  /* e.g. 255,255 */
+  comma_index = g_substrlastpos ((const gchar *)remain_string, ",");
+
+  gchar *red = g_substr ((const gchar *)remain_string, 0, comma_index-1);
+
+  guint16 rd =  (guint16) g_ascii_strtoull (red, NULL, 10);
+
+  g_free(red);
+
+  gchar *green = g_substr ((const gchar *)remain_string, comma_index+1, strlen (remain_string)-1);
+
+  guint16 gd =  (guint16) g_ascii_strtoull (green, NULL, 10);
+
+  g_free(green);
+
+  g_free(remain_string);
+
+  /* e.g. 255 */
+  xmlChar *alpha = xmlGetProp (node, (xmlChar *) "fill-opacity");
+  guint16 ad =  (guint16) g_ascii_strtoull ((gchar *) alpha, NULL, 10);
+
+  /* FFFFFFFF */
+
+  gchar *rgba = g_strdup_printf ("%02x%02x%02x%02x",
+				 rd,
+				 gd,
+				 bd,
+				 ad
+				 );
+
+  set_background_color (rgba);
+
+  g_free( (gchar * ) alpha);
+  g_free( (gchar * ) xpath);
+}
+
+
+/* Follow the ref and load the associated save-point. */
+void
+load_background_by_reference (gchar *project_tmp_dir,
+			      xmlXPathContextPtr context,
+			      xmlChar *ref)
+{
+  xmlChar *xpath = (xmlChar *) g_strdup_printf ("/iwb/svg:svg/svg:image[@id='%s']", (gchar *) ref);
+  xmlXPathObjectPtr result = xmlXPathEvalExpression (xpath, context);
+
+  if (result->nodesetval)
+    {
+      xmlNodePtr node = result->nodesetval->nodeTab[0];
+      xmlChar *href = xmlGetProp (node, (xmlChar *) "href");
+
+      if (!href)
+	{
+	  add_background_color_reference (context, ref);
+	}
+      else
+	{
+	  add_background_image_reference (project_tmp_dir, href);
+	}
+    }
+  /* Cleanup of XPath data. */
+  xmlXPathFreeObject (result);
+  g_free ((gchar *) xpath);
+}
 
 
 /* Follow the ref and load the associated save-point. */
@@ -32,7 +135,7 @@ load_savepoint_by_reference (GSList *savepoint_list,
 {
   xmlChar *xpath = (xmlChar *) g_strdup_printf ("/iwb/svg:svg/svg:image[@id='%s']", (gchar *) ref);
   xmlXPathObjectPtr result = xmlXPathEvalExpression (xpath, context); 
-  AnnotateSavepoint *savepoint = g_malloc ( (gsize) sizeof (AnnotateSavepoint));   
+  AnnotateSavepoint *savepoint = g_malloc ( (gsize) sizeof (AnnotateSavepoint));
   xmlNodePtr node = result->nodesetval->nodeTab[0];
   xmlChar *href = xmlGetProp (node, (xmlChar *) "href");
   g_free ((gchar *) xpath);
@@ -82,7 +185,7 @@ static xmlXPathContextPtr register_namespaces (xmlXPathContextPtr context)
 }
 
 
-/* Load save-points from iwb */
+/* Load save-points from iwb. */
 static GSList *
 load_savepoints_by_iwb (GSList *savepoint_list,
 			gchar *project_tmp_dir,
@@ -92,9 +195,10 @@ load_savepoints_by_iwb (GSList *savepoint_list,
   xmlXPathObjectPtr result = xmlXPathEvalExpression (xpath_get_element, context);
   gint i =0;
 
-  if (xmlXPathNodeSetIsEmpty (result->nodesetval)){
-    return savepoint_list;
-  }
+  if (xmlXPathNodeSetIsEmpty (result->nodesetval))
+    {
+      return savepoint_list;
+    }
 
   /* Surf for all the iwb element. */
   for (i=0; i < result->nodesetval->nodeNr; i++)
@@ -107,13 +211,15 @@ load_savepoints_by_iwb (GSList *savepoint_list,
 	{
 	  if (g_strcmp0 ( (gchar *) background, "true") == 0)
 	    { 
+              load_background_by_reference (project_tmp_dir, context, ref);
 	      xmlFree (background);
-	      continue;
 	    }
 	}
-
-      /* Follow the ref and take xlink href filename. */
-      savepoint_list = load_savepoint_by_reference (savepoint_list, project_tmp_dir, context, ref);
+      else
+        {
+	  /* Follow the ref and take xlink href filename. */
+	  savepoint_list = load_savepoint_by_reference (savepoint_list, project_tmp_dir, context, ref);
+        }
       xmlFree (ref);
     }
 

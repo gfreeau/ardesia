@@ -818,7 +818,8 @@ initialize_annotation_cairo_context(AnnotateData *data)
 
       if (data->savepoint_list == NULL)
 	{
-	  annotate_clear_screen ();
+	    annotate_reset_cairo ();
+            clear_cairo_context (data->annotation_cairo_context);
 	}
 #ifndef _WIN32
       gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1.0);

@@ -24,6 +24,7 @@
 
 #include <utils.h>
 #include <iwb_saver.h>
+#include <background_window.h>
 
 
 /* The file pointer to the iwb file. */
@@ -82,36 +83,6 @@ close_svg ()
 }
 
 
-/* Add the background element. */
-static void
-add_background ()
-{
-  gint width  = gdk_screen_width ();
-  gint height = gdk_screen_height ();
-  gchar *rgb  = "rgb (0,0,0)";
-  gchar *opacity = "0";
-
-  open_svg ();
-
-  fprintf (fp,
-	   "\t\t<svg:rect id=\"id1\" x=\"0\" y=\"0\" width=\"%d\" height=\"%d\" fill=\"%s\" fill-opacity=\"%s\"/>\n",
-	   width,
-	   height,
-	   rgb,opacity);
-
-  close_svg ();
-}
-
-
-/* Add the background reference. */
-static void
-add_background_reference ()
-{
-  fprintf (fp,
-	   "\t<iwb:element ref=\"id1\" background=\"true\"/>\n");
-}
-
-
 /* Add the savepoint element. */
 static void
 add_savepoint (gint index)
@@ -133,6 +104,78 @@ add_savepoint (gint index)
   file = NULL;
   g_free (id);
   close_svg ();
+}
+
+
+/* Add the background element. */
+static void
+add_background (gchar *img_dir_path,
+                gchar *background_image)
+{
+  gint width  = gdk_screen_width ();
+  gint height = gdk_screen_height ();
+
+
+  gchar *image_destination_path = g_build_filename (img_dir_path, "ardesia_0_vellum.png", (gchar *) 0);
+
+  g_remove(image_destination_path);
+
+  if (background_image)
+    {
+      // copy the file in ardesia_0_vellum.png under image_path
+      GFile *image_destination = g_file_new_for_path(image_destination_path);
+      GFile *image_source = g_file_new_for_path(background_image);
+
+      g_file_copy (image_source,
+                   image_destination,
+		   G_FILE_COPY_OVERWRITE,
+		   NULL,
+		   NULL,
+		   NULL,
+		   NULL);
+
+      add_savepoint (0);
+
+      g_object_unref (image_source);
+      g_object_unref (image_destination);
+    }
+  else
+    {
+
+      gchar *color = get_background_color();
+      guint r, g, b, a;
+
+      if (color!=NULL)
+	{
+	  sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+        }
+      else
+	{
+          r = 0; g=0; b=0; a=0;
+	}
+      gchar *rgb  =  g_strdup_printf ("rgb(%d,%d,%d)", r, g, b);
+
+      open_svg ();
+      fprintf (fp,
+	       "\t\t<svg:rect id=\"id1\" x=\"0\" y=\"0\" width=\"%d\" height=\"%d\" fill=\"%s\" fill-opacity=\"%d\"/>\n",
+	       width,
+	       height,
+	       rgb,
+	       a);
+      close_svg ();
+      g_free(rgb);
+    }
+
+  g_free(image_destination_path);
+}
+
+
+/* Add the background reference. */
+static void
+add_background_reference ()
+{
+  fprintf (fp,
+	   "\t<iwb:element ref=\"id1\" background=\"true\"/>\n");
 }
 
 
@@ -175,12 +218,21 @@ add_savepoint_references (gint savepoint_number)
 /* Create the iwb xml content file. */
 static void
 create_xml_content (gchar *content_filename,
-		    gchar *img_dir_path)
+		    gchar *img_dir_path,
+                    gchar *background_image)
 {
-  int savepoint_number = 0;
+  int savepoint_number = -1;
   GDir *img_dir;  
 
   fp = fopen (content_filename, "w");
+
+  add_header ();
+  add_background (img_dir_path, background_image);
+
+  if (!background_image)
+    {
+       savepoint_number = 0;
+    }
 
   img_dir = g_dir_open (img_dir_path, 0, NULL);
 
@@ -191,8 +243,6 @@ create_xml_content (gchar *content_filename,
 
   g_dir_close (img_dir);
 
-  add_header ();
-  add_background ();
   add_savepoints (savepoint_number);
   add_background_reference ();
   add_savepoint_references (savepoint_number);
@@ -242,11 +292,13 @@ export_iwb (gchar *iwb_location)
   gchar *images = "images";
   gchar *img_dir_path = g_build_filename (project_tmp_dir, images, (gchar *) 0);
 
-  gchar *first_savepoint_file = g_strdup_printf ("%s%s%s_2_vellum.png", img_dir_path, G_DIR_SEPARATOR_S, PACKAGE_NAME);
-  /* if exist the file I continue to save */
-  if (file_exists(first_savepoint_file))  
-    {
+  gchar *background_image = get_background_image();
 
+  gchar *first_savepoint_file = g_strdup_printf ("%s%s%s_1_vellum.png", img_dir_path, G_DIR_SEPARATOR_S, PACKAGE_NAME);
+  /* if exist the file I continue to save */
+  if ((file_exists(first_savepoint_file)) || (background_image))
+    {
+      
       /* If the iwb location is null means that it is a new project. */
       if (iwb_location == NULL)
 	{
@@ -266,7 +318,8 @@ export_iwb (gchar *iwb_location)
 	}
 
       g_remove (content_filepath);
-      create_xml_content (content_filepath, img_dir_path);
+
+      create_xml_content (content_filepath, img_dir_path, background_image);
 
       create_iwb (iwb_file, project_tmp_dir, "images", content_filename);
 
@@ -274,7 +327,7 @@ export_iwb (gchar *iwb_location)
       add_artifact (iwb_file);
     }
 
-  g_free (first_savepoint_file); 
+  g_free (first_savepoint_file);
   g_free (iwb_file);
   g_free (ardesia_tmp_dir);
   g_free (project_tmp_dir);

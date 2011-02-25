@@ -260,11 +260,13 @@ cairo_set_source_color_from_string ( cairo_t *cr,
     {
       guint r,g,b,a;
       sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+
       cairo_set_source_rgba (cr,
-			     (gdouble) r/255,
-			     (gdouble) g/255,
-			     (gdouble) b/255,
-			     (gdouble) a/255);
+			     1.0 * r / 255,
+			     1.0 * g /255,
+			     1.0 * b /255,
+			     1.0 * a /255);
+
     }
 }
 

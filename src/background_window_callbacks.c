@@ -48,11 +48,11 @@ back_event_expose(GtkWidget *widget,
 
   if (background_data->background_image)
     {
-      change_background_image (background_data->background_image);
+      set_background_image (background_data->background_image);
     }
   else if (background_data->background_color)
     {
-      change_background_color (background_data->background_color);
+      set_background_color (background_data->background_color);
     }
   else
     {

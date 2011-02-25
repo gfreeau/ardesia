@@ -280,9 +280,25 @@ create_background_window ()
 }
 
 
+/* Get the background image */
+gchar * 
+get_background_image()
+{
+  return background_data->background_image;
+}
+
+
+/* Get the background colour */
+gchar * 
+get_background_color()
+{
+  return background_data->background_color;
+}
+
+
 /* Change the background image of ardesia. */
 void
-change_background_image (gchar *name)
+set_background_image (gchar *name)
 {
   if (background_data->background_color)
     {
@@ -297,11 +313,12 @@ change_background_image (gchar *name)
 
 /* Change the background colour of ardesia. */
 void
-change_background_color (gchar* rgba)
+set_background_color (gchar* rgba)
 {
   if (background_data->background_image)
     {
       g_free (background_data->background_image);
+      background_data->background_image = (gchar *) NULL;
     }
 
   background_data->background_color = g_strdup_printf ("%s", rgba);
