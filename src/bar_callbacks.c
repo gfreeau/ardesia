@@ -85,13 +85,61 @@ quit (BarData *bar_data)
 }
 
 
+/* Is the toggle tool button specified with name is active? */
+static gboolean
+is_toggle_tool_button_active(gchar *toggle_tool_button_name)
+{
+  GObject *g_object = gtk_builder_get_object (bar_gtk_builder, toggle_tool_button_name);
+  GtkToggleToolButton *toggle_tool_button = GTK_TOGGLE_TOOL_BUTTON (g_object);
+  return gtk_toggle_tool_button_get_active (toggle_tool_button);
+}
+
+
+/* Is the text toggle tool button active? */
+static
+gboolean is_text_toggle_tool_button_active ()
+{
+  return is_toggle_tool_button_active("buttonText");
+}
+
+
+/* Is the highlighter toggle tool button active? */
+static
+gboolean is_highlighter_toggle_tool_button_active ()
+{
+  return is_toggle_tool_button_active("buttonHighlighter");
+}
+
+
+/* Is the eraser toggle tool button active? */
+static
+gboolean is_eraser_toggle_tool_button_active ()
+{
+  return is_toggle_tool_button_active("buttonEraser");
+}
+
+
+/* Is the pointer toggle tool button active? */
+static
+gboolean is_pointer_toggle_tool_button_active ()
+{
+  return is_toggle_tool_button_active("buttonPointer");
+}
+
+
+/* Is the pointer toggle tool button active? */
+static
+gboolean is_arrow_toggle_tool_button_active ()
+{
+  return is_toggle_tool_button_active("buttonArrow");
+}
+
+
 /* Add alpha channel to build the RGBA string. */
 static void
 add_alpha (BarData *bar_data)
 {
-  GObject *obj = gtk_builder_get_object (bar_gtk_builder, "buttonHighlighter");
-  GtkToggleToolButton *tool_button = GTK_TOGGLE_TOOL_BUTTON (obj);
-  if ( gtk_toggle_tool_button_get_active (tool_button))
+  if (is_highlighter_toggle_tool_button_active ())
     {
       strncpy (&bar_data->color[6], SEMI_OPAQUE_ALPHA, 2);
     }
@@ -106,26 +154,22 @@ add_alpha (BarData *bar_data)
 static void
 take_pen_tool ()
 {
-  GObject *eraser_obj = gtk_builder_get_object (bar_gtk_builder, "buttonEraser");
-  GtkToggleToolButton *eraser_tool_button = GTK_TOGGLE_TOOL_BUTTON (eraser_obj);
-  gboolean is_eraser_active = gtk_toggle_tool_button_get_active (eraser_tool_button);
-
   GObject *pencil_obj = gtk_builder_get_object (bar_gtk_builder, "buttonPencil");
   GtkToggleToolButton *pencil_tool_button = GTK_TOGGLE_TOOL_BUTTON (pencil_obj);
 
-  GObject *pointer_obj = gtk_builder_get_object (bar_gtk_builder, "buttonPointer");
-  GtkToggleToolButton *pointer_tool_button = GTK_TOGGLE_TOOL_BUTTON (pointer_obj);
-  gboolean is_pointer_active = gtk_toggle_tool_button_get_active (pointer_tool_button);
-
   /* Select the pen as default tool. */
-  if (is_eraser_active)
+  if (is_eraser_toggle_tool_button_active ())
     {
+      GObject *eraser_obj = gtk_builder_get_object (bar_gtk_builder, "buttonEraser");
+      GtkToggleToolButton *eraser_tool_button = GTK_TOGGLE_TOOL_BUTTON (eraser_obj);
       gtk_toggle_tool_button_set_active (eraser_tool_button, FALSE);
       gtk_toggle_tool_button_set_active (pencil_tool_button, TRUE);
     }
 
-  if (is_pointer_active)
+  if (is_pointer_toggle_tool_button_active ())
     {
+      GObject *pointer_obj = gtk_builder_get_object (bar_gtk_builder, "buttonPointer");
+      GtkToggleToolButton *pointer_tool_button = GTK_TOGGLE_TOOL_BUTTON (pointer_obj);
       gtk_toggle_tool_button_set_active (pointer_tool_button, FALSE);
       gtk_toggle_tool_button_set_active (pencil_tool_button, TRUE);
     }
@@ -151,11 +195,11 @@ release_lock(BarData *bar_data)
       if (gtk_window_get_opacity (GTK_WINDOW (get_background_window ()))!=0)
 	{
 	  /* 
-	   * @HACK This allow the mouse input go below the window putting 
+	   * @HACK This allow the mouse input go below the window putting
            * the opacity to 0; when will be found a better way to make
            * the window transparent to the the pointer input we might
            * remove the previous hack.
-           * @TODO Transparent window to the pointer input in a better way. 
+           * @TODO Transparent window to the pointer input in a better way.
 	   */
 	  gtk_window_set_opacity (GTK_WINDOW (get_background_window ()), 0);
 	}
@@ -186,7 +230,7 @@ lock (BarData *bar_data)
 
       /* 
        * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
-       * @TODO remove the opacity hack when will be solved the next todo. 
+       * @TODO remove the opacity hack when will be solved the next todo.
        */
       if (gtk_window_get_opacity (GTK_WINDOW (get_background_window ()))==0)
 	{
@@ -212,13 +256,6 @@ set_color (BarData *bar_data,
 /* Pass the options to the annotation window. */
 static void set_options (BarData *bar_data)
 {
-  GObject *eraser_obj = gtk_builder_get_object (bar_gtk_builder, "buttonEraser");
-  GtkToggleToolButton *eraser_tool_button = GTK_TOGGLE_TOOL_BUTTON (eraser_obj);
-  gboolean is_eraser_active = gtk_toggle_tool_button_get_active (eraser_tool_button);
-
-  GObject *arrow_obj = gtk_builder_get_object (bar_gtk_builder, "buttonArrow");
-  GtkToggleToolButton *arrow_tool_button = GTK_TOGGLE_TOOL_BUTTON (arrow_obj);
-  gboolean is_arrow_active = gtk_toggle_tool_button_get_active (arrow_tool_button);
 
   annotate_set_rectifier (bar_data->rectifier);
   
@@ -226,9 +263,9 @@ static void set_options (BarData *bar_data)
   
   annotate_set_thickness (bar_data->thickness);
   
-  annotate_set_arrow (is_arrow_active);
+  annotate_set_arrow (is_arrow_toggle_tool_button_active ());
 
-  if ( is_eraser_active )
+  if (is_eraser_toggle_tool_button_active ())
     {
       annotate_select_eraser ();
    
@@ -250,11 +287,8 @@ start_tool (BarData *bar_data)
 {
   if (bar_data->grab)
     {
-      GObject *text_obj = gtk_builder_get_object (bar_gtk_builder, "buttonText");
-      GtkToggleToolButton *text_tool_button = GTK_TOGGLE_TOOL_BUTTON (text_obj);
-      gboolean is_text_active = gtk_toggle_tool_button_get_active (text_tool_button);
 
-      if (is_text_active)
+      if (is_text_toggle_tool_button_active ())
         {
 	  /* Text button then start the text widget. */
 	  annotate_release_grab ();
@@ -344,10 +378,7 @@ on_bar_enter_notify_event       (GtkWidget       *widget,
 				 GdkEvent        *event,
 				 gpointer         func_data)
 {
-  GObject *text_obj = gtk_builder_get_object (bar_gtk_builder, "buttonText");
-
-  GtkToggleToolButton *text_tool_button = GTK_TOGGLE_TOOL_BUTTON (text_obj);
-  if ( gtk_toggle_tool_button_get_active (text_tool_button))
+  if (is_text_toggle_tool_button_active ())
     {
       stop_text_widget ();
     }
