@@ -344,9 +344,8 @@ on_bar_enter_notify_event       (GtkWidget       *widget,
 				 GdkEvent        *event,
 				 gpointer         func_data)
 {
-  BarData *bar_data = (BarData *) func_data;
-
   GObject *text_obj = gtk_builder_get_object (bar_gtk_builder, "buttonText");
+
   GtkToggleToolButton *text_tool_button = GTK_TOGGLE_TOOL_BUTTON (text_obj);
   if ( gtk_toggle_tool_button_get_active (text_tool_button))
     {
