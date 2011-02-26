@@ -114,16 +114,9 @@ init_bar_data ()
   BarData *bar_data = (BarData *) g_malloc ((gsize) sizeof (BarData));
   bar_data->color = g_strdup_printf ("%s", "FF0000FF");
   bar_data->annotation_is_visible = TRUE;
-  bar_data->pencil = TRUE;
   bar_data->grab = TRUE;
-  bar_data->text = FALSE;
-  
-
-  bar_data->highlighter = FALSE;
   bar_data->rectifier = FALSE;
   bar_data->rounder = FALSE;
-  bar_data->arrow = FALSE;
-
   bar_data->thickness = MEDIUM_THICKNESS;
 
   return bar_data;

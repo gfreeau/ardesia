@@ -52,23 +52,11 @@
 typedef struct
 {
 
-  /* Is the text tool enabled. */
-  gboolean text;
-
-  /* pencil is selected. */
-  gboolean pencil;
-
-  /* highlighter flag. */
-  gboolean highlighter;
-
   /* rectifier flag. */
   gboolean rectifier;
 
   /* rounder flag. */
   gboolean rounder;
-
-  /* arrow flag. */
-  gboolean arrow;
 
   /* selected colour in RGBA format. */
   gchar* color;
@@ -81,8 +69,6 @@ typedef struct
 
   /* grab when leave. */
   gboolean grab;
-
-  GSList *thick_list;
 
 }BarData;
 

@@ -89,7 +89,9 @@ quit (BarData *bar_data)
 static void
 add_alpha (BarData *bar_data)
 {
-  if (bar_data->highlighter)
+  GObject *obj = gtk_builder_get_object (bar_gtk_builder, "buttonHighlighter");
+  GtkToggleToolButton *tool_button = GTK_TOGGLE_TOOL_BUTTON (obj);
+  if ( gtk_toggle_tool_button_get_active (tool_button))
     {
       strncpy (&bar_data->color[6], SEMI_OPAQUE_ALPHA, 2);
     }
@@ -105,14 +107,26 @@ static void
 take_pen_tool ()
 {
   GObject *eraser_obj = gtk_builder_get_object (bar_gtk_builder, "buttonEraser");
-  GObject *pencil_obj = gtk_builder_get_object (bar_gtk_builder, "buttonPencil");
   GtkToggleToolButton *eraser_tool_button = GTK_TOGGLE_TOOL_BUTTON (eraser_obj);
+  gboolean is_eraser_active = gtk_toggle_tool_button_get_active (eraser_tool_button);
+
+  GObject *pencil_obj = gtk_builder_get_object (bar_gtk_builder, "buttonPencil");
   GtkToggleToolButton *pencil_tool_button = GTK_TOGGLE_TOOL_BUTTON (pencil_obj);
 
+  GObject *pointer_obj = gtk_builder_get_object (bar_gtk_builder, "buttonPointer");
+  GtkToggleToolButton *pointer_tool_button = GTK_TOGGLE_TOOL_BUTTON (pointer_obj);
+  gboolean is_pointer_active = gtk_toggle_tool_button_get_active (pointer_tool_button);
+
   /* Select the pen as default tool. */
-  if (gtk_toggle_tool_button_get_active (eraser_tool_button))
+  if (is_eraser_active)
     {
       gtk_toggle_tool_button_set_active (eraser_tool_button, FALSE);
+      gtk_toggle_tool_button_set_active (pencil_tool_button, TRUE);
+    }
+
+  if (is_pointer_active)
+    {
+      gtk_toggle_tool_button_set_active (pointer_tool_button, FALSE);
       gtk_toggle_tool_button_set_active (pencil_tool_button, TRUE);
     }
 
@@ -198,25 +212,36 @@ set_color (BarData *bar_data,
 /* Pass the options to the annotation window. */
 static void set_options (BarData *bar_data)
 {
+  GObject *eraser_obj = gtk_builder_get_object (bar_gtk_builder, "buttonEraser");
+  GtkToggleToolButton *eraser_tool_button = GTK_TOGGLE_TOOL_BUTTON (eraser_obj);
+  gboolean is_eraser_active = gtk_toggle_tool_button_get_active (eraser_tool_button);
+
+  GObject *arrow_obj = gtk_builder_get_object (bar_gtk_builder, "buttonArrow");
+  GtkToggleToolButton *arrow_tool_button = GTK_TOGGLE_TOOL_BUTTON (arrow_obj);
+  gboolean is_arrow_active = gtk_toggle_tool_button_get_active (arrow_tool_button);
+
   annotate_set_rectifier (bar_data->rectifier);
   
   annotate_set_rounder (bar_data->rounder);
   
   annotate_set_thickness (bar_data->thickness);
   
-  annotate_set_arrow (bar_data->arrow);
- 
-  if ( (bar_data->pencil)|| (bar_data->arrow))
+  annotate_set_arrow (is_arrow_active);
+
+  if ( is_eraser_active )
+    {
+      annotate_select_eraser ();
+   
+    }
+  else
     {
       annotate_set_color (bar_data->color);
       annotate_select_pen ();
     }
-  else
-    {
-      annotate_select_eraser ();
-    }
 
 }
+
+
 
 
 /* Start to paint with the selected tool. */
@@ -225,8 +250,11 @@ start_tool (BarData *bar_data)
 {
   if (bar_data->grab)
     {
+      GObject *text_obj = gtk_builder_get_object (bar_gtk_builder, "buttonText");
+      GtkToggleToolButton *text_tool_button = GTK_TOGGLE_TOOL_BUTTON (text_obj);
+      gboolean is_text_active = gtk_toggle_tool_button_get_active (text_tool_button);
 
-      if (bar_data->text)
+      if (is_text_active)
         {
 	  /* Text button then start the text widget. */
 	  annotate_release_grab ();
@@ -318,7 +346,9 @@ on_bar_enter_notify_event       (GtkWidget       *widget,
 {
   BarData *bar_data = (BarData *) func_data;
 
-  if (bar_data->text)
+  GObject *text_obj = gtk_builder_get_object (bar_gtk_builder, "buttonText");
+  GtkToggleToolButton *text_tool_button = GTK_TOGGLE_TOOL_BUTTON (text_obj);
+  if ( gtk_toggle_tool_button_get_active (text_tool_button))
     {
       stop_text_widget ();
     }
@@ -354,10 +384,6 @@ on_bar_pointer_activate           (GtkToolButton   *toolbutton,
 				   gpointer         func_data)
 {
   BarData *bar_data = (BarData *) func_data;
-  bar_data->text = FALSE;
-  bar_data->pencil = FALSE;
-  bar_data->arrow = FALSE;
-  bar_data->highlighter = FALSE;
   release_lock(bar_data);
 }
 
@@ -368,10 +394,6 @@ on_bar_arrow_activate           (GtkToolButton   *toolbutton,
 				 gpointer         func_data)
 {
   BarData *bar_data = (BarData *) func_data;
-  bar_data->text = FALSE;
-  bar_data->pencil = TRUE;
-  bar_data->arrow = TRUE;
-  bar_data->highlighter = FALSE;
   set_color (bar_data, bar_data->color);
 }
 
@@ -383,9 +405,6 @@ on_bar_text_activate            (GtkToolButton   *toolbutton,
 {
   BarData *bar_data = (BarData *) func_data;
   lock (bar_data);
-  bar_data->text = TRUE;
-  bar_data->arrow = FALSE;
-  bar_data->highlighter = FALSE;
 }
 
 
@@ -396,10 +415,6 @@ on_bar_highlighter_activate     (GtkToolButton   *toolbutton,
 {
   BarData *bar_data = (BarData *) func_data;
   lock (bar_data);
-  bar_data->text = FALSE;
-  bar_data->pencil = TRUE;
-  bar_data->arrow = FALSE;
-  bar_data->highlighter = TRUE;
 }
 
 
@@ -487,10 +502,6 @@ on_bar_pencil_activate          (GtkToolButton   *toolbutton,
 {
   BarData *bar_data = (BarData *) func_data;
   lock (bar_data);
-  bar_data->text = FALSE;
-  bar_data->pencil = TRUE;
-  bar_data->arrow = FALSE;
-  bar_data->highlighter = FALSE;
   set_color (bar_data, bar_data->color);
 }
 
@@ -502,9 +513,6 @@ on_bar_eraser_activate          (GtkToolButton   *toolbutton,
 {
   BarData *bar_data = (BarData *) func_data;
   lock (bar_data);
-  bar_data->text = FALSE;
-  bar_data->pencil = FALSE;
-  bar_data->arrow = FALSE;
 }
 
 
@@ -642,7 +650,6 @@ on_bar_color_activate	        (GtkToggleToolButton   *toolbutton,
     }
 
   bar_data->grab = FALSE;
-  bar_data->pencil = TRUE;
 
   new_color = start_color_selector_dialog (GTK_TOOL_BUTTON (toolbutton),
 					   GTK_WINDOW (get_bar_window ()),
