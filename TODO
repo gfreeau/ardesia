@@ -23,7 +23,6 @@
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
-  - Arrow icon
   - Import images
   - Make an image gallery (sticky notes...)
   - Deploy the artefact online

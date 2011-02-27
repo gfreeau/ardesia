@@ -34,6 +34,9 @@ static cairo_surface_t *highlighter_image_surface = (cairo_surface_t*) NULL;
 /* The image surface that will contain the eraser icon. */
 static cairo_surface_t *eraser_image_surface      = (cairo_surface_t*) NULL;
 
+/* The image surface that will contain the arrow icon. */
+static cairo_surface_t *arrow_image_surface      = (cairo_surface_t*) NULL;
+
 
 /*
  * Create pixmap and mask for the invisible cursor;
@@ -90,6 +93,20 @@ get_highlighter_image_surface ()
 
   highlighter_image_surface = cairo_image_surface_create_from_png (HIGHLIGHTER_ICON);
   return highlighter_image_surface;
+}
+
+
+/* Get the arrow image surface. */
+static cairo_surface_t *
+get_arrow_image_surface ()
+{
+  if (arrow_image_surface)
+    {
+      return arrow_image_surface;
+    }
+
+  arrow_image_surface = cairo_image_surface_create_from_png (ARROW_ICON);
+  return arrow_image_surface;
 }
 
 
@@ -222,7 +239,8 @@ static void
 get_pen_pixbuf (GdkPixbuf **pixbuf,
 		gdouble size,
 		gchar *color,
-		gdouble thickness)
+		gdouble thickness,
+                gdouble arrow)
 {
   cairo_t *pen_cr = (cairo_t *) NULL;
   cairo_surface_t *surface = (cairo_surface_t *) NULL;
@@ -256,24 +274,6 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
 
   cairo_surface_t *image_surface = (cairo_surface_t *) NULL;
 
-  /* Take the opacity. */
-  gchar* alpha = g_substr (color, 6, 8);
-  
-  if (g_strcmp0 (alpha, "FF") == 0)
-    {
-      /* load the pencil icon. */
-      image_surface = get_pen_image_surface ();
-    }
-  else
-    {
-      /* load the highlighter icon. */
-      image_surface = get_highlighter_image_surface ();
-    }
-
-  cairo_set_source_surface (pen_cr, image_surface, thickness/2, size);
-
-  cairo_paint (pen_cr);
-  cairo_stroke (pen_cr);
 
   /* Add a circle that respect the width and the selected colour. */
   cairo_set_source_color_from_string (pen_cr, color);
@@ -285,6 +285,32 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
 	     0,
 	     2 * M_PI);
 
+  cairo_stroke (pen_cr);
+
+  if (arrow)
+    {/* load the arrow icon. */
+      image_surface = get_arrow_image_surface ();
+      cairo_set_source_surface (pen_cr, image_surface, size/2 + thickness/2, size/2);
+    }
+  else
+    {
+      /* Take the opacity. */
+      gchar* alpha = g_substr (color, 6, 8);
+  
+      if (g_strcmp0 (alpha, "FF") == 0)
+	{
+	  /* load the pencil icon. */
+	  image_surface = get_pen_image_surface ();
+	}
+      else
+	{
+	  /* load the highlighter icon. */
+	  image_surface = get_highlighter_image_surface ();
+	}
+      cairo_set_source_surface (pen_cr, image_surface, thickness/2, size);
+    }
+
+  cairo_paint (pen_cr);
   cairo_stroke (pen_cr);
 
   cairo_surface_destroy (surface);
@@ -335,20 +361,21 @@ allocate_invisible_cursor (GdkCursor **cursor)
   g_object_unref (pixmap);
   g_object_unref (mask);
   g_free (foreground_color_p);
-  g_free (background_color_p);   			
+  g_free (background_color_p);			
 }
 
 
-/* Set the cursor patching the pixmap with the selected colour. */
+/* Set the pen cursor. */
 void
 set_pen_cursor (GdkCursor **cursor,
 		gdouble thickness,
-		gchar* color)
+		gchar* color,
+                gboolean arrow)
 {
   GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
   gint size = 12;
 
-  get_pen_pixbuf (&pixbuf, (gdouble) size, color, thickness);
+  get_pen_pixbuf (&pixbuf, (gdouble) size, color, thickness, arrow);
 
   *cursor = gdk_cursor_new_from_pixbuf (gdk_display_get_default (),
 					pixbuf,

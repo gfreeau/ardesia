@@ -32,11 +32,13 @@
 #  define ANNOTATION_PIXMAPS_FOLDER "..\\share\\ardesia\\ui\\pixmaps"
 #  define ERASER_ICON ANNOTATION_PIXMAPS_FOLDER"\\eraser.png"
 #  define PENCIL_ICON ANNOTATION_PIXMAPS_FOLDER"\\pencil.png"
+#  define ARROW_ICON ANNOTATION_PIXMAPS_FOLDER"\\arrow.png"
 #  define HIGHLIGHTER_ICON ANNOTATION_PIXMAPS_FOLDER"\\highlighter.png"
 #else
 #  define ANNOTATION_PIXMAPS_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/pixmaps"
 #  define ERASER_ICON ANNOTATION_PIXMAPS_FOLDER"/eraser.png"
 #  define PENCIL_ICON ANNOTATION_PIXMAPS_FOLDER"/pencil.png"
+#  define ARROW_ICON ANNOTATION_PIXMAPS_FOLDER"/arrow.png"
 #  define HIGHLIGHTER_ICON ANNOTATION_PIXMAPS_FOLDER"/highlighter.png"
 #endif
 
@@ -55,14 +57,14 @@ allocate_invisible_cursor (GdkCursor **cursor);
 void
 set_pen_cursor (GdkCursor **cursor,
 		gdouble thickness,
-		gchar *color);
+		gchar* color,
+                gboolean arrow);
 
 
 /* Set the eraser cursor. */
 void
 set_eraser_cursor (GdkCursor **cursor,
 		   gint size);
-
 
 
 /* Quit the cursors and free the inners variables. */

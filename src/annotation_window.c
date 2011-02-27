@@ -1082,7 +1082,7 @@ annotate_select_pen ()
 
   disallocate_cursor ();
 
-  set_pen_cursor (&data->cursor, data->thickness, data->cur_context->fg_color);
+  set_pen_cursor (&data->cursor, data->thickness, data->cur_context->fg_color, data->arrow);
 
   update_cursor ();
 }
