@@ -17,8 +17,8 @@
   
 - Reengineering
   - Store and load the savepoints using svg files
-  - Text insertion consolidation
   - Use a layered canvas instead a windows set
+  - Text insertion consolidation
   - Create the iwb without spawn the zip/unzip process
   - Screencast recorder using lib instead spawn processes
 
@@ -29,12 +29,12 @@
     - video; youtube upload
   - full filler implementation (flood filler algorithm)
   - Lazo selection tool
-  - Move
-  - Copy/paste
+  - Move the selected shapes
+  - Copy the selected shapes
   - Multi pointer support
-  - Zoom
-  - Not parallel to the axis polygon recognition
-  - Rotate the shapes
+  - Zoom the selected shapes
+  - Not parallel to the axis shape recognition
+  - Rotate the selected shapes
 
 ===
 EOF
