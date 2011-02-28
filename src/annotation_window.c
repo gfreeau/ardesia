@@ -271,12 +271,12 @@ is_a_closed_path (GSList* list)
   guint lenght = g_slist_length (list);
   AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (list, 0);
   AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (list, lenght-1);
-
-  if (get_distance (first_point->x, first_point->y, last_point->x, last_point->y) == 0)
+  gint distance = (gint) get_distance (first_point->x, first_point->y, last_point->x, last_point->y);
+  if ( distance == 0)
     {
       return TRUE;
     }
-
+  printf("Distance %d\n", distance);
   return FALSE;
 }
 
@@ -625,7 +625,7 @@ delete_savepoint (AnnotateSavepoint *savepoint)
     {
 
       if (data->debug)
-	{ 
+	{
 	  g_printerr ("The save-point %s has been removed\n", savepoint->filename);
 	}
 
@@ -702,8 +702,8 @@ draw_arrow_in_point(AnnotatePoint *point,
   gdouble arrow_head_1_y = point->y -  width_cos - width_sin;
 
   /* Origin. */
-  gdouble arrow_head_2_x = point->x - 0.8 * width_cos ;
-  gdouble arrow_head_2_y = point->y - 0.8 * width_sin ;
+  gdouble arrow_head_2_x = point->x - 0.8 * width_cos;
+  gdouble arrow_head_2_y = point->y - 0.8 * width_sin;
 
   /* Right point. */
   gdouble arrow_head_3_x = point->x - width_cos - width_sin;
@@ -818,8 +818,8 @@ initialize_annotation_cairo_context(AnnotateData *data)
 
       if (data->savepoint_list == NULL)
 	{
-	    annotate_reset_cairo ();
-            clear_cairo_context (data->annotation_cairo_context);
+	  annotate_reset_cairo ();
+	  clear_cairo_context (data->annotation_cairo_context);
 	}
 #ifndef _WIN32
       gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1.0);
@@ -1385,15 +1385,19 @@ void annotate_fill ()
       /* if is not a closed path I prevent to fill it */
       if (!is_a_closed_path (data->coord_list))
 	{
+	  if (data->debug)
+	    {
+	      g_printerr ("Fill is not done; no closed path has been detected\n");
+	    }
 	  return;
 	}
 
       if ( !(data->roundify) && (!(data->rectify)))
 	{
 	  annotate_draw_point_list (data->coord_list);
-	  cairo_close_path (data->annotation_cairo_context);
 	}
 
+      cairo_close_path (data->annotation_cairo_context);
       select_color ();
       cairo_fill (data->annotation_cairo_context);
       cairo_stroke (data->annotation_cairo_context);
@@ -1502,4 +1506,4 @@ annotate_init (GtkWidget *parent,
   return 0;
 }
 
-
+it
