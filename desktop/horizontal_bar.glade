@@ -16,6 +16,7 @@
     <property name="opacity">0.9</property>
     <property name="startup_id">Ardesia</property>
     <signal name="destroy" handler="on_bar_destroy_event"/>
+    <signal name="window_state_event" handler="on_bar_window_state_event"/>
     <signal name="leave_notify_event" handler="on_bar_leave_notify_event"/>
     <signal name="configure_event" handler="on_bar_configure_event"/>
     <signal name="enter_notify_event" handler="on_bar_enter_notify_event"/>

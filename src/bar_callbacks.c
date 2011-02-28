@@ -279,8 +279,6 @@ static void set_options (BarData *bar_data)
 }
 
 
-
-
 /* Start to paint with the selected tool. */
 static void
 start_tool (BarData *bar_data)
@@ -305,6 +303,24 @@ start_tool (BarData *bar_data)
 	}
 
     }
+}
+
+
+/* Windows state event: this occurs when the windows state changes. */
+G_MODULE_EXPORT gboolean
+on_bar_window_state_event (GtkWidget *widget,
+			   GdkEventWindowState *event,
+			   gpointer func_data)
+{
+  BarData *bar_data = (BarData *) func_data;
+
+  /* Track the minimized signals */
+  if(gdk_window_get_state (gtk_widget_get_window (widget)) & GDK_WINDOW_STATE_ICONIFIED)
+    {
+      release_lock (bar_data);
+    }
+
+  return TRUE;
 }
 
 
@@ -414,7 +430,7 @@ on_bar_pointer_activate           (GtkToolButton   *toolbutton,
 				   gpointer         func_data)
 {
   BarData *bar_data = (BarData *) func_data;
-  release_lock(bar_data);
+  release_lock (bar_data);
 }
 
 
