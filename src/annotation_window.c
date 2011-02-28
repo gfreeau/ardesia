@@ -1506,4 +1506,4 @@ annotate_init (GtkWidget *parent,
   return 0;
 }
 
-it
+
