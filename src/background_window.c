@@ -124,10 +124,13 @@ load_color ()
       cairo_stroke (background_data->back_cr);
 
 #ifndef _WIN32
-      gdk_window_input_shape_combine_mask (gtk_widget_get_window (background_data->background_window),
-					   NULL,
-					   0,
-					   0);
+      if (((gint) a ) < 1)
+	{
+	  gdk_window_input_shape_combine_mask (gtk_widget_get_window (background_data->background_window),
+					       NULL,
+					       0,
+					       0);
+	}
 #endif
 
     }
