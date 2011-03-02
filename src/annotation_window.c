@@ -260,6 +260,7 @@ annotate_draw_ellipse (gdouble x,
   cairo_scale (data->annotation_cairo_context, width / 2., height / 2.);
   cairo_arc (data->annotation_cairo_context, 0., 0., 1., 0., 2 * M_PI);
   cairo_restore (data->annotation_cairo_context);
+   
 }
 
 
@@ -397,7 +398,6 @@ static void
 roundify (gboolean closed_path)
 {
   gdouble tollerance = data->thickness;
-  gint lenght = g_slist_length (data->coord_list);
 
   /* Build the meaningful point list with the standard deviation algorithm. */
   GSList *meaningful_point_list = (GSList *) NULL;
@@ -405,23 +405,25 @@ roundify (gboolean closed_path)
   /* Restore the surface without the last path handwritten. */
   annotate_restore_surface ();
 
-  if ( lenght <= 3)
-    {
-      /* Draw the point line as is and jump the rounding. */
-      annotate_draw_point_list (data->coord_list);
-      return;
-    }
-
   meaningful_point_list = build_meaningful_point_list (data->coord_list, closed_path, tollerance);
-  if ((closed_path) && (is_similar_to_an_ellipse (meaningful_point_list, tollerance)))
+
+  if ( g_slist_length (meaningful_point_list) < 4)
+    {
+      /* Draw the point line as is and jump the bezier algorithm. */
+      annotate_draw_point_list (meaningful_point_list);
+    }
+  else if ((closed_path) && (is_similar_to_an_ellipse (meaningful_point_list, tollerance)))
     {
       AnnotatePoint *point1 = (AnnotatePoint *) NULL;
       AnnotatePoint *point3 = (AnnotatePoint *) NULL;
 
       GSList *rect_list = build_outbounded_rectangle (meaningful_point_list);
-      point1 = (AnnotatePoint *) g_slist_nth_data (rect_list, 0);
-      point3 = (AnnotatePoint *) g_slist_nth_data (rect_list, 2);
-      annotate_draw_ellipse (point1->x, point1->y, point3->x-point1->x, point3->y-point1->y, point1->pressure);
+      if (rect_list)
+	{
+	  point1 = (AnnotatePoint *) g_slist_nth_data (rect_list, 0);
+	  point3 = (AnnotatePoint *) g_slist_nth_data (rect_list, 2);
+	  annotate_draw_ellipse (point1->x, point1->y, point3->x-point1->x, point3->y-point1->y, point1->pressure);
+	}
       g_slist_foreach (rect_list, (GFunc)g_free, NULL);
       g_slist_free (rect_list);
     }
