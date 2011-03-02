@@ -249,10 +249,11 @@ annotate_draw_ellipse (gdouble x,
 {
   if (data->debug)
     {
-      g_printerr ("Draw ellipse\n");
+      g_printerr ("Draw ellipse: 2a=%f 2b=%f\n", width, height);
     }
 
   annotate_modify_color (data, pressure);
+
   cairo_save (data->annotation_cairo_context);
 
   /* The ellipse is done as a 360 degree arc translated. */
@@ -414,18 +415,43 @@ roundify (gboolean closed_path)
     }
   else if ((closed_path) && (is_similar_to_an_ellipse (meaningful_point_list, tollerance)))
     {
-      AnnotatePoint *point1 = (AnnotatePoint *) NULL;
-      AnnotatePoint *point3 = (AnnotatePoint *) NULL;
-
       GSList *rect_list = build_outbounded_rectangle (meaningful_point_list);
+
       if (rect_list)
 	{
-	  point1 = (AnnotatePoint *) g_slist_nth_data (rect_list, 0);
-	  point3 = (AnnotatePoint *) g_slist_nth_data (rect_list, 2);
+	  AnnotatePoint *point1 = (AnnotatePoint *) g_slist_nth_data (rect_list, 0);
+	  AnnotatePoint *point2 = (AnnotatePoint *) g_slist_nth_data (rect_list, 1);
+	  AnnotatePoint *point3 = (AnnotatePoint *) g_slist_nth_data (rect_list, 2);
+          gdouble p1p2 = get_distance(point1->x, point1->y, point2->x, point2->y);
+          gdouble p2p3 = get_distance(point2->x, point2->y, point3->x, point3->y);
+          gdouble e_threshold = 0.5;
+          gdouble a = 0;
+          gdouble b = 0;
+          if (p1p2>p2p3)
+            {
+               b = p2p3/2;
+               a = p1p2/2;
+            }
+          else
+            {
+               a = p2p3/2;
+               b = p1p2/2;   
+            }
+	  gdouble e = 1-powf((b/a), 2);
+          /* If the eccentricity is roundable to 0 it is a circle */
+	  if ((e >= 0) && (e <= e_threshold))
+	    {
+              /* Move the down right point in the right position to square the circle */
+	      gdouble quad_distance = (p1p2+p2p3)/2;
+	      point3->x = point1->x+quad_distance;
+	      point3->y = point1->y+quad_distance;
+	    }
+
 	  annotate_draw_ellipse (point1->x, point1->y, point3->x-point1->x, point3->y-point1->y, point1->pressure);
+	  g_slist_foreach (rect_list, (GFunc)g_free, NULL);
+	  g_slist_free (rect_list);
 	}
-      g_slist_foreach (rect_list, (GFunc)g_free, NULL);
-      g_slist_free (rect_list);
+
     }
   else
     {
