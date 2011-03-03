@@ -3,7 +3,7 @@
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">695</property>
+    <property name="width_request">690</property>
     <property name="height_request">35</property>
     <property name="events">GDK_LEAVE_NOTIFY_MASK</property>
     <property name="title">Ardesia</property>
@@ -43,19 +43,6 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolItem" id="thickSeparatorItem">
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkVSeparator" id="thickSeparator">
-                    <property name="visible">True</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
               </packing>
             </child>
             <child>
@@ -155,7 +142,7 @@
               <object class="GtkToolItem" id="toolSeparatorItem">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkHSeparator" id="toolseparator">
+                  <object class="GtkVSeparator" id="toolseparator">
                     <property name="visible">True</property>
                   </object>
                 </child>
