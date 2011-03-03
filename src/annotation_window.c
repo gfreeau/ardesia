@@ -429,13 +429,13 @@ roundify (gboolean closed_path)
           gdouble b = 0;
           if (p1p2>p2p3)
             {
-               b = p2p3/2;
-               a = p1p2/2;
+	      b = p2p3/2;
+	      a = p1p2/2;
             }
           else
             {
-               a = p2p3/2;
-               b = p1p2/2;   
+	      a = p2p3/2;
+	      b = p1p2/2;   
             }
 	  gdouble e = 1-powf((b/a), 2);
           /* If the eccentricity is roundable to 0 it is a circle */
@@ -864,12 +864,21 @@ annotate_restore_surface ()
   if (data->annotation_cairo_context)
     {
       guint i = data->current_save_index;
+
+      if (g_slist_length (data->savepoint_list)==i)
+        {
+	  annotate_reset_cairo ();
+	  clear_cairo_context (data->annotation_cairo_context);
+	  return;
+        }
+
       AnnotateSavepoint *savepoint = (AnnotateSavepoint *) g_slist_nth_data (data->savepoint_list, i);
 
       if (!savepoint)
 	{
 	  return;
 	}
+
 
       cairo_new_path (data->annotation_cairo_context);
       cairo_set_operator (data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
@@ -1446,17 +1455,21 @@ annotate_undo ()
 {
   if (data->savepoint_list)
     {
-      if (data->current_save_index != g_slist_length (data->savepoint_list)-1)
+      if (data->debug)
 	{
-
-	  if (data->debug)
-	    {
-	      g_printerr ("Undo\n");
-	    }
+	  g_printerr ("Undo\n");
+	}
+      if (data->current_save_index != g_slist_length (data->savepoint_list))
+	{
 
 	  data->current_save_index = data->current_save_index + 1;
 	  annotate_restore_surface ();
 	}
+      else
+        {
+	  data->current_save_index = g_slist_length (data->savepoint_list);
+          annotate_restore_surface ();
+        }
     }
 }
 

@@ -69,7 +69,7 @@ event_expose (GtkWidget *widget,
       g_printerr ("Expose event\n");
     }
 
-  initialize_annotation_cairo_context(data);
+  initialize_annotation_cairo_context (data);
 
   /* Postcondition; data->annotation_cairo_context is not NULL. */
   annotate_restore_surface ();
@@ -170,7 +170,7 @@ paintto (GtkWidget *win,
   gdouble selected_width = 0.0;
   gdouble pressure = 1.0; 
 
-  initialize_annotation_cairo_context(data);
+  initialize_annotation_cairo_context (data);
 
   if (!ev)
     {
