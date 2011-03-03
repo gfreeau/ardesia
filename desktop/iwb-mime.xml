@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+ <mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
+   <mime-type type="application/x-iwb">  
+   <comment>IWB File</comment>
+   <magic priority="100">
+       
+       <match type="string" offset="0:200" value="&lt;iwb">
+		<match type="string" offset="0:200" value="xmlns:iwb=&quot;http://www.becta.org.uk/iwb&quot;"/>
+	</match>
+   </magic>
+   <glob pattern="*.iwb"/>
+  </mime-type>
+ </mime-info>
