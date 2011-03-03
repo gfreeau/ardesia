@@ -4,3 +4,5 @@
 # see: dh_installdeb(1)
 
 [ -x "`which xdg-icon-resource`" ] && xdg-icon-resource install --novendor --size 48 /usr/local/share/ardesia/ui/pixmaps/application-x-iwb.png >/dev/null
+[ -x "`which xdg-mime`" ] && xdg-mime install --novendor --size 48 /usr/local/share/ardesia/iwb-mime.xml >/dev/null
+[ -x "`which xdg-desktop-menu`" ] && xdg-desktop-menu install --mode system --novendor /usr/local/share/applications/ardesia.desktop >/dev/null

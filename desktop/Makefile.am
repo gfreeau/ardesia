@@ -35,6 +35,7 @@ pixmap_DATA = pixmaps/ardesia.png
 
 install-data-local:
 	mkdir -p $(DESTDIR)$(uipixmapsdir) 
+	cp iwb-mime.xml $(DESTDIR)$(uidir) 
 	cp -r pixmaps/* $(DESTDIR)$(uipixmapsdir) 
 	mkdir -p $(DESTDIR)$(uibackgroundsdir) 
 	cp -r backgrounds/* $(DESTDIR)$(uibackgroundsdir) 
@@ -42,11 +43,11 @@ install-data-local:
 	cp -r scripts/* $(DESTDIR)$(scriptsdir) 
 	chmod a+x $(DESTDIR)$(scriptsdir)/*
 
-	@if test x"$(XDG_UTILS)" != x; then                                                                                             \
-		echo "Register iwb mimetype";                                                                                           \
-		xdg-icon-resource install --context mimetypes --mode system --novendor --size 48 $(uipixmapsdir)/application-x-iwb.png; \
-		xdg-mime install --mode system iwb-mime.xml;                                                                            \	
-		xdg-desktop-menu install --mode system --novendor ardesia.desktop;                                                      \
+	@if test x"$(XDG_UTILS)" != x; then                                                                                        \
+		echo "Register iwb mimetype";                                                                                      \
+		xdg-icon-resource install --context mimetypes --mode system --novendor --size 48 pixmaps/application-x-iwb.png;    \
+		xdg-mime install --mode system /usr/local/share/applications/iwb-mime.xml;                                         \	
+		xdg-desktop-menu install --mode system --novendor /usr/local/share/applications/ardesia.desktop;                   \
 	fi
 
 # Remove ui directory on uninstall

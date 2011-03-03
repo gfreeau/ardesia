@@ -39,8 +39,13 @@ DISTCLEANFILES = intltool-extract      \
 if !PLATFORM_WIN32
 
 deb:
-	debuild -us -uc -b
-	mv ../$(PACKAGE_NAME)_$(PACKAGE_VERSION)-*.deb .
+	@if test -s "`which debuild`"; then                                                \
+		debuild -us -uc -b;                                                        \
+		mv ../$(PACKAGE_NAME)_$(PACKAGE_VERSION)-*.deb .;                          \
+	else                                                                               \
+		echo "You need to install the debian package 'devscripts'";                \
+		exit 1;                                                                    \
+	fi
 
 else
 win-installer:
