@@ -2,6 +2,29 @@ Ardesia free digital sketchpad
 
 
 ---------------
+ ardesia 0.8
+---------------
+
+Usability
+- The lock/unlock button has been removed,
+  now you can use the mouse tool instead it
+- Gui revision; new tool and cursor icons
+
+Features
+- The iwb file import/export feature has been enriched with the 
+  background settings
+- Add a new micro thickness for the tools
+- Circle painting with the rounder tool
+
+Bug Fix:
+- Arrow tool: caused the arrow detachment from the sketched polyline 
+- Rounder: broke the digital ink if it is was painted a short line
+  with this tool
+- Solved a critical bug that occurred if the tool is started with
+  the decorate command line option
+
+
+---------------
  ardesia 0.7
 ---------------
 
