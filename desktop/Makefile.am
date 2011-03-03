@@ -46,7 +46,7 @@ install-data-local:
 	@if test x"$(XDG_UTILS)" != x; then                                                                                        \
 		echo "Register iwb mimetype";                                                                                      \
 		xdg-icon-resource install --context mimetypes --mode system --novendor --size 48 pixmaps/application-x-iwb.png;    \
-		xdg-mime install --mode system /usr/local/share/applications/iwb-mime.xml;                                         \	
+		xdg-mime install --mode system /usr/local/share/applications/iwb-mime.xml;                                         \
 		xdg-desktop-menu install --mode system --novendor /usr/local/share/applications/ardesia.desktop;                   \
 	fi
 
