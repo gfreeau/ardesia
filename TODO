@@ -16,8 +16,8 @@
   - Investigate about the status and make a plan
   
 - Reengineering
-  - Text insertion consolidation
   - Store and load the savepoints using svg files
+  - Text insertion consolidation
   - Use a layered canvas instead a windows set
   - Create the iwb without spawn the zip/unzip process
   - Screencast recorder using lib instead spawn processes
