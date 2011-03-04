@@ -90,6 +90,7 @@ if $PKG_CONFIG --atleast-version=2.24.0 gtk+-2.0; then
 else
   have_gtk_2_24=no
 fi
+
 AC_MSG_RESULT($have_gtk_2_24)
 
 PKG_CHECK_MODULES(GDK_PIXBUF, gdk-pixbuf-2.0 >= gdk_pixbuf_required_version)
@@ -121,17 +122,17 @@ pkg_modules="	glib-2.0
 
 PKG_CHECK_MODULES(ARDESIA, [$pkg_modules])
 
-AC_CHECK_PROGS(XDG_UTILS, [xdg-mime xdg-icon-resource], [])
+AC_CHECK_PROGS(XDG_UTILS, [xdg-mime xdg-icon-resource xdg-desktop-menu], [])
 
 AC_CONFIG_FILES([
 Makefile
-src/Makefile
-docs/Makefile
-docs/ardesia.1
 po/Makefile.in
+docs/ardesia.1
+docs/Makefile
+src/Makefile
 desktop/Makefile
-win32/build_installer
 win32/ardesia.iss
+win32/build_installer
 ])
 
 AC_OUTPUT
