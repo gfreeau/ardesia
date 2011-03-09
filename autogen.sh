@@ -50,13 +50,6 @@ fi
 
 LIBTOOL_BIN="libtool"
 
-# On MAC OS X, GNU libtool is named 'glibtool':
-if test "`uname -s`" = Darwin; then
-  LIBTOOL_BIN="glibtool"
-else
-  LIBTOOL_BIN="libtool"
-fi
-
 (grep "^AM_PROG_LIBTOOL" $srcdir/configure.ac >/dev/null) && {
   ("$LIBTOOL_BIN" --version) < /dev/null > /dev/null 2>&1 || {
     echo
