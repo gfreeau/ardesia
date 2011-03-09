@@ -45,9 +45,9 @@ install-data-local:
 
 	@if test x"$(XDG_UTILS)" != x; then                                                                                                          \
 		echo "Register iwb mimetype";                                                                                                        \
-		xdg-icon-resource install --mode system --novendor --context mimetypes --size 48 $(DESTDIR)$(uipixmapsdir)/application-x-iwb.png;    \
-		xdg-mime install --mode system $(DESTDIR)$(uidir)/iwb-mime.xml;                                                                      \
-		xdg-desktop-menu install --mode system --novendor ardesia.desktop;                                                                   \
+		xdg-icon-resource install --mode user --novendor --context mimetypes --size 48 $(DESTDIR)$(uipixmapsdir)/application-x-iwb.png;    \
+		xdg-mime install --mode user $(DESTDIR)$(uidir)/iwb-mime.xml;                                                                      \
+		xdg-desktop-menu install --mode user --novendor ardesia.desktop;                                                                   \
 	fi
 
 # Remove ui directory on uninstall
