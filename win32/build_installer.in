@@ -32,6 +32,7 @@ cp $WIN32_DIR/ardesia_open.bat $DESTDIR/bin
 
 cp /bin/zip.exe $DESTDIR/bin
 cp /bin/unzip.exe $DESTDIR/bin
+cp /bin/msys-1.0.dll $DESTDIR/bin
 
 cp /mingw/bin/freetype6.dll $DESTDIR/bin
 cp /mingw/bin/gspawn-win32-helper.exe $DESTDIR/bin
