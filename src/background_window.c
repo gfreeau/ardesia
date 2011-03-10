@@ -34,47 +34,35 @@
 /* The background data used internally and by the callbacks. */
 static BackgroundData *background_data;
 
-
-/* Load the "filename" file content into the image buffer. */
-static GdkPixbuf *
-load_png (gchar *filename)
-{
-  GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
-  GdkPixbuf *scaled = NULL;
-
-  if (pixbuf)
-    {
-      gint height = 0;
-      gint width = 0;
-      gdk_drawable_get_size (gtk_widget_get_window (background_data->background_window), &width, &height);
-      scaled = gdk_pixbuf_scale_simple (pixbuf, width, height, GDK_INTERP_BILINEAR);
-      g_object_unref (G_OBJECT (pixbuf));
-      pixbuf = scaled;
-    }
-  else
-    {
-      /* @TODO Handle this in a visual way or avoid this. */
-      g_printerr ("Failed to load the file %s as background\n", filename);
-      exit (EXIT_FAILURE);
-    }
-
-  return pixbuf;
-}
-
-
+ 
 /* Load a file image in the window. */
 static void
 load_file ()
 {
   if (background_data->back_cr)
     {
-      GdkPixbuf *pixbuf = load_png (background_data->background_image);
-      cairo_set_operator (background_data->back_cr, CAIRO_OPERATOR_SOURCE);
+      cairo_surface_t *surface = cairo_image_surface_create_from_png (background_data->background_image);
+      cairo_t *cr = cairo_create (surface);
+
       gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), 1.0);
-      gdk_cairo_set_source_pixbuf (background_data->back_cr, pixbuf, 0.0, 0.0);
+	  
+      gint new_height = 0;
+      gint new_width = 0;
+      gdk_drawable_get_size (gtk_widget_get_window (background_data->background_window), &new_width, &new_height);
+
+      cairo_surface_t *scaled_surface = scale_surface (surface, new_width, new_height );
+	  
+      cairo_surface_destroy (surface);
+	  
+      cairo_destroy (cr);
+	   
+      cairo_set_source_surface (background_data->back_cr, scaled_surface, 0.0, 0.0);
+	
       cairo_paint (background_data->back_cr);
       cairo_stroke (background_data->back_cr);
-      g_object_unref (G_OBJECT (pixbuf));
+	
+      cairo_surface_destroy (scaled_surface);
+	  
 #ifndef _WIN32
       gdk_window_input_shape_combine_mask (gtk_widget_get_window (background_data->background_window),
 					   NULL,

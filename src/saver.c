@@ -133,7 +133,7 @@ start_save_image_dialog (GtkToolButton *toolbutton,
   if (screenshot)
     {
       /* Store the buffer on file. */
-      save_png (buf, filename);
+      save_pixbuf_on_png_file (buf, filename);
     }
 
   /* Add to the list of the artefacts created in the session. */

@@ -152,6 +152,13 @@ gchar *
 gdkcolor_to_rgb (GdkColor *gdkcolor);
 
 
+/* Scale the surface with the width and height requested */
+cairo_surface_t *
+scale_surface    (cairo_surface_t *surface, 
+                  gdouble width,
+		  gdouble height);
+				  
+				  
 /* Set the cairo surface color to the RGBA string. */
 void
 cairo_set_source_color_from_string (cairo_t *cr,
@@ -199,8 +206,8 @@ rgba_to_gdkcolor (gchar *rgb);
 
 /* Save the contents of the pixbuf in the file with name file name. */
 gboolean
-save_png (GdkPixbuf *pixbuf,
-	  const gchar *filename);
+save_pixbuf_on_png_file (GdkPixbuf *pixbuf,
+                         const gchar *filename);
 
 
 /* Grab the screenshoot and put it in the image buffer. */

@@ -251,6 +251,39 @@ clear_cairo_context (cairo_t *cr)
 }
 
 
+/* Scale the surface with the width and height requested */
+cairo_surface_t *
+scale_surface    (cairo_surface_t *surface, 
+                  gdouble width,
+		  gdouble height)
+{
+  gdouble old_width = cairo_image_surface_get_width (surface);
+  gdouble old_height = cairo_image_surface_get_height (surface);
+	  
+  cairo_surface_t *new_surface = cairo_surface_create_similar(surface, CAIRO_CONTENT_COLOR_ALPHA, width, height);
+  cairo_t *cr = cairo_create (new_surface);
+
+  /* Scale *before* setting the source surface (1) */
+  cairo_scale (cr, width / old_width, height / old_height);
+  cairo_set_source_surface (cr, surface, 0, 0);
+
+  /* To avoid getting the edge pixels blended with 0 alpha, which would 
+   * occur with the default EXTEND_NONE. Use EXTEND_PAD for 1.2 or newer (2)
+   */
+  cairo_pattern_set_extend (cairo_get_source(cr), CAIRO_EXTEND_REFLECT); 
+
+  /* Replace the destination with the source instead of overlaying */
+  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+
+  /* Do the actual drawing */
+  cairo_paint (cr);
+   
+  cairo_destroy (cr);
+
+  return new_surface;
+}
+
+ 
 /* Set the cairo surface colour to the RGBA string. */
 void
 cairo_set_source_color_from_string ( cairo_t *cr,
@@ -271,9 +304,10 @@ cairo_set_source_color_from_string ( cairo_t *cr,
 }
 
 
-/* Save the contents of the image buffer in the file with name filename. */
-gboolean save_png (GdkPixbuf *pixbuf,
-		   const gchar *filename)
+/* Save the contents of the pixbuf in the file with name file name. */
+gboolean
+save_pixbuf_on_png_file (GdkPixbuf *pixbuf,
+                         const gchar *filename)
 {
   gint width = gdk_pixbuf_get_width (pixbuf);
   gint height = gdk_pixbuf_get_height (pixbuf);

@@ -22,8 +22,6 @@
  */
 
 
-#include <gdk-pixbuf/gdk-pixbuf.h>
-
 #include <gtk/gtk.h>
 
 #define BACKGROUND_OPACITY 0.01
