@@ -90,6 +90,7 @@ load_color ()
 
 
 #ifdef WIN32
+      gdouble opacity = BACKGROUND_OPACITY;
       cairo_set_source_rgb (background_data->back_cr, (gdouble) r/256, (gdouble) g/256, (gdouble) b/256);
 
       /*
@@ -98,7 +99,11 @@ load_color ()
        * I set the opacity with alpha and I use cairo_set_source_rgb to workaround
        * the problem on windows with rgba. 
        */
-      gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), (gdouble) a/256);
+	  if (((gdouble) a/256) >  BACKGROUND_OPACITY)
+	     { 
+		    opacity = (gdouble) a/256;
+	     }
+      gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), opacity);
 #else
       gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), 1);
       cairo_set_source_rgba (background_data->back_cr,
