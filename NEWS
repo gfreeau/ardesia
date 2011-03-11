@@ -6,15 +6,14 @@ Ardesia free digital sketchpad
 ---------------
 
 Usability
-- The lock/unlock button has been removed,
-  now you can use the mouse tool instead it
+- New mouse tool; the lock/unlock button has been removed
 - User interface revision; new tool and cursor icons
 
 Features
-- The iwb file import/export feature has been enriched with the 
-  background settings
+- The iwb file import/export feature has been enriched with
+  the background settings
 - Add a new micro thickness for the tools
-- Circle painting with the rounder tool
+- Easy circle painting with the rounder tool
 - Use the mouse tool with semi transparent coloured background
 
 Bug Fix:
@@ -23,7 +22,8 @@ Bug Fix:
   with this tool
 - Solved a critical bug that occurred if the tool is started with
   the decorate command line option (-d)
-- Rounder: fix the fill of elliptic close path
+- Rounder: fix the elliptic close path filling
+- Fix the open/save iwb files under Windows
 
 
 ---------------

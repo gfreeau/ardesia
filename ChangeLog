@@ -1,3 +1,26 @@
+2011-03-10 18:09  alpha@paranoici.org
+	* /trunk/ardesia/win32/build_installer.in:
+        - added missing library msys-1.0.dll used by the InfoZip tools;
+          this fix the open/save under Windows
+
+
+2011-03-10 17:19  alpha@paranoici.org
+        * /trunk/ardesia/src/background_window.c,
+        * /trunk/ardesia/src/background_window.h,
+        * /trunk/ardesia/src/saver.c,
+        * /trunk/ardesia/src/utils.c,
+        * /trunk/ardesia/src/utils.h:
+        - Add a caio scale utils
+        - Png saving with cairo instead with pixbuf
+        - The background image is loaded and scaled with cairo
+
+
+2011-03-10 13:47  alpha@paranoici.org
+	* trunk/ardesia/desktop/Makefile.am:
+        - Fix the xdg resources installation
+          to use the "user mode"
+
+
 2011-03-09 09:36  alpha@paranoici.org
 	* trunk/ardesia/autogen.sh:
         - Remove an old patch that was usefull to build ardesia with ports;
@@ -12,7 +35,7 @@
 
 
 2011-03-04 13:01  alpha@paranoici.org
-	* trunk/ardesia/configure.ac
+	* trunk/ardesia/configure.ac,
 	* trunk/ardesia/desktop/Makefile.am,
 	* trunk/ardesia/desktop/iwb-mime.xml: 
         - Adjust configure; add check for the xdg utils
