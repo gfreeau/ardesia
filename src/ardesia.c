@@ -288,10 +288,37 @@ create_workspace_shortcut (gchar *workspace_dir)
 static gchar *
 configure_workspace (gchar *project_name)
 {
-  /* The workspace directory is set in the documents ardesia folder. */
-  gchar *workspace_dir = g_build_filename (get_documents_dir (),
-					   PACKAGE_NAME,
-					   (gchar *) 0);
+  gchar *workspace_dir = (gchar *) NULL;
+  const gchar *documents_dir = get_documents_dir ();
+  if (documents_dir != NULL)
+    {
+      /* The workspace directory is set in the documents ardesia folder. */
+      workspace_dir = g_build_filename (documents_dir,
+					PACKAGE_NAME,
+					(gchar *) 0);
+    }
+  else
+    {
+       
+      gchar *recovery_documents_dir = g_build_filename (get_desktop_dir (),
+					                "Downloads",
+					                (gchar *) 0);
+
+      if (!file_exists(recovery_documents_dir))
+	{
+	  if (g_mkdir_with_parents (recovery_documents_dir, 0700)==-1)
+	    {
+	      g_warning ("Unable to create folder %s\n", recovery_documents_dir);
+	    }
+	}
+
+      /* The workspace directory is set in the documents ardesia folder. */
+      workspace_dir = g_build_filename (recovery_documents_dir,
+					PACKAGE_NAME,
+					(gchar *) 0);
+
+      g_free (recovery_documents_dir);
+    }
 
   create_workspace_shortcut (workspace_dir);
 
