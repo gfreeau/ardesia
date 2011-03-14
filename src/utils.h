@@ -238,6 +238,13 @@ file_exists (gchar* filename);
 
 
 /*
+ * Get the home directory.
+ */
+const gchar *
+get_home_dir (void);
+
+
+/*
  * Get the desktop directory.
  */
 const gchar *

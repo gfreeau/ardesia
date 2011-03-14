@@ -299,9 +299,9 @@ configure_workspace (gchar *project_name)
     }
   else
     {
-       
-      gchar *recovery_documents_dir = g_build_filename (get_desktop_dir (),
-					                "Downloads",
+      /* The system has not set a documents folder */ 
+      gchar *recovery_documents_dir = g_build_filename (get_home_dir (),
+					                "Documents",
 					                (gchar *) 0);
 
       if (!file_exists(recovery_documents_dir))

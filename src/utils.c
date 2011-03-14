@@ -465,6 +465,21 @@ get_default_filename ()
 
 
 /*
+ * Get the home directory.
+ */
+const gchar *
+get_home_dir (void)
+{
+  const char *homedir = g_getenv ("HOME");
+  if (!homedir)
+    {
+      homedir = g_get_home_dir ();
+    }
+  return homedir;
+}
+
+
+/*
  * Get the desktop directory.
  */
 const gchar *
