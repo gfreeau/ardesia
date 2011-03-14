@@ -290,16 +290,17 @@ configure_workspace (gchar *project_name)
 {
   gchar *workspace_dir = (gchar *) NULL;
   const gchar *documents_dir = get_documents_dir ();
+
   if (documents_dir != NULL)
     {
-      /* The workspace directory is set in the documents ardesia folder. */
+      /* The workspace directory is in the documents ardesia folder. */
       workspace_dir = g_build_filename (documents_dir,
 					PACKAGE_NAME,
 					(gchar *) 0);
     }
   else
     {
-      /* The system has not set a documents folder */ 
+      /* The system has not a documents folder */ 
       gchar *recovery_documents_dir = g_build_filename (get_home_dir (),
 					                "Documents",
 					                (gchar *) 0);
@@ -308,7 +309,7 @@ configure_workspace (gchar *project_name)
 	{
 	  if (g_mkdir_with_parents (recovery_documents_dir, 0700)==-1)
 	    {
-	      g_warning ("Unable to create folder %s\n", recovery_documents_dir);
+	      g_warning ("Unable to create the Documents folder %s\n", recovery_documents_dir);
 	    }
 	}
 
@@ -333,7 +334,7 @@ create_default_project_dir (gchar *workspace_dir,
 {
   gchar *project_dir = g_build_filename (workspace_dir, project_name, (gchar *) 0);
 
-  if (!g_file_test (project_dir, G_FILE_TEST_EXISTS)) 
+  if (!file_exists (project_dir)) 
     {
 
       if (g_mkdir_with_parents (project_dir, 0700)==-1)
