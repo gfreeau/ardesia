@@ -24,6 +24,8 @@ Bug Fix:
   the decorate command line option (-d)
 - Rounder: fix the elliptic close path filling
 - Fix the open/save iwb files under Windows
+- Fix the open/save iwb file uder the unix environment that has not
+  set an xdg documents folder
 
 
 ---------------

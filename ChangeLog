@@ -1,3 +1,12 @@
+2011-03-14 15:27  alpha@paranoici.org
+        * /trunk/ardesia/src/ardesia.c,
+	* /trunk/ardesia/src/utils.c:
+        - Fix to solve the xdg documents problem
+          in an xdg way; if the G_USER_DIRECTORY_DOCUMENTS
+          is not set I create the ardesia workspace folder
+          under the user home directory
+
+
 2011-03-10 18:09  alpha@paranoici.org
 	* /trunk/ardesia/win32/build_installer.in:
         - added missing library msys-1.0.dll used by the InfoZip tools;
