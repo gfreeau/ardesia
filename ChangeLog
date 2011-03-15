@@ -1,3 +1,15 @@
+
+
+2011-03-16 00:45  alpha@paranoici.org
+        * /trunk/ardesia/debian/postinst,
+        * /trunk/ardesia/Makefile.am,
+        * /trunk/ardesia/configure.ac,
+        * /trunk/ardesia/debian/copyright:
+        - Some adjustment following the debian guidelines,
+          the default prefix is now the /usr folder instead
+          of /usr/local
+
+
 2011-03-14 15:27  alpha@paranoici.org
         * /trunk/ardesia/src/ardesia.c,
 	* /trunk/ardesia/src/utils.c:
