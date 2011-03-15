@@ -16,7 +16,7 @@ AC_INIT([ardesia], [ardesia_version],
 	http://code.google.com/p/ardesia/issues/list,
 	[ardesia])
 
-
+AC_PREFIX_DEFAULT(/usr)
 AC_CONFIG_SRCDIR([src/ardesia.c])
 AC_CONFIG_MACRO_DIR([m4macros])
 
