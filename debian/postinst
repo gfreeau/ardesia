@@ -5,6 +5,6 @@
 
 set -e
 
-xdg-icon-resource install --mode system --novendor --context mimetypes --size 48 /usr/local/share/ardesia/ui/pixmaps/application-x-iwb.png
-xdg-mime install --mode system /usr/local/share/ardesia/ui/iwb-mime.xml
-xdg-desktop-menu install --mode system --novendor /usr/local/share/applications/ardesia.desktop
+xdg-icon-resource install --mode system --novendor --context mimetypes --size 48 /usr/share/ardesia/ui/pixmaps/application-x-iwb.png
+xdg-mime install --mode system /usr/share/ardesia/ui/iwb-mime.xml
+xdg-desktop-menu install --mode system --novendor /usr/share/applications/ardesia.desktop
