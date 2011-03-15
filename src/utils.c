@@ -495,7 +495,7 @@ get_desktop_dir (void)
 const gchar *
 get_documents_dir (void)
 {
-  gchar *documents_dir = g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS);
+  const gchar *documents_dir = g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS);
   if (documents_dir == NULL)
     {
        documents_dir = get_home_dir ();
