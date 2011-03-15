@@ -6,13 +6,11 @@ SUBDIRS = \
 	po                             \
 	src 
 
-ardesiadocdir = ${prefix}/doc/ardesia
+ardesiadocdir = ${prefix}/share/doc/ardesia
 ardesiadoc_DATA =                      \
 	README                         \
-	COPYING                        \
 	AUTHORS                        \
 	ChangeLog                      \
-	INSTALL                        \
 	NEWS
 
 autogen_FILE = autogen.sh
