@@ -40,7 +40,11 @@ install-data-local:
 	mkdir -p $(DESTDIR)$(uibackgroundsdir) 
 	cp -r backgrounds/* $(DESTDIR)$(uibackgroundsdir) 
 	mkdir -p $(DESTDIR)$(scriptsdir) 
-	cp -r scripts/* $(DESTDIR)$(scriptsdir) 
+if !PLATFORM_WIN32
+	cp -r scripts/*.sh $(DESTDIR)$(scriptsdir) 
+else
+	cp -r scripts/*.bat $(DESTDIR)$(scriptsdir) 
+endif
 	chmod a+x $(DESTDIR)$(scriptsdir)/*
 
 	@if test x"$(XDG_UTILS)" != x; then                                                                                                          \
