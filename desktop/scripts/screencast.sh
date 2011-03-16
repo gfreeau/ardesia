@@ -1,3 +1,5 @@
+#!/bin/sh
+
 RECORDER_PROGRAM="cvlc"
 
 # Uncomment this to use the live screencast on icecast
