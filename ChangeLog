@@ -1,3 +1,40 @@
+2011-03-18 14:26  alpha@paranoici.org
+        * trunk/ardesia/INSTALL,
+        * trunk/ardesia/README,
+        * trunk/ardesia/TODO,
+        * trunk/ardesia/desktop/ardesia.desktop.in,
+	* trunk/ardesia/desktop/scripts/screencast.sh,
+	* trunk/ardesia/desktop/icons/add-pdf.png,
+	* trunk/ardesia/desktop/icons/application-x-iwb.png,
+	* trunk/ardesia/desktop/icons/ardesia.png,
+	* trunk/ardesia/desktop/icons/ardesia_logo.png,
+	* trunk/ardesia/desktop/icons/arrow.png,
+	* trunk/ardesia/desktop/icons/blue.png,
+	* trunk/ardesia/desktop/icons/camera-photo.png,
+	* trunk/ardesia/desktop/icons/eraser.png,
+	* trunk/ardesia/desktop/icons/filler.png,
+        * trunk/ardesia/desktop/icons/green.png,
+	* trunk/ardesia/desktop/icons/hand.png,
+	* trunk/ardesia/desktop/icons/highlighter.png,
+	* trunk/ardesia/desktop/icons/media-record.png,
+	* trunk/ardesia/desktop/icons/media-recorder-unavailable.png,
+	* trunk/ardesia/desktop/icons/medium.png,
+	* trunk/ardesia/desktop/icons/micro.png,
+	* trunk/ardesia/desktop/icons/pencil.png,
+	* trunk/ardesia/desktop/icons/pointer.png,
+	* trunk/ardesia/desktop/icons/rectifier.png,
+        * trunk/ardesia/desktop/icons/red.png,
+	* trunk/ardesia/desktop/icons/rounder.png,
+	* trunk/ardesia/desktop/icons/text.png,
+	* trunk/ardesia/desktop/icons/thick.png,
+	* trunk/ardesia/desktop/icons/thin.png,
+	* trunk/ardesia/desktop/icons/white.png,
+	* trunk/ardesia/desktop/icons/yellow.png:
+        - Update readable files
+        - Move the icons from pixmaps to more generic icons
+          folder
+        - Revision of the file permission in the repository
+        - The binary deb package building is warning free
 
 
 2011-03-16 00:45  alpha@paranoici.org
