@@ -11,16 +11,13 @@
 - Management
   - Make a video tutorial
   - Make a pdf user manual
-
-- MacOsX-quartz porting
-  - Investigate about the status and make a plan
   
 - Reengineering
   - Store and load the savepoints using svg files
   - Text insertion consolidation
-  - Use a layered canvas instead a windows set
   - Create the iwb without spawn the zip/unzip process
   - Screencast recorder using lib instead spawn processes
+  - Use a layered canvas instead a windows set
 
 - Candidate features:
   - Import images
@@ -35,6 +32,7 @@
   - Zoom the selected shapes
   - Not parallel to the axis shape recognition
   - Rotate the selected shapes
+  - MacOsX porting
 
 ===
 EOF

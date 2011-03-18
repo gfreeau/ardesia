@@ -103,34 +103,34 @@ cp @prefix@/share/ardesia/ui/backgrounds/world_map.png $DESTDIR/share/ardesia/ui
 
 
 
-mkdir -p $DESTDIR/share/ardesia/ui/pixmaps
+mkdir -p $DESTDIR/share/ardesia/ui/icons
 
-cp $WIN32_DIR/iwb.ico $DESTDIR/share/ardesia/ui/pixmaps
+cp $WIN32_DIR/iwb.ico $DESTDIR/share/ardesia/ui/icons
 
-cp @prefix@/share/ardesia/ui/pixmaps/add-pdf.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/ardesia_logo.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/ardesia.ico $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/arrow.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/blue.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/camera-photo.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/eraser.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/filler.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/green.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/hand.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/highlighter.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/media-record.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/media-recorder-unavailable.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/medium.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/pointer.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/pencil.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/rectifier.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/red.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/rounder.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/text.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/thick.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/thin.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/white.png $DESTDIR/share/ardesia/ui/pixmaps
-cp @prefix@/share/ardesia/ui/pixmaps/yellow.png $DESTDIR/share/ardesia/ui/pixmaps
+cp @prefix@/share/ardesia/ui/icons/add-pdf.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/ardesia_logo.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/ardesia.ico $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/arrow.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/blue.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/camera-photo.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/eraser.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/filler.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/green.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/hand.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/highlighter.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/media-record.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/media-recorder-unavailable.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/medium.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/pointer.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/pencil.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/rectifier.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/red.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/rounder.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/text.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/thick.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/thin.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/white.png $DESTDIR/share/ardesia/ui/icons
+cp @prefix@/share/ardesia/ui/icons/yellow.png $DESTDIR/share/ardesia/ui/icons
 
 mkdir -p $DESTDIR/share/curtain/ui
 

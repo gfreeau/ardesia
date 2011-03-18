@@ -29,13 +29,13 @@
 
 #ifdef _WIN32
 #  define ANNOTATION_UI_FOLDER "..\\share\\ardesia\\ui"
-#  define ANNOTATION_PIXMAPS_FOLDER "..\\share\\ardesia\\ui\\pixmaps"
+#  define ANNOTATION_PIXMAPS_FOLDER "..\\share\\ardesia\\ui\\icons"
 #  define ERASER_ICON ANNOTATION_PIXMAPS_FOLDER"\\eraser.png"
 #  define PENCIL_ICON ANNOTATION_PIXMAPS_FOLDER"\\pencil.png"
 #  define ARROW_ICON ANNOTATION_PIXMAPS_FOLDER"\\arrow.png"
 #  define HIGHLIGHTER_ICON ANNOTATION_PIXMAPS_FOLDER"\\highlighter.png"
 #else
-#  define ANNOTATION_PIXMAPS_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/pixmaps"
+#  define ANNOTATION_PIXMAPS_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/icons"
 #  define ERASER_ICON ANNOTATION_PIXMAPS_FOLDER"/eraser.png"
 #  define PENCIL_ICON ANNOTATION_PIXMAPS_FOLDER"/pencil.png"
 #  define ARROW_ICON ANNOTATION_PIXMAPS_FOLDER"/arrow.png"

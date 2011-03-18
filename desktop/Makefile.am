@@ -3,13 +3,13 @@
 EXTRA_DIST = \
 	ardesia.desktop.in                \
 	scripts                           \
-	pixmaps                           \
+	icons                             \
 	backgrounds                       \
 	$(ui_DATA)
 
 uidir = $(datadir)/ardesia/ui
 scriptsdir = $(datadir)/ardesia/scripts
-uipixmapsdir = $(uidir)/pixmaps
+uiiconsdir = $(uidir)/icons
 uibackgroundsdir = $(uidir)/backgrounds
 
 ui_DATA = vertical_bar.glade              \
@@ -29,14 +29,14 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 @INTLTOOL_DESKTOP_RULE@
 
-pixmapdir = $(datadir)/pixmaps
-pixmap_DATA = pixmaps/ardesia.png
+pixmapdir = $(datadir)/icons
+pixmap_DATA = icons/ardesia.png
 
 
 install-data-local:
-	mkdir -p $(DESTDIR)$(uipixmapsdir) 
+	mkdir -p $(DESTDIR)$(uiiconsdir) 
 	cp iwb-mime.xml $(DESTDIR)$(uidir) 
-	cp -r pixmaps/* $(DESTDIR)$(uipixmapsdir) 
+	cp -r icons/* $(DESTDIR)$(uiiconsdir) 
 	mkdir -p $(DESTDIR)$(uibackgroundsdir) 
 	cp -r backgrounds/* $(DESTDIR)$(uibackgroundsdir) 
 	mkdir -p $(DESTDIR)$(scriptsdir) 
@@ -49,14 +49,14 @@ endif
 
 	@if test x"$(XDG_UTILS)" != x; then                                                                                                          \
 		echo "Register iwb mimetype";                                                                                                        \
-		xdg-icon-resource install --mode user --novendor --context mimetypes --size 48 $(DESTDIR)$(uipixmapsdir)/application-x-iwb.png;    \
-		xdg-mime install --mode user $(DESTDIR)$(uidir)/iwb-mime.xml;                                                                      \
-		xdg-desktop-menu install --mode user --novendor ardesia.desktop;                                                                   \
+		xdg-icon-resource install --mode user --novendor --context mimetypes --size 48 $(DESTDIR)$(uiiconsdir)/application-x-iwb.png;        \
+		xdg-mime install --mode user $(DESTDIR)$(uidir)/iwb-mime.xml;                                                                        \
+		xdg-desktop-menu install --mode user --novendor ardesia.desktop;                                                                     \
 	fi
 
 # Remove ui directory on uninstall
 uninstall-local:
-	rm -fr $(uipixmapsdir) 
+	rm -fr $(uiiconsdir) 
 	rm -fr $(uibackgroundsdir) 
 
 clean:

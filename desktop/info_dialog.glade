@@ -33,7 +33,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
    </property>
     <property name="authors">  Copyright (C) 2009 Pilolli Pietro &lt;pilolli@fbk.eu&gt;</property>
-    <property name="logo">pixmaps/ardesia_logo.png</property>
+    <property name="logo">icons/ardesia_logo.png</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
