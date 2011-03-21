@@ -2,6 +2,7 @@
 
 EXTRA_DIST = \
 	ardesia.desktop.in                \
+        iwb-mime.xml                      \
 	scripts                           \
 	icons                             \
 	backgrounds                       \
