@@ -13,21 +13,21 @@
   - Make a pdf user manual
   
 - Reengineering
+  - Create the iwb without spawn the zip/unzip process
   - Store and load the savepoints using svg files
   - Text insertion consolidation
-  - Create the iwb without spawn the zip/unzip process
   - Screencast recorder using lib instead spawn processes
   - Use a layered canvas instead a windows set
 
 - Candidate features:
+  - Lazo selection tool
+  - Move the selected shapes
   - Import images
   - Make an image gallery (sticky notes...)
   - Deploy the artefact online
     - video; youtube upload
   - full filler implementation (flood filler algorithm)
-  - Lazo selection tool
-  - Move the selected shapes
-  - Copy the selected shapes
+  - Copy/Paste
   - Multi pointer support
   - Zoom the selected shapes
   - Not parallel to the axis shape recognition
