@@ -2,7 +2,7 @@
 
 AC_PREREQ(2.54)
 
-m4_define([ardesia_version], [0.8])
+m4_define([ardesia_version], [0.9])
 m4_define([glib_required_version], [2.24.0])
 m4_define([gtk_required_version], [2.16.0])
 m4_define([gdk_pixbuf_required_version], [gtk_required_version])
