@@ -97,8 +97,8 @@ add_background_color_reference (xmlXPathContextPtr context,
 
   set_background_color (rgba);
 
-  g_free( (gchar * ) alpha);
-  g_free( (gchar * ) xpath);
+  g_free( (gchar *) alpha);
+  g_free( (gchar *) xpath);
 }
 
 
@@ -187,9 +187,9 @@ decompress_infile (GsfInfile *infile,
 	  gsf_input_copy (child, output);
 	  gsf_output_close (output);
 	  g_object_unref (output);
-
 	  g_free (file_path);
 	}
+
       g_object_unref (G_OBJECT (child));
     }
 }
@@ -213,7 +213,7 @@ decompress_iwb (gchar *iwbfile,
 
   if (infile == NULL)
     {
-      g_warning ("'Error: %s", err->message);
+      g_warning ("Error decompressing iwb file %s: %s", iwbfile, err->message);
       g_error_free (err);
       return;
     }
