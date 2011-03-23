@@ -189,9 +189,8 @@ decompress_infile (GsfInfile *infile,
 	  g_object_unref (output);
 
 	  g_free (file_path);
-	  g_object_unref (G_OBJECT (child));
 	}
-
+      g_object_unref (G_OBJECT (child));
     }
 }
 
