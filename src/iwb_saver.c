@@ -255,11 +255,12 @@ create_xml_content (gchar *content_filename,
 }
 
 
-/* Add a file to the out_file */
-static void add_file (GsfOutfile *out_file, gchar* path, const gchar *file_name)
+/* Add the filename under path to the gst_outfile. */
+static void add_file_to_gst_outfile (GsfOutfile *out_file,
+				     gchar* path,
+				     const gchar *file_name)
 {
   gchar *file_path = g_build_filename (path, file_name, NULL);
-
   GsfOutput  *child  = gsf_outfile_new_child (out_file, file_name, FALSE);
 
   FILE *fp = fopen (file_path, "r");
@@ -284,49 +285,31 @@ static void add_file (GsfOutfile *out_file, gchar* path, const gchar *file_name)
 }
 
 
-/* Add the content.xml file to the out_file */
-static void add_content(GsfOutfile *gst_outfile,
-			gchar *path,
-			gchar *content_filename)
-{
-  add_file (gst_outfile, path, content_filename);
-}
-
-
-/* Add all the files in the folder starting from working dir to the gst_outfile */
+/* Add all the files in the folder under the working_dir to the gst_outfile. */
 static void
-add_files  (GsfOutfile *gst_outfile,
-            gchar *working_dir,
-            gchar *folder)
+add_folder_to_gst_outfile  (GsfOutfile *gst_outfile,
+			    gchar *working_dir,
+			    gchar *folder)
 {
   GsfOutfile *gst_dir = GSF_OUTFILE (gsf_outfile_new_child  (gst_outfile, folder, TRUE));
   gchar *path = g_build_filename (working_dir, folder, NULL);
-
   GDir *dir = g_dir_open (path, 0, NULL);
 
   if (dir)
     {
-      const gchar *file;
+      const gchar *file = (const gchar *) NULL;
+
       while ( (file = g_dir_read_name (dir)))
 	{
-          add_file (gst_dir, path, file);
+          add_file_to_gst_outfile (gst_dir, path, file);
 	}
+
       g_dir_close (dir);
     }
 
   gsf_output_close ((GsfOutput *) gst_dir);
   g_object_unref (gst_dir);
   g_free (path);
-}
-
-
-/* Add images to the zip file */
-static void
-add_images (GsfOutfile *gst_outfile,
-            gchar *working_dir,
-            gchar *images_folder)
-{
-  add_files(gst_outfile, working_dir, images_folder);
 }
 
 
@@ -337,31 +320,33 @@ create_iwb (gchar *zip_filename,
 	    gchar *images_folder,
 	    gchar *content_filename)
 {
-  GError   *err = NULL;
+  GError   *err = (GError *) NULL;
+  GsfOutfile *gst_outfile  = (GsfOutfile *) NULL;
+  GsfOutput  *gst_output = (GsfOutput *) NULL;
 
   gsf_init ();
 
-  GsfOutput  *gst_output = gsf_output_stdio_new (zip_filename, &err);
+  gst_output = gsf_output_stdio_new (zip_filename, &err);
   if (gst_output == NULL) 
     {
-      g_warning ("Error: %s", err->message);
+      g_warning ("Error saving iwb: %s\n", err->message);
       g_error_free (err);
       return;
     }
 
-  GsfOutfile *gst_outfile  = gsf_outfile_zip_new (gst_output, &err);
+  gst_outfile  = gsf_outfile_zip_new (gst_output, &err);
   if (gst_outfile == NULL)
     {
-      g_warning ("Error in gsf_outfile_zip_new: %s", err->message);
+      g_warning ("Error in gsf_outfile_zip_new: %s\n", err->message);
       g_error_free (err);
       return;
     }
 
   g_object_unref (G_OBJECT (gst_output));
 
-  add_images (gst_outfile, working_dir, images_folder);
+  add_folder_to_gst_outfile (gst_outfile, working_dir, images_folder);
 
-  add_content (gst_outfile, working_dir, content_filename);
+  add_file_to_gst_outfile (gst_outfile, working_dir, content_filename);
 
   gsf_output_close ((GsfOutput *) gst_outfile);
   g_object_unref (G_OBJECT (gst_outfile));
@@ -374,7 +359,7 @@ create_iwb (gchar *zip_filename,
 void
 export_iwb (gchar *iwb_location)
 {
-  gchar *iwb_file = NULL;
+  gchar *iwb_file = (gchar *) NULL;
   const gchar *tmpdir = g_get_tmp_dir ();
   gchar *content_filename = "content.xml";
   gchar *ardesia_tmp_dir = g_build_filename (tmpdir, PACKAGE_NAME, (gchar *) 0);
@@ -389,6 +374,7 @@ export_iwb (gchar *iwb_location)
   gchar *background_image = get_background_image();
 
   gchar *first_savepoint_file = g_strdup_printf ("%s%s%s_1_vellum.png", img_dir_path, G_DIR_SEPARATOR_S, PACKAGE_NAME);
+
   /* if exist the file I continue to save */
   if ((file_exists(first_savepoint_file)) || (background_image))
     {

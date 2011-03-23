@@ -22,6 +22,11 @@
 #include <iwb_loader.h>
 #include <annotation_window.h>
 #include <background_window.h>
+#include <gsf/gsf-output-stdio.h>
+#include <gsf/gsf-input-stdio.h>
+#include <gsf/gsf-utils.h>
+#include <gsf/gsf-infile.h>
+#include <gsf/gsf-infile-zip.h>
 
 
 /* Add the background image reference. */
@@ -154,24 +159,71 @@ load_savepoint_by_reference (GSList *savepoint_list,
 }
 
 
+/* Decompress infile in dest_dir. */
+static void
+decompress_infile (GsfInfile *infile,
+                   gchar *dest_dir)
+{
+  GError   *err = NULL;
+  int j =0;
+
+  for (j = 0; j < gsf_infile_num_children (infile); j++)
+    {
+      GsfInput *child = gsf_infile_child_by_index (infile, j);
+      char const* filename = gsf_input_name (child);
+      gboolean is_dir = gsf_infile_num_children (GSF_INFILE (child)) >= 0;
+
+      if (is_dir)
+	{
+          gchar *dir_path = g_build_filename (dest_dir, filename, (gchar *) 0);
+	  decompress_infile (GSF_INFILE (child), dir_path);
+          g_free (dir_path);
+	}
+      else
+	{
+	  gchar* file_path = g_build_filename (dest_dir, filename, (gchar *) 0);
+
+	  GsfOutput * output = GSF_OUTPUT(gsf_output_stdio_new(file_path, &err));
+
+	  gsf_input_copy (child, output);
+
+	  gsf_output_close (output);
+	  g_object_unref (output);
+
+	  g_free (file_path);
+	  g_object_unref (G_OBJECT (child));
+	}
+
+    }
+}
+
+
 /* Decompress the iwb file; it is a zip file. */
 static void
 decompress_iwb (gchar *iwbfile,
 		gchar *project_tmp_dir)
 {
-  /* Unzip the iwb file spawing the Zip-Info process. */
-  gchar *argv[5] = {"unzip", iwbfile, "-d", project_tmp_dir, (gchar*) 0};
+  GError   *err = (GError *) NULL;
+  GsfInput   *input = (GsfInput *) NULL;
+  GsfInfile  *infile = (GsfInfile *) NULL;
+  
+  gsf_init ();
 
-  g_spawn_sync (project_tmp_dir /*working_directory*/,
-		argv,
-		NULL /*envp*/,
-		G_SPAWN_SEARCH_PATH,
-		NULL /*child_setup*/,
-		NULL /*user_data*/,
-		NULL /*child_pid*/,
-		NULL,
-		NULL,
-		NULL);
+  input = gsf_input_stdio_new (iwbfile, &err);
+
+  infile = gsf_infile_zip_new (input, &err);
+  g_object_unref (G_OBJECT (input));
+
+  if (infile == NULL)
+    {
+      g_warning ("'Error: %s", err->message);
+      g_error_free (err);
+      return;
+    }
+
+  decompress_infile (infile, project_tmp_dir);
+  g_object_unref (G_OBJECT (infile));
+  gsf_shutdown ();
 }
 
 

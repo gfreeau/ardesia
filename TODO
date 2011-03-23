@@ -13,7 +13,6 @@
   - Make a pdf user manual
   
 - Reengineering
-  - Create the iwb without spawn the zip/unzip process
   - Store and load the savepoints using svg files
   - Text insertion consolidation
   - Screencast recorder using lib instead spawn processes
