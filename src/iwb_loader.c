@@ -164,8 +164,8 @@ static void
 decompress_infile (GsfInfile *infile,
                    gchar *dest_dir)
 {
-  GError   *err = NULL;
-  int j =0;
+  GError   *err = (GError *) NULL;
+  int j = 0;
 
   for (j = 0; j < gsf_infile_num_children (infile); j++)
     {
@@ -181,12 +181,10 @@ decompress_infile (GsfInfile *infile,
 	}
       else
 	{
-	  gchar* file_path = g_build_filename (dest_dir, filename, (gchar *) 0);
-
-	  GsfOutput * output = GSF_OUTPUT(gsf_output_stdio_new(file_path, &err));
+	  gchar *file_path = g_build_filename (dest_dir, filename, (gchar *) 0);
+	  GsfOutput *output = GSF_OUTPUT (gsf_output_stdio_new (file_path, &err));
 
 	  gsf_input_copy (child, output);
-
 	  gsf_output_close (output);
 	  g_object_unref (output);
 

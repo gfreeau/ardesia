@@ -27,6 +27,7 @@
 #include <background_window.h>
 #include <gsf/gsf-utils.h>
 #include <gsf/gsf-output-stdio.h>
+#include <gsf/gsf-input-stdio.h>
 #include <gsf/gsf-outfile.h>
 #include <gsf/gsf-outfile-zip.h>
 
@@ -260,26 +261,14 @@ static void add_file_to_gst_outfile (GsfOutfile *out_file,
 				     gchar* path,
 				     const gchar *file_name)
 {
+  GError   *err = (GError *) NULL;
   gchar *file_path = g_build_filename (path, file_name, NULL);
+  GsfInput *input = GSF_INPUT (gsf_input_stdio_new (file_path, &err));
   GsfOutput  *child  = gsf_outfile_new_child (out_file, file_name, FALSE);
 
-  FILE *fp = fopen (file_path, "r");
-  if (fp)
-    {
-      void * data = g_malloc (8192);
-      gint size = 0;
-
-      while (0 != (size = fread (data, 1, 8192, fp)))
-	{
-	  gsf_output_write (child, size, data);
-	}
-
-      gsf_output_close ((GsfOutput *) child);
-      g_object_unref (child);
-      fclose (fp);
-      g_free (data);
-
-    }
+  gsf_input_copy (input, child);
+  gsf_output_close (child);
+  g_object_unref (child);
 
   g_free (file_path);
 }
