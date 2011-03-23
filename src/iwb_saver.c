@@ -25,6 +25,10 @@
 #include <utils.h>
 #include <iwb_saver.h>
 #include <background_window.h>
+#include <gsf/gsf-utils.h>
+#include <gsf/gsf-output-stdio.h>
+#include <gsf/gsf-outfile.h>
+#include <gsf/gsf-outfile-zip.h>
 
 
 /* The file pointer to the iwb file. */
@@ -231,7 +235,7 @@ create_xml_content (gchar *content_filename,
 
   if (!background_image)
     {
-       savepoint_number = 0;
+      savepoint_number = 0;
     }
 
   img_dir = g_dir_open (img_dir_path, 0, NULL);
@@ -251,6 +255,81 @@ create_xml_content (gchar *content_filename,
 }
 
 
+/* Add a file to the out_file */
+static void add_file (GsfOutfile *out_file, gchar* path, const gchar *file_name)
+{
+  gchar *file_path = g_build_filename (path, file_name, NULL);
+
+  GsfOutput  *child  = gsf_outfile_new_child (out_file, file_name, FALSE);
+
+  FILE *fp = fopen (file_path, "r");
+  if (fp)
+    {
+      void * data = g_malloc (8192);
+      gint size = 0;
+
+      while (0 != (size = fread (data, 1, 8192, fp)))
+	{
+	  gsf_output_write (child, size, data);
+	}
+
+      gsf_output_close ((GsfOutput *) child);
+      g_object_unref (child);
+      fclose (fp);
+      g_free (data);
+
+    }
+
+  g_free (file_path);
+}
+
+
+/* Add the content.xml file to the out_file */
+static void add_content(GsfOutfile *gst_outfile,
+			gchar *path,
+			gchar *content_filename)
+{
+  add_file (gst_outfile, path, content_filename);
+}
+
+
+/* Add all the files in the folder starting from working dir to the gst_outfile */
+static void
+add_files  (GsfOutfile *gst_outfile,
+            gchar *working_dir,
+            gchar *folder)
+{
+  GsfOutfile *gst_dir = GSF_OUTFILE (gsf_outfile_new_child  (gst_outfile, folder, TRUE));
+  gchar *path = g_build_filename (working_dir, folder, NULL);
+
+  GDir *dir = g_dir_open (path, 0, NULL);
+
+  if (dir)
+    {
+      const gchar *file;
+      while ( (file = g_dir_read_name (dir)))
+	{
+          add_file (gst_dir, path, file);
+	}
+      g_dir_close (dir);
+    }
+
+  gsf_output_close ((GsfOutput *) gst_dir);
+  g_object_unref (gst_dir);
+  g_free (path);
+}
+
+
+/* Add images to the zip file */
+static void
+add_images (GsfOutfile *gst_outfile,
+            gchar *working_dir,
+            gchar *images_folder)
+{
+  add_files(gst_outfile, working_dir, images_folder);
+}
+
+
 /* Create the iwb file. */
 static void
 create_iwb (gchar *zip_filename,
@@ -258,21 +337,36 @@ create_iwb (gchar *zip_filename,
 	    gchar *images_folder,
 	    gchar *content_filename)
 {
-  /* Create the zip archive, add all the file inside images to the zip and the content.xml;
-   * this is done spawning the info-Zip process
-   */
-  gchar *argv[6] = {"zip", "-r", zip_filename, images_folder, content_filename, (gchar *) 0};
+  GError   *err = NULL;
 
-  g_spawn_sync (working_dir /*working_directory*/,
-		argv,
-		NULL /*envp*/,
-		G_SPAWN_SEARCH_PATH,
-		NULL /*child_setup*/,
-		NULL /*user_data*/,
-		NULL /*child_pid*/,
-		NULL,
-		NULL,
-		NULL);
+  gsf_init ();
+
+  GsfOutput  *gst_output = gsf_output_stdio_new (zip_filename, &err);
+  if (gst_output == NULL) 
+    {
+      g_warning ("Error: %s", err->message);
+      g_error_free (err);
+      return;
+    }
+
+  GsfOutfile *gst_outfile  = gsf_outfile_zip_new (gst_output, &err);
+  if (gst_outfile == NULL)
+    {
+      g_warning ("Error in gsf_outfile_zip_new: %s", err->message);
+      g_error_free (err);
+      return;
+    }
+
+  g_object_unref (G_OBJECT (gst_output));
+
+  add_images (gst_outfile, working_dir, images_folder);
+
+  add_content (gst_outfile, working_dir, content_filename);
+
+  gsf_output_close ((GsfOutput *) gst_outfile);
+  g_object_unref (G_OBJECT (gst_outfile));
+
+  gsf_shutdown ();  
 }
 
 

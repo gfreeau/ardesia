@@ -114,6 +114,7 @@ dnl Check modules
 pkg_modules="	glib-2.0
                 gthread-2.0
                 gsl
+		libgsf-1
                 libxml-2.0
 		cairo
                 gdk-2.0
