@@ -1,5 +1,13 @@
 Ardesia free digital sketchpad
 
+---------------
+ ardesia 0.9
+---------------
+
+Dependencies:
+- Delete the zip/unzip dependency
+- Add a new build requirement: the libgsf library
+
 
 ---------------
  ardesia 0.8
