@@ -13,8 +13,8 @@
   - Make a pdf user manual
   
 - Reengineering
+  - Better integration beetween ardesia and virtual keyboard
   - Store and load the savepoints using svg files
-  - Text insertion consolidation
   - Screencast recorder using lib instead spawn processes
   - Use a layered canvas instead a windows set
 
