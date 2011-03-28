@@ -8,10 +8,10 @@
                         #    ####### ######  #######
 ==========================================================================
 
-- Management
-  - Make a video tutorial
-  - Make a pdf user manual
-  
+- Documentation
+  - video tutorial
+  - user manual
+
 - Reengineering
   - Better integration beetween ardesia and virtual keyboard
   - Store and load the savepoints using svg files
