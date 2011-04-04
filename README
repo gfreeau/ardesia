@@ -80,11 +80,12 @@ Please read the INSTALL file located on the current folder.
 
 
 - VLC
-  To use the recording feature you must install the vlc multimedia player
-  and streamer.
-  If you use Ubuntu you can install vlc with this command:
+  To use the recording feature you must install the VLC multimedia player
+  and Streamer.
+  On Debian/Ubuntu like distributions VLC could be already installed.
+  Anyway, you could do this manually with this command:
 
-  #sudo apt-get install vlc
+  $sudo apt-get install vlc
 
   If you use an other Linux distro please use your package manager
 
@@ -93,11 +94,11 @@ Please read the INSTALL file located on the current folder.
   After the installation add to the PATH environment
   variable the vlc installation folder.
 
-
 - xdg-utils (Linux only)
-  If you use Ubuntu you can install the xdg-utils with this command:
+  On Ubuntu xdg-utils is installed by default (ubuntu-desktop needs it)
+  If you use a Debian like distribution, you can install the xdg-utils with this command:
 
-  #sudo apt-get install xdg-utils
+  $sudo apt-get install xdg-utils
 
 
 -------
