@@ -100,12 +100,6 @@ Please read the INSTALL file located on the current folder.
   #sudo apt-get install xdg-utils
 
 
-- Info-ZIP zip and unzip tools (Linux only in windows are included in the package)
-  If you use Ubuntu you can install theese with this command:
-
-  #sudo apt-get install zip unzip
-
-
 -------
  Usage
 -------
