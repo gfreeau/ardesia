@@ -76,12 +76,13 @@ Please read the INSTALL file located on the current folder.
 
   If you are a Windows "user" I remember you that only these flavours are supported:
   - Windows 7 Ultimate, Enterprise, Professional and Home Premium
-  - Windows Vista Business, Enterprise, Ultimate and Home Premium Editions 
+  - Windows Vista Business, Enterprise, Ultimate and Home Premium Editions
 
 
 - VLC
   To use the recording feature you must install the VLC multimedia player
   and Streamer.
+
   On Debian/Ubuntu like distributions VLC could be already installed.
   Anyway, you could do this manually with this command:
 
@@ -93,6 +94,7 @@ Please read the INSTALL file located on the current folder.
   from http://www.videolan.org/vlc and install it.
   After the installation add to the PATH environment
   variable the vlc installation folder.
+
 
 - xdg-utils (Linux only)
   On Ubuntu xdg-utils is installed by default (ubuntu-desktop needs it)
