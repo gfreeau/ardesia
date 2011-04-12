@@ -431,8 +431,9 @@ get_date ()
   hour_min_sep = ".";
 #endif
   date = g_strdup_printf ("%d-%d-%d_%d%s%d-%d",
+                          t->tm_year+1900,
 			  t->tm_mday,
-			  t->tm_mon+1,t->tm_year+1900,
+			  t->tm_mon+1,
 			  t->tm_hour,
 			  hour_min_sep,
 			  t->tm_min,
