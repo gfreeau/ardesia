@@ -418,7 +418,7 @@ get_date ()
 {
   struct tm *t;
   time_t now;
-  gchar *hour_min_sep = ":";
+  gchar *time_sep = ":";
   gchar *date = "";
 
   time (&now);
@@ -428,15 +428,16 @@ get_date ()
   /* The ":" character on windows is avoided in file name and then
    * I use the "." character instead.
    */
-  hour_min_sep = ".";
+  time_sep = ".";
 #endif
-  date = g_strdup_printf ("%d-%d-%d_%d%s%d-%d",
+  date = g_strdup_printf ("%d-%d-%d_%d%s%d%s%d",
                           t->tm_year+1900,
 			  t->tm_mday,
 			  t->tm_mon+1,
 			  t->tm_hour,
-			  hour_min_sep,
+			  time_sep,
 			  t->tm_min,
+                          time_sep,
 			  t->tm_sec);
 
   return date;
