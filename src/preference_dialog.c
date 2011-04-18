@@ -38,17 +38,19 @@
 void
 start_preference_dialog (GtkWindow *parent)
 {
-  GObject *preference_obj = NULL;
-  GtkWidget *preference_dialog = NULL;
-  GObject *img_obj = NULL;
+  GObject *preference_obj = (GObject *) NULL;
+  GtkWidget *preference_dialog = (GtkWidget *) NULL;
+  GObject *img_obj = (GObject *) NULL;
   GtkFileChooser *chooser = NULL;
-  GtkFileFilter *filter = NULL;
-  GObject *bg_color_obj = NULL;
-  GtkWidget *color_button = NULL;
+  GtkFileFilter *filter = (GtkFileFilter *) NULL;
+  GObject *bg_color_obj = (GObject *) NULL;
+  GtkWidget *color_button = (GtkWidget *) NULL;
 
-  PreferenceData *preference_data = (PreferenceData *) g_malloc ((gsize) sizeof (PreferenceData));
+  PreferenceData *preference_data = (PreferenceData *) NULL;
 
   start_virtual_keyboard ();
+
+  preference_data = g_malloc ((gsize) sizeof (PreferenceData));
 
   /* 0 no background, 1 background colour, 2 png background. */
   preference_data->background = 0;
