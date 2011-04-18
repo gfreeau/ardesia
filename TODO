@@ -19,6 +19,7 @@
   - Use a layered canvas instead a windows set
 
 - Candidate features:
+  - Persist the last option in the preference dialog
   - Lazo selection tool
   - Move the selected shapes
   - Import images
