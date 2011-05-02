@@ -15,8 +15,8 @@
 - Reengineering
   - Better integration beetween ardesia and virtual keyboard
   - Store and load the savepoints using svg files
+  - Use the some window for the background painting
   - Screencast recorder using lib instead spawn processes
-  - Use a layered canvas instead a windows set
 
 - Candidate features:
   - Persist the last option in the preference dialog
