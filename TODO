@@ -13,9 +13,9 @@
   - user manual
 
 - Reengineering
-  - Better integration beetween ardesia and virtual keyboard
+  - Integration beetween ardesia and florence in the lxde environment
   - Store and load the savepoints using svg files
-  - Use the some window for the background painting
+  - Use the same window for the background
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
