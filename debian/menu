@@ -1,0 +1,2 @@
+?package(ardesia):needs="X11" section="Applications/Graphics"\
+  title="Ardesia" command="/usr/bin/ardesia"
