@@ -39,7 +39,7 @@ if !PLATFORM_WIN32
 deb:
 	@if test -s "`which debuild`"; then                                                \
 		debuild -us -uc -b;                                                        \
-		mv ../$(PACKAGE_NAME)_$(PACKAGE_VERSION)-*.deb .;                          \
+		mv ../$(PACKAGE_NAME)_$(PACKAGE_VERSION)-*_*.deb .;                        \
 	else                                                                               \
 		echo "You need to install the debian package 'devscripts'";                \
 		exit 1;                                                                    \
