@@ -1,5 +1,31 @@
-ardesia (0.9-0ubuntu1) lucid; urgency=low
+ardesia (0.9-1) unstable; urgency=low
 
-  * The 0.9 release
+  * New 0.9 upstream release. 
 
- -- root <pilolli@fbk.eu>  Mon, 03 Oct 2010 23:58:49 +0200
+ -- PILOLLI Pietro <alpha@paranoici.org>  Wed, 20 Jun 2011 23:28:03 +0900
+
+ardesia (0.8-3) unstable; urgency=low
+
+  * Build with new binutils. 
+
+ -- TANIGUCHI Takaki <takaki@debian.org>  Wed, 20 Apr 2011 23:28:03 +0900
+
+ardesia (0.8-2) unstable; urgency=low
+
+  * debian/control: add libxml2-dev to Build-Depends. (Closes: #620884)
+
+ -- TANIGUCHI Takaki <takaki@debian.org>  Tue, 05 Apr 2011 11:22:34 +0900
+
+ardesia (0.8-1) unstable; urgency=low
+
+  * New upstream.
+  * debian/watch: Fix filename.
+  * debian/rules: remove override_dh_fixperms 
+
+ -- TANIGUCHI Takaki <takaki@debian.org>  Mon, 04 Apr 2011 22:59:03 +0900
+
+ardesia (0.6-1) unstable; urgency=low
+
+  * Initial release (Closes: #599359)
+
+ -- TANIGUCHI Takaki <takaki@debian.org>  Wed, 19 Jan 2011 11:30:47 +0900
