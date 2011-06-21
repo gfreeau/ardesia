@@ -73,6 +73,7 @@ on_expose       (GtkWidget *widget,
 
   /* Postcondition; data->annotation_cairo_context is not NULL. */
   annotate_restore_surface ();
+
   return TRUE;
 }
 
@@ -152,8 +153,6 @@ on_motion_notify (GtkWidget *win,
   gdouble selected_width = 0.0;
   gdouble pressure = 1.0; 
 
-  initialize_annotation_cairo_context (data);
-
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
@@ -187,6 +186,9 @@ on_motion_notify (GtkWidget *win,
       /* The button is not pressed. */
       return TRUE;
     }
+
+
+  initialize_annotation_cairo_context (data);
 
   if ( (ev->device->source != GDK_SOURCE_MOUSE) &&
        (data->cur_context->type != ANNOTATE_ERASER))
@@ -244,8 +246,6 @@ on_button_release (GtkWidget *win,
   AnnotateData *data = (AnnotateData *) func_data;
   guint lenght = g_slist_length (data->coord_list);
 
-  initialize_annotation_cairo_context(data);
-
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
@@ -271,6 +271,8 @@ on_button_release (GtkWidget *win,
     }
 
 #endif
+
+  initialize_annotation_cairo_context(data);
 
   if (lenght > 2)
     { 
@@ -314,6 +316,7 @@ on_button_release (GtkWidget *win,
 
 	}
     }
+
   cairo_stroke_preserve (data->annotation_cairo_context);
   
   annotate_add_savepoint ();
@@ -336,12 +339,12 @@ on_proximity_in (GtkWidget *widget,
    */
   AnnotateData *data = (AnnotateData *) func_data;
 
-  initialize_annotation_cairo_context(data);
-
   if (data->debug)
     {
       g_printerr ("Proximity in device %s\n", ev->device->name);
     }
+
+  initialize_annotation_cairo_context(data);
 
   if (data->cur_context->type == ANNOTATE_PEN)
     {
@@ -374,12 +377,12 @@ on_proximity_out (GtkWidget *win,
    */
   AnnotateData *data = (AnnotateData *) func_data;
 
-  initialize_annotation_cairo_context(data);
-
   if (data->debug)
     {
       g_printerr ("Proximity out device %s\n", ev->device->name);
     }
+
+  initialize_annotation_cairo_context(data);
 
   if (data->old_paint_type == ANNOTATE_PEN)
     {
