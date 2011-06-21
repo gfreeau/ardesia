@@ -51,9 +51,9 @@ static gdouble get_pressure (GdkEvent *ev)
 
 /* Expose event: this occurs when the window is shown. */
 G_MODULE_EXPORT gboolean
-event_expose (GtkWidget *widget,
-	      GdkEventExpose *event,
-	      gpointer func_data)
+on_expose       (GtkWidget *widget,
+	         GdkEventExpose *event,
+	         gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
 
@@ -84,9 +84,9 @@ event_expose (GtkWidget *widget,
 
 /* This is called when the button is pushed. */
 G_MODULE_EXPORT gboolean
-paint (GtkWidget *win,
-       GdkEventButton *ev,
-       gpointer func_data)
+on_button_press (GtkWidget *win,
+                 GdkEventButton *ev,
+                 gpointer func_data)
 { 
 
   AnnotateData *data = (AnnotateData *) func_data;
@@ -143,9 +143,9 @@ paint (GtkWidget *win,
 
 /* This shots when the pointer is moving. */
 G_MODULE_EXPORT gboolean
-paintto (GtkWidget *win,
-	 GdkEventMotion *ev,
-	 gpointer func_data)
+on_motion_notify (GtkWidget *win,
+	          GdkEventMotion *ev,
+	          gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
   GdkModifierType state = (GdkModifierType) ev->state;
@@ -237,9 +237,9 @@ paintto (GtkWidget *win,
 
 /* This shots when the button is released. */
 G_MODULE_EXPORT gboolean
-paintend (GtkWidget *win,
-	  GdkEventButton *ev,
-	  gpointer func_data)
+on_button_release (GtkWidget *win,
+	           GdkEventButton *ev,
+	           gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
   guint lenght = g_slist_length (data->coord_list);
@@ -326,9 +326,9 @@ paintend (GtkWidget *win,
 
 /* Device touch. */
 G_MODULE_EXPORT gboolean
-proximity_in (GtkWidget *widget,
-	      GdkEventProximity *ev,
-	      gpointer func_data)
+on_proximity_in (GtkWidget *widget,
+    	         GdkEventProximity *ev,
+	         gpointer func_data)
 {
   /*
    * @TODO This message does not arrive on windows; why?
@@ -363,9 +363,9 @@ proximity_in (GtkWidget *widget,
 
 /* Device lease. */
 G_MODULE_EXPORT gboolean
-proximity_out (GtkWidget *win,
-	       GdkEventProximity *ev,
-	       gpointer func_data)
+on_proximity_out (GtkWidget *win,
+	          GdkEventProximity *ev,
+	          gpointer func_data)
 {
 
   /*

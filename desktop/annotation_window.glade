@@ -10,12 +10,12 @@
     <property name="title">window</property>
     <property name="destroy_with_parent">True</property>
     <property name="skip_taskbar_hint">True</property>
-    <signal name="expose_event" handler="event_expose"/>
-    <signal name="motion_notify_event" handler="paintto"/>
-    <signal name="button_press_event" handler="paint"/>
-    <signal name="proximity_in_event" handler="proximity_in"/>
-    <signal name="button_release_event" handler="paintend"/>
-    <signal name="proximity_out_event" handler="proximity_out"/>
+    <signal name="expose_event" handler="on_expose"/>
+    <signal name="motion_notify_event" handler="on_motion_notify"/>
+    <signal name="button_press_event" handler="on_button_press"/>
+    <signal name="proximity_in_event" handler="on_proximity_in"/>
+    <signal name="button_release_event" handler="on_button_release"/>
+    <signal name="proximity_out_event" handler="on_proximity_out"/>
     <child>
       <placeholder/>
     </child>
