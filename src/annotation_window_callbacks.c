@@ -122,31 +122,13 @@ paint (GtkWidget *win,
 
   annotate_unhide_cursor ();
 
-  /* Only button1 allowed. */
-  if (ev->button != 1)
-    {
-
-      if (data->debug)
-	{
-	  g_printerr ("Device '%s': Invalid pressure event\n",
-		      ev->device->name);
-	}
-
-      return TRUE;
-    }
-
   annotate_reset_cairo ();
 
-  if ((ev->device->source != GDK_SOURCE_MOUSE) &&
-      (data->cur_context->type != ANNOTATE_ERASER))
-    {
-      pressure = get_pressure ( (GdkEvent *) ev);
+  pressure = get_pressure ( (GdkEvent *) ev);
 
-      if (pressure <= 0)
-	{
-	  return TRUE;
-	}
-
+  if (pressure <= 0)
+    { 
+      return TRUE;
     }
 
   annotate_draw_point (ev->x, ev->y, pressure);
@@ -198,8 +180,9 @@ paintto (GtkWidget *win,
 
   annotate_unhide_cursor ();
 
-  /* Only button1 allowed. */
-  if (! (state & GDK_BUTTON1_MASK))
+  /* Only the first 5 buttons allowed. */
+  if (! (state & 
+	 (GDK_BUTTON1_MASK | GDK_BUTTON2_MASK | GDK_BUTTON3_MASK | GDK_BUTTON4_MASK | GDK_BUTTON5_MASK)))
     {
       /* The button is not pressed. */
       return TRUE;
@@ -288,12 +271,6 @@ paintend (GtkWidget *win,
     }
 
 #endif
-	
-  /* Only button1 allowed. */
-  if (! (ev->button == 1))
-    {
-      return TRUE;
-    }
 
   if (lenght > 2)
     { 

@@ -502,8 +502,8 @@ setup_input_devices ()
 	  gdk_device_set_source (device, GDK_SOURCE_ERASER);
 	}
 
-      /* Don’t touch devices with lesser than two axis. */
-      if (device->num_axes >= 2)
+       /* only enable devices with 2 ore more axes */
+      if (gdk_device_get_n_axes(device) >= 2)
 	{
 
 	  if (device->source != GDK_SOURCE_MOUSE)
@@ -515,10 +515,9 @@ setup_input_devices ()
 		{
 		  g_warning ("Unable to set the device %s to the screen mode\n", device->name);
 		}
-
 	    }
-
 	}
+
     }
 }
 
