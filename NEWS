@@ -6,7 +6,7 @@ Ardesia free digital sketchpad
 
 Dependencies:
 - Delete the zip/unzip dependency
-- Add a new build requirement: the libgsf library
+- Add a new requirement: the libgsf library
 
 Bug Fix:
 - Eraser: fix the eraser tool using the the back side of some
