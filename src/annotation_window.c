@@ -503,7 +503,7 @@ setup_input_devices ()
 	}
 
        /* only enable devices with 2 ore more axes */
-      if (gdk_device_get_n_axes(device) >= 2)
+      if (device->num_axes >= 2)
 	{
 
 	  if (device->source != GDK_SOURCE_MOUSE)
