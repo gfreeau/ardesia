@@ -1,3 +1,23 @@
+2011-06-21 19:37  alpha@paranoici.org
+        * trunk/ardesia/src/annotation_window.c,
+        * trunk/ardesia/desktop/annotation_window.glade,
+        * trunk/ardesia/src/annotation_window_callbacks.c,
+        * trunk/ardesia/src/annotation_window_callbacks.h:
+        - Code revision for the annotation drawing part
+        - The issue 28 is closed;
+          for furthermore info see http://code.google.com/p/ardesia/issues/detail?id=28
+
+
+2011-06-16 11:57  alpha@paranoici.org
+        * trunk/ardesia/Makefile.am,
+        * trunk/ardesia/debian/control,
+        * trunk/ardesia/debian/copyright,
+        * trunk/ardesia/debian/postinst,
+        * trunk/ardesia/debian/rules:
+        - Update debian scripts following the Takaki debian build
+          best pactices
+
+
 2011-03-18 14:26  alpha@paranoici.org
         * trunk/ardesia/INSTALL,
         * trunk/ardesia/README,

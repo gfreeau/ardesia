@@ -8,6 +8,9 @@ Dependencies:
 - Delete the zip/unzip dependency
 - Add a new build requirement: the libgsf library
 
+Bug Fix:
+- Eraser: fix the eraser tool using the the back side of some
+  wacom tablet pen
 
 ---------------
  ardesia 0.8
