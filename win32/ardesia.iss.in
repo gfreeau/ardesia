@@ -66,7 +66,7 @@ Name: "{group}\Ardesia"; Filename: "{app}\bin\ardesia.exe"; IconFilename: "{app}
 Name: "{group}\Curtain"; Filename: "{app}\bin\curtain.exe"; IconFilename: "{app}\share\curtain\ui\pixmaps\curtain.ico"
 Name: "{group}\Spotlighter"; Filename: "{app}\bin\spotlighter.exe"; IconFilename: "{app}\share\spotlighter\ui\pixmaps\spotlighter.ico"
 Name: "{group}\{cm:UninstallProgram,Ardesia}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\Ardesia"; Filename: "{app}\bin\ardesia.exe"; Tasks: desktopicon
+Name: "{commondesktop}\Ardesia"; Filename: "{app}\bin\ardesia.exe"; IconFilename: "{app}\share\ardesia\ui\icons\ardesia.ico"
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Ardesia"; Filename: "{app}\bin\ardesia.exe"; Tasks: quicklaunchicon
 
 [Run]
