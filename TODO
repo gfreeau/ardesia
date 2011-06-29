@@ -9,8 +9,8 @@
 ==========================================================================
 
 - Documentation
+  - user manual 
   - video tutorial
-  - user manual
 
 - Reengineering
   - Integration beetween ardesia and florence in the lxde environment
@@ -29,6 +29,7 @@
     - Zoom the selected area content
     - Rotate the selected area content
   - full filler implementation (flood filler algorithm)
+  - Hyperlink
   - Deploy the artefact online
     - video; youtube upload
   - Multi pointer support
