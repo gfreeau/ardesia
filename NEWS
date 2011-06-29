@@ -4,6 +4,10 @@ Ardesia free digital sketchpad
  ardesia 0.9
 ---------------
 
+Features
+- The iwb file import/export feature has been enriched with
+- Ubuntu 10.10/11.04 compliant
+
 Dependencies:
 - Delete the zip/unzip dependency
 - Add a new requirement: the libgsf library
@@ -26,6 +30,7 @@ Features
 - Add a new micro thickness for the tools
 - Easy circle painting with the rounder tool
 - Use the mouse tool with semi transparent coloured background
+- Ubuntu 10.04 compliant
 
 Bug Fix:
 - Arrow tool: caused the arrow detachment from the sketched polyline 
