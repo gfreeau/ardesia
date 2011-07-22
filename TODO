@@ -22,6 +22,7 @@
   - Persist the last option in the preference dialog
   - Import images
   - Make an image gallery (sticky notes...)
+  - Hyperlink
   - Lazo selection tool
     - Export to image the selected area content 
     - Move the selected area content
@@ -29,7 +30,6 @@
     - Zoom the selected area content
     - Rotate the selected area content
   - full filler implementation (flood filler algorithm)
-  - Hyperlink
   - Deploy the artefact online
     - video; youtube upload
   - Multi pointer support
