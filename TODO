@@ -13,6 +13,7 @@
   - video tutorial
 
 - Reengineering
+  - Remove libbfd dependency
   - Integration beetween ardesia and florence in the lxde environment
   - Store and load the savepoints using svg files
   - Use the same window for the background
