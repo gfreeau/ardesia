@@ -7,9 +7,7 @@ Build-Depends: debhelper (>= 7.0.50~), autotools-dev,
 	pkg-config,
 	libgtk2.0-dev,
 	libgsl0-dev,
-	libsigsegv-dev,
-	libxml2-dev,
-	binutils-dev,
+	libxml2-dev
 Standards-Version: 3.9.1
 Homepage: http://code.google.com/p/ardesia/
 #Vcs-Git: git://git.debian.org/collab-maint/ardesia.git

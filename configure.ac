@@ -102,8 +102,6 @@ fi
 
 PKG_CHECK_MODULES(CAIRO, cairo >= cairo_required_version)
 
-AC_CHECK_HEADER([sigsegv.h], AC_CHECK_LIB([sigsegv], [stackoverflow_install_handler]), AC_MSG_NOTICE([*** Header file sigsegv.h not found; please install the libsigsegv headers ***])) 
-
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = yes)
 
