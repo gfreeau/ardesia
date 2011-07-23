@@ -46,10 +46,6 @@ ardesia_SOURCES = \
 	utils.h                                   \
         windows_utils.c                           \
 	windows_utils.h                           \
-	windows_backtrace.c                       \
-	windows_backtrace.h                       \
-	glibc_backtrace.c                         \
-	glibc_backtrace.h                         \
 	keyboard.c                                \
 	keyboard.h                                \
         saver.c                                   \

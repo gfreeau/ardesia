@@ -30,15 +30,6 @@
 #include <bar.h>
 
 
-#ifdef HAVE_BACKTRACE
-#  include <glibc_backtrace.h>
-#endif
-
-#ifdef _WIN32
-#  include <windows_backtrace.h>
-#endif
-
-
 /* Print the version of the tool and exit. */
 static void 
 print_version ()
@@ -339,16 +330,6 @@ main (int argc,
 
   /* Enable the localization support with gettext. */
   enable_localization_support ();
-
-#ifdef HAVE_BACKTRACE
-#ifdef HAVE_LIBSIGSEGV
-  glibc_backtrace_register ();
-#endif
-#endif
-#ifdef _WIN32
-  windows_backtrace_register ();
-#endif
-
 
   gtk_init (&argc, &argv);
 	

@@ -13,13 +13,13 @@
   - video tutorial
 
 - Reengineering
-  - Remove libbfd dependency
   - Integration beetween ardesia and florence in the lxde environment
   - Store and load the savepoints using svg files
   - Use the same window for the background
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
+  - Implement a bug report when a crash occurred
   - Persist the last option in the preference dialog
   - Import images
   - Make an image gallery (sticky notes...)

@@ -14,7 +14,6 @@ desktop/text_window.glade
 desktop/vertical_bar.glade
                                                     
 src/utils.c
-src/windows_backtrace.c
 src/windows_utils.c
 
 
