@@ -1,4 +1,4 @@
-2011-06-21 19:37  alpha@paranoici.org
+2011-06-21 19:37  pilolli.pietro@gmail.com
         * trunk/ardesia/src/annotation_window.c,
         * trunk/ardesia/desktop/annotation_window.glade,
         * trunk/ardesia/src/annotation_window_callbacks.c,
@@ -8,7 +8,7 @@
           for furthermore info see http://code.google.com/p/ardesia/issues/detail?id=28
 
 
-2011-06-16 11:57  alpha@paranoici.org
+2011-06-16 11:57  pilolli.pietro@gmail.com
         * trunk/ardesia/Makefile.am,
         * trunk/ardesia/debian/control,
         * trunk/ardesia/debian/copyright,
@@ -18,7 +18,7 @@
           best pactices
 
 
-2011-03-18 14:26  alpha@paranoici.org
+2011-03-18 14:26  pilolli.pietro@gmail.com
         * trunk/ardesia/INSTALL,
         * trunk/ardesia/README,
         * trunk/ardesia/TODO,
@@ -57,7 +57,7 @@
         - The binary deb package building is warning free
 
 
-2011-03-16 00:45  alpha@paranoici.org
+2011-03-16 00:45  pilolli.pietro@gmail.com
         * /trunk/ardesia/debian/postinst,
         * /trunk/ardesia/Makefile.am,
         * /trunk/ardesia/configure.ac,
@@ -67,7 +67,7 @@
           of /usr/local
 
 
-2011-03-14 15:27  alpha@paranoici.org
+2011-03-14 15:27  pilolli.pietro@gmail.com
         * /trunk/ardesia/src/ardesia.c,
 	* /trunk/ardesia/src/utils.c:
         - Fix to solve the xdg documents problem
@@ -76,13 +76,13 @@
           under the user home directory
 
 
-2011-03-10 18:09  alpha@paranoici.org
+2011-03-10 18:09  pilolli.pietro@gmail.com
 	* /trunk/ardesia/win32/build_installer.in:
         - added missing library msys-1.0.dll used by the InfoZip tools;
           this fix the open/save under Windows
 
 
-2011-03-10 17:19  alpha@paranoici.org
+2011-03-10 17:19  pilolli.pietro@gmail.com
         * /trunk/ardesia/src/background_window.c,
         * /trunk/ardesia/src/background_window.h,
         * /trunk/ardesia/src/saver.c,
@@ -93,26 +93,26 @@
         - The background image is loaded and scaled with cairo
 
 
-2011-03-10 13:47  alpha@paranoici.org
+2011-03-10 13:47  pilolli.pietro@gmail.com
 	* trunk/ardesia/desktop/Makefile.am:
         - Fix the xdg resources installation
           to use the "user mode"
 
 
-2011-03-09 09:36  alpha@paranoici.org
+2011-03-09 09:36  pilolli.pietro@gmail.com
 	* trunk/ardesia/autogen.sh:
         - Remove an old patch that was usefull to build ardesia with ports;
 	  REGARDS: now the default build system is jhbuild and it is used
 	  the default libtool
 
 
-2011-03-06 17:47  alpha@paranoici.org
+2011-03-06 17:47  pilolli.pietro@gmail.com
 	* trunk/ardesia/src/preference_dialog.c:
         - Delete the stay above directive in preference dialog
           for windows compliance
 
 
-2011-03-04 13:01  alpha@paranoici.org
+2011-03-04 13:01  pilolli.pietro@gmail.com
 	* trunk/ardesia/configure.ac,
 	* trunk/ardesia/desktop/Makefile.am,
 	* trunk/ardesia/desktop/iwb-mime.xml: 
@@ -124,20 +124,20 @@
           deb target
 
 
-2011-03-03 14:42  alpha@paranoici.org
+2011-03-03 14:42  pilolli.pietro@gmail.com
 	* trunk/ardesia/src/annotation_window.c,
 	* trunk/ardesia/src/annotation_window_callbacks.c:
         - Fix the undo to clear the window if pressed when
 	  there are no more savepoints
 
 
-2011-03-02 16:36  alpha@paranoici.org
+2011-03-02 16:36  pilolli.pietro@gmail.com
 	* trunk/ardesia/src/annotation_window.c:
         - If the ellipse has an eccentricicity roundable
 	  to zero then the rounder draw a circle
 
 
-2011-03-02 00:56  alpha@paranoici.org
+2011-03-02 00:56  pilolli.pietro@gmail.com
 	* trunk/ardesia/src/annotation_window.c:
         - Fix an error that caused a colour starvation
 	  with the rounder mode enabled;
@@ -145,7 +145,7 @@
 	  as ellipse instead of a simple point or short lines
 	  
 
-2011-03-01 12:16  alpha@paranoici.org
+2011-03-01 12:16  pilolli.pietro@gmail.com
 	* trunk/ardesia/src/background_window.c:
         - If the background colour opacity is lesser than one
 	  and the mouse tool has been selected the background
@@ -154,14 +154,14 @@
           that it is not implemented in windows yet)
 
 
-2011-02-28 21:27  alpha@paranoici.org
+2011-02-28 21:27  pilolli.pietro@gmail.com
 	* trunk/ardesia/src/annotation_window.c:
         - Fix a little a little bug that caused
 	  the not filling of closed path using
 	  the roundifier tool
 
 
-2011-02-28 01:57  alpha@paranoici.org
+2011-02-28 01:57  pilolli.pietro@gmail.com
 	* trunk/ardesia/desktop/horizontal_bar.glade,
 	* trunk/ardesia/desktop/vertical_bar.glade,
 	* trunk/ardesia/src/bar_callbacks.c:
@@ -171,7 +171,7 @@
           minimization of the bar window using the "-d" decoration option
 
 
-2011-02-27 16:06  alpha@paranoici.org
+2011-02-27 16:06  pilolli.pietro@gmail.com
 	* trunk/ardesia/TODO, 
         * trunk/ardesia/desktop/pixmaps/arrow.png,
 	* trunk/ardesia/src/annotation_window.c,
@@ -180,7 +180,7 @@
         - New arrow icon and cursor
 
 
-2011-02-25 16:17  alpha@paranoici.org
+2011-02-25 16:17  pilolli.pietro@gmail.com
 	* trunk/ardesia/src/annotation_window.c,
 	* trunk/ardesia/src/background_window.c,
 	* trunk/ardesia/src/background_window.h,
@@ -192,7 +192,7 @@
         - Add the iwb background load and store support
 
 
-2011-02-23 16:18  alpha@paranoici.org
+2011-02-23 16:18  pilolli.pietro@gmail.com
 	* trunk/ardesia/TODO,
         * trunk/ardesia/desktop/horizontal_bar.glade,
 	* trunk/ardesia/desktop/pixmaps/micro.png,
@@ -208,7 +208,7 @@
 	  - Fixed a little math bug in the arrow algorithm
 
 
-2011-02-23 13:57  alpha@paranoici.org
+2011-02-23 13:57  pilolli.pietro@gmail.com
 	* trunk/ardesia/TODO,
         * trunk/ardesia/src/annotation_window.c,
 	* trunk/ardesia/src/cursors.c,
@@ -220,7 +220,7 @@
 	    the png icons used for the cursors
 
 
-2011-02-23 12:34  alpha@paranoici.org
+2011-02-23 12:34  pilolli.pietro@gmail.com
 	* trunk/ardesia/TODO,
         * trunk/ardesia/src/Makefile.am,
 	* trunk/ardesia/src/annotation_window.c,
@@ -231,7 +231,7 @@
 	  moved the cursor stuffs in the file cursor.c
 
 
-2011-02-23 01:02  alpha@paranoici.org
+2011-02-23 01:02  pilolli.pietro@gmail.com
 	* trunk/ardesia/src/windows_utils.c,
 	* trunk/ardesia/src/windows_utils.h: 
         - Delete the Dirk Gerrit re-implementation 
@@ -242,7 +242,7 @@
 	  transparent cursor
 
 
-2011-02-23 00:23  alpha@paranoici.org
+2011-02-23 00:23  pilolli.pietro@gmail.com
 	* trunk/ardesia/TODO,
 	* trunk/ardesia/desktop/pixmaps/highlighter.png,
 	* trunk/ardesia/src/annotation_window.c,
@@ -252,19 +252,19 @@
         - New icon for the ardesia tools
 
 
-2011-02-22 12:45  alpha@paranoici.org
+2011-02-22 12:45  pilolli.pietro@gmail.com
 	* trunk/ardesia/configure.ac,
         * trunk/ardesia/desktop/Makefile.am:
 	- Added check for xdg utils in configure
 
 
-2011-02-21 22:42  alpha@paranoici.org
+2011-02-21 22:42  pilolli.pietro@gmail.com
 	* trunk/ardesia/win32/ardesia.iss.in,
 	* trunk/ardesia/win32/build_installer.in:
         - Code revision for the windows installer
 
 
-2011-02-21 01:35  alpha@paranoici.org
+2011-02-21 01:35  pilolli.pietro@gmail.com
 	* trunk/ardesia/src/annotation_window.c,
 	* trunk/ardesia/src/annotation_window.h,
 	* trunk/ardesia/src/annotation_window_callbacks.c:
@@ -273,7 +273,7 @@
 	  after the project dialog
 
 
-2011-02-21 00:30  alpha@paranoici.org
+2011-02-21 00:30  pilolli.pietro@gmail.com
 	* trunk/ardesia/desktop/annotation_window.glade,
 	* trunk/ardesia/desktop/background_window.glade,
 	* trunk/ardesia/desktop/text_window.glade,
@@ -286,7 +286,7 @@
 	  gtk 2.16
 
 
-2011-02-18 15:59  alpha@paranoici.org
+2011-02-18 15:59  pilolli.pietro@gmail.com
 	* trunk/ardesia/desktop/horizontal_bar.glade,
 	* trunk/ardesia/desktop/pixmaps/lock.png,
 	* trunk/ardesia/desktop/pixmaps/pointer.png,
@@ -303,7 +303,7 @@
 	  a colors (will be taken the default pen tool)
 
 
-2011-02-18 12:49  alpha@paranoici.org
+2011-02-18 12:49  pilolli.pietro@gmail.com
 	* trunk/ardesia/Makefile.am,
         * trunk/ardesia/configure.ac,
 	* trunk/ardesia/data,
@@ -311,7 +311,7 @@
         - Move data in desktop folder
 
 
-2011-02-18 11:18  alpha@paranoici.org
+2011-02-18 11:18  pilolli.pietro@gmail.com
 	* trunk/ardesia/Makefile.am,
         * trunk/ardesia/data/info_dialog.glade,
 	* trunk/ardesia/win32/ardesia.iss.in: 
