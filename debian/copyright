@@ -3,7 +3,7 @@ Upstream-Name: ardesia
 Source: http://code.google.com/p/ardesia/
 
 Files: *
-Copyright: 2009-2010, Pilolli Pietro <pilolli@fbk.eu>
+Copyright: 2009-2010, Pilolli Pietro <pilolli.pietro@gmail.com>
 License: GPL-3.0+
 
 Files: debian/*

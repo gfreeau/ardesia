@@ -13,12 +13,12 @@
   - video tutorial
 
 - Reengineering
-  - Integration beetween ardesia and florence in the lxde environment
   - Store and load the savepoints using svg files
   - Use the same window for the background
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
+  - Integration beetween ardesia and florence in the lxde environment
   - Hyperlink
   - Import images
   - Make an image gallery (sticky notes...)
