@@ -19,9 +19,9 @@
 
 - Candidate features:
   - Integration beetween ardesia and florence in the lxde environment
-  - Hyperlink
   - Import images
   - Make an image gallery (sticky notes...)
+  - Hyperlink
   - Implement a bug report when a crash occurred
   - Persist the last option in the preference dialog
   - Lazo selection tool
