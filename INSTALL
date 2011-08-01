@@ -52,9 +52,7 @@ The compilation requires the following packages:
 - libgsl0-dev
 - libc6
 - libc6-dev
-- libvlc-dev
 - libxml2-dev
-- vlc
 - xdg-utils
 - libgsf
 
@@ -63,7 +61,7 @@ If you are using ubuntu you can simply run this command:
 
   # sudo apt-get install gcc make automake autoconf intltool libtool libxml2-dev libgsf-1-dev \
     libgtk2.0-dev libatk1.0-dev libx11-dev libpng12-dev libglib2.0-dev libgconf2-dev \ 
-    libfontconfig1-dev libfreetype6-dev libgsl0-dev libc6-dev libvlc-dev vlc xdg-utils
+    libfontconfig1-dev libfreetype6-dev libgsl0-dev libc6-dev xdg-utils
 
 You can compile the tool in the standard way:
 
