@@ -18,9 +18,9 @@
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
-  - Integration beetween ardesia and florence in the lxde environment
+  - Integration beetween ardesia and florence in lxde 
   - Persist the last option in the preference dialog
-  - Implement a bug report when a crash occurred
+  - Send a bug report when a crash occurred
   - Import images
   - Make an image gallery (sticky notes...)
   - Hyperlink
