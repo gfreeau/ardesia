@@ -18,7 +18,9 @@
   - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
-  - Integration beetween ardesia and florence in lxde 
+  - Integration beetween ardesia and florence in lxde;
+    this is done for WiildOs
+  - support a generic virtual keyboard 
   - Persist the last option in the preference dialog
   - Send a bug report when a crash occurred
   - Import images
