@@ -32,7 +32,7 @@
 
 /*
  * Start the dialog that ask to the user
- * if he wants share you work.
+ * if he wants share his work.
  */
 void
 start_share_dialog (GtkWindow *parent)
