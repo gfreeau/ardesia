@@ -774,6 +774,9 @@ annotate_add_savepoint ()
   cairo_surface_t *source_surface = (cairo_surface_t *) NULL;
   cairo_t *cr = (cairo_t *) NULL;
 
+  /* The story about the future is deleted. */
+  annotate_redolist_free ();
+
   guint savepoint_index = g_slist_length (data->savepoint_list) + 1;
   
   savepoint->filename = g_strdup_printf ("%s%s%s_%d_vellum.png",
@@ -781,10 +784,6 @@ annotate_add_savepoint ()
 					 G_DIR_SEPARATOR_S,
 					 PACKAGE_NAME,
 					 savepoint_index);
-
-  /* The story about the future is deleted. */
-  annotate_redolist_free ();
-
   /* Add a new save-point. */
   data->savepoint_list = g_slist_prepend (data->savepoint_list, savepoint);
   data->current_save_index = 0;
@@ -1460,7 +1459,6 @@ annotate_undo ()
 	}
       if (data->current_save_index != g_slist_length (data->savepoint_list))
 	{
-
 	  data->current_save_index = data->current_save_index + 1;
 	  annotate_restore_surface ();
 	}
