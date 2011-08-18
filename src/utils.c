@@ -352,8 +352,8 @@ grab_screenshot ()
 gboolean inside_bar_window (gdouble xp, gdouble yp)
 {
   gint x = 0;
-  gint y =0;
-  gint width =0 ;
+  gint y = 0;
+  gint width = 0;
   gint height = 0;
   gdouble xd = 0;
   gdouble yd = 0;

@@ -13,21 +13,22 @@
   - video tutorial
 
 - Reengineering
+  - Screencast recorder using library instead spawn processes
   - Store and load the savepoints using svg files
   - Use the same window for the background
-  - Screencast recorder using lib instead spawn processes
 
 - Candidate features:
+  - Send a bug report with stacktrace when a crash occurred
+  - Persist the background image in the preference dialog
   - Integration beetween ardesia and florence in lxde;
-    this is done for WiildOs
-  - support a generic virtual keyboard 
-  - Persist the last option in the preference dialog
-  - Send a bug report when a crash occurred
+    this will be done for WiildOs
+  - support for a generic virtual keyboard 
+  - keyboard shortcut ESC to exit, CTRL-Z undo, CTRL-Y redo
+  - Export to image the selected area content
+    as gnome-screenshoot 
   - Import images
   - Make an image gallery (sticky notes...)
-  - Hyperlink
   - Lazo selection tool
-    - Export to image the selected area content 
     - Move the selected area content
     - Paste the selected area content
     - Zoom the selected area content
@@ -36,8 +37,8 @@
   - Deploy the artefact online
     - video; youtube upload
   - Multi pointer support
-  - Not parallel to the axis shape recognition
   - MacOsX porting
+  - Not parallel to the axis shape recognition
 
 ===
 EOF

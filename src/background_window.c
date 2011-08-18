@@ -201,12 +201,6 @@ void clear_background_window ()
   gint width        = -1;
   cairo_t *shape_cr = (cairo_t *) NULL;
 
-  if (background_data->background_color)
-    {
-      g_free (background_data->background_color);
-      background_data->background_color = (gchar *) NULL;
-    }
-
   if (background_data->background_image)
     {
       g_free (background_data->background_image);
@@ -307,12 +301,6 @@ get_background_color()
 void
 set_background_image (gchar *name)
 {
-  if (background_data->background_color)
-    {
-      g_free (background_data->background_color);
-      background_data->background_color = (gchar *) NULL;
-    }
-
   background_data->background_image = name;
   load_file ();
 }

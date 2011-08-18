@@ -26,7 +26,9 @@
 #  include <config.h>
 #endif
 
+#include <utils.h>
 #include <preference_dialog.h>
+#include <background_window.h>
 #include <annotation_window.h>
 #include <keyboard.h>
 
@@ -97,6 +99,8 @@ start_preference_dialog (GtkWindow *parent)
   color_button = GTK_WIDGET (bg_color_obj);
   gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON (color_button), TRUE);
 
+
+
   /* Connect all signals by reflection. */
   gtk_builder_connect_signals (preference_data->preference_dialog_gtk_builder, (gpointer) preference_data);
    
@@ -113,8 +117,18 @@ start_preference_dialog (GtkWindow *parent)
       gtk_toggle_button_set_active (image_tool_button, TRUE);
     }
 
+  gchar *rgba = get_background_color ();
+
+  if (rgba)
+    {
+      GdkColor *gdkcolor = rgba_to_gdkcolor (rgba);
+      guint16 alpha = strtol(&rgba[6], NULL, 16) * 257;
+      gtk_color_button_set_alpha (GTK_COLOR_BUTTON (color_button), alpha);
+      gtk_color_button_set_color (GTK_COLOR_BUTTON (color_button), gdkcolor);
+    }
+
   gtk_dialog_run (GTK_DIALOG (preference_dialog));
-  
+
   if (preference_dialog)
     {
       gtk_widget_destroy (preference_dialog);

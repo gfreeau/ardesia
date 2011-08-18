@@ -1,6 +1,19 @@
 Ardesia free digital sketchpad
 
 ---------------
+ ardesia 1.0 
+---------------
+
+Feautures
+- Ubuntu 11.10 compliant
+
+Dependencies:
+- Delete dependency from the libbfd
+
+Bug Fix:
+- Fix an undo/redo problem
+
+---------------
  ardesia 0.9
 ---------------
 
