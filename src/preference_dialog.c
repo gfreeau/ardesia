@@ -127,6 +127,12 @@ start_preference_dialog (GtkWindow *parent)
       gtk_color_button_set_color (GTK_COLOR_BUTTON (color_button), gdkcolor);
     }
 
+  gchar *filename = get_background_image ();
+  if (filename)
+    {
+      gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (chooser), filename);
+    }
+
   gtk_dialog_run (GTK_DIALOG (preference_dialog));
 
   if (preference_dialog)

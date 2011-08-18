@@ -201,12 +201,6 @@ void clear_background_window ()
   gint width        = -1;
   cairo_t *shape_cr = (cairo_t *) NULL;
 
-  if (background_data->background_image)
-    {
-      g_free (background_data->background_image);
-      background_data->background_image = (gchar *) NULL;
-    }
-
   /*
    * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
    * I avoid a complete transparent window because in some operating system this would become
@@ -310,12 +304,6 @@ set_background_image (gchar *name)
 void
 set_background_color (gchar* rgba)
 {
-  if (background_data->background_image)
-    {
-      g_free (background_data->background_image);
-      background_data->background_image = (gchar *) NULL;
-    }
-
   background_data->background_color = g_strdup_printf ("%s", rgba);
 
   load_color ();
