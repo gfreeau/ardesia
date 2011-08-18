@@ -18,8 +18,8 @@
   - Use the same window for the background
 
 - Candidate features:
+  - Persist the option in the preference dialog
   - Send a bug report with stacktrace when a crash occurred
-  - Persist the background image in the preference dialog
   - Integration beetween ardesia and florence in lxde;
     this will be done for WiildOs
   - support for a generic virtual keyboard 
