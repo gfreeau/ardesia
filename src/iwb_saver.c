@@ -125,7 +125,8 @@ add_background (gchar *img_dir_path,
 
   g_remove(image_destination_path);
 
-  if (background_image)
+  /* Backgroun image valid and set to image type */
+  if ((background_image) && (get_background_type ()==2))
     {
       // copy the file in ardesia_0_vellum.png under image_path
       GFile *image_destination = g_file_new_for_path(image_destination_path);
@@ -146,18 +147,19 @@ add_background (gchar *img_dir_path,
     }
   else
     {
-
       gchar *color = get_background_color();
-      guint r, g, b, a;
+      /* Initialize the rgba components to transparent */
+      guint r = 0;
+      guint g = 0;
+      guint b = 0;
+      guint a = 0;
 
-      if (color!=NULL)
+      /* If the background type is colour then parse it */
+      if ((color!=NULL) && (get_background_type ()!=0))
 	{
 	  sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
         }
-      else
-	{
-          r = 0; g=0; b=0; a=0;
-	}
+  
       gchar *rgb  =  g_strdup_printf ("rgb(%d,%d,%d)", r, g, b);
 
       open_svg ();

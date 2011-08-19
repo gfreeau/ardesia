@@ -115,7 +115,7 @@ on_preference_ok_button_clicked (GtkButton *buton,
       g_free (rgb);
       g_free (rgba);
       g_free (gdkcolor);
-      preference_data->background = 1;
+      set_background_type (1);
     }
   else
     {
@@ -133,13 +133,13 @@ on_preference_ok_button_clicked (GtkButton *buton,
 	  if (file)
             {
               set_background_image (file);
-              preference_data->background = 2;
+              set_background_type (2);
             }
           else
             {
-              /* no background */
+              /* The file is not set; same cae that no background */
 	      clear_background_window ();
-              preference_data->background = 0;
+              set_background_type (0);
             }
 
 	}
@@ -147,7 +147,7 @@ on_preference_ok_button_clicked (GtkButton *buton,
 	{
 	  /* none */
 	  clear_background_window ();
-          preference_data->background = 0;
+          set_background_type (0);
 	}
     }
 

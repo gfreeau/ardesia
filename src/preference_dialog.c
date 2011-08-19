@@ -54,9 +54,6 @@ start_preference_dialog (GtkWindow *parent)
 
   preference_data = g_malloc ((gsize) sizeof (PreferenceData));
 
-  /* 0 no background, 1 background colour, 2 png background. */
-  preference_data->background = 0;
-
   /* Initialize the main window. */
   preference_data->preference_dialog_gtk_builder = gtk_builder_new ();
 
@@ -99,18 +96,18 @@ start_preference_dialog (GtkWindow *parent)
   color_button = GTK_WIDGET (bg_color_obj);
   gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON (color_button), TRUE);
 
-
-
   /* Connect all signals by reflection. */
   gtk_builder_connect_signals (preference_data->preference_dialog_gtk_builder, (gpointer) preference_data);
-   
-  if (preference_data->background == 1)
+
+  gint background_type = get_background_type();
+
+  if (background_type == 1)
     {
-      GObject *color_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "colour");
-      GtkToggleButton *colorToolButton = GTK_TOGGLE_BUTTON (color_obj);
-      gtk_toggle_button_set_active (colorToolButton, TRUE);
+      GObject *color_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "color");
+      GtkToggleButton *color_tool_button = GTK_TOGGLE_BUTTON (color_obj);
+      gtk_toggle_button_set_active (color_tool_button, TRUE);
     }
-  else if (preference_data->background == 2)
+  else if (background_type == 2)
     {
       GObject *file_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "file");
       GtkToggleButton *image_tool_button = GTK_TOGGLE_BUTTON (file_obj);
@@ -118,7 +115,6 @@ start_preference_dialog (GtkWindow *parent)
     }
 
   gchar *rgba = get_background_color ();
-
   if (rgba)
     {
       GdkColor *gdkcolor = rgba_to_gdkcolor (rgba);

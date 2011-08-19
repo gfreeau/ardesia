@@ -40,6 +40,9 @@ typedef struct
   /* Gtkbuilder for background window. */
   GtkBuilder *background_window_gtk_builder;
 
+  /* 0 no background, 1 color, 1 image*/
+  gint background_type;
+
   /* Background colour selected. */
   gchar *background_color; 
 
@@ -61,6 +64,15 @@ typedef struct
 /* Create the background window. */
 GtkWidget *
 create_background_window ();
+
+/* Set the background type. */
+void
+set_background_type (gint type);
+
+
+/* Get the background type */
+gint
+get_background_type();
 
 
 /* Set the background image. */

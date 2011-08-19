@@ -140,6 +140,7 @@ allocate_background_data ()
   background_data->back_cr          = (cairo_t *) NULL;
   background_data->background_shape = (GdkPixmap *) NULL;
   background_data->background_window = (GtkWidget *) NULL;
+  background_data->background_type = 0;
   return background_data;
 }
 
@@ -275,6 +276,14 @@ create_background_window ()
 }
 
 
+/* Get the background type */
+gint
+get_background_type()
+{
+  return background_data->background_type;
+}
+
+
 /* Get the background image */
 gchar * 
 get_background_image()
@@ -288,6 +297,14 @@ gchar *
 get_background_color()
 {
   return background_data->background_color;
+}
+
+
+/* Set the background type. */
+void
+set_background_type (gint type)
+{
+  background_data->background_type = type;
 }
 
 
