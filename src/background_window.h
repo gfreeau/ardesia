@@ -80,6 +80,11 @@ void
 set_background_image (gchar *background_image);
 
 
+/* Update the background image. */
+void
+update_background_image (gchar *name);
+
+
 /* Get the background image */
 gchar * 
 get_background_image();
@@ -88,6 +93,11 @@ get_background_image();
 /* Set the background colour. */
 void
 set_background_color (gchar *rgba);
+
+
+/* Update the background colour. */
+void
+update_background_color (gchar* rgba);
 
 
 /* Get the background colour */

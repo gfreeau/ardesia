@@ -46,13 +46,13 @@ back_event_expose(GtkWidget *widget,
       background_data->back_cr = gdk_cairo_create (gtk_widget_get_window (widget) );
     }
 
-  if (background_data->background_image)
+  if ((background_data->background_image) && (get_background_type () == 2))
     {
-      set_background_image (background_data->background_image);
+      update_background_image (background_data->background_image);
     }
-  else if (background_data->background_color)
+  else if ((background_data->background_color) && (get_background_type () == 1))
     {
-      set_background_color (background_data->background_color);
+      update_background_color (background_data->background_color);
     }
   else
     {

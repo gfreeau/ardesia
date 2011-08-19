@@ -308,20 +308,36 @@ set_background_type (gint type)
 }
 
 
-/* Change the background image of ardesia. */
+/* Set the background image. */
 void
 set_background_image (gchar *name)
 {
   background_data->background_image = name;
+}
+
+
+/* Update the background image. */
+void
+update_background_image (gchar *name)
+{
+  set_background_image (name);
   load_file ();
 }
 
 
-/* Change the background colour of ardesia. */
+/* Set the background colour. */
 void
 set_background_color (gchar* rgba)
 {
   background_data->background_color = g_strdup_printf ("%s", rgba);
+}
+
+
+/* Update the background colour. */
+void
+update_background_color (gchar* rgba)
+{
+  set_background_color (rgba);
   load_color ();
 }
 

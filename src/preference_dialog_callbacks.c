@@ -109,7 +109,7 @@ on_preference_ok_button_clicked (GtkButton *buton,
       a = g_strdup_printf ("%02x", gtk_color_button_get_alpha (background_color_button)/257);
       rgba = g_strdup_printf ("%s%s", rgb, a);
       
-      set_background_color (rgba);
+      update_background_color (rgba);
 
       g_free (a);
       g_free (rgb);
@@ -132,7 +132,7 @@ on_preference_ok_button_clicked (GtkButton *buton,
 
 	  if (file)
             {
-              set_background_image (file);
+              update_background_image (file);
               set_background_type (2);
             }
           else
