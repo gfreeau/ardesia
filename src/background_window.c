@@ -322,7 +322,6 @@ void
 set_background_color (gchar* rgba)
 {
   background_data->background_color = g_strdup_printf ("%s", rgba);
-
   load_color ();
 }
 

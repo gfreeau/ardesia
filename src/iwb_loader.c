@@ -37,6 +37,7 @@ add_background_image_reference (gchar *project_tmp_dir,
   /* It is an image */
   gchar *background_path = "";
   background_path = g_build_filename (project_tmp_dir, href, (gchar *) 0);
+  set_background_type (2);
   set_background_image (background_path);
 }
 
@@ -94,6 +95,11 @@ add_background_color_reference (xmlXPathContextPtr context,
 				 bd,
 				 ad
 				 );
+
+  if (g_strcmp0 (rgba, "00000000") != 0)
+    {
+       set_background_type (1);
+    }
 
   set_background_color (rgba);
 

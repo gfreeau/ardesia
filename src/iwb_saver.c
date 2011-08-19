@@ -120,30 +120,36 @@ add_background (gchar *img_dir_path,
   gint width  = gdk_screen_width ();
   gint height = gdk_screen_height ();
 
-
   gchar *image_destination_path = g_build_filename (img_dir_path, "ardesia_0_vellum.png", (gchar *) 0);
 
-  g_remove(image_destination_path);
+  if (g_strcmp0 (background_image, image_destination_path) != 0)
+    {
+       g_remove(image_destination_path);
+    }
 
-  /* Backgroun image valid and set to image type */
+  /* Background image valid and set to image type */
   if ((background_image) && (get_background_type ()==2))
     {
-      // copy the file in ardesia_0_vellum.png under image_path
-      GFile *image_destination = g_file_new_for_path(image_destination_path);
-      GFile *image_source = g_file_new_for_path(background_image);
 
-      g_file_copy (image_source,
-                   image_destination,
-		   G_FILE_COPY_OVERWRITE,
-		   NULL,
-		   NULL,
-		   NULL,
-		   NULL);
+      if (g_strcmp0 (background_image, image_destination_path) != 0)
+         {
+            // copy the file in ardesia_0_vellum.png under image_path
+            GFile *image_destination = g_file_new_for_path(image_destination_path);
+            GFile *image_source = g_file_new_for_path(background_image);
+
+            g_file_copy (image_source,
+                         image_destination,
+		         G_FILE_COPY_OVERWRITE,
+		         NULL,
+		         NULL,
+		         NULL,
+		         NULL);
+            g_object_unref (image_source);
+            g_object_unref (image_destination);
+         }
 
       add_savepoint (0);
 
-      g_object_unref (image_source);
-      g_object_unref (image_destination);
     }
   else
     {
