@@ -1,10 +1,123 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
+  <object class="GtkImage" id="addpdf">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/add-pdf.png</property>
+  </object>
+  <object class="GtkImage" id="arrow">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/arrow.png</property>
+  </object>
+  <object class="GtkImage" id="blue">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/blue.png</property>
+  </object>
+  <object class="GtkImage" id="eraser">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/eraser.png</property>
+  </object>
+  <object class="GtkImage" id="filler">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/filler.png</property>
+  </object>
+  <object class="GtkImage" id="green">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/green.png</property>
+  </object>
+  <object class="GtkImage" id="hand">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/hand.png</property>
+  </object>
+  <object class="GtkImage" id="highlighter">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/highlighter.png</property>
+  </object>
+  <object class="GtkImage" id="media-record">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/media-record.png</property>
+  </object>
+  <object class="GtkImage" id="media-recorder-unavailable">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/media-recorder-unavailable.png</property>
+  </object>
+  <object class="GtkImage" id="medium">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/medium.png</property>
+  </object>
+  <object class="GtkImage" id="micro">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/micro.png</property>
+  </object>
+  <object class="GtkImage" id="pencil">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/pencil.png</property>
+  </object>
+  <object class="GtkImage" id="pointer">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/pointer.png</property>
+  </object>
+  <object class="GtkImage" id="rectifier">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/rectifier.png</property>
+  </object>
+  <object class="GtkImage" id="red">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/red.png</property>
+  </object>
+  <object class="GtkImage" id="rounder">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/rounder.png</property>
+  </object>
+  <object class="GtkImage" id="screenshoot">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/camera-photo.png</property>
+  </object>
+  <object class="GtkImage" id="text">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/text.png</property>
+  </object>
+  <object class="GtkImage" id="thick">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/thick.png</property>
+  </object>
+  <object class="GtkImage" id="thin">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/thin.png</property>
+  </object>
+  <object class="GtkImage" id="white">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/white.png</property>
+  </object>
   <object class="GtkWindow" id="winMain">
     <property name="width_request">38</property>
     <property name="height_request">665</property>
+    <property name="can_focus">True</property>
+    <property name="has_focus">True</property>
+    <property name="is_focus">True</property>
     <property name="events">GDK_LEAVE_NOTIFY_MASK</property>
     <property name="title">Ardesia</property>
     <property name="resizable">False</property>
@@ -15,20 +128,22 @@
     <property name="gravity">center</property>
     <property name="opacity">0.9</property>
     <property name="startup_id">Ardesia</property>
-    <signal name="destroy" handler="on_bar_destroy_event"/>
-    <signal name="window_state_event" handler="on_bar_window_state_event"/>
-    <signal name="leave_notify_event" handler="on_bar_leave_notify_event"/>
-    <signal name="configure_event" handler="on_bar_configure_event"/>
-    <signal name="enter_notify_event" handler="on_bar_enter_notify_event"/>
-    <signal name="delete_event" handler="on_bar_delete_event"/>
+    <signal name="destroy" handler="on_bar_destroy_event" swapped="no"/>
+    <signal name="window-state-event" handler="on_bar_window_state_event" swapped="no"/>
+    <signal name="configure-event" handler="on_bar_configure_event" swapped="no"/>
+    <signal name="leave-notify-event" handler="on_bar_leave_notify_event" swapped="no"/>
+    <signal name="enter-notify-event" handler="on_bar_enter_notify_event" swapped="no"/>
+    <signal name="delete-event" handler="on_bar_delete_event" swapped="no"/>
     <child>
       <object class="GtkHBox" id="toolboxMain">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <property name="events">GDK_POINTER_MOTION_MASK | GDK_STRUCTURE_MASK</property>
         <property name="homogeneous">True</property>
         <child>
           <object class="GtkToolbar" id="toolbarPen">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <property name="toolbar_style">icons</property>
             <property name="icon_size">1</property>
@@ -36,10 +151,12 @@
               <object class="GtkToolButton" id="buttonThick">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Thickness</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">medium</property>
-                <signal name="clicked" handler="on_bar_thick_activate"/>
+                <signal name="clicked" handler="on_bar_thick_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -50,10 +167,12 @@
               <object class="GtkToolButton" id="buttonMode">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Drawing Mode</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">hand</property>
-                <signal name="clicked" handler="on_bar_mode_activate"/>
+                <signal name="clicked" handler="on_bar_mode_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -63,9 +182,12 @@
             <child>
               <object class="GtkToolItem" id="undoItem">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
                 <child>
                   <object class="GtkHSeparator" id="undoSeparator">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                   </object>
                 </child>
               </object>
@@ -77,9 +199,12 @@
               <object class="GtkToolButton" id="buttonUndo">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Undo</property>
+                <property name="use_action_appearance">False</property>
                 <property name="stock_id">gtk-undo</property>
-                <signal name="clicked" handler="on_bar_undo_activate"/>
+                <accelerator key="z" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
+                <signal name="clicked" handler="on_bar_undo_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -90,9 +215,12 @@
               <object class="GtkToolButton" id="buttonRedo">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Redo</property>
+                <property name="use_action_appearance">False</property>
                 <property name="stock_id">gtk-redo</property>
-                <signal name="clicked" handler="on_bar_redo_activate"/>
+                <accelerator key="y" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
+                <signal name="clicked" handler="on_bar_redo_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -102,9 +230,12 @@
             <child>
               <object class="GtkToolItem" id="otherSeparatorItem">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
                 <child>
                   <object class="GtkHSeparator" id="otherSeparator">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                   </object>
                 </child>
               </object>
@@ -116,10 +247,12 @@
               <object class="GtkToolButton" id="buttonFiller">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Filler</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">filler</property>
-                <signal name="clicked" handler="on_bar_filler_activate"/>
+                <signal name="clicked" handler="on_bar_filler_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -130,9 +263,11 @@
               <object class="GtkToolButton" id="buttonClear">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Clear</property>
+                <property name="use_action_appearance">False</property>
                 <property name="stock_id">gtk-clear</property>
-                <signal name="clicked" handler="on_bar_clear_activate"/>
+                <signal name="clicked" handler="on_bar_clear_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -142,9 +277,12 @@
             <child>
               <object class="GtkToolItem" id="toolSeparatorItem">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
                 <child>
                   <object class="GtkHSeparator" id="toolseparator">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                   </object>
                 </child>
               </object>
@@ -156,11 +294,13 @@
               <object class="GtkRadioToolButton" id="buttonPointer">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Mouse</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">pointer</property>
                 <property name="group">buttonPencil</property>
-                <signal name="clicked" handler="on_bar_pointer_activate"/>
+                <signal name="clicked" handler="on_bar_pointer_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -171,11 +311,13 @@
               <object class="GtkRadioToolButton" id="buttonArrow">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Arrow</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">arrow</property>
                 <property name="group">buttonPencil</property>
-                <signal name="clicked" handler="on_bar_arrow_activate"/>
+                <signal name="clicked" handler="on_bar_arrow_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -186,11 +328,13 @@
               <object class="GtkRadioToolButton" id="buttonText">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Insert Text</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">text</property>
                 <property name="group">buttonPencil</property>
-                <signal name="clicked" handler="on_bar_text_activate"/>
+                <signal name="clicked" handler="on_bar_text_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -201,11 +345,13 @@
               <object class="GtkRadioToolButton" id="buttonHighlighter">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Highlighter</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">highlighter</property>
                 <property name="group">buttonPencil</property>
-                <signal name="clicked" handler="on_bar_highlighter_activate"/>
+                <signal name="clicked" handler="on_bar_highlighter_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -216,11 +362,13 @@
               <object class="GtkRadioToolButton" id="buttonEraser">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Eraser</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">eraser</property>
                 <property name="group">buttonPencil</property>
-                <signal name="clicked" handler="on_bar_eraser_activate"/>
+                <signal name="clicked" handler="on_bar_eraser_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -231,10 +379,12 @@
               <object class="GtkRadioToolButton" id="buttonPencil">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Pencil</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">pencil</property>
-                <signal name="clicked" handler="on_bar_pencil_activate"/>
+                <signal name="clicked" handler="on_bar_pencil_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -244,9 +394,12 @@
             <child>
               <object class="GtkToolItem" id="colorItem">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
                 <child>
                   <object class="GtkHSeparator" id="colorSeparator">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                   </object>
                 </child>
               </object>
@@ -258,11 +411,13 @@
               <object class="GtkRadioToolButton" id="buttonBlue">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Blue</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">blue</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_bar_blue_activate"/>
+                <signal name="clicked" handler="on_bar_blue_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -273,11 +428,13 @@
               <object class="GtkRadioToolButton" id="buttonLightGreen">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Green</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="icon_widget">green</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_bar_green_activate"/>
+                <signal name="clicked" handler="on_bar_green_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -288,11 +445,13 @@
               <object class="GtkRadioToolButton" id="buttonYellow">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Yellow</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">yellow</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_bar_yellow_activate"/>
+                <signal name="clicked" handler="on_bar_yellow_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -303,10 +462,12 @@
               <object class="GtkRadioToolButton" id="buttonRed">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Red</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">red</property>
-                <signal name="clicked" handler="on_bar_red_activate"/>
+                <signal name="clicked" handler="on_bar_red_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -317,11 +478,13 @@
               <object class="GtkRadioToolButton" id="buttonWhite">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">White</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">white</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_bar_white_activate"/>
+                <signal name="clicked" handler="on_bar_white_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -332,10 +495,12 @@
               <object class="GtkRadioToolButton" id="buttonColor">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Color Chooser</property>
+                <property name="use_action_appearance">False</property>
                 <property name="stock_id">gtk-select-color</property>
                 <property name="group">buttonRed</property>
-                <signal name="clicked" handler="on_bar_color_activate"/>
+                <signal name="clicked" handler="on_bar_color_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -345,9 +510,12 @@
             <child>
               <object class="GtkToolItem" id="screenItem">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
                 <child>
                   <object class="GtkHSeparator" id="screenSeparator">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                   </object>
                 </child>
               </object>
@@ -359,10 +527,12 @@
               <object class="GtkToolButton" id="buttonPreferences">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Preferences</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-preferences</property>
-                <signal name="clicked" handler="on_bar_preferences_activate"/>
+                <signal name="clicked" handler="on_bar_preferences_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -373,10 +543,12 @@
               <object class="GtkToolButton" id="buttonScreenShoot">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Screenshot</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">screenshoot</property>
-                <signal name="clicked" handler="on_bar_screenshot_activate"/>
+                <signal name="clicked" handler="on_bar_screenshot_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -387,10 +559,12 @@
               <object class="GtkToolButton" id="buttonAddPdf">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Add to pdf</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">addpdf</property>
-                <signal name="clicked" handler="on_bar_add_pdf_activate"/>
+                <signal name="clicked" handler="on_bar_add_pdf_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -401,10 +575,12 @@
               <object class="GtkToggleToolButton" id="buttonRecorder">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Record</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">media-record</property>
-                <signal name="clicked" handler="on_bar_recorder_activate"/>
+                <signal name="clicked" handler="on_bar_recorder_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -415,11 +591,13 @@
               <object class="GtkToolButton" id="buttonInfo">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Info</property>
+                <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes">info</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-info</property>
-                <signal name="clicked" handler="on_bar_info"/>
+                <signal name="clicked" handler="on_bar_info" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -430,10 +608,13 @@
               <object class="GtkToolButton" id="buttonQuit">
                 <property name="height_request">27</property>
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Quit</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-quit</property>
-                <signal name="clicked" handler="on_bar_quit"/>
+                <accelerator key="q" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
+                <signal name="clicked" handler="on_bar_quit" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -443,102 +624,16 @@
           </object>
           <packing>
             <property name="expand">False</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="micro">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/micro.png</property>
-  </object>
-  <object class="GtkImage" id="thin">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/thin.png</property>
-  </object>
-  <object class="GtkImage" id="medium">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/medium.png</property>
-  </object>
-  <object class="GtkImage" id="thick">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/thick.png</property>
-  </object>
-  <object class="GtkImage" id="hand">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/hand.png</property>
-  </object>
-  <object class="GtkImage" id="rectifier">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/rectifier.png</property>
-  </object>
-  <object class="GtkImage" id="rounder">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/rounder.png</property>
-  </object>
-  <object class="GtkImage" id="filler">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/filler.png</property>
-  </object>
-  <object class="GtkImage" id="pointer">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/pointer.png</property>
-  </object>
-  <object class="GtkImage" id="highlighter">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/highlighter.png</property>
-  </object>
-  <object class="GtkImage" id="arrow">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/arrow.png</property>
-  </object>
-  <object class="GtkImage" id="text">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/text.png</property>
-  </object>
-  <object class="GtkImage" id="pencil">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/pencil.png</property>
-  </object>
-  <object class="GtkImage" id="eraser">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/eraser.png</property>
-  </object>
-  <object class="GtkImage" id="blue">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/blue.png</property>
-  </object>
-  <object class="GtkImage" id="green">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/green.png</property>
-  </object>
   <object class="GtkImage" id="yellow">
     <property name="visible">True</property>
+    <property name="can_focus">False</property>
     <property name="pixbuf">icons/yellow.png</property>
-  </object>
-  <object class="GtkImage" id="red">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/red.png</property>
-  </object>
-  <object class="GtkImage" id="white">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/white.png</property>
-  </object>
-  <object class="GtkImage" id="screenshoot">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/camera-photo.png</property>
-  </object>
-  <object class="GtkImage" id="addpdf">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/add-pdf.png</property>
-  </object>
-  <object class="GtkImage" id="media-record">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/media-record.png</property>
-  </object>
-  <object class="GtkImage" id="media-recorder-unavailable">
-    <property name="visible">True</property>
-    <property name="pixbuf">icons/media-recorder-unavailable.png</property>
   </object>
 </interface>

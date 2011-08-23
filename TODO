@@ -22,7 +22,6 @@
   - Integration beetween ardesia and florence in lxde;
     this will be done for WiildOs
   - support for a generic virtual keyboard 
-  - keyboard shortcut ESC to exit, CTRL-Z undo, CTRL-Y redo
   - Export to image the selected area content
     as gnome-screenshoot 
   - Import images
