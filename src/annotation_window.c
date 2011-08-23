@@ -859,6 +859,12 @@ initialize_annotation_cairo_context(AnnotateData *data)
 void
 annotate_restore_surface ()
 {
+
+  if (data->debug)
+    {
+      g_printerr ("Restore surface\n");
+    }
+
   if (data->annotation_cairo_context)
     {
       guint i = data->current_save_index;
@@ -876,7 +882,6 @@ annotate_restore_surface ()
 	{
 	  return;
 	}
-
 
       cairo_new_path (data->annotation_cairo_context);
       cairo_set_operator (data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
@@ -1451,22 +1456,24 @@ void annotate_fill ()
 void
 annotate_undo ()
 {
+  if (data->debug)
+    {
+      g_printerr ("Undo\n");
+    }
+
   if (data->savepoint_list)
     {
-      if (data->debug)
-	{
-	  g_printerr ("Undo\n");
-	}
       if (data->current_save_index != g_slist_length (data->savepoint_list))
 	{
 	  data->current_save_index = data->current_save_index + 1;
-	  annotate_restore_surface ();
-	}
-      else
-        {
-	  data->current_save_index = g_slist_length (data->savepoint_list);
           annotate_restore_surface ();
-        }
+          if (data->current_save_index == g_slist_length (data->savepoint_list))
+            {
+               g_printerr("Force expose");
+               /* The savepoint are finished I force an expose event to clean the screen */
+               gtk_widget_queue_draw_area (data->annotation_window, 0, 0, gdk_screen_width (), gdk_screen_height ());
+            }
+	}
     }
 }
 
@@ -1474,16 +1481,15 @@ annotate_undo ()
 /* Redo to the last save point. */
 void annotate_redo ()
 {
+  if (data->debug)
+   {
+      g_printerr ("Redo\n");
+   }
+
   if (data->savepoint_list)
     {
       if (data->current_save_index != 0)
 	{
-
-	  if (data->debug)
-	    {
-	      g_printerr ("Redo\n");
-	    }
-
 	  data->current_save_index = data->current_save_index - 1;
 	  annotate_restore_surface ();
 	}
@@ -1501,6 +1507,7 @@ void annotate_clear_screen ()
 
   annotate_reset_cairo ();
   clear_cairo_context (data->annotation_cairo_context);
+  gtk_widget_queue_draw_area (data->annotation_window, 0, 0, gdk_screen_width (), gdk_screen_height ());
   annotate_add_savepoint ();
 }
 

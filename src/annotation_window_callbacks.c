@@ -59,14 +59,14 @@ on_expose       (GtkWidget *widget,
 
   gint is_fullscreen = gdk_window_get_state (gtk_widget_get_window (widget)) & GDK_WINDOW_STATE_FULLSCREEN;
 
-  if (!is_fullscreen)
-    {
-      return TRUE;
-    }
-
   if (data->debug)
     {
       g_printerr ("Expose event\n");
+    }
+
+  if (!is_fullscreen)
+    {
+      return TRUE;
     }
 
   initialize_annotation_cairo_context (data);
