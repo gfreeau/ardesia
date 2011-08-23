@@ -113,7 +113,7 @@
     <property name="pixbuf">icons/white.png</property>
   </object>
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">660</property>
+    <property name="width_request">665</property>
     <property name="height_request">35</property>
     <property name="can_focus">True</property>
     <property name="has_focus">True</property>
