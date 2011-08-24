@@ -40,8 +40,6 @@
 #include <pdf_saver.h>
 
 
-#ifndef _WIN32
-
 /* Timer used to up-rise the window. */
 static gint timer = -1;
 
@@ -61,9 +59,6 @@ bar_to_top (gpointer data)
     }
   return TRUE;
 }
-
-#endif
-
 
 /* Called when close the program. */
 static gboolean
@@ -190,11 +185,10 @@ release_lock(BarData *bar_data)
       bar_data->grab = FALSE;
       annotate_release_grab ();
 
-#ifndef _WIN32
       /* Try to up-rise the window. */
       timer = g_timeout_add (BAR_TO_TOP_TIMEOUT, bar_to_top, get_background_window ());
-#else // WIN32
-
+	  
+#ifdef _WIN32 // WIN32
       if (gtk_window_get_opacity (GTK_WINDOW (get_background_window ()))!=0)
 	{
 	  /* 
@@ -220,8 +214,7 @@ lock (BarData *bar_data)
     {
       // Unlock
       bar_data->grab = TRUE;
-#ifndef _WIN32
-
+	  
       /* delete the old timer */
       if (timer!=-1)
         { 
@@ -229,7 +222,7 @@ lock (BarData *bar_data)
 	  timer = -1;
         }
 
-#else // WIN32
+#ifdef _WIN32 // WIN32
 
       /* 
        * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
