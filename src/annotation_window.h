@@ -48,7 +48,6 @@
 /* User for grab the pointer on win32. */
 #  define ANNOTATE_MOUSE_EVENTS    ( GDK_POINTER_MOTION_MASK|	\
 				     GDK_BUTTON_PRESS_MASK|	\
-				     GDK_BUTTON_RELEASE_MASK|	\
 				     GDK_PROXIMITY_IN|		\
 				     GDK_PROXIMITY_OUT|		\
 				     GDK_MOTION_NOTIFY|		\
