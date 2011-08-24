@@ -7,6 +7,10 @@ Ardesia free digital sketchpad
 Feautures
 - Ubuntu 11.10 compliant
 - Persist the background setting options
+- Compliant with xfce enabling the display compositing xfwm tweak
+  or using compiz or xcompmgr composite manager
+- Compliant with kde environment using kwin or compiz or xcompmgr 
+  composite manager
 
 Dependencies:
 - Delete dependency from the libbfd
