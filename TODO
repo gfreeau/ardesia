@@ -13,7 +13,7 @@
   - video tutorial
 
 - Reengineering
-  - Screencast recorder using library instead spawn processes
+  - Screencast recorder using a library instead spawn processes
   - Store and load the savepoints using svg files
   - Use the same window for the background
 
@@ -22,6 +22,8 @@
   - Integration beetween ardesia and florence in lxde;
     this will be done for WiildOs
   - support for a generic virtual keyboard 
+  - Deploy the artefact online
+    - video; youtube upload
   - Export to image the selected area content
     as gnome-screenshoot 
   - Import images
@@ -32,8 +34,6 @@
     - Zoom the selected area content
     - Rotate the selected area content
   - full filler implementation (flood filler algorithm)
-  - Deploy the artefact online
-    - video; youtube upload
   - Multi pointer support
   - MacOsX porting
   - Not parallel to the axis shape recognition
