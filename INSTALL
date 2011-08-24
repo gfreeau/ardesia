@@ -32,8 +32,8 @@ The compilation requires the following packages:
 - autoconf
 - intltool
 - libtool
-- libgtk2.0-0 > 2.14
-- libgtk2.0-dev > 2.14
+- libgtk2.0-0 > 2.16
+- libgtk2.0-dev > 2.16
 - libatk1.0-0
 - libatk1.0-dev
 - libx11-6

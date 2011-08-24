@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <!-- interface-requires gtk+ 2.12 -->
+  <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkImage" id="addpdf">
     <property name="visible">True</property>
@@ -113,7 +113,7 @@
     <property name="pixbuf">icons/white.png</property>
   </object>
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">665</property>
+    <property name="width_request">660</property>
     <property name="height_request">35</property>
     <property name="can_focus">True</property>
     <property name="has_focus">True</property>
@@ -126,7 +126,7 @@
     <property name="skip_pager_hint">True</property>
     <property name="decorated">False</property>
     <property name="gravity">center</property>
-    <property name="opacity">0.9</property>
+    <property name="opacity">0.90000000000000002</property>
     <property name="startup_id">Ardesia</property>
     <signal name="destroy" handler="on_bar_destroy_event" swapped="no"/>
     <signal name="window-state-event" handler="on_bar_window_state_event" swapped="no"/>

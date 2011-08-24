@@ -6,9 +6,21 @@ Ardesia free digital sketchpad
 
 Feautures
 - Ubuntu 11.10 compliant
+- Persist the background setting options
 
 Dependencies:
 - Delete dependency from the libbfd
+- Require gtk 2.16
+
+Internationalization:
+- Add the po/ardesia.pot translation template; you can use it 
+  to add the support to a missing language with poedit and others tools
+
+Usability
+- keyboard accelerators
+  - ctrl+q to quit
+  - ctrl+z to undo
+  - ctrl+y to redo
 
 Bug Fix:
 - Fix an undo/redo problem
@@ -24,6 +36,8 @@ Features
 Dependencies:
 - Delete the zip/unzip dependency
 - Add a new requirement: the libgsf library
+
+Usability:
 
 Bug Fix:
 - Eraser: fix the eraser tool using the the back side of some

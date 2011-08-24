@@ -1,16 +1,18 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <!-- interface-naming-policy project-wide -->
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="text_window">
+    <property name="app_paintable">True</property>
+    <property name="can_focus">False</property>
+    <property name="events">GDK_EXPOSURE_MASK | GDK_POINTER_MOTION_MASK | GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_STRUCTURE_MASK | GDK_PROXIMITY_IN_MASK | GDK_PROXIMITY_OUT_MASK</property>
+    <property name="extension_events">cursor</property>
     <property name="title">text_window</property>
     <property name="destroy_with_parent">True</property>
     <property name="skip_taskbar_hint">True</property>
-        <property name="extension_events">cursor</property>
-    <property name="events">GDK_EXPOSURE_MASK | GDK_POINTER_MOTION_MASK | GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_STRUCTURE_MASK | GDK_PROXIMITY_IN_MASK | GDK_PROXIMITY_OUT_MASK</property>
-    <property name="app_paintable">True</property>
-    <signal name="expose_event" handler="on_window_text_expose_event"/>
-    <signal name="motion_notify_event" handler="on_window_text_cursor_motion"/>
-    <signal name="button_release_event" handler="on_window_text_button_release"/>
+    <signal name="expose-event" handler="on_window_text_expose_event" swapped="no"/>
+    <signal name="button-release-event" handler="on_window_text_button_release" swapped="no"/>
+    <signal name="motion-notify-event" handler="on_window_text_cursor_motion" swapped="no"/>
     <child>
       <placeholder/>
     </child>

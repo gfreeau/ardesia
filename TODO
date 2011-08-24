@@ -18,7 +18,7 @@
   - Use the same window for the background
 
 - Candidate features:
-  - Send a bug report with stacktrace when a crash occurred
+  - Send a bug report with stacktrace when a crash occurs
   - Integration beetween ardesia and florence in lxde;
     this will be done for WiildOs
   - support for a generic virtual keyboard 
