@@ -15,5 +15,5 @@ desktop/vertical_bar.glade
                                                     
 src/utils.c
 src/windows_utils.c
-
+src/preference_dialog.c
 

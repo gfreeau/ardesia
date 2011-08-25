@@ -128,12 +128,23 @@ on_preference_ok_button_clicked (GtkButton *buton,
 						       "imageChooserButton");
 
 	  GtkFileChooserButton *image_chooser_button = GTK_FILE_CHOOSER_BUTTON (image_obj);
-	  gchar *file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (image_chooser_button));
+	  gchar *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (image_chooser_button));
 
-	  if (file)
+	  if (filename)
             {
-              update_background_image (file);
-              set_background_type (2);
+              if ( g_access (filename, R_OK) )
+                {
+                  GObject *preference_obj = (GObject *) NULL;
+                  GtkWindow *preference_window = (GtkWindow *) NULL;
+                  preference_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "preferences");
+                  preference_window = GTK_WINDOW (preference_obj);
+                  visualize_permission_denied_dialog (preference_window, filename);
+                }
+              else
+                {
+                  update_background_image (filename);
+                  set_background_type (2);
+                }
             }
           else
             {

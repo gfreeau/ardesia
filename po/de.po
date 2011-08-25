@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-17 22:58+0200\n"
+"POT-Creation-Date: 2011-08-25 10:48+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli.pietro@gmail.com>\n"
 "Language-Team: Ardesia Team <pilolli.pietro@gmail.com>\n"
@@ -203,6 +203,10 @@ msgstr "Gelb"
 #: ../desktop/vertical_bar.glade.h:25
 msgid "info"
 msgstr "info"
+
+#: ../src/preference_dialog.c:46
+msgid "Fail to open the file %s: Permission denied"
+msgstr "Konnte Datei »%s« nicht öffnen: keine Berechtigung"
 
 #~ msgid "Unlock"
 #~ msgstr "Offnen"

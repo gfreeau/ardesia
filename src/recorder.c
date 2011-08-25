@@ -149,7 +149,6 @@ visualize_missing_recorder_program_dialog (GtkWindow *parent_window)
       gtk_widget_destroy (miss_dialog);
       miss_dialog = NULL;
     }
-
 }
 
 
