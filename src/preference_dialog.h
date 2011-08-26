@@ -46,9 +46,9 @@ typedef struct
 }PreferenceData;
 
 
-/* Permission denied to acess to file dialog. */
+/* Show the permission denied to access to file dialog. */
 void
-visualize_permission_denied_dialog (GtkWindow *parent_window, gchar *filename);
+show_permission_denied_dialog (GtkWindow *parent_window);
 
 
 /*

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-25 10:48+0200\n"
+"POT-Creation-Date: 2011-08-26 17:08+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli.pietro@gmail.com>\n"
 "Language-Team: Ardesia Team <pilolli.pietro@gmail.com>\n"
@@ -168,7 +168,8 @@ msgstr "Preferenze"
 msgid "Quit"
 msgstr "Esci"
 
-#: ../desktop/vertical_bar.glade.h:17
+#. Set the stop tool-tip.
+#: ../desktop/vertical_bar.glade.h:17 ../src/bar_callbacks.c:625
 msgid "Record"
 msgstr "Registra"
 
@@ -204,9 +205,51 @@ msgstr "Giallo"
 msgid "info"
 msgstr "informazioni"
 
+#: ../src/ardesia.c:78
+msgid "In order to run Ardesia you need to enable a composite manager"
+msgstr "Per far girare Ardesia è necessario abilitare un composite manager"
+
+#. Set the stop tool-tip.
+#: ../src/bar_callbacks.c:636
+msgid "Stop"
+msgstr "Ferma"
+
+#. Open colour widget.
+#: ../src/color_selector.c:55
+msgid "Changing colour"
+msgstr "Cambia colore"
+
+#: ../src/pdf_saver.c:48 ../src/saver.c:103
+msgid "Export as pdf"
+msgstr "Esporta come pdf"
+
+#: ../src/pdf_saver.c:58 ../src/recorder.c:180 ../src/saver.c:115
+msgid "Choose a file"
+msgstr "Scegli un file"
+
 #: ../src/preference_dialog.c:46
-msgid "Fail to open the file %s: Permission denied"
-msgstr "Impossibile aprire il file %s: Permesso negato"
+msgid "Fail to open the file: Permission denied"
+msgstr "Impossibile aprire il file: Permesso negato"
+
+#: ../src/recorder.c:142
+msgid ""
+"In order to record with Ardesia you must install the vlc program and add it "
+"to the PATH environment variable"
+msgstr ""
+"Per registrare con Ardesia devi installare il programma vlc e aggiungerlo "
+"alla variabile d'ambiente PATH"
+
+#: ../src/recorder.c:168
+msgid "Save video as ogv"
+msgstr "Salva il video nel formato ogv"
+
+#: ../src/saver.c:45
+msgid "File Exists. Overwrite"
+msgstr "Il file esiste. Sovrascrivilo"
+
+#: ../src/saver.c:70
+msgid "Couldn't open file for writing: Permission denied"
+msgstr "Impossibile aprire il file: Permesso negato"
 
 #~ msgid "Unlock"
 #~ msgstr "Sblocca"
@@ -214,36 +257,8 @@ msgstr "Impossibile aprire il file %s: Permesso negato"
 #~ msgid "Save"
 #~ msgstr "Salva"
 
-#~ msgid "In order to run Ardesia you need to enable a composite manager"
-#~ msgstr "Per far girare Ardesia è necessario abilitare un composite manager"
-
-#~ msgid "Stop"
-#~ msgstr "Ferma"
-
 #~ msgid "Lock"
 #~ msgstr "Blocca"
-
-#~ msgid "Changing color"
-#~ msgstr "Cambia colore"
-
-#~ msgid "Export as pdf"
-#~ msgstr "Esporta come pdf"
-
-#~ msgid "Choose a file"
-#~ msgstr "Scegli un file"
-
-#~ msgid "File Exists. Overwrite"
-#~ msgstr "Il file esiste. Sovrascrivilo"
-
-#~ msgid ""
-#~ "To record with Ardesia you must install the vlc program and add it to the "
-#~ "PATH environment variable"
-#~ msgstr ""
-#~ "Per registrare con Ardesia devi installare il programma vlc e aggiungerlo "
-#~ "alla variabile d'ambiente PATH"
-
-#~ msgid "Save video as ogv"
-#~ msgstr "Salva il video nel formato ogv"
 
 #~ msgid "Save image"
 #~ msgstr "Salva immagine"

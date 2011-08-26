@@ -26,6 +26,7 @@
 #  include <config.h>
 #endif
 
+#include <saver.h>
 #include <recorder.h>
 #include <utils.h>
 #include <keyboard.h>
@@ -203,20 +204,7 @@ gboolean start_save_video_dialog (GtkToolButton *toolbutton, GtkWindow *parent)
 
       if (file_exists (filename))
 	{
-	  GtkWidget *msg_dialog = (GtkWidget *) NULL;
-          gint result = -1;
-
-	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (chooser),
-					       GTK_DIALOG_MODAL,
-                                               GTK_MESSAGE_WARNING,
-                                               GTK_BUTTONS_YES_NO,
-					       gettext ("File Exists. Overwrite"));
-	  result = gtk_dialog_run (GTK_DIALOG (msg_dialog));
-	  if (msg_dialog)
-	    {
-	      gtk_widget_destroy (msg_dialog);
-	      msg_dialog = NULL;
-	    }
+          gint result = show_override_dialog (GTK_WINDOW (chooser));
 	  if ( result  == GTK_RESPONSE_NO)
 	    {
 	      g_free (filename);
@@ -226,6 +214,18 @@ gboolean start_save_video_dialog (GtkToolButton *toolbutton, GtkWindow *parent)
 	      return status;
 	    }
 	}
+      else
+        {
+           FILE *stream = g_fopen (filename, "w+");
+	   if (stream == NULL)
+            {
+              show_could_not_write_dialog (GTK_WINDOW (chooser));
+            }
+           else
+            {
+              fclose (stream);
+            }
+        }
 
       recorder_pid = call_recorder (filename, "start");
       status = (recorder_pid > 0);

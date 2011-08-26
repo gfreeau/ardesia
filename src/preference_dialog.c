@@ -33,17 +33,17 @@
 #include <keyboard.h>
 
 
-/* Permission denied to acess to file dialog. */
+/* Show the permission denied to access to file dialog. */
 void
-visualize_permission_denied_dialog (GtkWindow *parent_window, gchar *filename)
+show_permission_denied_dialog (GtkWindow *parent_window)
 {
   GtkWidget *permission_denied_dialog = (GtkWidget *) NULL;
 
   permission_denied_dialog = gtk_message_dialog_new (parent_window,
-					GTK_DIALOG_MODAL,
-                                        GTK_MESSAGE_ERROR,
-                                        GTK_BUTTONS_OK,
-                                        gettext ("Fail to open the file: Permission denied"));
+					             GTK_DIALOG_MODAL,
+                                                     GTK_MESSAGE_ERROR,
+                                                     GTK_BUTTONS_OK,
+                                                     gettext ("Fail to open the file: Permission denied"));
 
   gtk_window_set_modal (GTK_WINDOW (permission_denied_dialog), TRUE);
 

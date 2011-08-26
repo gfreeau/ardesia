@@ -44,7 +44,6 @@ start_save_pdf_dialog (GtkWindow *parent,
   GdkPixbuf *preview_pixbuf = NULL;
   gchar *filename = "";
   gchar *supported_extension = ".pdf";
-  gint result = GTK_RESPONSE_NO;
 
   GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext ("Export as pdf"),
 						    parent,
@@ -92,19 +91,7 @@ start_save_pdf_dialog (GtkWindow *parent,
 
       if (file_exists (pdf_data->filename))
         {
-	  GtkWidget *msg_dialog;
-	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (chooser),
-					       GTK_DIALOG_MODAL,
-                                               GTK_MESSAGE_WARNING,
-                                               GTK_BUTTONS_YES_NO,
-					       gettext ("File Exists. Overwrite"));
-	
-          result = gtk_dialog_run (GTK_DIALOG (msg_dialog));
-          if (msg_dialog)
-	    {
-	      gtk_widget_destroy (msg_dialog);
-	      msg_dialog = NULL;
-            }
+          gint result = show_override_dialog (GTK_WINDOW (chooser));
 	  if ( result == GTK_RESPONSE_NO)
             {
 	      ret = FALSE;

@@ -31,6 +31,55 @@
 #include <keyboard.h>
 
 
+/* Confirm to override file dialog. */
+gboolean
+show_override_dialog (GtkWindow *parent_window)
+{
+  GtkWidget *msg_dialog = (GtkWidget *) NULL;
+  gint result = GTK_RESPONSE_NO;
+  
+  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (parent_window),
+				       GTK_DIALOG_MODAL,
+                                       GTK_MESSAGE_WARNING,
+                                       GTK_BUTTONS_YES_NO,
+				       gettext ("File Exists. Overwrite"));
+	
+  gtk_window_set_modal (GTK_WINDOW (msg_dialog), TRUE);
+
+  result = gtk_dialog_run (GTK_DIALOG (msg_dialog));
+    if (msg_dialog)
+      {
+        gtk_widget_destroy (msg_dialog);
+	msg_dialog = NULL;
+      }
+
+   return result;
+}
+
+
+/* Show the could not write the file */
+void
+show_could_not_write_dialog (GtkWindow *parent_window)
+{
+  GtkWidget *permission_denied_dialog = (GtkWidget *) NULL;
+  
+  permission_denied_dialog = gtk_message_dialog_new (parent_window,
+					             GTK_DIALOG_MODAL,
+                                                     GTK_MESSAGE_ERROR,
+                                                     GTK_BUTTONS_OK,
+                                                     gettext ("Couldn't open file for writing: Permission denied"));
+	
+  gtk_window_set_modal (GTK_WINDOW (permission_denied_dialog), TRUE);
+
+  gtk_dialog_run (GTK_DIALOG (permission_denied_dialog));
+    if (permission_denied_dialog)
+      {
+        gtk_widget_destroy (permission_denied_dialog);
+	permission_denied_dialog = NULL;
+      }
+}
+
+
 /*
  * Start the dialog that ask to the user where save the image
  * containing the screenshot.
@@ -47,7 +96,6 @@ start_save_image_dialog (GtkToolButton *toolbutton,
   gchar  *filename = "";
   gchar *filename_copy = "";
   gchar *supported_extension = ".pdf";
-  gint result = GTK_RESPONSE_NO;
   gint run_status = GTK_RESPONSE_NO;
   gboolean screenshot = FALSE;
   GdkPixbuf *buf = grab_screenshot ();
@@ -103,24 +151,24 @@ start_save_image_dialog (GtkToolButton *toolbutton,
 
       if (file_exists (filename))
         {
-	  GtkWidget *msg_dialog;
-	  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (chooser),
-					       GTK_DIALOG_MODAL,
-                                               GTK_MESSAGE_WARNING,
-                                               GTK_BUTTONS_YES_NO,
-					       gettext ("File Exists. Overwrite"));
-	
-          result = gtk_dialog_run (GTK_DIALOG (msg_dialog));
-          if (msg_dialog)
-            {
-	      gtk_widget_destroy (msg_dialog);
-	      msg_dialog = NULL;
-            }
+          gint result = show_override_dialog (GTK_WINDOW (chooser));
 	  if ( result == GTK_RESPONSE_NO)
             {
 	      screenshot = FALSE;
 	    } 
 	}
+      else
+        {
+           FILE *stream = g_fopen (filename, "w+");
+	   if (stream == NULL)
+            {
+              show_could_not_write_dialog (GTK_WINDOW (chooser));
+            }
+           else
+            {
+              fclose (stream);
+            }
+        }
     }
   stop_virtual_keyboard ();
   gtk_widget_destroy (preview);

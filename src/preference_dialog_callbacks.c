@@ -138,7 +138,7 @@ on_preference_ok_button_clicked (GtkButton *buton,
                   GtkWindow *preference_window = (GtkWindow *) NULL;
                   preference_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "preferences");
                   preference_window = GTK_WINDOW (preference_obj);
-                  visualize_permission_denied_dialog (preference_window, filename);
+                  show_permission_denied_dialog (preference_window);
                 }
               else
                 {

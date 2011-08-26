@@ -12,8 +12,11 @@ desktop/project_dialog.glade
 desktop/share_confirmation_dialog.glade
 desktop/text_window.glade
 desktop/vertical_bar.glade
-                                                    
-src/utils.c
-src/windows_utils.c
-src/preference_dialog.c
 
+src/ardesia.c
+src/bar_callbacks.c
+src/color_selector.c
+src/pdf_saver.c                                                    
+src/preference_dialog.c
+src/recorder.c
+src/saver.c

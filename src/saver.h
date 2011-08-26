@@ -26,6 +26,9 @@
 
 #include <cairo.h>
 
+#include <glib.h>
+#include <glib/gstdio.h>
+
 
 #ifdef _WIN32
 #  include <cairo-win32.h>
@@ -37,6 +40,16 @@
 #    include <cairo-xlib.h>
 #  endif
 #endif
+
+
+/* Confirm to override file dialog. */
+gboolean
+show_override_dialog (GtkWindow *parent_window);
+
+
+/* Show the could not write the file */
+void
+show_could_not_write_dialog (GtkWindow *parent_window);
 
 
 /*
