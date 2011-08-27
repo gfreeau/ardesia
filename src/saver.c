@@ -159,7 +159,7 @@ start_save_image_dialog (GtkToolButton *toolbutton,
 	}
       else
         {
-           FILE *stream = g_fopen (filename, "w+");
+           FILE *stream = g_fopen (filename, "w");
 	   if (stream == NULL)
             {
               show_could_not_write_dialog (GTK_WINDOW (chooser));

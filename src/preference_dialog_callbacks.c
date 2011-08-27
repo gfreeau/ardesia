@@ -132,7 +132,8 @@ on_preference_ok_button_clicked (GtkButton *buton,
 
 	  if (filename)
             {
-              if ( g_access (filename, R_OK) )
+              FILE *stream = g_fopen (filename, "r");
+              if (stream == NULL)
                 {
                   GObject *preference_obj = (GObject *) NULL;
                   GtkWindow *preference_window = (GtkWindow *) NULL;
@@ -144,6 +145,7 @@ on_preference_ok_button_clicked (GtkButton *buton,
                 {
                   update_background_image (filename);
                   set_background_type (2);
+                  fclose (stream);
                 }
             }
           else
