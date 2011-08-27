@@ -38,36 +38,6 @@ static cairo_surface_t *eraser_image_surface      = (cairo_surface_t*) NULL;
 static cairo_surface_t *arrow_image_surface      = (cairo_surface_t*) NULL;
 
 
-/*
- * Create pixmap and mask for the invisible cursor;
- * this is used to hide the cursor.
- */
-static void
-get_invisible_pixmaps (gint size,
-		       GdkPixmap **pixmap,
-                       GdkPixmap **mask)
-{
-  cairo_t *invisible_cr = (cairo_t *) NULL;
-  cairo_t *invisible_shape_cr = (cairo_t *) NULL;
-
-  *pixmap = gdk_pixmap_new ((GdkDrawable *) NULL, size, size, 1);
-  *mask =  gdk_pixmap_new ((GdkDrawable *) NULL, size, size, 1);
-
-  invisible_cr = gdk_cairo_create (*pixmap);
-
-  cairo_set_source_rgb (invisible_cr, 1, 1, 1);
-  cairo_paint (invisible_cr);
-  cairo_stroke (invisible_cr);
-  cairo_destroy (invisible_cr);
-
-  invisible_shape_cr = gdk_cairo_create (*mask);
-
-  clear_cairo_context (invisible_shape_cr);
-  cairo_stroke (invisible_shape_cr);
-  cairo_destroy (invisible_shape_cr);
-}
-
-
 /* Get the eraser image surface. */
 static cairo_surface_t *
 get_eraser_image_surface ()
@@ -343,25 +313,7 @@ cursors_main ()
 void
 allocate_invisible_cursor (GdkCursor **cursor)
 {
-  GdkPixmap *pixmap = (GdkPixmap *) NULL;
-  GdkPixmap *mask = (GdkPixmap *) NULL;
-
-  GdkColor *background_color_p = rgba_to_gdkcolor (BLACK);
-  GdkColor *foreground_color_p = rgba_to_gdkcolor (WHITE);
-
-  get_invisible_pixmaps (1, &pixmap, &mask);
-  
-  *cursor = gdk_cursor_new_from_pixmap (pixmap,
-					mask,
-					foreground_color_p,
-					background_color_p,
-					0,
-                                        0);
-
-  g_object_unref (pixmap);
-  g_object_unref (mask);
-  g_free (foreground_color_p);
-  g_free (background_color_p);			
+  *cursor = gdk_cursor_new (GDK_BLANK_CURSOR);		
 }
 
 
