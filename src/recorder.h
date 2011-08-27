@@ -44,14 +44,29 @@ start_save_video_dialog (GtkToolButton *toolbutton,
 			 GtkWindow *parent);
 
 
-/* Quit to record. */
+/* Quit the recorder. */
 void
 quit_recorder ();
 
 
-/* Return if the recording is active. */
+/* Pause the recorder. */
+void
+pause_recorder ();
+
+
+/* Resume the recorder. */
+void
+resume_recorder ();
+
+
+/* Return if the recording is started. */
 gboolean
-is_recording ();
+is_started ();
+
+
+/* Return if the recording is paused. */
+gboolean
+is_paused ();
 
 
 /* Is the recorder available. */

@@ -128,13 +128,13 @@ init_pdf_saver (GtkWindow *parent,
   /* Start the widget to ask the file name where save the pdf. */
   ret = start_save_pdf_dialog (parent, pixbuf);
 
-  /* Add to the list of the artefacts created in the session. */
-  add_artifact (pdf_data->filename);
-
   if (!ret)
     {
       return FALSE;
     }
+
+  /* Add to the list of the artefacts created in the session. */
+  add_artifact (pdf_data->filename);
 
   return TRUE;
 }

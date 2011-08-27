@@ -35,9 +35,11 @@
 /* pid of the recording process. */
 static GPid recorder_pid;
 
-/* is the recorder active */
-static gboolean is_active = FALSE;
+/* is the recorder started */
+static gboolean started = FALSE;
 
+/* is the recorder paused */
+static gboolean paused = FALSE;
 
 /*
  * Create a recorder process; it return the pid
@@ -59,7 +61,7 @@ call_recorder (gchar *filename,
 		     &pid /*child_pid*/,
 		     NULL /*error*/))
     {
-      is_active = TRUE;
+      started = TRUE;
     }
 
   return pid;
@@ -107,11 +109,41 @@ is_recorder_available ()
 }
 
 
-/* Return if the recording is active. */
+/* Return if the recording is started. */
 gboolean
-is_recording ()
+is_started ()
 {
-  return is_active;
+  return started;
+}
+
+
+/* Return if the recording is paused. */
+gboolean
+is_paused ()
+{
+  return paused;
+}
+
+
+/* Pause the recorder. */
+void pause_recorder ()
+{
+  if (is_started ())
+    {
+      recorder_pid = call_recorder (NULL, "pause");
+      paused = TRUE;
+    }
+}
+
+
+/* Resume the recorder. */
+void resume_recorder ()
+{
+  if (is_started ())
+    {
+      recorder_pid = call_recorder (NULL, "resume");
+      paused = FALSE;
+    }
 }
 
 
@@ -119,12 +151,12 @@ is_recording ()
 void
 quit_recorder ()
 {
-  if (is_recording ())
+  if (is_started ())
     {
       g_spawn_close_pid (recorder_pid);
-      recorder_pid = call_recorder (NULL, "stop");
+      recorder_pid = call_recorder (NULL, "quit");
       g_spawn_close_pid (recorder_pid);
-      is_active = FALSE;
+      started = FALSE;
     }
 }
 
@@ -163,7 +195,7 @@ gboolean start_save_video_dialog (GtkToolButton *toolbutton, GtkWindow *parent)
 {
   gboolean status = FALSE;
 
-  gchar *filename = get_default_filename ();
+  gchar *filename = g_strdup_printf ("%s", get_project_name ());
 
   GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext ("Save video as ogv"),
 						    parent,

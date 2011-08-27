@@ -611,13 +611,20 @@ on_bar_recorder_activate        (GtkToolButton   *toolbutton,
       return;
     }
 	
-  if (is_recording ())
+  if (is_started ())
     {
-      quit_recorder ();
-      /* Set the stop tool-tip. */ 
-      gtk_tool_item_set_tooltip_text ( (GtkToolItem *) toolbutton, gettext ("Record"));
-      /* Put the record icon. */
-      gtk_tool_button_set_stock_id (toolbutton, "gtk-media-record");
+      if (is_paused ())
+        {
+          resume_recorder ();
+        }
+      else
+        {
+          pause_recorder ();
+          /* Set the stop tool-tip. */ 
+          gtk_tool_item_set_tooltip_text ( (GtkToolItem *) toolbutton, gettext ("Record"));
+          /* Put the record icon. */
+          gtk_tool_button_set_stock_id (toolbutton, "gtk-media-record");
+        }
     }
   else
     { 

@@ -182,10 +182,9 @@ start_save_image_dialog (GtkToolButton *toolbutton,
     {
       /* Store the buffer on file. */
       save_pixbuf_on_png_file (buf, filename);
+      /* Add to the list of the artefacts created in the session. */
+      add_artifact (filename);
     }
-
-  /* Add to the list of the artefacts created in the session. */
-  add_artifact (filename);
 
   g_free (filename);
   filename = NULL;

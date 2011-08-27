@@ -39,10 +39,24 @@ then
   echo $RECORDER_PID >> $RECORDER_PID_FILE
 fi
 
-if [ "$1" = "stop" ]
+if [ "$1" = "pause" ]
 then
   RECORDER_PID=$(cat $RECORDER_PID_FILE)
-  echo Stop the screencast killing $RECORDER_PROGRAM 
+  echo Pause the screencast sending TSTP to $RECORDER_PROGRAM 
+  kill -TSTP $RECORDER_PID 
+fi
+
+if [ "$1" = "resume" ]
+then
+  RECORDER_PID=$(cat $RECORDER_PID_FILE)
+  echo Resume the screencast sending CONT to $RECORDER_PROGRAM 
+  kill -CONT $RECORDER_PID 
+fi
+
+if [ "$1" = "quit" ]
+then
+  RECORDER_PID=$(cat $RECORDER_PID_FILE)
+  echo Quit the screencast killing $RECORDER_PROGRAM 
   kill -2 $RECORDER_PID 
   rm $RECORDER_PID_FILE
 fi
