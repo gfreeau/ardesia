@@ -50,6 +50,22 @@ rem exec recorder
 start %RECORDER_PROGRAM% %RECORDER_AND_FORWARD_PROGRAM_OPTIONS%
 goto end
 
+:pause
+set RECORDER_PID=cat %RECORDER_PID_FILE%
+echo Stop the screencast killing %RECORDER_PROGRAM% 
+TASKKILL /F /IM %RECORDER_PROGRAM%
+goto end
+
+:resume
+rem This start the recording on file
+if "%ICECAST%" == "TRUE" goto icecast_start
+rem if not icecast then only record the screencast
+echo Start the screencast running %RECORDER_PROGRAM% 
+echo With arguments %RECORDER_PROGRAM_OPTIONS%
+rem exec recorder
+start %RECORDER_PROGRAM% %RECORDER_PROGRAM_OPTIONS%
+goto end
+
 :stop
 set RECORDER_PID=cat %RECORDER_PID_FILE%
 echo Stop the screencast killing %RECORDER_PROGRAM% 
