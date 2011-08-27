@@ -66,7 +66,7 @@ quit (BarData *bar_data)
 {
   annotate_quit ();
   quit_pdf_saver ();
-  quit_recorder ();
+  stop_recorder ();
 
   /* Dis-allocate all the BarData structure. */
   if (bar_data)

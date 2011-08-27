@@ -147,14 +147,14 @@ void resume_recorder ()
 }
 
 
-/* Quit the recorder. */
+/* Stop the recorder. */
 void
-quit_recorder ()
+stop_recorder ()
 {
   if (is_started ())
     {
       g_spawn_close_pid (recorder_pid);
-      recorder_pid = call_recorder (NULL, "quit");
+      recorder_pid = call_recorder (NULL, "stop");
       g_spawn_close_pid (recorder_pid);
       started = FALSE;
     }

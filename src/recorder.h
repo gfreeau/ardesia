@@ -46,7 +46,7 @@ start_save_video_dialog (GtkToolButton *toolbutton,
 
 /* Quit the recorder. */
 void
-quit_recorder ();
+stop_recorder ();
 
 
 /* Pause the recorder. */

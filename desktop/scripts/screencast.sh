@@ -53,10 +53,10 @@ then
   kill -CONT $RECORDER_PID 
 fi
 
-if [ "$1" = "quit" ]
+if [ "$1" = "stop" ]
 then
   RECORDER_PID=$(cat $RECORDER_PID_FILE)
-  echo Quit the screencast killing $RECORDER_PROGRAM 
+  echo Stop the screencast killing $RECORDER_PROGRAM 
   kill -2 $RECORDER_PID 
   rm $RECORDER_PID_FILE
 fi
