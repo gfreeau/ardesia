@@ -16,7 +16,6 @@ desktop/vertical_bar.glade
 src/ardesia.c
 src/bar_callbacks.c
 src/color_selector.c
-src/pdf_saver.c                                                    
 src/preference_dialog.c
 src/recorder.c
 src/saver.c

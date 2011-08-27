@@ -94,28 +94,27 @@ static gboolean blink_cursor (gpointer data)
 {
   if ((text_data->window) && (text_data->pos))
     {
-      cairo_t *cr = gdk_cairo_create (gtk_widget_get_window  (text_data->window));
       gint height = text_data->max_font_height;
 
-      cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
-      cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
+      cairo_set_line_cap (text_data->cr, CAIRO_LINE_CAP_ROUND);
+      cairo_set_line_join (text_data->cr, CAIRO_LINE_JOIN_ROUND);
 
       if (text_data->blink_show)
 	{
-	  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-	  cairo_set_line_width (cr, text_data->pen_width);
-	  cairo_set_source_color_from_string (cr, text_data->color);
+	  cairo_set_operator (text_data->cr, CAIRO_OPERATOR_SOURCE);
+	  cairo_set_line_width (text_data->cr, text_data->pen_width);
+	  cairo_set_source_color_from_string (text_data->cr, text_data->color);
 
-	  cairo_rectangle (cr, text_data->pos->x, text_data->pos->y - height, TEXT_CURSOR_WIDTH, height);
+	  cairo_rectangle (text_data->cr, text_data->pos->x, text_data->pos->y - height, TEXT_CURSOR_WIDTH, height);
 
 	  text_data->blink_show = FALSE;
 	}
       else
 	{
-	  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-          cairo_rectangle (cr, text_data->pos->x, text_data->pos->y - height, TEXT_CURSOR_WIDTH, height);
+	  cairo_set_operator (text_data->cr, CAIRO_OPERATOR_CLEAR);
+          cairo_rectangle (text_data->cr, text_data->pos->x, text_data->pos->y - height, TEXT_CURSOR_WIDTH, height);
 
-          cairo_rectangle (cr,
+          cairo_rectangle (text_data->cr,
                            text_data->pos->x-1,
                            text_data->pos->y - height - 1,
 			   TEXT_CURSOR_WIDTH  + 2,
@@ -124,9 +123,9 @@ static gboolean blink_cursor (gpointer data)
 	  text_data->blink_show=TRUE;
 	}
 
-      cairo_fill (cr);
-      cairo_stroke (cr);
-      cairo_destroy (cr);
+      cairo_fill (text_data->cr);
+      cairo_stroke (text_data->cr);
+    
     }
   return TRUE;
 }

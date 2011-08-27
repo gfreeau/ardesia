@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-26 17:08+0200\n"
+"POT-Creation-Date: 2011-08-27 10:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -147,7 +147,7 @@ msgid "Quit"
 msgstr ""
 
 #. Set the stop tool-tip.
-#: ../desktop/vertical_bar.glade.h:17 ../src/bar_callbacks.c:625
+#: ../desktop/vertical_bar.glade.h:17 ../src/bar_callbacks.c:618
 msgid "Record"
 msgstr ""
 
@@ -188,21 +188,13 @@ msgid "In order to run Ardesia you need to enable a composite manager"
 msgstr ""
 
 #. Set the stop tool-tip.
-#: ../src/bar_callbacks.c:636
+#: ../src/bar_callbacks.c:629
 msgid "Stop"
 msgstr ""
 
 #. Open colour widget.
 #: ../src/color_selector.c:55
 msgid "Changing colour"
-msgstr ""
-
-#: ../src/pdf_saver.c:48 ../src/saver.c:103
-msgid "Export as pdf"
-msgstr ""
-
-#: ../src/pdf_saver.c:58 ../src/recorder.c:180 ../src/saver.c:115
-msgid "Choose a file"
 msgstr ""
 
 #: ../src/preference_dialog.c:46
@@ -219,10 +211,18 @@ msgstr ""
 msgid "Save video as ogv"
 msgstr ""
 
+#: ../src/recorder.c:180 ../src/saver.c:115
+msgid "Choose a file"
+msgstr ""
+
 #: ../src/saver.c:45
 msgid "File Exists. Overwrite"
 msgstr ""
 
 #: ../src/saver.c:70
 msgid "Couldn't open file for writing: Permission denied"
+msgstr ""
+
+#: ../src/saver.c:103
+msgid "Export as pdf"
 msgstr ""
