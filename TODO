@@ -22,10 +22,11 @@
 - Candidate features:
   - Integration beetween ardesia and florence in lxde;
     this will be done for WiildOs
-  - Send a bug report with stacktrace when a crash occurs
+  - Send a bug report with stacktrace when a crash occurs;
+    could be used google-breakpad
   - support for a generic virtual keyboard 
   - Deploy the artefact online
-    - video; youtube upload
+    - video; youtube upload as kazam
   - Export to image the selected area content
     as gnome-screenshoot 
   - Import images
