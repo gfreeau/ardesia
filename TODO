@@ -14,13 +14,15 @@
 
 - Reengineering
   - Screencast recorder using a library instead spawn processes
-  - Store and load the savepoints using svg files
-  - Use the same window for the background
+  - Paint on a svg surface to be synched with the paintable window
+  - Store and load the savepoints with svg files
+  - Use the same window for the background; the expose will paint
+    all the layers
 
 - Candidate features:
-  - Send a bug report with stacktrace when a crash occurs
   - Integration beetween ardesia and florence in lxde;
     this will be done for WiildOs
+  - Send a bug report with stacktrace when a crash occurs
   - support for a generic virtual keyboard 
   - Deploy the artefact online
     - video; youtube upload
