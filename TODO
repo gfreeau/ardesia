@@ -37,6 +37,7 @@
     - Zoom the selected area content
     - Rotate the selected area content
   - full filler implementation (flood filler algorithm)
+  - libgtk-3 
   - Multi pointer support
   - MacOsX porting
   - Not parallel to the axis shape recognition
