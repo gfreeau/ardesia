@@ -25,6 +25,7 @@
 #  include <config.h>
 #endif
 
+#include <annotation_window.h>
 #include <pdf_saver.h>
 #include <utils.h>
 #include <saver.h>
@@ -48,6 +49,8 @@ start_save_pdf_dialog (GtkWindow *parent,
   gchar *filename = "";
   gchar *supported_extension = ".pdf";
 
+  gdk_window_set_cursor (get_annotation_window ()->window, (GdkCursor *) NULL);
+  
   GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext ("Export as pdf"),
 						    parent,
 						    GTK_FILE_CHOOSER_ACTION_SAVE,
