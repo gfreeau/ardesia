@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-26 17:08+0200\n"
+"POT-Creation-Date: 2011-09-05 17:52+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli.pietro@gmail.com>\n"
 "Language-Team: Ardesia Team <pilolli.pietro@gmail.com>\n"
@@ -170,7 +170,7 @@ msgid "Quit"
 msgstr "Quitter"
 
 #. Set the stop tool-tip.
-#: ../desktop/vertical_bar.glade.h:17 ../src/bar_callbacks.c:625
+#: ../desktop/vertical_bar.glade.h:17 ../src/bar_callbacks.c:627
 msgid "Record"
 msgstr "Enregistrer"
 
@@ -212,7 +212,7 @@ msgstr ""
 "Pour exécuter Ardesia est nécessaire de l'exécuter le composite manager"
 
 #. Set the stop tool-tip.
-#: ../src/bar_callbacks.c:636
+#: ../src/bar_callbacks.c:640
 msgid "Stop"
 msgstr "arrête"
 
@@ -221,19 +221,11 @@ msgstr "arrête"
 msgid "Changing colour"
 msgstr "Changement de couleur"
 
-#: ../src/pdf_saver.c:48 ../src/saver.c:103
-msgid "Export as pdf"
-msgstr "Exporter au Pdf"
-
-#: ../src/pdf_saver.c:58 ../src/recorder.c:180 ../src/saver.c:115
-msgid "Choose a file"
-msgstr "Choisissez un fichier"
-
 #: ../src/preference_dialog.c:46
 msgid "Fail to open the file: Permission denied"
 msgstr "Impossible d'ouvrir le fichier: Permission refusée"
 
-#: ../src/recorder.c:142
+#: ../src/recorder.c:174
 msgid ""
 "In order to record with Ardesia you must install the vlc program and add it "
 "to the PATH environment variable"
@@ -241,9 +233,13 @@ msgstr ""
 "Pour enregistrer une vidéo avec Ardesia, vous devez installer vlc et ajouter "
 "à la variable d'environnement PATH"
 
-#: ../src/recorder.c:168
+#: ../src/recorder.c:200
 msgid "Save video as ogv"
 msgstr "Enregistrer la vidéo en OGV"
+
+#: ../src/recorder.c:212 ../src/saver.c:115
+msgid "Choose a file"
+msgstr "Choisissez un fichier"
 
 #: ../src/saver.c:45
 msgid "File Exists. Overwrite"
@@ -253,23 +249,6 @@ msgstr "Le fichier existe. Écraser"
 msgid "Couldn't open file for writing: Permission denied"
 msgstr "Impossible d'ouvrir le fichier: Permission refusée"
 
-#~ msgid "Unlock"
-#~ msgstr "Déverrouiller"
-
-#~ msgid "Save"
-#~ msgstr "Enregistrer"
-
-#~ msgid "Lock"
-#~ msgstr "Vérrouiller"
-
-#~ msgid "Save image"
-#~ msgstr "Enregistrer l'image"
-
-#~ msgid "window"
-#~ msgstr "fenetre"
-
-#~ msgid "Ardesia"
-#~ msgstr "Ardesia"
-
-#~ msgid "text_window"
-#~ msgstr "fenetre d'entrée de texte"
+#: ../src/saver.c:103
+msgid "Export as pdf"
+msgstr "Exporter au Pdf"

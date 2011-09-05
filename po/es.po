@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-26 17:08+0200\n"
+"POT-Creation-Date: 2011-09-05 17:52+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli.pietro@gmail.com>\n"
 "Language-Team: Ardesia Team <pilolli.pietro@gmail.com>\n"
@@ -169,7 +169,7 @@ msgid "Quit"
 msgstr "Cerrar"
 
 #. Set the stop tool-tip.
-#: ../desktop/vertical_bar.glade.h:17 ../src/bar_callbacks.c:625
+#: ../desktop/vertical_bar.glade.h:17 ../src/bar_callbacks.c:627
 msgid "Record"
 msgstr "Grabar"
 
@@ -210,7 +210,7 @@ msgid "In order to run Ardesia you need to enable a composite manager"
 msgstr "Para ejecutar Ardesia necesita habilitar el administrador compuestos"
 
 #. Set the stop tool-tip.
-#: ../src/bar_callbacks.c:636
+#: ../src/bar_callbacks.c:640
 msgid "Stop"
 msgstr "Detener"
 
@@ -219,27 +219,23 @@ msgstr "Detener"
 msgid "Changing colour"
 msgstr "Cambiar el color"
 
-#: ../src/pdf_saver.c:48 ../src/saver.c:103
-msgid "Export as pdf"
-msgstr "Exportar como PDF"
-
-#: ../src/pdf_saver.c:58 ../src/recorder.c:180 ../src/saver.c:115
-msgid "Choose a file"
-msgstr "Elegir un archivo"
-
 #: ../src/preference_dialog.c:46
 msgid "Fail to open the file: Permission denied"
 msgstr "No puedo abrir el fichero: Permiso negado"
 
-#: ../src/recorder.c:142
+#: ../src/recorder.c:174
 msgid ""
 "In order to record with Ardesia you must install the vlc program and add it "
 "to the PATH environment variable"
 msgstr "Para grabar con Ardesia debe instalar el programa vlc y anadir al path"
 
-#: ../src/recorder.c:168
+#: ../src/recorder.c:200
 msgid "Save video as ogv"
 msgstr "Guardar el vídeo como ogv"
+
+#: ../src/recorder.c:212 ../src/saver.c:115
+msgid "Choose a file"
+msgstr "Elegir un archivo"
 
 #: ../src/saver.c:45
 msgid "File Exists. Overwrite"
@@ -249,23 +245,6 @@ msgstr "El archivo existe. Sobrescribir"
 msgid "Couldn't open file for writing: Permission denied"
 msgstr "No puedo abrir el fichero: Permiso negado"
 
-#~ msgid "Unlock"
-#~ msgstr "Desbloquear"
-
-#~ msgid "Save"
-#~ msgstr "Guardar"
-
-#~ msgid "Lock"
-#~ msgstr "Bloquear"
-
-#~ msgid "Save image"
-#~ msgstr "Guardar imagen"
-
-#~ msgid "window"
-#~ msgstr "Fenetre"
-
-#~ msgid "Ardesia"
-#~ msgstr "Ardesia"
-
-#~ msgid "text_window"
-#~ msgstr "fenetre d'entrée de texte"
+#: ../src/saver.c:103
+msgid "Export as pdf"
+msgstr "Exportar como PDF"

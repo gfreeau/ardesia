@@ -2,14 +2,20 @@ ardesia (1.0-1) unstable; urgency=low
 
   * New 1.0 stable upstream release.
 
- -- PILOLLI Pietro <pilolli.pietro@gmail.com>  Wed, 30 Jun 2011 23:28:03 +0900
+ -- PILOLLI Pietro <pilolli.pietro@gmail.com>  Wed, 10 Sep 2011 23:28:03 +0900
 
+ardesia (0.9-2) unstable; urgency=low
+
+  * Add libgsf-1-dev to Build-Depends. (Closes: #637103).
+
+ -- TANIGUCHI Takaki <takaki@debian.org>  Wed, 10 Aug 2011 11:12:30 +0900
 
 ardesia (0.9-1) unstable; urgency=low
 
-  * New 0.9 upstream release. 
+  * New upstream
+  * Bump Standards-Version to 3.9.2.
 
- -- PILOLLI Pietro <pilolli.pietro@gmail.com>  Wed, 20 Jun 2011 23:28:03 +0900
+ -- TANIGUCHI Takaki <takaki@debian.org>  Mon, 08 Aug 2011 09:52:17 +0900
 
 ardesia (0.8-3) unstable; urgency=low
 

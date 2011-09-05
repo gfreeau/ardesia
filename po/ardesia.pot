@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-27 10:41+0200\n"
+"POT-Creation-Date: 2011-09-05 17:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -147,7 +147,7 @@ msgid "Quit"
 msgstr ""
 
 #. Set the stop tool-tip.
-#: ../desktop/vertical_bar.glade.h:17 ../src/bar_callbacks.c:618
+#: ../desktop/vertical_bar.glade.h:17 ../src/bar_callbacks.c:627
 msgid "Record"
 msgstr ""
 
@@ -188,7 +188,7 @@ msgid "In order to run Ardesia you need to enable a composite manager"
 msgstr ""
 
 #. Set the stop tool-tip.
-#: ../src/bar_callbacks.c:629
+#: ../src/bar_callbacks.c:640
 msgid "Stop"
 msgstr ""
 
@@ -201,17 +201,17 @@ msgstr ""
 msgid "Fail to open the file: Permission denied"
 msgstr ""
 
-#: ../src/recorder.c:142
+#: ../src/recorder.c:174
 msgid ""
 "In order to record with Ardesia you must install the vlc program and add it "
 "to the PATH environment variable"
 msgstr ""
 
-#: ../src/recorder.c:168
+#: ../src/recorder.c:200
 msgid "Save video as ogv"
 msgstr ""
 
-#: ../src/recorder.c:180 ../src/saver.c:115
+#: ../src/recorder.c:212 ../src/saver.c:115
 msgid "Choose a file"
 msgstr ""
 
