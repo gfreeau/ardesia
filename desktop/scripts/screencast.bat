@@ -33,6 +33,16 @@ if ""%1"" == ""start"" goto start
 
 if ""%1"" == ""stop"" goto stop
 
+if ""%1"" == ""pause"" goto pause
+
+if ""%1"" == ""resume"" goto resume
+
+:resume
+goto start
+
+:pause
+goto stop
+
 :start
 rem This start the recording on file
 if "%ICECAST%" == "TRUE" goto icecast_start
@@ -48,22 +58,6 @@ echo Start the screencast running %RECORDER_PROGRAM%
 echo With arguments %RECORDER_AND_FORWARD_PROGRAM_OPTIONS%
 rem exec recorder
 start %RECORDER_PROGRAM% %RECORDER_AND_FORWARD_PROGRAM_OPTIONS%
-goto end
-
-:pause
-set RECORDER_PID=cat %RECORDER_PID_FILE%
-echo Stop the screencast killing %RECORDER_PROGRAM% 
-TASKKILL /F /IM %RECORDER_PROGRAM%
-goto end
-
-:resume
-rem This start the recording on file
-if "%ICECAST%" == "TRUE" goto icecast_start
-rem if not icecast then only record the screencast
-echo Start the screencast running %RECORDER_PROGRAM% 
-echo With arguments %RECORDER_PROGRAM_OPTIONS%
-rem exec recorder
-start %RECORDER_PROGRAM% %RECORDER_PROGRAM_OPTIONS%
 goto end
 
 :stop
