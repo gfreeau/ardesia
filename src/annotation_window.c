@@ -844,13 +844,14 @@ initialize_annotation_cairo_context(AnnotateData *data)
 
       if (data->savepoint_list == NULL)
 	{
-	  annotate_reset_cairo ();
-	  clear_cairo_context (data->annotation_cairo_context);
+          /* Clear the screen and create the first empty savepoint. */
+	  annotate_clear_screen ();
 	}
 #ifndef _WIN32
       gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1.0);
 #endif 	
       annotate_acquire_grab ();
+      
     }
 }
 
@@ -1463,7 +1464,7 @@ annotate_undo ()
 
   if (data->savepoint_list)
     {
-      if (data->current_save_index != g_slist_length (data->savepoint_list))
+      if (data->current_save_index != g_slist_length (data->savepoint_list)-1)
 	{
 	  data->current_save_index = data->current_save_index + 1;
           annotate_restore_surface ();
@@ -1491,7 +1492,7 @@ void annotate_redo ()
 }
 
 
-/* Clear the annotations windows. */
+/* Clear the annotations windows and make an empty savepoint. */
 void annotate_clear_screen ()
 {
   if (data->debug)
@@ -1502,6 +1503,7 @@ void annotate_clear_screen ()
   annotate_reset_cairo ();
   clear_cairo_context (data->annotation_cairo_context);
   gtk_widget_queue_draw_area (data->annotation_window, 0, 0, gdk_screen_width (), gdk_screen_height ());
+  /* Add the empty savepoint. */
   annotate_add_savepoint ();
 }
 

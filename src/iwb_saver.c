@@ -365,7 +365,7 @@ export_iwb (gchar *iwb_location)
 
   gchar *background_image = get_background_image();
 
-  gchar *first_savepoint_file = g_strdup_printf ("%s%s%s_1_vellum.png", img_dir_path, G_DIR_SEPARATOR_S, PACKAGE_NAME);
+  gchar *first_savepoint_file = g_strdup_printf ("%s%s%s_2_vellum.png", img_dir_path, G_DIR_SEPARATOR_S, PACKAGE_NAME);
 
   /* if exist the file I continue to save */
   if ((file_exists(first_savepoint_file)) || (background_image))
