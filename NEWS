@@ -11,6 +11,8 @@ Feautures
   xfwm tweak or using compiz or xcompmgr composite manager
 - Compliant with kde desktop environment using kwin or compiz or xcompmgr 
   composite manager
+- Recorder in Linux is able to pause and restore the recording in order to have
+  one video per session
 
 Dependencies:
 - Delete dependency from the libbfd
@@ -27,7 +29,13 @@ Usability
   - ctrl+y to redo
 
 Bug Fix:
-- Fix an undo/redo problem
+- Solved the issue 37
+- Solved the issue 31
+- Solved the issue 30
+- Solved the issue 22: a bug in the undo/redo implementation
+- Solved the issue 21: Losing Window Focus in Win7
+  switching from mouse mode and drawing mode
+
 
 ---------------
  ardesia 0.9
