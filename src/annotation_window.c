@@ -215,6 +215,7 @@ annotate_acquire_input_grab ()
    * in mac this will do nothing 
    */
   gtk_widget_input_shape_combine_mask (data->annotation_window, NULL, 0, 0);
+  //drill_window_in_bar_area (data->annotation_window);
 #endif
 
 }
@@ -1371,7 +1372,7 @@ annotate_release_input_grab ()
   gdk_window_set_cursor (gtk_widget_get_window (data->annotation_window), (GdkCursor *) NULL);
 #ifndef _WIN32
   /*
-   * @TODO implement correctly gdk_window_input_shape_combine_mask
+   * @TODO implement correctly gtk_widget_input_shape_combine_mask
    * in the quartz gdkwindow or use an equivalent native function;
    * the current implementation in macosx this does not do nothing.
    */
@@ -1379,13 +1380,13 @@ annotate_release_input_grab ()
    * This allows the mouse event to be passed below the transparent annotation;
    * at the moment this call works only on Linux
    */
-  gdk_window_input_shape_combine_mask (gtk_widget_get_window (data->annotation_window), data->shape, 0, 0);
+  gtk_widget_input_shape_combine_mask (data->annotation_window, data->shape, 0, 0);
 #else
   /*
-   * @TODO WIN32 implement correctly gdk_window_input_shape_combine_mask
+   * @TODO WIN32 implement correctly gtk_widget_input_shape_combine_mask
    * in the win32 gdkwindow or use an equivalent native function.
-   * Now in the gtk implementation the gdk_window_input_shape_combine_mask
-   * call the gdk_window_shape_combine_mask that is not the desired behaviour.
+   * Now in the gtk implementation the gtk_widget_input_shape_combine_mask
+   * call the gtk_widget_shape_combine_mask that is not the desired behaviour.
    *
    */
   annotate_release_pointer_grab ();

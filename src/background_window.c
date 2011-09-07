@@ -64,10 +64,11 @@ load_file ()
       cairo_surface_destroy (scaled_surface);
 	  
 #ifndef _WIN32
-      gdk_window_input_shape_combine_mask (gtk_widget_get_window (background_data->background_window),
+      gtk_widget_input_shape_combine_mask (background_data->background_window,
 					   NULL,
 					   0,
                                            0);
+      drill_window_in_bar_area (background_data->background_window);
 #endif
     }
 }
@@ -119,7 +120,7 @@ load_color ()
 #ifndef _WIN32
       if (((gint) a ) < 1)
 	{
-	  gdk_window_input_shape_combine_mask (gtk_widget_get_window (background_data->background_window),
+	  gtk_widget_input_shape_combine_mask (background_data->background_window,
 					       NULL,
 					       0,
 					       0);
@@ -222,7 +223,7 @@ void clear_background_window ()
 
   /* This allows the mouse event to be passed to the window below. */
 #ifndef _WIN32
-  gdk_window_input_shape_combine_mask (gtk_widget_get_window (background_data->background_window),
+  gtk_widget_input_shape_combine_mask (background_data->background_window,
 				       background_data->background_shape,
 				       0,
 				       0);

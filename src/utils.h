@@ -193,7 +193,7 @@ inside_bar_window (gdouble xp,
 
 /* Drill the gdkwindow in the area where the ardesia bar is located. */
 void
-drill_window_in_bar_area (GdkWindow *window);
+drill_window_in_bar_area (GtkWidget *widget);
 
 
 /*

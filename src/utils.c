@@ -380,7 +380,7 @@ gboolean inside_bar_window (gdouble xp, gdouble yp)
 
 /* Drill the gdk window in the area where the ardesia bar is located. */
 void
-drill_window_in_bar_area (GdkWindow *window)
+drill_window_in_bar_area (GtkWidget *widget)
 {
   /* Instantiate a transparent pixmap with a black hole upon the bar area to be used as mask. */
   GdkBitmap *shape = gdk_pixmap_new (NULL,  gdk_screen_width (), gdk_screen_height (), 1);
@@ -400,7 +400,7 @@ drill_window_in_bar_area (GdkWindow *window)
   cairo_rectangle (shape_cr, (double) x, (double) y, (double) width, (double) height);
   cairo_fill (shape_cr);	
 
-  gdk_window_input_shape_combine_mask (window,
+  gtk_widget_input_shape_combine_mask (widget,
 				       shape,
 				       0,
 				       0);
