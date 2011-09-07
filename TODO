@@ -14,17 +14,17 @@
 
 - Reengineering
   - Screencast recorder using a library 
-  - support for a generic virtual keyboard 
   - Paint on a svg surface to be synchronized with the paintable window
   - Store and load the savepoints with svg files
   - Use the same window for the background; the expose will paint
     all the layers
 
 - Candidate features:
-  - Integration beetween ardesia and florence in lxde;
-    this will be done for WiildOs
   - Send a bug report with stacktrace when a crash occurs;
     could be used google-breakpad
+  - Integration beetween ardesia and florence in lxde;
+    this will be done for WiildOs
+  - Support for a generic virtual keyboard 
   - Deploy the artefact online
     - video; youtube upload as kazam
   - Export to image the selected area content
