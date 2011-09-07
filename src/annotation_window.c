@@ -1467,6 +1467,13 @@ annotate_undo ()
 	{
 	  data->current_save_index = data->current_save_index + 1;
           annotate_restore_surface ();
+          if (data->current_save_index == g_slist_length (data->savepoint_list))
+            {
+               g_printerr("Force expose");
+               /* The savepoint are finished I force an expose event to clean the screen */
+               gtk_widget_queue_draw_area (data->annotation_window, 0, 0, gdk_screen_width (), gdk_screen_height ());
+            }
+
 	}
     }
 }
@@ -1501,6 +1508,7 @@ void annotate_clear_screen ()
 
   annotate_reset_cairo ();
   clear_cairo_context (data->annotation_cairo_context);
+  gtk_widget_queue_draw_area (data->annotation_window, 0, 0, gdk_screen_width (), gdk_screen_height ());
   annotate_add_savepoint ();
 }
 
