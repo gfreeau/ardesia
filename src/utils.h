@@ -88,7 +88,7 @@ typedef struct
 
 
 /* Get the name of the current project. */
-gchar*
+gchar *
 get_project_name ();
 
 
@@ -332,6 +332,7 @@ g_substr (const gchar *string,
  * This function create a segmentation fault; 
  * it is useful to test the segmentation fault handler.
  */
-void create_segmentation_fault ();
+void
+create_segmentation_fault ();
 
 
