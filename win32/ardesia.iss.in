@@ -56,15 +56,15 @@ Source: "ardesia_@VERSION@-windows-1_i386\share\curtain\ui\curtain.ui"; DestDir:
 Source: "ardesia_@VERSION@-windows-1_i386\share\locale\es\LC_MESSAGES\ardesia.mo"; DestDir: "{app}\share\locale\es\LC_MESSAGES"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\share\locale\fr\LC_MESSAGES\ardesia.mo"; DestDir: "{app}\share\locale\fr\LC_MESSAGES"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\share\locale\it\LC_MESSAGES\ardesia.mo"; DestDir: "{app}\share\locale\it\LC_MESSAGES"; Flags: ignoreversion
-Source: "ardesia_@VERSION@-windows-1_i386\share\spotlighter\ui\pixmaps\*"; DestDir: "{app}\share\spotlighter\ui\pixmaps"; Flags: ignoreversion
-Source: "ardesia_@VERSION@-windows-1_i386\share\curtain\ui\pixmaps\*"; DestDir: "{app}\share\curtain\ui\pixmaps"; Flags: ignoreversion
+Source: "ardesia_@VERSION@-windows-1_i386\share\spotlighter\ui\icons\*"; DestDir: "{app}\share\spotlighter\ui\icons"; Flags: ignoreversion
+Source: "ardesia_@VERSION@-windows-1_i386\share\curtain\ui\icons\*"; DestDir: "{app}\share\curtain\ui\icons"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\share\spotlighter\ui\spotlighter.ui"; DestDir: "{app}\share\spotlighter\ui"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{group}\Ardesia"; Filename: "{app}\bin\ardesia.exe"; IconFilename: "{app}\share\ardesia\ui\icons\ardesia.ico"
-Name: "{group}\Curtain"; Filename: "{app}\bin\curtain.exe"; IconFilename: "{app}\share\curtain\ui\pixmaps\curtain.ico"
-Name: "{group}\Spotlighter"; Filename: "{app}\bin\spotlighter.exe"; IconFilename: "{app}\share\spotlighter\ui\pixmaps\spotlighter.ico"
+Name: "{group}\Curtain"; Filename: "{app}\bin\curtain.exe"; IconFilename: "{app}\share\curtain\ui\icons\curtain.ico"
+Name: "{group}\Spotlighter"; Filename: "{app}\bin\spotlighter.exe"; IconFilename: "{app}\share\spotlighter\ui\icons\spotlighter.ico"
 Name: "{group}\{cm:UninstallProgram,Ardesia}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\Ardesia"; Filename: "{app}\bin\ardesia.exe"; Tasks: desktopicon; IconFilename: "{app}\share\ardesia\ui\icons\ardesia.ico"
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Ardesia"; Filename: "{app}\bin\ardesia.exe"; Tasks: quicklaunchicon

@@ -133,11 +133,11 @@ cp @prefix@/share/ardesia/ui/icons/yellow.png $DESTDIR/share/ardesia/ui/icons
 
 mkdir -p $DESTDIR/share/curtain/ui
 
-cp @prefix@/share/curtain/ui/curtain.png $DESTDIR/share/curtain/ui
+cp @prefix@/share/curtain/ui/icons/curtain.png $DESTDIR/share/curtain/ui/icons
 cp @prefix@/share/curtain/ui/curtain.ui $DESTDIR/share/curtain/ui
 
-mkdir -p $DESTDIR/share/curtain/ui/pixmaps
-cp @prefix@/share/curtain/ui/pixmaps/curtain.ico $DESTDIR/share/curtain/ui/pixmaps
+mkdir -p $DESTDIR/share/curtain/ui/icons
+cp @prefix@/share/curtain/ui/icons/curtain.ico $DESTDIR/share/curtain/ui/icons
 
 mkdir -p $DESTDIR/share/locale/de/LC_MESSAGES/
 
@@ -159,8 +159,8 @@ mkdir -p $DESTDIR/share/spotlighter/ui/
 
 cp @prefix@/share/spotlighter/ui/spotlighter.ui $DESTDIR/share/spotlighter/ui/
 
-mkdir -p $DESTDIR/share/spotlighter/ui/pixmaps
-cp @prefix@/share/spotlighter/ui/pixmaps/spotlighter.ico $DESTDIR/share/spotlighter/ui/pixmaps
+mkdir -p $DESTDIR/share/spotlighter/ui/icons
+cp @prefix@/share/spotlighter/ui/icons/spotlighter.ico $DESTDIR/share/spotlighter/ui/icons
 
 echo Build $ARDESIA_ISCC_FILENAME
 
