@@ -44,7 +44,6 @@ Dependencies:
 - Delete the zip/unzip dependency
 - Add a new requirement: the libgsf library
 
-Usability:
 
 Bug Fix:
 - Eraser: fix the eraser tool using the the back side of some
@@ -284,36 +283,36 @@ Usability:
 The first public stable realease rewritten in C from scratch
 
 Dependencies:
-  - libgtk-2 > 2.14; interface rewritten using
-    the new "gtk builder" glade format
-  - recordmydesktop used at runtime for the on the fly recording
+- libgtk-2 > 2.14; interface rewritten using
+  the new "gtk builder" glade format
+- recordmydesktop used at runtime for the on the fly recording
 
 Usability:
-  - Multiple language support
-  - English and Italian translations
-  - Added the colour selector dialog
-  - Added a button to clear all the screen
-  - New pen and eraser cursor
-  - Add the preference dialog that allow to change the background
+- Multiple language support
+- English and Italian translations
+- Added the colour selector dialog
+- Added a button to clear all the screen
+- New pen and eraser cursor
+- Add the preference dialog that allow to change the background
 
 Features:
-  - Draw rect lines
-  - Draw broken lines
-  - Smoothing algorithm for curves
-  - Draw rectangles
-  - Draw ellipses
-  - Add text insertion
-  - Draw arrow and double arrow
-  - Save in jpeg or png format
-  - Make screencast
-  - Width selection
-  - Colour selection 
-  - Highlighter
-  - Undo/redo
-  - Draw Text
-  - Realtime recorder 
-  - Open png, jpeg and svg images as background
-  - Background colour and opacity selection
+- Draw rect lines
+- Draw broken lines
+- Smoothing algorithm for curves
+- Draw rectangles
+- Draw ellipses
+- Add text insertion
+- Draw arrow and double arrow
+- Save in jpeg or png format
+- Make screencast
+- Width selection
+- Colour selection 
+- Highlighter
+- Undo/redo
+- Draw Text
+- Realtime recorder 
+- Open png, jpeg and svg images as background
+- Background colour and opacity selection
 
 
 ---------------
