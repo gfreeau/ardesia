@@ -12,6 +12,10 @@
   - user manual in english language 
   - video tutorial
 
+- Management
+  - create the Changelog for the 1.0
+  - release the code
+
 - Reengineering
   - Screencast recorder using a library 
   - Paint on a svg surface to be synchronized with the paintable window
@@ -27,15 +31,15 @@
   - Support for a generic virtual keyboard 
   - Deploy the artefact online
     - video; youtube upload as kazam
-  - Export to image the selected area content
-    as gnome-screenshoot 
-  - Import images
-  - Make an image gallery (sticky notes...)
   - Lazo selection tool
     - Move the selected area content
     - Paste the selected area content
     - Zoom the selected area content
     - Rotate the selected area content
+  - Import images
+  - Make an image gallery (sticky notes...)
+  - Export to image the selected area content
+    as gnome-screenshoot 
   - full filler implementation (flood filler algorithm)
   - libgtk-3 
   - Multi pointer support
