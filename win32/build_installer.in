@@ -31,7 +31,6 @@ mkdir -p $DESTDIR/bin
 cp $WIN32_DIR/ardesia_open.bat $DESTDIR/bin
 
 cp /mingw/bin/libgsf-1-114.dll $DESTDIR/bin
-cp /mingw/bin/libgsf-win32-1-114.dll $DESTDIR/bin
 
 cp /mingw/bin/freetype6.dll $DESTDIR/bin
 cp /mingw/bin/gspawn-win32-helper.exe $DESTDIR/bin
@@ -133,10 +132,11 @@ cp @prefix@/share/ardesia/ui/icons/yellow.png $DESTDIR/share/ardesia/ui/icons
 
 mkdir -p $DESTDIR/share/curtain/ui
 
-cp @prefix@/share/curtain/ui/icons/curtain.png $DESTDIR/share/curtain/ui/icons
-cp @prefix@/share/curtain/ui/curtain.ui $DESTDIR/share/curtain/ui
+cp @prefix@/share/curtain/ui/curtain.glade $DESTDIR/share/curtain/ui
 
 mkdir -p $DESTDIR/share/curtain/ui/icons
+
+cp @prefix@/share/curtain/ui/icons/curtain.png $DESTDIR/share/curtain/ui/icons
 cp @prefix@/share/curtain/ui/icons/curtain.ico $DESTDIR/share/curtain/ui/icons
 
 mkdir -p $DESTDIR/share/locale/de/LC_MESSAGES/
@@ -157,7 +157,7 @@ cp @prefix@/share/locale/it/LC_MESSAGES/ardesia.mo $DESTDIR/share/locale/it/LC_M
 
 mkdir -p $DESTDIR/share/spotlighter/ui/
 
-cp @prefix@/share/spotlighter/ui/spotlighter.ui $DESTDIR/share/spotlighter/ui/
+cp @prefix@/share/spotlighter/ui/spotlighter.glade $DESTDIR/share/spotlighter/ui/
 
 mkdir -p $DESTDIR/share/spotlighter/ui/icons
 cp @prefix@/share/spotlighter/ui/icons/spotlighter.ico $DESTDIR/share/spotlighter/ui/icons

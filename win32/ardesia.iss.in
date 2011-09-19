@@ -51,14 +51,14 @@ Source: "ardesia_@VERSION@-windows-1_i386\share\ardesia\scripts\screencast.bat";
 Source: "ardesia_@VERSION@-windows-1_i386\share\ardesia\ui\*"; DestDir: "{app}\share\ardesia\ui"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\share\ardesia\ui\backgrounds\*"; DestDir: "{app}\share\ardesia\ui\backgrounds"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\share\ardesia\ui\icons\*"; DestDir: "{app}\share\ardesia\ui\icons"; Flags: ignoreversion
-Source: "ardesia_@VERSION@-windows-1_i386\share\curtain\ui\curtain.png"; DestDir: "{app}\share\curtain\ui"; Flags: ignoreversion
-Source: "ardesia_@VERSION@-windows-1_i386\share\curtain\ui\curtain.ui"; DestDir: "{app}\share\curtain\ui"; Flags: ignoreversion
+Source: "ardesia_@VERSION@-windows-1_i386\share\curtain\ui\icons\curtain.png"; DestDir: "{app}\share\curtain\ui\icons"; Flags: ignoreversion
+Source: "ardesia_@VERSION@-windows-1_i386\share\curtain\ui\curtain.glade"; DestDir: "{app}\share\curtain\ui"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\share\locale\es\LC_MESSAGES\ardesia.mo"; DestDir: "{app}\share\locale\es\LC_MESSAGES"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\share\locale\fr\LC_MESSAGES\ardesia.mo"; DestDir: "{app}\share\locale\fr\LC_MESSAGES"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\share\locale\it\LC_MESSAGES\ardesia.mo"; DestDir: "{app}\share\locale\it\LC_MESSAGES"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\share\spotlighter\ui\icons\*"; DestDir: "{app}\share\spotlighter\ui\icons"; Flags: ignoreversion
 Source: "ardesia_@VERSION@-windows-1_i386\share\curtain\ui\icons\*"; DestDir: "{app}\share\curtain\ui\icons"; Flags: ignoreversion
-Source: "ardesia_@VERSION@-windows-1_i386\share\spotlighter\ui\spotlighter.ui"; DestDir: "{app}\share\spotlighter\ui"; Flags: ignoreversion
+Source: "ardesia_@VERSION@-windows-1_i386\share\spotlighter\ui\spotlighter.glade"; DestDir: "{app}\share\spotlighter\ui"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
