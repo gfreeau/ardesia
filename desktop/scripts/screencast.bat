@@ -21,7 +21,7 @@ set VLC_FOLDER=%PROGRAMFILES%\VideoLAN\VLC\
 if not exist %VLC_FOLDER% set VLC_FOLDER=%PROGRAMFILES(X86)%\VideoLAN\VLC\
 if not exist %VLC_FOLDER% set VLC_FOLDER=""
 
-echo Detected vlc in folder %VLC_FOLDER%
+echo Detected vlc in folder "%VLC_FOLDER%"
 
 set PATH=%VLC_FOLDER%;%PATH% 
 
