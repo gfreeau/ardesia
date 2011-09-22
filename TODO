@@ -9,7 +9,8 @@
 ==========================================================================
 
 - Documentation
-  - user manual in english language 
+  - user manual in english and italian language
+  - traslate the wiki in english 
   - video tutorial
 
 - Management
@@ -17,11 +18,14 @@
   - release the code
 
 - Reengineering
-  - Screencast recorder using a library 
+  - Screencast recorder using a library
   - Paint on a svg surface to be synchronized with the paintable window
   - Store and load the savepoints with svg files
   - Use the same window for the background; the expose will paint
     all the layers
+
+- Bug fix 
+  - See http://code.google.com/p/ardesia/issues/list
 
 - Candidate features:
   - Send a bug report with stacktrace when a crash occurs;
