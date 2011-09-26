@@ -11,15 +11,19 @@ Feautures
   xfwm tweak or using compiz or xcompmgr composite manager
 - Compliant with kde desktop environment using kwin or compiz or xcompmgr 
   composite manager
-- Pause the recording whenever necessary, and then resume when you want 
+- Pause the recording whenever necessary, and then resume when you want
+- Update backgrounds images
+- Add file permissions check for import/export functions 
 
 Dependencies:
 - Delete dependency from the libbfd
+- Delete dependency from binutils
 - Require gtk 2.16
 
 Internationalization:
 - Add the po/ardesia.pot translation template; you can use it 
   to add the support to a missing language with poedit and others tools
+  (issue 27)
 
 Usability
 - keyboard accelerators
@@ -28,8 +32,11 @@ Usability
   - ctrl+y to redo
 
 Bug Fix:
+- Solved the issue 22: the libbfd dependecy has been removed.
+- Solved the issue 30: configure strange behavior
 - Solved the issue 31: Losing Window Focus in Win7
-- Solved the issue 22: undo/redo implementation misbehaviour
+- Solved the issue 33: undo/redo implementation misbehaviour
+- Fix the clear button in order to clear the screen immediately
 
 
 ---------------

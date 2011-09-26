@@ -1,319 +1,251 @@
-2011-06-21 19:37  pilolli.pietro@gmail.com
-        * trunk/ardesia/src/annotation_window.c,
-        * trunk/ardesia/desktop/annotation_window.glade,
-        * trunk/ardesia/src/annotation_window_callbacks.c,
-        * trunk/ardesia/src/annotation_window_callbacks.h:
-        - Code revision for the annotation drawing part
-        - The issue 28 is closed;
-          for furthermore info see http://code.google.com/p/ardesia/issues/detail?id=28
+2011-09-22 10:42  alpha@paranoici.org
+	* trunk/ardesia/desktop/backgrounds/world_map.png,
+	* trunk/ardesia/desktop/backgrounds/civil_society.png,
+	* trunk/ardesia/desktop/backgrounds/musical_staff.png:
+        - Adjusted musical staff background
+        - Update political map
+        - Update civil society background
 
 
-2011-06-16 11:57  pilolli.pietro@gmail.com
-        * trunk/ardesia/Makefile.am,
-        * trunk/ardesia/debian/control,
-        * trunk/ardesia/debian/copyright,
-        * trunk/ardesia/debian/postinst,
-        * trunk/ardesia/debian/rules:
-        - Update debian scripts following the Takaki debian build
-          best pactices
+2011-09-22 09:38  alpha@paranoici.org
+	* trunk/ardesia/desktop/backgrounds/squared_paper.png,
+	* trunk/ardesia/desktop/backgrounds/blackboard.png,
+	* trunk/ardesia/desktop/backgrounds/squared_blackboard.png,
+	* trunk/ardesia/desktop/backgrounds/whiteboard.png:
+        - Update with better done backgrounds
 
 
-2011-03-18 14:26  pilolli.pietro@gmail.com
-        * trunk/ardesia/INSTALL,
-        * trunk/ardesia/README,
-        * trunk/ardesia/TODO,
-        * trunk/ardesia/desktop/ardesia.desktop.in,
-	* trunk/ardesia/desktop/scripts/screencast.sh,
-	* trunk/ardesia/desktop/icons/add-pdf.png,
-	* trunk/ardesia/desktop/icons/application-x-iwb.png,
-	* trunk/ardesia/desktop/icons/ardesia.png,
-	* trunk/ardesia/desktop/icons/ardesia_logo.png,
-	* trunk/ardesia/desktop/icons/arrow.png,
-	* trunk/ardesia/desktop/icons/blue.png,
-	* trunk/ardesia/desktop/icons/camera-photo.png,
-	* trunk/ardesia/desktop/icons/eraser.png,
-	* trunk/ardesia/desktop/icons/filler.png,
-        * trunk/ardesia/desktop/icons/green.png,
-	* trunk/ardesia/desktop/icons/hand.png,
-	* trunk/ardesia/desktop/icons/highlighter.png,
-	* trunk/ardesia/desktop/icons/media-record.png,
-	* trunk/ardesia/desktop/icons/media-recorder-unavailable.png,
-	* trunk/ardesia/desktop/icons/medium.png,
-	* trunk/ardesia/desktop/icons/micro.png,
-	* trunk/ardesia/desktop/icons/pencil.png,
-	* trunk/ardesia/desktop/icons/pointer.png,
-	* trunk/ardesia/desktop/icons/rectifier.png,
-        * trunk/ardesia/desktop/icons/red.png,
-	* trunk/ardesia/desktop/icons/rounder.png,
-	* trunk/ardesia/desktop/icons/text.png,
-	* trunk/ardesia/desktop/icons/thick.png,
-	* trunk/ardesia/desktop/icons/thin.png,
-	* trunk/ardesia/desktop/icons/white.png,
-	* trunk/ardesia/desktop/icons/yellow.png:
-        - Update readable files
-        - Move the icons from pixmaps to more generic icons
-          folder
-        - Revision of the file permission in the repository
-        - The binary deb package building is warning free
-
-
-2011-03-16 00:45  pilolli.pietro@gmail.com
-        * /trunk/ardesia/debian/postinst,
-        * /trunk/ardesia/Makefile.am,
-        * /trunk/ardesia/configure.ac,
-        * /trunk/ardesia/debian/copyright:
-        - Some adjustment following the debian guidelines,
-          the default prefix is now the /usr folder instead
-          of /usr/local
-
-
-2011-03-14 15:27  pilolli.pietro@gmail.com
-        * /trunk/ardesia/src/ardesia.c,
-	* /trunk/ardesia/src/utils.c:
-        - Fix to solve the xdg documents problem
-          in an xdg way; if the G_USER_DIRECTORY_DOCUMENTS
-          is not set I create the ardesia workspace folder
-          under the user home directory
-
-
-2011-03-10 18:09  pilolli.pietro@gmail.com
-	* /trunk/ardesia/win32/build_installer.in:
-        - added missing library msys-1.0.dll used by the InfoZip tools;
-          this fix the open/save under Windows
-
-
-2011-03-10 17:19  pilolli.pietro@gmail.com
-        * /trunk/ardesia/src/background_window.c,
-        * /trunk/ardesia/src/background_window.h,
-        * /trunk/ardesia/src/saver.c,
-        * /trunk/ardesia/src/utils.c,
-        * /trunk/ardesia/src/utils.h:
-        - Add a caio scale utils
-        - Png saving with cairo instead with pixbuf
-        - The background image is loaded and scaled with cairo
-
-
-2011-03-10 13:47  pilolli.pietro@gmail.com
-	* trunk/ardesia/desktop/Makefile.am:
-        - Fix the xdg resources installation
-          to use the "user mode"
-
-
-2011-03-09 09:36  pilolli.pietro@gmail.com
-	* trunk/ardesia/autogen.sh:
-        - Remove an old patch that was usefull to build ardesia with ports;
-	  REGARDS: now the default build system is jhbuild and it is used
-	  the default libtool
-
-
-2011-03-06 17:47  pilolli.pietro@gmail.com
-	* trunk/ardesia/src/preference_dialog.c:
-        - Delete the stay above directive in preference dialog
-          for windows compliance
-
-
-2011-03-04 13:01  pilolli.pietro@gmail.com
-	* trunk/ardesia/configure.ac,
-	* trunk/ardesia/desktop/Makefile.am,
-	* trunk/ardesia/desktop/iwb-mime.xml: 
-        - Adjust configure; add check for the xdg utils
-	  in order to register icons, mime type info and menu
-        - Update the deb post install script in order to
-          register icons, mime type info and menu
-        - Add check for devscript before running the make
-          deb target
-
-
-2011-03-03 14:42  pilolli.pietro@gmail.com
-	* trunk/ardesia/src/annotation_window.c,
-	* trunk/ardesia/src/annotation_window_callbacks.c:
-        - Fix the undo to clear the window if pressed when
-	  there are no more savepoints
-
-
-2011-03-02 16:36  pilolli.pietro@gmail.com
-	* trunk/ardesia/src/annotation_window.c:
-        - If the ellipse has an eccentricicity roundable
-	  to zero then the rounder draw a circle
-
-
-2011-03-02 00:56  pilolli.pietro@gmail.com
-	* trunk/ardesia/src/annotation_window.c:
-        - Fix an error that caused a colour starvation
-	  with the rounder mode enabled;
-	  in some cases a closed path was bad interpreted
-	  as ellipse instead of a simple point or short lines
-	  
-
-2011-03-01 12:16  pilolli.pietro@gmail.com
-	* trunk/ardesia/src/background_window.c:
-        - If the background colour opacity is lesser than one
-	  and the mouse tool has been selected the background
-	  window is left transparent to the input events
-          (linux only via the  gdk_window_input_shape_combine_mask
-          that it is not implemented in windows yet)
-
-
-2011-02-28 21:27  pilolli.pietro@gmail.com
-	* trunk/ardesia/src/annotation_window.c:
-        - Fix a little a little bug that caused
-	  the not filling of closed path using
-	  the roundifier tool
-
-
-2011-02-28 01:57  pilolli.pietro@gmail.com
-	* trunk/ardesia/desktop/horizontal_bar.glade,
-	* trunk/ardesia/desktop/vertical_bar.glade,
-	* trunk/ardesia/src/bar_callbacks.c:
-        - Track the bar iconification via the window-state-event
-	  to release the pointer; 
-          this avoid to go in a inconsistent state after the 
-          minimization of the bar window using the "-d" decoration option
-
-
-2011-02-27 16:06  pilolli.pietro@gmail.com
-	* trunk/ardesia/TODO, 
-        * trunk/ardesia/desktop/pixmaps/arrow.png,
-	* trunk/ardesia/src/annotation_window.c,
-	* trunk/ardesia/src/cursors.c,
-        * trunk/ardesia/src/cursors.h:
-        - New arrow icon and cursor
-
-
-2011-02-25 16:17  pilolli.pietro@gmail.com
-	* trunk/ardesia/src/annotation_window.c,
-	* trunk/ardesia/src/background_window.c,
-	* trunk/ardesia/src/background_window.h,
-	* trunk/ardesia/src/background_window_callbacks.c,
-	* trunk/ardesia/src/iwb_loader.c, 
-        * trunk/ardesia/src/iwb_saver.c,
-	* trunk/ardesia/src/preference_dialog_callbacks.c,
-	* trunk/ardesia/src/utils.c: 
-        - Add the iwb background load and store support
-
-
-2011-02-23 16:18  pilolli.pietro@gmail.com
-	* trunk/ardesia/TODO,
-        * trunk/ardesia/desktop/horizontal_bar.glade,
-	* trunk/ardesia/desktop/pixmaps/micro.png,
-	* trunk/ardesia/desktop/vertical_bar.glade,
-	* trunk/ardesia/src/annotation_window.c,
-        * trunk/ardesia/src/bar.c,
-	* trunk/ardesia/src/bar.h,
-        * trunk/ardesia/src/bar_callbacks.c,
-	* trunk/ardesia/src/broken.c,
-        * trunk/ardesia/src/broken.h,
-	* trunk/ardesia/src/utils.h:
-        - Add a micro 1 pixel thickness
-	  - Fixed a little math bug in the arrow algorithm
-
-
-2011-02-23 13:57  pilolli.pietro@gmail.com
-	* trunk/ardesia/TODO,
-        * trunk/ardesia/src/annotation_window.c,
-	* trunk/ardesia/src/cursors.c,
-        * trunk/ardesia/src/cursors.h,
-	* trunk/ardesia/src/utils.c,
-        * trunk/ardesia/src/utils.h:
-	- cursor code refatoring
-	  - Cached the image surface containing
-	    the png icons used for the cursors
-
-
-2011-02-23 12:34  pilolli.pietro@gmail.com
-	* trunk/ardesia/TODO,
-        * trunk/ardesia/src/Makefile.am,
-	* trunk/ardesia/src/annotation_window.c,
-	* trunk/ardesia/src/annotation_window.h,
-	* trunk/ardesia/src/cursors.c,
-        * trunk/ardesia/src/cursors.h:
-	- Refactoring of the cursor code;
-	  moved the cursor stuffs in the file cursor.c
-
-
-2011-02-23 01:02  pilolli.pietro@gmail.com
-	* trunk/ardesia/src/windows_utils.c,
-	* trunk/ardesia/src/windows_utils.h: 
-        - Delete the Dirk Gerrit re-implementation 
-          of the bugged function on win32 called 
-          "gdk_cursor_new_from_pixmap".
-	  Now we use the gdk_cursor_new_from_pixbuf
-	  that works fine on win32 also with
-	  transparent cursor
-
-
-2011-02-23 00:23  pilolli.pietro@gmail.com
-	* trunk/ardesia/TODO,
-	* trunk/ardesia/desktop/pixmaps/highlighter.png,
-	* trunk/ardesia/src/annotation_window.c,
-	* trunk/ardesia/src/annotation_window.h, 
-        * trunk/ardesia/src/utils.c,
-	* trunk/ardesia/src/utils.h: 
-        - New icon for the ardesia tools
-
-
-2011-02-22 12:45  pilolli.pietro@gmail.com
-	* trunk/ardesia/configure.ac,
-        * trunk/ardesia/desktop/Makefile.am:
-	- Added check for xdg utils in configure
-
-
-2011-02-21 22:42  pilolli.pietro@gmail.com
+2011-09-19 17:33  alpha@paranoici.org
 	* trunk/ardesia/win32/ardesia.iss.in,
 	* trunk/ardesia/win32/build_installer.in:
-        - Code revision for the windows installer
+        - Fix the installer for the 1.0 ardesia toolset
 
 
-2011-02-21 01:35  pilolli.pietro@gmail.com
-	* trunk/ardesia/src/annotation_window.c,
-	* trunk/ardesia/src/annotation_window.h,
-	* trunk/ardesia/src/annotation_window_callbacks.c:
-        - Fix a bug that occurs with the tablet
-	  if you click to fast on the screen
-	  after the project dialog
-
-
-2011-02-21 00:30  pilolli.pietro@gmail.com
-	* trunk/ardesia/desktop/annotation_window.glade,
-	* trunk/ardesia/desktop/background_window.glade,
-	* trunk/ardesia/desktop/text_window.glade,
+2011-09-07 15:21  alpha@paranoici.org
 	* trunk/ardesia/src/annotation_window.c,
 	* trunk/ardesia/src/background_window.c,
-	* trunk/ardesia/src/text_window.c:
-        - The double buffered property is set
-	  by code instead in the glade file;
-	  this is done to be compliant with the
-	  gtk 2.16
+	* trunk/ardesia/src/text_window.c,
+        * trunk/ardesia/src/utils.c,
+	* trunk/ardesia/src/utils.h
+        - Using gtk_widget_shape_combine_mask instead of 
+          the gdk_window_input_shape_combine_mask
+	  (might be more correct)
 
 
-2011-02-18 15:59  pilolli.pietro@gmail.com
-	* trunk/ardesia/desktop/horizontal_bar.glade,
-	* trunk/ardesia/desktop/pixmaps/lock.png,
-	* trunk/ardesia/desktop/pixmaps/pointer.png,
-	* trunk/ardesia/desktop/pixmaps/unlock.png,
-	* trunk/ardesia/desktop/vertical_bar.glade,
+2011-09-07 12:32  alpha@paranoici.org
+	* trunk/ardesia/src/annotation_window.c,
+	* trunk/ardesia/src/iwb_saver.c:
+        - Fix in a definitive way the problem about the
+	  first undo problem; when the tool is started is created
+	  an empty savepoint. Ardesia will save the project only
+	  if will exist at least an other valid savepoint.
+
+
+2011-09-07 10:01  alpha@paranoici.org
+	* trunk/ardesia/src/annotation_window.c:
+        - Reintroduced patches to force to redraw the screen
+	  after the clear button and for the last undo
+	  that must clear the screen
+
+
+2011-09-05 16:04  alpha@paranoici.org
+	* trunk/ardesia/debian/changelog,
+        * trunk/ardesia/debian/control,
+	* trunk/ardesia/po/ardesia.pot,
+        * trunk/ardesia/po/de.po,
+	* trunk/ardesia/po/es.po,
+        * trunk/ardesia/po/fr.po,
+	* trunk/ardesia/po/it.po: 
+        - adjusted translation
+	- update deb files
+
+
+2011-08-27 14:40  alpha@paranoici.org
+	* trunk/ardesia/desktop/scripts/screencast.sh,
+	* trunk/ardesia/src/bar_callbacks.c,
+        * trunk/ardesia/src/pdf_saver.c,
+	* trunk/ardesia/src/recorder.c, 
+        * trunk/ardesia/src/recorder.h,
+	* trunk/ardesia/src/saver.c:
+        - Fix the recorder script to pause/resume the recording;
+          for each project you will have only one video,
+	  the first time will be shown a file chooser to change
+          the suggested video name, whe you resume this will resume
+          the video silently.
+	  The recorder export and the pdf one have the defect that
+          they do not give a feedback;
+          I suppose that can be a good choise drive the user with
+          some help.
+
+
+2011-08-27 09:35  alpha@paranoici.org
+	* trunk/ardesia/src/cursors.c:
+        - Review cursor code using the GDK_BLANK_CURSOR in order to hide 
+          the cursor pointer
+
+
+2011-08-26 15:17  alpha@paranoici.org
+	* trunk/ardesia/po/POTFILES.in,
+        * trunk/ardesia/po/ardesia.pot,
+        * trunk/ardesia/po/de.po,
+        * trunk/ardesia/po/es.po,
+        * trunk/ardesia/po/fr.po,
+        * trunk/ardesia/po/it.po,
+        * trunk/ardesia/src/pdf_saver.c,
+        * trunk/ardesia/src/preference_dialog.c,
+        * trunk/ardesia/src/preference_dialog.h,
+        * trunk/ardesia/src/preference_dialog_callbacks.c,
+        * trunk/ardesia/src/recorder.c, 
+        * trunk/ardesia/src/saver.c,
+        * trunk/ardesia/src/saver.h: 
+        - Add check if you can write file and permission denied dialog for:
+	  - screenshoot
+	  - screencast
+	  - pdf export
+        - Review of the override check and dialog
+	- Update translation
+
+
+2011-08-25 09:10  alpha@paranoici.org
+	* trunk/ardesia/po/POTFILES.in,
+        * trunk/ardesia/po/de.po,
+	* trunk/ardesia/po/es.po,
+        * trunk/ardesia/po/fr.po,
+	* trunk/ardesia/po/it.po,
+        * trunk/ardesia/src/preference_dialog.c,
+	* trunk/ardesia/src/preference_dialog.h,
+	* trunk/ardesia/src/preference_dialog_callbacks.c,
+	* trunk/ardesia/src/recorder.c: 
+        - Check the readability permission of the background file selected
+	  in preference dialog
+
+
+2011-08-24 12:58  alpha@paranoici.org
+	* trunk/ardesia/src/annotation_window.h:
+        - Solved the issue 31; Losing Window Focus in Win7
+	  switching from mouse mode and drawing mode
+
+
+2011-08-24 10:57  alpha@paranoici.org
 	* trunk/ardesia/src/bar_callbacks.c:
-        - Delete the lock unlock mechanism,
-	  now is added a tool button to the bar;
-	  if do you want use the mouse as usual
-	  preventing the annotation hiding,
-          please press the mouse button, 
-          in order to reuse ardesia you can
-	  simply reselect an other one tool or select
-	  a colors (will be taken the default pen tool)
+        - Force the ardesia bar to stay on the top in windows also
 
 
-2011-02-18 12:49  pilolli.pietro@gmail.com
-	* trunk/ardesia/Makefile.am,
+2011-08-24 10:24  alpha@paranoici.org
+	* trunk/ardesia/INSTALL,
+        * trunk/ardesia/NEWS,
+        * trunk/ardesia/TODO,
+	* trunk/ardesia/desktop/annotation_window.glade,
+	* trunk/ardesia/desktop/background_window.glade,
+	* trunk/ardesia/desktop/crash_dialog.glade,
+	* trunk/ardesia/desktop/horizontal_bar.glade,
+	* trunk/ardesia/desktop/info_dialog.glade,
+	* trunk/ardesia/desktop/preference_dialog.glade,
+	* trunk/ardesia/desktop/project_dialog.glade,
+	* trunk/ardesia/desktop/share_confirmation_dialog.glade,
+	* trunk/ardesia/desktop/text_window.glade,
+	* trunk/ardesia/desktop/vertical_bar.glade:
+        - Adjust interfaces and readable files
+
+
+2011-08-23 15:13  alpha@paranoici.org
+	* trunk/ardesia/src/annotation_window.c,
+	* trunk/ardesia/src/annotation_window_callbacks.c:
+        - Force expose in undo to the zero savepoint
+	  and after the clear callbackevent
+	  this force to redraw the screen and clean it
+
+
+2011-08-23 09:57  alpha@paranoici.org
+	* trunk/ardesia/TODO,
+	* trunk/ardesia/desktop/annotation_window.glade,
+	* trunk/ardesia/desktop/horizontal_bar.glade,
+	* trunk/ardesia/desktop/vertical_bar.glade:
+        - keyboard accelerators:
+	  - ctrl+q to quit
+	  - ctrl+z to undo
+	  - ctrl+y to redo
+	- revision of horizontal layout
+	- update TODO
+
+
+2011-08-19 18:13  alpha@paranoici.org
+	* trunk/ardesia/NEWS,
+        * trunk/ardesia/TODO,
+	* trunk/ardesia/src/background_window.c,
+	* trunk/ardesia/src/background_window.h,
+        * trunk/ardesia/src/background_window_callbacks.c,
+        * trunk/ardesia/src/iwb_loader.c,
+	* trunk/ardesia/src/iwb_saver.c,
+	* trunk/ardesia/src/preference_dialog.c,
+	* trunk/ardesia/src/preference_dialog.h,
+	* trunk/ardesia/src/preference_dialog_callbacks.c,
+        * trunk/ardesia/src/utils.c:
+	- Persist the background color selected in the preference dialog
+
+
+2011-08-17 21:02  alpha@paranoici.org
+	* trunk/ardesia/src/annotation_window.c,
+	* trunk/ardesia/po/ardesia.pot,
+        * trunk/ardesia/po/de.po,
+	* trunk/ardesia/po/es.po,
+        * trunk/ardesia/po/fr.po,
+	* trunk/ardesia/po/it.po: 
+        - Update po/pot files; issue 27 is closed
+        - Fix an error in the undo/redo implementation
+
+
+2011-08-01 13:24  alpha@paranoici.org
+        * trunk/ardesia/INSTALL,
         * trunk/ardesia/configure.ac,
-	* trunk/ardesia/data,
-        * trunk/ardesia/desktop: 
-        - Move data in desktop folder
+	* trunk/ardesia/debian/changelog,
+        * trunk/ardesia/debian/control,
+	* trunk/ardesia/INSTALL:
+        - Fix the issue 30
+	- Adjust code and doc to avoid the backtarce code and deps
 
 
-2011-02-18 11:18  pilolli.pietro@gmail.com
-	* trunk/ardesia/Makefile.am,
-        * trunk/ardesia/data/info_dialog.glade,
-	* trunk/ardesia/win32/ardesia.iss.in: 
-        - Change ardesia url in http://ardesia.googlecode.com
+2011-07-23 11:05  alpha@paranoici.org
+	* trunk/ardesia/TODO,
+        * trunk/ardesia/configure.ac,
+	* trunk/ardesia/po/POTFILES.in,
+        * trunk/ardesia/src/Makefile.am,
+	* trunk/ardesia/src/ardesia.c,
+        * trunk/ardesia/src/glibc_backtrace.c,
+	* trunk/ardesia/src/glibc_backtrace.h,
+	* trunk/ardesia/src/windows_backtrace.c,
+	* trunk/ardesia/src/windows_backtrace.h:
+        - Remove the libbfd dependency
+
+
+2011-07-23 10:35  alpha@paranoici.org
+	* trunk/ardesia/TODO:
+        - Update TODO the libbfd dependency might be removed
+
+
+2011-06-29 15:32  alpha@paranoici.org
+	* trunk/TODO,
+        * trunk/ardesia/TODO,
+        * trunk/ardesia/configure.ac,
+	* trunk/ardesia/debian/changelog:
+        - Rescheduled TODO and version number for the 1.0
+	  stable release that is coming soon
+
+
+2011-06-29 14:28  alpha@paranoici.org
+	* trunk/ardesia/win32/ardesia.iss.in:
+        - Fix the desktop icon shortut created by the Ardesia Innosetup
+          installer
+
+
+2011-06-29 13:50  alpha@paranoici.org
+	* trunk/ardesia/win32/ardesia.iss.in:
+        - Fix shortcut icon on desktop
+
+
+2011-06-27 14:25  alpha@paranoici.org
+	* trunk/ardesia/src/annotation_window.c:
+        - Old gtk used on windows have not the gdk_device_get_n_axes (device)
+	  then I prefer use the explicit form device->num_axes
+
 

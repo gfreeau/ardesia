@@ -13,10 +13,6 @@
   - traslate the wiki in english 
   - video tutorial
 
-- Management
-  - create the Changelog for the 1.0
-  - release the code
-
 - Reengineering
   - Screencast recorder using a library
   - Paint on a svg surface to be synchronized with the paintable window
