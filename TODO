@@ -10,11 +10,11 @@
 
 - Documentation
   - user manual in english and italian language
-  - traslate the wiki in english 
   - video tutorial
+  - traslate the wiki in english 
 
 - Reengineering
-  - Screencast recorder using a library
+  - Screencast recorder using a library (ffmpeg or libvlc)
   - Paint on a svg surface to be synchronized with the paintable window
   - Store and load the savepoints with svg files
   - Use the same window for the background; the expose will paint
