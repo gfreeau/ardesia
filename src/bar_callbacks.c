@@ -600,19 +600,6 @@ on_bar_recorder_activate        (GtkToolButton   *toolbutton,
   annotate_release_grab ();
 
   bar_data->grab = FALSE;
-
-  if (!is_recorder_available ())	
-    {
-      /* Visualize a dialog that informs the user about the missing recorder tool. */
-      GObject *recorder_obj = gtk_builder_get_object (bar_gtk_builder, "media-recorder-unavailable");
-      gdk_window_set_cursor (get_annotation_window ()->window, (GdkCursor *) NULL);
-      visualize_missing_recorder_program_dialog (GTK_WINDOW (get_bar_window ()));
-      /* Put an icon that remember that the tool is not available. */
-      gtk_tool_button_set_label_widget (toolbutton, GTK_WIDGET (recorder_obj));
-      bar_data->grab = grab_value;
-      start_tool (bar_data);		
-      return;
-    }
 	
   if (is_started ())
     {
@@ -630,7 +617,21 @@ on_bar_recorder_activate        (GtkToolButton   *toolbutton,
         }
     }
   else
-    { 
+    {
+ 
+      if (!is_recorder_available ())	
+        {
+          /* Visualize a dialog that informs the user about the missing recorder tool. */
+          GObject *recorder_obj = gtk_builder_get_object (bar_gtk_builder, "media-recorder-unavailable");
+          gdk_window_set_cursor (get_annotation_window ()->window, (GdkCursor *) NULL);
+          visualize_missing_recorder_program_dialog (GTK_WINDOW (get_bar_window ()));
+          /* Put an icon that remember that the tool is not available. */
+          gtk_tool_button_set_label_widget (toolbutton, GTK_WIDGET (recorder_obj));
+          bar_data->grab = grab_value;
+          start_tool (bar_data);		
+          return;
+        }
+
       gdk_window_set_cursor (get_annotation_window ()->window, (GdkCursor *) NULL);
       /* The recording is not active. */ 
       gboolean status = start_save_video_dialog (toolbutton, GTK_WINDOW (get_bar_window ()));
