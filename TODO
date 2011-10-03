@@ -26,6 +26,7 @@
 - Candidate features:
   - Send a bug report with stacktrace when a crash occurs;
     could be used google-breakpad
+  - New backgrounds
   - Integration beetween ardesia and florence in lxde;
     this will be done for WiildOs
   - Deploy the artefact online
