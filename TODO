@@ -28,9 +28,10 @@
     could be used google-breakpad
   - Integration beetween ardesia and florence in lxde;
     this will be done for WiildOs
-  - Support for a generic virtual keyboard 
   - Deploy the artefact online
     - video; youtube upload as kazam
+  - Recognize the hand written text
+  - Support for a generic virtual keyboard 
   - Lazo selection tool
     - Move the selected area content
     - Paste the selected area content
