@@ -17,22 +17,23 @@
   - Screencast recorder using a library (ffmpeg or libvlc)
   - Paint on a svg surface to be synchronized with the paintable window
   - Store and load the savepoints with svg files
-  - Use the same window for the background; the expose will paint
-    all the layers
 
 - Bug fix 
   - See http://code.google.com/p/ardesia/issues/list
 
 - Candidate features:
-  - Send a bug report with stacktrace when a crash occurs;
-    could be used google-breakpad
   - New backgrounds
   - Integration beetween ardesia and florence in lxde;
     this will be done for WiildOs
+  - Support for a generic virtual keyboard 
   - Deploy the artefact online
     - video; youtube upload as kazam
-  - Recognize the hand written text
-  - Support for a generic virtual keyboard 
+  - libgtk-3 
+  - Multi pointer support
+  - Use the same window for the background; the expose will paint
+    all the layers
+  - Send a bug report with stacktrace when a crash occurs;
+    could be used google-breakpad
   - Lazo selection tool
     - Move the selected area content
     - Paste the selected area content
@@ -40,11 +41,10 @@
     - Rotate the selected area content
   - Import images
   - Make an image gallery (sticky notes...)
+  - Recognize the hand written text
   - Export to image the selected area content
     as gnome-screenshoot 
   - full filler implementation (flood filler algorithm)
-  - libgtk-3 
-  - Multi pointer support
   - MacOsX porting
   - Not parallel to the axis shape recognition
 
