@@ -22,9 +22,9 @@
   - See http://code.google.com/p/ardesia/issues/list
 
 - Candidate features:
-  - New backgrounds
   - Integration beetween ardesia and florence in lxde;
     this will be done for WiildOs
+  - New backgrounds
   - Support for a generic virtual keyboard 
   - Deploy the artefact online
     - video; youtube upload as kazam
