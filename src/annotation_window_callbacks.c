@@ -56,7 +56,7 @@ on_expose       (GtkWidget *widget,
 	         gpointer func_data)
 {
   AnnotateData *data = (AnnotateData *) func_data;
-
+	
   gint is_fullscreen = gdk_window_get_state (gtk_widget_get_window (widget)) & GDK_WINDOW_STATE_FULLSCREEN;
 
   if (data->debug)
@@ -71,6 +71,11 @@ on_expose       (GtkWidget *widget,
 
   initialize_annotation_cairo_context (data);
 
+  if (!data->is_grabbed)
+    {
+      return TRUE;
+	}
+	
   /* Postcondition; data->annotation_cairo_context is not NULL. */
   annotate_restore_surface ();
 
@@ -92,9 +97,12 @@ on_button_press (GtkWidget *win,
 
   AnnotateData *data = (AnnotateData *) func_data;
   gdouble pressure = 1.0; 
-
-  initialize_annotation_cairo_context(data);
-
+  
+  if (!data->is_grabbed)
+    {
+      return TRUE;
+	}
+	
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
@@ -103,11 +111,11 @@ on_button_press (GtkWidget *win,
       annotate_release_grab ();
       return TRUE;
     }
-
+	
   if (data->debug)
     {
       g_printerr ("Device '%s': Button %i Down at (x,y)= (%f : %f)\n",
-		  ev->device->name, ev->button, ev->x, ev->y);
+	  ev->device->name, ev->button, ev->x, ev->y);
     }
 
 #ifdef _WIN32
@@ -119,18 +127,20 @@ on_button_press (GtkWidget *win,
     }
 #endif
 
-  annotate_coord_list_free ();
-
-  annotate_unhide_cursor ();
-
-  annotate_reset_cairo ();
-
   pressure = get_pressure ( (GdkEvent *) ev);
 
   if (pressure <= 0)
     { 
       return TRUE;
     }
+	
+  initialize_annotation_cairo_context(data);
+  
+  annotate_coord_list_free ();
+
+  annotate_unhide_cursor ();
+
+  annotate_reset_cairo ();
 
   annotate_draw_point (ev->x, ev->y, pressure);
 
@@ -152,7 +162,12 @@ on_motion_notify (GtkWidget *win,
   GdkModifierType state = (GdkModifierType) ev->state;
   gdouble selected_width = 0.0;
   gdouble pressure = 1.0; 
-
+   
+  if (!data->is_grabbed)
+    {
+      return TRUE;
+	}
+	
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
@@ -178,7 +193,7 @@ on_motion_notify (GtkWidget *win,
 #endif
 
   annotate_unhide_cursor ();
-
+  
   /* Only the first 5 buttons allowed. */
   if (! (state & 
 	 (GDK_BUTTON1_MASK | GDK_BUTTON2_MASK | GDK_BUTTON3_MASK | GDK_BUTTON4_MASK | GDK_BUTTON5_MASK)))
@@ -186,7 +201,6 @@ on_motion_notify (GtkWidget *win,
       /* The button is not pressed. */
       return TRUE;
     }
-
 
   initialize_annotation_cairo_context (data);
 
@@ -246,6 +260,11 @@ on_button_release (GtkWidget *win,
   AnnotateData *data = (AnnotateData *) func_data;
   guint lenght = g_slist_length (data->coord_list);
 
+  if (!data->is_grabbed)
+    {
+      return TRUE;
+	}
+	
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
@@ -333,12 +352,13 @@ on_proximity_in (GtkWidget *widget,
     	         GdkEventProximity *ev,
 	         gpointer func_data)
 {
-  /*
-   * @TODO This message does not arrive on windows; why?
-   * is it a driver problem, gtk or what is happening.
-   */
   AnnotateData *data = (AnnotateData *) func_data;
 
+  if (!data->is_grabbed)
+    {
+      return TRUE;
+	}
+	
   if (data->debug)
     {
       g_printerr ("Proximity in device %s\n", ev->device->name);
@@ -371,12 +391,13 @@ on_proximity_out (GtkWidget *win,
 	          gpointer func_data)
 {
 
-  /*
-   * @TODO This message does not arrive on windows; why?
-   * is it a driver problem, gtk or what is happening.
-   */
   AnnotateData *data = (AnnotateData *) func_data;
 
+  if (!data->is_grabbed)
+    {
+      return TRUE;
+	}
+	
   if (data->debug)
     {
       g_printerr ("Proximity out device %s\n", ev->device->name);
@@ -391,5 +412,4 @@ on_proximity_out (GtkWidget *win,
 
   return TRUE;
 }
-
 
