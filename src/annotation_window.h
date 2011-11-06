@@ -45,15 +45,6 @@
 #  define ANNOTATION_UI_FOLDER "..\\share\\ardesia\\ui"
 #  define ANNOTATION_UI_FILE ANNOTATION_UI_FOLDER"\\annotation_window.glade"
 
-/* User for grab the pointer on win32. */
-#  define ANNOTATE_MOUSE_EVENTS    ( GDK_POINTER_MOTION_MASK|	\
-				     GDK_BUTTON_PRESS_MASK|	\
-				     GDK_PROXIMITY_IN|		\
-				     GDK_PROXIMITY_OUT|		\
-				     GDK_MOTION_NOTIFY|		\
-				     GDK_BUTTON_PRESS		\
-				     )
-
 #else
 #  define ANNOTATION_UI_FOLDER PACKAGE_DATA_DIR"/ardesia/ui"
 #  define ANNOTATION_UI_FILE ANNOTATION_UI_FOLDER"/annotation_window.glade"

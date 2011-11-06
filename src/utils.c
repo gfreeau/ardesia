@@ -165,7 +165,7 @@ void
 ungrab_pointer (GdkDisplay *display)
 {
   gdk_error_trap_push ();
-  gdk_display_pointer_ungrab (display, GDK_CURRENT_TIME);
+  gdk_pointer_ungrab (GDK_CURRENT_TIME);
   gdk_flush ();
   if (gdk_error_trap_pop ())
     {
