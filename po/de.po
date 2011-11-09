@@ -246,7 +246,7 @@ msgstr "Datei existiert. Überschreiben?"
 
 #: ../src/saver.c:70
 msgid "Couldn't open file for writing: Permission denied"
-msgstr "onnte Datei nicht schreiben: Keine Berechtigung"
+msgstr "Konnte Datei nicht schreiben: Keine Berechtigung"
 
 #: ../src/saver.c:103
 msgid "Export as pdf"

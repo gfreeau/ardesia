@@ -4,6 +4,12 @@ Ardesia free digital sketchpad
  ardesia 1.1 
 ---------------
 
+Bug fix
+- Fix a critical bug inserted in the 1.0 on windows that
+  cause the iwb saving misbehaviour
+- Eraser: fix the eraser tool using the the back side of some
+  tablet pen on windows
+
 
 ---------------
  ardesia 1.0 
@@ -59,7 +65,7 @@ Dependencies:
 
 Bug Fix:
 - Eraser: fix the eraser tool using the the back side of some
-  wacom tablet pen
+  tablet pen
 
 ---------------
  ardesia 0.8

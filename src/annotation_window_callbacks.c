@@ -125,6 +125,15 @@ on_button_press (GtkWidget *win,
       annotate_release_grab ();
       return TRUE;
     }
+		 if (data->cur_context->type == ANNOTATE_PEN)
+    {
+      annotate_select_tool (data, ev->device, ev->state);
+      data->old_paint_type = ANNOTATE_PEN; 
+    }
+  else
+    {
+      data->old_paint_type = ANNOTATE_ERASER;
+    }
 #endif
 
   pressure = get_pressure ( (GdkEvent *) ev);
@@ -280,7 +289,6 @@ on_button_release (GtkWidget *win,
     }
 
 #ifdef _WIN32
-
   if (inside_bar_window (ev->x_root, ev->y_root))
     /* Point is in the ardesia bar. */
     {
@@ -288,7 +296,10 @@ on_button_release (GtkWidget *win,
       annotate_release_grab ();
       return TRUE;
     }
-
+  if (data->old_paint_type == ANNOTATE_PEN)
+    {
+      annotate_select_pen ();
+    }
 #endif
 
   initialize_annotation_cairo_context(data);
