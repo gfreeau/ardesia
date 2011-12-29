@@ -51,7 +51,7 @@ static gint timer = -1;
 static gboolean
 bar_to_top (gpointer data)
 {
-  if (!GTK_WIDGET_VISIBLE(GTK_WIDGET (data)))
+  if (!gtk_widget_get_visible(GTK_WIDGET (data)))
     {
        gtk_window_present (GTK_WINDOW (data));
        gtk_widget_grab_focus (data);
@@ -362,7 +362,7 @@ on_bar_info                      (GtkToolButton   *toolbutton,
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
 
-  gdk_window_set_cursor (get_annotation_window ()->window, (GdkCursor *) NULL);
+  gdk_window_set_cursor (gtk_widget_get_window (get_annotation_window ()), (GdkCursor *) NULL);
   /* Start the info dialog. */
   start_info_dialog (toolbutton, GTK_WINDOW (get_bar_window ()));
 
@@ -567,7 +567,7 @@ on_bar_screenshot_activate	(GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData *) func_data;
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
-  gdk_window_set_cursor (get_annotation_window ()->window, (GdkCursor *) NULL);
+  gdk_window_set_cursor (gtk_widget_get_window (get_annotation_window ()), (GdkCursor *) NULL);
   start_save_image_dialog (toolbutton, GTK_WINDOW (get_bar_window ()));
   bar_data->grab = grab_value;
   start_tool (bar_data);
@@ -623,7 +623,7 @@ on_bar_recorder_activate        (GtkToolButton   *toolbutton,
         {
           /* Visualize a dialog that informs the user about the missing recorder tool. */
           GObject *recorder_obj = gtk_builder_get_object (bar_gtk_builder, "media-recorder-unavailable");
-          gdk_window_set_cursor (get_annotation_window ()->window, (GdkCursor *) NULL);
+          gdk_window_set_cursor (gtk_widget_get_window (get_annotation_window ()), (GdkCursor *) NULL);
           visualize_missing_recorder_program_dialog (GTK_WINDOW (get_bar_window ()));
           /* Put an icon that remember that the tool is not available. */
           gtk_tool_button_set_label_widget (toolbutton, GTK_WIDGET (recorder_obj));
@@ -632,7 +632,7 @@ on_bar_recorder_activate        (GtkToolButton   *toolbutton,
           return;
         }
 
-      gdk_window_set_cursor (get_annotation_window ()->window, (GdkCursor *) NULL);
+      gdk_window_set_cursor (gtk_widget_get_window (get_annotation_window ()), (GdkCursor *) NULL);
       /* The recording is not active. */ 
       gboolean status = start_save_video_dialog (toolbutton, GTK_WINDOW (get_bar_window ()));
       if (status)
@@ -656,7 +656,7 @@ on_bar_preferences_activate	(GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData *) func_data;
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
-  gdk_window_set_cursor (get_annotation_window ()->window, (GdkCursor *) NULL);
+  gdk_window_set_cursor (gtk_widget_get_window (get_annotation_window ()), (GdkCursor *) NULL);
   start_preference_dialog (GTK_WINDOW (get_bar_window ()));
   bar_data->grab = grab_value;
   start_tool (bar_data);
@@ -705,7 +705,7 @@ on_bar_color_activate	        (GtkToggleToolButton   *toolbutton,
     }
 
   bar_data->grab = FALSE;
-  gdk_window_set_cursor (get_annotation_window ()->window, (GdkCursor *) NULL);
+  gdk_window_set_cursor (gtk_widget_get_window (get_annotation_window ()), (GdkCursor *) NULL);
   new_color = start_color_selector_dialog (GTK_TOOL_BUTTON (toolbutton),
 					   GTK_WINDOW (get_bar_window ()),
 					   bar_data->color);
