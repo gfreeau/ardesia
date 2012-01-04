@@ -11,7 +11,7 @@
 - Documentation
   - user manual in english and italian language
   - video tutorial
-  - traslate the wiki in english 
+  - translate the wiki in english 
 
 - Reengineering
   - Screencast recorder using a library (ffmpeg or libvlc)
@@ -23,7 +23,8 @@
 
 - Candidate features:
   - Integration beetween ardesia and florence in lxde
-  - Support for a generic virtual keyboard 
+  - Better sketch recognition
+  - Recognize the hand written text
   - Deploy the artefact online
     - video; youtube upload as kazam
   - libgtk-3 
@@ -32,6 +33,7 @@
     all the layers
   - Send a bug report with stacktrace when a crash occurs;
     could be used google-breakpad
+  - Support for a generic virtual keyboard 
   - Lazo selection tool
     - Move the selected area content
     - Paste the selected area content
@@ -39,8 +41,6 @@
     - Rotate the selected area content
   - Import images
   - Make an image gallery (sticky notes...)
-  - Better sketch recognition
-  - Recognize the hand written text
   - Export to image the selected area content
     as gnome-screenshoot 
   - full filler implementation (flood filler algorithm)
