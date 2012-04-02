@@ -24,15 +24,13 @@
 - Candidate features:
   - Better sketch recognition
   - Integration beetween ardesia and florence in lxde
-  - Recognize the hand written text
   - Deploy the artefact online
     - video; youtube upload as kazam
+  - Recognize the hand written text
   - libgtk-3 
   - Multi pointer support
   - Use the same window for the background; the expose will paint
     all the layers
-  - Send a bug report with stacktrace when a crash occurs;
-    could be used google-breakpad
   - Support for a generic virtual keyboard 
   - Lazo selection tool
     - Move the selected area content
@@ -44,8 +42,10 @@
   - Export to image the selected area content
     as gnome-screenshoot 
   - full filler implementation (flood filler algorithm)
-  - MacOsX porting
   - Not parallel to the axis shape recognition
+  - Send a bug report with stacktrace when a crash occurs;
+    could be used google-breakpad
+  - MacOsX porting
 
 ===
 EOF
