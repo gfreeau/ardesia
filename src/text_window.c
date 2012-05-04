@@ -41,6 +41,8 @@
 /* The structure used internally to store the status. */
 static TextData *text_data = (TextData *) NULL;
 
+/* The structure used to configure text input. */
+TextConfig *text_config = (TextConfig *) NULL;
 
 /* Create the text window. */
 static void
@@ -248,6 +250,12 @@ init_text_widget (GtkWidget *widget)
       cairo_set_line_width (text_data->cr, text_data->pen_width);
       cairo_set_source_color_from_string (text_data->cr, text_data->color);
       cairo_set_font_size (text_data->cr, text_data->pen_width * 2);
+      
+      /* Select the font */
+      cairo_select_font_face (text_data->cr, text_config->fontfamily,
+		      CAIRO_FONT_SLANT_NORMAL,
+		      CAIRO_FONT_WEIGHT_NORMAL);
+
       /* This is a trick; we must found the maximum height of the font. */
       cairo_text_extents (text_data->cr, "|" , &text_data->extents);
       text_data->max_font_height = text_data->extents.height;
@@ -345,9 +353,15 @@ key_snooper (GtkWidget *widget,
 	    (event->keyval == GDK_ISO_Enter) ||
 	    (event->keyval == GDK_KP_Enter))
     {
-      text_data->pos->x = 0;
+     /* select the x indentation */
+      text_data->pos->x = text_config->leftmargin;
       text_data->pos->y +=  text_data->max_font_height;
     }
+  /* Simple Tab-Implementation */
+  else if (event->keyval == GDK_Tab)
+  {
+      text_data->pos->x += text_config->tabsize;
+  }
   /* Is the character printable? */
   else if (isprint (event->keyval))
     {

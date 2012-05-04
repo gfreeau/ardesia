@@ -194,6 +194,12 @@ options:
   				west
   				north
   				south
+  --font ,      -f              Set the font family for the text window. Possible values are:
+                                serif [default]
+                                sans-serif
+                                monospace
+  --leftmargin, -l              Set the left margin in text window to set after hitting Enter
+  --tabsize,    -t              Set the tabsize in pixel in text window
   --help    ,	-h		Shows the help screen
   --version ,	-v		Show version information and exit
 

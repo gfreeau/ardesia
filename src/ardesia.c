@@ -29,6 +29,9 @@
 #include <share_confirmation_dialog.h>
 #include <bar.h>
 
+/*ch* External defined structure used to configure text input. (see text_window.c) */
+#include <text_window.h>
+extern TextConfig *text_config;
 
 /* Print the version of the tool and exit. */
 static void 
@@ -55,6 +58,12 @@ print_help ()
   g_printf ("  \t\t\t\twest\n");
   g_printf ("  \t\t\t\tnorth\n");
   g_printf ("  \t\t\t\tsouth\n");
+  g_printf ("  --font ,\t-f\t\tSet the font family for the text window. Possible values are:\n");
+  g_printf ("  \t\t\t\tserif [default]\n");
+  g_printf ("  \t\t\t\tsans-serif\n");
+  g_printf ("  \t\t\t\tmonospace\n");
+  g_printf ("  --leftmargin,\t-l\t\tSet the left margin in text window to set after hitting Enter\n");
+  g_printf ("  --tabsize,\t-t\t\tSet the tabsize in pixel in text window\n");
   g_printf ("  --help    ,\t-h\t\tShows the help screen\n");
   g_printf ("  --version ,\t-v\t\tShows version information and exit\n");
   g_printf ("\n");
@@ -157,6 +166,9 @@ parse_options (gint argc,
   commandline->debug = FALSE;
   commandline->iwb_filename = NULL;
   commandline->decorated=FALSE;
+  commandline->fontfamily = "serif";
+  commandline->text_leftmargin = 0;
+  commandline->text_tabsize = 80;
 
   /* Getopt_long stores the option index here. */
   while (1)
@@ -174,13 +186,16 @@ parse_options (gint argc,
 	   * We distinguish them by their indices.
            */
 	  {"gravity", required_argument, 0, 'g'},
+	  {"font", required_argument, 0, 'f'},
+	  {"leftmargin", required_argument, 0, 'l'},
+	  {"tabsize", required_argument, 0, 't'},
 	  {0, 0, 0, 0}
 	};
 
       gint option_index = 0;
       c = getopt_long (argc,
 		       argv,
-		       "hdvVg:",
+		       "hdvVg:f:l:t:",
 		       long_options,
 		       &option_index);
 
@@ -223,6 +238,20 @@ parse_options (gint argc,
 	    {
 	      print_help ();
 	    }
+	  break;
+	case 'f':
+	  if (g_strcmp0 (optarg, "serif") == 0 ||
+			  g_strcmp0 (optarg, "sans-serif") == 0 ||
+			  g_strcmp0 (optarg, "monospace") == 0)
+	    {
+	      commandline->fontfamily = optarg;
+	    }
+	  break;
+	case 'l':
+	  commandline->text_leftmargin = atoi(optarg);
+	  break;
+	case 't':
+	  commandline->text_tabsize = atoi(optarg);
 	  break;
 	default:
 	  print_help ();
@@ -343,6 +372,12 @@ main (int argc,
 
   commandline = parse_options (argc, argv);
 	
+  /*ch* Initialize new text configuration options */
+  text_config = g_malloc ((gsize) sizeof (TextConfig));
+  text_config->fontfamily = commandline->fontfamily;
+  text_config->leftmargin = commandline->text_leftmargin;
+  text_config->tabsize = commandline->text_tabsize;
+
   if (commandline->iwb_filename)
     {
       gint init_pos = -1;

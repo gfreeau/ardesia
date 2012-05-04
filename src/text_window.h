@@ -117,6 +117,14 @@ typedef struct
 
 }TextData;
 
+typedef struct
+{
+
+  /* Option for text config */
+  gchar *fontfamily;
+  gint leftmargin;
+  gint tabsize;
+}TextConfig;
 
 /* Start text widget. */
 void
