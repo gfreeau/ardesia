@@ -1,3 +1,9 @@
+ardesia (1.1-0) unstable; urgency=low
+
+  * New upstream release 
+
+ -- Pilolli Piletro <pilolli.pietro@gmail.com>  Mon, 24 Jun 2012 00:00:11 +0900
+
 ardesia (1.0-1) unstable; urgency=low
 
   * New upstream release (Closes: #636589)
