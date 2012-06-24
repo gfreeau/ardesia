@@ -176,10 +176,11 @@ create_bar_window (CommandLine *commandline,
 
   bar_data = init_bar_data ();
 
+  bar_window = GTK_WIDGET (gtk_builder_get_object (bar_gtk_builder, "winMain"));
+  
   /* Connect all the callback from bar_gtk_builder xml file. */
   gtk_builder_connect_signals (bar_gtk_builder, (gpointer) bar_data);
-
-  bar_window = GTK_WIDGET (gtk_builder_get_object (bar_gtk_builder, "winMain"));
+  
   gtk_window_set_transient_for (GTK_WINDOW (bar_window), GTK_WINDOW (parent));
 
   if (commandline->decorated)
@@ -205,6 +206,7 @@ create_bar_window (CommandLine *commandline,
   /* Move the window in the desired position. */
   gtk_window_move (GTK_WINDOW (bar_window), x, y);
 
+  
   return bar_window;
 }
 

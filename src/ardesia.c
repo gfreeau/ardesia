@@ -366,13 +366,13 @@ main (int argc,
 
   /*
    * Uncomment this and the create_segmentation_fault function
-   * to create a segmentation fault
+   * to create a segmentation fault.
    */
   //create_segmentation_fault ();
 
   commandline = parse_options (argc, argv);
 	
-  /*ch* Initialize new text configuration options */
+  /* Initialize new text configuration options. */
   text_config = g_malloc ((gsize) sizeof (TextConfig));
   text_config->fontfamily = commandline->fontfamily;
   text_config->leftmargin = commandline->text_leftmargin;
@@ -432,6 +432,7 @@ main (int argc,
     }
 
   gtk_window_set_keep_above (GTK_WINDOW (background_window), TRUE);
+
   gtk_widget_show (background_window);
   
   set_background_window (background_window);
@@ -488,5 +489,3 @@ main (int argc,
 
   return 0;
 }
-
-

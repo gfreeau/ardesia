@@ -395,7 +395,6 @@ on_bar_enter_notify_event       (GtkWidget       *widget,
     {
       stop_text_widget ();
     }
-
   return TRUE;
 }
 
