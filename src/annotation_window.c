@@ -605,9 +605,7 @@ setup_app (GtkWidget* parent)
   /* Connect all the callback from gtkbuilder xml file. */
   gtk_builder_connect_signals (data->annotation_window_gtk_builder, (gpointer) data);
 
-  gtk_widget_show_all (data->annotation_window);
-
-  /* This put the window in fullscreen generating an exposure. */
+  /* This show the window in fullscreen generating an exposure. */
   gtk_window_fullscreen (GTK_WINDOW (data->annotation_window));
 
 
