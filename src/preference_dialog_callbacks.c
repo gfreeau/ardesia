@@ -50,7 +50,7 @@ on_image_chooser_button_update_preview (GtkFileChooser *file_chooser,
 
       if (pixbuf)
         {
-          gdk_pixbuf_unref (pixbuf);
+          g_object_unref (pixbuf);
           pixbuf = NULL;
         }
 
