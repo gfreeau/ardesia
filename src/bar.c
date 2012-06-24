@@ -40,7 +40,7 @@ calculate_position (GtkWidget *ardesia_bar_window,
 		    gint w_height,
 		    gint position)
 {
-  *y = ((d_height - w_height)/2);
+  *y = ((d_height - w_height - SPACE_FROM_BORDER)/2);
   /* Vertical layout. */
   if (position==WEST)
     {

@@ -40,7 +40,7 @@
 
 
 /* Distance space from border to the ardesia bar in pixel unit. */
-#define SPACE_FROM_BORDER 25
+#define SPACE_FROM_BORDER 35
 
 #define MICRO_THICKNESS   3
 #define THIN_THICKNESS    6
