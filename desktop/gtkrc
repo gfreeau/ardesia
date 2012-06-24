@@ -1,0 +1,13 @@
+pixmap_path "/etc/xdg/ardesia/" # for additional artwork
+style "ardesia-bg" { # for the background GtkWindow
+    #bg[NORMAL] = "#99B9D5" #toolbar background
+    bg[ACTIVE] = "#99B9D5" #selected tool background
+    # background image seen on top of the screen, below the panel
+    #bg_pixmap[NORMAL] = "top-background.png"
+}
+style "ardesia-sep" { 
+    bg[NORMAL] = "#0000FF" #color for active separators
+}
+widget_class "*GtkWindow*" style "ardesia-bg"
+widget_class "*<GtkHSeparator>" style "ardesia-sep"
+widget_class "*<GtkVSeparator>" style "ardesia-sep"

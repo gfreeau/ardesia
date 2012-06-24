@@ -122,7 +122,32 @@ init_bar_data ()
   return bar_data;
 }
 
+gchar*
+get_xdg_config_file (const char *name)
+{
+  const gchar *user_dir = g_get_user_config_dir();
+  const gchar* const *system_dirs;
+  const gchar* const *dir;
+  gchar *file;
 
+  system_dirs = g_get_system_config_dirs();
+  file = g_build_filename(user_dir, name, NULL);
+  if (g_file_test(file, G_FILE_TEST_EXISTS) == TRUE)
+  {
+      return file;
+  }
+  
+  free(file);
+
+  for (dir = system_dirs; *dir; ++dir )
+  {
+      file = g_build_filename(*dir, name, NULL);
+      if (g_file_test(file, G_FILE_TEST_EXISTS) == TRUE)
+          return file;
+          free(file);
+  }
+  return NULL;
+}
 
 /* Create the ardesia bar window. */
 GtkWidget *
@@ -138,6 +163,15 @@ create_bar_window (CommandLine *commandline,
   gint width = 0;
   gint height = 0;
 
+
+  /* Set up gtkrc for ardesia */
+  gchar* gtkrc_file = get_xdg_config_file("ardesia/gtkrc");
+  if (gtkrc_file)
+    {
+     gtk_rc_parse(gtkrc_file);
+     free(gtkrc_file);
+    }
+    
   bar_gtk_builder = gtk_builder_new ();
 
   if (commandline->position>2)
@@ -177,10 +211,10 @@ create_bar_window (CommandLine *commandline,
   bar_data = init_bar_data ();
 
   bar_window = GTK_WIDGET (gtk_builder_get_object (bar_gtk_builder, "winMain"));
-  
+    
   /* Connect all the callback from bar_gtk_builder xml file. */
   gtk_builder_connect_signals (bar_gtk_builder, (gpointer) bar_data);
-  
+
   gtk_window_set_transient_for (GTK_WINDOW (bar_window), GTK_WINDOW (parent));
 
   if (commandline->decorated)
