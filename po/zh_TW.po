@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-05 17:52+0200\n"
+"POT-Creation-Date: 2012-06-25 09:38+0200\n"
 "PO-Revision-Date: 2011-09-06 16:57+0800\n"
 "Last-Translator: Wei-Lun Chao <william.chao@ossii.com.tw>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,6 +22,14 @@ msgid "An error is occurred. Do you want send the crash report?"
 msgstr "發生了錯誤。您想要發送當機報告嗎？"
 
 #: ../desktop/info_dialog.glade.h:1
+msgid ""
+"   Copyright (C) 2009 Pilolli Pietro <pilolli.pietro@gmail.com>\n"
+"    "
+msgstr ""
+"   著作權©2009 Pilolli Pietro <pilolli.pietro@gmail.com>\n"
+"   "
+
+#: ../desktop/info_dialog.glade.h:3
 msgid ""
 "\n"
 "    Ardesia -- a program for painting on the screen\n"
@@ -42,34 +51,31 @@ msgid ""
 " \n"
 "    You should have received a copy of the GNU General Public License\n"
 "    along with this program; if not, write to the Free Software\n"
-"    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
+"    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, "
+"USA.\n"
 "   "
 msgstr ""
 "\n"
 "    Ardesia -- 在螢幕上描繪的程式\n"
 "    您可以利用這個程式播放、描繪、學習和教學\n"
 "    這個程式是依據自由 sonet\n"
-"    我們信奉自由以及自由的教育\n\n"
-"    著作權©2009 Pilolli Pietro <pilolli.pietro@gmail.com>\n\n"
+"    我們信奉自由以及自由的教育\n"
+"\n"
+"    著作權©2009 Pilolli Pietro <pilolli.pietro@gmail.com>\n"
+"\n"
 "    這個程式是自由軟體；您可以遵循由自由軟體基金會\n"
 "    所發布的 GNU 通用公共授權來再次散布和/或修改它；\n"
 "    無論您依據的是本授權的第二版，或\n"
-"    (您自行選擇) 任何後續的版本。\n\n"
+"    (您自行選擇) 任何後續的版本。\n"
+"\n"
 "    本程式發行的目的是希望它能夠有用，\n"
 "    但是沒有任何擔保；亦無暗示性\n"
 "    對於某一特定目的之適售性與適用性的擔保。\n"
-"    請參看 GNU 通用公共授權以獲知更多細節。\n\n"
+"    請參看 GNU 通用公共授權以獲知更多細節。\n"
+"\n"
 "    您應該已收到隨附於這個程式的 GNU 通用公共授權\n"
 "    的複本；如果沒有，請寫信給 Free Software \n"
 "    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
-"   "
-
-#: ../desktop/info_dialog.glade.h:23
-msgid ""
-"   Copyright (C) 2009 Pilolli Pietro <pilolli.pietro@gmail.com>\n"
-"    "
-msgstr ""
-"   著作權©2009 Pilolli Pietro <pilolli.pietro@gmail.com>\n"
 "   "
 
 #: ../desktop/preference_dialog.glade.h:1
@@ -77,16 +83,16 @@ msgid "Choose the background"
 msgstr "選擇背景"
 
 #: ../desktop/preference_dialog.glade.h:2
-msgid "Choose the background color"
-msgstr "選擇背景顏色"
+msgid "image"
+msgstr "影像"
 
 #: ../desktop/preference_dialog.glade.h:3
 msgid "background color"
 msgstr "背景顏色"
 
 #: ../desktop/preference_dialog.glade.h:4
-msgid "image"
-msgstr "影像"
+msgid "Choose the background color"
+msgstr "選擇背景顏色"
 
 #: ../desktop/preference_dialog.glade.h:5
 msgid "none"
@@ -101,107 +107,107 @@ msgid "Do you want to share your work by email?"
 msgstr "您要利用電子郵件分享您的成果嗎？"
 
 #: ../desktop/vertical_bar.glade.h:1
-msgid "Add to pdf"
-msgstr "加入到 pdf"
+msgid "Thickness"
+msgstr "粗細"
 
 #: ../desktop/vertical_bar.glade.h:2
-msgid "Arrow"
-msgstr "箭頭"
-
-#: ../desktop/vertical_bar.glade.h:3
-msgid "Blue"
-msgstr "藍色"
-
-#: ../desktop/vertical_bar.glade.h:4
-msgid "Clear"
-msgstr "清空"
-
-#: ../desktop/vertical_bar.glade.h:5
-msgid "Color Chooser"
-msgstr "顏色選擇器"
-
-#: ../desktop/vertical_bar.glade.h:6
 msgid "Drawing Mode"
 msgstr "繪圖模式"
 
-#: ../desktop/vertical_bar.glade.h:7
-msgid "Eraser"
-msgstr "橡皮擦"
+#: ../desktop/vertical_bar.glade.h:3
+msgid "Undo"
+msgstr "復原"
 
-#: ../desktop/vertical_bar.glade.h:8
+#: ../desktop/vertical_bar.glade.h:4
+msgid "Redo"
+msgstr "重做"
+
+#: ../desktop/vertical_bar.glade.h:5
 msgid "Filler"
 msgstr "填滿"
 
+#: ../desktop/vertical_bar.glade.h:6
+msgid "Clear"
+msgstr "清空"
+
+#: ../desktop/vertical_bar.glade.h:7
+msgid "Mouse"
+msgstr "滑鼠"
+
+#: ../desktop/vertical_bar.glade.h:8
+msgid "Arrow"
+msgstr "箭頭"
+
 #: ../desktop/vertical_bar.glade.h:9
-msgid "Green"
-msgstr "綠色"
+msgid "Insert Text"
+msgstr "插入文字"
 
 #: ../desktop/vertical_bar.glade.h:10
 msgid "Highlighter"
 msgstr "標記"
 
 #: ../desktop/vertical_bar.glade.h:11
-msgid "Info"
-msgstr "資訊"
+msgid "Eraser"
+msgstr "橡皮擦"
 
 #: ../desktop/vertical_bar.glade.h:12
-msgid "Insert Text"
-msgstr "插入文字"
-
-#: ../desktop/vertical_bar.glade.h:13
-msgid "Mouse"
-msgstr "滑鼠"
-
-#: ../desktop/vertical_bar.glade.h:14
 msgid "Pencil"
 msgstr "畫筆"
 
+#: ../desktop/vertical_bar.glade.h:13
+msgid "Blue"
+msgstr "藍色"
+
+#: ../desktop/vertical_bar.glade.h:14
+msgid "Green"
+msgstr "綠色"
+
 #: ../desktop/vertical_bar.glade.h:15
-msgid "Preferences"
-msgstr "偏好設定"
+msgid "Yellow"
+msgstr "黃色"
 
 #: ../desktop/vertical_bar.glade.h:16
-msgid "Quit"
-msgstr "離開"
-
-#. Set the stop tool-tip.
-#: ../desktop/vertical_bar.glade.h:17 ../src/bar_callbacks.c:627
-msgid "Record"
-msgstr "記錄"
-
-#: ../desktop/vertical_bar.glade.h:18
 msgid "Red"
 msgstr "紅色"
 
+#: ../desktop/vertical_bar.glade.h:17
+msgid "White"
+msgstr "白色"
+
+#: ../desktop/vertical_bar.glade.h:18
+msgid "Color Chooser"
+msgstr "顏色選擇器"
+
 #: ../desktop/vertical_bar.glade.h:19
-msgid "Redo"
-msgstr "重做"
+msgid "Preferences"
+msgstr "偏好設定"
 
 #: ../desktop/vertical_bar.glade.h:20
 msgid "Screenshot"
 msgstr "螢幕快照"
 
 #: ../desktop/vertical_bar.glade.h:21
-msgid "Thickness"
-msgstr "粗細"
+msgid "Add to pdf"
+msgstr "加入到 pdf"
 
-#: ../desktop/vertical_bar.glade.h:22
-msgid "Undo"
-msgstr "復原"
+#. Set the stop tool-tip.
+#: ../desktop/vertical_bar.glade.h:22 ../src/bar_callbacks.c:613
+msgid "Record"
+msgstr "記錄"
 
 #: ../desktop/vertical_bar.glade.h:23
-msgid "White"
-msgstr "白色"
+msgid "Info"
+msgstr "資訊"
 
 #: ../desktop/vertical_bar.glade.h:24
-msgid "Yellow"
-msgstr "黃色"
-
-#: ../desktop/vertical_bar.glade.h:25
 msgid "info"
 msgstr "資訊"
 
-#: ../src/ardesia.c:78
+#: ../desktop/vertical_bar.glade.h:25
+msgid "Quit"
+msgstr "離開"
+
+#: ../src/ardesia.c:87
 msgid "In order to run Ardesia you need to enable a composite manager"
 msgstr "您需要啟用合成管理員以便運行 Ardesia"
 
@@ -220,7 +226,9 @@ msgid "Fail to open the file: Permission denied"
 msgstr "開啟檔案失敗：權限被拒絕"
 
 #: ../src/recorder.c:174
-msgid "In order to record with Ardesia you must install the vlc program and add it to the PATH environment variable"
+msgid ""
+"In order to record with Ardesia you must install the vlc program and add it "
+"to the PATH environment variable"
 msgstr "您必須安裝 vlc 程式並將它加入路徑環境變數，以便利用 Ardesia 記錄"
 
 #: ../src/recorder.c:200

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-04 14:04+0200\n"
+"POT-Creation-Date: 2012-06-25 09:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,6 +22,12 @@ msgid "An error is occurred. Do you want send the crash report?"
 msgstr ""
 
 #: ../desktop/info_dialog.glade.h:1
+msgid ""
+"   Copyright (C) 2009 Pilolli Pietro <pilolli.pietro@gmail.com>\n"
+"    "
+msgstr ""
+
+#: ../desktop/info_dialog.glade.h:3
 msgid ""
 "\n"
 "    Ardesia -- a program for painting on the screen\n"
@@ -48,18 +54,12 @@ msgid ""
 "   "
 msgstr ""
 
-#: ../desktop/info_dialog.glade.h:23
-msgid ""
-"   Copyright (C) 2009 Pilolli Pietro <pilolli.pietro@gmail.com>\n"
-"    "
-msgstr ""
-
 #: ../desktop/preference_dialog.glade.h:1
 msgid "Choose the background"
 msgstr ""
 
 #: ../desktop/preference_dialog.glade.h:2
-msgid "Choose the background color"
+msgid "image"
 msgstr ""
 
 #: ../desktop/preference_dialog.glade.h:3
@@ -67,7 +67,7 @@ msgid "background color"
 msgstr ""
 
 #: ../desktop/preference_dialog.glade.h:4
-msgid "image"
+msgid "Choose the background color"
 msgstr ""
 
 #: ../desktop/preference_dialog.glade.h:5
@@ -83,39 +83,39 @@ msgid "Do you want to share your work by email?"
 msgstr ""
 
 #: ../desktop/vertical_bar.glade.h:1
-msgid "Add to pdf"
+msgid "Thickness"
 msgstr ""
 
 #: ../desktop/vertical_bar.glade.h:2
-msgid "Arrow"
-msgstr ""
-
-#: ../desktop/vertical_bar.glade.h:3
-msgid "Blue"
-msgstr ""
-
-#: ../desktop/vertical_bar.glade.h:4
-msgid "Clear"
-msgstr ""
-
-#: ../desktop/vertical_bar.glade.h:5
-msgid "Color Chooser"
-msgstr ""
-
-#: ../desktop/vertical_bar.glade.h:6
 msgid "Drawing Mode"
 msgstr ""
 
-#: ../desktop/vertical_bar.glade.h:7
-msgid "Eraser"
+#: ../desktop/vertical_bar.glade.h:3
+msgid "Undo"
 msgstr ""
 
-#: ../desktop/vertical_bar.glade.h:8
+#: ../desktop/vertical_bar.glade.h:4
+msgid "Redo"
+msgstr ""
+
+#: ../desktop/vertical_bar.glade.h:5
 msgid "Filler"
 msgstr ""
 
+#: ../desktop/vertical_bar.glade.h:6
+msgid "Clear"
+msgstr ""
+
+#: ../desktop/vertical_bar.glade.h:7
+msgid "Mouse"
+msgstr ""
+
+#: ../desktop/vertical_bar.glade.h:8
+msgid "Arrow"
+msgstr ""
+
 #: ../desktop/vertical_bar.glade.h:9
-msgid "Green"
+msgid "Insert Text"
 msgstr ""
 
 #: ../desktop/vertical_bar.glade.h:10
@@ -123,40 +123,39 @@ msgid "Highlighter"
 msgstr ""
 
 #: ../desktop/vertical_bar.glade.h:11
-msgid "Info"
+msgid "Eraser"
 msgstr ""
 
 #: ../desktop/vertical_bar.glade.h:12
-msgid "Insert Text"
-msgstr ""
-
-#: ../desktop/vertical_bar.glade.h:13
-msgid "Mouse"
-msgstr ""
-
-#: ../desktop/vertical_bar.glade.h:14
 msgid "Pencil"
 msgstr ""
 
+#: ../desktop/vertical_bar.glade.h:13
+msgid "Blue"
+msgstr ""
+
+#: ../desktop/vertical_bar.glade.h:14
+msgid "Green"
+msgstr ""
+
 #: ../desktop/vertical_bar.glade.h:15
-msgid "Preferences"
+msgid "Yellow"
 msgstr ""
 
 #: ../desktop/vertical_bar.glade.h:16
-msgid "Quit"
-msgstr ""
-
-#. Set the stop tool-tip.
-#: ../desktop/vertical_bar.glade.h:17 ../src/bar_callbacks.c:614
-msgid "Record"
-msgstr ""
-
-#: ../desktop/vertical_bar.glade.h:18
 msgid "Red"
 msgstr ""
 
+#: ../desktop/vertical_bar.glade.h:17
+msgid "White"
+msgstr ""
+
+#: ../desktop/vertical_bar.glade.h:18
+msgid "Color Chooser"
+msgstr ""
+
 #: ../desktop/vertical_bar.glade.h:19
-msgid "Redo"
+msgid "Preferences"
 msgstr ""
 
 #: ../desktop/vertical_bar.glade.h:20
@@ -164,31 +163,32 @@ msgid "Screenshot"
 msgstr ""
 
 #: ../desktop/vertical_bar.glade.h:21
-msgid "Thickness"
+msgid "Add to pdf"
 msgstr ""
 
-#: ../desktop/vertical_bar.glade.h:22
-msgid "Undo"
+#. Set the stop tool-tip.
+#: ../desktop/vertical_bar.glade.h:22 ../src/bar_callbacks.c:613
+msgid "Record"
 msgstr ""
 
 #: ../desktop/vertical_bar.glade.h:23
-msgid "White"
+msgid "Info"
 msgstr ""
 
 #: ../desktop/vertical_bar.glade.h:24
-msgid "Yellow"
-msgstr ""
-
-#: ../desktop/vertical_bar.glade.h:25
 msgid "info"
 msgstr ""
 
-#: ../src/ardesia.c:78
+#: ../desktop/vertical_bar.glade.h:25
+msgid "Quit"
+msgstr ""
+
+#: ../src/ardesia.c:87
 msgid "In order to run Ardesia you need to enable a composite manager"
 msgstr ""
 
 #. Set the stop tool-tip.
-#: ../src/bar_callbacks.c:641
+#: ../src/bar_callbacks.c:640
 msgid "Stop"
 msgstr ""
 

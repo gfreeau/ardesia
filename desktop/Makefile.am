@@ -30,7 +30,7 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 @INTLTOOL_DESKTOP_RULE@
 
-pixmapdir = $(datadir)/icons
+pixmapdir = $(datadir)/pixmaps
 pixmap_DATA = icons/ardesia.png
 
 
@@ -59,6 +59,12 @@ endif
 uninstall-local:
 	rm -fr $(uiiconsdir) 
 	rm -fr $(uibackgroundsdir) 
+	@if test x"$(XDG_UTILS)" != x; then                                                                                                          \
+		echo "Deregister iwb mimetype";                                                                                                        \
+		xdg-icon-resource uninstall --mode user --novendor --context mimetypes --size 48 $(DESTDIR)$(uiiconsdir)/application-x-iwb.png;        \
+		xdg-mime uninstall --mode user $(DESTDIR)$(uidir)/iwb-mime.xml;                                                                        \
+		xdg-desktop-menu uninstall --mode user --novendor ardesia.desktop;                                                                     \
+	fi
 
 clean:
 	rm -f ardesia.desktop
