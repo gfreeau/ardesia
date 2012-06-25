@@ -1,13 +1,13 @@
-Format: http://dep.debian.net/deps/dep5
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: ardesia
 Source: http://code.google.com/p/ardesia/
 
 Files: *
-Copyright: 2009-2010, Pilolli Pietro <pilolli.pietro@gmail.com>
+Copyright: 2009-2012, PILOLLI Pietro <pilolli.pietro@gmail.com>
 License: GPL-3.0+
 
 Files: debian/*
-Copyright: 2011 TANIGUCHI Takaki <takaki@debian.org>
+Copyright: 2012 TANIGUCHI Takaki <takaki@debian.org>
 License: GPL-3.0+
 
 License: GPL-3.0+

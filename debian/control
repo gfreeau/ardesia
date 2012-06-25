@@ -9,10 +9,10 @@ Build-Depends: debhelper (>= 7.0.50~), autotools-dev,
 	libgsl0-dev,
 	libxml2-dev,
 	libgsf-1-dev
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Homepage: http://code.google.com/p/ardesia/
-#Vcs-Git: git://git.debian.org/collab-maint/ardesia.git
-#Vcs-Browser: http://git.debian.org/?p=collab-maint/ardesia.git;a=summary
+Vcs-Git: git://git.debian.org/collab-maint/ardesia.git
+Vcs-Browser: http://git.debian.org/?p=collab-maint/ardesia.git;a=summary
 
 Package: ardesia
 Architecture: any

@@ -2,7 +2,17 @@ ardesia (1.1-1) unstable; urgency=low
 
   * New upstream release 
 
- -- Pilolli Pietro <pilolli.pietro@gmail.com>  Mon, 24 Jun 2012 00:00:11 +0900
+ -- PILOLLI Pietro <pilolli.pietro@gmail.com>  Mon, 24 Jun 2012 00:00:11 +0100
+
+ardesia (1.0-2) unstable; urgency=low
+
+  * debian/control: Remove libsigsegv-dev and binutils-dev from Build-Depends.
+  * debian/copyright: Update upstream author email address.
+  * Bump standards version to 3.9.3.
+    + Update debian/copyright URI.
+  * debian/rules: Fix typo. (Closes: #660357)
+
+ -- TANIGUCHI Takaki <takaki@debian.org>  Mon, 27 Feb 2012 10:09:09 +0900
 
 ardesia (1.0-1) unstable; urgency=low
 

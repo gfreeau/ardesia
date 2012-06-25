@@ -112,6 +112,7 @@ Please read the INSTALL file located on the current folder.
 Start Ardesia clicking in the menu on Applications/Tools/Ardesia
 Now you can select colours and annotate the screen.
 
+Video tutorial on http://www.youtube.com/watch?v=iTiV1qz-rEI
 
 Button explanation
 
@@ -171,6 +172,8 @@ Button explanation
 You can reuse your iwb project going in the ardesia workspace and "open with Ardesia"
 the iwb file
 
+Ardesia bar customization. You can change the ardesia bar look and feel copying the desktop/gtrc file in /ect/xdg/ardesia folder
+and customizing it. The file might be auto explanatory.
 
 - From Command Line
 
