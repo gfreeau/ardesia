@@ -160,25 +160,40 @@ gdk_pixbuf_swap_blue_with_red (GdkPixbuf **pixbuf)
 
 /* Create pixmap and mask for the eraser cursor. */
 static void
-get_eraser_pixbuf (gdouble size,
-		   GdkPixbuf **pixbuf)
+get_eraser_pixbuf (gdouble thickness,
+		   GdkPixbuf **pixbuf,
+		   gdouble circle_width)
 {
-  gdouble circle_width = 2.0;
   cairo_t *eraser_cr = (cairo_t *) NULL;
   cairo_surface_t *image_surface = get_eraser_image_surface ();
+  gint icon_width, icon_height;
+  gint cursor_width, cursor_height;
 
-  gint width = size + cairo_image_surface_get_width (image_surface);
-  gint height = size + cairo_image_surface_get_height (image_surface);
+  icon_width = cairo_image_surface_get_width (image_surface);
+  icon_height = cairo_image_surface_get_height (image_surface);
+  
+  cursor_width = (gint) icon_width + thickness + circle_width;
+  cursor_height = (gint) icon_height + thickness +  circle_width;
 
   cairo_surface_t *surface = (cairo_surface_t *) NULL;
 
-  *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, width, height);
+  *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, cursor_width, cursor_height);
 
   surface = cairo_image_surface_create_for_data (gdk_pixbuf_get_pixels (*pixbuf),
 						 CAIRO_FORMAT_RGB24,
-						 width,
-						 height,
+						 gdk_pixbuf_get_width (*pixbuf),
+						 gdk_pixbuf_get_height (*pixbuf),
 						 gdk_pixbuf_get_rowstride (*pixbuf));
+						 
+						 
+	eraser_cr = cairo_create (surface);
+
+  clear_cairo_context (eraser_cr);
+
+  cairo_set_operator (eraser_cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_rgb (eraser_cr, 1, 1, 1);
+  cairo_paint (eraser_cr);
+  cairo_stroke (eraser_cr);
 
   eraser_cr = cairo_create (surface);
 
@@ -186,14 +201,20 @@ get_eraser_pixbuf (gdouble size,
 
   cairo_set_line_width (eraser_cr, circle_width);
 
-  cairo_set_source_surface (eraser_cr, image_surface, 0, 0);
-
-  cairo_paint (eraser_cr);
-  cairo_stroke (eraser_cr);
-
   /* Add a circle with the desired width. */
   cairo_set_source_rgba (eraser_cr, 0, 0, 1, 1);
-  cairo_arc (eraser_cr, width/2, height/2, (size/2)-circle_width, 0, 2 * M_PI);
+ 
+  cairo_arc (eraser_cr,
+       thickness/2 + circle_width,
+	     cursor_height-thickness/2 -circle_width,
+	     thickness/2,
+	     0,
+	     2 * M_PI);
+
+  cairo_stroke (eraser_cr);
+
+  cairo_set_source_surface (eraser_cr, image_surface, thickness*3/4, 0);
+  cairo_paint (eraser_cr);
   cairo_stroke (eraser_cr);
 
   cairo_surface_destroy (surface);
@@ -201,6 +222,7 @@ get_eraser_pixbuf (gdouble size,
 
   /* The pixbuf created by cairo has the r and b color inverted. */
   gdk_pixbuf_swap_blue_with_red (pixbuf);
+   
 }
 
 
@@ -241,8 +263,6 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
     
   icon_width = cairo_image_surface_get_width (image_surface);
   icon_height = cairo_image_surface_get_height (image_surface);
-  
-  printf("Width %d height %d thickness %f\n", icon_width, icon_height, thickness);
   
   cursor_width = (gint) icon_width + thickness/2 + circle_width;
   cursor_height = (gint) icon_height + thickness/2 +  circle_width;
@@ -349,14 +369,15 @@ set_eraser_cursor (GdkCursor **cursor,
 		   gint size)
 {
   GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
+  gdouble circle_width = 2.0;
 
-  get_eraser_pixbuf (size, &pixbuf);
+  get_eraser_pixbuf (size, &pixbuf, circle_width);
 
   *cursor = gdk_cursor_new_from_pixbuf (gdk_display_get_default (),
 					pixbuf,
-					gdk_pixbuf_get_width (pixbuf)/2,
-					gdk_pixbuf_get_height (pixbuf)/2);
-
+					size/2 + circle_width,
+					gdk_pixbuf_get_height (pixbuf) - size/2-circle_width);
+					
   g_object_unref (pixbuf);
 }
 
