@@ -28,6 +28,7 @@
 
 #include <utils.h>
 #include <background_window.h>
+#include <background_window_callbacks.h>
 #include <annotation_window.h>
 
 
@@ -244,7 +245,7 @@ create_background_window ()
   background_data->background_window = GTK_WIDGET (background_obj);
 
   /* This trys to set an alpha channel. */
-  on_screen_changed(background_data->background_window, NULL, background_data);
+  on_back_screen_changed (background_data->background_window, NULL, background_data);
   
   /* In the gtk 2.16.6 used for windows the gtkbuilder the double buffered property
    * is not parsed from glade and then I set this by hands. 

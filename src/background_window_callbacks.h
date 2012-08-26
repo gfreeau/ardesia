@@ -23,4 +23,8 @@
 
 #include <gtk/gtk.h>
 
+/* On screen changed. */
+void on_back_screen_changed       (GtkWidget *widget,
+		       GdkScreen *previous_screen,
+		       gpointer   user_data);
 

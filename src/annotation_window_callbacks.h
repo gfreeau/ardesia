@@ -31,7 +31,7 @@ on_expose                    (GtkWidget *widget,
 			      gpointer func_data);
 
 /* On screen changed. */
-void on_screen_changed(GtkWidget *widget,
+void on_screen_changed       (GtkWidget *widget,
 		       GdkScreen *previous_screen,
 		       gpointer   user_data);
 		       
