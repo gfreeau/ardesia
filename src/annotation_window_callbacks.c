@@ -79,7 +79,6 @@ on_configure (GtkWidget *widget,
 	}
 	
   /* Postcondition; data->annotation_cairo_context is not NULL. */
-  annotate_restore_surface ();
   return TRUE;
 }
 
@@ -119,9 +118,7 @@ on_expose       (GtkWidget *widget,
       g_printerr ("DEBUG: Annotation window get expose event\n");
     }
     
-  cairo_set_source_surface (cr, cairo_get_target (data->annotation_cairo_context), 0, 0);
-  cairo_paint (cr);
-
+  annotate_restore_surface ();
   return FALSE;
 }
 
