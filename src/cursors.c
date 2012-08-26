@@ -209,12 +209,12 @@ static void
 get_pen_pixbuf (GdkPixbuf **pixbuf,
 		gchar *color,
 		gdouble thickness,
-                gdouble arrow)
+                gdouble arrow,
+                gdouble circle_width)
 {
   cairo_t *pen_cr = (cairo_t *) NULL;
   cairo_surface_t *surface = (cairo_surface_t *) NULL;
   cairo_surface_t *image_surface = (cairo_surface_t *) NULL;
-  gdouble circle_width = 2.0;
   gint icon_width, icon_height;
   gint cursor_width, cursor_height;
 
@@ -241,6 +241,8 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
     
   icon_width = cairo_image_surface_get_width (image_surface);
   icon_height = cairo_image_surface_get_height (image_surface);
+  
+  printf("Width %d height %d thickness %f\n", icon_width, icon_height, thickness);
   
   cursor_width = (gint) icon_width + thickness/2 + circle_width;
   cursor_height = (gint) icon_height + thickness/2 +  circle_width;
@@ -328,13 +330,14 @@ set_pen_cursor (GdkCursor **cursor,
                 gboolean arrow)
 {
   GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
+  gdouble circle_width = 2.0;
 
-  get_pen_pixbuf (&pixbuf, color, thickness, arrow);
+  get_pen_pixbuf (&pixbuf, color, thickness, arrow, circle_width);
 
   *cursor = gdk_cursor_new_from_pixbuf (gdk_display_get_default (),
 					pixbuf,
-					thickness/2,
-					gdk_pixbuf_get_height (pixbuf) - thickness/2);
+					thickness/2 + circle_width,
+					gdk_pixbuf_get_height (pixbuf) - thickness/2-circle_width);
 
   g_object_unref (pixbuf);
 }
