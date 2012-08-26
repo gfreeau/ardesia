@@ -57,7 +57,7 @@ on_configure (GtkWidget *widget,
 {
   AnnotateData *data = (AnnotateData *) user_data;
 
-  if(data->debug)
+  if (data->debug)
     {
       g_printerr("DEBUG: Annotation window get configure event (%d,%d)\n",
                  gtk_widget_get_allocated_width (widget),
@@ -92,7 +92,7 @@ on_screen_changed(GtkWidget *widget,
 {
   AnnotateData *data = (AnnotateData *) user_data;
 
-  if(data->debug)
+  if (data->debug)
     {
       g_printerr("DEBUG: Annotation window get screen-changed event\n");
     }

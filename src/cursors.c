@@ -207,17 +207,46 @@ get_eraser_pixbuf (gdouble size,
 /* Create pixmap and mask for the pen cursor. */
 static void
 get_pen_pixbuf (GdkPixbuf **pixbuf,
-		gdouble size,
 		gchar *color,
 		gdouble thickness,
                 gdouble arrow)
 {
   cairo_t *pen_cr = (cairo_t *) NULL;
   cairo_surface_t *surface = (cairo_surface_t *) NULL;
+  cairo_surface_t *image_surface = (cairo_surface_t *) NULL;
   gdouble circle_width = 2.0;
-  gdouble side_lenght = (size*3) + thickness;
+  gint icon_width, icon_height;
+  gint cursor_width, cursor_height;
 
-  *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, (gint) side_lenght, (gint) side_lenght);
+  if (arrow)
+    {/* load the arrow icon. */
+      image_surface = get_arrow_image_surface ();
+    }
+  else
+    {
+      /* Take the opacity. */
+      gchar* alpha = g_substr (color, 6, 8);
+  
+      if (g_strcmp0 (alpha, "FF") == 0)
+	{
+	  /* load the pencil icon. */
+	  image_surface = get_pen_image_surface ();
+	}
+      else
+	{
+	  /* load the highlighter icon. */
+	  image_surface = get_highlighter_image_surface ();
+	}
+    }
+    
+  icon_width = cairo_image_surface_get_width (image_surface);
+  icon_height = cairo_image_surface_get_height (image_surface);
+  
+  printf("Width %d height %d thickness %f\n", icon_width, icon_height, thickness);
+  
+  cursor_width = (gint) icon_width + thickness/2 + circle_width;
+  cursor_height = (gint) icon_height + thickness/2 +  circle_width;
+  *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, cursor_width, cursor_height);
 
 
   surface = cairo_image_surface_create_for_data (gdk_pixbuf_get_pixels (*pixbuf),
@@ -242,44 +271,20 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
 
   cairo_set_line_width (pen_cr, circle_width);
 
-  cairo_surface_t *image_surface = (cairo_surface_t *) NULL;
-
 
   /* Add a circle that respect the width and the selected colour. */
   cairo_set_source_color_from_string (pen_cr, color);
  
   cairo_arc (pen_cr,
-	     size/2 + thickness/2,
-	     5 * size/2,
+       thickness/2 + circle_width,
+	     cursor_height-thickness/2 -circle_width,
 	     thickness/2,
 	     0,
 	     2 * M_PI);
 
   cairo_stroke (pen_cr);
 
-  if (arrow)
-    {/* load the arrow icon. */
-      image_surface = get_arrow_image_surface ();
-      cairo_set_source_surface (pen_cr, image_surface, size/2 + thickness/2, size/2);
-    }
-  else
-    {
-      /* Take the opacity. */
-      gchar* alpha = g_substr (color, 6, 8);
-  
-      if (g_strcmp0 (alpha, "FF") == 0)
-	{
-	  /* load the pencil icon. */
-	  image_surface = get_pen_image_surface ();
-	}
-      else
-	{
-	  /* load the highlighter icon. */
-	  image_surface = get_highlighter_image_surface ();
-	}
-      cairo_set_source_surface (pen_cr, image_surface, thickness/2, size);
-    }
-
+  cairo_set_source_surface (pen_cr, image_surface, thickness/2, 0);
   cairo_paint (pen_cr);
   cairo_stroke (pen_cr);
 
@@ -325,14 +330,13 @@ set_pen_cursor (GdkCursor **cursor,
                 gboolean arrow)
 {
   GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
-  gint size = 12;
 
-  get_pen_pixbuf (&pixbuf, (gdouble) size, color, thickness, arrow);
+  get_pen_pixbuf (&pixbuf, color, thickness, arrow);
 
   *cursor = gdk_cursor_new_from_pixbuf (gdk_display_get_default (),
 					pixbuf,
-					size/2 + thickness/2,
-					5* size/2);
+					thickness/2,
+					gdk_pixbuf_get_height (pixbuf) - thickness/2);
 
   g_object_unref (pixbuf);
 }
