@@ -352,7 +352,16 @@ on_button_release (GtkWidget *win,
       gdouble distance = get_distance (ev->x, ev->y, first_point->x, first_point->y);
  
       /* This is the tolerance to force to close the path in a magnetic way. */
-      gdouble tollerance = data->thickness * 2;
+      gint score = 3;
+      
+      /* If is applied some handled drawing mode then the tool is more tollerant. */
+      if ((data->rectify || data->roundify))
+        {
+          score = 6;
+        }
+        
+      gdouble tollerance = data->thickness * score;
+      
       gdouble pressure = last_point->pressure;   
 
       gboolean closed_path = FALSE;

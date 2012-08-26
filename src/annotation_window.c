@@ -281,7 +281,6 @@ is_a_closed_path (GSList* list)
     {
       return TRUE;
     }
-  printf("Distance %d\n", distance);
   return FALSE;
 }
 
