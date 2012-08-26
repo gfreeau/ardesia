@@ -22,7 +22,6 @@
 
 - Candidate features:
   - Better sketch recognition
-  - Partial implementation without composite support
   - Recognize the hand written text
   - Multi pointer support
   - Integration beetween ardesia and florence in lxde
