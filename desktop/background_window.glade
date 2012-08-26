@@ -11,8 +11,8 @@
     <property name="accept_focus">False</property>
     <property name="focus_on_map">False</property>
     <signal name="draw" handler="back_event_expose" swapped="no"/>
-    <signal name="configure_event" handler="on_back_configure" swapped="no"/>
     <signal name="screen-changed" handler="on_back_screen_changed" swapped="no"/>
+    <signal name="configure-event" handler="on_back_configure" swapped="no"/>
     <child>
       <placeholder/>
     </child>

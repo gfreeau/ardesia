@@ -22,13 +22,14 @@
 
 - Candidate features:
   - Better sketch recognition
-  - Integration beetween ardesia and florence in lxde
-  - Deploy the artefact online
-    - video; youtube upload as kazam
+  - Partial implementation without composite support
   - Recognize the hand written text
   - Multi pointer support
+  - Integration beetween ardesia and florence in lxde
   - Use the same window for the background; the expose will paint
     all the layers
+  - Deploy the artefact online
+    - video; youtube upload as kazam
   - Support for a generic virtual keyboard 
   - Lazo selection tool
     - Move the selected area content
