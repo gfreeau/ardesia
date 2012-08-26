@@ -26,7 +26,6 @@
 #include <utils.h>
 #include <bar.h>
 
-
 /* 
  * Calculate the better position where put the bar.
  */
@@ -99,7 +98,7 @@ calculate_initial_position (GtkWidget *ardesia_bar_window,
     {
       gint tollerance = 15;
       w_height = d_height - tollerance;
-      gtk_widget_set_usize (ardesia_bar_window, w_width, w_height);
+      gtk_widget_set_size_request (ardesia_bar_window, w_width, w_height);
     }
 
   calculate_position (ardesia_bar_window, d_width, d_height, x, y, w_width, w_height, position);
@@ -164,12 +163,16 @@ create_bar_window (CommandLine *commandline,
   gint height = 0;
 
 
-  /* Set up gtkrc for ardesia */
-  gchar* gtkrc_file = get_xdg_config_file("ardesia/gtkrc");
-  if (gtkrc_file)
+  /* Set up style for ardesia */
+  gchar* gtkcss_file = get_xdg_config_file("ardesia/gtk.css");
+  if (gtkcss_file)
     {
-     gtk_rc_parse(gtkrc_file);
-     free(gtkrc_file);
+      GtkCssProvider *css = gtk_css_provider_new ();
+      gtk_css_provider_load_from_path (css, gtkcss_file, NULL);
+      g_free (gtkcss_file);
+      gtk_style_context_add_provider_for_screen (gdk_screen_get_default(),
+                                                 GTK_STYLE_PROVIDER(css),
+                                                 GTK_STYLE_PROVIDER_PRIORITY_USER);
     }
     
   bar_gtk_builder = gtk_builder_new ();

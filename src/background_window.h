@@ -53,10 +53,10 @@ typedef struct
   GtkWidget *background_window;
 
   /* cairo context to draw on the background window. */
-  cairo_t *back_cr;
-
-  /* Used by the input shape mask. */
-  GdkPixmap *background_shape;
+  cairo_t *background_cr;
+  
+  /* The back buffer surface used to do the input shape combine region. */
+  cairo_surface_t *background_backsurface;
 
 }BackgroundData;
 

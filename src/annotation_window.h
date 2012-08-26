@@ -96,11 +96,11 @@ typedef struct
   /* The annotation window. */
   GtkWidget *annotation_window;
 
-  /* cairo context attached to the window. */
+  /* The cairo context attached to the window. */
   cairo_t *annotation_cairo_context;
 
-  /* The shape pixmap used as input shaping mask. */
-  GdkPixmap   *shape;
+  /* The back buffer surface used to do the input shape combine region. */
+  cairo_surface_t *annotation_backsurface;
 
   /* Mouse cursor to be used. */
   GdkCursor *cursor;
@@ -111,7 +111,8 @@ typedef struct
   /* List of the savepoint. */
   GSList  *savepoint_list;
 
-  /* The index of the position in the save-point list
+  /* 
+   * The index of the position in the save-point list
    * of the current picture shown. 
    */
   guint    current_save_index;

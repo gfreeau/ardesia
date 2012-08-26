@@ -3,30 +3,26 @@
 AC_PREREQ(2.54)
 
 m4_define([ardesia_version], [1.1])
-m4_define([glib_required_version], [2.24.0])
-m4_define([gtk_required_version], [2.16.0])
-m4_define([gdk_pixbuf_required_version], [gtk_required_version])
-m4_define([cairo_required_version], [1.8.0])
-m4_define([cairo_pdf_required_version], [1.8.0])
-m4_define([pangocairo_required_version], [1.22.0])
-m4_define([libpng_required_version], [1.2.37])
-
+m4_define([gtk_required_version], [2.99.3])
 
 AC_INIT([ardesia], [ardesia_version],
 	http://code.google.com/p/ardesia/issues/list,
 	[ardesia])
 
 AC_PREFIX_DEFAULT(/usr)
-AC_CONFIG_SRCDIR([src/ardesia.c])
 AC_CONFIG_MACRO_DIR([m4macros])
-
-AM_INIT_AUTOMAKE(no-define dist-bzip2)
+AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_CONFIG_HEADER(config.h)
 
-# Enable silent build rules by default, requires at least
-# Automake-1.11. Disable by either passing --disable-silent-rules to
-# configure or passing V=1 to make
-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+# Check if we have enabled debug support.
+AC_MSG_CHECKING(whether to enable debugging)
+AC_ARG_ENABLE(debug, [  --enable-debug          enable debug build [[default=no]]],, enable_debug="no")
+if test "x$enable_debug" = "xyes"; then
+	CPPFLAGS="$CPPFLAGS -Wall -Wextra -Wno-unused-parameter -DDEBUG"
+	AC_MSG_RESULT(yes)
+else
+	AC_MSG_RESULT(no)
+fi
 
 # gettext i18n support
 GETTEXT_PACKAGE=ardesia
@@ -35,8 +31,12 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
                    [The prefix for our gettext translation domains.])
 
 # Determine a C compiler to use
+AC_ISC_POSIX
+AC_PROG_CPP
 AC_PROG_CC
+AM_PROG_CC_STDC
 AM_PROG_CC_C_O
+AC_HEADER_STDC
 
 # Initialize libtool
 AM_DISABLE_STATIC
@@ -76,50 +76,36 @@ AM_GLIB_GNU_GETTEXT
 
 AM_PROG_LIBTOOL
 
-AM_PATH_GLIB_2_0(glib_required_version, :,
-  AC_MSG_ERROR(Test for GLIB failed. See the file 'INSTALL' for help.),
-  gobject gthread)
-
-AM_PATH_GTK_2_0(gtk_required_version, :,
+#######
+# Gtk 3
+#######
+AM_PATH_GTK_3_0(gtk_required_version, :,
   AC_MSG_ERROR(Test for GTK+ failed. See the file 'INSTALL' for help.),
   gthread)
 
-AC_MSG_CHECKING([if GTK+ is version 2.24.0 or newer])
-if $PKG_CONFIG --atleast-version=2.24.0 gtk+-2.0; then
-  have_gtk_2_24=yes
+AC_MSG_CHECKING([if GTK+ is version 2.99.3 or newer])
+if $PKG_CONFIG --atleast-version=2.99.3 gtk+-3.0; then
+  have_gtk3=yes
 else
-  have_gtk_2_24=no
+  have_gtk3=no
 fi
 
-AC_MSG_RESULT($have_gtk_2_24)
-
-PKG_CHECK_MODULES(GDK_PIXBUF, gdk-pixbuf-2.0 >= gdk_pixbuf_required_version)
-
-AC_PATH_PROG(GDK_PIXBUF_CSOURCE, gdk-pixbuf-csource, no)
-if test "x$GDK_PIXBUF_CSOURCE" = xno; then
-  AC_MSG_ERROR(Could not find gdk-pixbuf-csource in your PATH)
-fi
-
-PKG_CHECK_MODULES(CAIRO, cairo >= cairo_required_version)
+AC_MSG_RESULT($have_gtk_3)
 
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = yes)
 
-dnl Check modules
-pkg_modules="	glib-2.0
-                gthread-2.0
-                gsl
-		libgsf-1
-                libxml-2.0
-		cairo
-                gdk-2.0
-                gtk+-2.0 >= 2.12"
-
-
-PKG_CHECK_MODULES(ARDESIA, [$pkg_modules])
-
+################
+# Check packages
+################
+PKG_CHECK_MODULES(ARDESIA, [gtk+-3.0 gsl libgsf-1])
 AC_CHECK_PROGS(XDG_UTILS, [xdg-mime xdg-icon-resource xdg-desktop-menu], [])
+AC_SUBST(GTK3_CFLAGS)
+AC_SUBST(GTK3_LIBS)
 
+# ***************************************************************************
+# finally
+# ***************************************************************************
 AC_CONFIG_FILES([
 Makefile
 po/Makefile.in

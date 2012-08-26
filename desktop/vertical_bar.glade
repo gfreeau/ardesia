@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.16"/>
-  <!-- interface-naming-policy toplevel-contextual -->
+  <!-- interface-requires gtk+ 3.0 -->
   <object class="GtkImage" id="addpdf">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -112,9 +111,13 @@
     <property name="can_focus">False</property>
     <property name="pixbuf">icons/white.png</property>
   </object>
+  <object class="GtkImage" id="yellow">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icons/yellow.png</property>
+  </object>
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">38</property>
-    <property name="height_request">665</property>
+    <property name="height_request">630</property>
     <property name="can_focus">True</property>
     <property name="has_focus">True</property>
     <property name="is_focus">True</property>
@@ -126,7 +129,7 @@
     <property name="skip_pager_hint">True</property>
     <property name="decorated">False</property>
     <property name="gravity">center</property>
-    <property name="opacity">0.90000000000000002</property>
+    <property name="opacity">0.9</property>
     <property name="startup_id">Ardesia</property>
     <signal name="destroy" handler="on_bar_destroy_event" swapped="no"/>
     <signal name="window-state-event" handler="on_bar_window_state_event" swapped="no"/>
@@ -149,7 +152,7 @@
             <property name="icon_size">1</property>
             <child>
               <object class="GtkToolButton" id="buttonThick">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Thickness</property>
@@ -165,7 +168,7 @@
             </child>
             <child>
               <object class="GtkToolButton" id="buttonMode">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Drawing Mode</property>
@@ -181,6 +184,7 @@
             </child>
             <child>
               <object class="GtkToolItem" id="undoItem">
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
@@ -197,7 +201,7 @@
             </child>
             <child>
               <object class="GtkToolButton" id="buttonUndo">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Undo</property>
@@ -213,7 +217,7 @@
             </child>
             <child>
               <object class="GtkToolButton" id="buttonRedo">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Redo</property>
@@ -229,6 +233,7 @@
             </child>
             <child>
               <object class="GtkToolItem" id="otherSeparatorItem">
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
@@ -245,7 +250,7 @@
             </child>
             <child>
               <object class="GtkToolButton" id="buttonFiller">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Filler</property>
@@ -261,7 +266,7 @@
             </child>
             <child>
               <object class="GtkToolButton" id="buttonClear">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Clear</property>
@@ -276,6 +281,7 @@
             </child>
             <child>
               <object class="GtkToolItem" id="toolSeparatorItem">
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
@@ -292,7 +298,7 @@
             </child>
             <child>
               <object class="GtkRadioToolButton" id="buttonPointer">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Mouse</property>
@@ -309,7 +315,7 @@
             </child>
             <child>
               <object class="GtkRadioToolButton" id="buttonArrow">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Arrow</property>
@@ -326,7 +332,7 @@
             </child>
             <child>
               <object class="GtkRadioToolButton" id="buttonText">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Insert Text</property>
@@ -343,7 +349,7 @@
             </child>
             <child>
               <object class="GtkRadioToolButton" id="buttonHighlighter">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Highlighter</property>
@@ -360,7 +366,7 @@
             </child>
             <child>
               <object class="GtkRadioToolButton" id="buttonEraser">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Eraser</property>
@@ -377,7 +383,7 @@
             </child>
             <child>
               <object class="GtkRadioToolButton" id="buttonPencil">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Pencil</property>
@@ -393,7 +399,8 @@
             </child>
             <child>
               <object class="GtkToolItem" id="colorItem">
-                <property name="visible">True</property>
+                <property name="use_action_appearance">False</property>
+                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
                 <child>
@@ -409,7 +416,7 @@
             </child>
             <child>
               <object class="GtkRadioToolButton" id="buttonBlue">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Blue</property>
@@ -426,7 +433,7 @@
             </child>
             <child>
               <object class="GtkRadioToolButton" id="buttonLightGreen">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Green</property>
@@ -443,7 +450,7 @@
             </child>
             <child>
               <object class="GtkRadioToolButton" id="buttonYellow">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Yellow</property>
@@ -460,7 +467,7 @@
             </child>
             <child>
               <object class="GtkRadioToolButton" id="buttonRed">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Red</property>
@@ -476,7 +483,7 @@
             </child>
             <child>
               <object class="GtkRadioToolButton" id="buttonWhite">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">White</property>
@@ -493,7 +500,7 @@
             </child>
             <child>
               <object class="GtkRadioToolButton" id="buttonColor">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Color Chooser</property>
@@ -509,6 +516,7 @@
             </child>
             <child>
               <object class="GtkToolItem" id="screenItem">
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
@@ -525,7 +533,7 @@
             </child>
             <child>
               <object class="GtkToolButton" id="buttonPreferences">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Preferences</property>
@@ -541,7 +549,7 @@
             </child>
             <child>
               <object class="GtkToolButton" id="buttonScreenShoot">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Screenshot</property>
@@ -557,7 +565,7 @@
             </child>
             <child>
               <object class="GtkToolButton" id="buttonAddPdf">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Add to pdf</property>
@@ -573,7 +581,7 @@
             </child>
             <child>
               <object class="GtkToggleToolButton" id="buttonRecorder">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Record</property>
@@ -589,7 +597,7 @@
             </child>
             <child>
               <object class="GtkToolButton" id="buttonInfo">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Info</property>
@@ -606,7 +614,7 @@
             </child>
             <child>
               <object class="GtkToolButton" id="buttonQuit">
-                <property name="height_request">27</property>
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Quit</property>
@@ -630,10 +638,5 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkImage" id="yellow">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixbuf">icons/yellow.png</property>
   </object>
 </interface>

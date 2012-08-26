@@ -75,7 +75,7 @@ create_text_window (GtkWindow *parent)
       gtk_window_set_transient_for (GTK_WINDOW (text_data->window), GTK_WINDOW (parent));
 
       gtk_window_set_opacity (GTK_WINDOW (text_data->window), 1);
-      gtk_widget_set_usize (GTK_WIDGET (text_data->window), gdk_screen_width (), gdk_screen_height ());
+      gtk_widget_set_size_request (GTK_WIDGET (text_data->window), gdk_screen_width (), gdk_screen_height ());
     }
 
 }
@@ -179,25 +179,17 @@ set_text_cursor (GtkWidget *window)
   gdouble decoration_height = 4;
   gint height = text_data->max_font_height + decoration_height * 2;
   gint width = TEXT_CURSOR_WIDTH * 3;  
-  GdkPixmap *pixmap = gdk_pixmap_new (NULL, width, height, 1);
-  cairo_t *text_pointer_pcr = gdk_cairo_create (pixmap);
-  GdkPixmap *bitmap = gdk_pixmap_new (NULL, width, height, 1);
-  cairo_t *text_pointer_cr = gdk_cairo_create (bitmap);
+  cairo_surface_t *text_surface_t = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
+  cairo_t *text_pointer_cr = cairo_create (text_surface_t);
   GdkColor *background_color_p = rgba_to_gdkcolor (BLACK);
   GdkColor *foreground_color_p = rgba_to_gdkcolor (text_data->color);
   GdkCursor *cursor = (GdkCursor *) NULL;
-
-  clear_cairo_context (text_pointer_pcr);
-  cairo_set_operator (text_pointer_pcr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgb (text_pointer_pcr, 1, 1, 1);
-  cairo_paint (text_pointer_pcr);
-  cairo_stroke (text_pointer_pcr);
-  cairo_destroy (text_pointer_pcr);
+  GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
 
   if (text_pointer_cr)
     {
       clear_cairo_context (text_pointer_cr);
-      cairo_set_source_rgb (text_pointer_cr, 1, 1, 1);
+      cairo_set_source_color_from_string (text_pointer_cr, text_data->color);
       cairo_set_operator (text_pointer_cr, CAIRO_OPERATOR_SOURCE);
       cairo_set_line_width (text_pointer_cr, 2);
 
@@ -218,20 +210,20 @@ set_text_cursor (GtkWidget *window)
       cairo_stroke (text_pointer_cr);
       cairo_destroy (text_pointer_cr);
     } 
-  
-  cursor = gdk_cursor_new_from_pixmap (pixmap,
-						  bitmap,
-						  foreground_color_p,
-						  background_color_p,
-						  TEXT_CURSOR_WIDTH,
-						  height-decoration_height);
+
+  pixbuf = gdk_pixbuf_get_from_surface (text_surface_t,
+                                        0,
+                                        0,
+                                        width,
+                                        height); 
+
+  cursor = gdk_cursor_new_from_pixbuf ( gdk_display_get_default (), pixbuf, 0, 0);
 
   gdk_window_set_cursor (gtk_widget_get_window  (text_data->window), cursor);
   gdk_flush ();
-  gdk_cursor_unref (cursor);
-
-  g_object_unref (pixmap);
-  g_object_unref (bitmap);
+  g_object_unref (cursor);
+  g_object_unref (pixbuf);
+  cairo_surface_destroy (text_surface_t);
   g_free (foreground_color_p);
   g_free (background_color_p);
   
@@ -245,7 +237,7 @@ init_text_widget (GtkWidget *widget)
 {
   if (!text_data->cr)
     {
-      text_data->cr = gdk_cairo_create (widget->window);
+      text_data->cr = gdk_cairo_create ( gtk_widget_get_window (widget) );
       cairo_set_operator (text_data->cr, CAIRO_OPERATOR_SOURCE);
       cairo_set_line_width (text_data->cr, text_data->pen_width);
       cairo_set_source_color_from_string (text_data->cr, text_data->color);
@@ -262,7 +254,7 @@ init_text_widget (GtkWidget *widget)
       set_text_cursor (widget);
     }
 
-  drill_window_in_bar_area (text_data->window);
+  //drill_window_in_bar_area (text_data->window);
 
 #ifdef _WIN32
   grab_pointer (text_data->window, TEXT_MOUSE_EVENTS);
@@ -341,24 +333,24 @@ key_snooper (GtkWidget *widget,
   gboolean closed_to_bar = inside_bar_window (text_data->pos->x + text_data->extents.x_advance,
 					      text_data->pos->y-text_data->max_font_height/2);
 
-  if ( (event->keyval == GDK_BackSpace) ||
-       (event->keyval == GDK_Delete))
+  if ( (event->keyval == GDK_KEY_BackSpace) ||
+       (event->keyval == GDK_KEY_Delete))
     {
       delete_character (); // undo the last character inserted
     }
   /* It is the end of the line or the letter is closed to the window bar. */
   else if ( (text_data->pos->x + text_data->extents.x_advance >= gdk_screen_width ()) ||
 	    (closed_to_bar) ||
-	    (event->keyval == GDK_Return) ||
-	    (event->keyval == GDK_ISO_Enter) ||
-	    (event->keyval == GDK_KP_Enter))
+	    (event->keyval == GDK_KEY_Return) ||
+	    (event->keyval == GDK_KEY_ISO_Enter) ||
+	    (event->keyval == GDK_KEY_KP_Enter))
     {
      /* select the x indentation */
       text_data->pos->x = text_config->leftmargin;
       text_data->pos->y +=  text_data->max_font_height;
     }
   /* Simple Tab-Implementation */
-  else if (event->keyval == GDK_Tab)
+  else if (event->keyval == GDK_KEY_Tab)
   {
       text_data->pos->x += text_config->tabsize;
   }
@@ -396,13 +388,39 @@ key_snooper (GtkWidget *widget,
 }
 
 
+/* On configure event. */
+G_MODULE_EXPORT gboolean
+on_text_window_configure (GtkWidget *widget,
+		       GdkEventExpose *event,
+		       gpointer user_data)
+{
+  return TRUE;
+}
+
+
+/* On screen changed. */
+G_MODULE_EXPORT void
+on_text_window_screen_changed(GtkWidget *widget,
+		       GdkScreen *previous_screen,
+		       gpointer   user_data)
+{
+  GdkScreen *screen = gtk_widget_get_screen(GTK_WIDGET (widget));
+  GdkVisual *visual = gdk_screen_get_rgba_visual(screen);
+  if (visual == NULL)
+    visual = gdk_screen_get_system_visual (screen);
+
+  gtk_widget_set_visual (widget, visual);
+}
+
+
 /* The windows has been exposed. */
 G_MODULE_EXPORT gboolean
-on_window_text_expose_event (GtkWidget *widget,
-			     GdkEventExpose *event,
+on_text_window_expose_event (GtkWidget *widget,
+			     cairo_t *cr,
 			     gpointer data)
 {
-  gint is_fullscreen = gdk_window_get_state (widget->window) & GDK_WINDOW_STATE_FULLSCREEN;
+  GdkWindow *gdk_win = gtk_widget_get_window (widget);
+  gint is_fullscreen = gdk_window_get_state (gdk_win) & GDK_WINDOW_STATE_FULLSCREEN;
 
   if (!is_fullscreen)
     {
@@ -445,7 +463,7 @@ is_above_virtual_keyboard (gint x,
 
 /* This is called when the button is leased. */
 G_MODULE_EXPORT gboolean
-on_window_text_button_release (GtkWidget *win,
+on_text_window_button_release (GtkWidget *win,
 			       GdkEventButton *ev,
 			       gpointer user_data)
 {
@@ -494,7 +512,7 @@ on_window_text_button_release (GtkWidget *win,
 
 /* This shots when the text pointer is moving. */
 G_MODULE_EXPORT gboolean
-on_window_text_cursor_motion (GtkWidget *win,
+on_text_window_cursor_motion (GtkWidget *win,
 			      GdkEventMotion *ev,
 			      gpointer func_data)
 {
@@ -529,6 +547,9 @@ void start_text_widget (GtkWindow *parent, gchar* color, gint tickness)
 
   create_text_window (parent);
 
+  /* This trys to set an alpha channel. */
+  on_text_window_screen_changed(text_data->window, NULL, text_data);
+  
   /* In the gtk 2.16.6 the gtkbuilder property double-buffered is not parsed
    * from the glade file and then I set this by hands. 
    */

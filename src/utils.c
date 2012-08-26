@@ -124,13 +124,24 @@ grab_pointer (GtkWidget *widget,
 	      GdkEventMask eventmask)
 {
   GdkGrabStatus result;
-  gdk_error_trap_push ();
-  result = gdk_pointer_grab (gtk_widget_get_window (widget),
-			     FALSE,
-			     eventmask, 0,
-			     NULL,
-			     GDK_CURRENT_TIME);
+  GdkDisplay    *display = (GdkDisplay *) NULL;
+  GdkDevice     *pointer = (GdkDevice *) NULL;
+  GdkDeviceManager *device_manager = (GdkDeviceManager *) NULL;
 
+  display = gdk_display_get_default ();
+  device_manager = gdk_display_get_device_manager (display);
+  pointer = gdk_device_manager_get_client_pointer (device_manager);
+
+  gdk_error_trap_push ();
+ 
+  result = gdk_device_grab (pointer,
+                            gtk_widget_get_window (widget),
+                            GDK_OWNERSHIP_WINDOW,
+                            TRUE,
+                            eventmask,
+                            NULL,
+                            GDK_CURRENT_TIME);
+ 
   gdk_flush ();
   if (gdk_error_trap_pop ())
     {
@@ -164,8 +175,16 @@ grab_pointer (GtkWidget *widget,
 void
 ungrab_pointer (GdkDisplay *display)
 {
+  GdkDevice     *pointer = (GdkDevice *) NULL;
+  GdkDeviceManager *device_manager = (GdkDeviceManager *) NULL;
+
+  display = gdk_display_get_default ();
+  device_manager = gdk_display_get_device_manager (display);
+  pointer = gdk_device_manager_get_client_pointer (device_manager);
+
   gdk_error_trap_push ();
-  gdk_pointer_ungrab (GDK_CURRENT_TIME);
+  
+  gdk_device_ungrab (pointer, GDK_CURRENT_TIME);
   gdk_flush ();
   if (gdk_error_trap_pop ())
     {
@@ -333,15 +352,11 @@ grab_screenshot ()
   gint width = gdk_screen_width ();
 
   GdkWindow *root_window = gdk_get_default_root_window ();
-  return gdk_pixbuf_get_from_drawable (NULL,
-				       root_window,
-				       NULL,
-				       0,
-				       0,
-				       0,
-				       0,
-				       width,
-				       height);
+  return gdk_pixbuf_get_from_window (root_window,
+				     0,
+				     0,
+				     width,
+				     height);
 
 }
 
@@ -378,34 +393,18 @@ gboolean inside_bar_window (gdouble xp, gdouble yp)
 }
 
 
-/* Drill the gdk window in the area where the ardesia bar is located. */
-void
+/* Drill the window in the area where the ardesia bar is located. */
+void 
 drill_window_in_bar_area (GtkWidget *widget)
 {
-  /* Instantiate a transparent pixmap with a black hole upon the bar area to be used as mask. */
-  GdkBitmap *shape = gdk_pixmap_new (NULL,  gdk_screen_width (), gdk_screen_height (), 1);
-  cairo_t *shape_cr = gdk_cairo_create (shape);
+  GdkRectangle allocation;
   GtkWidget *bar= get_bar_window ();
-  gint x, y, width, height;
-
-  cairo_set_operator (shape_cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgba (shape_cr, 1.0, 1.0, 1.0, 1.0);
-  cairo_paint (shape_cr);
-
-  gtk_window_get_position (GTK_WINDOW (bar), &x, &y);
-  gtk_window_get_size (GTK_WINDOW (bar), &width, &height);
-
-  cairo_set_operator (shape_cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgba (shape_cr, 0.0, 0.0, 0.0, 0.0);
-  cairo_rectangle (shape_cr, (double) x, (double) y, (double) width, (double) height);
-  cairo_fill (shape_cr);	
-
-  gtk_widget_input_shape_combine_mask (widget,
-				       shape,
-				       0,
-				       0);
-
-  cairo_destroy (shape_cr);
+  gtk_widget_get_allocation (bar, &allocation);
+  
+  cairo_region_t *r = cairo_region_create_rectangle (&allocation);
+  gtk_widget_input_shape_combine_region(widget, r);
+  cairo_region_destroy(r);
+  
 }
 
 

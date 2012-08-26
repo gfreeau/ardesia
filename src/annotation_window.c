@@ -193,7 +193,7 @@ disallocate_cursor ()
 {
   if (data->cursor)
     {
-      gdk_cursor_unref (data->cursor);
+      g_object_unref (data->cursor);
       data->cursor = (GdkCursor *) NULL;
     }
 }
@@ -214,7 +214,7 @@ annotate_acquire_input_grab ()
    * MACOSX
    * in mac this will do nothing 
    */
-  gtk_widget_input_shape_combine_mask (data->annotation_window, NULL, 0, 0);
+  gtk_widget_input_shape_combine_region(data->annotation_window, NULL);
   //drill_window_in_bar_area (data->annotation_window);
 #endif
 
@@ -235,6 +235,8 @@ destroy_cairo ()
     }
 
   data->annotation_cairo_context = (cairo_t *) NULL;
+  cairo_surface_destroy (data->annotation_backsurface);
+  data->annotation_backsurface = (cairo_surface_t *) NULL;
 }
 
 
@@ -474,8 +476,8 @@ roundify (gboolean closed_path)
 static gboolean
 is_eraser (GdkDevice *device)
 {
-  if (strstr (device->name, "raser") ||
-      strstr (device->name, "RASER"))
+  if (strstr (gdk_device_get_name(device), "raser") ||
+      strstr (gdk_device_get_name(device), "RASER"))
     {
       return TRUE;
     }
@@ -488,10 +490,9 @@ is_eraser (GdkDevice *device)
 static void
 setup_input_devices ()
 {
-  GList *devices = (GList *) NULL;
-  GList *d = (GList *) NULL;
-
-  devices = gdk_display_list_devices (gdk_display_get_default ());
+  GdkDeviceManager *device_manager = gdk_display_get_device_manager (gdk_display_get_default ());
+  GList *devices, *d;
+  devices = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
 
   for (d = devices; d; d = d->next)
     {
@@ -500,21 +501,22 @@ setup_input_devices ()
       /* Guess "Eraser"-Type devices. */
       if (is_eraser (device))
 	{
-	  gdk_device_set_source (device, GDK_SOURCE_ERASER);
+	  //gdk_device_set_source (device, GDK_SOURCE_ERASER);
 	}
 
        /* only enable devices with 2 ore more axes */
-      if (device->num_axes >= 2)
+      if ((gdk_device_get_source (device) != GDK_SOURCE_KEYBOARD) &&
+          (gdk_device_get_source (device) != GDK_SOURCE_MOUSE))
 	{
 
-	  if (device->source != GDK_SOURCE_MOUSE)
+	  if ( gdk_device_get_n_axes(device) >= 2)
 	    {
 	      g_printerr ("Enabled Device. %p: \"%s\" (Type: %d)\n",
-			  device, device->name, device->source);
+			  device, gdk_device_get_name (device), gdk_device_get_source (device));
 
 	      if (!gdk_device_set_mode (device, GDK_MODE_SCREEN))
 		{
-		  g_warning ("Unable to set the device %s to the screen mode\n", device->name);
+		  g_warning ("Unable to set the device %s to the screen mode\n", gdk_device_get_name (device));
 		}
 	    }
 	}
@@ -545,7 +547,7 @@ create_annotation_window ()
 
   widget = GTK_WIDGET (gtk_builder_get_object (data->annotation_window_gtk_builder,
 					       "annotationWindow"));
-
+  
   return widget;
 }
 
@@ -556,7 +558,6 @@ setup_app (GtkWidget* parent)
 {
   gint width = gdk_screen_width ();
   gint height = gdk_screen_height ();
-  cairo_t *shape_cr = (cairo_t *) NULL;
 
   /* Initialize the pen context. */
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN);
@@ -569,6 +570,9 @@ setup_app (GtkWidget* parent)
   /* Create the annotation window. */
   data->annotation_window = create_annotation_window ();
 
+  /* This trys to set an alpha channel. */
+  on_screen_changed(data->annotation_window, NULL, data);
+  
   /* In the gtk 2.16.6 the gtkbuilder property double-buffered is not parsed from the glade file
    * and then I set this by hands.
    */
@@ -584,23 +588,11 @@ setup_app (GtkWidget* parent)
     }
 
   gtk_window_set_transient_for (GTK_WINDOW (data->annotation_window), GTK_WINDOW (parent));
+  
+  gtk_widget_set_size_request (data->annotation_window, width, height);
 
-  gtk_widget_set_usize (data->annotation_window, width, height);
-
-  /* Initialize a transparent pixmap with depth 1 to be used as input shape. */
-  data->shape = gdk_pixmap_new ((GdkDrawable *) NULL, width, height, 1);
-
-  shape_cr = gdk_cairo_create (data->shape);
-
-  if (cairo_status (shape_cr) != CAIRO_STATUS_SUCCESS)
-    {
-      g_printerr ("Failed to allocate the shape cairo context");
-      annotate_quit ();
-      exit (EXIT_FAILURE);
-    }
-
-  clear_cairo_context (shape_cr);
-  cairo_destroy (shape_cr);
+  /* Initialize a transparent surface to be used as input shape. */
+  data->annotation_backsurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32 , width, height);
 
   /* Connect all the callback from gtkbuilder xml file. */
   gtk_builder_connect_signals (data->annotation_window_gtk_builder, (gpointer) data);
@@ -1281,7 +1273,7 @@ annotate_select_tool (AnnotateData *data, GdkDevice *device, guint state)
   if (device)
     {
 
-      if (device->source == GDK_SOURCE_ERASER)
+      if (gdk_device_get_source (device) == GDK_SOURCE_ERASER)
 	{
 	  annotate_select_eraser ();
 	}
@@ -1318,12 +1310,6 @@ annotate_quit ()
   export_iwb (get_iwb_filename ());
   if (data)
     {
-
-      if (data->shape)
-	{
-	  g_object_unref (data->shape);
-	  data->shape = (GdkPixmap *) NULL;
-	}
 	
       /* Destroy cairo object. */
       destroy_cairo ();
@@ -1334,7 +1320,7 @@ annotate_quit ()
 
       if (data->invisible_cursor)
 	{
-	  gdk_cursor_unref (data->invisible_cursor);
+	  g_object_unref (data->invisible_cursor);
 	  data->invisible_cursor = (GdkCursor *) NULL;
 	}
 
@@ -1378,7 +1364,9 @@ annotate_release_input_grab ()
    * This allows the mouse event to be passed below the transparent annotation;
    * at the moment this call works only on Linux
    */
-  gtk_widget_input_shape_combine_mask (data->annotation_window, data->shape, 0, 0);
+  cairo_region_t* r = gdk_cairo_region_create_from_surface(data->annotation_backsurface);
+  gtk_widget_input_shape_combine_region(data->annotation_window, r);
+  cairo_region_destroy(r);
 #else
   /*
    * @TODO WIN32 implement correctly gtk_widget_input_shape_combine_mask

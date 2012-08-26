@@ -49,7 +49,7 @@ start_save_pdf_dialog (GtkWindow *parent,
   gchar *filename = "";
   gchar *supported_extension = ".pdf";
 
-  gdk_window_set_cursor (get_annotation_window ()->window, (GdkCursor *) NULL);
+  gdk_window_set_cursor (gtk_widget_get_window(get_annotation_window ()), (GdkCursor *) NULL);
   
   GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext ("Export as pdf"),
 						    parent,

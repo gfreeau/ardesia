@@ -100,8 +100,10 @@ run_missing_composite_manager_dialog ()
 
 /* Check if a composite manager is active. */
 static void
-check_composite_manager (GdkScreen *screen)
+check_composite_manager ()
 {
+  GdkDisplay *display = gdk_display_get_default ();
+  GdkScreen  *screen  = gdk_display_get_default_screen (display);
   gboolean composite = gdk_screen_is_composited (screen);
 
   if (!composite)
@@ -112,47 +114,6 @@ check_composite_manager (GdkScreen *screen)
 
 }
 #endif
-
-
-/* Set the best colormap available on the system. */
-static void
-set_the_best_colormap ()
-{
-  GdkDisplay *display = gdk_display_get_default ();
-  GdkScreen  *screen  = gdk_display_get_default_screen (display);
-  GdkVisual  *visual  = NULL;
-  GdkColormap *colormap = gdk_screen_get_rgba_colormap (screen);
-
-  /* In FreeBSD operating system you might have a composite manager. */
-#if ( defined (__freebsd__) || defined (__freebsd) || defined (_freebsd) || defined (freebsd) )
-  check_composite_manager (screen);
-#endif
-
-  /* In linux operating system you must have a composite manager. */
-#ifdef linux
-  check_composite_manager (screen);
-#endif
-
-  if (colormap)
-    {
-      gtk_widget_set_default_colormap (colormap);
-    }
-  else
-    {
-      g_warning ("The screen does not support the alpha channel\n");
-      visual = gdk_screen_get_rgba_visual (screen);
-
-      if (visual == NULL)
-	{
-	  g_warning ("The screen does not support the rgba visual!\n");
-#ifndef _WIN32
-	  exit (EXIT_FAILURE);
-#endif
-	}
-
-    }
-
-}
 
 
 /* Parse the command line in the standard getopt way. */
@@ -277,8 +238,6 @@ enable_localization_support ()
   bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (GETTEXT_PACKAGE);
 #endif
-
-  gtk_set_locale ();
 }
 
 
@@ -361,9 +320,12 @@ main (int argc,
   enable_localization_support ();
 
   gtk_init (&argc, &argv);
-	
-  set_the_best_colormap ();
 
+#ifndef _WIN32
+  check_composite_manager ();
+#endif
+  
+	
   /*
    * Uncomment this and the create_segmentation_fault function
    * to create a segmentation fault.

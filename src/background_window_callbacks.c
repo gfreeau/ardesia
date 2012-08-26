@@ -26,11 +26,39 @@
 #include <background_window.h>
 #include <utils.h> 
 
+/* On configure event. */
+G_MODULE_EXPORT gboolean
+on_back_configure (GtkWidget *widget,
+		       GdkEventExpose *event,
+		       gpointer user_data)
+{
+  BackgroundData *background_data = (BackgroundData *) user_data;
+
+  return TRUE;
+}
+
+
+/* On screen changed. */
+G_MODULE_EXPORT void
+on_back_screen_changed(GtkWidget *widget,
+		       GdkScreen *previous_screen,
+		       gpointer   user_data)
+{
+  BackgroundData *background_data = (BackgroundData *) user_data;
+    
+  GdkScreen *screen = gtk_widget_get_screen(GTK_WIDGET (widget));
+  GdkVisual *visual = gdk_screen_get_rgba_visual(screen);
+  if (visual == NULL)
+    visual = gdk_screen_get_system_visual (screen);
+
+  gtk_widget_set_visual (widget, visual);
+}
+
 
 /* Expose event in background window occurs. */
 G_MODULE_EXPORT gboolean
 back_event_expose(GtkWidget *widget, 
-		  GdkEventExpose *event,
+		  cairo_t *cr,
 		  gpointer user_data)
 {
   BackgroundData *background_data = (BackgroundData *) user_data;
@@ -41,9 +69,9 @@ back_event_expose(GtkWidget *widget,
       return TRUE;
     }
 
-  if (!background_data->back_cr)
+  if (!background_data->background_cr)
     {
-      background_data->back_cr = gdk_cairo_create (gtk_widget_get_window (widget) );
+      background_data->background_cr = gdk_cairo_create (gtk_widget_get_window (widget) );
     }
 
   if ((background_data->background_image) && (get_background_type () == 2))
@@ -58,6 +86,7 @@ back_event_expose(GtkWidget *widget,
     {
       clear_background_window ();
     }
+
 
   return TRUE;
 }

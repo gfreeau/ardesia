@@ -39,7 +39,7 @@ static BackgroundData *background_data;
 static void
 load_file ()
 {
-  if (background_data->back_cr)
+  if (background_data->background_cr)
     {
       cairo_surface_t *surface = cairo_image_surface_create_from_png (background_data->background_image);
       cairo_t *cr = cairo_create (surface);
@@ -48,7 +48,8 @@ load_file ()
 	  
       gint new_height = 0;
       gint new_width = 0;
-      gdk_drawable_get_size (gtk_widget_get_window (background_data->background_window), &new_width, &new_height);
+      new_height = gdk_window_get_height (gtk_widget_get_window (background_data->background_window));
+      new_width = gdk_window_get_width (gtk_widget_get_window (background_data->background_window));
 
       cairo_surface_t *scaled_surface = scale_surface (surface, new_width, new_height );
 	  
@@ -56,19 +57,15 @@ load_file ()
 	  
       cairo_destroy (cr);
 	   
-      cairo_set_source_surface (background_data->back_cr, scaled_surface, 0.0, 0.0);
+      cairo_set_source_surface (background_data->background_cr, scaled_surface, 0.0, 0.0);
 	
-      cairo_paint (background_data->back_cr);
-      cairo_stroke (background_data->back_cr);
+      cairo_paint (background_data->background_cr);
+      cairo_stroke (background_data->background_cr);
 	
       cairo_surface_destroy (scaled_surface);
 	  
 #ifndef _WIN32
-      gtk_widget_input_shape_combine_mask (background_data->background_window,
-					   NULL,
-					   0,
-                                           0);
-      drill_window_in_bar_area (background_data->background_window);
+      gtk_widget_input_shape_combine_region (background_data->background_window, NULL);
 #endif
     }
 }
@@ -83,16 +80,16 @@ load_color ()
   gint b = 0;
   gint a = 0;
 
-  if (background_data->back_cr)
+  if (background_data->background_cr)
     {
       sscanf (background_data->background_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
 
-      cairo_set_operator (background_data->back_cr, CAIRO_OPERATOR_SOURCE);
+      cairo_set_operator (background_data->background_cr, CAIRO_OPERATOR_SOURCE);
 
 
 #ifdef WIN32
       gdouble opacity = BACKGROUND_OPACITY;
-      cairo_set_source_rgb (background_data->back_cr, (gdouble) r/256, (gdouble) g/256, (gdouble) b/256);
+      cairo_set_source_rgb (background_data->background_cr, (gdouble) r/256, (gdouble) g/256, (gdouble) b/256);
 
       /*
        * @TODO Implement with a full opaque windows and use cairo_set_source_rgba
@@ -107,23 +104,20 @@ load_color ()
       gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), opacity);
 #else
       gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), 1);
-      cairo_set_source_rgba (background_data->back_cr,
+      cairo_set_source_rgba (background_data->background_cr,
                              (gdouble) r/256,
 			     (gdouble) g/256,
 			     (gdouble) b/256,
 			     (gdouble) a/256);
 #endif
 
-      cairo_paint (background_data->back_cr);
-      cairo_stroke (background_data->back_cr);
+      cairo_paint (background_data->background_cr);
+      cairo_stroke (background_data->background_cr);
 
 #ifndef _WIN32
       if (((gint) a ) < 1)
 	{
-	  gtk_widget_input_shape_combine_mask (background_data->background_window,
-					       NULL,
-					       0,
-					       0);
+	  gtk_widget_input_shape_combine_region (background_data->background_window, NULL);
 	}
 #endif
 
@@ -138,8 +132,8 @@ allocate_background_data ()
   BackgroundData *background_data   = g_malloc ((gsize) sizeof (BackgroundData));
   background_data->background_color = (gchar *) NULL;
   background_data->background_image = (gchar *) NULL;
-  background_data->back_cr          = (cairo_t *) NULL;
-  background_data->background_shape = (GdkPixmap *) NULL;
+  background_data->background_cr          = (cairo_t *) NULL;
+  background_data->background_backsurface = (cairo_surface_t *) NULL;
   background_data->background_window = (GtkWidget *) NULL;
   background_data->background_type = 0;
   return background_data;
@@ -152,12 +146,8 @@ destroy_background_window ()
 {
   if (background_data)
     {
-      if (background_data->background_shape)
-	{
-	  g_object_unref (background_data->background_shape);
-          background_data->background_shape = (GdkPixmap *) NULL;
-	}
-
+      cairo_surface_destroy (background_data->background_backsurface);
+     
       if (background_data->background_window)
 	{ 
 	  /* Destroy brutally the background window. */
@@ -165,10 +155,10 @@ destroy_background_window ()
 	  background_data->background_window = (GtkWidget *) NULL;
 	}
 
-      if (background_data->back_cr)
+      if (background_data->background_cr)
 	{
-	  cairo_destroy (background_data->back_cr);
-          background_data->back_cr = (cairo_t *) NULL;
+	  cairo_destroy (background_data->background_cr);
+          background_data->background_cr = (cairo_t *) NULL;
 	}
 
       if (background_data->background_color)
@@ -201,7 +191,6 @@ void clear_background_window ()
 {
   gint height       = -1;
   gint width        = -1;
-  cairo_t *shape_cr = (cairo_t *) NULL;
 
   /*
    * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
@@ -211,22 +200,20 @@ void clear_background_window ()
    */
   gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), BACKGROUND_OPACITY);
 
-  clear_cairo_context (background_data->back_cr);
+  clear_cairo_context (background_data->background_cr);
 
-  gdk_drawable_get_size (gtk_widget_get_window (background_data->background_window), &width, &height);
+  
+  height = gdk_window_get_height (gtk_widget_get_window (background_data->background_window));
+  width = gdk_window_get_width (gtk_widget_get_window (background_data->background_window));
 
-  /* Instantiate a transparent pixmap to be used as mask. */
-  background_data->background_shape = gdk_pixmap_new ((GdkDrawable *) NULL, width, height, 1);
-  shape_cr = gdk_cairo_create (background_data->background_shape);
-  clear_cairo_context (shape_cr);
-  cairo_destroy (shape_cr);
+  /* Initialize a transparent surface to be used as input shape. */
+  background_data->background_backsurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32 , width, height);
 
   /* This allows the mouse event to be passed to the window below. */
 #ifndef _WIN32
-  gtk_widget_input_shape_combine_mask (background_data->background_window,
-				       background_data->background_shape,
-				       0,
-				       0);
+  cairo_region_t* r = gdk_cairo_region_create_from_surface(background_data->background_backsurface);
+  gtk_widget_input_shape_combine_region (background_data->background_window, r);
+  cairo_region_destroy(r);
 #endif
 }
 
@@ -256,14 +243,17 @@ create_background_window ()
   background_obj = gtk_builder_get_object (background_data->background_window_gtk_builder, "backgroundWindow");
   background_data->background_window = GTK_WIDGET (background_obj);
 
+  /* This trys to set an alpha channel. */
+  on_screen_changed(background_data->background_window, NULL, background_data);
+  
   /* In the gtk 2.16.6 used for windows the gtkbuilder the double buffered property
    * is not parsed from glade and then I set this by hands. 
    */
   gtk_widget_set_double_buffered (background_data->background_window, FALSE);
 
   gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), BACKGROUND_OPACITY);
-
-  gtk_widget_set_usize (background_data->background_window, gdk_screen_width (), gdk_screen_height ());
+  
+  gtk_widget_set_size_request (background_data->background_window, gdk_screen_width (), gdk_screen_height ());
 
   /* Connect all the callback from gtkbuilder xml file. */
   gtk_builder_connect_signals (background_data->background_window_gtk_builder, (gpointer) background_data);

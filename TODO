@@ -26,7 +26,6 @@
   - Deploy the artefact online
     - video; youtube upload as kazam
   - Recognize the hand written text
-  - libgtk-3 
   - Multi pointer support
   - Use the same window for the background; the expose will paint
     all the layers

@@ -54,7 +54,7 @@ start_color_selector_dialog (GtkToolButton *toolbutton,
       /* Open colour widget. */
       GtkWidget *color_widget = gtk_color_selection_dialog_new (gettext ("Changing colour"));
       GtkColorSelectionDialog *color_dialog = GTK_COLOR_SELECTION_DIALOG (color_widget);
-      GtkColorSelection *colorsel = GTK_COLOR_SELECTION (color_dialog->colorsel);
+      GtkColorSelection *colorsel = GTK_COLOR_SELECTION (gtk_color_selection_dialog_get_color_selection (color_dialog));
       gint result = -1;
       /* Colour initially selected. */
       GdkColor *gdkcolor;
@@ -82,7 +82,7 @@ start_color_selector_dialog (GtkToolButton *toolbutton,
       switch (result)
 	{
 	case GTK_RESPONSE_OK:
-	  colorsel = GTK_COLOR_SELECTION (color_dialog->colorsel);
+	  colorsel = GTK_COLOR_SELECTION (gtk_color_selection_dialog_get_color_selection (color_dialog));
 	  gtk_color_selection_set_has_palette (colorsel, TRUE);
 	  gtk_color_selection_get_current_color (colorsel, gdkcolor);
 	  ret_color = gdkcolor_to_rgb (gdkcolor);

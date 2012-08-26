@@ -24,14 +24,17 @@
 
 #include <gtk/gtk.h>
 
-
 /* Expose event: this occurs when the windows is show .*/
 G_MODULE_EXPORT gboolean
 on_expose                    (GtkWidget *widget,
-			      GdkEventExpose *event,
+			      cairo_t* cr,
 			      gpointer func_data);
 
-
+/* On screen changed. */
+void on_screen_changed(GtkWidget *widget,
+		       GdkScreen *previous_screen,
+		       gpointer   user_data);
+		       
 /* This is called when the button is pushed. */
 G_MODULE_EXPORT gboolean
 on_button_press              (GtkWidget *win,
