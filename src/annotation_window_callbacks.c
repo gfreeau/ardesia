@@ -253,8 +253,7 @@ on_motion_notify (GtkWidget *win,
 
   initialize_annotation_cairo_context (data);
 
-  if ( (gdk_device_get_source (ev->device) != GDK_SOURCE_MOUSE) &&
-       (data->cur_context->type != ANNOTATE_ERASER))
+  if (data->cur_context->type != ANNOTATE_ERASER)
     {
       pressure = get_pressure ( (GdkEvent *) ev);
 
