@@ -487,44 +487,43 @@ is_eraser (GdkDevice *device)
 
 /* Set-up input device. */
 void
+setup_input_device(GdkDevice *device)
+{
+  /* only enable devices with 2 ore more axes */
+  if ((gdk_device_get_source(device) != GDK_SOURCE_KEYBOARD) &&
+      (gdk_device_get_source(device) != GDK_SOURCE_MOUSE) &&
+      (gdk_device_get_n_axes(device) >= 2))
+	  {
+	  
+	    if (!gdk_device_set_mode (device, GDK_MODE_SCREEN))
+		    {
+		      g_warning ("Unable to set the device %s to the screen mode\n",
+		                 gdk_device_get_name (device));
+		    }
+			g_printerr ("Enabled Device in screen mode. %p: \"%s\" (Type: %d)\n",
+			            device, gdk_device_get_name (device),
+			            gdk_device_get_source (device));
+	  }
+}
+
+
+
+/* Set-up input devices. */
+void
 setup_input_devices ()
 {
+  GList *d = (GList *) NULL;
   GdkDeviceManager *device_manager = gdk_display_get_device_manager (gdk_display_get_default ());
-  GList *devices, *d;
-  devices = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
-
+  GList *devices = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
+  devices = g_list_concat (devices, gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE));
+    
   for (d = devices; d; d = d->next)
     {
       GdkDevice *device = (GdkDevice *) d->data;
-      GdkInputSource type = gdk_device_get_source (device);
-      
-      			if (type == GDK_SOURCE_ERASER)
-			{
-			  g_printerr ("Enabled eraser Device in screen mode. %p: \"%s\" (Type: %d)\n",
-			  device, gdk_device_get_name (device), gdk_device_get_source (device));
-			}
-      /* Guess "Eraser"-Type devices. */
-      if (is_eraser (device))
-	{
-	   //GValue val = GDK_SOURCE_ERASER;
-	   //g_object_set_property (G_OBJECT (device), "input-source", &val);
-	  //gdk_device_set_source (device, GDK_SOURCE_ERASER);
-	}
-
-       /* only enable devices with 2 ore more axes */
-  if ((gdk_device_get_source(device) != GDK_SOURCE_KEYBOARD) && 
-      (gdk_device_get_n_axes(device) >= 2))
-	    {
-
-	      if (!gdk_device_set_mode (device, GDK_MODE_SCREEN))
-		{
-		  g_warning ("Unable to set the device %s to the screen mode\n", gdk_device_get_name (device));
-		}
-			  g_printerr ("Enabled Device in screen mode. %p: \"%s\" (Type: %d)\n",
-			  device, gdk_device_get_name (device), gdk_device_get_source (device));
-	}
-
+			  
+      setup_input_device(device);
     }
+    
 }
 
 

@@ -427,7 +427,11 @@ on_proximity_in (GtkWidget *widget,
 
   if (data->cur_context->type == ANNOTATE_PEN)
     {
+      GdkModifierType state = (GdkModifierType) NULL;
 
+      /* Get the modifier state. */
+      gdk_window_get_device_position (gtk_widget_get_window (widget), ev->device, (gint *) NULL, (gint *) NULL, &state);
+      annotate_select_tool (data, ev->device, state);
       data->old_paint_type = ANNOTATE_PEN; 
     }
   else
