@@ -70,3 +70,16 @@ on_proximity_out             (GtkWidget *win,
 			      gpointer func_data);
 
 
+/* On device added. */
+void on_device_removed (GdkDeviceManager *device_manager,
+			GdkDevice        *device,
+			gpointer          user_data);
+			
+
+/* On device removed. */
+void on_device_added (GdkDeviceManager *device_manager,
+		      GdkDevice        *device,
+		      gpointer          user_data);
+			      
+
+

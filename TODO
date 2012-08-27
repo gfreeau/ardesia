@@ -43,7 +43,6 @@
   - Not parallel to the axis shape recognition
   - Send a bug report with stacktrace when a crash occurs;
     could be used google-breakpad
-  - MacOsX porting
 
 ===
 EOF

@@ -468,3 +468,35 @@ on_proximity_out (GtkWidget *win,
   return TRUE;
 }
 
+
+/* On device added. */
+void on_device_removed (GdkDeviceManager *device_manager,
+			GdkDevice        *device,
+			gpointer          user_data)
+{
+  AnnotateData *data = (AnnotateData *) user_data;
+  
+  if(data->debug)
+    {
+      g_printerr("DEBUG: device '%s' removed\n", gdk_device_get_name(device));
+    }
+
+  setup_input_devices();
+}
+
+
+/* On device removed. */
+void on_device_added (GdkDeviceManager *device_manager,
+		      GdkDevice        *device,
+		      gpointer          user_data)
+{
+  AnnotateData *data = (AnnotateData *) user_data;
+
+  if(data->debug)
+    {
+      g_printerr("DEBUG: device '%s' added\n", gdk_device_get_name(device));
+    }
+
+  setup_input_devices();
+}
+

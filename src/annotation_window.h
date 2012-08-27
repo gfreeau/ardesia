@@ -164,11 +164,17 @@ typedef struct
 void
 initialize_annotation_cairo_context(AnnotateData *data);
 
+
 /* Initialize the annotation window. */
 gint
 annotate_init (GtkWidget *parent,
 	       gchar *iwb_filename,
 	       gboolean debug);
+
+
+/* Set-up input device. */
+void
+setup_input_devices ();
 
 
 /* Get the annotation window. */

@@ -486,7 +486,7 @@ is_eraser (GdkDevice *device)
 
 
 /* Set-up input device. */
-static void
+void
 setup_input_devices ()
 {
   GdkDeviceManager *device_manager = gdk_display_get_device_manager (gdk_display_get_default ());
@@ -496,10 +496,18 @@ setup_input_devices ()
   for (d = devices; d; d = d->next)
     {
       GdkDevice *device = (GdkDevice *) d->data;
-
+      GdkInputSource type = gdk_device_get_source (device);
+      
+      			if (type == GDK_SOURCE_ERASER)
+			{
+			  g_printerr ("Enabled eraser Device in screen mode. %p: \"%s\" (Type: %d)\n",
+			  device, gdk_device_get_name (device), gdk_device_get_source (device));
+			}
       /* Guess "Eraser"-Type devices. */
       if (is_eraser (device))
 	{
+	   //GValue val = GDK_SOURCE_ERASER;
+	   //g_object_set_property (G_OBJECT (device), "input-source", &val);
 	  //gdk_device_set_source (device, GDK_SOURCE_ERASER);
 	}
 
@@ -592,6 +600,12 @@ setup_app (GtkWidget* parent)
   /* Connect all the callback from gtkbuilder xml file. */
   gtk_builder_connect_signals (data->annotation_window_gtk_builder, (gpointer) data);
 
+  /* Connet some extra callbacks in order to handle the hotplugged input devices. */
+  g_signal_connect (gdk_display_get_device_manager (gdk_display_get_default ()), "device-added",
+                    G_CALLBACK (on_device_added), data);
+  g_signal_connect (gdk_display_get_device_manager (gdk_display_get_default ()), "device-removed",
+                    G_CALLBACK (on_device_removed), data);
+                    
   /* This show the window in fullscreen generating an exposure. */
   gtk_window_fullscreen (GTK_WINDOW (data->annotation_window));
 
