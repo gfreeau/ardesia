@@ -491,7 +491,7 @@ setup_input_devices ()
 {
   GdkDeviceManager *device_manager = gdk_display_get_device_manager (gdk_display_get_default ());
   GList *devices, *d;
-  devices = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE);
+  devices = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
 
   for (d = devices; d; d = d->next)
     {
@@ -504,14 +504,15 @@ setup_input_devices ()
 	}
 
        /* only enable devices with 2 ore more axes */
-  if (gdk_device_get_source(device) != GDK_SOURCE_KEYBOARD && gdk_device_get_n_axes(device) >= 2)
+  if ((gdk_device_get_source(device) != GDK_SOURCE_KEYBOARD) && 
+      (gdk_device_get_n_axes(device) >= 2))
 	    {
 
 	      if (!gdk_device_set_mode (device, GDK_MODE_SCREEN))
 		{
 		  g_warning ("Unable to set the device %s to the screen mode\n", gdk_device_get_name (device));
 		}
-			  g_printerr ("Enabled Device. %p: \"%s\" (Type: %d)\n",
+			  g_printerr ("Enabled Device in screen mode. %p: \"%s\" (Type: %d)\n",
 			  device, gdk_device_get_name (device), gdk_device_get_source (device));
 	}
 
