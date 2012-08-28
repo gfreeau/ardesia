@@ -471,27 +471,48 @@ roundify (gboolean closed_path)
 }
 
 
+/* Set screen mode. */
+static void
+set_screen_mode (GdkDevice *device)
+{
+  if (!gdk_device_set_mode (device, GDK_MODE_SCREEN))
+    {
+      g_warning ("Unable to set the device %s to the screen mode\n",
+		             gdk_device_get_name (device));
+		}
+		
+	g_printerr ("Enabled Device in screen mode. %p: \"%s\" (Type: %d)\n",
+			        device, gdk_device_get_name (device),
+			        gdk_device_get_source (device));
+}
+			            
+			            
 /* Set-up input device. */
 static void
-setup_input_device(GdkDevice *device)
+setup_input_device (GdkDevice *device)
 {
   /* only enable devices with 2 ore more axes */
   if ((gdk_device_get_source(device) != GDK_SOURCE_KEYBOARD) &&
       (gdk_device_get_source(device) != GDK_SOURCE_MOUSE) &&
-      (gdk_device_get_n_axes(device) >= 2))
+      ( gdk_device_get_n_axes (device) >= 2))
 	  {
-	    gtk_widget_get_device_enabled (data->annotation_window , device);
-	    if (!gdk_device_set_mode (device, GDK_MODE_SCREEN))
-		    {
-		      g_warning ("Unable to set the device %s to the screen mode\n",
-		                 gdk_device_get_name (device));
-		    }
-			g_printerr ("Enabled Device in screen mode. %p: \"%s\" (Type: %d)\n",
-			            device, gdk_device_get_name (device),
-			            gdk_device_get_source (device));
+	    int i = 0;
+	    for (i=0; i < gdk_device_get_n_axes (device); i++)
+	      {
+	        GdkAxisUse axis_use = gdk_device_get_axis_use (device, i);
+	        if (axis_use != GDK_AXIS_PRESSURE)
+	          {
+	            /* I can not set to screen mode. */
+	            continue;
+	          }
+	        else
+	          {
+	            /* Set screen mode. */
+	            set_screen_mode(device);
+	          }
+	      }
 	  }
 }
-
 
 
 /* Set-up input devices. */
