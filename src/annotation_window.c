@@ -515,26 +515,6 @@ setup_input_device (GdkDevice *device)
 }
 
 
-/* Set-up input devices. */
-void
-setup_input_devices ()
-{
-  GList *d = (GList *) NULL;
-  GdkDeviceManager *device_manager = gdk_display_get_device_manager (gdk_display_get_default ());
-  GList *masters = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
-  GList *slavers = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE);
-  GList *devices = g_list_concat (masters, slavers);
-    
-  for (d = devices; d; d = d->next)
-    {
-      GdkDevice *device = (GdkDevice *) d->data;
-			  
-      setup_input_device(device);
-    }
-    
-}
-
-
 /* Create the annotation window. */
 static GtkWidget *
 create_annotation_window ()
@@ -677,7 +657,7 @@ delete_savepoint (AnnotateSavepoint *savepoint)
 
 
 /* Free the list of the  save-point for the redo. */
-void static
+static void
 annotate_redolist_free ()
 {
   guint i = data->current_save_index;
@@ -766,6 +746,26 @@ draw_arrow_in_point(AnnotatePoint *point,
     {
       g_printerr ("with vertex at (x,y)= (%f : %f)\n",  arrow_head_0_x , arrow_head_0_y);
     }
+}
+
+
+/* Set-up input devices. */
+void
+setup_input_devices ()
+{
+  GList *d = (GList *) NULL;
+  GdkDeviceManager *device_manager = gdk_display_get_device_manager (gdk_display_get_default ());
+  GList *masters = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
+  GList *slavers = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE);
+  GList *devices = g_list_concat (masters, slavers);
+    
+  for (d = devices; d; d = d->next)
+    {
+      GdkDevice *device = (GdkDevice *) d->data;
+			  
+      setup_input_device(device);
+    }
+    
 }
 
 
