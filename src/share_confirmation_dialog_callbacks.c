@@ -29,7 +29,7 @@
 /* Shot when the ok button in share dialog is pushed. */
 G_MODULE_EXPORT void
 on_share_ok_button_clicked (GtkButton *buton,
-			    gpointer data)
+                            gpointer   data)
 {
   GSList *artifact_list = get_artifacts ();
   send_artifacts_with_email (artifact_list);
@@ -39,7 +39,7 @@ on_share_ok_button_clicked (GtkButton *buton,
 /* Shot when the ok button in preference dialog is pushed. */
 G_MODULE_EXPORT void
 on_share_cancel_button_clicked (GtkButton *buton,
-				gpointer data)
+                                gpointer   data)
 {
   /* do nothing */
 }

@@ -35,7 +35,7 @@
  */
 void
 start_info_dialog (GtkToolButton *toolbutton,
-		   GtkWindow *parent)
+                   GtkWindow *parent)
 {
   GtkWidget *info_dialog = NULL;
 

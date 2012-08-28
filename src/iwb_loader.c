@@ -31,7 +31,7 @@
 
 /* Add the background image reference. */
 static void
-add_background_image_reference (gchar *project_tmp_dir,
+add_background_image_reference (gchar   *project_tmp_dir,
                                 xmlChar *href)
 {
   /* It is an image */
@@ -44,8 +44,8 @@ add_background_image_reference (gchar *project_tmp_dir,
 
 /* Add the background color reference. */
 static void
-add_background_color_reference (xmlXPathContextPtr context,
-                                xmlChar *ref)
+add_background_color_reference (xmlXPathContextPtr  context,
+                                xmlChar            *ref)
 {
   xmlChar *xpath = (xmlChar *) g_strdup_printf ("/iwb/svg:svg/svg:rect[@id='%s']", (gchar *) ref);
   xmlXPathObjectPtr result = xmlXPathEvalExpression (xpath, context);
@@ -90,11 +90,10 @@ add_background_color_reference (xmlXPathContextPtr context,
   /* FFFFFFFF */
 
   gchar *rgba = g_strdup_printf ("%02x%02x%02x%02x",
-				 rd,
-				 gd,
-				 bd,
-				 ad
-				 );
+                                 rd,
+                                 gd,
+                                 bd,
+                                 ad);
 
   if (g_strcmp0 (rgba, "00000000") != 0)
     {
@@ -115,9 +114,9 @@ add_background_color_reference (xmlXPathContextPtr context,
 
 /* Follow the ref and load the associated save-point. */
 void
-load_background_by_reference (gchar *project_tmp_dir,
-			      xmlXPathContextPtr context,
-			      xmlChar *ref)
+load_background_by_reference (gchar               *project_tmp_dir,
+                              xmlXPathContextPtr   context,
+                              xmlChar             *ref)
 {
   xmlChar *xpath = (xmlChar *) g_strdup_printf ("/iwb/svg:svg/svg:image[@id='%s']", (gchar *) ref);
   xmlXPathObjectPtr result = xmlXPathEvalExpression (xpath, context);
@@ -128,13 +127,13 @@ load_background_by_reference (gchar *project_tmp_dir,
       xmlChar *href = xmlGetProp (node, (xmlChar *) "href");
 
       if (!href)
-	{
-	  add_background_color_reference (context, ref);
-	}
+        {
+          add_background_color_reference (context, ref);
+        }
       else
-	{
-	  add_background_image_reference (project_tmp_dir, href);
-	}
+        {
+          add_background_image_reference (project_tmp_dir, href);
+        }
     }
   /* Cleanup of XPath data. */
   xmlXPathFreeObject (result);
@@ -144,10 +143,10 @@ load_background_by_reference (gchar *project_tmp_dir,
 
 /* Follow the ref and load the associated save-point. */
 GSList *
-load_savepoint_by_reference (GSList *savepoint_list,
-			     gchar *project_tmp_dir,
-			     xmlXPathContextPtr context,
-			     xmlChar *ref)
+load_savepoint_by_reference (GSList              *savepoint_list,
+                             gchar               *project_tmp_dir,
+                             xmlXPathContextPtr   context,
+                             xmlChar             *ref)
 {
   xmlChar *xpath = (xmlChar *) g_strdup_printf ("/iwb/svg:svg/svg:image[@id='%s']", (gchar *) ref);
   xmlXPathObjectPtr result = xmlXPathEvalExpression (xpath, context); 
@@ -173,7 +172,7 @@ load_savepoint_by_reference (GSList *savepoint_list,
 /* Decompress infile in dest_dir. */
 static void
 decompress_infile (GsfInfile *infile,
-                   gchar *dest_dir)
+                   gchar     *dest_dir)
 {
   GError   *err = (GError *) NULL;
   int j = 0;
@@ -185,21 +184,20 @@ decompress_infile (GsfInfile *infile,
       gboolean is_dir = gsf_infile_num_children (GSF_INFILE (child)) >= 0;
 
       if (is_dir)
-	{
+        {
           gchar *dir_path = g_build_filename (dest_dir, filename, (gchar *) 0);
-	  decompress_infile (GSF_INFILE (child), dir_path);
+          decompress_infile (GSF_INFILE (child), dir_path);
           g_free (dir_path);
-	}
+        }
       else
-	{
-	  gchar *file_path = g_build_filename (dest_dir, filename, (gchar *) 0);
-	  GsfOutput *output = GSF_OUTPUT (gsf_output_stdio_new (file_path, &err));
-
-	  gsf_input_copy (child, output);
-	  gsf_output_close (output);
-	  g_object_unref (output);
-	  g_free (file_path);
-	}
+        {
+          gchar *file_path = g_build_filename (dest_dir, filename, (gchar *) 0);
+          GsfOutput *output = GSF_OUTPUT (gsf_output_stdio_new (file_path, &err));
+          gsf_input_copy (child, output);
+          gsf_output_close (output);
+          g_object_unref (output);
+          g_free (file_path);
+        }
 
       g_object_unref (G_OBJECT (child));
     }
@@ -209,7 +207,7 @@ decompress_infile (GsfInfile *infile,
 /* Decompress the iwb file; it is a zip file. */
 static void
 decompress_iwb (gchar *iwbfile,
-		gchar *project_tmp_dir)
+                gchar *project_tmp_dir)
 {
   GError   *err = (GError *) NULL;
   GsfInput   *input = (GsfInput *) NULL;
@@ -247,9 +245,9 @@ static xmlXPathContextPtr register_namespaces (xmlXPathContextPtr context)
 
 /* Load save-points from iwb. */
 static GSList *
-load_savepoints_by_iwb (GSList *savepoint_list,
-			gchar *project_tmp_dir,
-			xmlXPathContextPtr context)
+load_savepoints_by_iwb (GSList             *savepoint_list,
+                        gchar              *project_tmp_dir,
+                        xmlXPathContextPtr  context)
 {
   xmlChar *xpath_get_element = (xmlChar *) "/iwb/iwb:element";
   xmlXPathObjectPtr result = xmlXPathEvalExpression (xpath_get_element, context);
@@ -268,17 +266,17 @@ load_savepoints_by_iwb (GSList *savepoint_list,
       xmlChar *background = xmlGetProp (node, (xmlChar *) "background");
 
       if (background)
-	{
-	  if (g_strcmp0 ( (gchar *) background, "true") == 0)
-	    { 
+        {
+          if (g_strcmp0 ( (gchar *) background, "true") == 0)
+            { 
               load_background_by_reference (project_tmp_dir, context, ref);
-	      xmlFree (background);
-	    }
-	}
+              xmlFree (background);
+            }
+        }
       else
         {
-	  /* Follow the ref and take xlink href filename. */
-	  savepoint_list = load_savepoint_by_reference (savepoint_list, project_tmp_dir, context, ref);
+          /* Follow the ref and take xlink href filename. */
+          savepoint_list = load_savepoint_by_reference (savepoint_list, project_tmp_dir, context, ref);
         }
       xmlFree (ref);
     }

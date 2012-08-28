@@ -41,7 +41,7 @@
  */
 gboolean
 start_save_video_dialog (GtkToolButton *toolbutton,
-			 GtkWindow *parent);
+                         GtkWindow     *parent);
 
 
 /* Quit the recorder. */

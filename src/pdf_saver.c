@@ -39,7 +39,7 @@ static PdfData *pdf_data;
 /* Start the dialog that ask the file name where is being exported the pdf. */
 static gboolean
 start_save_pdf_dialog (GtkWindow *parent,
-		       GdkPixbuf *pixbuf)
+                       GdkPixbuf *pixbuf)
 {
   gboolean ret = TRUE;
   GtkWidget *preview = NULL;
@@ -52,17 +52,19 @@ start_save_pdf_dialog (GtkWindow *parent,
   gdk_window_set_cursor (gtk_widget_get_window(get_annotation_window ()), (GdkCursor *) NULL);
   
   GtkWidget *chooser = gtk_file_chooser_dialog_new (gettext ("Export as pdf"),
-						    parent,
-						    GTK_FILE_CHOOSER_ACTION_SAVE,
-						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						    GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT,
-						    NULL);
+                                                    parent,
+                                                    GTK_FILE_CHOOSER_ACTION_SAVE,
+                                                    GTK_STOCK_CANCEL,
+                                                    GTK_RESPONSE_CANCEL,
+                                                    GTK_STOCK_SAVE_AS,
+                                                    GTK_RESPONSE_ACCEPT,
+                                                    NULL);
 
   gtk_window_set_modal (GTK_WINDOW (chooser), TRUE);
   gtk_window_set_keep_above (GTK_WINDOW (chooser), TRUE);
 
   gtk_window_set_title (GTK_WINDOW (chooser), gettext ("Choose a file"));
- 
+
   /* Save the preview in a image buffer. */
   preview = gtk_image_new ();
   preview_pixbuf = gdk_pixbuf_scale_simple (pixbuf, preview_width, preview_height, GDK_INTERP_BILINEAR);
@@ -98,11 +100,11 @@ start_save_pdf_dialog (GtkWindow *parent,
       if (file_exists (pdf_data->filename))
         {
           gint result = show_override_dialog (GTK_WINDOW (chooser));
-	  if ( result == GTK_RESPONSE_NO)
+          if ( result == GTK_RESPONSE_NO)
             {
-	      ret = FALSE;
-	    }
-	}
+              ret = FALSE;
+            }
+        }
     }
 
   stop_virtual_keyboard ();
@@ -119,7 +121,7 @@ start_save_pdf_dialog (GtkWindow *parent,
 /* Initialize the pdf saver. */
 static gboolean 
 init_pdf_saver (GtkWindow *parent,
-		GdkPixbuf *pixbuf)
+                GdkPixbuf *pixbuf)
 {
   gboolean ret = FALSE;
 
@@ -193,9 +195,9 @@ void
 add_pdf_page (GtkWindow *parent)
 {
   GdkPixbuf *pixbuf = grab_screenshot ();
-  cairo_surface_t *saved_surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 
-							       gdk_screen_width (), 
-							       gdk_screen_height ());
+  cairo_surface_t *saved_surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+                                                               gdk_screen_width (),
+                                                               gdk_screen_height ());
 
   cairo_t *cr = cairo_create (saved_surface);
   const gchar *tmp_dir = g_get_tmp_dir ();
@@ -218,17 +220,17 @@ add_pdf_page (GtkWindow *parent)
   if (pdf_data == NULL)
     {
       if (!g_thread_supported ())
-	{
-	  /* Initialize internal mutex "gdk_threads_mutex". */
-	  g_thread_init (NULL);
-	  gdk_threads_init ();
-	  g_printerr ("g_thread supported\n");
-	}
+        {
+          /* Initialize internal mutex "gdk_threads_mutex". */
+          g_thread_init (NULL);
+          gdk_threads_init ();
+          g_printerr ("g_thread supported\n");
+        }
       if (!init_pdf_saver (parent, pixbuf))
-	{
-	  g_object_unref (pixbuf);
-	  return;
-	}
+        {
+          g_object_unref (pixbuf);
+          return;
+        }
     }
 
   g_object_unref (pixbuf);
@@ -256,22 +258,22 @@ quit_pdf_saver ()
 
       /* Free the list and all the buffers inside it. */
       while (pdf_data->input_filelist)
-	{
-	  gchar *filename = (gchar *) g_slist_nth_data (pdf_data->input_filelist, 0);
-	  if (filename)
-	    {
-	      g_remove (filename);
-	      pdf_data->input_filelist = g_slist_remove (pdf_data->input_filelist, filename);
-	      g_free (filename);
-	      filename = NULL;
-	    }
-	}
+        {
+          gchar *filename = (gchar *) g_slist_nth_data (pdf_data->input_filelist, 0);
+          if (filename)
+            {
+              g_remove (filename);
+              pdf_data->input_filelist = g_slist_remove (pdf_data->input_filelist, filename);
+              g_free (filename);
+              filename = NULL;
+            }
+        }
 
       if (pdf_data->filename)
-	{
+        {
           g_free (pdf_data->filename);
           pdf_data->filename = NULL;
-	}
+        }
 
       g_free (pdf_data);
       pdf_data = NULL;

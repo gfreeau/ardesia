@@ -31,13 +31,13 @@
  */
 static void
 calculate_position (GtkWidget *ardesia_bar_window,
-		    gint d_width,
-		    gint d_height,
-		    gint *x,
-		    gint *y,
-		    gint w_width,
-		    gint w_height,
-		    gint position)
+                    gint       d_width,
+                    gint       d_height,
+                    gint      *x,
+                    gint      *y,
+                    gint       w_width,
+                    gint       w_height,
+                    gint       position)
 {
   *y = ((d_height - w_height - SPACE_FROM_BORDER)/2);
   /* Vertical layout. */
@@ -59,8 +59,8 @@ calculate_position (GtkWidget *ardesia_bar_window,
         }
       else if (position==SOUTH)
         {
-	  /* South. */
-	  *y = d_height - SPACE_FROM_BORDER - w_height;
+          /* South. */
+          *y = d_height - SPACE_FROM_BORDER - w_height;
         }
       else
         {
@@ -75,13 +75,13 @@ calculate_position (GtkWidget *ardesia_bar_window,
 /*
  * Calculate the initial position.
  */
-static void 
+static void
 calculate_initial_position (GtkWidget *ardesia_bar_window,
-			    gint *x,
-			    gint *y, 
-			    gint w_width,
-			    gint w_height, 
-			    gint position)
+                            gint *x,
+                            gint *y,
+                            gint w_width,
+                            gint w_height,
+                            gint position)
 {
   gint d_width = gdk_screen_width ();
   gint d_height = gdk_screen_height ();
@@ -151,7 +151,7 @@ get_xdg_config_file (const char *name)
 /* Create the ardesia bar window. */
 GtkWidget *
 create_bar_window (CommandLine *commandline,
-		   GtkWidget *parent)
+                   GtkWidget   *parent)
 {
   GtkWidget *bar_window = (GtkWidget *) NULL;
   BarData *bar_data = (BarData *) NULL;
@@ -229,11 +229,11 @@ create_bar_window (CommandLine *commandline,
 
   /* x and y will be the bar left corner coordinates. */
   calculate_initial_position (bar_window,
-			      &x,
-			      &y,
-			      width,
-			      height,
-			      commandline->position);
+                              &x,
+                              &y,
+                              width,
+                              height,
+                              commandline->position);
 
   /* The position is calculated respect the top left corner
    * and then I set the north west gravity. 
@@ -243,7 +243,7 @@ create_bar_window (CommandLine *commandline,
   /* Move the window in the desired position. */
   gtk_window_move (GTK_WINDOW (bar_window), x, y);
 
-  
+
   return bar_window;
 }
 

@@ -145,14 +145,13 @@ gdk_pixbuf_swap_blue_with_red (GdkPixbuf **pixbuf)
       gint y =0;
 
       for( y = 0; y < pixbuf_width; y++ )
-	{
-	  guchar* p = pixels + y * rowstride + x * n_channels;
+        {
+          guchar* p = pixels + y * rowstride + x * n_channels;
           /* swap the pixel red value with the blue */
-	  guchar p0 = p[0];
-
-	  p[0] = p[2];
-	  p[2] = p0;
-	}
+          guchar p0 = p[0];
+          p[0] = p[2];
+          p[2] = p0;
+        }
     }
 
 }
@@ -160,9 +159,9 @@ gdk_pixbuf_swap_blue_with_red (GdkPixbuf **pixbuf)
 
 /* Create pixmap and mask for the eraser cursor. */
 static void
-get_eraser_pixbuf (gdouble thickness,
-		   GdkPixbuf **pixbuf,
-		   gdouble circle_width)
+get_eraser_pixbuf (gdouble     thickness,
+                   GdkPixbuf **pixbuf,
+                   gdouble     circle_width)
 {
   cairo_t *eraser_cr = (cairo_t *) NULL;
   cairo_surface_t *image_surface = get_eraser_image_surface ();
@@ -180,12 +179,11 @@ get_eraser_pixbuf (gdouble thickness,
   *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, cursor_width, cursor_height);
 
   surface = cairo_image_surface_create_for_data (gdk_pixbuf_get_pixels (*pixbuf),
-						 CAIRO_FORMAT_RGB24,
-						 gdk_pixbuf_get_width (*pixbuf),
-						 gdk_pixbuf_get_height (*pixbuf),
-						 gdk_pixbuf_get_rowstride (*pixbuf));
-						 
-						 
+                                                 CAIRO_FORMAT_RGB24,
+                                                 gdk_pixbuf_get_width (*pixbuf),
+                                                 gdk_pixbuf_get_height (*pixbuf),
+                                                 gdk_pixbuf_get_rowstride (*pixbuf));
+						
 	eraser_cr = cairo_create (surface);
 
   clear_cairo_context (eraser_cr);
@@ -203,13 +201,13 @@ get_eraser_pixbuf (gdouble thickness,
 
   /* Add a circle with the desired width. */
   cairo_set_source_rgba (eraser_cr, 0, 0, 1, 1);
- 
+
   cairo_arc (eraser_cr,
-       thickness/2 + circle_width,
-	     cursor_height-thickness/2 -circle_width,
-	     thickness/2,
-	     0,
-	     2 * M_PI);
+             thickness/2 + circle_width,
+             cursor_height-thickness/2 -circle_width,
+             thickness/2,
+             0,
+             2 * M_PI);
 
   cairo_stroke (eraser_cr);
 
@@ -222,17 +220,17 @@ get_eraser_pixbuf (gdouble thickness,
 
   /* The pixbuf created by cairo has the r and b color inverted. */
   gdk_pixbuf_swap_blue_with_red (pixbuf);
-   
+
 }
 
 
 /* Create pixmap and mask for the pen cursor. */
 static void
 get_pen_pixbuf (GdkPixbuf **pixbuf,
-		gchar *color,
-		gdouble thickness,
-                gdouble arrow,
-                gdouble circle_width)
+                gchar      *color,
+                gdouble     thickness,
+                gdouble     arrow,
+                gdouble     circle_width)
 {
   cairo_t *pen_cr = (cairo_t *) NULL;
   cairo_surface_t *surface = (cairo_surface_t *) NULL;
@@ -248,19 +246,19 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
     {
       /* Take the opacity. */
       gchar* alpha = g_substr (color, 6, 8);
-  
+
       if (g_strcmp0 (alpha, "FF") == 0)
-	{
-	  /* load the pencil icon. */
-	  image_surface = get_pen_image_surface ();
-	}
+        {
+          /* load the pencil icon. */
+          image_surface = get_pen_image_surface ();
+        }
       else
-	{
-	  /* load the highlighter icon. */
-	  image_surface = get_highlighter_image_surface ();
-	}
+        {
+          /* load the highlighter icon. */
+          image_surface = get_highlighter_image_surface ();
+        }
     }
-    
+
   icon_width = cairo_image_surface_get_width (image_surface);
   icon_height = cairo_image_surface_get_height (image_surface);
   
@@ -270,10 +268,10 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
 
 
   surface = cairo_image_surface_create_for_data (gdk_pixbuf_get_pixels (*pixbuf),
-						 CAIRO_FORMAT_RGB24,
-						 gdk_pixbuf_get_width (*pixbuf),
-						 gdk_pixbuf_get_height (*pixbuf),
-						 gdk_pixbuf_get_rowstride (*pixbuf));
+                                                 CAIRO_FORMAT_RGB24,
+                                                 gdk_pixbuf_get_width (*pixbuf),
+                                                 gdk_pixbuf_get_height (*pixbuf),
+                                                 gdk_pixbuf_get_rowstride (*pixbuf));
 
 
   pen_cr = cairo_create (surface);
@@ -294,13 +292,13 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
 
   /* Add a circle that respect the width and the selected colour. */
   cairo_set_source_color_from_string (pen_cr, color);
- 
+
   cairo_arc (pen_cr,
-       thickness/2 + circle_width,
-	     cursor_height-thickness/2 -circle_width,
-	     thickness/2,
-	     0,
-	     2 * M_PI);
+             thickness/2 + circle_width,
+             cursor_height-thickness/2 -circle_width,
+             thickness/2,
+             0,
+             2 * M_PI);
 
   cairo_stroke (pen_cr);
 
@@ -345,9 +343,9 @@ allocate_invisible_cursor (GdkCursor **cursor)
 /* Set the pen cursor. */
 void
 set_pen_cursor (GdkCursor **cursor,
-		gdouble thickness,
-		gchar* color,
-                gboolean arrow)
+                gdouble     thickness,
+                gchar      *color,
+                gboolean    arrow)
 {
   GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
   gdouble circle_width = 2.0;
@@ -366,7 +364,7 @@ set_pen_cursor (GdkCursor **cursor,
 /* Set the eraser cursor. */
 void
 set_eraser_cursor (GdkCursor **cursor,
-		   gint size)
+                   gint        size)
 {
   GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
   gdouble circle_width = 2.0;

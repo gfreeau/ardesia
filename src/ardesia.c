@@ -34,7 +34,7 @@
 extern TextConfig *text_config;
 
 /* Print the version of the tool and exit. */
-static void 
+static void
 print_version ()
 {
   g_printf ("Ardesia %s; the free digital sketchpad\n\n", PACKAGE_VERSION);
@@ -81,10 +81,10 @@ run_missing_composite_manager_dialog ()
 {
   GtkWidget *msg_dialog;
   msg_dialog = gtk_message_dialog_new (NULL,
-				       GTK_DIALOG_MODAL,
-				       GTK_MESSAGE_ERROR,
-				       GTK_BUTTONS_OK,
-				       gettext ("In order to run Ardesia you need to enable a composite manager"));
+                                       GTK_DIALOG_MODAL,
+                                       GTK_MESSAGE_ERROR,
+                                       GTK_BUTTONS_OK,
+                                       gettext ("In order to run Ardesia you need to enable a composite manager"));
 
   gtk_dialog_run (GTK_DIALOG (msg_dialog));
 
@@ -118,8 +118,8 @@ check_composite_manager ()
 
 /* Parse the command line in the standard getopt way. */
 static CommandLine *
-parse_options (gint argc,
-	       char *argv[])
+parse_options (gint  argc,
+               char *argv[])
 {
   CommandLine *commandline = g_malloc ((gsize) sizeof (CommandLine));
 
@@ -136,88 +136,89 @@ parse_options (gint argc,
     {
       gint c;
       static struct option long_options[] =
-	{
-	  /* These options set a flag. */
-	  {"help", no_argument,       0, 'h'},
-          {"decorated", no_argument,  0, 'd'},
-	  {"verbose", no_argument,    0, 'V'},
-          {"version", no_argument,    0, 'v'},
-	  /* 
-           * These options don't set a flag.
-	   * We distinguish them by their indices.
-           */
-	  {"gravity", required_argument, 0, 'g'},
-	  {"font", required_argument, 0, 'f'},
-	  {"leftmargin", required_argument, 0, 'l'},
-	  {"tabsize", required_argument, 0, 't'},
-	  {0, 0, 0, 0}
-	};
+      {/* These options set a flag. */
+      {"help", no_argument,       0, 'h'},
+      {"decorated", no_argument,  0, 'd'},
+      {"verbose", no_argument,    0, 'V'},
+      {"version", no_argument,    0, 'v'},
+      /*
+       * These options don't set a flag.
+       * We distinguish them by their indices.
+       */
+      {"gravity", required_argument, 0, 'g'},
+      {"font", required_argument, 0, 'f'},
+      {"leftmargin", required_argument, 0, 'l'},
+      {"tabsize", required_argument, 0, 't'},
+      {0, 0, 0, 0}
+      };
 
       gint option_index = 0;
       c = getopt_long (argc,
-		       argv,
-		       "hdvVg:f:l:t:",
-		       long_options,
-		       &option_index);
+                       argv,
+                       "hdvVg:f:l:t:",
+                       long_options,
+                       &option_index);
 
       /* Detect the end of the options. */
       if (c == -1)
-	break;
+        {
+          break;
+        }
 
       switch (c)
-	{
-	case 'h':
-	  print_help ();
-	  break;
-        case 'v':
-	  print_version ();
-	  break;
-        case 'd':
-	  commandline->decorated=TRUE;
-	  break;
-	case 'V':
-	  commandline->debug=TRUE;
-	  break;
-	case 'g':
-	  if (g_strcmp0 (optarg, "east") == 0)
-	    {
-	      commandline->position = EAST;
-	    }
-	  else if (g_strcmp0 (optarg, "west") == 0)
-	    {
-	      commandline->position = WEST;
-	    }
-          else if (g_strcmp0 (optarg, "north") == 0)
-	    {
-	      commandline->position = NORTH;
-	    }
-          else if (g_strcmp0 (optarg, "south") == 0)
-	    {
-	      commandline->position = SOUTH;
-	    }
-	  else
-	    {
-	      print_help ();
-	    }
-	  break;
-	case 'f':
-	  if (g_strcmp0 (optarg, "serif") == 0 ||
-			  g_strcmp0 (optarg, "sans-serif") == 0 ||
-			  g_strcmp0 (optarg, "monospace") == 0)
-	    {
-	      commandline->fontfamily = optarg;
-	    }
-	  break;
-	case 'l':
-	  commandline->text_leftmargin = atoi(optarg);
-	  break;
-	case 't':
-	  commandline->text_tabsize = atoi(optarg);
-	  break;
-	default:
-	  print_help ();
-	  break;
-	} 
+        {
+          case 'h':
+            print_help ();
+            break;
+          case 'v':
+            print_version ();
+            break;
+          case 'd':
+            commandline->decorated=TRUE;
+            break;
+          case 'V':
+            commandline->debug=TRUE;
+            break;
+          case 'g':
+            if (g_strcmp0 (optarg, "east") == 0)
+              {
+                commandline->position = EAST;
+              }
+            else if (g_strcmp0 (optarg, "west") == 0)
+              {
+                commandline->position = WEST;
+              }
+            else if (g_strcmp0 (optarg, "north") == 0)
+              {
+                commandline->position = NORTH;
+              }
+            else if (g_strcmp0 (optarg, "south") == 0)
+              {
+                commandline->position = SOUTH;
+              }
+            else
+              {
+                print_help ();
+              }
+            break;
+          case 'f':
+            if (g_strcmp0 (optarg, "serif") == 0 ||
+                g_strcmp0 (optarg, "sans-serif") == 0 ||
+                g_strcmp0 (optarg, "monospace") == 0)
+              {
+                commandline->fontfamily = optarg;
+              }
+            break;
+          case 'l':
+            commandline->text_leftmargin = atoi(optarg);
+            break;
+          case 't':
+            commandline->text_tabsize = atoi(optarg);
+            break;
+          default:
+            print_help ();
+            break;
+        }
     }
 
   if (optind<argc)
@@ -246,15 +247,15 @@ static void
 create_workspace_shortcut (gchar *workspace_dir)
 {
   gchar *desktop_entry_filename = g_strdup_printf ("%s%s%s_workspace",
-						   get_desktop_dir (),
-						   G_DIR_SEPARATOR_S,
-						   PACKAGE_NAME);
+                                                    get_desktop_dir (),
+                                                    G_DIR_SEPARATOR_S,
+                                                    PACKAGE_NAME);
 
 #ifdef _WIN32
   windows_create_link (workspace_dir,
-		       desktop_entry_filename,
-		       "%SystemRoot%\\system32\\imageres.dll",
-		       123);
+                       desktop_entry_filename,
+                       "%SystemRoot%\\system32\\imageres.dll",
+                       123);
 
 #else
   xdg_create_link (workspace_dir , desktop_entry_filename, "folder-documents");
@@ -272,8 +273,8 @@ configure_workspace (gchar *project_name)
 
   /* The workspace directory is in the documents ardesia folder. */
   workspace_dir = g_build_filename (documents_dir,
-			            PACKAGE_NAME,
-			            (gchar *) 0);
+                                    PACKAGE_NAME,
+                                    (gchar *) 0);
 
   create_workspace_shortcut (workspace_dir);
 
@@ -284,16 +285,16 @@ configure_workspace (gchar *project_name)
 /* Create the default project dir under the workspace_dir. */
 static gchar *
 create_default_project_dir (gchar *workspace_dir,
-			    gchar *project_name)
+                            gchar *project_name)
 {
   gchar *project_dir = g_build_filename (workspace_dir, project_name, (gchar *) 0);
 
-  if (!file_exists (project_dir)) 
+  if (!file_exists (project_dir))
     {
 
       if (g_mkdir_with_parents (project_dir, 0700)==-1)
         {
-	  g_warning ("Unable to create folder %s\n", project_dir);
+          g_warning ("Unable to create folder %s\n", project_dir);
         }
 
     }
@@ -304,7 +305,7 @@ create_default_project_dir (gchar *workspace_dir,
 
 /* This is the starting point of the program. */
 int
-main (int argc,
+main (int   argc,
       char *argv[])
 {
   CommandLine *commandline = (CommandLine *) NULL;
@@ -324,7 +325,7 @@ main (int argc,
 #ifndef _WIN32
   check_composite_manager ();
 #endif
-  
+
 	
   /*
    * Uncomment this and the create_segmentation_fault function
@@ -347,20 +348,20 @@ main (int argc,
 
 
       if (g_path_is_absolute (commandline->iwb_filename))
-	{
-	  iwb_filename = g_strdup (commandline->iwb_filename);
-	}
+        {
+          iwb_filename = g_strdup (commandline->iwb_filename);
+        }
       else
-	{
-	  gchar *dir = g_get_current_dir ();
-	  iwb_filename = g_build_filename (dir, commandline->iwb_filename, (gchar *) 0);
-	  g_free (dir);
-	}
+        {
+          gchar *dir = g_get_current_dir ();
+          iwb_filename = g_build_filename (dir, commandline->iwb_filename, (gchar *) 0);
+          g_free (dir);
+        }
 
       if (!file_exists(iwb_filename))
         {
-          printf("No such file %s\n", iwb_filename);          
-          exit (EXIT_FAILURE);          
+          printf("No such file %s\n", iwb_filename);
+          exit (EXIT_FAILURE);
         }
 
       init_pos = g_substrlastpos (iwb_filename, G_DIR_SEPARATOR_S);

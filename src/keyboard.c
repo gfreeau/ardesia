@@ -49,13 +49,13 @@ start_virtual_keyboard ()
   gchar *argv[2] = {VIRTUALKEYBOARD_NAME, (gchar *) 0};
 
   g_spawn_async (NULL /*working_directory*/,
-		 argv,
-		 NULL /*envp*/,
-		 G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD | G_SPAWN_LEAVE_DESCRIPTORS_OPEN,
-		 NULL /*child_setup*/,
-		 NULL /*user_data*/,
-		 &virtual_keyboard_pid /*child_pid*/,
-		 NULL /*error*/);
+                 argv,
+                 NULL /*envp*/,
+                 G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD | G_SPAWN_LEAVE_DESCRIPTORS_OPEN,
+                 NULL /*child_setup*/,
+                 NULL /*user_data*/,
+                 &virtual_keyboard_pid /*child_pid*/,
+                 NULL /*error*/);
 }
 
 

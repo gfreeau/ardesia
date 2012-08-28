@@ -29,27 +29,27 @@
 
 
 BOOL (WINAPI *setLayeredWindowAttributesProc) (HWND hwnd,
-					       COLORREF cr_key,
-					       BYTE b_alpha,
-					       DWORD dw_flags) = NULL;
+                                               COLORREF cr_key,
+                                               BYTE b_alpha,
+                                               DWORD dw_flags) = NULL;
 	
 
 
 /* This is needed to wrap the setLayeredWindowAttributes throught the windows user32 dll. */
 void
 setLayeredGdkWindowAttributes (GdkWindow* gdk_window,
-			       COLORREF cr_key,
-			       BYTE b_alpha,
-			       DWORD dw_flags)
+                               COLORREF cr_key,
+                               BYTE b_alpha,
+                               DWORD dw_flags)
 {
   HWND hwnd = GDK_WINDOW_HWND (gdk_window);
   HINSTANCE h_instance = LoadLibraryA ("user32");		
 
   setLayeredWindowAttributesProc = (BOOL (WINAPI*) (HWND hwnd,
-						    COLORREF cr_key,
-						    BYTE b_alpha,
-						    DWORD dw_flags))
-    GetProcAddress (h_instance, "SetLayeredWindowAttributes");
+                                                    COLORREF cr_key,
+                                                    BYTE b_alpha,
+                                                    DWORD dw_flags))
+  GetProcAddress (h_instance, "SetLayeredWindowAttributes");
 
   setLayeredWindowAttributesProc (hwnd, cr_key, b_alpha, dw_flags);
 }
@@ -57,10 +57,10 @@ setLayeredGdkWindowAttributes (GdkWindow* gdk_window,
 
 /* Send an email with MAPI. */
 void
-windows_send_email (gchar *to,
-		    gchar *subject,
-		    gchar *body,
-		    GSList *attachment_list)
+windows_send_email (gchar  *to,
+                    gchar  *subject,
+                    gchar  *body,
+                    GSList *attachment_list)
 {
   HINSTANCE inst;
   LPMAPISENDMAIL MAPISendMail;
@@ -112,9 +112,9 @@ windows_send_email (gchar *to,
 /* Create a link with icon. */
 void
 windows_create_link (gchar *src,
-		     gchar *dest,
-		     gchar *icon_path,
-		     int icon_index)
+                     gchar *dest,
+                     gchar *icon_path,
+                     int    icon_index)
 {
 
   gchar *extension = "lnk";

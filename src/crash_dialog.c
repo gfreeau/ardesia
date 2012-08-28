@@ -47,7 +47,8 @@ new_crash_data (gchar *crash_report)
  * Start the dialog that ask to the user
  * if he wants crash you work.
  */
-void start_crash_dialog (GtkWindow *parent, gchar *crash_report)
+void start_crash_dialog (GtkWindow *parent,
+                         gchar *crash_report)
 {
   GtkWidget *crash_dialog = NULL;
   GObject *crash_obj = NULL;
@@ -63,7 +64,7 @@ void start_crash_dialog (GtkWindow *parent, gchar *crash_report)
   gtk_window_set_modal (GTK_WINDOW (crash_dialog), TRUE);
 
 #ifdef _WIN32
-  /* 
+  /*
    * In Windows the parent bar go above the dialog;
    * to avoid this behaviour I put the parent keep above to false.
    */

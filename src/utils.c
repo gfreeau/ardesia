@@ -120,8 +120,8 @@ free_artifacts ()
 	
 /* Grab pointer. */
 void
-grab_pointer (GtkWidget *widget,
-	      GdkEventMask eventmask)
+grab_pointer (GtkWidget    *widget,
+              GdkEventMask  eventmask)
 {
   GdkGrabStatus result;
   GdkDisplay    *display = (GdkDisplay *) NULL;
@@ -207,9 +207,9 @@ get_bar_window ()
 /** Get the distance between two points. */
 gdouble
 get_distance (gdouble x1,
-	      gdouble y1,
-	      gdouble x2,
-	      gdouble y2)
+              gdouble y1,
+              gdouble x2,
+              gdouble y2)
 {
   /* Apply the Pitagora theorem to calculate the distance. */
   gdouble x_delta = fabs(x2-x1);
@@ -226,9 +226,9 @@ gdkcolor_to_rgb (GdkColor *gdkcolor)
 {
   /* Transform in the  RGB format e.g. FF0000. */ 
   gchar *ret_str = g_strdup_printf ("%02x%02x%02x",
-				    gdkcolor->red/257,
-				    gdkcolor->green/257,
-				    gdkcolor->blue/257);
+                                    gdkcolor->red/257,
+                                    gdkcolor->green/257,
+                                    gdkcolor->blue/257);
 
   return ret_str;
 }
@@ -272,9 +272,9 @@ clear_cairo_context (cairo_t *cr)
 
 /* Scale the surface with the width and height requested */
 cairo_surface_t *
-scale_surface    (cairo_surface_t *surface, 
-                  gdouble width,
-		  gdouble height)
+scale_surface    (cairo_surface_t *surface,
+                  gdouble          width,
+                  gdouble          height)
 {
   gdouble old_width = cairo_image_surface_get_width (surface);
   gdouble old_height = cairo_image_surface_get_height (surface);
@@ -306,7 +306,7 @@ scale_surface    (cairo_surface_t *surface,
 /* Set the cairo surface colour to the RGBA string. */
 void
 cairo_set_source_color_from_string ( cairo_t *cr,
-				     gchar *color)
+                                     gchar   *color)
 {
   if (cr)
     {
@@ -314,10 +314,10 @@ cairo_set_source_color_from_string ( cairo_t *cr,
       sscanf (color, "%02X%02X%02X%02X", &r, &g, &b, &a);
 
       cairo_set_source_rgba (cr,
-			     1.0 * r / 255,
-			     1.0 * g /255,
-			     1.0 * b /255,
-			     1.0 * a /255);
+                             1.0 * r / 255,
+                             1.0 * g /255,
+                             1.0 * b /255,
+                             1.0 * a /255);
 
     }
 }
@@ -353,10 +353,10 @@ grab_screenshot ()
 
   GdkWindow *root_window = gdk_get_default_root_window ();
   return gdk_pixbuf_get_from_window (root_window,
-				     0,
-				     0,
-				     width,
-				     height);
+                                     0,
+                                     0,
+                                     width,
+                                     height);
 
 }
 
@@ -364,7 +364,9 @@ grab_screenshot ()
 /*
  * This is function return if the point (x,y) in inside the ardesia bar window.
  */
-gboolean inside_bar_window (gdouble xp, gdouble yp)
+gboolean
+inside_bar_window (gdouble xp,
+                   gdouble yp)
 {
   gint x = 0;
   gint y = 0;
@@ -383,9 +385,9 @@ gboolean inside_bar_window (gdouble xp, gdouble yp)
     {
 
       if ((xp>=xd) && (xp<xd+width))
-	{
-	  return 1;
-	}
+        {
+          return 1;
+        }
 
     }
 
@@ -431,13 +433,13 @@ get_date ()
 #endif
   date = g_strdup_printf ("%d-%d-%d_%d%s%d%s%d",
                           t->tm_year+1900,
-			  t->tm_mday,
-			  t->tm_mon+1,
-			  t->tm_hour,
-			  time_sep,
-			  t->tm_min,
+                          t->tm_mday,
+                          t->tm_mon+1,
+                          t->tm_hour,
                           time_sep,
-			  t->tm_sec);
+                          t->tm_min,
+                          time_sep,
+                          t->tm_sec);
 
   return date;
 }
@@ -517,23 +519,22 @@ rmdir_recursive (gchar *path)
   if (cur_dir)
     {
       while ( (dir_file = g_dir_read_name (cur_dir)))
-	{
-	  gchar *fpath = g_build_filename (path, dir_file, NULL);
-	
-	  if (fpath)
-	    {
-	      if (g_file_test (fpath, G_FILE_TEST_IS_DIR))
-		{
-		  rmdir_recursive (fpath);
-		}
-	      else
-		{
-		  g_unlink (fpath);
-		}
-	      g_free (fpath);
-	    }
+        {
+          gchar *fpath = g_build_filename (path, dir_file, NULL);
 
-	}
+          if (fpath)
+            {
+              if (g_file_test (fpath, G_FILE_TEST_IS_DIR))
+                {
+                  rmdir_recursive (fpath);
+                }
+              else
+                {
+                  g_unlink (fpath);
+                }
+              g_free (fpath);
+            }
+        }
 			
       g_dir_close (cur_dir);
     }
@@ -567,9 +568,9 @@ remove_dir_if_empty(gchar* dir_path)
 /* Allocate a new point belonging to the stroke passing the values. */
 AnnotatePoint *
 allocate_point (gdouble x,
-		gdouble y,
-		gdouble width,
-		gdouble pressure)
+                gdouble y,
+                gdouble width,
+                gdouble pressure)
 {
   AnnotatePoint *point =  g_malloc ( (gsize) sizeof (AnnotatePoint));
   point->x = x;
@@ -582,10 +583,10 @@ allocate_point (gdouble x,
 
 /* Send an email. */
 void
-send_email (gchar *to,
-	    gchar *subject,
-	    gchar *body,
-	    GSList *attachment_list)
+send_email (gchar  *to,
+            gchar  *subject,
+            gchar  *body,
+            GSList *attachment_list)
 {
 #ifdef _WIN32
   windows_send_email (to, subject, body, attachment_list);
@@ -650,9 +651,9 @@ send_trace_with_email (gchar *attachment)
   gchar *subject = "ardesia-bug-report";
 
   gchar *body = g_strdup_printf ("%s,\n%s,%s.",
-				 "Dear ardesia developer group", 
-				 "An application error occurred",
-				 "please for details see the attachment with the stack trace" );
+                                 "Dear ardesia developer group", 
+                                 "An application error occurred",
+                                 "please for details see the attachment with the stack trace" );
 
   attachment_list = g_slist_prepend (attachment_list, attachment);
   send_email (to, subject, body, attachment_list);
@@ -671,9 +672,10 @@ is_gnome ()
   gchar *current_desktop = getenv ("XDG_CURRENT_DESKTOP");
   if (current_desktop)
     {
-      if (strcmp (current_desktop, "GNOME")!=0) {
-	return FALSE;
-      }
+      if (strcmp (current_desktop, "GNOME")!=0)
+        {
+          return FALSE;
+        }
     }
   return TRUE;
 }
@@ -682,10 +684,10 @@ is_gnome ()
 /* Create desktop entry passing value. */
 void
 xdg_create_desktop_entry (gchar *filename,
-			  gchar *type,
-			  gchar *name,
-			  gchar *icon,
-			  gchar *exec)
+                          gchar *type,
+                          gchar *name,
+                          gchar *icon,
+                          gchar *exec)
 {
   FILE *fp = fopen (filename, "w");
   if (fp)
@@ -704,8 +706,8 @@ xdg_create_desktop_entry (gchar *filename,
 /* Create a desktop link. */
 void
 xdg_create_link (gchar *src,
-		 gchar *dest,
-		 gchar *icon)
+                 gchar *dest,
+                 gchar *icon)
 {
   gchar *link_extension = "desktop";
   gchar *link_filename = g_strdup_printf ("%s.%s", dest, link_extension);
@@ -724,7 +726,7 @@ xdg_create_link (gchar *src,
 /* Get the last position where sub-string occurs in the string. */
 gint
 g_substrlastpos (const char *str,
-		 const char *substr)
+                 const char *substr)
 {
   gint len = (gint) strlen (str);
   gint i = 0;
@@ -745,8 +747,8 @@ g_substrlastpos (const char *str,
 /* Sub-string of string from start to end position. */
 gchar *
 g_substr (const gchar *string,
-	  gint         start,
-	  gint         end)
+          gint         start,
+          gint         end)
 {
   gint number_of_char = (end - start + 1);
   gsize size = (gsize) sizeof (gchar) * number_of_char;

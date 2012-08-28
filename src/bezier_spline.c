@@ -54,8 +54,8 @@ spline (GSList *list)
       mx[i][1] = point->y;
       if (i==0)
         {
-	  width = point->width;
-	  pressure = point->pressure;
+          width = point->width;
+          pressure = point->pressure;
         }
     }
 
@@ -162,19 +162,19 @@ spline (GSList *list)
       // printf ("%d: Bx' (1) = %lf\n", i+1, -3*mq[i][0]+3*mx[i+1][0]);
 
       AnnotatePoint *first_point =  allocate_point ( mp[i][0],
-						     mp[i][1],
-						     width,
-						     pressure);
+                                                     mp[i][1],
+                                                     width,
+                                                     pressure);
 
       AnnotatePoint *second_point =  allocate_point (mq[i][0],
-						     mq[i][1],
-						     width,
-						     pressure);
+                                                     mq[i][1],
+                                                     width,
+                                                     pressure);
 
       AnnotatePoint *third_point =  allocate_point (mx[i+1][0],
-						    mx[i+1][1],
-						    width,
-						    pressure);
+                                                    mx[i+1][1],
+                                                    width,
+                                                    pressure);
 
       ret = g_slist_prepend (ret, first_point);
       ret = g_slist_prepend (ret, second_point);

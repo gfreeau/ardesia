@@ -35,7 +35,7 @@
 /* The background data used internally and by the callbacks. */
 static BackgroundData *background_data;
 
- 
+
 /* Load a file image in the window. */
 static void
 load_file ()
@@ -46,25 +46,25 @@ load_file ()
       cairo_t *cr = cairo_create (surface);
 
       gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), 1.0);
-	  
+	
       gint new_height = 0;
       gint new_width = 0;
       new_height = gdk_window_get_height (gtk_widget_get_window (background_data->background_window));
       new_width = gdk_window_get_width (gtk_widget_get_window (background_data->background_window));
 
       cairo_surface_t *scaled_surface = scale_surface (surface, new_width, new_height );
-	  
+	
       cairo_surface_destroy (surface);
-	  
+	
       cairo_destroy (cr);
-	   
+	
       cairo_set_source_surface (background_data->background_cr, scaled_surface, 0.0, 0.0);
 	
       cairo_paint (background_data->background_cr);
       cairo_stroke (background_data->background_cr);
 	
       cairo_surface_destroy (scaled_surface);
-	  
+	
 #ifndef _WIN32
       gtk_widget_input_shape_combine_region (background_data->background_window, NULL);
 #endif
@@ -99,7 +99,7 @@ load_color ()
        * the problem on windows with rgba. 
        */
 	  if (((gdouble) a/256) >  BACKGROUND_OPACITY)
-	     { 
+	     {
 		    opacity = (gdouble) a/256;
 	     }
       gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), opacity);
@@ -117,9 +117,9 @@ load_color ()
 
 #ifndef _WIN32
       if (((gint) a ) < 1)
-	{
-	  gtk_widget_input_shape_combine_region (background_data->background_window, NULL);
-	}
+        {
+          gtk_widget_input_shape_combine_region (background_data->background_window, NULL);
+        }
 #endif
 
     }
@@ -150,36 +150,36 @@ destroy_background_window ()
       cairo_surface_destroy (background_data->background_backsurface);
      
       if (background_data->background_window)
-	{ 
-	  /* Destroy brutally the background window. */
-	  gtk_widget_destroy (background_data->background_window);
-	  background_data->background_window = (GtkWidget *) NULL;
-	}
+        {
+          /* Destroy brutally the background window. */
+          gtk_widget_destroy (background_data->background_window);
+          background_data->background_window = (GtkWidget *) NULL;
+        }
 
       if (background_data->background_cr)
-	{
-	  cairo_destroy (background_data->background_cr);
+        {
+          cairo_destroy (background_data->background_cr);
           background_data->background_cr = (cairo_t *) NULL;
-	}
+        }
 
       if (background_data->background_color)
-	{
-	  g_free (background_data->background_color);
-	  background_data->background_color = (gchar *) NULL;
-	}
+        {
+          g_free (background_data->background_color);
+          background_data->background_color = (gchar *) NULL;
+        }
 
       /* Delete reference to the gtk builder object. */
       if (background_data->background_window_gtk_builder)
-	{
-	  g_object_unref (background_data->background_window_gtk_builder);
-	  background_data->background_window_gtk_builder = (GtkBuilder *) NULL;
-	}
+        {
+          g_object_unref (background_data->background_window_gtk_builder);
+          background_data->background_window_gtk_builder = (GtkBuilder *) NULL;
+        }
 
       if (background_data)
-	{
-	  g_free (background_data);
-	  background_data = (BackgroundData *) NULL;
-	}
+        {
+          g_free (background_data);
+          background_data = (BackgroundData *) NULL;
+        }
 
     }
   /* Quit the gtk engine. */

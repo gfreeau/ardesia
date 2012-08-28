@@ -59,11 +59,11 @@ create_text_window (GtkWindow *parent)
       gtk_builder_add_from_file (text_data->text_window_gtk_builder, TEXT_UI_FILE, &error);
 
       if (error)
-	{
-	  g_warning ("Failed to load builder file: %s", error->message);
-	  g_error_free (error);
-	  return;
-	}
+        {
+          g_warning ("Failed to load builder file: %s", error->message);
+          g_error_free (error);
+          return;
+        }
 
     }
 
@@ -103,28 +103,25 @@ static gboolean blink_cursor (gpointer data)
       cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
 
       if (text_data->blink_show)
-	{
-	  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-	  cairo_set_line_width (cr, text_data->pen_width);
-	  cairo_set_source_color_from_string (cr, text_data->color);
-
-	  cairo_rectangle (cr, text_data->pos->x, text_data->pos->y - height, TEXT_CURSOR_WIDTH, height);
-
-	  text_data->blink_show = FALSE;
-	}
+        {
+          cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+          cairo_set_line_width (cr, text_data->pen_width);
+          cairo_set_source_color_from_string (cr, text_data->color);
+          cairo_rectangle (cr, text_data->pos->x, text_data->pos->y - height, TEXT_CURSOR_WIDTH, height);
+          text_data->blink_show = FALSE;
+        }
       else
-	{
-	  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+        {
+          cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
           cairo_rectangle (cr, text_data->pos->x, text_data->pos->y - height, TEXT_CURSOR_WIDTH, height);
 
           cairo_rectangle (cr,
                            text_data->pos->x-1,
                            text_data->pos->y - height - 1,
-			   TEXT_CURSOR_WIDTH  + 2,
-			   height + 2);
-
-	  text_data->blink_show=TRUE;
-	}
+                           TEXT_CURSOR_WIDTH  + 2,
+                           height + 2);
+          text_data->blink_show=TRUE;
+        }
 
       cairo_fill (cr);
       cairo_stroke (cr);
@@ -144,10 +141,10 @@ static void delete_character ()
       cairo_set_operator (text_data->cr, CAIRO_OPERATOR_CLEAR);
 
       cairo_rectangle (text_data->cr,
-		       char_info->x + char_info->x_bearing -1,
-		       char_info->y + char_info->y_bearing -1,
-		       gdk_screen_width ()+2,
-		       text_data->max_font_height + 2);
+                       char_info->x + char_info->x_bearing -1,
+                       char_info->y + char_info->y_bearing -1,
+                       gdk_screen_width ()+2,
+                       text_data->max_font_height + 2);
 
       cairo_fill (text_data->cr);
       cairo_stroke (text_data->cr);
@@ -215,7 +212,7 @@ set_text_cursor (GtkWidget *window)
                                         0,
                                         0,
                                         width,
-                                        height); 
+                                        height);
 
   cursor = gdk_cursor_new_from_pixbuf ( gdk_display_get_default (), pixbuf, 0, 0);
 
@@ -245,8 +242,8 @@ init_text_widget (GtkWidget *widget)
       
       /* Select the font */
       cairo_select_font_face (text_data->cr, text_config->fontfamily,
-		      CAIRO_FONT_SLANT_NORMAL,
-		      CAIRO_FONT_WEIGHT_NORMAL);
+                              CAIRO_FONT_SLANT_NORMAL,
+                              CAIRO_FONT_WEIGHT_NORMAL);
 
       /* This is a trick; we must found the maximum height of the font. */
       cairo_text_extents (text_data->cr, "|" , &text_data->extents);
@@ -286,12 +283,12 @@ save_text ()
       blink_cursor (NULL);
 
       if (text_data->letterlist)
-	{
-	  annotate_push_context (text_data->cr);
-	  g_slist_foreach (text_data->letterlist, (GFunc)g_free, NULL);
-	  g_slist_free (text_data->letterlist);
-	  text_data->letterlist = NULL;
-	}
+        {
+          annotate_push_context (text_data->cr);
+          g_slist_foreach (text_data->letterlist, (GFunc)g_free, NULL);
+          g_slist_free (text_data->letterlist);
+          text_data->letterlist = NULL;
+        }
 
     }
 }
@@ -307,19 +304,19 @@ destroy_text_window ()
       ungrab_pointer (gdk_display_get_default ());
 #endif
       if (text_data->window)
-	{
-	  gtk_widget_destroy (text_data->window);
-	  text_data->window = NULL;
-	}
+        {
+          gtk_widget_destroy (text_data->window);
+          text_data->window = NULL;
+        }
     }
 }
 
 
 /* keyboard event snooper. */
 G_MODULE_EXPORT gboolean
-key_snooper (GtkWidget *widget,
-	     GdkEventKey *event,
-	     gpointer user_data)
+key_snooper (GtkWidget   *widget,
+             GdkEventKey *event,
+             gpointer     user_data)
 {
 
   if (event->type != GDK_KEY_PRESS) {
@@ -331,7 +328,7 @@ key_snooper (GtkWidget *widget,
   blink_cursor (NULL);
 
   gboolean closed_to_bar = inside_bar_window (text_data->pos->x + text_data->extents.x_advance,
-					      text_data->pos->y-text_data->max_font_height/2);
+                                              text_data->pos->y-text_data->max_font_height/2);
 
   if ( (event->keyval == GDK_KEY_BackSpace) ||
        (event->keyval == GDK_KEY_Delete))
@@ -351,9 +348,9 @@ key_snooper (GtkWidget *widget,
     }
   /* Simple Tab-Implementation */
   else if (event->keyval == GDK_KEY_Tab)
-  {
+    {
       text_data->pos->x += text_config->tabsize;
-  }
+    }
   /* Is the character printable? */
   else if (isprint (event->keyval))
     {
@@ -391,8 +388,8 @@ key_snooper (GtkWidget *widget,
 /* On configure event. */
 G_MODULE_EXPORT gboolean
 on_text_window_configure (GtkWidget *widget,
-		       GdkEventExpose *event,
-		       gpointer user_data)
+                          GdkEventExpose *event,
+                          gpointer user_data)
 {
   return TRUE;
 }
@@ -401,13 +398,15 @@ on_text_window_configure (GtkWidget *widget,
 /* On screen changed. */
 G_MODULE_EXPORT void
 on_text_window_screen_changed(GtkWidget *widget,
-		       GdkScreen *previous_screen,
-		       gpointer   user_data)
+                              GdkScreen *previous_screen,
+                              gpointer   user_data)
 {
   GdkScreen *screen = gtk_widget_get_screen(GTK_WIDGET (widget));
   GdkVisual *visual = gdk_screen_get_rgba_visual(screen);
   if (visual == NULL)
-    visual = gdk_screen_get_system_visual (screen);
+    {
+      visual = gdk_screen_get_system_visual (screen);
+    }
 
   gtk_widget_set_visual (widget, visual);
 }
@@ -416,8 +415,8 @@ on_text_window_screen_changed(GtkWidget *widget,
 /* The windows has been exposed. */
 G_MODULE_EXPORT gboolean
 on_text_window_expose_event (GtkWidget *widget,
-			     cairo_t *cr,
-			     gpointer data)
+                             cairo_t   *cr,
+                             gpointer data)
 {
   GdkWindow *gdk_win = gtk_widget_get_window (widget);
   gint is_fullscreen = gdk_window_get_state (gdk_win) & GDK_WINDOW_STATE_FULLSCREEN;
@@ -440,16 +439,16 @@ on_text_window_expose_event (GtkWidget *widget,
 /* Is the point (x,y) above the virtual keyboard? */
 static gboolean
 is_above_virtual_keyboard (gint x,
-			   gint y)
+                           gint y)
 {
   RECT rect;
   HWND hwnd = FindWindow (VIRTUALKEYBOARD_WINDOW_NAME, NULL);
   if (!hwnd)
     {
       return FALSE;
-    }  
+    }
   if (!GetWindowRect (hwnd, &rect))
-    { 
+    {
       return FALSE;
     }
   if ( (rect.left<x)&& (x<rect.right)&& (rect.top<y)&& (y<rect.bottom))
@@ -464,8 +463,8 @@ is_above_virtual_keyboard (gint x,
 /* This is called when the button is leased. */
 G_MODULE_EXPORT gboolean
 on_text_window_button_release (GtkWidget *win,
-			       GdkEventButton *ev,
-			       gpointer user_data)
+                               GdkEventButton *ev,
+                               gpointer user_data)
 {
   /* only button1 allowed */
   if (ev->button != 1)
@@ -513,8 +512,8 @@ on_text_window_button_release (GtkWidget *win,
 /* This shots when the text pointer is moving. */
 G_MODULE_EXPORT gboolean
 on_text_window_cursor_motion (GtkWidget *win,
-			      GdkEventMotion *ev,
-			      gpointer func_data)
+                              GdkEventMotion *ev,
+                              gpointer func_data)
 {
 #ifdef _WIN32
   if (inside_bar_window (ev->x_root, ev->y_root))
@@ -527,7 +526,9 @@ on_text_window_cursor_motion (GtkWidget *win,
 
 
 /* Start the widget for the text insertion. */
-void start_text_widget (GtkWindow *parent, gchar* color, gint tickness)
+void start_text_widget (GtkWindow *parent,
+                        gchar     *color,
+                        gint       tickness)
 {
   text_data = g_malloc ((gsize) sizeof (TextData));
 
@@ -583,32 +584,32 @@ stop_text_widget ()
       stop_virtual_keyboard ();
 
       if (text_data->snooper_handler_id)
-	{
-	  gtk_key_snooper_remove (text_data->snooper_handler_id);
-	  text_data->snooper_handler_id = 0;
-	}
+        {
+          gtk_key_snooper_remove (text_data->snooper_handler_id);
+          text_data->snooper_handler_id = 0;
+        }
 
       save_text ();
       destroy_text_window ();
 
       if (text_data->cr)
-	{
-	  cairo_destroy (text_data->cr);
-	  text_data->cr = NULL;
-	}
+        {
+          cairo_destroy (text_data->cr);
+          text_data->cr = NULL;
+        }
 
       if (text_data->pos)
-	{
-	  g_free (text_data->pos);
-	  text_data->pos = NULL;
-	}
+        {
+          g_free (text_data->pos);
+          text_data->pos = NULL;
+        }
 
       /* Free the gtk builder object. */
       if (text_data->text_window_gtk_builder)
-	{
-	  g_object_unref (text_data->text_window_gtk_builder);
+        {
+          g_object_unref (text_data->text_window_gtk_builder);
           text_data->text_window_gtk_builder = NULL;
-	}
+        }
 
       g_free (text_data);
       text_data = NULL;

@@ -33,7 +33,8 @@
 
 
 /* Return the pressure passing the event. */
-static gdouble get_pressure (GdkEvent *ev)
+static gdouble
+get_pressure (GdkEvent *ev)
 {
   gdouble ret_value = 1.0;
   gdouble pressure = ret_value;
@@ -51,9 +52,9 @@ static gdouble get_pressure (GdkEvent *ev)
 
 /* On configure event. */
 G_MODULE_EXPORT gboolean
-on_configure (GtkWidget *widget,
-		       GdkEventExpose *event,
-		       gpointer user_data)
+on_configure (GtkWidget      *widget,
+              GdkEventExpose *event,
+              gpointer        user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
 
@@ -64,7 +65,8 @@ on_configure (GtkWidget *widget,
                  gtk_widget_get_allocated_height (widget));
     }
 	
-  gint is_fullscreen = gdk_window_get_state (gtk_widget_get_window (widget)) & GDK_WINDOW_STATE_FULLSCREEN;
+	GdkWindowState state = gdk_window_get_state (gtk_widget_get_window (widget));
+  gint is_fullscreen = state & GDK_WINDOW_STATE_FULLSCREEN;
 
   if (!is_fullscreen)
     {
@@ -76,7 +78,7 @@ on_configure (GtkWidget *widget,
   if (!data->is_grabbed)
     {
       return TRUE;
-	}
+    }
 	
   /* Postcondition; data->annotation_cairo_context is not NULL. */
   return TRUE;
@@ -86,8 +88,8 @@ on_configure (GtkWidget *widget,
 /* On screen changed. */
 G_MODULE_EXPORT void
 on_screen_changed(GtkWidget *widget,
-		       GdkScreen *previous_screen,
-		       gpointer   user_data)
+                  GdkScreen *previous_screen,
+                  gpointer   user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
 
@@ -96,10 +98,13 @@ on_screen_changed(GtkWidget *widget,
       g_printerr("DEBUG: Annotation window get screen-changed event\n");
     }
 
-  GdkScreen *screen = gtk_widget_get_screen(GTK_WIDGET (widget));
-  GdkVisual *visual = gdk_screen_get_rgba_visual(screen);
+  GdkScreen *screen = gtk_widget_get_screen (GTK_WIDGET (widget));
+  GdkVisual *visual = gdk_screen_get_rgba_visual (screen);
+  
   if (visual == NULL)
-    visual = gdk_screen_get_system_visual (screen);
+    {
+      visual = gdk_screen_get_system_visual (screen);
+    }
 
   gtk_widget_set_visual (widget, visual);
 }
@@ -108,8 +113,8 @@ on_screen_changed(GtkWidget *widget,
 /* Expose event: this occurs when the window is shown. */
 G_MODULE_EXPORT gboolean
 on_expose       (GtkWidget *widget,
-	         cairo_t *cr,
-	         gpointer user_data)
+                 cairo_t   *cr,
+                 gpointer   user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
   
@@ -130,9 +135,9 @@ on_expose       (GtkWidget *widget,
 
 /* This is called when the button is pushed. */
 G_MODULE_EXPORT gboolean
-on_button_press (GtkWidget *win,
+on_button_press (GtkWidget      *win,
                  GdkEventButton *ev,
-                 gpointer user_data)
+                 gpointer        user_data)
 { 
 
   AnnotateData *data = (AnnotateData *) user_data;
@@ -146,8 +151,7 @@ on_button_press (GtkWidget *win,
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
-		  gdk_device_get_name (ev->device));
-
+                   gdk_device_get_name (ev->device));
       annotate_release_grab ();
       return TRUE;
     }
@@ -155,7 +159,10 @@ on_button_press (GtkWidget *win,
   if (data->debug)
     {
       g_printerr ("Device '%s': Button %i Down at (x,y)= (%f : %f)\n",
-                  gdk_device_get_name (ev->device), ev->button, ev->x, ev->y);
+                  gdk_device_get_name (ev->device),
+                  ev->button,
+                  ev->x,
+                  ev->y);
     }
 
 #ifdef _WIN32
@@ -165,7 +172,8 @@ on_button_press (GtkWidget *win,
       annotate_release_grab ();
       return TRUE;
     }
-		 if (data->cur_context->type == ANNOTATE_PEN)
+    
+  if (data->cur_context->type == ANNOTATE_PEN)
     {
       annotate_select_tool (data, ev->device, ev->state);
       data->old_paint_type = ANNOTATE_PEN; 
@@ -179,7 +187,7 @@ on_button_press (GtkWidget *win,
   pressure = get_pressure ( (GdkEvent *) ev);
 
   if (pressure <= 0)
-    { 
+    {
       return TRUE;
     }
 	
@@ -193,9 +201,10 @@ on_button_press (GtkWidget *win,
 
   annotate_draw_point (ev->x, ev->y, pressure);
 
-  annotate_coord_list_prepend (ev->x, ev->y,
-			       annotate_get_thickness (),
-			       pressure);
+  annotate_coord_list_prepend (ev->x,
+                               ev->y,
+                               annotate_get_thickness (),
+                               pressure);
 
   return TRUE;
 }
@@ -203,15 +212,15 @@ on_button_press (GtkWidget *win,
 
 /* This shots when the pointer is moving. */
 G_MODULE_EXPORT gboolean
-on_motion_notify (GtkWidget *win,
-	          GdkEventMotion *ev,
-	          gpointer user_data)
+on_motion_notify (GtkWidget      *win,
+                  GdkEventMotion *ev,
+                  gpointer        user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
   GdkModifierType state = (GdkModifierType) ev->state;
   gdouble selected_width = 0.0;
   gdouble pressure = 1.0; 
-   
+
   if (!data->is_grabbed)
     {
       return TRUE;
@@ -220,7 +229,7 @@ on_motion_notify (GtkWidget *win,
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
-		  gdk_device_get_name (ev->device));
+                  gdk_device_get_name (ev->device));
       annotate_release_grab ();
       return TRUE;
     }
@@ -230,10 +239,10 @@ on_motion_notify (GtkWidget *win,
     {
 
       if (data->debug)
-	{
-	  g_printerr ("Device '%s': Move on the bar then ungrab\n",
-		      gdk_device_get_name (ev->device));
-	}
+        {
+          g_printerr ("Device '%s': Move on the bar then ungrab\n",
+          gdk_device_get_name (ev->device));
+        }
 
       /* The point is inside the ardesia bar then ungrab. */
       annotate_release_grab ();
@@ -258,41 +267,39 @@ on_motion_notify (GtkWidget *win,
       pressure = get_pressure ( (GdkEvent *) ev);
 
       if (pressure <= 0)
-	{
-	  return TRUE;
-	}
+        {
+          return TRUE;
+        }
 
       /* If the point is already selected and higher pressure then print else jump it. */
       if (data->coord_list)
-	{
-	  AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, 0);
-	  gdouble tollerance = data->thickness;
-	  if (get_distance (last_point->x, last_point->y, ev->x, ev->y)<tollerance)
-	    {
-
-	      /* Seems that you are uprising the pen. */
-	      if (pressure <= last_point->pressure)
-		{
-		  /* Jump the point you are uprising the hand. */
-		  return TRUE;
-		}
-	      else // pressure >= last_point->pressure
-		{
-		  /* Seems that you are pressing the pen more. */
-		  annotate_modify_color (data, pressure);
-		  annotate_draw_line (ev->x, ev->y, TRUE);
-		  /* Store the new pressure without allocate a new coordinate. */
-		  last_point->pressure = pressure;
-		  return TRUE;
-		}
-
-	    }
-	  annotate_modify_color (data, pressure);
-	}
+        {
+          AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, 0);
+          gdouble tollerance = data->thickness;
+          
+          if (get_distance (last_point->x, last_point->y, ev->x, ev->y)<tollerance)
+            {
+              /* Seems that you are uprising the pen. */
+              if (pressure <= last_point->pressure)
+                {
+                  /* Jump the point you are uprising the hand. */
+                  return TRUE;
+                }
+              else // pressure >= last_point->pressure
+                {
+                  /* Seems that you are pressing the pen more. */
+                  annotate_modify_color (data, pressure);
+                  annotate_draw_line (ev->x, ev->y, TRUE);
+                  /* Store the new pressure without allocate a new coordinate. */
+                  last_point->pressure = pressure;
+                  return TRUE;
+                }
+            }
+          annotate_modify_color (data, pressure);
+        }
     }
 
   annotate_draw_line (ev->x, ev->y, TRUE);
-
   annotate_coord_list_prepend (ev->x, ev->y, selected_width, pressure);
 
   return TRUE;
@@ -301,9 +308,9 @@ on_motion_notify (GtkWidget *win,
 
 /* This shots when the button is released. */
 G_MODULE_EXPORT gboolean
-on_button_release (GtkWidget *win,
-	           GdkEventButton *ev,
-	           gpointer user_data)
+on_button_release (GtkWidget      *win,
+                   GdkEventButton *ev,
+                   gpointer        user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
   guint lenght = g_slist_length (data->coord_list);
@@ -311,12 +318,12 @@ on_button_release (GtkWidget *win,
   if (!data->is_grabbed)
     {
       return TRUE;
-	}
+    }
 	
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
-		  gdk_device_get_name (ev->device));
+                   gdk_device_get_name (ev->device));
       annotate_release_grab ();
       return TRUE;
     }
@@ -324,7 +331,8 @@ on_button_release (GtkWidget *win,
   if (data->debug)
     {
       g_printerr ("Device '%s': Button %i Up at (x,y)= (%.2f : %.2f)\n",
-		  gdk_device_get_name (ev->device), ev->button, ev->x, ev->y);
+                   gdk_device_get_name (ev->device), 
+                   ev->button, ev->x, ev->y);
     }
 
 #ifdef _WIN32
@@ -344,12 +352,12 @@ on_button_release (GtkWidget *win,
   initialize_annotation_cairo_context(data);
 
   if (lenght > 2)
-    { 
+    {
       AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, lenght-1);
       AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, 0);
 
       gdouble distance = get_distance (ev->x, ev->y, first_point->x, first_point->y);
- 
+
       /* This is the tolerance to force to close the path in a magnetic way. */
       gint score = 3;
       
@@ -364,35 +372,33 @@ on_button_release (GtkWidget *win,
       gdouble pressure = last_point->pressure;   
 
       gboolean closed_path = FALSE;
-         
+
       /* If the distance between two point lesser than tolerance they are the same point for me. */
       if (distance > tollerance)
         {
           /* Different point. */
           cairo_line_to (data->annotation_cairo_context, ev->x, ev->y);
           annotate_coord_list_prepend (ev->x, ev->y, data->thickness, pressure);
-	}
+        }
       else
         {
           /* Rounded to be tha same point. */
           closed_path = TRUE; // this seems to be a closed path
-
-	  cairo_line_to (data->annotation_cairo_context, first_point->x, first_point->y);
-	  annotate_coord_list_prepend (first_point->x, first_point->y, data->thickness, pressure);
+          cairo_line_to (data->annotation_cairo_context, first_point->x, first_point->y);
+          annotate_coord_list_prepend (first_point->x, first_point->y, data->thickness, pressure);
         }
 
       if (data->cur_context->type != ANNOTATE_ERASER)
-        { 
+        {
           annotate_shape_recognize (closed_path);
 
           /* If is selected an arrow type then I draw the arrow. */
           if (data->arrow)
             {
-	      /* Print arrow at the end of the path. */
-	      annotate_draw_arrow (distance);
-	    }
-
-	}
+              /* Print arrow at the end of the path. */
+              annotate_draw_arrow (distance);
+            }
+        }
     }
 
   cairo_stroke_preserve (data->annotation_cairo_context);
@@ -407,16 +413,16 @@ on_button_release (GtkWidget *win,
 
 /* Device touch. */
 G_MODULE_EXPORT gboolean
-on_proximity_in (GtkWidget *widget,
-    	         GdkEventProximity *ev,
-	         gpointer user_data)
+on_proximity_in (GtkWidget         *widget,
+                 GdkEventProximity *ev,
+                 gpointer          user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
 
   if (!data->is_grabbed)
     {
       return TRUE;
-	}
+    }
 	
   if (data->debug)
     {
@@ -430,7 +436,11 @@ on_proximity_in (GtkWidget *widget,
       GdkModifierType state = (GdkModifierType) NULL;
 
       /* Get the modifier state. */
-      gdk_window_get_device_position (gtk_widget_get_window (widget), ev->device, (gint *) NULL, (gint *) NULL, &state);
+      gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                      ev->device, (gint *) NULL,
+                                      (gint *) NULL,
+                                      &state);
+                                      
       annotate_select_tool (data, ev->device, state);
       data->old_paint_type = ANNOTATE_PEN; 
     }
@@ -445,9 +455,9 @@ on_proximity_in (GtkWidget *widget,
 
 /* Device lease. */
 G_MODULE_EXPORT gboolean
-on_proximity_out (GtkWidget *win,
-	          GdkEventProximity *ev,
-	          gpointer user_data)
+on_proximity_out (GtkWidget         *win,
+                  GdkEventProximity *ev,
+                  gpointer           user_data)
 {
 
   AnnotateData *data = (AnnotateData *) user_data;
@@ -475,8 +485,8 @@ on_proximity_out (GtkWidget *win,
 
 /* On device added. */
 void on_device_removed (GdkDeviceManager *device_manager,
-			GdkDevice        *device,
-			gpointer          user_data)
+                        GdkDevice        *device,
+                        gpointer          user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
   
@@ -491,8 +501,8 @@ void on_device_removed (GdkDeviceManager *device_manager,
 
 /* On device removed. */
 void on_device_added (GdkDeviceManager *device_manager,
-		      GdkDevice        *device,
-		      gpointer          user_data)
+                      GdkDevice        *device,
+                      gpointer          user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
 

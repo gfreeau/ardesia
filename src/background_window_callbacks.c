@@ -28,9 +28,9 @@
 
 /* On configure event. */
 G_MODULE_EXPORT gboolean
-on_back_configure (GtkWidget *widget,
-		       GdkEventExpose *event,
-		       gpointer user_data)
+on_back_configure (GtkWidget      *widget,
+                   GdkEventExpose *event,
+                   gpointer        user_data)
 {
   return TRUE;
 }
@@ -39,8 +39,8 @@ on_back_configure (GtkWidget *widget,
 /* On screen changed. */
 G_MODULE_EXPORT void
 on_back_screen_changed(GtkWidget *widget,
-		       GdkScreen *previous_screen,
-		       gpointer   user_data)
+                       GdkScreen *previous_screen,
+                       gpointer   user_data)
 {
   GdkScreen *screen = gtk_widget_get_screen(GTK_WIDGET (widget));
   GdkVisual *visual = gdk_screen_get_rgba_visual(screen);

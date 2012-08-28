@@ -138,8 +138,8 @@ ungrab_pointer (GdkDisplay *display);
 
 /* Grab pointer. */
 void
-grab_pointer (GtkWidget *win,
-	      GdkEventMask eventmask);
+grab_pointer (GtkWidget     *win,
+              GdkEventMask   eventmask);
 
 				
 /* get bar window widget. */
@@ -156,9 +156,9 @@ gdkcolor_to_rgb (GdkColor *gdkcolor);
 cairo_surface_t *
 scale_surface    (cairo_surface_t *surface, 
                   gdouble width,
-		  gdouble height);
-				  
-				  
+                  gdouble height);
+				
+				
 /* Set the cairo surface color to the RGBA string. */
 void
 cairo_set_source_color_from_string (cairo_t *cr,
@@ -173,9 +173,9 @@ cairo_set_transparent_color (cairo_t *cr);
 /* Distance between two points using the Pitagora theorem. */
 gdouble
 get_distance (gdouble x1,
-	      gdouble y1,
-	      gdouble x2,
-	      gdouble y2);
+              gdouble y1,
+              gdouble x2,
+              gdouble y2);
 
 
 /* Clear cairo context. */
@@ -188,7 +188,7 @@ clear_cairo_context (cairo_t *cr);
  */
 gboolean
 inside_bar_window (gdouble xp,
-		   gdouble yp);
+                   gdouble yp);
 
 
 /* Drill the gdkwindow in the area where the ardesia bar is located. */
@@ -271,17 +271,17 @@ remove_dir_if_empty(gchar* dir_path);
 /* Allocate a new point belonging to the path passing the values. */
 AnnotatePoint *
 allocate_point (gdouble x,
-		gdouble y,
-		gdouble width,
-		gdouble pressure);
+                gdouble y,
+                gdouble width,
+                gdouble pressure);
 
 
 /* Send an email. */
 void
-send_email (gchar *to,
-	    gchar *subject,
-	    gchar *body,
-	    GSList *attachment_list);
+send_email (gchar  *to,
+            gchar  *subject,
+            gchar  *body,
+            GSList *attachment_list);
 
 
 /* Send artefacts with email. */
@@ -302,30 +302,30 @@ is_gnome ();
 /* Create desktop entry passing value. */
 void
 xdg_create_desktop_entry (gchar *filename,
-			  gchar *type,
-			  gchar *name,
-			  gchar *icon,
-			  gchar *exec);
+                          gchar *type,
+                          gchar *name,
+                          gchar *icon,
+                          gchar *exec);
 
 
 /* Create a desktop link. */
 void
 xdg_create_link (gchar *src_filename,
-		 gchar *dest,
-		 gchar *icon);
+                 gchar *dest,
+                 gchar *icon);
 
 
 /* Get the last position where sub-string occurs in string. */
 int
 g_substrlastpos (const char *str,
-		 const char *substr);
+                 const char *substr);
 
 
 /* Sub-string of string from start to end position. */
 gchar *
 g_substr (const gchar *string,
-	  gint start,
-	  gint end);
+          gint         start,
+          gint         end);
 
 
 /* 

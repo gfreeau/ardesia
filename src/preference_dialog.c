@@ -40,7 +40,7 @@ show_permission_denied_dialog (GtkWindow *parent_window)
   GtkWidget *permission_denied_dialog = (GtkWidget *) NULL;
 
   permission_denied_dialog = gtk_message_dialog_new (parent_window,
-					             GTK_DIALOG_MODAL,
+                                                     GTK_DIALOG_MODAL,
                                                      GTK_MESSAGE_ERROR,
                                                      GTK_BUTTONS_OK,
                                                      gettext ("Fail to open the file: Permission denied"));

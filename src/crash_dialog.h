@@ -50,6 +50,6 @@ typedef struct
  */
 void
 start_crash_dialog (GtkWindow *parent,
-		    gchar *crash_report);
+                    gchar     *crash_report);
 
 

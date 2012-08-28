@@ -29,7 +29,7 @@
 /* Shot when the ok button in crash dialog is pushed. */
 G_MODULE_EXPORT void
 on_crash_ok_button_clicked (GtkButton *buton,
-			    gpointer data)
+                            gpointer data)
 {
   CrashData *crash_data = (CrashData *) data;
   send_trace_with_email (crash_data->crash_report);
@@ -39,7 +39,7 @@ on_crash_ok_button_clicked (GtkButton *buton,
 /* Shot when the ok button in preference dialog is pushed. */
 G_MODULE_EXPORT void
 on_crash_cancel_button_clicked (GtkButton *buton,
-				gpointer data)
+                                gpointer data)
 {
   /* Do nothing. */
 }

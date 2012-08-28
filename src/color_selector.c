@@ -41,8 +41,8 @@ static gchar *picked_color = NULL;
  */
 gchar *
 start_color_selector_dialog (GtkToolButton *toolbutton,
-			     GtkWindow *parent,
-			     gchar *color)
+                             GtkWindow     *parent,
+                             gchar         *color)
 {
   GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON (toolbutton);
   gchar *ret_color = NULL;
@@ -65,11 +65,11 @@ start_color_selector_dialog (GtkToolButton *toolbutton,
 
       if (picked_color != NULL)
         {
-	  gdkcolor = rgba_to_gdkcolor (picked_color);
+          gdkcolor = rgba_to_gdkcolor (picked_color);
         }
       else
         {
-	  gdkcolor = rgba_to_gdkcolor (color);
+          gdkcolor = rgba_to_gdkcolor (color);
         }
 
       gtk_color_selection_set_current_color (colorsel, gdkcolor);
@@ -80,27 +80,27 @@ start_color_selector_dialog (GtkToolButton *toolbutton,
 
       /* Wait for user to select OK or Cancel. */
       switch (result)
-	{
-	case GTK_RESPONSE_OK:
-	  colorsel = GTK_COLOR_SELECTION (gtk_color_selection_dialog_get_color_selection (color_dialog));
-	  gtk_color_selection_set_has_palette (colorsel, TRUE);
-	  gtk_color_selection_get_current_color (colorsel, gdkcolor);
-	  ret_color = gdkcolor_to_rgb (gdkcolor);
-	  g_free (picked_color);
-	  picked_color = g_strdup_printf ("%s%s", ret_color, "FF");
-	  break;
-
-	default:
-	  break;
-	}
+        {
+          case GTK_RESPONSE_OK:
+            colorsel = GTK_COLOR_SELECTION (gtk_color_selection_dialog_get_color_selection (color_dialog));
+            gtk_color_selection_set_has_palette (colorsel, TRUE);
+            gtk_color_selection_get_current_color (colorsel, gdkcolor);
+            ret_color = gdkcolor_to_rgb (gdkcolor);
+            g_free (picked_color);
+            picked_color = g_strdup_printf ("%s%s", ret_color, "FF");
+            break;
+          default:
+            break;
+        }
 
       if (color_widget)
-	{
-	  gtk_widget_destroy (color_widget);
-	}
+      {
+        gtk_widget_destroy (color_widget);
+      }
 
       g_free (gdkcolor);
     }
+    
   stop_virtual_keyboard ();
   return ret_color;
 }

@@ -162,14 +162,14 @@ typedef struct
 
 /* Initialize the annotation cairo context */
 void
-initialize_annotation_cairo_context(AnnotateData *data);
+initialize_annotation_cairo_context (AnnotateData *data);
 
 
 /* Initialize the annotation window. */
 gint
 annotate_init (GtkWidget *parent,
-	       gchar *iwb_filename,
-	       gboolean debug);
+               gchar     *iwb_filename,
+               gboolean   debug);
 
 
 /* Set-up input device. */
@@ -230,7 +230,7 @@ annotate_set_color (gchar *color);
 /* Modify colour according to the pressure. */
 void
 annotate_modify_color (AnnotateData *data,
-		       gdouble pressure);
+                       gdouble       pressure);
 
 
 /* Set the line thickness. */
@@ -304,23 +304,23 @@ annotate_unhide_cursor ();
 /* Add to the coordinate list the point (x,y) storing the line width and the pressure. */
 void
 annotate_coord_list_prepend (gdouble x,
-			     gdouble y,
-			     gdouble width,
-			     gdouble pressure);
+                             gdouble y,
+                             gdouble width,
+                             gdouble pressure);
 
 
 /* Draw line from the last point drawn to (x2,y2). */
 void
-annotate_draw_line (gdouble x2,
-		    gdouble y2,
-		    gboolean stroke);
+annotate_draw_line (gdouble  x2,
+                    gdouble  y2,
+                    gboolean stroke);
 
 
 /* Draw a point in x,y respecting the context. */
 void
 annotate_draw_point (gdouble x,
-		     gdouble y,
-		     gdouble pressure);
+                     gdouble y,
+                     gdouble pressure);
 
 
 /* Draw an arrow using some polygons. */
@@ -331,8 +331,8 @@ annotate_draw_arrow (gdouble distance);
 /* Select eraser, pen or other tool for tablet; code inherited by gromit. */
 void
 annotate_select_tool (AnnotateData *data,
-		      GdkDevice *device,
-		      guint state);
+                      GdkDevice    *device,
+                      guint         state);
 
 
 /* Select the default pen tool. */

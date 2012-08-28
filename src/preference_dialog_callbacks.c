@@ -30,7 +30,7 @@
 /* Update the preview image. */
 G_MODULE_EXPORT void
 on_image_chooser_button_update_preview (GtkFileChooser *file_chooser,
-					gpointer data)
+                                        gpointer        data)
 {
   PreferenceData *preference_data = (PreferenceData *) data;
   gchar *filename;
@@ -62,7 +62,7 @@ on_image_chooser_button_update_preview (GtkFileChooser *file_chooser,
 /* Shot when the selected folder change in the file browser. */
 G_MODULE_EXPORT void
 on_image_chooser_button_file_set (GtkButton *buton,
-				  gpointer data)
+                                  gpointer   data)
 {
   PreferenceData *preference_data = (PreferenceData *) data;
   GObject *file_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "file");
@@ -74,7 +74,7 @@ on_image_chooser_button_file_set (GtkButton *buton,
 /* Shot when is pushed the background colour button. */
 G_MODULE_EXPORT void
 on_background_color_button_color_set (GtkButton *buton,
-				      gpointer data)
+                                      gpointer   data)
 {
   PreferenceData *preference_data = (PreferenceData *) data;
   GObject *color_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "color");
@@ -86,7 +86,7 @@ on_background_color_button_color_set (GtkButton *buton,
 /* Shot when the ok button in preference dialog is pushed. */
 G_MODULE_EXPORT void
 on_preference_ok_button_clicked (GtkButton *buton,
-				 gpointer data)
+                                 gpointer   data)
 {
   PreferenceData *preference_data = (PreferenceData*) data;
   gchar *rgb = NULL;
@@ -122,15 +122,13 @@ on_preference_ok_button_clicked (GtkButton *buton,
       GObject *file_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "file");
       GtkToggleButton *image_tool_button = GTK_TOGGLE_BUTTON (file_obj);
       if (gtk_toggle_button_get_active (image_tool_button))
-	{
-	  /* background png from file */
-	  GObject *image_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder,
-						       "imageChooserButton");
-
-	  GtkFileChooserButton *image_chooser_button = GTK_FILE_CHOOSER_BUTTON (image_obj);
-	  gchar *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (image_chooser_button));
-
-	  if (filename)
+        {
+          /* background png from file */
+          GObject *image_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder,
+                                                       "imageChooserButton");
+          GtkFileChooserButton *image_chooser_button = GTK_FILE_CHOOSER_BUTTON (image_obj);
+          gchar *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (image_chooser_button));
+          if (filename)
             {
               FILE *stream = g_fopen (filename, "r");
               if (stream == NULL)
@@ -151,26 +149,24 @@ on_preference_ok_button_clicked (GtkButton *buton,
           else
             {
               /* The file is not set; same cae that no background */
-	      clear_background_window ();
+              clear_background_window ();
               set_background_type (0);
             }
-
-	}
+        }
       else
-	{
-	  /* none */
-	  clear_background_window ();
+        {
+          /* none */
+          clear_background_window ();
           set_background_type (0);
-	}
+        }
     }
-
 }
 
 
 /* Shot when is pushed the cancel button. */
 G_MODULE_EXPORT void
 on_preference_cancel_button_clicked    (GtkButton *buton,
-					gpointer data)
+                                        gpointer   data)
 {
   /* do nothing */
 }

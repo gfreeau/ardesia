@@ -30,8 +30,8 @@
 /* Number x is roundable to y. */
 static gboolean
 is_similar (gdouble x,
-	    gdouble y,
-	    gdouble pixel_tollerance)
+            gdouble y,
+            gdouble pixel_tollerance)
 {
   gdouble delta = fabs (x-y);
 
@@ -50,7 +50,7 @@ is_similar (gdouble x,
  */
 static gboolean
 is_a_rectangle (GSList *list,
-		gdouble pixel_tollerance)
+                gdouble pixel_tollerance)
 {
 
   if ( g_slist_length (list) != 4)
@@ -65,24 +65,24 @@ is_a_rectangle (GSList *list,
       AnnotatePoint *point3 = (AnnotatePoint *) g_slist_nth_data (list, 3);
 
       if (! (is_similar (point0->x, point1->x, pixel_tollerance) ))
-	{
-	  return FALSE;
-	}
+        {
+          return FALSE;
+        }
 
       if (! (is_similar (point1->y, point2->y, pixel_tollerance)))
-	{
-	  return FALSE;
-	}
+        {
+          return FALSE;
+        }
 
       if (! (is_similar (point2->x, point3->x, pixel_tollerance)))
-	{
-	  return FALSE;
-	}
+        {
+          return FALSE;
+        }
 
       if (! (is_similar (point3->y, point0->y, pixel_tollerance)))
-	{
-	  return FALSE;
-	}
+        {
+          return FALSE;
+        }
     }
 
   /* Postcondition: it is a rectangle. */
@@ -109,11 +109,11 @@ calculate_medium_pression (GSList *list)
 
 
 /* Take the list and found the minx miny maxx and maxy points. */
-static void found_min_and_max (GSList *list,
-			       gdouble *minx,
-			       gdouble *miny,
-			       gdouble *maxx,
-			       gdouble *maxy)
+static void found_min_and_max (GSList  *list,
+                               gdouble *minx,
+                               gdouble *miny,
+                               gdouble *maxx,
+                               gdouble *maxy)
 {
   guint i = 0;
 
@@ -141,7 +141,7 @@ static void found_min_and_max (GSList *list,
 /* The path described in list is similar to a regular polygon. */
 static gboolean
 is_similar_to_a_regular_polygon (GSList *list,
-				 gdouble pixel_tollerance)
+                                 gdouble pixel_tollerance)
 {
   guint i = 0;
   gdouble ideal_distance = -1;
@@ -173,9 +173,9 @@ is_similar_to_a_regular_polygon (GSList *list,
       gdouble distance = get_distance (point->x, point->y, old_point->x, old_point->y);
 
       if (! (is_similar (distance, ideal_distance, threshold)))
-	{
-	  return FALSE; 
-	}
+        {
+          return FALSE;
+        }
 
       old_point = point;
     }
@@ -233,8 +233,9 @@ extract_polygon (GSList *list)
 
 
 /* Set x-axis of the point. */
-void
-point_put_x (gpointer current, gpointer value)
+static void
+point_put_x (gpointer current,
+             gpointer value)
 {
   AnnotatePoint *current_point = (AnnotatePoint *) current;
   gdouble *valuex = (gdouble *) value;
@@ -256,7 +257,7 @@ point_put_y (gpointer current,
 /* Return the degree of the rectangle between two point respect the axis. */
 static gdouble
 calculate_edge_degree (AnnotatePoint *point_a,
-		       AnnotatePoint *point_b)
+                       AnnotatePoint *point_b)
 {
   gdouble deltax = fabs (point_a->x-point_b->x);
   gdouble deltay = fabs (point_a->y-point_b->y);
@@ -297,13 +298,12 @@ straighten (GSList *list)
 
       if (delta_degree > degree_threshold)
         {
-	  /* Copy B it's a good point. */
-	  AnnotatePoint *point =  allocate_point (point_b->x,
-						  point_b->y,
-						  point_b->width,
-						  point_b->pressure);
-
-	  list_out = g_slist_prepend (list_out, point);
+          /* Copy B it's a good point. */
+          AnnotatePoint *point =  allocate_point (point_b->x,
+                                                  point_b->y,
+                                                  point_b->width,point_b->pressure);
+                                                  
+          list_out = g_slist_prepend (list_out, point);
         }
 
       /* Else: is three the difference degree is minor than the threshold I neglegt B. */
@@ -312,9 +312,9 @@ straighten (GSList *list)
   /* Copy the last point; it is a good point. */
   last_point = (AnnotatePoint *) g_slist_nth_data (list, lenght-1);
   last_out_point =  allocate_point (last_point->x,
-				    last_point->y,
-				    last_point->width,
-				    last_point->pressure);
+                                    last_point->y,
+                                    last_point->width,
+                                    last_point->pressure);
 
   list_out = g_slist_prepend (list_out, last_out_point);
 
@@ -358,8 +358,8 @@ straighten (GSList *list)
  */
 GSList *
 build_meaningful_point_list     (GSList *list_inp,
-				 gboolean rectify,
-				 gdouble pixel_tollerance)
+                                 gboolean rectify,
+                                 gdouble pixel_tollerance)
 {
   guint lenght = g_slist_length (list_inp);
   guint i = 0;
@@ -488,7 +488,7 @@ build_outbounded_rectangle (GSList *list)
 /* The path in list is similar to an ellipse. */
 gboolean
 is_similar_to_an_ellipse (GSList *list,
-			  gdouble pixel_tollerance)
+                          gdouble pixel_tollerance)
 {
   guint i = 0;
   gdouble minx = 0;
@@ -585,11 +585,11 @@ is_similar_to_an_ellipse (GSList *list,
       gdouble difference = fabs (sum-sump1);
 
       if (difference>tollerance)
-        {  
-	  /* The sum is too different from the ideal one;
+        {
+          /* The sum is too different from the ideal one;
            * I do not approximate the shape to an ellipse.
            */
-	  return FALSE;
+          return FALSE;
         }
 
     }
@@ -600,9 +600,9 @@ is_similar_to_an_ellipse (GSList *list,
 
 /* Return a list rectified */
 GSList*
-build_rectified_list(GSList *list_inp,
-		     gboolean close_path,
-		     gdouble pixel_tollerance)
+build_rectified_list(GSList  *list_inp,
+                     gboolean close_path,
+                     gdouble  pixel_tollerance)
 {
   GSList *ret_list = (GSList *) NULL;
   if (close_path)
@@ -613,11 +613,11 @@ build_rectified_list(GSList *list_inp,
 
       /* Copy the input list */
       for (i=0; i<lenght; i++)
-	{
-	  AnnotatePoint *point = (AnnotatePoint *) g_slist_nth_data (list_inp, i);
-	  AnnotatePoint *point_copy =  allocate_point (point->x, point->y, point->width, point->pressure);
-	  ret_list = g_slist_prepend (ret_list, point_copy);
-	}
+        {
+          AnnotatePoint *point = (AnnotatePoint *) g_slist_nth_data (list_inp, i);
+          AnnotatePoint *point_copy =  allocate_point (point->x, point->y, point->width, point->pressure);
+          ret_list = g_slist_prepend (ret_list, point_copy);
+        }
 
       /* I reverse the list to preserve the initial order. */
       ret_list = g_slist_reverse (ret_list);
@@ -630,22 +630,21 @@ build_rectified_list(GSList *list_inp,
 
       /* It is similar to regular a polygon. */
       if (is_similar_to_a_regular_polygon (ret_list, pixel_tollerance))
-	{
-	  ret_list = extract_polygon (ret_list);
-	}
+        {
+          ret_list = extract_polygon (ret_list);
+        }
       else
-	{
-
-	  if (is_a_rectangle (ret_list, pixel_tollerance))
-	    {
-	      /* It is a rectangle. */
-	      GSList *rect_list = build_outbounded_rectangle (ret_list);
+        {
+        
+          if (is_a_rectangle (ret_list, pixel_tollerance))
+            {
+              /* It is a rectangle. */
+              GSList *rect_list = build_outbounded_rectangle (ret_list);
               g_slist_foreach (ret_list, (GFunc)g_free, NULL);
               g_slist_free (ret_list);
               ret_list = rect_list;
-	    }
-
-	}
+            }
+        }
     }
   else
     {
@@ -659,10 +658,10 @@ build_rectified_list(GSList *list_inp,
 
 /* Take a list of point and return magically the new recognized path. */
 GSList *
-broken (GSList *list_inp,
-	gboolean close_path,
-	gboolean rectify,
-	gdouble pixel_tollerance)
+broken (GSList   *list_inp,
+        gboolean  close_path,
+        gboolean  rectify,
+        gdouble   pixel_tollerance)
 {
   GSList *meaningful_point_list = build_meaningful_point_list (list_inp, close_path, pixel_tollerance);
 
@@ -670,15 +669,15 @@ broken (GSList *list_inp,
     {
 
       if (rectify)
-	{
-	  GSList * rectified_list = build_rectified_list(meaningful_point_list, close_path, pixel_tollerance);
+        {
+          GSList * rectified_list = build_rectified_list(meaningful_point_list, close_path, pixel_tollerance);
 
           /* Free the meaningful_point_list. */
           g_slist_foreach (meaningful_point_list, (GFunc)g_free, NULL);
           g_slist_free (meaningful_point_list);
 
           return rectified_list;
-	}
+        }
 
     }
 
