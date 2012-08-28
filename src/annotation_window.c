@@ -471,22 +471,8 @@ roundify (gboolean closed_path)
 }
 
 
-/* Is the device the "Eraser"-Type device. */
-static gboolean
-is_eraser (GdkDevice *device)
-{
-  if (strstr (gdk_device_get_name(device), "raser") ||
-      strstr (gdk_device_get_name(device), "RASER"))
-    {
-      return TRUE;
-    }
-
-  return FALSE;
-}
-
-
 /* Set-up input device. */
-void
+static void
 setup_input_device(GdkDevice *device)
 {
   /* only enable devices with 2 ore more axes */
@@ -494,7 +480,7 @@ setup_input_device(GdkDevice *device)
       (gdk_device_get_source(device) != GDK_SOURCE_MOUSE) &&
       (gdk_device_get_n_axes(device) >= 2))
 	  {
-	  
+	    gtk_widget_get_device_enabled (data->annotation_window , device);
 	    if (!gdk_device_set_mode (device, GDK_MODE_SCREEN))
 		    {
 		      g_warning ("Unable to set the device %s to the screen mode\n",
@@ -514,8 +500,9 @@ setup_input_devices ()
 {
   GList *d = (GList *) NULL;
   GdkDeviceManager *device_manager = gdk_display_get_device_manager (gdk_display_get_default ());
-  GList *devices = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
-  devices = g_list_concat (devices, gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE));
+  GList *masters = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
+  GList *slavers = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE);
+  GList *devices = g_list_concat (masters, slavers);
     
   for (d = devices; d; d = d->next)
     {
@@ -604,7 +591,7 @@ setup_app (GtkWidget* parent)
                     G_CALLBACK (on_device_added), data);
   g_signal_connect (gdk_display_get_device_manager (gdk_display_get_default ()), "device-removed",
                     G_CALLBACK (on_device_removed), data);
-                    
+                   
   /* This show the window in fullscreen generating an exposure. */
   gtk_window_fullscreen (GTK_WINDOW (data->annotation_window));
 
