@@ -507,7 +507,7 @@ setup_input_device (GdkDevice *device)
               /* Set screen mode. */
               set_screen_mode (device);
               //gdk_window_set_device_events (gtk_widget_get_window (data->annotation_window),
-                                              device, GDK_POINTER_MOTION_MASK);
+              //                              device, GDK_POINTER_MOTION_MASK);
               break;
             }
         }
