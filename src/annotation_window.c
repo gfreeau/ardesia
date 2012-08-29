@@ -505,7 +505,9 @@ setup_input_device (GdkDevice *device)
           else
             {
               /* Set screen mode. */
-              set_screen_mode(device);
+              set_screen_mode (device);
+              //gdk_window_set_device_events (gtk_widget_get_window (data->annotation_window),
+                                              device, GDK_POINTER_MOTION_MASK);
               break;
             }
         }
@@ -521,7 +523,6 @@ setup_input_device_list (GList *devices)
   for (d = devices; d; d = d->next)
     {
       GdkDevice *device = (GdkDevice *) d->data;
-
       setup_input_device(device);
     }
 }    
@@ -567,8 +568,6 @@ setup_app (GtkWidget* parent)
   data->cur_context = data->default_pen;
   data->old_paint_type = ANNOTATE_PEN;
 
-  setup_input_devices ();
-
   /* Create the annotation window. */
   data->annotation_window = create_annotation_window ();
 
@@ -598,7 +597,7 @@ setup_app (GtkWidget* parent)
 
   /* Connect all the callback from gtkbuilder xml file. */
   gtk_builder_connect_signals (data->annotation_window_gtk_builder, (gpointer) data);
-
+  
   /* Connet some extra callbacks in order to handle the hotplugged input devices. */
   g_signal_connect (gdk_display_get_device_manager (gdk_display_get_default ()), "device-added",
                     G_CALLBACK (on_device_added), data);
@@ -607,7 +606,6 @@ setup_app (GtkWidget* parent)
 
   /* This show the window in fullscreen generating an exposure. */
   gtk_window_fullscreen (GTK_WINDOW (data->annotation_window));
-
 
 #ifdef _WIN32
   /* @TODO Use RGBA colormap and avoid to use the layered window. */
@@ -767,9 +765,9 @@ setup_input_devices ()
 {
   GdkDeviceManager *device_manager = gdk_display_get_device_manager (gdk_display_get_default ());
   GList *masters = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
+  setup_input_device_list(masters);
   //GList *slavers = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE);
   //setup_input_device_list(slavers);
-  setup_input_device_list(masters);
 }
 
 

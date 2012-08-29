@@ -73,8 +73,9 @@ on_configure (GtkWidget      *widget,
       return TRUE;
     }
 
+  setup_input_devices ();
   initialize_annotation_cairo_context (data);
-
+  
   if (!data->is_grabbed)
     {
       return TRUE;
@@ -495,7 +496,6 @@ void on_device_removed (GdkDeviceManager *device_manager,
       g_printerr("DEBUG: device '%s' removed\n", gdk_device_get_name(device));
     }
 
-  setup_input_devices();
 }
 
 
@@ -513,4 +513,5 @@ void on_device_added (GdkDeviceManager *device_manager,
 
   setup_input_devices();
 }
+
 
