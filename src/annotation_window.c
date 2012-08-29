@@ -506,11 +506,26 @@ setup_input_device (GdkDevice *device)
             {
               /* Set screen mode. */
               set_screen_mode(device);
+              break;
             }
         }
     }
 }
 
+
+/* Set-up input device list. */
+static void
+setup_input_device_list (GList *devices)
+{
+  GList *d = (GList *) NULL;
+  for (d = devices; d; d = d->next)
+    {
+      GdkDevice *device = (GdkDevice *) d->data;
+
+      setup_input_device(device);
+    }
+}    
+    
 
 /* Create the annotation window. */
 static GtkWidget *
@@ -750,19 +765,11 @@ draw_arrow_in_point(AnnotatePoint *point,
 void
 setup_input_devices ()
 {
-  GList *d = (GList *) NULL;
   GdkDeviceManager *device_manager = gdk_display_get_device_manager (gdk_display_get_default ());
   GList *masters = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
-  GList *slavers = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE);
-  GList *devices = g_list_concat (masters, slavers);
-
-  for (d = devices; d; d = d->next)
-    {
-      GdkDevice *device = (GdkDevice *) d->data;
-
-      setup_input_device(device);
-    }
-
+  //GList *slavers = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE);
+  //setup_input_device_list(slavers);
+  setup_input_device_list(masters);
 }
 
 
