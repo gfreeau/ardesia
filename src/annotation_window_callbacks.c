@@ -142,6 +142,10 @@ on_button_press (GtkWidget      *win,
 { 
 
   AnnotateData *data = (AnnotateData *) user_data;
+  
+  /* Get the data for this device. */
+  AnnotateDeviceData *devdata = g_hash_table_lookup(data->devdatatable, ev->device);
+  
   gdouble pressure = 1.0; 
   
   if (!data->is_grabbed)
@@ -193,16 +197,17 @@ on_button_press (GtkWidget      *win,
     }
 	
   initialize_annotation_cairo_context(data);
-  
-  annotate_coord_list_free ();
+
+  annotate_configure_pen_options (data);
+
+  annotate_coord_dev_list_free (devdata);
 
   annotate_unhide_cursor ();
 
-  annotate_reset_cairo ();
+  annotate_draw_point (devdata, ev->x, ev->y, pressure);
 
-  annotate_draw_point (ev->x, ev->y, pressure);
-
-  annotate_coord_list_prepend (ev->x,
+  annotate_coord_list_prepend (devdata,
+                               ev->x,
                                ev->y,
                                annotate_get_thickness (),
                                pressure);
@@ -218,6 +223,10 @@ on_motion_notify (GtkWidget      *win,
                   gpointer        user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
+  
+  /* Get the data for this device. */
+  AnnotateDeviceData *devdata = g_hash_table_lookup(data->devdatatable, ev->device);
+  
   GdkModifierType state = (GdkModifierType) ev->state;
   gdouble selected_width = 0.0;
   gdouble pressure = 1.0; 
@@ -263,6 +272,11 @@ on_motion_notify (GtkWidget      *win,
 
   initialize_annotation_cairo_context (data);
 
+  annotate_configure_pen_options (data);
+  
+  /* Select the new color. */
+  annotate_modify_color (devdata, data, pressure);
+  
   if (data->cur_context->type != ANNOTATE_ERASER)
     {
       pressure = get_pressure ( (GdkEvent *) ev);
@@ -273,10 +287,10 @@ on_motion_notify (GtkWidget      *win,
         }
 
       /* If the point is already selected and higher pressure then print else jump it. */
-      if (data->coord_list)
+      if (devdata->coord_list)
         {
-          AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, 0);
-          gdouble tollerance = data->thickness;
+          AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (devdata->coord_list, 0);
+          gdouble tollerance = annotate_get_thickness ();
           
           if (get_distance (last_point->x, last_point->y, ev->x, ev->y)<tollerance)
             {
@@ -289,19 +303,19 @@ on_motion_notify (GtkWidget      *win,
               else // pressure >= last_point->pressure
                 {
                   /* Seems that you are pressing the pen more. */
-                  annotate_modify_color (data, pressure);
-                  annotate_draw_line (ev->x, ev->y, TRUE);
+                  annotate_modify_color (devdata, data, pressure);
+                  annotate_draw_line (devdata, ev->x, ev->y, TRUE);
                   /* Store the new pressure without allocate a new coordinate. */
                   last_point->pressure = pressure;
                   return TRUE;
                 }
             }
-          annotate_modify_color (data, pressure);
+          annotate_modify_color (devdata, data, pressure);
         }
     }
 
-  annotate_draw_line (ev->x, ev->y, TRUE);
-  annotate_coord_list_prepend (ev->x, ev->y, selected_width, pressure);
+  annotate_draw_line (devdata, ev->x, ev->y, TRUE);
+  annotate_coord_list_prepend (devdata, ev->x, ev->y, selected_width, pressure);
 
   return TRUE;
 }
@@ -314,7 +328,11 @@ on_button_release (GtkWidget      *win,
                    gpointer        user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
-  guint lenght = g_slist_length (data->coord_list);
+  
+  /* Get the data for this device. */
+  AnnotateDeviceData *devdata = g_hash_table_lookup(data->devdatatable, ev->device);
+  
+  guint lenght = g_slist_length (devdata->coord_list);
 
   if (!data->is_grabbed)
     {
@@ -354,8 +372,8 @@ on_button_release (GtkWidget      *win,
 
   if (lenght > 2)
     {
-      AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, lenght-1);
-      AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (data->coord_list, 0);
+      AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (devdata->coord_list, lenght-1);
+      AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (devdata->coord_list, 0);
 
       gdouble distance = get_distance (ev->x, ev->y, first_point->x, first_point->y);
 
@@ -368,7 +386,7 @@ on_button_release (GtkWidget      *win,
           score = 6;
         }
         
-      gdouble tollerance = data->thickness * score;
+      gdouble tollerance = annotate_get_thickness () * score;
       
       gdouble pressure = last_point->pressure;   
 
@@ -378,26 +396,26 @@ on_button_release (GtkWidget      *win,
       if (distance > tollerance)
         {
           /* Different point. */
-          cairo_line_to (data->annotation_cairo_context, ev->x, ev->y);
-          annotate_coord_list_prepend (ev->x, ev->y, data->thickness, pressure);
+          annotate_draw_line (devdata, ev->x, ev->y, TRUE);
+          annotate_coord_list_prepend (devdata, ev->x, ev->y, annotate_get_thickness (), pressure);
         }
       else
         {
-          /* Rounded to be tha same point. */
+          /* Rounded to be the same point. */
           closed_path = TRUE; // this seems to be a closed path
-          cairo_line_to (data->annotation_cairo_context, first_point->x, first_point->y);
-          annotate_coord_list_prepend (first_point->x, first_point->y, data->thickness, pressure);
+          annotate_draw_line (devdata, first_point->x, first_point->y, TRUE);
+          annotate_coord_list_prepend (devdata, first_point->x, first_point->y, annotate_get_thickness (), pressure);
         }
 
       if (data->cur_context->type != ANNOTATE_ERASER)
         {
-          annotate_shape_recognize (closed_path);
+          annotate_shape_recognize (devdata, closed_path);
 
           /* If is selected an arrow type then I draw the arrow. */
           if (data->arrow)
             {
               /* Print arrow at the end of the path. */
-              annotate_draw_arrow (distance);
+              annotate_draw_arrow (devdata, distance);
             }
         }
     }
@@ -462,7 +480,7 @@ on_proximity_out (GtkWidget         *win,
 {
 
   AnnotateData *data = (AnnotateData *) user_data;
-
+  
   if (!data->is_grabbed)
     {
       return TRUE;

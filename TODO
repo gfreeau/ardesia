@@ -23,7 +23,6 @@
 - Candidate features:
   - Better sketch recognition
   - Recognize the hand written text
-  - Multi pointer support
   - Integration beetween ardesia and florence in lxde
   - Use the same window for the background; the expose will paint
     all the layers
