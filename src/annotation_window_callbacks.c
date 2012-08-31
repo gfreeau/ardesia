@@ -35,7 +35,7 @@
 
 /* Return the pressure passing the event. */
 static gdouble
-get_pressure (GdkEvent *ev)
+get_pressure       (GdkEvent *ev)
 {
   gdouble ret_value = 1.0;
   gdouble pressure = ret_value;
@@ -53,9 +53,9 @@ get_pressure (GdkEvent *ev)
 
 /* On configure event. */
 G_MODULE_EXPORT gboolean
-on_configure (GtkWidget      *widget,
-              GdkEventExpose *event,
-              gpointer        user_data)
+on_configure       (GtkWidget      *widget,
+                    GdkEventExpose *event,
+                    gpointer        user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
 
@@ -88,9 +88,9 @@ on_configure (GtkWidget      *widget,
 
 /* On screen changed. */
 G_MODULE_EXPORT void
-on_screen_changed(GtkWidget *widget,
-                  GdkScreen *previous_screen,
-                  gpointer   user_data)
+on_screen_changed       (GtkWidget  *widget,
+                         GdkScreen  *previous_screen,
+                         gpointer    user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
 
@@ -113,9 +113,9 @@ on_screen_changed(GtkWidget *widget,
 
 /* Expose event: this occurs when the window is shown. */
 G_MODULE_EXPORT gboolean
-on_expose       (GtkWidget *widget,
-                 cairo_t   *cr,
-                 gpointer   user_data)
+on_expose          (GtkWidget *widget,
+                    cairo_t   *cr,
+                    gpointer   user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
   
@@ -123,7 +123,7 @@ on_expose       (GtkWidget *widget,
     {
       g_printerr ("DEBUG: Annotation window get expose event\n");
     }
-    
+
   annotate_restore_surface ();
   return FALSE;
 }
@@ -136,9 +136,9 @@ on_expose       (GtkWidget *widget,
 
 /* This is called when the button is pushed. */
 G_MODULE_EXPORT gboolean
-on_button_press (GtkWidget      *win,
-                 GdkEventButton *ev,
-                 gpointer        user_data)
+on_button_press    (GtkWidget      *win,
+                    GdkEventButton *ev,
+                    gpointer        user_data)
 { 
 
   AnnotateData *data = (AnnotateData *) user_data;
@@ -218,9 +218,9 @@ on_button_press (GtkWidget      *win,
 
 /* This shots when the pointer is moving. */
 G_MODULE_EXPORT gboolean
-on_motion_notify (GtkWidget      *win,
-                  GdkEventMotion *ev,
-                  gpointer        user_data)
+on_motion_notify   (GtkWidget       *win,
+                    GdkEventMotion  *ev,
+                    gpointer         user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
   
@@ -323,9 +323,9 @@ on_motion_notify (GtkWidget      *win,
 
 /* This shots when the button is released. */
 G_MODULE_EXPORT gboolean
-on_button_release (GtkWidget      *win,
-                   GdkEventButton *ev,
-                   gpointer        user_data)
+on_button_release  (GtkWidget       *win,
+                    GdkEventButton  *ev,
+                    gpointer         user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
   
@@ -432,9 +432,9 @@ on_button_release (GtkWidget      *win,
 
 /* Device touch. */
 G_MODULE_EXPORT gboolean
-on_proximity_in (GtkWidget         *widget,
-                 GdkEventProximity *ev,
-                 gpointer          user_data)
+on_proximity_in    (GtkWidget          *widget,
+                    GdkEventProximity  *ev,
+                    gpointer            user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
 
@@ -474,9 +474,9 @@ on_proximity_in (GtkWidget         *widget,
 
 /* Device lease. */
 G_MODULE_EXPORT gboolean
-on_proximity_out (GtkWidget         *win,
-                  GdkEventProximity *ev,
-                  gpointer           user_data)
+on_proximity_out   (GtkWidget          *win,
+                    GdkEventProximity  *ev,
+                    gpointer            user_data)
 {
 
   AnnotateData *data = (AnnotateData *) user_data;
@@ -503,12 +503,12 @@ on_proximity_out (GtkWidget         *win,
 
 
 /* On device added. */
-void on_device_removed (GdkDeviceManager *device_manager,
-                        GdkDevice        *device,
-                        gpointer          user_data)
+void on_device_removed  (GdkDeviceManager  *device_manager,
+                         GdkDevice         *device,
+                         gpointer           user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
-  
+
   if(data->debug)
     {
       g_printerr("DEBUG: device '%s' removed\n", gdk_device_get_name(device));
@@ -519,9 +519,9 @@ void on_device_removed (GdkDeviceManager *device_manager,
 
 
 /* On device removed. */
-void on_device_added (GdkDeviceManager *device_manager,
-                      GdkDevice        *device,
-                      gpointer          user_data)
+void on_device_added    (GdkDeviceManager  *device_manager,
+                         GdkDevice         *device,
+                         gpointer           user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
 

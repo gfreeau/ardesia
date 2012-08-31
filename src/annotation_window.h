@@ -382,7 +382,7 @@ annotate_add_savepoint       ();
 
 /* Configure pen option for cairo context. */
 void 
-annotate_configure_pen_options (AnnotateData       *data);
+annotate_configure_pen_options    (AnnotateData       *data);
 
 
 #endif

@@ -47,7 +47,7 @@ static GSList *artifacts = (GSList *) NULL;
 
 /* Get the name of the current project. */
 gchar*
-get_project_name ()
+get_project_name   ()
 {
   return project_name;
 }
@@ -55,7 +55,7 @@ get_project_name ()
 
 /* Set the name of the current project. */
 void
-set_project_name (gchar *name)
+set_project_name   (gchar  *name)
 {
   project_name = name;
 }
@@ -63,7 +63,7 @@ set_project_name (gchar *name)
 
 /* Get the dir of the current project. */
 gchar*
-get_project_dir ()
+get_project_dir    ()
 {
   return project_dir;
 }
@@ -71,7 +71,7 @@ get_project_dir ()
 
 /* Set the directory of the current project. */
 void
-set_project_dir (gchar *dir)
+set_project_dir    (gchar *dir)
 {
   project_dir = dir;
 }
@@ -79,7 +79,7 @@ set_project_dir (gchar *dir)
 
 /* Get the iwb file of the current project. */
 gchar *
-get_iwb_filename ()
+get_iwb_filename   ()
 {
   return iwb_filename;
 }
@@ -87,7 +87,7 @@ get_iwb_filename ()
 
 /* Set the iwb file of the current project. */
 void
-set_iwb_filename (gchar *file)
+set_iwb_filename   (gchar *file)
 {
   iwb_filename = file;
 }
@@ -95,7 +95,7 @@ set_iwb_filename (gchar *file)
 
 /* Get the list of the path of the artefacts created in the session. */
 GSList *
-get_artifacts ()
+get_artifacts      ()
 {
   return artifacts;
 }
@@ -103,7 +103,7 @@ get_artifacts ()
 
 /* Add the path of an artefacts created in the session to the list. */
 void
-add_artifact (gchar *path)
+add_artifact       (gchar *path)
 {
   gchar *copied_path = g_strdup_printf ("%s", path);
   artifacts = g_slist_prepend (artifacts, copied_path);
@@ -112,7 +112,7 @@ add_artifact (gchar *path)
 
 /* Free the structure containing the artefact list created in the session. */
 void
-free_artifacts ()
+free_artifacts     ()
 {
   g_slist_foreach (artifacts, (GFunc)g_free, NULL);
 }
@@ -120,7 +120,7 @@ free_artifacts ()
 
 /* Get the bar window widget. */
 GtkWidget *
-get_bar_window ()
+get_bar_window     ()
 {
   return GTK_WIDGET (gtk_builder_get_object (bar_gtk_builder, "winMain"));
 }
@@ -128,10 +128,10 @@ get_bar_window ()
 
 /** Get the distance between two points. */
 gdouble
-get_distance (gdouble x1,
-              gdouble y1,
-              gdouble x2,
-              gdouble y2)
+get_distance       (gdouble x1,
+                    gdouble y1,
+                    gdouble x2,
+                    gdouble y2)
 {
   /* Apply the Pitagora theorem to calculate the distance. */
   gdouble x_delta = fabs(x2-x1);
@@ -144,7 +144,7 @@ get_distance (gdouble x1,
 
 /* Take a GdkColor and return the equivalent RGBA string. */
 gchar *
-gdkcolor_to_rgb (GdkColor *gdkcolor)
+gdkcolor_to_rgb    (GdkColor *gdkcolor)
 {
   /* Transform in the  RGB format e.g. FF0000. */ 
   gchar *ret_str = g_strdup_printf ("%02x%02x%02x",
@@ -161,7 +161,7 @@ gdkcolor_to_rgb (GdkColor *gdkcolor)
  * neglecting the alpha channel; the gtkColor does not support the rgba color.
  */
 GdkColor *
-rgba_to_gdkcolor (gchar *rgba)
+rgba_to_gdkcolor   (gchar  *rgba)
 {
   GdkColor *gdkcolor = g_malloc ((gsize) sizeof (GdkColor));
   gchar *rgb = g_strndup (rgba, 6);
@@ -180,7 +180,7 @@ rgba_to_gdkcolor (gchar *rgba)
 
 /* Clear cairo context. */
 void
-clear_cairo_context (cairo_t *cr)
+clear_cairo_context     (cairo_t  *cr)
 {
   if (cr)
     {
@@ -194,13 +194,13 @@ clear_cairo_context (cairo_t *cr)
 
 /* Scale the surface with the width and height requested */
 cairo_surface_t *
-scale_surface    (cairo_surface_t *surface,
-                  gdouble          width,
-                  gdouble          height)
+scale_surface      (cairo_surface_t  *surface,
+                    gdouble           width,
+                    gdouble           height)
 {
   gdouble old_width = cairo_image_surface_get_width (surface);
   gdouble old_height = cairo_image_surface_get_height (surface);
-	  
+	
   cairo_surface_t *new_surface = cairo_surface_create_similar(surface, CAIRO_CONTENT_COLOR_ALPHA, width, height);
   cairo_t *cr = cairo_create (new_surface);
 
@@ -227,8 +227,8 @@ scale_surface    (cairo_surface_t *surface,
  
 /* Set the cairo surface colour to the RGBA string. */
 void
-cairo_set_source_color_from_string ( cairo_t *cr,
-                                     gchar   *color)
+cairo_set_source_color_from_string     ( cairo_t *cr,
+                                         gchar   *color)
 {
   if (cr)
     {
@@ -247,8 +247,8 @@ cairo_set_source_color_from_string ( cairo_t *cr,
 
 /* Save the contents of the pixbuf in the file with name file name. */
 gboolean
-save_pixbuf_on_png_file (GdkPixbuf *pixbuf,
-                         const gchar *filename)
+save_pixbuf_on_png_file      (GdkPixbuf    *pixbuf,
+                              const gchar  *filename)
 {
   gint width = gdk_pixbuf_get_width (pixbuf);
   gint height = gdk_pixbuf_get_height (pixbuf);
@@ -268,7 +268,7 @@ save_pixbuf_on_png_file (GdkPixbuf *pixbuf,
 
 /* Grab the screenshoot and put it in the image buffer. */
 GdkPixbuf *
-grab_screenshot ()
+grab_screenshot    ()
 {
   gint height = gdk_screen_height ();
   gint width = gdk_screen_width ();
@@ -287,8 +287,8 @@ grab_screenshot ()
  * This is function return if the point (x,y) in inside the ardesia bar window.
  */
 gboolean
-inside_bar_window (gdouble xp,
-                   gdouble yp)
+inside_bar_window       (gdouble xp,
+                         gdouble yp)
 {
   gint x = 0;
   gint y = 0;
@@ -319,7 +319,7 @@ inside_bar_window (gdouble xp,
 
 /* Drill the window in the area where the ardesia bar is located. */
 void 
-drill_window_in_bar_area (GtkWidget *widget)
+drill_window_in_bar_area     (GtkWidget *widget)
 {
   GdkRectangle allocation;
   GtkWidget *bar= get_bar_window ();
@@ -337,7 +337,7 @@ drill_window_in_bar_area (GtkWidget *widget)
  * the returned value must be free with the g_free.
  */
 gchar *
-get_date ()
+get_date      ()
 {
   struct tm *t;
   time_t now;
@@ -369,7 +369,7 @@ get_date ()
 
 /* Return if a file exists. */
 gboolean
-file_exists (gchar *filename)
+file_exists        (gchar *filename)
 {
   return g_file_test (filename, G_FILE_TEST_EXISTS);
 }
@@ -380,7 +380,7 @@ file_exists (gchar *filename)
  * the project name and the current date.
  */
 gchar *
-get_default_filename ()
+get_default_filename    ()
 {
   gchar *date = get_date ();
   gchar *filename = g_strdup_printf ("%s_%s", project_name, date);
@@ -393,7 +393,7 @@ get_default_filename ()
  * Get the home directory.
  */
 const gchar *
-get_home_dir (void)
+get_home_dir       (void)
 {
   const char *homedir = g_getenv ("HOME");
   if (!homedir)
@@ -408,7 +408,7 @@ get_home_dir (void)
  * Get the desktop directory.
  */
 const gchar *
-get_desktop_dir (void)
+get_desktop_dir    (void)
 {
   return g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
 }
@@ -418,7 +418,7 @@ get_desktop_dir (void)
  * Get the documents directory.
  */
 const gchar *
-get_documents_dir (void)
+get_documents_dir  (void)
 {
   const gchar *documents_dir = g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS);
   if (documents_dir == NULL)
@@ -431,7 +431,7 @@ get_documents_dir (void)
 
 /* Delete a directory recursively. */
 void
-rmdir_recursive (gchar *path)
+rmdir_recursive    (gchar *path)
 {
   GDir *cur_dir;
   const gchar *dir_file;
@@ -467,7 +467,7 @@ rmdir_recursive (gchar *path)
 
 /* Remove directory if it is empty */
 void
-remove_dir_if_empty(gchar* dir_path)
+remove_dir_if_empty     (gchar* dir_path)
 {
   GDir        *dir = (GDir *) NULL;
   gint         file_occurrence = 0;
@@ -489,10 +489,10 @@ remove_dir_if_empty(gchar* dir_path)
 
 /* Allocate a new point belonging to the stroke passing the values. */
 AnnotatePoint *
-allocate_point (gdouble x,
-                gdouble y,
-                gdouble width,
-                gdouble pressure)
+allocate_point     (gdouble  x,
+                    gdouble  y,
+                    gdouble  width,
+                    gdouble  pressure)
 {
   AnnotatePoint *point =  g_malloc ( (gsize) sizeof (AnnotatePoint));
   point->x = x;
@@ -505,10 +505,10 @@ allocate_point (gdouble x,
 
 /* Send an email. */
 void
-send_email (gchar  *to,
-            gchar  *subject,
-            gchar  *body,
-            GSList *attachment_list)
+send_email         (gchar   *to,
+                    gchar   *subject,
+                    gchar   *body,
+                    GSList  *attachment_list)
 {
 #ifdef _WIN32
   windows_send_email (to, subject, body, attachment_list);
@@ -550,7 +550,7 @@ send_email (gchar  *to,
 
 /* Send artifacts with email. */
 void
-send_artifacts_with_email (GSList *attachment_list)
+send_artifacts_with_email    (GSList *attachment_list)
 {
   gchar *to = "ardesia-developer@googlegroups.com";
   gchar *subject = "ardesia-contribution";
@@ -566,7 +566,7 @@ send_artifacts_with_email (GSList *attachment_list)
 
 /* Send trace with email. */
 void
-send_trace_with_email (gchar *attachment)
+send_trace_with_email        (gchar *attachment)
 {
   GSList *attachment_list = NULL;
   gchar *to = "ardesia-developer@googlegroups.com";
@@ -585,7 +585,7 @@ send_trace_with_email (gchar *attachment)
 
 /* Is the desktop manager gnome. */
 gboolean
-is_gnome ()
+is_gnome           ()
 {
 #ifdef _WIN32
   return FALSE;
@@ -605,11 +605,11 @@ is_gnome ()
 
 /* Create desktop entry passing value. */
 void
-xdg_create_desktop_entry (gchar *filename,
-                          gchar *type,
-                          gchar *name,
-                          gchar *icon,
-                          gchar *exec)
+xdg_create_desktop_entry      (gchar  *filename,
+                               gchar  *type,
+                               gchar  *name,
+                               gchar  *icon,
+                               gchar  *exec)
 {
   FILE *fp = fopen (filename, "w");
   if (fp)
@@ -627,9 +627,9 @@ xdg_create_desktop_entry (gchar *filename,
 
 /* Create a desktop link. */
 void
-xdg_create_link (gchar *src,
-                 gchar *dest,
-                 gchar *icon)
+xdg_create_link         (gchar  *src,
+                         gchar  *dest,
+                         gchar  *icon)
 {
   gchar *link_extension = "desktop";
   gchar *link_filename = g_strdup_printf ("%s.%s", dest, link_extension);
@@ -647,8 +647,8 @@ xdg_create_link (gchar *src,
 
 /* Get the last position where sub-string occurs in the string. */
 gint
-g_substrlastpos (const char *str,
-                 const char *substr)
+g_substrlastpos         (const char *str,
+                         const char *substr)
 {
   gint len = (gint) strlen (str);
   gint i = 0;
@@ -668,9 +668,9 @@ g_substrlastpos (const char *str,
 
 /* Sub-string of string from start to end position. */
 gchar *
-g_substr (const gchar *string,
-          gint         start,
-          gint         end)
+g_substr           (const gchar *string,
+                    gint         start,
+                    gint         end)
 {
   gint number_of_char = (end - start + 1);
   gsize size = (gsize) sizeof (gchar) * number_of_char;
@@ -682,7 +682,7 @@ g_substr (const gchar *string,
  * This function create a segmentation fault; 
  * it is useful to test the segmentation fault handler.
  */
-void create_segmentation_fault ()
+void create_segmentation_fault    ()
 {
   int *f=NULL;
   *f = 0;

@@ -27,9 +27,9 @@
 
 /* Add input device. */
 static void
-add_input_mode_device (AnnotateData    *data,
-                       GdkDevice       *device,
-                       GdkInputMode     mode)
+add_input_mode_device   (AnnotateData    *data,
+                         GdkDevice       *device,
+                         GdkInputMode     mode)
 {
   if (!data->devdatatable)
     {
@@ -58,8 +58,8 @@ add_input_mode_device (AnnotateData    *data,
 
 /* Set-up input device list. */
 static void
-setup_input_device_list (AnnotateData *data,
-                         GList        *devices)
+setup_input_device_list (AnnotateData  *data,
+                         GList         *devices)
 {
   remove_input_devices (data);
   GList *d = (GList *) NULL;
@@ -73,7 +73,7 @@ setup_input_device_list (AnnotateData *data,
 
 /* Select the preferred input mode depending on axis. */
 static GdkInputMode
-select_input_device_mode (GdkDevice     *device)
+select_input_device_mode     (GdkDevice     *device)
 {
       int i = 0;
       for (i=0; i < gdk_device_get_n_axes (device); i++)
@@ -97,7 +97,7 @@ select_input_device_mode (GdkDevice     *device)
 
 /* Remove all the devices . */
 void
-remove_input_devices (AnnotateData *data)
+remove_input_devices    (AnnotateData  *data)
 {
   if (data->devdatatable)
     {
@@ -117,7 +117,7 @@ remove_input_devices (AnnotateData *data)
 
 /* Set-up input devices. */
 void
-setup_input_devices (AnnotateData *data)
+setup_input_devices     (AnnotateData  *data)
 {
   GdkDeviceManager *device_manager = gdk_display_get_device_manager (gdk_display_get_default ());
   GList *masters = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
@@ -129,8 +129,8 @@ setup_input_devices (AnnotateData *data)
 
 /* Add input device. */
 void
-add_input_device   (AnnotateData  *data,
-                    GdkDevice     *device)
+add_input_device        (AnnotateData  *data,
+                         GdkDevice     *device)
 {
   /* only enable devices with 2 ore more axes and exclude keyboards */
   if ((gdk_device_get_source(device) != GDK_SOURCE_KEYBOARD) &&
@@ -143,8 +143,8 @@ add_input_device   (AnnotateData  *data,
 
 /* Add input device. */
 void
-remove_input_device (AnnotateData  *data,
-                     GdkDevice     *device)
+remove_input_device     (AnnotateData  *data,
+                         GdkDevice     *device)
 {
   AnnotateDeviceData *devdata = g_hash_table_lookup(data->devdatatable, device);;
   annotate_coord_dev_list_free (devdata);
@@ -154,8 +154,8 @@ remove_input_device (AnnotateData  *data,
 
 /* Grab pointer. */
 void
-grab_pointer (GtkWidget           *widget,
-              GdkEventMask         eventmask)
+grab_pointer       (GtkWidget           *widget,
+                    GdkEventMask         eventmask)
 {
   GdkGrabStatus result;
   GdkDisplay    *display = (GdkDisplay *) NULL;
@@ -207,7 +207,7 @@ grab_pointer (GtkWidget           *widget,
 
 /* Ungrab pointer. */
 void
-ungrab_pointer (GdkDisplay        *display)
+ungrab_pointer     (GdkDisplay        *display)
 {
   GdkDevice     *pointer = (GdkDevice *) NULL;
   GdkDeviceManager *device_manager = (GdkDeviceManager *) NULL;

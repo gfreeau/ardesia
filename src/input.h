@@ -44,35 +44,33 @@
 
 /* Un-grab pointer. */
 void
-ungrab_pointer (GdkDisplay         *display);
+ungrab_pointer     (GdkDisplay         *display);
 
 
 /* Grab pointer. */
 void
-grab_pointer (GtkWidget            *win,
-              GdkEventMask          eventmask);
+grab_pointer       (GtkWidget            *win,
+                    GdkEventMask          eventmask);
 
 
 /* Remove all the devices . */
 void
-remove_input_devices (AnnotateData *data);
+remove_input_devices    (AnnotateData *data);
 
 /* Set-up input devices. */
 void
-setup_input_devices (AnnotateData  *data);
+setup_input_devices     (AnnotateData  *data);
 
 
 /* Add input device. */
 void
-add_input_device (AnnotateData     *data,
-                  GdkDevice        *device);
+add_input_device   (AnnotateData     *data,
+                    GdkDevice        *device);
 
 
 /* Remove input device. */
 void
-remove_input_device (AnnotateData  *data,
-                     GdkDevice     *device);
-                     
-                     
+remove_input_device     (AnnotateData  *data,
+                         GdkDevice     *device);
 
 
