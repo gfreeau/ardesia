@@ -130,17 +130,6 @@ void add_artifact (gchar* path);
 void
 free_artifacts ();
 
-
-/* Un-grab pointer. */
-void
-ungrab_pointer (GdkDisplay *display);
-
-
-/* Grab pointer. */
-void
-grab_pointer (GtkWidget     *win,
-              GdkEventMask   eventmask);
-
 				
 /* get bar window widget. */
 GtkWidget *

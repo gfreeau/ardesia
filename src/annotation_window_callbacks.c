@@ -30,6 +30,7 @@
 #include <annotation_window_callbacks.h>
 #include <annotation_window.h>
 #include <utils.h>
+#include <input.h>
 
 
 /* Return the pressure passing the event. */
@@ -73,7 +74,6 @@ on_configure (GtkWidget      *widget,
       return TRUE;
     }
 
-  setup_input_devices ();
   initialize_annotation_cairo_context (data);
   
   if (!data->is_grabbed)
@@ -513,7 +513,8 @@ void on_device_removed (GdkDeviceManager *device_manager,
     {
       g_printerr("DEBUG: device '%s' removed\n", gdk_device_get_name(device));
     }
-
+    
+  remove_input_device (data, device);
 }
 
 
@@ -529,7 +530,7 @@ void on_device_added (GdkDeviceManager *device_manager,
       g_printerr("DEBUG: device '%s' added\n", gdk_device_get_name(device));
     }
 
-  setup_input_devices();
+  add_input_device (data, device);
 }
 
 

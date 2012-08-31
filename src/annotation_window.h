@@ -21,6 +21,8 @@
  *
  */
 
+#ifndef ANNOTATE_H
+#define ANNOTATE_H
 
 #include <glib.h>
 
@@ -381,5 +383,8 @@ annotate_add_savepoint       ();
 /* Configure pen option for cairo context. */
 void 
 annotate_configure_pen_options (AnnotateData       *data);
+
+
+#endif
 
 

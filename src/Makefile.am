@@ -44,6 +44,8 @@ ardesia_SOURCES = \
 	annotation_window.h                       \
         utils.c                                   \
 	utils.h                                   \
+        input.c                                   \
+	input.h                                   \
         windows_utils.c                           \
 	windows_utils.h                           \
 	keyboard.c                                \

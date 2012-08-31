@@ -26,6 +26,7 @@
 #include <annotation_window.h>
 #include <annotation_window_callbacks.h>
 #include <utils.h>
+#include <input.h>
 #include <broken.h>
 #include <background_window.h>
 #include <bezier_spline.h>
@@ -456,73 +457,6 @@ roundify (AnnotateDeviceData *devdata, gboolean closed_path)
 }
 
 
-/* Add input device. */
-static void
-add_input_device (GdkDevice *device, GdkInputMode mode)
-{
-  AnnotateDeviceData *devdata = (AnnotateDeviceData *) NULL;
-  devdata  = g_malloc ((gsize) sizeof (AnnotateDeviceData));
-  devdata->coord_list = (GSList *) NULL;
-  g_hash_table_insert(data->devdatatable, device, devdata);
-  
-  if (!gdk_device_set_mode (device, mode))
-    {
-      g_warning ("Unable to set the device %s to the %d mode\n",
-                  gdk_device_get_name (device),
-                  mode);
-    }
-		
-  g_printerr ("Enabled Device in screen %d. %p: \"%s\" (Type: %d)\n",
-               mode,
-               device,
-               gdk_device_get_name (device),
-               gdk_device_get_source (device));
-}
-
-
-/* Set-up input device. */
-static void
-setup_input_device (GdkDevice *device)
-{
-  /* only enable devices with 2 ore more axes */
-  if ((gdk_device_get_source(device) != GDK_SOURCE_KEYBOARD) &&
-      ( gdk_device_get_n_axes (device) >= 2))
-    {
-      int i = 0;
-      for (i=0; i < gdk_device_get_n_axes (device); i++)
-        {
-          GdkAxisUse axis_use = gdk_device_get_axis_use (device, i);
-          if (axis_use != GDK_AXIS_PRESSURE)
-            {
-              /* I can not set to screen mode. */
-              continue;
-            }
-          else
-            {
-              /* Set screen mode. */
-              add_input_device (device, GDK_MODE_SCREEN);
-              return;
-            }
-        }
-      /* I can not set to window mode. */
-      add_input_device (device, GDK_MODE_WINDOW);
-    }
-}
-
-
-/* Set-up input device list. */
-static void
-setup_input_device_list (GList *devices)
-{
-  GList *d = (GList *) NULL;
-  for (d = devices; d; d = d->next)
-    {
-      GdkDevice *device = (GdkDevice *) d->data;
-      setup_input_device(device);
-    }
-}
-
-
 /* Create the annotation window. */
 static GtkWidget *
 create_annotation_window ()
@@ -786,18 +720,6 @@ static void fill_dev (AnnotateDeviceData *devdata)
 
       annotate_add_savepoint ();
     }
-}
-
-
-/* Set-up input devices. */
-void
-setup_input_devices ()
-{
-  GdkDeviceManager *device_manager = gdk_display_get_device_manager (gdk_display_get_default ());
-  GList *masters = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
-  setup_input_device_list(masters);
-  //GList *slavers = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE);
-  //setup_input_device_list(slavers);
 }
 
 
@@ -1067,24 +989,6 @@ annotate_coord_dev_list_free (AnnotateDeviceData *devdata)
       devdata->coord_list = (GSList *) NULL;
     }
 }
-
-
-/* Free the coord list belonging to all the devices. */
-void
-annotate_coord_list_free ()
-{
-      /* and clear our own device data list */
-      GHashTableIter it;
-      gpointer value;
-      g_hash_table_iter_init (&it, data->devdatatable);
-      while (g_hash_table_iter_next (&it, NULL, &value)) 
-        {
-          AnnotateDeviceData *devdata = (AnnotateDeviceData *) value;
-          annotate_coord_dev_list_free (devdata);
-          g_free(value);
-        }
-      g_hash_table_remove_all(data->devdatatable);
-} 
       
 
 /* Modify colour according to the pressure. */
@@ -1414,9 +1318,8 @@ annotate_quit ()
           gtk_widget_destroy (data->annotation_window);
           data->annotation_window = (GtkWidget *) NULL;
         }
-      
-      annotate_coord_list_free ();
   
+      remove_input_devices (data);
       annotate_savepoint_list_free ();
 
       delete_ardesia_tmp_dir();
@@ -1569,11 +1472,11 @@ annotate_init (GtkWidget *parent,
   data = g_malloc ((gsize) sizeof (AnnotateData));
 
   /* Initialize the data structure. */
-  data->devdatatable = g_hash_table_new (NULL, NULL);
   data->annotation_cairo_context = (cairo_t *) NULL;
   data->savepoint_list = (GSList *) NULL;
   data->current_save_index = 0;
   data->cursor = (GdkCursor *) NULL;
+  data->devdatatable = (GHashTable *) NULL;
 
   data->is_grabbed = FALSE;
   data->arrow = FALSE;
@@ -1590,7 +1493,7 @@ annotate_init (GtkWidget *parent,
   data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER);
   data->cur_context = data->default_pen;
   
-  setup_input_devices ();
+  setup_input_devices (data);
   allocate_invisible_cursor (&data->invisible_cursor);
   
   create_savepoint_dir ();
