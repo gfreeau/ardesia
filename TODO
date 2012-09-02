@@ -22,8 +22,8 @@
 
 - Candidate features:
   - Better sketch recognition
-  - Recognize the hand written text
   - Integration beetween ardesia and florence in lxde
+  - Recognize the hand written text
   - Use the same window for the background; the expose will paint
     all the layers
   - Deploy the artefact online

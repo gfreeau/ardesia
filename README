@@ -72,7 +72,8 @@ Please read the INSTALL file located on the current folder.
 
 - Composite manager
   In order to run Ardesia on Linux you need to run a composite manager such as
-  compiz, kwin or xcompmgr.
+  compiz, kwin or xcompmgr. You can also use a compositing window manager as xfwm,
+  metacity and mutter.
 
   If you are a Windows "user" I remember you that only these flavours are supported:
   - Windows 7 Ultimate, Enterprise, Professional and Home Premium
