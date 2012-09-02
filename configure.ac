@@ -79,7 +79,7 @@ AM_PROG_LIBTOOL
 #######
 # Gtk 3
 #######
-AM_PATH_GTK_3_0(gtk_required_version, :,
+AM_PATH_GTK_3_0(gtk_required_version, ,
   AC_MSG_ERROR(Test for GTK+ failed. See the file 'INSTALL' for help.),
   gthread)
 
