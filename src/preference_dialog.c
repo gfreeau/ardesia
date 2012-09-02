@@ -35,7 +35,7 @@
 
 /* Show the permission denied to access to file dialog. */
 void
-show_permission_denied_dialog (GtkWindow *parent_window)
+show_permission_denied_dialog     (GtkWindow *parent_window)
 {
   GtkWidget *permission_denied_dialog = (GtkWidget *) NULL;
 
@@ -62,7 +62,7 @@ show_permission_denied_dialog (GtkWindow *parent_window)
  * the background setting.
  */
 void
-start_preference_dialog (GtkWindow *parent)
+start_preference_dialog      (GtkWindow *parent)
 {
   GObject *preference_obj = (GObject *) NULL;
   GtkWidget *preference_dialog = (GtkWidget *) NULL;
@@ -82,24 +82,22 @@ start_preference_dialog (GtkWindow *parent)
   preference_data->preference_dialog_gtk_builder = gtk_builder_new ();
 
   /* Load the gtk builder file created with glade. */
-  gtk_builder_add_from_file (preference_data->preference_dialog_gtk_builder, PREFERENCE_UI_FILE, NULL);
+  gtk_builder_add_from_file (preference_data->preference_dialog_gtk_builder,
+                             PREFERENCE_UI_FILE,
+                             NULL);
 
   /* Take the preference object. */
-  preference_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "preferences");
+  preference_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder,
+                                           "preferences");
+
   preference_dialog = GTK_WIDGET (preference_obj);
 
-  gtk_window_set_transient_for (GTK_WINDOW (preference_dialog), parent);
   gtk_window_set_modal (GTK_WINDOW (preference_dialog), TRUE);
+  gtk_window_set_keep_above (GTK_WINDOW (preference_dialog), TRUE);
   
-#ifdef _WIN32
-  /*
-   * In Windows the parent bar go above the dialog;
-   * to avoid this behaviour I put the parent keep above to false.
-   */
-  gtk_window_set_keep_above (GTK_WINDOW (parent), FALSE);
-#endif
+  img_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder,
+                                    "imageChooserButton");
 
-  img_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "imageChooserButton");
   chooser = GTK_FILE_CHOOSER (img_obj);
 
   gtk_file_chooser_set_current_folder (chooser, BACKGROUNDS_FOLDER);
@@ -115,25 +113,30 @@ start_preference_dialog (GtkWindow *parent)
   gtk_file_chooser_set_preview_widget (chooser, preference_data->preview);
 
   bg_color_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder,
-					 "backgroundColorButton");
+                                         "backgroundColorButton");
 
   color_button = GTK_WIDGET (bg_color_obj);
   gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON (color_button), TRUE);
 
   /* Connect all signals by reflection. */
-  gtk_builder_connect_signals (preference_data->preference_dialog_gtk_builder, (gpointer) preference_data);
+  gtk_builder_connect_signals (preference_data->preference_dialog_gtk_builder,
+                               (gpointer) preference_data);
 
   gint background_type = get_background_type();
 
   if (background_type == 1)
     {
-      GObject *color_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "color");
+      GObject *color_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder,
+                                                   "color");
+
       GtkToggleButton *color_tool_button = GTK_TOGGLE_BUTTON (color_obj);
       gtk_toggle_button_set_active (color_tool_button, TRUE);
     }
   else if (background_type == 2)
     {
-      GObject *file_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder, "file");
+      GObject *file_obj = gtk_builder_get_object (preference_data->preference_dialog_gtk_builder,
+                                                  "file");
+
       GtkToggleButton *image_tool_button = GTK_TOGGLE_BUTTON (file_obj);
       gtk_toggle_button_set_active (image_tool_button, TRUE);
     }

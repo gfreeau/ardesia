@@ -35,7 +35,7 @@ extern TextConfig *text_config;
 
 /* Print the version of the tool and exit. */
 static void
-print_version ()
+print_version      ()
 {
   g_printf ("Ardesia %s; the free digital sketchpad\n\n", PACKAGE_VERSION);
   exit (EXIT_SUCCESS);
@@ -44,7 +44,7 @@ print_version ()
 
 /* Print the command line help. */
 static void
-print_help ()
+print_help         ()
 {
   gchar *year = "2009-2010";
   gchar *author = "Pietro Pilolli";
@@ -77,7 +77,7 @@ print_help ()
 #ifndef _WIN32
 /* Call the dialog that inform the user to enable a composite manager. */
 static void
-run_missing_composite_manager_dialog ()
+run_missing_composite_manager_dialog   ()
 {
   GtkWidget *msg_dialog;
   msg_dialog = gtk_message_dialog_new (NULL,
@@ -100,7 +100,7 @@ run_missing_composite_manager_dialog ()
 
 /* Check if a composite manager is active. */
 static void
-check_composite_manager ()
+check_composite_manager      ()
 {
   GdkDisplay *display = gdk_display_get_default ();
   GdkScreen  *screen  = gdk_display_get_default_screen (display);
@@ -118,8 +118,8 @@ check_composite_manager ()
 
 /* Parse the command line in the standard getopt way. */
 static CommandLine *
-parse_options (gint  argc,
-               char *argv[])
+parse_options           (gint   argc,
+                         char  *argv[])
 {
   CommandLine *commandline = g_malloc ((gsize) sizeof (CommandLine));
 
@@ -232,7 +232,7 @@ parse_options (gint  argc,
 
 /* Enable the localization support with gettext. */
 static void
-enable_localization_support ()
+enable_localization_support       ()
 {
 #ifdef ENABLE_NLS
   setlocale (LC_ALL, "");
@@ -266,7 +266,7 @@ create_workspace_shortcut (gchar *workspace_dir)
 
 /* Configure the workspace. */
 static gchar *
-configure_workspace (gchar *project_name)
+configure_workspace               (gchar *project_name)
 {
   gchar *workspace_dir = (gchar *) NULL;
   const gchar *documents_dir = get_documents_dir ();
@@ -284,10 +284,12 @@ configure_workspace (gchar *project_name)
 
 /* Create the default project dir under the workspace_dir. */
 static gchar *
-create_default_project_dir (gchar *workspace_dir,
-                            gchar *project_name)
+create_default_project_dir        (gchar  *workspace_dir,
+                                   gchar  *project_name)
 {
-  gchar *project_dir = g_build_filename (workspace_dir, project_name, (gchar *) 0);
+  gchar *project_dir = g_build_filename (workspace_dir,
+                                         project_name,
+                                         (gchar *) 0);
 
   if (!file_exists (project_dir))
     {
@@ -305,8 +307,8 @@ create_default_project_dir (gchar *workspace_dir,
 
 /* This is the starting point of the program. */
 int
-main (int   argc,
-      char *argv[])
+main                              (int    argc,
+                                   char  *argv[])
 {
   CommandLine *commandline = (CommandLine *) NULL;
   gchar       *project_name = (gchar *) NULL;
@@ -393,8 +395,6 @@ main (int   argc,
       g_free (commandline);
       exit (EXIT_FAILURE);
     }
-
-  gtk_window_set_keep_above (GTK_WINDOW (background_window), TRUE);
 
   gtk_widget_show (background_window);
   

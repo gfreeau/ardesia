@@ -71,14 +71,14 @@ on_configure       (GtkWidget      *widget,
 
   if (!is_fullscreen)
     {
-      return TRUE;
+      return FALSE;
     }
 
   initialize_annotation_cairo_context (data);
   
   if (!data->is_grabbed)
     {
-      return TRUE;
+      return FALSE;
     }
 	
   /* Postcondition; data->annotation_cairo_context is not NULL. */
@@ -125,7 +125,7 @@ on_expose          (GtkWidget *widget,
     }
 
   annotate_restore_surface ();
-  return FALSE;
+  return TRUE;
 }
 
 
@@ -150,7 +150,7 @@ on_button_press    (GtkWidget      *win,
   
   if (!data->is_grabbed)
     {
-      return TRUE;
+      return FALSE;
 	}
 	
   if (!ev)
@@ -158,7 +158,7 @@ on_button_press    (GtkWidget      *win,
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
                    gdk_device_get_name (ev->device));
       annotate_release_grab ();
-      return TRUE;
+      return FALSE;
     }
 	
   if (data->debug)
@@ -175,7 +175,7 @@ on_button_press    (GtkWidget      *win,
     {
       /* The point is inside the ardesia bar then ungrab. */
       annotate_release_grab ();
-      return TRUE;
+      return FALSE;
     }
     
   if (data->cur_context->type == ANNOTATE_PEN)
@@ -193,7 +193,7 @@ on_button_press    (GtkWidget      *win,
 
   if (pressure <= 0)
     {
-      return TRUE;
+      return FALSE;
     }
 	
   initialize_annotation_cairo_context(data);
@@ -233,7 +233,7 @@ on_motion_notify   (GtkWidget       *win,
 
   if (!data->is_grabbed)
     {
-      return TRUE;
+      return FALSE;
 	}
 	
   if (!ev)
@@ -241,7 +241,7 @@ on_motion_notify   (GtkWidget       *win,
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
                   gdk_device_get_name (ev->device));
       annotate_release_grab ();
-      return TRUE;
+      return FALSE;
     }
   
 #ifdef _WIN32
@@ -256,7 +256,7 @@ on_motion_notify   (GtkWidget       *win,
 
       /* The point is inside the ardesia bar then ungrab. */
       annotate_release_grab ();
-      return TRUE;
+      return FALSE;
     }
 #endif
 
@@ -264,10 +264,10 @@ on_motion_notify   (GtkWidget       *win,
   
   /* Only the first 5 buttons allowed. */
   if (! (state & 
-	 (GDK_BUTTON1_MASK | GDK_BUTTON2_MASK | GDK_BUTTON3_MASK | GDK_BUTTON4_MASK | GDK_BUTTON5_MASK)))
+         (GDK_BUTTON1_MASK | GDK_BUTTON2_MASK | GDK_BUTTON3_MASK | GDK_BUTTON4_MASK | GDK_BUTTON5_MASK)))
     {
       /* The button is not pressed. */
-      return TRUE;
+      return FALSE;
     }
 
   initialize_annotation_cairo_context (data);
@@ -283,7 +283,7 @@ on_motion_notify   (GtkWidget       *win,
 
       if (pressure <= 0)
         {
-          return TRUE;
+          return FALSE;
         }
 
       /* If the point is already selected and higher pressure then print else jump it. */
@@ -298,7 +298,7 @@ on_motion_notify   (GtkWidget       *win,
               if (pressure <= last_point->pressure)
                 {
                   /* Jump the point you are uprising the hand. */
-                  return TRUE;
+                  return FALSE;
                 }
               else // pressure >= last_point->pressure
                 {
@@ -336,7 +336,7 @@ on_button_release  (GtkWidget       *win,
 
   if (!data->is_grabbed)
     {
-      return TRUE;
+      return FALSE;
     }
 	
   if (!ev)
@@ -344,7 +344,7 @@ on_button_release  (GtkWidget       *win,
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
                    gdk_device_get_name (ev->device));
       annotate_release_grab ();
-      return TRUE;
+      return FALSE;
     }
 
   if (data->debug)
@@ -360,7 +360,7 @@ on_button_release  (GtkWidget       *win,
     {
       /* The last point was outside the bar then ungrab. */
       annotate_release_grab ();
-      return TRUE;
+      return FALSE;
     }
   if (data->old_paint_type == ANNOTATE_PEN)
     {
@@ -387,7 +387,7 @@ on_button_release  (GtkWidget       *win,
         }
         
       gdouble tollerance = annotate_get_thickness () * score;
-      
+
       gdouble pressure = last_point->pressure;   
 
       gboolean closed_path = FALSE;
@@ -421,7 +421,7 @@ on_button_release  (GtkWidget       *win,
     }
 
   cairo_stroke_preserve (data->annotation_cairo_context);
-  
+
   annotate_add_savepoint ();
 
   annotate_hide_cursor ();
@@ -440,7 +440,7 @@ on_proximity_in    (GtkWidget          *widget,
 
   if (!data->is_grabbed)
     {
-      return TRUE;
+      return FALSE;
     }
 	
   if (data->debug)
@@ -459,7 +459,7 @@ on_proximity_in    (GtkWidget          *widget,
                                       ev->device, (gint *) NULL,
                                       (gint *) NULL,
                                       &state);
-                                      
+
       annotate_select_tool (data, ev->device, state);
       data->old_paint_type = ANNOTATE_PEN; 
     }
@@ -480,10 +480,10 @@ on_proximity_out   (GtkWidget          *win,
 {
 
   AnnotateData *data = (AnnotateData *) user_data;
-  
+
   if (!data->is_grabbed)
     {
-      return TRUE;
+      return FALSE;
 	}
 	
   if (data->debug)
@@ -498,7 +498,7 @@ on_proximity_out   (GtkWidget          *win,
       annotate_select_pen ();
     }
 
-  return TRUE;
+  return FALSE;
 }
 
 

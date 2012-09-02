@@ -112,7 +112,7 @@ remove_input_devices    (AnnotateData  *data)
       g_hash_table_remove_all (data->devdatatable);
       data->devdatatable = (GHashTable *) NULL;
     }
-} 
+}
 
 
 /* Set-up input devices. */
@@ -163,6 +163,7 @@ grab_pointer       (GtkWidget           *widget,
   GdkDeviceManager *device_manager = (GdkDeviceManager *) NULL;
 
   display = gdk_display_get_default ();
+  ungrab_pointer     (display);
   device_manager = gdk_display_get_device_manager (display);
   pointer = gdk_device_manager_get_client_pointer (device_manager);
 

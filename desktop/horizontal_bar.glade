@@ -117,7 +117,7 @@
     <property name="pixbuf">icons/yellow.png</property>
   </object>
   <object class="GtkWindow" id="winMain">
-    <property name="width_request">630</property>
+    <property name="width_request">635</property>
     <property name="can_focus">True</property>
     <property name="has_focus">True</property>
     <property name="is_focus">True</property>

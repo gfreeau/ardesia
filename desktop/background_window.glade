@@ -2,7 +2,6 @@
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
   <object class="GtkWindow" id="backgroundWindow">
-    <property name="sensitive">False</property>
     <property name="app_paintable">True</property>
     <property name="can_focus">False</property>
     <property name="events">GDK_EXPOSURE_MASK</property>
@@ -10,6 +9,7 @@
     <property name="icon">icons/ardesia.png</property>
     <property name="accept_focus">False</property>
     <property name="focus_on_map">False</property>
+    <property name="decorated">False</property>
     <signal name="draw" handler="back_event_expose" swapped="no"/>
     <signal name="screen-changed" handler="on_back_screen_changed" swapped="no"/>
     <signal name="configure-event" handler="on_back_configure" swapped="no"/>

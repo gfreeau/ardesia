@@ -40,9 +40,9 @@ static gchar *picked_color = NULL;
  * it return the selected color.
  */
 gchar *
-start_color_selector_dialog (GtkToolButton *toolbutton,
-                             GtkWindow     *parent,
-                             gchar         *color)
+start_color_selector_dialog       (GtkToolButton  *toolbutton,
+                                   GtkWindow      *parent,
+                                   gchar          *color)
 {
   GtkToggleToolButton *button = GTK_TOGGLE_TOOL_BUTTON (toolbutton);
   gchar *ret_color = NULL;
@@ -59,7 +59,7 @@ start_color_selector_dialog (GtkToolButton *toolbutton,
       /* Colour initially selected. */
       GdkColor *gdkcolor;
       
-      gtk_window_set_transient_for (GTK_WINDOW (color_widget), parent);
+      //gtk_window_set_transient_for (parent, GTK_WINDOW (color_widget));
       gtk_window_set_modal (GTK_WINDOW (color_widget), TRUE);
       gtk_window_set_keep_above (GTK_WINDOW (color_widget), TRUE);
 

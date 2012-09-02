@@ -48,36 +48,33 @@ typedef struct
 
   /* Background image selected. */
   gchar *background_image;
- 
+
   /* The background widget that represent the full window. */
   GtkWidget *background_window;
 
   /* cairo context to draw on the background window. */
   cairo_t *background_cr;
-  
-  /* The back buffer surface used to do the input shape combine region. */
-  cairo_surface_t *background_backsurface;
 
 }BackgroundData;
 
 
 /* Create the background window. */
 GtkWidget *
-create_background_window ();
+create_background_window     ();
 
 /* Set the background type. */
 void
-set_background_type (gint type);
+set_background_type     (gint type);
 
 
 /* Get the background type */
 gint
-get_background_type();
+get_background_type     ();
 
 
 /* Set the background image. */
 void
-set_background_image (gchar *background_image);
+set_background_image    (gchar *background_image);
 
 
 /* Update the background image. */
@@ -86,13 +83,13 @@ update_background_image (gchar *name);
 
 
 /* Get the background image */
-gchar * 
-get_background_image();
+gchar *
+get_background_image    ();
 
 
 /* Set the background colour. */
 void
-set_background_color (gchar *rgba);
+set_background_color    (gchar *rgba);
 
 
 /* Update the background colour. */
@@ -101,8 +98,8 @@ update_background_color (gchar* rgba);
 
 
 /* Get the background colour */
-gchar * 
-get_background_color();
+gchar *
+get_background_color    ();
 
 
 /* Clear the background. */
@@ -112,21 +109,21 @@ clear_background_window ();
 
 /* Destroy background window. */
 void
-destroy_background_window ();
+destroy_background_window    ();
 
 
 /* Get the background window. */
-GtkWidget * 
-get_background_window ();
+GtkWidget *
+get_background_window   ();
 
 
 /* Set the background window. */
 void
-set_background_window (GtkWidget *widget);
+set_background_window   (GtkWidget *widget);
 
 
 /* Upgrade the background window */
-void 
-update_background();
+void
+update_background       ();
 
 

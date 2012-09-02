@@ -321,14 +321,23 @@ inside_bar_window       (gdouble xp,
 void 
 drill_window_in_bar_area     (GtkWidget *widget)
 {
-  GdkRectangle allocation;
   GtkWidget *bar= get_bar_window ();
-  gtk_widget_get_allocation (bar, &allocation);
-  
-  cairo_region_t *r = cairo_region_create_rectangle (&allocation);
-  gtk_widget_input_shape_combine_region(widget, r);
-  cairo_region_destroy(r);
-  
+  gint x, y, width, height;
+
+  gtk_window_get_position (GTK_WINDOW (bar), &x, &y);
+  gtk_window_get_size (GTK_WINDOW (bar), &width, &height);
+
+  const cairo_rectangle_int_t widget_rect = { x+1, y+1, width-1, height-1 };               
+  cairo_region_t *widget_reg = cairo_region_create_rectangle (&widget_rect);
+                                  
+  const cairo_rectangle_int_t ann_rect = { 0, 0, gdk_screen_width (), gdk_screen_height () };                        
+  cairo_region_t *ann_reg = cairo_region_create_rectangle (&ann_rect);                              
+                                  
+  cairo_region_subtract (ann_reg, widget_reg);
+                                                                                        
+  gtk_widget_input_shape_combine_region(widget, ann_reg);
+  cairo_region_destroy(ann_reg);
+  cairo_region_destroy(widget_reg);
 }
 
 

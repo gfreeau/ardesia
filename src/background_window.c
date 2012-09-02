@@ -38,7 +38,7 @@ static BackgroundData *background_data;
 
 /* Load a file image in the window. */
 static void
-load_file ()
+load_file               ()
 {
   if (background_data->background_cr)
     {
@@ -74,7 +74,7 @@ load_file ()
 
 /* The windows has been exposed after the show_all request to change the background color. */
 static void
-load_color ()
+load_color              ()
 {
   gint r = 0;
   gint g = 0;
@@ -98,18 +98,18 @@ load_color ()
        * I set the opacity with alpha and I use cairo_set_source_rgb to workaround
        * the problem on windows with rgba. 
        */
-	  if (((gdouble) a/256) >  BACKGROUND_OPACITY)
-	     {
-		    opacity = (gdouble) a/256;
-	     }
+       if (((gdouble) a/256) >  BACKGROUND_OPACITY)
+         {
+           opacity = (gdouble) a/256;
+         }
       gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), opacity);
 #else
       gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), 1);
       cairo_set_source_rgba (background_data->background_cr,
                              (gdouble) r/256,
-			     (gdouble) g/256,
-			     (gdouble) b/256,
-			     (gdouble) a/256);
+                             (gdouble) g/256,
+                             (gdouble) b/256,
+                             (gdouble) a/256);
 #endif
 
       cairo_paint (background_data->background_cr);
@@ -128,13 +128,12 @@ load_color ()
 
 /* Allocate internal structure. */
 static BackgroundData *
-allocate_background_data ()
+allocate_background_data          ()
 {
   BackgroundData *background_data   = g_malloc ((gsize) sizeof (BackgroundData));
   background_data->background_color = (gchar *) NULL;
   background_data->background_image = (gchar *) NULL;
   background_data->background_cr          = (cairo_t *) NULL;
-  background_data->background_backsurface = (cairo_surface_t *) NULL;
   background_data->background_window = (GtkWidget *) NULL;
   background_data->background_type = 0;
   return background_data;
@@ -143,12 +142,11 @@ allocate_background_data ()
 
 /* Destroy the background window. */
 void
-destroy_background_window ()
+destroy_background_window         ()
 {
   if (background_data)
     {
-      cairo_surface_destroy (background_data->background_backsurface);
-     
+   
       if (background_data->background_window)
         {
           /* Destroy brutally the background window. */
@@ -188,11 +186,8 @@ destroy_background_window ()
 
 
 /* Clear the background. */
-void clear_background_window ()
+void clear_background_window      ()
 {
-  gint height       = -1;
-  gint width        = -1;
-
   /*
    * @HACK Deny the mouse input to go below the window putting the opacity greater than 0
    * I avoid a complete transparent window because in some operating system this would become
@@ -203,16 +198,9 @@ void clear_background_window ()
 
   clear_cairo_context (background_data->background_cr);
 
-  
-  height = gdk_window_get_height (gtk_widget_get_window (background_data->background_window));
-  width = gdk_window_get_width (gtk_widget_get_window (background_data->background_window));
-
-  /* Initialize a transparent surface to be used as input shape. */
-  background_data->background_backsurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32 , width, height);
-
   /* This allows the mouse event to be passed to the window below. */
 #ifndef _WIN32
-  cairo_region_t* r = gdk_cairo_region_create_from_surface(background_data->background_backsurface);
+  cairo_region_t* r = gdk_cairo_region_create_from_surface(cairo_get_target (background_data->background_cr));
   gtk_widget_input_shape_combine_region (background_data->background_window, r);
   cairo_region_destroy(r);
 #endif
@@ -221,7 +209,7 @@ void clear_background_window ()
 
 /* Create the background window. */
 GtkWidget *
-create_background_window ()
+create_background_window     ()
 {
   GError *error = (GError *) NULL;
   GObject *background_obj = (GObject *) NULL;
@@ -243,6 +231,7 @@ create_background_window ()
 
   background_obj = gtk_builder_get_object (background_data->background_window_gtk_builder, "backgroundWindow");
   background_data->background_window = GTK_WIDGET (background_obj);
+  gtk_window_set_keep_above (GTK_WINDOW (background_data->background_window), TRUE);
 
   /* This trys to set an alpha channel. */
   on_back_screen_changed (background_data->background_window, NULL, background_data);
@@ -258,7 +247,7 @@ create_background_window ()
 
   /* Connect all the callback from gtkbuilder xml file. */
   gtk_builder_connect_signals (background_data->background_window_gtk_builder, (gpointer) background_data);
-
+    
   gtk_widget_show_all (background_data->background_window);
 
   /* This put in full screen; this will generate an exposure. */
@@ -270,7 +259,7 @@ create_background_window ()
 
 /* Get the background type */
 gint
-get_background_type()
+get_background_type          ()
 {
   return background_data->background_type;
 }
@@ -278,7 +267,7 @@ get_background_type()
 
 /* Get the background image */
 gchar * 
-get_background_image()
+get_background_image         ()
 {
   return background_data->background_image;
 }
@@ -286,7 +275,7 @@ get_background_image()
 
 /* Get the background colour */
 gchar * 
-get_background_color()
+get_background_color         ()
 {
   return background_data->background_color;
 }
@@ -294,7 +283,7 @@ get_background_color()
 
 /* Set the background type. */
 void
-set_background_type (gint type)
+set_background_type          (gint type)
 {
   background_data->background_type = type;
 }
@@ -302,7 +291,7 @@ set_background_type (gint type)
 
 /* Set the background image. */
 void
-set_background_image (gchar *name)
+set_background_image         (gchar *name)
 {
   background_data->background_image = name;
 }
@@ -310,7 +299,7 @@ set_background_image (gchar *name)
 
 /* Update the background image. */
 void
-update_background_image (gchar *name)
+update_background_image      (gchar *name)
 {
   set_background_image (name);
   load_file ();
@@ -319,7 +308,7 @@ update_background_image (gchar *name)
 
 /* Set the background colour. */
 void
-set_background_color (gchar* rgba)
+set_background_color         (gchar* rgba)
 {
   background_data->background_color = g_strdup_printf ("%s", rgba);
 }
@@ -327,7 +316,7 @@ set_background_color (gchar* rgba)
 
 /* Update the background colour. */
 void
-update_background_color (gchar* rgba)
+update_background_color      (gchar* rgba)
 {
   set_background_color (rgba);
   load_color ();
@@ -336,7 +325,7 @@ update_background_color (gchar* rgba)
 
 /* Get the background window. */
 GtkWidget *
-get_background_window ()
+get_background_window        ()
 {
   return background_data->background_window;
 }
@@ -344,7 +333,7 @@ get_background_window ()
 
 /* Set the background window. */
 void
-set_background_window (GtkWidget *widget)
+set_background_window        (GtkWidget *widget)
 {
   background_data->background_window = widget;
 }

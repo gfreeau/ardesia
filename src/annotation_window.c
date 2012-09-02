@@ -188,9 +188,8 @@ disallocate_cursor     ()
 static void
 annotate_acquire_input_grab  ()
 {
-
 #ifdef _WIN32
-  annotate_acquire_pointer_grab ();
+  grab_pointer (data->annotation_window, GDK_ALL_EVENTS_MASK);
 #endif
 
 #ifndef _WIN32
@@ -198,7 +197,7 @@ annotate_acquire_input_grab  ()
    * MACOSX; will do nothing.
    */
   gtk_widget_input_shape_combine_region(data->annotation_window, NULL);
-  //drill_window_in_bar_area (data->annotation_window);
+  drill_window_in_bar_area (data->annotation_window);
 #endif
 
 }
@@ -218,8 +217,6 @@ destroy_cairo           ()
     }
 
   data->annotation_cairo_context = (cairo_t *) NULL;
-  cairo_surface_destroy (data->annotation_backsurface);
-  data->annotation_backsurface = (cairo_surface_t *) NULL;
 }
 
 
@@ -375,7 +372,7 @@ rectify            (AnnotateDeviceData *devdata,
   annotate_restore_surface ();
 
   annotate_draw_point_list (devdata, broken_list);
-  
+
   annotate_coord_dev_list_free (devdata);
   devdata->coord_list = broken_list;
   
@@ -494,7 +491,7 @@ setup_app          (GtkWidget* parent)
 
   /* Create the annotation window. */
   data->annotation_window = create_annotation_window ();
-
+ 
   /* This trys to set an alpha channel. */
   on_screen_changed(data->annotation_window, NULL, data);
   
@@ -512,16 +509,13 @@ setup_app          (GtkWidget* parent)
       return;
     }
 
-  gtk_window_set_transient_for (GTK_WINDOW (data->annotation_window), GTK_WINDOW (parent));
-  
-  gtk_widget_set_size_request (data->annotation_window, width, height);
+  //gtk_window_set_transient_for (GTK_WINDOW (data->annotation_window), GTK_WINDOW (parent));
 
-  /* Initialize a transparent surface to be used as input shape. */
-  data->annotation_backsurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32 , width, height);
+  gtk_widget_set_size_request (data->annotation_window, width, height);
 
   /* Connect all the callback from gtkbuilder xml file. */
   gtk_builder_connect_signals (data->annotation_window_gtk_builder, (gpointer) data);
-  
+
   /* Connet some extra callbacks in order to handle the hotplugged input devices. */
   g_signal_connect (gdk_display_get_device_manager (gdk_display_get_default ()),
                     "device-added",
@@ -1156,6 +1150,7 @@ annotate_hide_cursor    ()
 void
 annotate_acquire_grab   ()
 {
+  ungrab_pointer     (gdk_display_get_default ());
   if  (!data->is_grabbed)
     {
 
@@ -1349,7 +1344,8 @@ annotate_quit           ()
 void
 annotate_release_input_grab  ()
 {
-  gdk_window_set_cursor (gtk_widget_get_window (data->annotation_window), (GdkCursor *) NULL);
+  ungrab_pointer (gdk_display_get_default ());
+  //gdk_window_set_cursor (gtk_widget_get_window (data->annotation_window), (GdkCursor *) NULL);
 #ifndef _WIN32
   /*
    * @TODO implement correctly gtk_widget_input_shape_combine_mask
@@ -1360,9 +1356,11 @@ annotate_release_input_grab  ()
    * This allows the mouse event to be passed below the transparent annotation;
    * at the moment this call works only on Linux
    */
-  cairo_region_t* r = gdk_cairo_region_create_from_surface(data->annotation_backsurface);
+  gtk_widget_input_shape_combine_region(data->annotation_window, NULL);
+  cairo_region_t* r = gdk_cairo_region_create_from_surface(cairo_get_target (data->annotation_cairo_context));
   gtk_widget_input_shape_combine_region(data->annotation_window, r);
   cairo_region_destroy(r);
+  
 #else
   /*
    * @TODO WIN32 implement correctly gtk_widget_input_shape_combine_mask
@@ -1371,7 +1369,7 @@ annotate_release_input_grab  ()
    * call the gtk_widget_shape_combine_mask that is not the desired behaviour.
    *
    */
-  annotate_release_pointer_grab ();
+   
 #endif
 }
 
