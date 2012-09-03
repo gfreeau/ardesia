@@ -92,6 +92,7 @@ start_preference_dialog      (GtkWindow *parent)
 
   preference_dialog = GTK_WIDGET (preference_obj);
 
+  gtk_window_set_transient_for (GTK_WINDOW (preference_dialog), parent);
   gtk_window_set_modal (GTK_WINDOW (preference_dialog), TRUE);
   gtk_window_set_keep_above (GTK_WINDOW (preference_dialog), TRUE);
   

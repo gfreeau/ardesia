@@ -2,10 +2,12 @@
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
   <object class="GtkWindow" id="backgroundWindow">
+    <property name="sensitive">False</property>
     <property name="app_paintable">True</property>
     <property name="can_focus">False</property>
     <property name="events">GDK_EXPOSURE_MASK</property>
     <property name="title">Ardesia</property>
+    <property name="resizable">False</property>
     <property name="icon">icons/ardesia.png</property>
     <property name="accept_focus">False</property>
     <property name="focus_on_map">False</property>

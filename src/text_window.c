@@ -72,8 +72,6 @@ create_text_window (GtkWindow *parent)
       GObject *text_obj = gtk_builder_get_object (text_data->text_window_gtk_builder, "text_window");
       text_data->window = GTK_WIDGET (text_obj);
 
-      gtk_window_set_transient_for (GTK_WINDOW (text_data->window), GTK_WINDOW (parent));
-
       gtk_window_set_opacity (GTK_WINDOW (text_data->window), 1);
       gtk_widget_set_size_request (GTK_WIDGET (text_data->window), gdk_screen_width (), gdk_screen_height ());
     }
@@ -232,6 +230,9 @@ set_text_cursor (GtkWidget *window)
 static void
 init_text_widget (GtkWidget *widget)
 {
+  gtk_widget_input_shape_combine_region(text_data->window, NULL);
+  drill_window_in_bar_area (text_data->window);
+  
   if (!text_data->cr)
     {
       text_data->cr = gdk_cairo_create ( gtk_widget_get_window (widget) );
@@ -250,8 +251,6 @@ init_text_widget (GtkWidget *widget)
       text_data->max_font_height = text_data->extents.height;
       set_text_cursor (widget);
     }
-
-  //drill_window_in_bar_area (text_data->window);
 
 #ifdef _WIN32
   grab_pointer (text_data->window, TEXT_MOUSE_EVENTS);
@@ -556,7 +555,8 @@ void start_text_widget (GtkWindow *parent,
    */
   gtk_widget_set_double_buffered (text_data->window, FALSE); 
 
-  gtk_window_set_keep_above (GTK_WINDOW (text_data->window), TRUE);
+  //gtk_window_set_transient_for (GTK_WINDOW (text_data->window), GTK_WINDOW (parent));
+  //gtk_window_set_keep_above (GTK_WINDOW (text_data->window), TRUE);
   
   /* Connect all the callback from gtkbuilder xml file. */
   gtk_builder_connect_signals (text_data->text_window_gtk_builder, (gpointer) text_data);
