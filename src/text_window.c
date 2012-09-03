@@ -46,7 +46,7 @@ TextConfig *text_config = (TextConfig *) NULL;
 
 /* Create the text window. */
 static void
-create_text_window (GtkWindow *parent)
+create_text_window           (GtkWindow *parent)
 {
   GError *error = (GError *) NULL;
 
@@ -80,7 +80,7 @@ create_text_window (GtkWindow *parent)
 
 
 /* Move the pen cursor. */
-static void move_editor_cursor ()
+static void move_editor_cursor    ()
 {
   if (text_data->cr)
     {
@@ -90,7 +90,8 @@ static void move_editor_cursor ()
 
 
 /* Blink cursor. */
-static gboolean blink_cursor (gpointer data)
+static
+gboolean blink_cursor        (gpointer data)
 {
   if ((text_data->window) && (text_data->pos))
     {
@@ -130,7 +131,8 @@ static gboolean blink_cursor (gpointer data)
 
 
 /* Delete the last character printed. */
-static void delete_character ()
+static void
+delete_character        ()
 {
   CharInfo *char_info = (CharInfo *) g_slist_nth_data (text_data->letterlist, 0);
 
@@ -157,7 +159,7 @@ static void delete_character ()
 
 /* Stop the timer to handle the blocking cursor. */
 static void
-stop_timer ()
+stop_timer              ()
 {
   if (text_data->timer>0)
     {
@@ -169,7 +171,7 @@ stop_timer ()
 
 /* Set the text cursor. */
 static gboolean
-set_text_cursor (GtkWidget *window)
+set_text_cursor              (GtkWidget  *window)
 {
   gdouble decoration_height = 4;
   gint height = text_data->max_font_height + decoration_height * 2;
@@ -204,7 +206,7 @@ set_text_cursor (GtkWidget *window)
 
       cairo_stroke (text_pointer_cr);
       cairo_destroy (text_pointer_cr);
-    } 
+    }
 
   pixbuf = gdk_pixbuf_get_from_surface (text_surface_t,
                                         0,
@@ -228,11 +230,11 @@ set_text_cursor (GtkWidget *window)
 
 /* Initialization routine. */
 static void
-init_text_widget (GtkWidget *widget)
+init_text_widget             (GtkWidget *widget)
 {
   gtk_widget_input_shape_combine_region(text_data->window, NULL);
   drill_window_in_bar_area (text_data->window);
-  
+
   if (!text_data->cr)
     {
       text_data->cr = gdk_cairo_create ( gtk_widget_get_window (widget) );
@@ -273,7 +275,7 @@ init_text_widget (GtkWidget *widget)
 
 /* Add a save-point with the text. */
 static void
-save_text ()
+save_text          ()
 {
   if (text_data)
     {
@@ -284,7 +286,10 @@ save_text ()
       if (text_data->letterlist)
         {
           annotate_push_context (text_data->cr);
-          g_slist_foreach (text_data->letterlist, (GFunc)g_free, NULL);
+          g_slist_foreach (text_data->letterlist,
+                           (GFunc)g_free,
+                           NULL);
+
           g_slist_free (text_data->letterlist);
           text_data->letterlist = NULL;
         }
@@ -295,7 +300,7 @@ save_text ()
 
 /* Destroy text window. */
 static void
-destroy_text_window ()
+destroy_text_window     ()
 {
   if (text_data->window)
     {
@@ -313,9 +318,9 @@ destroy_text_window ()
 
 /* keyboard event snooper. */
 G_MODULE_EXPORT gboolean
-key_snooper (GtkWidget   *widget,
-             GdkEventKey *event,
-             gpointer     user_data)
+key_snooper                  (GtkWidget    *widget,
+                              GdkEventKey  *event,
+                              gpointer      user_data)
 {
 
   if (event->type != GDK_KEY_PRESS) {
@@ -386,9 +391,9 @@ key_snooper (GtkWidget   *widget,
 
 /* On configure event. */
 G_MODULE_EXPORT gboolean
-on_text_window_configure (GtkWidget *widget,
-                          GdkEventExpose *event,
-                          gpointer user_data)
+on_text_window_configure     (GtkWidget       *widget,
+                              GdkEventExpose  *event,
+                              gpointer         user_data)
 {
   return TRUE;
 }
@@ -396,9 +401,9 @@ on_text_window_configure (GtkWidget *widget,
 
 /* On screen changed. */
 G_MODULE_EXPORT void
-on_text_window_screen_changed(GtkWidget *widget,
-                              GdkScreen *previous_screen,
-                              gpointer   user_data)
+on_text_window_screen_changed     (GtkWidget  *widget,
+                                   GdkScreen  *previous_screen,
+                                   gpointer    user_data)
 {
   GdkScreen *screen = gtk_widget_get_screen(GTK_WIDGET (widget));
   GdkVisual *visual = gdk_screen_get_rgba_visual(screen);
@@ -413,9 +418,9 @@ on_text_window_screen_changed(GtkWidget *widget,
 
 /* The windows has been exposed. */
 G_MODULE_EXPORT gboolean
-on_text_window_expose_event (GtkWidget *widget,
-                             cairo_t   *cr,
-                             gpointer data)
+on_text_window_expose_event  (GtkWidget  *widget,
+                              cairo_t    *cr,
+                              gpointer    data)
 {
   GdkWindow *gdk_win = gtk_widget_get_window (widget);
   gint is_fullscreen = gdk_window_get_state (gdk_win) & GDK_WINDOW_STATE_FULLSCREEN;
@@ -437,8 +442,8 @@ on_text_window_expose_event (GtkWidget *widget,
 #ifdef _WIN32
 /* Is the point (x,y) above the virtual keyboard? */
 static gboolean
-is_above_virtual_keyboard (gint x,
-                           gint y)
+is_above_virtual_keyboard    (gint  x,
+                              gint  y)
 {
   RECT rect;
   HWND hwnd = FindWindow (VIRTUALKEYBOARD_WINDOW_NAME, NULL);
@@ -461,9 +466,9 @@ is_above_virtual_keyboard (gint x,
 
 /* This is called when the button is leased. */
 G_MODULE_EXPORT gboolean
-on_text_window_button_release (GtkWidget *win,
-                               GdkEventButton *ev,
-                               gpointer user_data)
+on_text_window_button_release     (GtkWidget       *win,
+                                   GdkEventButton  *ev,
+                                   gpointer         user_data)
 {
   /* only button1 allowed */
   if (ev->button != 1)
@@ -510,9 +515,9 @@ on_text_window_button_release (GtkWidget *win,
 
 /* This shots when the text pointer is moving. */
 G_MODULE_EXPORT gboolean
-on_text_window_cursor_motion (GtkWidget *win,
-                              GdkEventMotion *ev,
-                              gpointer func_data)
+on_text_window_cursor_motion      (GtkWidget       *win,
+                                   GdkEventMotion  *ev,
+                                   gpointer         func_data)
 {
 #ifdef _WIN32
   if (inside_bar_window (ev->x_root, ev->y_root))
@@ -525,9 +530,9 @@ on_text_window_cursor_motion (GtkWidget *win,
 
 
 /* Start the widget for the text insertion. */
-void start_text_widget (GtkWindow *parent,
-                        gchar     *color,
-                        gint       tickness)
+void start_text_widget      (GtkWindow  *parent,
+                             gchar      *color,
+                             gint        tickness)
 {
   text_data = g_malloc ((gsize) sizeof (TextData));
 
@@ -577,7 +582,7 @@ void start_text_widget (GtkWindow *parent,
 
 /* Stop the text insertion widget. */
 void
-stop_text_widget ()
+stop_text_widget             ()
 {
   if (text_data)
     {

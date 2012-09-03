@@ -48,7 +48,7 @@ typedef struct
 
 /* Show the permission denied to access to file dialog. */
 void
-show_permission_denied_dialog (GtkWindow *parent_window);
+show_permission_denied_dialog     (GtkWindow  *parent_window);
 
 
 /*
@@ -56,6 +56,6 @@ show_permission_denied_dialog (GtkWindow *parent_window);
  * the background setting.
  */
 void
-start_preference_dialog (GtkWindow *parent);
+start_preference_dialog           (GtkWindow  *parent);
 
 

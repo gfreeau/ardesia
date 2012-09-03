@@ -46,14 +46,14 @@
 
 
 #ifdef _WIN32
-#  define TEXT_MOUSE_EVENTS         ( GDK_POINTER_MOTION_MASK|	\
-                                     GDK_BUTTON_PRESS_MASK|	\
-                                     GDK_BUTTON_RELEASE_MASK|	\
-                                     GDK_PROXIMITY_IN|		\
-                                     GDK_PROXIMITY_OUT|	\
-                                     GDK_MOTION_NOTIFY|	\
-                                     GDK_BUTTON_PRESS		\
-				      )
+#  define TEXT_MOUSE_EVENTS         (GDK_POINTER_MOTION_MASK|  \
+                                     GDK_BUTTON_PRESS_MASK  |  \
+                                     GDK_BUTTON_RELEASE_MASK|  \
+                                     GDK_PROXIMITY_IN       |  \
+                                     GDK_PROXIMITY_OUT      |  \
+                                     GDK_MOTION_NOTIFY      |  \
+                                     GDK_BUTTON_PRESS          \
+                                    )
 
 #  define TEXT_UI_FILE "..\\share\\ardesia\\ui\\text_window.glade"
 #else
@@ -117,24 +117,25 @@ typedef struct
 
 }TextData;
 
+
+/* Option for text config */
 typedef struct
 {
-
-  /* Option for text config */
   gchar *fontfamily;
   gint leftmargin;
   gint tabsize;
 }TextConfig;
 
+
 /* Start text widget. */
 void
-start_text_widget (GtkWindow *parent,
-                   gchar     *color,
-                   gint       tickness);
+start_text_widget            (GtkWindow  *parent,
+                              gchar      *color,
+                              gint        tickness);
 
 
 /* Stop text widget. */
 void
-stop_text_widget ();
+stop_text_widget        ();
 
 
