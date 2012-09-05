@@ -1357,9 +1357,12 @@ annotate_release_input_grab  ()
    * at the moment this call works only on Linux
    */
   gtk_widget_input_shape_combine_region(data->annotation_window, NULL);
-  cairo_region_t* r = gdk_cairo_region_create_from_surface(cairo_get_target (data->annotation_cairo_context));
-  gtk_widget_input_shape_combine_region(data->annotation_window, r);
-  cairo_region_destroy(r);
+  
+  const cairo_rectangle_int_t ann_rect = { 0, 0, 0, 0 };
+  cairo_region_t *r = cairo_region_create_rectangle (&ann_rect);
+  
+  gtk_widget_input_shape_combine_region (data->annotation_window, r);
+  cairo_region_destroy (r);
   
 #else
   /*

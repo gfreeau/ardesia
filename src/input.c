@@ -229,3 +229,5 @@ ungrab_pointer     (GdkDisplay        *display)
       g_printerr ("Ungrab pointer device error\n");
     }
 }
+
+

@@ -335,9 +335,9 @@ drill_window_in_bar_area     (GtkWidget *widget)
                                   
   cairo_region_subtract (ann_reg, widget_reg);
                                                                                         
-  gtk_widget_input_shape_combine_region(widget, ann_reg);
-  cairo_region_destroy(ann_reg);
-  cairo_region_destroy(widget_reg);
+  gtk_widget_input_shape_combine_region (widget, ann_reg);
+  cairo_region_destroy (ann_reg);
+  cairo_region_destroy (widget_reg);
 }
 
 

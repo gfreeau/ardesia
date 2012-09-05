@@ -16,6 +16,8 @@
   - Screencast recorder using a library (ffmpeg or libvlc)
   - Paint on a svg surface to be synchronized with the paintable window
   - Store and load the savepoints with svg files
+  - Use the same window for the background; the expose will paint 
+    all the layers
 
 - Bug fix 
   - See http://code.google.com/p/ardesia/issues/list
@@ -23,8 +25,6 @@
 - Candidate features:
   - Better sketch recognition
   - Recognize the hand written text
-  - Use the same window for the background; the expose will paint
-    all the layers
   - Deploy the artefact online
     - video; youtube upload as kazam
   - Support for a generic virtual keyboard 
