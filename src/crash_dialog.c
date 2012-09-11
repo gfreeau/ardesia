@@ -62,7 +62,7 @@ void start_crash_dialog (GtkWindow *parent,
   crash_dialog = GTK_WIDGET (crash_obj);
   gtk_window_set_transient_for (GTK_WINDOW (crash_dialog), parent);
   gtk_window_set_modal (GTK_WINDOW (crash_dialog), TRUE);
-  //gtk_window_set_keep_above (GTK_WINDOW (crash_dialog), TRUE);
+  gtk_window_set_keep_above (GTK_WINDOW (crash_dialog), TRUE);
 
   /* Connect all signals by reflection. */
   gtk_builder_connect_signals (crash_data->crash_dialog_gtk_builder, (gpointer) crash_data);

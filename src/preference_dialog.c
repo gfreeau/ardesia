@@ -45,7 +45,7 @@ show_permission_denied_dialog     (GtkWindow *parent)
                                                      GTK_BUTTONS_OK,
                                                      gettext ("Fail to open the file: Permission denied"));
 
-  //gtk_window_set_keep_above (GTK_WINDOW (permission_denied_dialog), TRUE);
+  gtk_window_set_keep_above (GTK_WINDOW (permission_denied_dialog), TRUE);
 
   gtk_dialog_run (GTK_DIALOG (permission_denied_dialog));
 
