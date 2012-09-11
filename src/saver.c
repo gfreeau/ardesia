@@ -33,18 +33,18 @@
 
 /* Confirm to override file dialog. */
 gboolean
-show_override_dialog (GtkWindow *parent_window)
+show_override_dialog (GtkWindow *parent)
 {
   GtkWidget *msg_dialog = (GtkWidget *) NULL;
   gint result = GTK_RESPONSE_NO;
   
-  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (parent_window),
+  msg_dialog = gtk_message_dialog_new (GTK_WINDOW (parent),
                                        GTK_DIALOG_MODAL,
                                        GTK_MESSAGE_WARNING,
                                        GTK_BUTTONS_YES_NO,
                                        gettext ("File Exists. Overwrite"));
-	
-  gtk_window_set_modal (GTK_WINDOW (msg_dialog), TRUE);
+
+  //gtk_window_set_keep_above (GTK_WINDOW (msg_dialog), TRUE);
 
   result = gtk_dialog_run (GTK_DIALOG (msg_dialog));
     if (msg_dialog)

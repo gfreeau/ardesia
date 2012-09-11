@@ -35,17 +35,17 @@
 
 /* Show the permission denied to access to file dialog. */
 void
-show_permission_denied_dialog     (GtkWindow *parent_window)
+show_permission_denied_dialog     (GtkWindow *parent)
 {
   GtkWidget *permission_denied_dialog = (GtkWidget *) NULL;
 
-  permission_denied_dialog = gtk_message_dialog_new (parent_window,
+  permission_denied_dialog = gtk_message_dialog_new (parent,
                                                      GTK_DIALOG_MODAL,
                                                      GTK_MESSAGE_ERROR,
                                                      GTK_BUTTONS_OK,
                                                      gettext ("Fail to open the file: Permission denied"));
 
-  gtk_window_set_modal (GTK_WINDOW (permission_denied_dialog), TRUE);
+  //gtk_window_set_keep_above (GTK_WINDOW (permission_denied_dialog), TRUE);
 
   gtk_dialog_run (GTK_DIALOG (permission_denied_dialog));
 

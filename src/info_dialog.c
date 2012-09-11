@@ -48,9 +48,10 @@ start_info_dialog            (GtkToolButton  *toolbutton,
   /* Fill the window by the gtk builder xml. */
   info_dialog = GTK_WIDGET (gtk_builder_get_object (info_dialog_gtk_builder,
                                                     "aboutdialog"));
-
+                                                    
+  gtk_window_set_transient_for (GTK_WINDOW (info_dialog), parent);
   gtk_window_set_modal (GTK_WINDOW (info_dialog), TRUE);
-  gtk_window_set_keep_above (GTK_WINDOW (info_dialog), TRUE);
+  //gtk_window_set_keep_above (GTK_WINDOW (info_dialog), TRUE);
 
   gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (info_dialog), PACKAGE_VERSION);
 

@@ -58,10 +58,10 @@ start_color_selector_dialog       (GtkToolButton  *toolbutton,
       gint result = -1;
       /* Colour initially selected. */
       GdkColor *gdkcolor;
-      
-      //gtk_window_set_transient_for (parent, GTK_WINDOW (color_widget));
+  
+      gtk_window_set_transient_for (GTK_WINDOW (color_widget), parent);
       gtk_window_set_modal (GTK_WINDOW (color_widget), TRUE);
-      gtk_window_set_keep_above (GTK_WINDOW (color_widget), TRUE);
+      //gtk_window_set_keep_above (GTK_WINDOW (color_widget), TRUE);
 
       if (picked_color != NULL)
         {
@@ -77,7 +77,7 @@ start_color_selector_dialog       (GtkToolButton  *toolbutton,
       gtk_color_selection_set_has_palette (colorsel, TRUE);
 
       result = gtk_dialog_run (GTK_DIALOG (color_dialog));
-
+ 
       /* Wait for user to select OK or Cancel. */
       switch (result)
         {
@@ -99,6 +99,7 @@ start_color_selector_dialog       (GtkToolButton  *toolbutton,
       }
 
       g_free (gdkcolor);
+       
     }
     
   stop_virtual_keyboard ();
