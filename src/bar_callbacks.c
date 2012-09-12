@@ -672,7 +672,7 @@ on_bar_recorder_activate          (GtkToolButton   *toolbutton,
 /* Push preference button. */
 G_MODULE_EXPORT void
 on_bar_preferences_activate	      (GtkToolButton   *toolbutton,
-                                   gpointer         func_data)
+                                       gpointer         func_data)
 {
   BarData *bar_data = (BarData *) func_data;
   gboolean grab_value = bar_data->grab;
