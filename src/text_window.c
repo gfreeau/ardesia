@@ -497,14 +497,13 @@ on_text_window_button_release     (GtkWidget       *win,
       text_data->pos->y = ev->y_root;
       move_editor_cursor ();
 
-      stop_virtual_keyboard ();
-      start_virtual_keyboard ();
-
       /* This present the ardesia bar and the panels. */
       gtk_window_present (GTK_WINDOW (get_bar_window ()));
-
       gtk_window_present (GTK_WINDOW (text_data->window));
       gdk_window_raise (gtk_widget_get_window  (text_data->window));
+
+      stop_virtual_keyboard ();
+      start_virtual_keyboard ();
 
       text_data->timer = g_timeout_add (1000, blink_cursor, NULL);
     }
@@ -560,9 +559,10 @@ void start_text_widget      (GtkWindow  *parent,
    */
   gtk_widget_set_double_buffered (text_data->window, FALSE); 
 
-  //gtk_window_set_transient_for (GTK_WINDOW (text_data->window), GTK_WINDOW (parent));
+  gtk_window_set_transient_for (GTK_WINDOW (text_data->window), GTK_WINDOW (parent));
   //gtk_window_set_keep_above (GTK_WINDOW (text_data->window), TRUE);
-  
+  gtk_widget_grab_focus (text_data->window);
+
   /* Connect all the callback from gtkbuilder xml file. */
   gtk_builder_connect_signals (text_data->text_window_gtk_builder, (gpointer) text_data);
 
