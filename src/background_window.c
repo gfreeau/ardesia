@@ -180,8 +180,6 @@ destroy_background_window         ()
         }
 
     }
-  /* Quit the gtk engine. */
-  gtk_main_quit ();
 }
 
 
@@ -248,7 +246,7 @@ create_background_window     ()
   /* Connect all the callback from gtkbuilder xml file. */
   gtk_builder_connect_signals (background_data->background_window_gtk_builder, (gpointer) background_data);
     
-  gtk_widget_show_all (background_data->background_window);
+  //gtk_widget_show_all (background_data->background_window);
 
   /* This put in full screen; this will generate an exposure. */
   gtk_window_fullscreen (GTK_WINDOW (background_data->background_window));

@@ -228,6 +228,31 @@ set_text_cursor              (GtkWidget  *window)
 }
 
 
+/* Add a save-point with the text. */
+static void
+save_text          ()
+{
+  if (text_data)
+    {
+      stop_timer (); 
+      text_data->blink_show=FALSE;
+      blink_cursor (NULL);
+
+      if (text_data->letterlist)
+        {
+          annotate_push_context (text_data->cr);
+          g_slist_foreach (text_data->letterlist,
+                           (GFunc)g_free,
+                           NULL);
+
+          g_slist_free (text_data->letterlist);
+          text_data->letterlist = NULL;
+        }
+
+    }
+}
+
+
 /* Initialization routine. */
 static void
 init_text_widget             (GtkWidget *widget)
@@ -262,38 +287,13 @@ init_text_widget             (GtkWidget *widget)
     {
       clear_cairo_context (text_data->cr);
     }
-
+  
   if (!text_data->pos)
     {
       text_data->pos = g_malloc ( (gsize) sizeof (Pos));
       text_data->pos->x = 0;
       text_data->pos->y = 0;
       move_editor_cursor ();
-    }
-}
-
-
-/* Add a save-point with the text. */
-static void
-save_text          ()
-{
-  if (text_data)
-    {
-      stop_timer (); 
-      text_data->blink_show=FALSE;
-      blink_cursor (NULL);
-
-      if (text_data->letterlist)
-        {
-          annotate_push_context (text_data->cr);
-          g_slist_foreach (text_data->letterlist,
-                           (GFunc)g_free,
-                           NULL);
-
-          g_slist_free (text_data->letterlist);
-          text_data->letterlist = NULL;
-        }
-
     }
 }
 
@@ -427,7 +427,7 @@ on_text_window_expose_event  (GtkWidget  *widget,
 
   if (!is_fullscreen)
     {
-      return TRUE;
+      return FALSE;
     }
 
   if (widget)
@@ -559,8 +559,8 @@ void start_text_widget      (GtkWindow  *parent,
    */
   gtk_widget_set_double_buffered (text_data->window, FALSE); 
 
-  gtk_window_set_transient_for (GTK_WINDOW (text_data->window), GTK_WINDOW (parent));
-  //gtk_window_set_keep_above (GTK_WINDOW (text_data->window), TRUE);
+  //gtk_window_set_transient_for (GTK_WINDOW (text_data->window), GTK_WINDOW (parent));
+  gtk_window_set_keep_above (GTK_WINDOW (text_data->window), TRUE);
   gtk_widget_grab_focus (text_data->window);
 
   /* Connect all the callback from gtkbuilder xml file. */

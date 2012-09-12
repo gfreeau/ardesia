@@ -509,7 +509,7 @@ setup_app          (GtkWidget* parent)
       return;
     }
 
-  gtk_window_set_transient_for (GTK_WINDOW (data->annotation_window), GTK_WINDOW (parent));
+  //gtk_window_set_transient_for (GTK_WINDOW (data->annotation_window), GTK_WINDOW (parent));
 
   gtk_widget_set_size_request (data->annotation_window, width, height);
 

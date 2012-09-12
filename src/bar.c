@@ -218,7 +218,7 @@ create_bar_window (CommandLine *commandline,
   /* Connect all the callback from bar_gtk_builder xml file. */
   gtk_builder_connect_signals (bar_gtk_builder, (gpointer) bar_data);
 
-  gtk_window_set_transient_for (GTK_WINDOW (bar_window), GTK_WINDOW (parent));
+  //gtk_window_set_transient_for (GTK_WINDOW (bar_window), GTK_WINDOW (parent));
 
   if (commandline->decorated)
     {

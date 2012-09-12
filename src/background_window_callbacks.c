@@ -32,6 +32,20 @@ on_back_configure                 (GtkWidget       *widget,
                                    GdkEventExpose  *event,
                                    gpointer        user_data)
 {
+  BackgroundData *background_data = (BackgroundData *) user_data;
+
+  GdkWindowState state = gdk_window_get_state (gtk_widget_get_window (widget));
+  gint is_fullscreen = state & GDK_WINDOW_STATE_FULLSCREEN;
+  if (!is_fullscreen)
+    {
+      return FALSE;
+    }
+
+  if (!background_data->background_cr)
+    {
+      background_data->background_cr = gdk_cairo_create (gtk_widget_get_window (widget) );
+    }
+
   return TRUE;
 }
 
@@ -60,19 +74,7 @@ back_event_expose                 (GtkWidget  *widget,
                                    gpointer user_data)
 {
   BackgroundData *background_data = (BackgroundData *) user_data;
-
-  GdkWindowState state = gdk_window_get_state (gtk_widget_get_window (widget));
-  gint is_fullscreen = state & GDK_WINDOW_STATE_FULLSCREEN;
-  if (!is_fullscreen)
-    {
-      return TRUE;
-    }
-
-  if (!background_data->background_cr)
-    {
-      background_data->background_cr = gdk_cairo_create (gtk_widget_get_window (widget) );
-    }
-
+  
   if ((background_data->background_image) && (get_background_type () == 2))
     {
       update_background_image (background_data->background_image);
@@ -85,7 +87,6 @@ back_event_expose                 (GtkWidget  *widget,
     {
       clear_background_window ();
     }
-
   return TRUE;
 }
 

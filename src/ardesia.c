@@ -415,9 +415,9 @@ main                              (int    argc,
 
   /* Postcondition: the annotation window is valid. */
   gtk_window_set_keep_above (GTK_WINDOW (annotation_window), TRUE);
-
+  
   gtk_widget_show (annotation_window);
-
+  
   ardesia_bar_window = create_bar_window (commandline, annotation_window);
 
   if (ardesia_bar_window == NULL)

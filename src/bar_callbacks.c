@@ -346,17 +346,18 @@ on_bar_quit                     (GtkToolButton   *toolbutton,
                                  gpointer         func_data)
 {
   BarData *bar_data = (BarData *) func_data;
-  gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
   
   /* Release grab. */
   annotate_release_grab ();
-  
+
+  annotate_quit ();
+    
   /* Destroy the background window this will call the destroy of all windows. */
   destroy_background_window ();
-
-  bar_data->grab = grab_value;
   
+  /* Quit the gtk engine. */
+  gtk_main_quit ();
   return FALSE;
 }
 
