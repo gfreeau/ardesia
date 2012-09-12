@@ -36,6 +36,13 @@
     <property name="valign">center</property>
     <property name="pixbuf">icons/filler.png</property>
   </object>
+  <object class="GtkImage" id="highlighter">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="halign">center</property>
+    <property name="valign">center</property>
+    <property name="pixbuf">icons/highlighter.png</property>
+  </object>
   <object class="GtkImage" id="green">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -49,13 +56,6 @@
     <property name="halign">center</property>
     <property name="valign">center</property>
     <property name="pixbuf">icons/hand.png</property>
-  </object>
-  <object class="GtkImage" id="highlighter">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="halign">center</property>
-    <property name="valign">center</property>
-    <property name="pixbuf">icons/highlighter.png</property>
   </object>
   <object class="GtkImage" id="media-record">
     <property name="visible">True</property>
@@ -192,6 +192,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Thickness</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">medium</property>
@@ -208,6 +210,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Drawing Mode</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">hand</property>
@@ -294,6 +298,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Filler</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">filler</property>
@@ -363,6 +369,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Arrow</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">arrow</property>
@@ -380,6 +388,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Insert Text</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">text</property>
@@ -397,6 +407,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Highlighter</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">highlighter</property>
@@ -414,6 +426,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Eraser</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">eraser</property>
@@ -431,6 +445,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Pencil</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">pencil</property>
@@ -464,6 +480,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Blue</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">blue</property>
@@ -481,6 +499,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Green</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="icon_widget">green</property>
@@ -498,6 +518,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Yellow</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">yellow</property>
@@ -515,6 +537,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Red</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">red</property>
@@ -531,6 +555,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">White</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">white</property>
@@ -601,6 +627,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Screenshot</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">screenshoot</property>
@@ -617,6 +645,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Add to pdf</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">addpdf</property>
@@ -633,6 +663,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Record</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <property name="label_widget">media-record</property>
