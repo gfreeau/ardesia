@@ -1,251 +1,310 @@
-2011-09-22 10:42  alpha@paranoici.org
-	* trunk/ardesia/desktop/backgrounds/world_map.png,
-	* trunk/ardesia/desktop/backgrounds/civil_society.png,
-	* trunk/ardesia/desktop/backgrounds/musical_staff.png:
-        - Adjusted musical staff background
-        - Update political map
-        - Update civil society background
+2012-09-12 15:58  alpha@paranoici.org
+	* desktop/horizontal_bar.glade,
+	* desktop/vertical_bar.glade,
+	* po/ardesia.pot:
+	- Better user interface.
+	- Update translation files.
 
 
-2011-09-22 09:38  alpha@paranoici.org
-	* trunk/ardesia/desktop/backgrounds/squared_paper.png,
-	* trunk/ardesia/desktop/backgrounds/blackboard.png,
-	* trunk/ardesia/desktop/backgrounds/squared_blackboard.png,
-	* trunk/ardesia/desktop/backgrounds/whiteboard.png:
-        - Update with better done backgrounds
+2012-09-12 15:39  alpha@paranoici.org
+	* desktop/vertical_bar.glade:
+	- Adjusted the vertical bar user interface.
 
 
-2011-09-19 17:33  alpha@paranoici.org
-	* trunk/ardesia/win32/ardesia.iss.in,
-	* trunk/ardesia/win32/build_installer.in:
-        - Fix the installer for the 1.0 ardesia toolset
+2012-09-12 14:49  alpha@paranoici.org
+	* src/annotation_window.c,
+	* src/ardesia.c,
+	* src/background_window.c,
+	* src/background_window_callbacks.c,
+	* src/bar.c,
+	* src/bar_callbacks.c,
+	* src/text_window.c:
+	- Fix the keyboard issues, the windows are not stacked
+	  with gtk_window_set_transient_for but showing them
+	  in the down/top order with the keep above flag enabled.
 
 
-2011-09-07 15:21  alpha@paranoici.org
-	* trunk/ardesia/src/annotation_window.c,
-	* trunk/ardesia/src/background_window.c,
-	* trunk/ardesia/src/text_window.c,
-        * trunk/ardesia/src/utils.c,
-	* trunk/ardesia/src/utils.h
-        - Using gtk_widget_shape_combine_mask instead of 
-          the gdk_window_input_shape_combine_mask
-	  (might be more correct)
+2012-09-12 09:54  alpha@paranoici.org
+	* src/bar_callbacks.c,
+	* src/text_window.c: 
+	- Fix the text window interaction.
+	  This commit could break the virtual keyboard interaction;
+	  an action must be taken in order to fix the problem.
 
 
-2011-09-07 12:32  alpha@paranoici.org
-	* trunk/ardesia/src/annotation_window.c,
-	* trunk/ardesia/src/iwb_saver.c:
-        - Fix in a definitive way the problem about the
-	  first undo problem; when the tool is started is created
-	  an empty savepoint. Ardesia will save the project only
-	  if will exist at least an other valid savepoint.
+2012-09-11 08:24  alpha@paranoici.org
+	* src/annotation_window.c:
+	- Fix iwb saving bren after gtk3 porting.
 
 
-2011-09-07 10:01  alpha@paranoici.org
-	* trunk/ardesia/src/annotation_window.c:
-        - Reintroduced patches to force to redraw the screen
-	  after the clear button and for the last undo
-	  that must clear the screen
+2012-09-03 13:58  alpha@paranoici.org
+	* desktop/annotation_window.glade,
+	* desktop/background_window.glade,
+	* desktop/text_window.glade,
+	* src/preference_dialog.c,
+	* src/text_window.c:
+	- Closed issue 37.
 
 
-2011-09-05 16:04  alpha@paranoici.org
-	* trunk/ardesia/debian/changelog,
-        * trunk/ardesia/debian/control,
-	* trunk/ardesia/po/ardesia.pot,
-        * trunk/ardesia/po/de.po,
-	* trunk/ardesia/po/es.po,
-        * trunk/ardesia/po/fr.po,
-	* trunk/ardesia/po/it.po: 
-        - adjusted translation
-	- update deb files
+2012-09-02 22:43  alpha@paranoici.org
+	* INSTALL,
+	* README,
+	* TODO: 
+	- Update readable files with current changes.
 
 
-2011-08-27 14:40  alpha@paranoici.org
-	* trunk/ardesia/desktop/scripts/screencast.sh,
-	* trunk/ardesia/src/bar_callbacks.c,
-        * trunk/ardesia/src/pdf_saver.c,
-	* trunk/ardesia/src/recorder.c, 
-        * trunk/ardesia/src/recorder.h,
-	* trunk/ardesia/src/saver.c:
-        - Fix the recorder script to pause/resume the recording;
-          for each project you will have only one video,
-	  the first time will be shown a file chooser to change
-          the suggested video name, whe you resume this will resume
-          the video silently.
-	  The recorder export and the pdf one have the defect that
-          they do not give a feedback;
-          I suppose that can be a good choise drive the user with
-          some help.
+2012-09-02 13:52  alpha@paranoici.org
+	* desktop/background_window.glade,
+	* desktop/horizontal_bar.glade,
+	* desktop/vertical_bar.glade,
+	* po/ardesia.pot,
+	* src/annotation_window.c,
+	* src/annotation_window_callbacks.c,
+	* src/ardesia.c,
+	* src/background_window.c,
+	* src/background_window.h,
+	* src/background_window_callbacks.c,
+	* src/bar_callbacks.c,
+	* src/color_selector.c,
+	* src/info_dialog.c,
+	* src/input.c,
+	* src/preference_dialog.c,
+	* src/share_confirmation_dialog.c,
+	* src/utils.c:
+	- Better handling of focus, shape and window stack.
+	- Metacity compliant.
+	- Gnome Classic compliant.
+	- Unity compliant.
+	- Gnome-shell compliant.
+	- Closed issue 37.
+	- Could be compliant with mutter.
+	  Closed issue 34.
 
 
-2011-08-27 09:35  alpha@paranoici.org
-	* trunk/ardesia/src/cursors.c:
-        - Review cursor code using the GDK_BLANK_CURSOR in order to hide 
-          the cursor pointer
+2012-08-31 13:48  alpha@paranoici.org
+	* src/Makefile.am,
+	* src/annotation_window.c,
+	* src/annotation_window.h,
+	* src/annotation_window_callbacks.c,
+	* src/input.c,
+	* src/input.h,
+	* src/utils.c,
+	* src/utils.h:
+	- Code refactoring:
+	  - input device function in input.c/input.h.
+	  - better hotplug device handling.
 
 
-2011-08-26 15:17  alpha@paranoici.org
-	* trunk/ardesia/po/POTFILES.in,
-        * trunk/ardesia/po/ardesia.pot,
-        * trunk/ardesia/po/de.po,
-        * trunk/ardesia/po/es.po,
-        * trunk/ardesia/po/fr.po,
-        * trunk/ardesia/po/it.po,
-        * trunk/ardesia/src/pdf_saver.c,
-        * trunk/ardesia/src/preference_dialog.c,
-        * trunk/ardesia/src/preference_dialog.h,
-        * trunk/ardesia/src/preference_dialog_callbacks.c,
-        * trunk/ardesia/src/recorder.c, 
-        * trunk/ardesia/src/saver.c,
-        * trunk/ardesia/src/saver.h: 
-        - Add check if you can write file and permission denied dialog for:
-	  - screenshoot
-	  - screencast
-	  - pdf export
-        - Review of the override check and dialog
-	- Update translation
+2012-08-30 18:05  alpha@paranoici.org
+	* TODO, src/annotation_window.c,
+	* src/annotation_window.h,
+	* src/annotation_window_callbacks.c,
+	* src/annotation_window_callbacks.h:
+	- Multipointer support; now you can use multipoint and
+	  multitouch devivices thanks to mpx, gtk3 and Ardesia.
+	  REMARKS: Having an only one toolbar the setting will
+	  affect all the pointers.
 
 
-2011-08-25 09:10  alpha@paranoici.org
-	* trunk/ardesia/po/POTFILES.in,
-        * trunk/ardesia/po/de.po,
-	* trunk/ardesia/po/es.po,
-        * trunk/ardesia/po/fr.po,
-	* trunk/ardesia/po/it.po,
-        * trunk/ardesia/src/preference_dialog.c,
-	* trunk/ardesia/src/preference_dialog.h,
-	* trunk/ardesia/src/preference_dialog_callbacks.c,
-	* trunk/ardesia/src/recorder.c: 
-        - Check the readability permission of the background file selected
-	  in preference dialog
+2012-08-29 10:12  alpha@paranoici.org
+	* src/annotation_window.c,
+	* src/annotation_window.c,
+	* src/annotation_window_callbacks.c,
+	* src/annotation_window_callbacks.h:
+	- Device management review.
 
 
-2011-08-24 12:58  alpha@paranoici.org
-	* trunk/ardesia/src/annotation_window.h:
-        - Solved the issue 31; Losing Window Focus in Win7
-	  switching from mouse mode and drawing mode
+2012-08-28 18:22  alpha@paranoici.org
+	* src/annotation_window.c,
+	* src/annotation_window.h,
+	* src/annotation_window_callbacks.c,
+	* src/annotation_window_callbacks.h,
+	* src/ardesia.c,
+	* src/background_window.c,
+	* src/background_window_callbacks.c,
+	* src/background_window_callbacks.h,
+	* src/bar.c,
+	* src/bar.h,
+	* src/bar_callbacks.c,
+	* src/bezier_spline.c,
+	* src/broken.c,
+	* src/broken.h,
+	* src/color_selector.c,
+	* src/color_selector.h,
+	* src/crash_dialog.c,
+	* src/crash_dialog.h,
+	* src/crash_dialog_callbacks.c,
+	* src/cursors.c,
+	* src/cursors.h,
+	* src/info_dialog.c,
+	* src/info_dialog.h,
+	* src/iwb_loader.c,
+	* src/iwb_saver.c,
+	* src/keyboard.c,
+	* src/pdf_saver.c,
+	* src/preference_dialog.c,
+	* src/preference_dialog_callbacks.c,
+	* src/project_dialog_callbacks.c,
+	* src/recorder.c,
+	* src/recorder.h,
+	* src/saver.c,
+	* src/share_confirmation_dialog_callbacks.c,
+	* src/text_window.c,
+	* src/text_window.h,
+	* src/utils.c,
+	* src/utils.h,
+	* src/windows_utils.c,
+	* src/windows_utils.h:
+	- Code revision.
 
 
-2011-08-24 10:57  alpha@paranoici.org
-	* trunk/ardesia/src/bar_callbacks.c:
-        - Force the ardesia bar to stay on the top in windows also
+2012-08-28 11:14  alpha@paranoici.org
+	* src/annotation_window.c:
+	- Better auto device configuration setup.
 
 
-2011-08-24 10:24  alpha@paranoici.org
-	* trunk/ardesia/INSTALL,
-        * trunk/ardesia/NEWS,
-        * trunk/ardesia/TODO,
-	* trunk/ardesia/desktop/annotation_window.glade,
-	* trunk/ardesia/desktop/background_window.glade,
-	* trunk/ardesia/desktop/crash_dialog.glade,
-	* trunk/ardesia/desktop/horizontal_bar.glade,
-	* trunk/ardesia/desktop/info_dialog.glade,
-	* trunk/ardesia/desktop/preference_dialog.glade,
-	* trunk/ardesia/desktop/project_dialog.glade,
-	* trunk/ardesia/desktop/share_confirmation_dialog.glade,
-	* trunk/ardesia/desktop/text_window.glade,
-	* trunk/ardesia/desktop/vertical_bar.glade:
-        - Adjust interfaces and readable files
+2012-08-27 21:42  alpha@paranoici.org
+	* src/annotation_window.c,
+	* src/annotation_window.h,
+	* src/annotation_window_callbacks.c
+	* src/annotation_window_callbacks.h:
+	- Code review: hotplug master and slave devices.
+	- Hotplug input device manager.
 
 
-2011-08-23 15:13  alpha@paranoici.org
-	* trunk/ardesia/src/annotation_window.c,
-	* trunk/ardesia/src/annotation_window_callbacks.c:
-        - Force expose in undo to the zero savepoint
-	  and after the clear callbackevent
-	  this force to redraw the screen and clean it
+2012-08-27 10:51  alpha@paranoici.org
+	* src/annotation_window.c:
+	- Adjust init device code.
 
 
-2011-08-23 09:57  alpha@paranoici.org
-	* trunk/ardesia/TODO,
-	* trunk/ardesia/desktop/annotation_window.glade,
-	* trunk/ardesia/desktop/horizontal_bar.glade,
-	* trunk/ardesia/desktop/vertical_bar.glade:
-        - keyboard accelerators:
-	  - ctrl+q to quit
-	  - ctrl+z to undo
-	  - ctrl+y to redo
-	- revision of horizontal layout
-	- update TODO
+2012-08-27 10:45  alpha@paranoici.org
+	* src/annotation_window.c,
+	* src/annotation_window_callbacks.c:
+	- Fix pressure code for GDK_SOURCE_PEN.
 
 
-2011-08-19 18:13  alpha@paranoici.org
-	* trunk/ardesia/NEWS,
-        * trunk/ardesia/TODO,
-	* trunk/ardesia/src/background_window.c,
-	* trunk/ardesia/src/background_window.h,
-        * trunk/ardesia/src/background_window_callbacks.c,
-        * trunk/ardesia/src/iwb_loader.c,
-	* trunk/ardesia/src/iwb_saver.c,
-	* trunk/ardesia/src/preference_dialog.c,
-	* trunk/ardesia/src/preference_dialog.h,
-	* trunk/ardesia/src/preference_dialog_callbacks.c,
-        * trunk/ardesia/src/utils.c:
-	- Persist the background color selected in the preference dialog
+2012-08-26 16:17  alpha@paranoici.org
+	* src/annotation_window.c,
+	* src/annotation_window_callbacks.c:
+	- More tollerance merging initial and end point 
+	  in a special way when rectify and roundify mode is enabled.
 
 
-2011-08-17 21:02  alpha@paranoici.org
-	* trunk/ardesia/src/annotation_window.c,
-	* trunk/ardesia/po/ardesia.pot,
-        * trunk/ardesia/po/de.po,
-	* trunk/ardesia/po/es.po,
-        * trunk/ardesia/po/fr.po,
-	* trunk/ardesia/po/it.po: 
-        - Update po/pot files; issue 27 is closed
-        - Fix an error in the undo/redo implementation
+2012-08-26 15:52  alpha@paranoici.org
+	* src/annotation_window_callbacks.c:
+	- Fix the code to restore surface when is coming back to the
+	  ardesia virtual desktop.
 
 
-2011-08-01 13:24  alpha@paranoici.org
-        * trunk/ardesia/INSTALL,
-        * trunk/ardesia/configure.ac,
-	* trunk/ardesia/debian/changelog,
-        * trunk/ardesia/debian/control,
-	* trunk/ardesia/INSTALL:
-        - Fix the issue 30
-	- Adjust code and doc to avoid the backtarce code and deps
+2012-08-26 15:40  alpha@paranoici.org
+	* desktop/annotation_window.glade
+	* desktop/background_window.glade,
+	* desktop/crash_dialog.glade,
+	* desktop/info_dialog.glade,
+	* desktop/preference_dialog.glade,
+	* desktop/project_dialog.glade,
+	* desktop/share_confirmation_dialog.glade,
+	* desktop/text_window.glade:
+	- Porting interfaces to gtk3.
 
 
-2011-07-23 11:05  alpha@paranoici.org
-	* trunk/ardesia/TODO,
-        * trunk/ardesia/configure.ac,
-	* trunk/ardesia/po/POTFILES.in,
-        * trunk/ardesia/src/Makefile.am,
-	* trunk/ardesia/src/ardesia.c,
-        * trunk/ardesia/src/glibc_backtrace.c,
-	* trunk/ardesia/src/glibc_backtrace.h,
-	* trunk/ardesia/src/windows_backtrace.c,
-	* trunk/ardesia/src/windows_backtrace.h:
-        - Remove the libbfd dependency
+2012-08-26 15:15  alpha@paranoici.org
+	* src/cursors.c:
+	- New eraser cursor code.
 
 
-2011-07-23 10:35  alpha@paranoici.org
-	* trunk/ardesia/TODO:
-        - Update TODO the libbfd dependency might be removed
+2012-08-26 14:52  alpha@paranoici.org
+	* src/cursors.c:
+	- Minor fix in pen cursor.
 
 
-2011-06-29 15:32  alpha@paranoici.org
-	* trunk/TODO,
-        * trunk/ardesia/TODO,
-        * trunk/ardesia/configure.ac,
-	* trunk/ardesia/debian/changelog:
-        - Rescheduled TODO and version number for the 1.0
-	  stable release that is coming soon
+2012-08-26 14:25  alpha@paranoici.org
+	* src/annotation_window_callbacks.c,
+	* src/cursors.c:
+	- adjust pen cursor code.
 
 
-2011-06-29 14:28  alpha@paranoici.org
-	* trunk/ardesia/win32/ardesia.iss.in:
-        - Fix the desktop icon shortut created by the Ardesia Innosetup
-          installer
+2012-08-26 12:03  alpha@paranoici.org
+	* desktop/icons/application-x-iwb.png,
+	* desktop/icons/ardesia.png,
+	* desktop/icons/arrow.png,
+	* desktop/icons/medium.png,
+	* desktop/icons/micro.png,
+	* desktop/icons/pointer.png,
+	* desktop/icons/rectifier.png,
+	* desktop/icons/rounder.png,
+	* desktop/icons/thick.png,
+	* desktop/icons/thin.png,
+	* desktop/icons/media-record.png,
+	* desktop/icons/media-recorder-unavailable.png,
+	* po/ardesia.pot:
+	- Icon revision.
+	- Update internazionalization files.
+	- Bigger recorder icons.
 
 
-2011-06-29 13:50  alpha@paranoici.org
-	* trunk/ardesia/win32/ardesia.iss.in:
-        - Fix shortcut icon on desktop
+2012-08-26 09:03  alpha@paranoici.org
+	* TODO,
+	* configure.ac,
+	* debian/control,
+	* desktop/annotation_window.glade,
+	* desktop/background_window.glade,
+	* desktop/horizontal_bar.glade,
+	* desktop/icons/add-pdf.png,
+	* desktop/icons/application-x-iwb.png,
+	* desktop/icons/ardesia.png,
+	* desktop/icons/arrow.png,
+	* desktop/icons/blue.png,
+	* desktop/icons/camera-photo.png,
+	* desktop/icons/eraser.png,
+	* desktop/icons/filler.png,
+	* desktop/icons/green.png,
+	* desktop/icons/hand.png,
+	* desktop/icons/highlighter.png,
+	* desktop/icons/media-record.png,
+	* desktop/icons/media-recorder-unavailable.png,
+	* desktop/icons/medium.png,
+	* desktop/icons/micro.png,
+	* desktop/icons/pencil.png,
+	* desktop/icons/pointer.png,
+	* desktop/icons/rectifier.png,
+	* desktop/icons/red.png,
+	* desktop/icons/rounder.png,
+	* desktop/icons/text.png,
+	* desktop/icons/thick.png,
+	* desktop/icons/thin.png,
+	* desktop/icons/white.png,
+	* desktop/icons/yellow.png,
+	* desktop/text_window.glade,
+	* desktop/vertical_bar.glade,
+	* po/ardesia.pot,
+	* src/annotation_window.c,
+	* src/annotation_window.h,
+	* src/annotation_window_callbacks.c,
+	* src/annotation_window_callbacks.h,
+	* src/ardesia.c,
+	* src/background_window.c,
+	* src/background_window.h,
+	* src/background_window_callbacks.c,
+	* src/bar.c,src/color_selector.c,
+	* src/pdf_saver.c,
+	* src/text_window.c,
+	* src/utils.c: 
+	- GTK3 porting.
+	- Icon revision.
 
 
-2011-06-27 14:25  alpha@paranoici.org
-	* trunk/ardesia/src/annotation_window.c:
-        - Old gtk used on windows have not the gdk_device_get_n_axes (device)
-	  then I prefer use the explicit form device->num_axes
-
-
+2012-05-04 14:45  alpha@paranoici.org
+	* AUTHORS,
+	* NEWS,
+	* README,
+	* src/ardesia.c,
+	* src/ardesia.h,
+	* src/text_window.c,
+	* src/text_window.h:
+	- Rough commit of the Claus Hentschel patchset:
+	  - font selection
+	  - tab size
+	  - left margin
+	  
+	  

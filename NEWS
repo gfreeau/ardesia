@@ -3,8 +3,30 @@ Ardesia free digital sketchpad
 ---------------
  ardesia 1.2
 ---------------
-- Add font selection
-- Add left margin size for text 
+
+Internationalization:
+- Add german support made from Ronny Standtke
+
+Bug fix:
+- Solved the issue 34: compliant with Gnome/Mutter.
+- Solved the issue 37: compliant with Gnome/Metacity.
+- Closed the issue 38: german language translation enhancement.
+
+Features:
+- Gtk3 port
+- multipointer and multitouch support (mpx)
+- hotplugging input devices
+- Metacity compliant
+- Mutter compliant
+- Gnome classic compiant
+- Gnome-shell compliant
+- Unity compliant
+- Add font selection and left margin size for text
+  from command line options. See the README file for
+  furthermore info. 
+
+Dependencies:
+- Require gtk 2.99
 
 ---------------
  ardesia 1.1 
@@ -158,8 +180,6 @@ Usability:
 
 
 Features:
-- Ardesia stay above all windows; you can open a program
-  in fullscreen and annotate on it
 - When a fault occurs it logs the backtrace in tour TMP folder
 - Email support
 - Pdf email sender; when you quit the program if you have made
