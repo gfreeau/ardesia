@@ -1,12 +1,13 @@
 Ardesia free digital sketchpad
 
 ---------------
- ardesia 1.2
+ ardesia 1.1
 ---------------
 
 Internationalization:
 - Add german support made from Ronny Standtke.
 - Update traditional Chinese support made by William Chao.
+- Add traditional Chinese support made by William Chao
 
 Bug fix:
 - Solved the issue 34: compliant with Gnome/Mutter.
@@ -28,18 +29,6 @@ Features:
 
 Dependencies:
 - Require gtk 2.99
-
----------------
- ardesia 1.1 
----------------
-
-Internationalization:
-- Add traditional Chinese support made by William Chao
-
-Bug fix
-- Fix a critical bug on Windows that caused some misbehaviours saving iwb
-- Eraser: fix the eraser tool using the the pen' back side windows
-- Clodes issue 42
 
 ---------------
  ardesia 1.0 
