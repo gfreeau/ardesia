@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-25 09:53+0200\n"
+"POT-Creation-Date: 2012-09-12 17:56+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli.pietro@gmail.com>\n"
 "Language-Team: Ardesia Team <pilolli.pietro@gmail.com>\n"
@@ -188,8 +188,7 @@ msgstr "Captura de pantalla"
 msgid "Add to pdf"
 msgstr "Anadir a pdf"
 
-#. Set the stop tool-tip.
-#: ../desktop/vertical_bar.glade.h:22 ../src/bar_callbacks.c:613
+#: ../desktop/vertical_bar.glade.h:22 ../src/bar_callbacks.c:629
 msgid "Record"
 msgstr "Grabar"
 
@@ -210,7 +209,7 @@ msgid "In order to run Ardesia you need to enable a composite manager"
 msgstr "Para ejecutar Ardesia necesita habilitar el administrador compuestos"
 
 #. Set the stop tool-tip.
-#: ../src/bar_callbacks.c:640
+#: ../src/bar_callbacks.c:663
 msgid "Stop"
 msgstr "Detener"
 
@@ -229,11 +228,11 @@ msgid ""
 "to the PATH environment variable"
 msgstr "Para grabar con Ardesia debe instalar el programa vlc y anadir al path"
 
-#: ../src/recorder.c:200
+#: ../src/recorder.c:201
 msgid "Save video as ogv"
 msgstr "Guardar el vídeo como ogv"
 
-#: ../src/recorder.c:212 ../src/saver.c:115
+#: ../src/recorder.c:213 ../src/saver.c:115
 msgid "Choose a file"
 msgstr "Elegir un archivo"
 

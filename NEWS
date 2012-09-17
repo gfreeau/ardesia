@@ -5,7 +5,8 @@ Ardesia free digital sketchpad
 ---------------
 
 Internationalization:
-- Add german support made from Ronny Standtke
+- Add german support made from Ronny Standtke.
+- Update traditional Chinese support made by William Chao.
 
 Bug fix:
 - Solved the issue 34: compliant with Gnome/Mutter.

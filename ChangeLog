@@ -308,3 +308,15 @@
 	  - left margin
 	  
 	  
+2012-02-21 09:41  alpha@paranoici.org
+	* po/LINGUAS,
+	* po/zh_TW.po:
+	- Update traditional Chinese support made by William Chao.
+
+	  
+2011-10-09 11:44  alpha@paranoici.org
+	* po/de.po:
+	- The german lang has been fixed applying the Ronny patches;
+	  this commit close the issue 38.
+	  
+	  
