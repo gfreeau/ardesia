@@ -1181,7 +1181,14 @@ annotate_draw_line      (AnnotateDeviceData  *devdata,
   else
     {
       AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (devdata->coord_list, 0);
-      cairo_move_to (data->annotation_cairo_context, last_point->x, last_point->y);
+      if (last_point)
+        {
+          cairo_move_to (data->annotation_cairo_context, last_point->x, last_point->y);
+        }
+      else
+        {
+          cairo_move_to (data->annotation_cairo_context, x2, y2);
+        }
       cairo_line_to (data->annotation_cairo_context, x2, y2);
       cairo_stroke (data->annotation_cairo_context);
     }
