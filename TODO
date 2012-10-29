@@ -10,7 +10,7 @@
 
 - Documentation
   - user manual in english language
-  - translate the wiki in english 
+  - english revision
 
 - Reengineering
   - Store and load the savepoints with svg files
@@ -23,11 +23,12 @@
   - See http://code.google.com/p/ardesia/issues/list
 
 - Candidate features:
+  - stay above all windows
+  - Support for a generic virtual keyboard 
   - Better sketch recognition
   - Recognize the hand written text
   - Deploy the artefact online
     - video; youtube upload as kazam
-  - Support for a generic virtual keyboard 
   - Lazo selection tool
     - Move the selected area content
     - Paste the selected area content
