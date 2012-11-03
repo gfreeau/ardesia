@@ -70,3 +70,6 @@ uninstall-local:
 	rm -fr $(ardesiadocdir)
 	rm -fr $(uidir)
 	rm -fr $(datadir)/ardesia
+
+dist-hook:
+	rm -rf `find $(distdir) -name .svn`
