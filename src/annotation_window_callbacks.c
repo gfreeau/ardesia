@@ -161,11 +161,6 @@ on_button_press    (GtkWidget      *win,
       return FALSE;
     }
 	
-  if (ev->x==0 || ev->y==0)
-   {
-     return FALSE;
-   }
-
   if (data->debug)
     {
       g_printerr ("Device '%s': Button %i Down at (x,y)= (%f : %f)\n",
@@ -241,12 +236,6 @@ on_motion_notify   (GtkWidget       *win,
       return FALSE;
     }
 
-  if (ev->x==0 || ev->y==0)
-   {
-     return FALSE;
-   }
-
-	
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
@@ -357,11 +346,6 @@ on_button_release  (GtkWidget       *win,
       annotate_release_grab ();
       return FALSE;
     }
-
-  if (ev->x==0 || ev->y==0)
-   {
-     return FALSE;
-   }
 
   if (data->debug)
     {
