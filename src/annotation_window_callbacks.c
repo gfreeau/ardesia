@@ -239,7 +239,13 @@ on_motion_notify   (GtkWidget       *win,
   if (!data->is_grabbed)
     {
       return FALSE;
-	}
+    }
+
+  if (ev->x==0 || ev->y==0)
+   {
+     return FALSE;
+   }
+
 	
   if (!ev)
     {
