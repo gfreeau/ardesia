@@ -151,7 +151,7 @@ on_button_press    (GtkWidget      *win,
   if (!data->is_grabbed)
     {
       return FALSE;
-	}
+    }
 	
   if (!ev)
     {
@@ -161,7 +161,7 @@ on_button_press    (GtkWidget      *win,
       return FALSE;
     }
 	
-  if (ev->x==0 && ev->y==0)
+  if (ev->x==0 || ev->y==0)
    {
      return FALSE;
    }
@@ -352,7 +352,7 @@ on_button_release  (GtkWidget       *win,
       return FALSE;
     }
 
-  if (ev->x==0 && ev->y==0)
+  if (ev->x==0 || ev->y==0)
    {
      return FALSE;
    }
