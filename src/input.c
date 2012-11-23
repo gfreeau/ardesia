@@ -79,7 +79,7 @@ select_input_device_mode     (GdkDevice     *device)
       for (i=0; i < gdk_device_get_n_axes (device); i++)
         {
           GdkAxisUse axis_use = gdk_device_get_axis_use (device, i);
-          if (axis_use != GDK_AXIS_PRESSURE)
+          if (gdk_device_get_source(device) != GDK_SOURCE_KEYBOARD || gdk_device_get_n_axes(device)<2)
             {
               /* I can not set to screen mode. */
               continue;
