@@ -66,7 +66,7 @@ on_configure       (GtkWidget      *widget,
                  gtk_widget_get_allocated_height (widget));
     }
 	
-	GdkWindowState state = gdk_window_get_state (gtk_widget_get_window (widget));
+  GdkWindowState state = gdk_window_get_state (gtk_widget_get_window (widget));
   gint is_fullscreen = state & GDK_WINDOW_STATE_FULLSCREEN;
 
   if (!is_fullscreen)

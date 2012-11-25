@@ -1089,17 +1089,20 @@ annotate_select_pen     ()
                   data->cur_context->fg_color);
     }
 
-  data->cur_context = data->default_pen;
-  data->old_paint_type = ANNOTATE_PEN;
+  if (data->default_pen)
+    {
+      data->cur_context = data->default_pen;
+      data->old_paint_type = ANNOTATE_PEN;
 
-  disallocate_cursor ();
+      disallocate_cursor ();
 
-  set_pen_cursor (&data->cursor,
-                  data->thickness,
-                  data->cur_context->fg_color,
-                  data->arrow);
+      set_pen_cursor (&data->cursor,
+                      data->thickness,
+                      data->cur_context->fg_color,
+                      data->arrow);
 
-  update_cursor ();
+      update_cursor ();
+    }
 }
 
 
