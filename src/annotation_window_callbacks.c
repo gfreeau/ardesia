@@ -281,9 +281,6 @@ on_motion_notify   (GtkWidget       *win,
 
   annotate_configure_pen_options (data);
   
-  /* Select the new color. */
-  annotate_modify_color (slavedata, data, pressure);
-  
   if (data->cur_context->type != ANNOTATE_ERASER)
     {
       pressure = get_pressure ( (GdkEvent *) ev);
