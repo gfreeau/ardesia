@@ -75,23 +75,16 @@ setup_input_device_list (AnnotateData  *data,
 static GdkInputMode
 select_input_device_mode     (GdkDevice     *device)
 {
-      int i = 0;
-      for (i=0; i < gdk_device_get_n_axes (device); i++)
-        {
-          GdkAxisUse axis_use = gdk_device_get_axis_use (device, i);
-          if (gdk_device_get_source(device) != GDK_SOURCE_KEYBOARD || gdk_device_get_n_axes(device)<2)
-            {
-              /* I can not set to screen mode. */
-              continue;
-            }
-          else
-            {
-              /* Choose screen mode. */
-              return GDK_MODE_SCREEN;
-            }
-        }
+  if (gdk_device_get_source (device) != GDK_SOURCE_KEYBOARD && gdk_device_get_n_axes (device) >= 2)
+    {
+      /* Choose screen mode. */
+      return GDK_MODE_SCREEN;
+    }
+  else
+    {
       /* Choose window mode. */
       return GDK_MODE_WINDOW;
+    }
 }
 
 
@@ -119,11 +112,13 @@ remove_input_devices    (AnnotateData  *data)
 void
 setup_input_devices     (AnnotateData  *data)
 {
+  GList *devices, *d;
   GdkDeviceManager *device_manager = gdk_display_get_device_manager (gdk_display_get_default ());
   GList *masters = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
-  setup_input_device_list(data, masters);
-  //GList *slavers = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE);
-  //setup_input_device_list(slavers);
+  GList *slavers = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE);
+  devices = g_list_concat(masters, slavers);
+  //setup_input_device_list(data, masters);
+  setup_input_device_list(data, devices);
 }
 
 

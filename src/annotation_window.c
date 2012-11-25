@@ -121,7 +121,7 @@ select_color            ()
           /* It is the eraser tool. */
           if (data->debug)
             {
-              g_printerr ("The eraser tool has been selected\n");
+              g_printerr ("Select transparent colour to erase\n");
             }
 
           cairo_set_operator (data->annotation_cairo_context, CAIRO_OPERATOR_CLEAR);
@@ -1266,13 +1266,17 @@ annotate_shape_recognize     (AnnotateDeviceData  *devdata,
 
 /* Select eraser, pen or other tool for tablet. */
 void
-annotate_select_tool    (AnnotateData  *data,
-                         GdkDevice     *device,
-                         guint state)
+annotate_select_tool (AnnotateData *data,
+                      GdkDevice *masterdevice,
+                      GdkDevice *slavedevice,
+                      guint state)
 {
-  if (device)
+  AnnotateDeviceData *masterdata = g_hash_table_lookup(data->devdatatable, masterdevice);
+  AnnotateDeviceData *slavedata = g_hash_table_lookup(data->devdatatable, slavedevice);
+
+  if (slavedevice)
     {
-      if (gdk_device_get_source (device) == GDK_SOURCE_ERASER)
+      if (gdk_device_get_source (slavedevice) == GDK_SOURCE_ERASER)
         {
           annotate_select_eraser ();
         }
@@ -1286,6 +1290,10 @@ annotate_select_tool    (AnnotateData  *data,
     {
       g_printerr ("Attempt to select non existent device!\n");
     }
+
+  masterdata->lastslave = slavedevice;
+  masterdata->state = state;
+  slavedata->state = state;
 }
 
 

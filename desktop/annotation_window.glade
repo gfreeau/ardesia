@@ -15,13 +15,11 @@
     <property name="deletable">False</property>
     <property name="focus_visible">False</property>
     <signal name="screen-changed" handler="on_screen_changed" swapped="no"/>
-    <signal name="proximity-out-event" handler="on_proximity_out" swapped="no"/>
     <signal name="configure-event" handler="on_configure" swapped="no"/>
     <signal name="button-press-event" handler="on_button_press" swapped="no"/>
     <signal name="motion-notify-event" handler="on_motion_notify" swapped="no"/>
     <signal name="button-release-event" handler="on_button_release" swapped="no"/>
     <signal name="draw" handler="on_expose" swapped="no"/>
-    <signal name="proximity-in-event" handler="on_proximity_in" swapped="no"/>
     <child>
       <placeholder/>
     </child>

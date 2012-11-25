@@ -89,7 +89,8 @@ typedef struct
 
   /* List of the coordinates of the last line drawn. */
   GSList       *coord_list;
-
+  GdkDevice*   lastslave;
+  guint        state;
 } AnnotateDeviceData;
 
 
@@ -145,7 +146,7 @@ typedef struct
    * using a tablet pen.
    */
   AnnotatePaintType old_paint_type;
-  
+
   /* Tool thickness. */
   gdouble thickness;
 
@@ -354,9 +355,10 @@ annotate_draw_arrow          (AnnotateDeviceData *devdata,
 
 /* Select eraser, pen or other tool for tablet. */
 void
-annotate_select_tool         (AnnotateData      *data,
-                              GdkDevice         *device,
-                              guint              state);
+annotate_select_tool         (AnnotateData *data,
+                              GdkDevice *masterdevice,
+                              GdkDevice *slavedevice,
+                              guint state);
 
 
 /* Select the default pen tool. */

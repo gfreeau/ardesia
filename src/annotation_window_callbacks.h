@@ -57,20 +57,6 @@ on_button_release            (GtkWidget      *win,
                               gpointer        func_data);
 
 
-/* Device touch. */
-G_MODULE_EXPORT gboolean
-on_proximity_in              (GtkWidget         *win,
-                              GdkEventProximity *ev,
-                              gpointer           func_data);
-
-
-/* Device lease. */
-G_MODULE_EXPORT gboolean
-on_proximity_out             (GtkWidget         *win,
-                              GdkEventProximity *ev,
-                              gpointer           func_data);
-
-
 /* On device added. */
 void on_device_removed       (GdkDeviceManager *device_manager,
                               GdkDevice        *device,
