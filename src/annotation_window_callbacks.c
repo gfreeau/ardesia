@@ -396,6 +396,7 @@ on_button_release  (GtkWidget       *win,
       gdouble tollerance = annotate_get_thickness () * score;
 
       gdouble pressure = last_point->pressure;   
+      annotate_modify_color (slavedata, data, pressure);
 
       gboolean closed_path = FALSE;
 
