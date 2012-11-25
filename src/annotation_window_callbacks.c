@@ -187,13 +187,11 @@ on_button_press    (GtkWidget      *win,
       return FALSE;
     }
 	
+  annotate_unhide_cursor ();
+
   initialize_annotation_cairo_context(data);
 
   annotate_configure_pen_options (data);
-
-  annotate_coord_dev_list_free (slavedata);
-
-  annotate_unhide_cursor ();
 
   annotate_draw_point (slavedata, ev->x, ev->y, pressure);
 
@@ -320,11 +318,10 @@ on_motion_notify   (GtkWidget       *win,
                 }
             }
           annotate_modify_color (slavedata, data, pressure);
+          annotate_draw_line (slavedata, ev->x, ev->y, TRUE);
+          annotate_coord_list_prepend (slavedata, ev->x, ev->y, selected_width, pressure);
         }
     }
-
-  annotate_draw_line (slavedata, ev->x, ev->y, TRUE);
-  annotate_coord_list_prepend (slavedata, ev->x, ev->y, selected_width, pressure);
 
   return TRUE;
 }
@@ -346,6 +343,7 @@ on_button_release  (GtkWidget       *win,
 
   if (!data->is_grabbed)
     {
+      annotate_coord_dev_list_free (slavedata);
       return FALSE;
     }
 	
@@ -353,6 +351,7 @@ on_button_release  (GtkWidget       *win,
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
                   gdk_device_get_name (slave));
+      annotate_coord_dev_list_free (slavedata);
       annotate_release_grab ();
       return FALSE;
     }
@@ -370,6 +369,7 @@ on_button_release  (GtkWidget       *win,
     {
       /* The last point was outside the bar then ungrab. */
       annotate_release_grab ();
+      annotate_coord_dev_list_free (slavedata);
       return FALSE;
     }
   if (data->old_paint_type == ANNOTATE_PEN)
@@ -436,6 +436,7 @@ on_button_release  (GtkWidget       *win,
 
   annotate_hide_cursor ();
 
+  annotate_coord_dev_list_free (slavedata);
   return TRUE;
 }
 
