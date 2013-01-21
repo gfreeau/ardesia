@@ -729,7 +729,7 @@ annotate_configure_pen_options    (AnnotateData       *data)
       cairo_set_line_cap(data->annotation_cairo_context, CAIRO_LINE_CAP_ROUND);
       cairo_set_line_join(data->annotation_cairo_context, CAIRO_LINE_JOIN_ROUND);
       
-      if (data->old_paint_type == ANNOTATE_ERASER)
+      if (data->cur_context->type == ANNOTATE_ERASER)
         {
           data->cur_context = data->default_eraser;
           cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_CLEAR);
@@ -1282,16 +1282,25 @@ annotate_select_tool (AnnotateData *data,
       if (gdk_device_get_source (slavedevice) == GDK_SOURCE_ERASER)
         {
           annotate_select_eraser ();
+          data->old_paint_type = ANNOTATE_PEN;
         }
       else
         {
-          annotate_select_pen ();
+          if (data->old_paint_type == ANNOTATE_ERASER)
+            {
+              annotate_select_eraser ();
+            }
+          else
+            {
+              annotate_select_pen ();
+            }
         }
 
     }
   else
     {
       g_printerr ("Attempt to select non existent device!\n");
+      data->cur_context = data->default_pen;
     }
 
   masterdata->lastslave = slavedevice;

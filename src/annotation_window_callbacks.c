@@ -223,14 +223,6 @@ on_motion_notify   (GtkWidget       *win,
       masterdata->lastslave != slave)
     {
        annotate_select_tool (data, ev->device, slave, ev->state);
-       if (data->cur_context->type == ANNOTATE_PEN)
-         {
-            data->old_paint_type = ANNOTATE_PEN; 
-         }
-       else
-         {
-            data->old_paint_type = ANNOTATE_ERASER;
-         }
     }
 
   gdouble selected_width = 0.0;
