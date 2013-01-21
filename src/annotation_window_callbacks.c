@@ -317,8 +317,12 @@ on_motion_notify   (GtkWidget       *win,
           annotate_modify_color (slavedata, data, pressure);
           annotate_draw_line (slavedata, ev->x, ev->y, TRUE);
           annotate_coord_list_prepend (slavedata, ev->x, ev->y, selected_width, pressure);
+          return;
         }
     }
+    
+  annotate_draw_line (slavedata, ev->x, ev->y, TRUE);
+  annotate_coord_list_prepend (slavedata, ev->x, ev->y, selected_width, pressure);
 
   return TRUE;
 }
