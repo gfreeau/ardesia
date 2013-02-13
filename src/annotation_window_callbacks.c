@@ -193,6 +193,7 @@ on_button_press    (GtkWidget      *win,
 
   annotate_configure_pen_options (data);
 
+  annotate_coord_dev_list_free (slavedata);
   annotate_draw_point (slavedata, ev->x, ev->y, pressure);
 
   annotate_coord_list_prepend (slavedata,
