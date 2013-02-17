@@ -293,24 +293,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="buttonFiller">
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Filler</property>
-                <property name="halign">center</property>
-                <property name="valign">center</property>
-                <property name="use_action_appearance">False</property>
-                <property name="use_underline">True</property>
-                <property name="label_widget">filler</property>
-                <signal name="clicked" handler="on_bar_filler_activate" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkToolButton" id="buttonClear">
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
@@ -357,6 +339,25 @@
                 <property name="label_widget">pointer</property>
                 <property name="group">buttonPencil</property>
                 <signal name="clicked" handler="on_bar_pointer_activate" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRadioToolButton" id="buttonFiller">
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Filler</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <property name="use_action_appearance">False</property>
+                <property name="use_underline">True</property>
+                <property name="label_widget">filler</property>
+                <property name="group">buttonPencil</property>
+                <signal name="clicked" handler="on_bar_filler_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

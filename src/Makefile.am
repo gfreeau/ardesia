@@ -40,6 +40,8 @@ ardesia_SOURCES = \
 	cursors.h                                 \
         pdf_saver.c                               \
 	pdf_saver.h                               \
+        fill.c                                    \
+	fill.h                                    \
         annotation_window.c                       \
 	annotation_window.h                       \
         utils.c                                   \

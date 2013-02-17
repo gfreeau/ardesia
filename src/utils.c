@@ -227,8 +227,8 @@ scale_surface      (cairo_surface_t  *surface,
  
 /* Set the cairo surface colour to the RGBA string. */
 void
-cairo_set_source_color_from_string     ( cairo_t *cr,
-                                         gchar   *color)
+cairo_set_source_color_from_string     (cairo_t  *cr,
+                                        gchar    *color)
 {
   if (cr)
     {

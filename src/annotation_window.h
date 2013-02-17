@@ -60,6 +60,8 @@ typedef enum
     ANNOTATE_PEN,
 
     ANNOTATE_ERASER,
+    
+    ANNOTATE_FILLER,
 
   } AnnotatePaintType;
 
@@ -136,6 +138,9 @@ typedef struct
 
   /* Paint context for the eraser. */
   AnnotatePaintContext *default_eraser;
+  
+  /* Paint context for the filler. */
+  AnnotatePaintContext *default_filler;
 
   /* Point to the current context. */
   AnnotatePaintContext *cur_context;
@@ -270,11 +275,6 @@ void
 annotate_set_rounder         (gboolean rounder);
 
 
-/* fill the last shape if it is a close path. */
-void
-annotate_fill                ();
-
-
 /* Set arrow. */
 void
 annotate_set_arrow           (gboolean arrow);
@@ -347,12 +347,26 @@ annotate_draw_point          (AnnotateDeviceData *devdata,
                               gdouble             pressure);
 
 
+/* Draw the point list. */
+void
+annotate_draw_point_list     (AnnotateDeviceData *devdata,
+                              GSList             *list);
+                              
+                              
 /* Draw an arrow using some polygons. */
 void
 annotate_draw_arrow          (AnnotateDeviceData *devdata,
                               gdouble             distance);
 
 
+/* Fill the contiguos area around point with coordinates (x,y). */
+void
+annotate_fill                (AnnotateDeviceData *devdata,
+                              AnnotateData       *data,
+                              gdouble             x,
+                              gdouble             y);
+                              
+                              
 /* Select eraser, pen or other tool for tablet. */
 void
 annotate_select_tool         (AnnotateData *data,
@@ -369,6 +383,11 @@ annotate_select_pen          ();
 /* Select the default eraser tool. */
 void
 annotate_select_eraser       ();
+
+
+/* Select the default filler tool. */
+void
+annotate_select_filler       ();
 
 
 /* Call the geometric shape recognizer. */

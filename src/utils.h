@@ -50,7 +50,6 @@
 
 #include <config.h>
 
-
 /*
  * Standard gettext macros.
  */
@@ -74,7 +73,6 @@ GtkBuilder *bar_gtk_builder;
 #define YELLOW "FFFF00"
 #define GREEN "00FF00"
 #define BLUE "0000FF"
-
 
 
 /* Struct to store the painted point. */
@@ -153,6 +151,15 @@ void
 cairo_set_source_color_from_string     (cairo_t  *cr,
                                         gchar    *color);
 
+
+/*
+ * Get color of the surface at point with coordinates (x,y).
+ */
+gint
+get_color             (cairo_surface_t  *surface,
+                       gint              x,
+                       gint              y);
+                              
 
 /* Set the cairo surface color to transparent. */
 void

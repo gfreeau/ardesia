@@ -112,7 +112,7 @@ remove_input_devices    (AnnotateData  *data)
 void
 setup_input_devices     (AnnotateData  *data)
 {
-  GList *devices, *d;
+  GList *devices;
   GdkDeviceManager *device_manager = gdk_display_get_device_manager (gdk_display_get_default ());
   GList *masters = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
   GList *slavers = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE);

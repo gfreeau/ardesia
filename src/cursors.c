@@ -37,6 +37,9 @@ static cairo_surface_t *eraser_image_surface      = (cairo_surface_t*) NULL;
 /* The image surface that will contain the arrow icon. */
 static cairo_surface_t *arrow_image_surface      = (cairo_surface_t*) NULL;
 
+/* The image surface that will contain the filler icon. */
+static cairo_surface_t *filler_image_surface     = (cairo_surface_t*) NULL;
+
 
 /* Get the eraser image surface. */
 static cairo_surface_t *
@@ -77,6 +80,20 @@ get_arrow_image_surface ()
 
   arrow_image_surface = cairo_image_surface_create_from_png (ARROW_ICON);
   return arrow_image_surface;
+}
+
+
+/* Get the filler image surface. */
+static cairo_surface_t *
+get_filler_image_surface ()
+{
+  if (filler_image_surface)
+    {
+      return filler_image_surface;
+    }
+
+  filler_image_surface = cairo_image_surface_create_from_png (FILLER_ICON);
+  return filler_image_surface;
 }
 
 
@@ -123,6 +140,17 @@ void destroy_pen_image_surface ()
   if (pen_image_surface)
     {
       cairo_surface_destroy (pen_image_surface);
+    }
+}
+
+
+/* Destroy the filler image surface. */
+static
+void destroy_filler_image_surface ()
+{
+  if (filler_image_surface)
+    {
+      cairo_surface_destroy (filler_image_surface);
     }
 }
 
@@ -184,7 +212,7 @@ get_eraser_pixbuf (gdouble     thickness,
                                                  gdk_pixbuf_get_height (*pixbuf),
                                                  gdk_pixbuf_get_rowstride (*pixbuf));
 						
-	eraser_cr = cairo_create (surface);
+  eraser_cr = cairo_create (surface);
 
   clear_cairo_context (eraser_cr);
 
@@ -224,6 +252,44 @@ get_eraser_pixbuf (gdouble     thickness,
 }
 
 
+/* Create pixmap and mask for the eraser cursor. */
+static void
+get_filler_pixbuf (GdkPixbuf **pixbuf)
+{
+  cairo_surface_t  *image_surface = (cairo_surface_t *) NULL;
+  cairo_surface_t  *surface = (cairo_surface_t *) NULL;
+  cairo_t          *filler_cr = (cairo_t *) NULL;
+  
+  gint image_width;
+  gint image_height;
+  
+  image_surface = get_filler_image_surface ();
+  image_width = cairo_image_surface_get_width (image_surface);
+  image_height = cairo_image_surface_get_height (image_surface);
+  
+  *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, image_width, image_height);
+  surface = cairo_image_surface_create_for_data (gdk_pixbuf_get_pixels (*pixbuf),
+                                                 CAIRO_FORMAT_RGB24,
+                                                 gdk_pixbuf_get_width (*pixbuf),
+                                                 gdk_pixbuf_get_height (*pixbuf),
+                                                 gdk_pixbuf_get_rowstride (*pixbuf));
+                                                 
+  filler_cr = cairo_create (surface);
+
+  clear_cairo_context (filler_cr);
+
+  cairo_set_operator (filler_cr, CAIRO_OPERATOR_SOURCE);
+                                                     
+  cairo_set_source_surface (filler_cr, image_surface, 0, 0);
+  
+  cairo_paint (filler_cr);
+  cairo_stroke (filler_cr);
+
+  cairo_surface_destroy (surface);
+  cairo_destroy (filler_cr);
+}
+
+
 /* Create pixmap and mask for the pen cursor. */
 static void
 get_pen_pixbuf (GdkPixbuf **pixbuf,
@@ -232,11 +298,13 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
                 gdouble     arrow,
                 gdouble     circle_width)
 {
-  cairo_t *pen_cr = (cairo_t *) NULL;
-  cairo_surface_t *surface = (cairo_surface_t *) NULL;
-  cairo_surface_t *image_surface = (cairo_surface_t *) NULL;
-  gint icon_width, icon_height;
-  gint cursor_width, cursor_height;
+  cairo_t          *pen_cr = (cairo_t *) NULL;
+  cairo_surface_t  *surface = (cairo_surface_t *) NULL;
+  cairo_surface_t  *image_surface = (cairo_surface_t *) NULL;
+  gint              icon_width;
+  gint              icon_height;
+  gint              cursor_width;
+  gint              cursor_height;
 
   if (arrow)
     {/* load the arrow icon. */
@@ -321,6 +389,7 @@ destroy_cached_image_surfaces ()
   destroy_eraser_image_surface ();
   destroy_pen_image_surface ();
   destroy_highlighter_image_surface ();
+  destroy_filler_image_surface ();
 }
 
 
@@ -377,6 +446,20 @@ set_eraser_cursor (GdkCursor **cursor,
 					gdk_pixbuf_get_height (pixbuf) - size/2-circle_width);
 					
   g_object_unref (pixbuf);
+}
+
+
+/* Set the filler cursor. */
+void
+set_filler_cursor (GdkCursor **cursor)
+{
+  GdkPixbuf *pixbuf = (GdkPixbuf *) NULL;
+  get_filler_pixbuf (&pixbuf);
+
+  *cursor = gdk_cursor_new_from_pixbuf (gdk_display_get_default (),
+					pixbuf,
+					gdk_pixbuf_get_width (pixbuf) - 1,
+					gdk_pixbuf_get_height (pixbuf) - 1);
 }
 
 

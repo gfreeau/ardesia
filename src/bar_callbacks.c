@@ -110,11 +110,27 @@ gboolean is_highlighter_toggle_tool_button_active          ()
 }
 
 
+/* Is the filler toggle tool button active? */
+static
+gboolean is_filler_toggle_tool_button_active          ()
+{
+  return is_toggle_tool_button_active("buttonFiller");
+}
+
+
 /* Is the eraser toggle tool button active? */
 static
 gboolean is_eraser_toggle_tool_button_active     ()
 {
   return is_toggle_tool_button_active("buttonEraser");
+}
+
+
+/* Is the eraser toggle tool button active? */
+static
+gboolean is_pen_toggle_tool_button_active     ()
+{
+  return is_toggle_tool_button_active("buttonPencil");
 }
 
 
@@ -172,7 +188,48 @@ take_pen_tool           ()
       gtk_toggle_tool_button_set_active (pointer_tool_button, FALSE);
       gtk_toggle_tool_button_set_active (pencil_tool_button, TRUE);
     }
+    
+  if (is_filler_toggle_tool_button_active ())
+    {
+      GObject *filler_obj = gtk_builder_get_object (bar_gtk_builder, "buttonFiller");
+      GtkToggleToolButton *filler_tool_button = GTK_TOGGLE_TOOL_BUTTON (filler_obj);
+      gtk_toggle_tool_button_set_active (filler_tool_button, FALSE);
+      gtk_toggle_tool_button_set_active (pencil_tool_button, TRUE);
+    }
+}
 
+
+/* Select the filler tool. */
+static void
+take_filler_tool           ()
+{
+  GObject *filler_obj = gtk_builder_get_object (bar_gtk_builder, "buttonFiller");
+  GtkToggleToolButton *filler_tool_button = GTK_TOGGLE_TOOL_BUTTON (filler_obj);
+
+  /* Select the pen as default tool. */
+  if (is_eraser_toggle_tool_button_active ())
+    {
+      GObject *eraser_obj = gtk_builder_get_object (bar_gtk_builder, "buttonEraser");
+      GtkToggleToolButton *eraser_tool_button = GTK_TOGGLE_TOOL_BUTTON (eraser_obj);
+      gtk_toggle_tool_button_set_active (eraser_tool_button, FALSE);
+      gtk_toggle_tool_button_set_active (filler_tool_button, TRUE);
+    }
+
+  if (is_pointer_toggle_tool_button_active ())
+    {
+      GObject *pointer_obj = gtk_builder_get_object (bar_gtk_builder, "buttonPointer");
+      GtkToggleToolButton *pointer_tool_button = GTK_TOGGLE_TOOL_BUTTON (pointer_obj);
+      gtk_toggle_tool_button_set_active (pointer_tool_button, FALSE);
+      gtk_toggle_tool_button_set_active (filler_tool_button, TRUE);
+    }
+    
+  if (is_pen_toggle_tool_button_active ())
+    {
+      GObject *pencil_obj = gtk_builder_get_object (bar_gtk_builder, "buttonPencil");
+      GtkToggleToolButton *pencil_button = GTK_TOGGLE_TOOL_BUTTON (pencil_obj);
+      gtk_toggle_tool_button_set_active (pencil_button, FALSE);
+      gtk_toggle_tool_button_set_active (filler_tool_button, TRUE);
+    }
 }
 
 
@@ -265,10 +322,14 @@ static void set_options      (BarData *bar_data)
     {
       annotate_select_eraser ();
     }
-  else
+  else if (is_pen_toggle_tool_button_active ())
     {
       annotate_set_color (bar_data->color);
       annotate_select_pen ();
+    }
+  else
+    {
+      annotate_select_filler ();
     }
 
 }
@@ -422,15 +483,6 @@ on_bar_delete_event               (GtkWidget       *widget,
 }
 
 
-/* Push filler button. */
-G_MODULE_EXPORT void
-on_bar_filler_activate            (GtkToolButton   *toolbutton,
-                                   gpointer         func_data)
-{
-  annotate_fill ();
-}
-
-
 /* Push pointer button. */
 G_MODULE_EXPORT void
 on_bar_pointer_activate           (GtkToolButton   *toolbutton,
@@ -554,6 +606,20 @@ on_bar_pencil_activate            (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData *) func_data;
   lock (bar_data);
   set_color (bar_data, bar_data->color);
+}
+
+
+/* Push filler button. */
+G_MODULE_EXPORT void
+on_bar_filler_activate            (GtkToolButton   *toolbutton,
+                                   gpointer         func_data)
+{
+  BarData *bar_data = (BarData *) func_data;
+  take_filler_tool ();
+  lock (bar_data);
+  annotate_select_filler ();
+  strncpy (bar_data->color, bar_data->color, 6);
+  annotate_set_color (bar_data->color);
 }
 
 

@@ -23,9 +23,10 @@
   - See http://code.google.com/p/ardesia/issues/list
 
 - Candidate features:
+  - full filler implementation (flood filler algorithm)
   - stay above all windows
-  - Support for a generic virtual keyboard 
   - Better sketch recognition
+  - Support for a generic virtual keyboard 
   - Recognize the hand written text
   - Deploy the artefact online
     - video; youtube upload as kazam
@@ -38,10 +39,9 @@
   - Make an image gallery (sticky notes...)
   - Export to image the selected area content
     as gnome-screenshoot 
-  - full filler implementation (flood filler algorithm)
   - Not parallel to the axis shape recognition
   - Send a bug report with stacktrace when a crash occurs;
-    could be used google-breakpad
+    may be with google-breakpad
 
 ===
 EOF

@@ -33,6 +33,7 @@
 #include <cursors.h>
 #include <iwb_loader.h>
 #include <iwb_saver.h>
+#include <fill.h>
 
 
 #ifdef _WIN32
@@ -268,37 +269,6 @@ is_a_closed_path        (GSList* list)
       return TRUE;
     }
   return FALSE;
-}
-
-
-/* Draw the point list;the cairo path is not forgotten */
-static void
-annotate_draw_point_list     (AnnotateDeviceData *devdata,
-                              GSList             *list)
-{
-  if (list)
-    {
-      guint i = 0;
-      guint lenght = g_slist_length (list);
-      for (i=0; i<lenght; i=i+1)
-        {
-          AnnotatePoint *point = (AnnotatePoint *) g_slist_nth_data (list, i);
-          if (!point)
-            {
-              return;
-            }
-            
-          if (lenght == 1)
-            {
-              /* It is a point. */
-              annotate_draw_point (devdata, point->x, point->y, point->pressure);
-              break;
-            }
-          annotate_modify_color (devdata, data, point->pressure);
-          /* Draw line between the two points. */
-          annotate_draw_line (devdata, point->x, point->y, FALSE);
-        }
-    }
 }
 
 
@@ -681,43 +651,6 @@ draw_arrow_in_point     (AnnotatePoint      *point,
 }
 
 
-/* Fill the shape drawn by the devdata owner. */
-static void fill_dev    (AnnotateDeviceData *devdata)
-{
-
-  if (devdata->coord_list != NULL)
-    {
-
-      /* if is not a closed path I prevent to fill it */
-      if (!is_a_closed_path (devdata->coord_list))
-        {
-          if (data->debug)
-            {
-              g_printerr ("Fill is not done; no closed path has been detected\n");
-            }
-          return;
-        }
-
-      if ( !(data->roundify) && (!(data->rectify)))
-        {
-          annotate_draw_point_list (devdata, devdata->coord_list);
-        }
-
-      cairo_close_path (data->annotation_cairo_context);
-      select_color (devdata);
-      cairo_fill (data->annotation_cairo_context);
-      cairo_stroke (data->annotation_cairo_context);
-
-      if (data->debug)
-        {
-          g_printerr ("Fill\n");
-        }
-
-      annotate_add_savepoint ();
-    }
-}
-
-
 /* Configure pen option for cairo context. */
 void 
 annotate_configure_pen_options    (AnnotateData       *data)
@@ -1081,7 +1014,7 @@ annotate_push_context (cairo_t * cr)
 
 /* Select the default pen tool. */
 void
-annotate_select_pen     ()
+annotate_select_pen          ()
 {
   if (data->debug)
     {
@@ -1106,9 +1039,33 @@ annotate_select_pen     ()
 }
 
 
+/* Select the default filler tool. */
+void
+annotate_select_filler       ()
+{
+  if (data->debug)
+    {
+      g_printerr ("The pen with colour %s has been selected\n",
+                  data->cur_context->fg_color);
+    }
+
+  if (data->default_pen)
+    {
+      data->cur_context = data->default_filler;
+      data->old_paint_type = ANNOTATE_FILLER;
+
+      disallocate_cursor ();
+
+      set_filler_cursor (&data->cursor);
+
+      update_cursor ();
+    }
+}
+
+
 /* Select the default eraser tool. */
 void
-annotate_select_eraser  ()
+annotate_select_eraser       ()
 {
   if (data->debug)
     {
@@ -1128,7 +1085,7 @@ annotate_select_eraser  ()
 
 /* Unhide the cursor. */
 void
-annotate_unhide_cursor ()
+annotate_unhide_cursor       ()
 {
   if (data->is_cursor_hidden)
     {
@@ -1140,7 +1097,7 @@ annotate_unhide_cursor ()
 
 /* Hide the cursor icon. */
 void
-annotate_hide_cursor    ()
+annotate_hide_cursor         ()
 {
   gdk_window_set_cursor (gtk_widget_get_window (data->annotation_window),
                          data->invisible_cursor);
@@ -1151,7 +1108,7 @@ annotate_hide_cursor    ()
 
 /* acquire the grab. */
 void
-annotate_acquire_grab   ()
+annotate_acquire_grab        ()
 {
   ungrab_pointer     (gdk_display_get_default ());
   if  (!data->is_grabbed)
@@ -1198,6 +1155,37 @@ annotate_draw_line      (AnnotateDeviceData  *devdata,
 }
 
 
+/* Draw the point list. */
+void
+annotate_draw_point_list     (AnnotateDeviceData *devdata,
+                              GSList             *list)
+{
+  if (list)
+    {
+      guint i = 0;
+      guint lenght = g_slist_length (list);
+      for (i=0; i<lenght; i=i+1)
+        {
+          AnnotatePoint *point = (AnnotatePoint *) g_slist_nth_data (list, i);
+          if (!point)
+            {
+              return;
+            }
+            
+          if (lenght == 1)
+            {
+              /* It is a point. */
+              annotate_draw_point (devdata, point->x, point->y, point->pressure);
+              break;
+            }
+          annotate_modify_color (devdata, data, point->pressure);
+          /* Draw line between the two points. */
+          annotate_draw_line (devdata, point->x, point->y, FALSE);
+        }
+    }
+}
+
+
 /* Draw an arrow using some polygons. */
 void
 annotate_draw_arrow     (AnnotateDeviceData  *devdata,
@@ -1237,12 +1225,57 @@ annotate_draw_arrow     (AnnotateDeviceData  *devdata,
 }
 
 
+/* Fill the contiguos area around point with coordinates (x,y). */
+void
+annotate_fill                (AnnotateDeviceData *devdata,
+                              AnnotateData       *data,
+                              gdouble             x,
+                              gdouble             y)
+{
+
+   select_color (devdata);
+  
+   if (cairo_in_fill (data->annotation_cairo_context, x, y))
+     {
+       if (data->debug)
+         {
+           g_printerr ("Fill with stroke method\n");
+         }
+       cairo_close_path (data->annotation_cairo_context);
+       cairo_fill (data->annotation_cairo_context);
+       cairo_stroke (data->annotation_cairo_context);
+       annotate_add_savepoint ();
+       return;
+     }
+  else
+    {
+      guint i = data->current_save_index;
+      AnnotateSavepoint *savepoint = (AnnotateSavepoint *) g_slist_nth_data (data->savepoint_list, i);
+      cairo_surface_t *image_surface = cairo_image_surface_create_from_png(savepoint->filename);
+      
+      if (data->debug)
+         {
+           g_printerr ("Fill with fill flood algorithm\n");
+         }
+         
+      flood_fill (data->annotation_cairo_context,
+                  image_surface,
+                  x,
+                  y,
+                  get_color (image_surface, x, y));
+                  
+      annotate_add_savepoint ();
+      cairo_surface_destroy(image_surface);
+    }
+}
+
+
 /* Draw a point in x,y respecting the context. */
 void
-annotate_draw_point     (AnnotateDeviceData  *devdata,
-                         gdouble              x,
-                         gdouble              y,
-                         gdouble              pressure)
+annotate_draw_point          (AnnotateDeviceData  *devdata,
+                              gdouble              x,
+                              gdouble              y,
+                              gdouble              pressure)
 {
   /* Modify a little bit the colour depending on pressure. */
   annotate_modify_color (devdata, data, pressure);
@@ -1423,26 +1456,6 @@ annotate_release_grab   ()
 }
 
 
-/* Fill the last shapes. */
-void annotate_fill      ()
-{
-  if (data->debug)
-    {
-      g_printerr ("Fill\n");
-    }
-    
-  GHashTableIter it;
-  gpointer value;
-  g_hash_table_iter_init (&it, data->devdatatable);
-  
-  while (g_hash_table_iter_next (&it, NULL, &value))
-    {
-       AnnotateDeviceData *devdata = (AnnotateDeviceData *) value;
-       fill_dev (devdata);
-    }
-}
-
-
 /* Undo reverting to the last save point. */
 void
 annotate_undo           ()
@@ -1529,6 +1542,7 @@ annotate_init                (GtkWidget  *parent,
   /* Initialize the pen context. */
   data->default_pen = annotate_paint_context_new (ANNOTATE_PEN);
   data->default_eraser = annotate_paint_context_new (ANNOTATE_ERASER);
+  data->default_filler = annotate_paint_context_new (ANNOTATE_FILLER);
   data->cur_context = data->default_pen;
   
   setup_input_devices (data);

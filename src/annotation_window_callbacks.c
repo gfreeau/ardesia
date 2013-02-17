@@ -149,6 +149,11 @@ on_button_press    (GtkWidget      *win,
   
   gdouble pressure = 1.0; 
   
+  if (data->cur_context == data->default_filler)
+    {
+      return FALSE;
+    }
+  
   if (!data->is_grabbed)
     {
       return FALSE;
@@ -219,6 +224,11 @@ on_motion_notify   (GtkWidget       *win,
   AnnotateDeviceData *masterdata= g_hash_table_lookup(data->devdatatable, ev->device);
   AnnotateDeviceData *slavedata = g_hash_table_lookup(data->devdatatable, slave);
  
+   if (data->cur_context == data->default_filler)
+    {
+      return FALSE;
+    }
+    
   if (ev->state != masterdata->state ||
       ev->state != slavedata->state ||
       masterdata->lastslave != slave)
@@ -331,7 +341,7 @@ on_button_release  (GtkWidget       *win,
   AnnotateDeviceData *slavedata = g_hash_table_lookup(data->devdatatable, slave);
   
   guint lenght = g_slist_length (slavedata->coord_list);
-
+    
   if (!data->is_grabbed)
     {
       return FALSE;
@@ -366,6 +376,12 @@ on_button_release  (GtkWidget       *win,
     }
 #endif
 
+  if (data->cur_context == data->default_filler)
+    { 
+      annotate_fill (slavedata, data, ev->x, ev->y);
+      return TRUE;
+    }
+    
   initialize_annotation_cairo_context(data);
 
   if (lenght > 2)
@@ -404,6 +420,11 @@ on_button_release  (GtkWidget       *win,
           closed_path = TRUE; // this seems to be a closed path
           annotate_draw_line (slavedata, first_point->x, first_point->y, TRUE);
           annotate_coord_list_prepend (slavedata, first_point->x, first_point->y, annotate_get_thickness (), pressure);
+          
+          if ( !(data->roundify) && (!(data->rectify)))
+            {
+              annotate_draw_point_list (slavedata, slavedata->coord_list);
+            }
         }
 
       if (data->cur_context->type != ANNOTATE_ERASER)
