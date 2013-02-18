@@ -35,11 +35,11 @@ add_input_mode_device   (AnnotateData    *data,
     {
       data->devdatatable = g_hash_table_new (NULL, NULL);
     }
-    
+
   AnnotateDeviceData *devdata = (AnnotateDeviceData *) NULL;
   devdata  = g_malloc ((gsize) sizeof (AnnotateDeviceData));
   devdata->coord_list = (GSList *) NULL;
-  g_hash_table_insert(data->devdatatable, device, devdata);
+  g_hash_table_insert (data->devdatatable, device, devdata);
   
   if (!gdk_device_set_mode (device, mode))
     {
@@ -117,8 +117,8 @@ setup_input_devices     (AnnotateData  *data)
   GList *masters = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
   GList *slavers = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE);
   devices = g_list_concat(masters, slavers);
-  //setup_input_device_list(data, masters);
-  setup_input_device_list(data, devices);
+  //setup_input_device_list (data, masters);
+  setup_input_device_list (data, devices);
 }
 
 
@@ -141,7 +141,7 @@ void
 remove_input_device     (AnnotateData  *data,
                          GdkDevice     *device)
 {
-  AnnotateDeviceData *devdata = g_hash_table_lookup(data->devdatatable, device);;
+  AnnotateDeviceData *devdata = g_hash_table_lookup (data->devdatatable, device);;
   annotate_coord_dev_list_free (devdata);
   g_hash_table_remove (data->devdatatable, device);
 }
@@ -163,7 +163,7 @@ grab_pointer       (GtkWidget           *widget,
   pointer = gdk_device_manager_get_client_pointer (device_manager);
 
   gdk_error_trap_push ();
- 
+
   result = gdk_device_grab (pointer,
                             gtk_widget_get_window (widget),
                             GDK_OWNERSHIP_WINDOW,
@@ -171,7 +171,7 @@ grab_pointer       (GtkWidget           *widget,
                             eventmask,
                             NULL,
                             GDK_CURRENT_TIME);
- 
+
   gdk_flush ();
   if (gdk_error_trap_pop ())
     {
@@ -213,7 +213,7 @@ ungrab_pointer     (GdkDisplay        *display)
   pointer = gdk_device_manager_get_client_pointer (device_manager);
 
   gdk_error_trap_push ();
-  
+
   gdk_device_ungrab (pointer, GDK_CURRENT_TIME);
   gdk_flush ();
   if (gdk_error_trap_pop ())

@@ -1,4 +1,4 @@
-/* 
+/*
  * Ardesia -- a program for painting on the screen
  * with this program you can play, draw, learn and teach
  * This program has been written such as a freedom sonet
@@ -161,18 +161,18 @@ gdk_pixbuf_swap_blue_with_red (GdkPixbuf **pixbuf)
 {
   gint  n_channels = gdk_pixbuf_get_n_channels (*pixbuf);
 
-  gint pixbuf_width = gdk_pixbuf_get_width(*pixbuf);
-  gint pixbuf_height = gdk_pixbuf_get_height(*pixbuf);
+  gint pixbuf_width = gdk_pixbuf_get_width (*pixbuf);
+  gint pixbuf_height = gdk_pixbuf_get_height (*pixbuf);
   gint rowstride = gdk_pixbuf_get_rowstride (*pixbuf);
   guchar *pixels = gdk_pixbuf_get_pixels (*pixbuf);
 
   gint x =0;
 
-  for( x = 0; x < pixbuf_height; x++ )
+  for ( x = 0; x < pixbuf_height; x++ )
     {
       gint y =0;
 
-      for( y = 0; y < pixbuf_width; y++ )
+      for ( y = 0; y < pixbuf_width; y++ )
         {
           guchar* p = pixels + y * rowstride + x * n_channels;
           /* swap the pixel red value with the blue */
@@ -259,14 +259,14 @@ get_filler_pixbuf (GdkPixbuf **pixbuf)
   cairo_surface_t  *image_surface = (cairo_surface_t *) NULL;
   cairo_surface_t  *surface = (cairo_surface_t *) NULL;
   cairo_t          *filler_cr = (cairo_t *) NULL;
-  
+
   gint image_width;
   gint image_height;
-  
+
   image_surface = get_filler_image_surface ();
   image_width = cairo_image_surface_get_width (image_surface);
   image_height = cairo_image_surface_get_height (image_surface);
-  
+
   *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, image_width, image_height);
   surface = cairo_image_surface_create_for_data (gdk_pixbuf_get_pixels (*pixbuf),
                                                  CAIRO_FORMAT_RGB24,
@@ -279,14 +279,17 @@ get_filler_pixbuf (GdkPixbuf **pixbuf)
   clear_cairo_context (filler_cr);
 
   cairo_set_operator (filler_cr, CAIRO_OPERATOR_SOURCE);
-                                                     
+
   cairo_set_source_surface (filler_cr, image_surface, 0, 0);
-  
+
   cairo_paint (filler_cr);
   cairo_stroke (filler_cr);
 
   cairo_surface_destroy (surface);
   cairo_destroy (filler_cr);
+  
+  /* The pixbuf created by cairo has the r and b color inverted. */
+  gdk_pixbuf_swap_blue_with_red (pixbuf);
 }
 
 
@@ -329,7 +332,7 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
 
   icon_width = cairo_image_surface_get_width (image_surface);
   icon_height = cairo_image_surface_get_height (image_surface);
-  
+
   cursor_width = (gint) icon_width + thickness/2 + circle_width;
   cursor_height = (gint) icon_height + thickness/2 +  circle_width;
   *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, cursor_width, cursor_height);

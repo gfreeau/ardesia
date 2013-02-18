@@ -1,4 +1,4 @@
-/* 
+/*
  * Ardesia -- a program for painting on the screen
  * with this program you can play, draw, learn and teach
  * This program has been written such as a freedom sonet
@@ -25,15 +25,12 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 
+#include <string.h>
 #include <stdlib.h>
 #include <errno.h>
-
-#include <string.h>
-
 #include <math.h>
 
 #include <gdk/gdk.h>
-
 #include <gtk/gtk.h>
 
 
@@ -225,7 +222,7 @@ get_default_filename    ();
  * the returned value must be free with the g_free.
  */
 gchar *
-get_date           ();
+get_date                ();
 
 
 /* Return if a file exists. */
@@ -324,7 +321,7 @@ g_substr           (const gchar  *string,
                     gint          end);
 
 
-/* 
+/*
  * This function create a segmentation fault; 
  * it is useful to test the segmentation fault handler.
  */

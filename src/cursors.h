@@ -66,7 +66,7 @@ set_pen_cursor (GdkCursor **cursor,
 /* Set the eraser cursor. */
 void
 set_eraser_cursor (GdkCursor **cursor,
-                   gint size);
+                   gint        size);
 
 
 /* Set the filler cursor. */

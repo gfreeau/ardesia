@@ -70,8 +70,10 @@ typedef enum
 typedef struct
 {
 
+  /* Context type. */
   AnnotatePaintType type;
 
+  /* Foreground color. */
   gchar *fg_color;
 
 } AnnotatePaintContext;
@@ -91,7 +93,11 @@ typedef struct
 
   /* List of the coordinates of the last line drawn. */
   GSList       *coord_list;
+
+  /* The slave device. */
   GdkDevice*   lastslave;
+
+  /* The state. */
   guint        state;
 } AnnotateDeviceData;
 
@@ -126,7 +132,7 @@ typedef struct
 
   /*
    * The index of the position in the save-point list
-   * of the current picture shown. 
+   * of the current picture shown.
    */
   guint    current_save_index;
 
@@ -402,7 +408,7 @@ annotate_add_savepoint       ();
 
 
 /* Configure pen option for cairo context. */
-void 
+void
 annotate_configure_pen_options    (AnnotateData       *data);
 
 

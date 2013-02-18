@@ -51,11 +51,11 @@ static gint timer = -1;
 static gboolean
 bar_to_top         (gpointer data)
 {
-  if (!gtk_widget_get_visible(GTK_WIDGET (data)))
+  if (!gtk_widget_get_visible (GTK_WIDGET (data)))
     {
        gtk_window_present (GTK_WINDOW (data));
        gtk_widget_grab_focus (data);
-       gdk_window_lower (gtk_widget_get_window(GTK_WIDGET(data)));
+       gdk_window_lower (gtk_widget_get_window (GTK_WIDGET (data)));
     }
   return TRUE;
 }
@@ -98,7 +98,7 @@ is_toggle_tool_button_active      (gchar *toggle_tool_button_name)
 static
 gboolean is_text_toggle_tool_button_active       ()
 {
-  return is_toggle_tool_button_active("buttonText");
+  return is_toggle_tool_button_active ("buttonText");
 }
 
 
@@ -106,7 +106,7 @@ gboolean is_text_toggle_tool_button_active       ()
 static
 gboolean is_highlighter_toggle_tool_button_active          ()
 {
-  return is_toggle_tool_button_active("buttonHighlighter");
+  return is_toggle_tool_button_active ("buttonHighlighter");
 }
 
 
@@ -114,7 +114,7 @@ gboolean is_highlighter_toggle_tool_button_active          ()
 static
 gboolean is_filler_toggle_tool_button_active          ()
 {
-  return is_toggle_tool_button_active("buttonFiller");
+  return is_toggle_tool_button_active ("buttonFiller");
 }
 
 
@@ -122,7 +122,7 @@ gboolean is_filler_toggle_tool_button_active          ()
 static
 gboolean is_eraser_toggle_tool_button_active     ()
 {
-  return is_toggle_tool_button_active("buttonEraser");
+  return is_toggle_tool_button_active ("buttonEraser");
 }
 
 
@@ -130,7 +130,7 @@ gboolean is_eraser_toggle_tool_button_active     ()
 static
 gboolean is_pen_toggle_tool_button_active     ()
 {
-  return is_toggle_tool_button_active("buttonPencil");
+  return is_toggle_tool_button_active ("buttonPencil");
 }
 
 
@@ -138,7 +138,7 @@ gboolean is_pen_toggle_tool_button_active     ()
 static
 gboolean is_pointer_toggle_tool_button_active    ()
 {
-  return is_toggle_tool_button_active("buttonPointer");
+  return is_toggle_tool_button_active ("buttonPointer");
 }
 
 
@@ -146,7 +146,7 @@ gboolean is_pointer_toggle_tool_button_active    ()
 static
 gboolean is_arrow_toggle_tool_button_active      ()
 {
-  return is_toggle_tool_button_active("buttonArrow");
+  return is_toggle_tool_button_active ("buttonArrow");
 }
 
 
@@ -267,7 +267,7 @@ release_lock                 (BarData *bar_data)
 static void
 lock (BarData *bar_data)
 {
-  if (!bar_data->grab)
+  if (! bar_data->grab)
     {
       // Unlock
       bar_data->grab = TRUE;
@@ -413,7 +413,7 @@ on_bar_quit                     (GtkToolButton   *toolbutton,
   annotate_release_grab ();
 
   annotate_quit ();
-    
+
   /* Destroy the background window this will call the destroy of all windows. */
   destroy_background_window ();
   
@@ -658,10 +658,10 @@ on_bar_add_pdf_activate	          (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData *) func_data;
   gboolean grab_value = bar_data->grab;
   bar_data->grab = FALSE;
-  
+
   /* Release grab. */
   annotate_release_grab ();
-  
+
   add_pdf_page (GTK_WINDOW (get_bar_window ()));
   bar_data->grab = grab_value;
   start_tool (bar_data);

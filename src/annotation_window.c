@@ -197,7 +197,7 @@ annotate_acquire_input_grab  ()
   /*
    * MACOSX; will do nothing.
    */
-  gtk_widget_input_shape_combine_region(data->annotation_window, NULL);
+  gtk_widget_input_shape_combine_region (data->annotation_window, NULL);
   drill_window_in_bar_area (data->annotation_window);
 #endif
 
@@ -247,28 +247,6 @@ annotate_draw_ellipse   (AnnotateDeviceData *devdata,
   cairo_arc (data->annotation_cairo_context, 0., 0., 1., 0., 2 * M_PI);
   cairo_restore (data->annotation_cairo_context);
 
-}
-
-
-/* Return if it is a closed path. */
-static gboolean
-is_a_closed_path        (GSList* list)
-{
-  /* Check if it is a closed path. */
-  guint lenght = g_slist_length (list);
-  AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (list, 0);
-  AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (list, lenght-1);
-
-  gint distance = (gint) get_distance (first_point->x,
-                                       first_point->y,
-                                       last_point->x,
-                                       last_point->y);
-
-  if ( distance == 0)
-    {
-      return TRUE;
-    }
-  return FALSE;
 }
 
 
@@ -328,7 +306,7 @@ annotate_draw_curve    (AnnotateDeviceData *devdata,
 /* Rectify the line. */
 static void
 rectify            (AnnotateDeviceData *devdata,
-                    gboolean closed_path)
+                    gboolean            closed_path)
 {
   gdouble tollerance = annotate_get_thickness ();
   GSList *broken_list = broken (devdata->coord_list, closed_path, TRUE, tollerance);
@@ -352,7 +330,7 @@ rectify            (AnnotateDeviceData *devdata,
 /* Roundify the line. */
 static void
 roundify           (AnnotateDeviceData *devdata,
-                    gboolean closed_path)
+                    gboolean            closed_path)
 {
   gdouble tollerance = annotate_get_thickness ();
 
@@ -461,9 +439,9 @@ setup_app          (GtkWidget* parent)
 
   /* Create the annotation window. */
   data->annotation_window = create_annotation_window ();
- 
+
   /* This trys to set an alpha channel. */
-  on_screen_changed(data->annotation_window, NULL, data);
+  on_screen_changed (data->annotation_window, NULL, data);
   
   /* In the gtk 2.16.6 the gtkbuilder property double-buffered is not parsed from the glade file
    * and then I set this by hands.
@@ -502,7 +480,7 @@ setup_app          (GtkWidget* parent)
 #ifdef _WIN32
   /* @TODO Use RGBA colormap and avoid to use the layered window. */
   /* I use a layered window that use the black as transparent colour. */
-  setLayeredGdkWindowAttributes (gtk_widget_get_window(data->annotation_window),
+  setLayeredGdkWindowAttributes (gtk_widget_get_window (data->annotation_window),
                                  RGB (0,0,0),
                                  0,
                                  LWA_COLORKEY);	
@@ -659,19 +637,19 @@ annotate_configure_pen_options    (AnnotateData       *data)
   if (data->annotation_cairo_context)
     {
       cairo_new_path (data->annotation_cairo_context);
-      cairo_set_line_cap(data->annotation_cairo_context, CAIRO_LINE_CAP_ROUND);
-      cairo_set_line_join(data->annotation_cairo_context, CAIRO_LINE_JOIN_ROUND);
+      cairo_set_line_cap (data->annotation_cairo_context, CAIRO_LINE_CAP_ROUND);
+      cairo_set_line_join (data->annotation_cairo_context, CAIRO_LINE_JOIN_ROUND);
       
       if (data->cur_context->type == ANNOTATE_ERASER)
         {
           data->cur_context = data->default_eraser;
-          cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_CLEAR);
-          cairo_set_line_width(data->annotation_cairo_context, annotate_get_thickness ());
+          cairo_set_operator (data->annotation_cairo_context, CAIRO_OPERATOR_CLEAR);
+          cairo_set_line_width (data->annotation_cairo_context, annotate_get_thickness ());
         }
       else
         {
-          cairo_set_operator(data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
-          cairo_set_line_width(data->annotation_cairo_context, annotate_get_thickness ());
+          cairo_set_operator (data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
+          cairo_set_line_width (data->annotation_cairo_context, annotate_get_thickness ());
         }
     }
     select_color ();
@@ -765,7 +743,7 @@ initialize_annotation_cairo_context    (AnnotateData *data)
       annotate_clear_screen ();
     }
 #ifndef _WIN32
-      gtk_window_set_opacity(GTK_WINDOW(data->annotation_window), 1.0);
+      gtk_window_set_opacity (GTK_WINDOW (data->annotation_window), 1.0);
 #endif	
    annotate_acquire_grab ();
 
@@ -807,7 +785,7 @@ annotate_restore_surface     ()
       if (savepoint->filename)
         {
           /* Load the file in the annotation surface. */
-          cairo_surface_t *image_surface = cairo_image_surface_create_from_png(savepoint->filename);
+          cairo_surface_t *image_surface = cairo_image_surface_create_from_png (savepoint->filename);
           if (data->debug)
             {
               g_printerr ("The save-point %s has been loaded from file\n", savepoint->filename);
@@ -815,10 +793,10 @@ annotate_restore_surface     ()
 
           if (image_surface)
             {
-              cairo_set_source_surface(data->annotation_cairo_context, image_surface, 0, 0);
+              cairo_set_source_surface (data->annotation_cairo_context, image_surface, 0, 0);
               cairo_paint (data->annotation_cairo_context);
               cairo_stroke (data->annotation_cairo_context);
-              cairo_surface_destroy(image_surface);
+              cairo_surface_destroy (image_surface);
             }
 
         }
@@ -934,7 +912,7 @@ annotate_modify_color   (AnnotateDeviceData *devdata,
    */
   gdouble contrast = 96;
   gdouble corrective = 0;
-  
+
   /* The pressure is greater than 0. */
   if ( (!data->annotation_cairo_context) || (!data->cur_context->fg_color))
     {
@@ -963,7 +941,7 @@ annotate_modify_color   (AnnotateDeviceData *devdata,
   cairo_set_source_rgba (data->annotation_cairo_context,
                          (r + corrective)/255,
                          (g + corrective)/255,
-                         (b+corrective)/255,
+                         (b + corrective)/255,
                          (gdouble) a/255);
 }
 
@@ -1221,7 +1199,7 @@ annotate_draw_arrow     (AnnotateDeviceData  *devdata,
       g_printerr ("Arrow direction %f\n", direction/M_PI*180);
     }
 
-  draw_arrow_in_point(point, pen_width, direction);
+  draw_arrow_in_point (point, pen_width, direction);
 }
 
 
@@ -1232,41 +1210,24 @@ annotate_fill                (AnnotateDeviceData *devdata,
                               gdouble             x,
                               gdouble             y)
 {
+  guint i = data->current_save_index;
+  AnnotateSavepoint *savepoint = (AnnotateSavepoint *) g_slist_nth_data (data->savepoint_list, i);
+  cairo_surface_t *image_surface = cairo_image_surface_create_from_png (savepoint->filename);
 
-   select_color (devdata);
+  select_color (devdata);
   
-   if (cairo_in_fill (data->annotation_cairo_context, x, y))
-     {
-       if (data->debug)
-         {
-           g_printerr ("Fill with stroke method\n");
-         }
-       cairo_close_path (data->annotation_cairo_context);
-       cairo_fill (data->annotation_cairo_context);
-       cairo_stroke (data->annotation_cairo_context);
-       annotate_add_savepoint ();
-       return;
-     }
-  else
+  if (data->debug)
     {
-      guint i = data->current_save_index;
-      AnnotateSavepoint *savepoint = (AnnotateSavepoint *) g_slist_nth_data (data->savepoint_list, i);
-      cairo_surface_t *image_surface = cairo_image_surface_create_from_png(savepoint->filename);
-      
-      if (data->debug)
-         {
-           g_printerr ("Fill with fill flood algorithm\n");
-         }
-         
-      flood_fill (data->annotation_cairo_context,
-                  image_surface,
-                  x,
-                  y,
-                  get_color (image_surface, x, y));
-                  
-      annotate_add_savepoint ();
-      cairo_surface_destroy(image_surface);
+      g_printerr ("Fill with fill flood algorithm\n");
     }
+         
+  flood_fill (data->annotation_cairo_context,
+              image_surface,
+              x,
+              y);
+
+  annotate_add_savepoint ();
+  cairo_surface_destroy (image_surface);
 }
 
 
@@ -1307,8 +1268,8 @@ annotate_select_tool (AnnotateData *data,
                       GdkDevice *slavedevice,
                       guint state)
 {
-  AnnotateDeviceData *masterdata = g_hash_table_lookup(data->devdatatable, masterdevice);
-  AnnotateDeviceData *slavedata = g_hash_table_lookup(data->devdatatable, slavedevice);
+  AnnotateDeviceData *masterdata = g_hash_table_lookup (data->devdatatable, masterdevice);
+  AnnotateDeviceData *slavedata = g_hash_table_lookup (data->devdatatable, slavedevice);
 
   if (slavedevice)
     {
@@ -1416,14 +1377,14 @@ annotate_release_input_grab  ()
    * This allows the mouse event to be passed below the transparent annotation;
    * at the moment this call works only on Linux
    */
-  gtk_widget_input_shape_combine_region(data->annotation_window, NULL);
+  gtk_widget_input_shape_combine_region (data->annotation_window, NULL);
   
   const cairo_rectangle_int_t ann_rect = { 0, 0, 0, 0 };
   cairo_region_t *r = cairo_region_create_rectangle (&ann_rect);
   
   gtk_widget_input_shape_combine_region (data->annotation_window, r);
   cairo_region_destroy (r);
-  
+
 #else
   /*
    * @TODO WIN32 implement correctly gtk_widget_input_shape_combine_mask
@@ -1432,7 +1393,7 @@ annotate_release_input_grab  ()
    * call the gtk_widget_shape_combine_mask that is not the desired behaviour.
    *
    */
-   
+
 #endif
 }
 

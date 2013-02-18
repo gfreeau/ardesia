@@ -1,4 +1,4 @@
-/* 
+/*
  * Ardesia -- a program for painting on the screen
  * with this program you can play, draw, learn and teach
  * This program has been written such as a freedom sonet
@@ -134,8 +134,8 @@ get_distance       (gdouble x1,
                     gdouble y2)
 {
   /* Apply the Pitagora theorem to calculate the distance. */
-  gdouble x_delta = fabs(x2-x1);
-  gdouble y_delta = fabs(y2-y1);
+  gdouble x_delta = fabs (x2-x1);
+  gdouble y_delta = fabs (y2-y1);
   gdouble quad_sum = pow (x_delta, 2);
   quad_sum = quad_sum + pow (y_delta, 2);
   return sqrt (quad_sum);
@@ -146,7 +146,7 @@ get_distance       (gdouble x1,
 gchar *
 gdkcolor_to_rgb    (GdkColor *gdkcolor)
 {
-  /* Transform in the  RGB format e.g. FF0000. */ 
+  /* Transform in the  RGB format e.g. FF0000. */
   gchar *ret_str = g_strdup_printf ("%02x%02x%02x",
                                     gdkcolor->red/257,
                                     gdkcolor->green/257,
@@ -163,7 +163,7 @@ gdkcolor_to_rgb    (GdkColor *gdkcolor)
 GdkColor *
 rgba_to_gdkcolor   (gchar  *rgba)
 {
-  GdkColor *gdkcolor = g_malloc ((gsize) sizeof (GdkColor));
+  GdkColor *gdkcolor = g_malloc ( (gsize) sizeof (GdkColor));
   gchar *rgb = g_strndup (rgba, 6);
   gchar *color = g_strdup_printf ("%s%s", "#", rgb);
   gboolean ret = gdk_color_parse (color, gdkcolor);
@@ -201,7 +201,11 @@ scale_surface      (cairo_surface_t  *surface,
   gdouble old_width = cairo_image_surface_get_width (surface);
   gdouble old_height = cairo_image_surface_get_height (surface);
 	
-  cairo_surface_t *new_surface = cairo_surface_create_similar(surface, CAIRO_CONTENT_COLOR_ALPHA, width, height);
+  cairo_surface_t *new_surface = cairo_surface_create_similar (surface,
+                                                               CAIRO_CONTENT_COLOR_ALPHA,
+                                                               width,
+                                                               height);
+
   cairo_t *cr = cairo_create (new_surface);
 
   /* Scale *before* setting the source surface (1) */
@@ -218,13 +222,13 @@ scale_surface      (cairo_surface_t  *surface,
 
   /* Do the actual drawing */
   cairo_paint (cr);
-   
+
   cairo_destroy (cr);
 
   return new_surface;
 }
 
- 
+
 /* Set the cairo surface colour to the RGBA string. */
 void
 cairo_set_source_color_from_string     (cairo_t  *cr,
@@ -237,9 +241,9 @@ cairo_set_source_color_from_string     (cairo_t  *cr,
 
       cairo_set_source_rgba (cr,
                              1.0 * r / 255,
-                             1.0 * g /255,
-                             1.0 * b /255,
-                             1.0 * a /255);
+                             1.0 * g / 255,
+                             1.0 * b / 255,
+                             1.0 * a / 255);
 
     }
 }
@@ -253,7 +257,10 @@ save_pixbuf_on_png_file      (GdkPixbuf    *pixbuf,
   gint width = gdk_pixbuf_get_width (pixbuf);
   gint height = gdk_pixbuf_get_height (pixbuf);
 
-  cairo_surface_t *surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
+  cairo_surface_t *surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+                                                         width,
+                                                         height);
+
   cairo_t *cr = cairo_create (surface);
   gdk_cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
   cairo_paint (cr);
@@ -274,6 +281,7 @@ grab_screenshot    ()
   gint width = gdk_screen_width ();
 
   GdkWindow *root_window = gdk_get_default_root_window ();
+
   return gdk_pixbuf_get_from_window (root_window,
                                      0,
                                      0,
@@ -303,10 +311,10 @@ inside_bar_window       (gdouble xp,
 
   gtk_window_get_size (bar, &width, &height);
 
-  if ((yp>=yd) && (yp<yd+height))
+  if ( (yp>=yd) && (yp<yd+height) )
     {
 
-      if ((xp>=xd) && (xp<xd+width))
+      if ( (xp>=xd) && (xp<xd+width) )
         {
           return 1;
         }
@@ -327,14 +335,14 @@ drill_window_in_bar_area     (GtkWidget *widget)
   gtk_window_get_position (GTK_WINDOW (bar), &x, &y);
   gtk_window_get_size (GTK_WINDOW (bar), &width, &height);
 
-  const cairo_rectangle_int_t widget_rect = { x+1, y+1, width-1, height-1 };               
+  const cairo_rectangle_int_t widget_rect = { x+1, y+1, width-1, height-1 };
   cairo_region_t *widget_reg = cairo_region_create_rectangle (&widget_rect);
-                                  
-  const cairo_rectangle_int_t ann_rect = { 0, 0, gdk_screen_width (), gdk_screen_height () };                        
-  cairo_region_t *ann_reg = cairo_region_create_rectangle (&ann_rect);                              
-                                  
+
+  const cairo_rectangle_int_t ann_rect = { 0, 0, gdk_screen_width (), gdk_screen_height () };
+  cairo_region_t *ann_reg = cairo_region_create_rectangle (&ann_rect);
+
   cairo_region_subtract (ann_reg, widget_reg);
-                                                                                        
+
   gtk_widget_input_shape_combine_region (widget, ann_reg);
   cairo_region_destroy (ann_reg);
   cairo_region_destroy (widget_reg);
@@ -362,6 +370,7 @@ get_date      ()
    */
   time_sep = ".";
 #endif
+
   date = g_strdup_printf ("%d-%d-%d_%d%s%d%s%d",
                           t->tm_year+1900,
                           t->tm_mday,
@@ -393,7 +402,8 @@ get_default_filename    ()
 {
   gchar *date = get_date ();
   gchar *filename = g_strdup_printf ("%s_%s", project_name, date);
-  g_free (date); 
+  g_free (date);
+
   return filename;
 }
 
@@ -405,7 +415,7 @@ const gchar *
 get_home_dir       (void)
 {
   const char *homedir = g_getenv ("HOME");
-  if (!homedir)
+  if (! homedir)
     {
       homedir = g_get_home_dir ();
     }
@@ -491,7 +501,7 @@ remove_dir_if_empty     (gchar* dir_path)
 
   if (file_occurrence == 0)
     {
-      rmdir_recursive(dir_path);
+      rmdir_recursive (dir_path);
     }
 }
 
@@ -531,27 +541,27 @@ send_email         (gchar   *to,
   gchar* body_param = "--body";
   gchar* attach_param = "--attach";
 
-  gchar* args = g_strdup_printf("%s %s %s %s '%s'", mailer, subject_param, subject, body_param, body);
+  gchar* args = g_strdup_printf ("%s %s %s %s '%s'", mailer, subject_param, subject, body_param, body);
 
   for (i=0; i<attach_lenght; i++)
     {
       gchar* attachment = (gchar*) g_slist_nth_data (attachment_list, i);
-      gchar* attachment_str = g_strdup_printf("%s '%s'", attach_param, attachment);
-      gchar* new_args = g_strdup_printf("%s %s", args, attachment_str);
-      g_free(args);
+      gchar* attachment_str = g_strdup_printf ("%s '%s'", attach_param, attachment);
+      gchar* new_args = g_strdup_printf ("%s %s", args, attachment_str);
+      g_free (args);
       args = new_args;
-      g_free(attachment_str);
+      g_free (attachment_str);
     }
 
-  gchar* new_args = g_strdup_printf("%s %s&", args, to);
-  g_free(args);
+  gchar* new_args = g_strdup_printf ("%s %s&", args, to);
+  g_free (args);
 
   if (system (new_args)<0)
     {
-      g_warning("Problem running command: %s", new_args);
+      g_warning ("Problem running command: %s", new_args);
     }
 
-  g_free(new_args);
+  g_free (new_args);
 
 #endif
 }
@@ -643,7 +653,7 @@ xdg_create_link         (gchar  *src,
   gchar *link_extension = "desktop";
   gchar *link_filename = g_strdup_printf ("%s.%s", dest, link_extension);
 
-  if (!g_file_test (link_filename, G_FILE_TEST_EXISTS))
+  if (! g_file_test (link_filename, G_FILE_TEST_EXISTS))
     {
        gchar *exec = g_strdup_printf ("xdg-open %s\n", src);
        xdg_create_desktop_entry (link_filename, "Application", PACKAGE_NAME, icon, exec);
@@ -688,7 +698,7 @@ g_substr           (const gchar *string,
 
 
 /* 
- * This function create a segmentation fault; 
+ * This function create a segmentation fault;
  * it is useful to test the segmentation fault handler.
  */
 void create_segmentation_fault    ()

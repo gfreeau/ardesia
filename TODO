@@ -10,7 +10,7 @@
 
 - Documentation
   - user manual in english language
-  - english revision
+  - web site english revision
 
 - Reengineering
   - Store and load the savepoints with svg files
@@ -23,8 +23,8 @@
   - See http://code.google.com/p/ardesia/issues/list
 
 - Candidate features:
-  - full filler implementation (flood filler algorithm)
   - stay above all windows
+  - Fix flood filler to unpaint the bar area
   - Better sketch recognition
   - Support for a generic virtual keyboard 
   - Recognize the hand written text

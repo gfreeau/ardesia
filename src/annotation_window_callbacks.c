@@ -1,4 +1,4 @@
-/* 
+/*
  * Ardesia -- a program for painting on the screen
  * with this program you can play, draw, learn and teach
  * This program has been written such as a freedom sonet
@@ -80,7 +80,7 @@ on_configure       (GtkWidget      *widget,
     {
       return FALSE;
     }
-	
+
   /* Postcondition; data->annotation_cairo_context is not NULL. */
   return TRUE;
 }
@@ -96,7 +96,7 @@ on_screen_changed       (GtkWidget  *widget,
 
   if (data->debug)
     {
-      g_printerr("DEBUG: Annotation window get screen-changed event\n");
+      g_printerr ("DEBUG: Annotation window get screen-changed event\n");
     }
 
   GdkScreen *screen = gtk_widget_get_screen (GTK_WIDGET (widget));
@@ -118,7 +118,7 @@ on_expose          (GtkWidget *widget,
                     gpointer   user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
-  
+
   if (data->debug)
     {
       g_printerr ("DEBUG: Annotation window get expose event\n");
@@ -139,15 +139,15 @@ G_MODULE_EXPORT gboolean
 on_button_press    (GtkWidget      *win,
                     GdkEventButton *ev,
                     gpointer        user_data)
-{ 
+{
 
   AnnotateData *data = (AnnotateData *) user_data;
-  GdkDevice *slave = gdk_event_get_source_device ((GdkEvent *) ev);
+  GdkDevice *slave = gdk_event_get_source_device ( (GdkEvent *) ev);
   
   /* Get the data for this device. */
-  AnnotateDeviceData *slavedata = g_hash_table_lookup(data->devdatatable, slave);
+  AnnotateDeviceData *slavedata = g_hash_table_lookup (data->devdatatable, slave);
   
-  gdouble pressure = 1.0; 
+  gdouble pressure = 1.0;
   
   if (data->cur_context == data->default_filler)
     {
@@ -194,7 +194,7 @@ on_button_press    (GtkWidget      *win,
 	
   annotate_unhide_cursor ();
 
-  initialize_annotation_cairo_context(data);
+  initialize_annotation_cairo_context (data);
 
   annotate_configure_pen_options (data);
 
@@ -218,19 +218,19 @@ on_motion_notify   (GtkWidget       *win,
                     gpointer         user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
-  GdkDevice *slave = gdk_event_get_source_device ((GdkEvent *) ev);
+  GdkDevice *slave = gdk_event_get_source_device ( (GdkEvent *) ev);
   
   /* Get the data for this device. */
-  AnnotateDeviceData *masterdata= g_hash_table_lookup(data->devdatatable, ev->device);
-  AnnotateDeviceData *slavedata = g_hash_table_lookup(data->devdatatable, slave);
- 
+  AnnotateDeviceData *masterdata= g_hash_table_lookup (data->devdatatable, ev->device);
+  AnnotateDeviceData *slavedata = g_hash_table_lookup (data->devdatatable, slave);
+
    if (data->cur_context == data->default_filler)
     {
       return FALSE;
     }
     
   if (ev->state != masterdata->state ||
-      ev->state != slavedata->state ||
+      ev->state != slavedata->state  ||
       masterdata->lastslave != slave)
     {
        annotate_select_tool (data, ev->device, slave, ev->state);
@@ -298,7 +298,7 @@ on_motion_notify   (GtkWidget       *win,
         {
           AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (slavedata->coord_list, 0);
           gdouble tollerance = annotate_get_thickness ();
-          
+
           if (get_distance (last_point->x, last_point->y, ev->x, ev->y)<tollerance)
             {
               /* Seems that you are uprising the pen. */
@@ -341,7 +341,7 @@ on_button_release  (GtkWidget       *win,
   AnnotateDeviceData *slavedata = g_hash_table_lookup(data->devdatatable, slave);
   
   guint lenght = g_slist_length (slavedata->coord_list);
-    
+
   if (!data->is_grabbed)
     {
       return FALSE;
@@ -377,12 +377,12 @@ on_button_release  (GtkWidget       *win,
 #endif
 
   if (data->cur_context == data->default_filler)
-    { 
+    {
       annotate_fill (slavedata, data, ev->x, ev->y);
       return TRUE;
     }
     
-  initialize_annotation_cairo_context(data);
+  initialize_annotation_cairo_context (data);
 
   if (lenght > 2)
     {
@@ -402,7 +402,7 @@ on_button_release  (GtkWidget       *win,
         
       gdouble tollerance = annotate_get_thickness () * score;
 
-      gdouble pressure = last_point->pressure;   
+      gdouble pressure = last_point->pressure;
       annotate_modify_color (slavedata, data, pressure);
 
       gboolean closed_path = FALSE;
@@ -420,11 +420,6 @@ on_button_release  (GtkWidget       *win,
           closed_path = TRUE; // this seems to be a closed path
           annotate_draw_line (slavedata, first_point->x, first_point->y, TRUE);
           annotate_coord_list_prepend (slavedata, first_point->x, first_point->y, annotate_get_thickness (), pressure);
-          
-          if ( !(data->roundify) && (!(data->rectify)))
-            {
-              annotate_draw_point_list (slavedata, slavedata->coord_list);
-            }
         }
 
       if (data->cur_context->type != ANNOTATE_ERASER)
@@ -459,7 +454,7 @@ void on_device_removed  (GdkDeviceManager  *device_manager,
 
   if(data->debug)
     {
-      g_printerr("DEBUG: device '%s' removed\n", gdk_device_get_name(device));
+      g_printerr ("DEBUG: device '%s' removed\n", gdk_device_get_name(device));
     }
     
   remove_input_device (data, device);
@@ -475,7 +470,7 @@ void on_device_added    (GdkDeviceManager  *device_manager,
 
   if(data->debug)
     {
-      g_printerr("DEBUG: device '%s' added\n", gdk_device_get_name(device));
+      g_printerr ("DEBUG: device '%s' added\n", gdk_device_get_name (device));
     }
 
   add_input_device (data, device);
