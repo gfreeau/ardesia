@@ -32,13 +32,13 @@
 /*
  * Get color of the surface at point with coordinates (x,y).
  */
-gint
-get_color             (cairo_surface_t  *surface,
+static gint
+get_color             (struct FillInfo *fill_info,
                        gint           x,
                        gint           y)
 {
-  guchar *pixels = cairo_image_surface_get_data (surface);
-  gint stride = cairo_image_surface_get_stride (surface);
+  guchar *pixels = fill_info->pixels;
+  gint stride = fill_info->stride;
   const guchar *s  = pixels + y * stride + x * 4;
 
   guchar color[4];
@@ -47,9 +47,9 @@ get_color             (cairo_surface_t  *surface,
                          color[1],
                          color[2],
                          color[3]);
-
-  gint colorint = (color[0] << 24) | (color[1] << 16) | (color[2] << 8) | (color[3] << 0);
-  //printf("Color %8.8X \n", colorint); 
+                         
+  gint colorint = (color[0] << 32) | (color[1] << 24) | (color[2] << 16) | (color[3] << 8);
+  //printf("Color %8.8X \n", colorint);
   return colorint;
 }
 
@@ -60,11 +60,40 @@ is_old_pixel_value    (struct FillInfo *fill_info,
                        gdouble          x,
                        gdouble          y)
 {
-  gint current_color = get_color (fill_info->surface, x, y);
-  if (current_color == fill_info->orig_color)
+  gint c = get_color (fill_info, x, y);
+  gint oc = fill_info->orig_color;
+  if (c == oc)
      {
        return TRUE;
      }
+     
+  guint r, g, b, a, or, og, ob, oa;
+  a = ((c & 0xff000000) >> 24);
+  r = (c & 0x000000ff);
+  g = ((c & 0x0000ff00) >> 8);
+  b = ((c & 0x00ff0000) >> 16);
+  
+  oa = ((oc & 0xff000000) >> 24);
+  or = (oc & 0x000000ff);
+  og = ((oc & 0x0000ff00) >> 8);
+  ob = ((oc & 0x00ff0000) >> 16);
+ 
+  //sscanf (c, "%02X%02X%02X%02X", &r, &g, &b, &a);
+  //sscanf (oc, "%02X%02X%02X%02X", &or, &og, &ob, &oa);
+  
+  gint threshold = 250;
+  //gint difference = sqrt (pow (or-r, 2) + pow (og-g, 2) + pow (ob-b, 2) + pow (oa-a, 2) );
+  
+  gint difference = abs(or-r) + abs(og-g) + abs(ob-b) + abs(oa-a);
+  //printf("Difference %d %d\n", difference, a);
+  
+  if ( difference < threshold)
+    {
+      return TRUE;
+    }
+  
+  //printf("Color %8.8X \n", colorint);
+  
   return FALSE; 
 }
 
@@ -154,19 +183,21 @@ skip:
 void
 flood_fill                   (cairo_t          *annotation_cairo_context,
                               cairo_surface_t  *surface,
+                              gchar            *filled_color,
                               gdouble           x,
                               gdouble           y)
 {
+
   struct FillInfo fill_info;
   
   fill_info.width = cairo_image_surface_get_width (surface);
   fill_info.height = cairo_image_surface_get_height (surface);
   fill_info.surface = surface;
   fill_info.context = annotation_cairo_context;
-  fill_info.orig_color = get_color (surface, x, y);
   fill_info.pixels = cairo_image_surface_get_data (surface);
   fill_info.stride = cairo_image_surface_get_stride (surface);
-
+  gint color = get_color (&fill_info, x, y);
+  fill_info.orig_color = color;
   
   cairo_set_line_width (annotation_cairo_context, 1);
   

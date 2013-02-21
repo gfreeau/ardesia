@@ -1226,6 +1226,7 @@ annotate_fill                (AnnotateDeviceData *devdata,
          
   flood_fill (data->annotation_cairo_context,
               image_surface,
+              data->cur_context->fg_color,
               x,
               y);
 

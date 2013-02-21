@@ -132,20 +132,12 @@ struct FillInfo
 
 
 /*
- * Get color of the surface at point with coordinates (x,y).
- */
-gint
-get_color             (cairo_surface_t  *surface,
-                       gint              x,
-                       gint              y);
-
-
-/*
  * Perform the flood fill algorithm.
  */
 void
 flood_fill                   (cairo_t          *annotation_cairo_context,
                               cairo_surface_t  *surface,
+                              gchar            *filled_color,
                               gdouble           x,
                               gdouble           y);
 
