@@ -147,15 +147,6 @@ scale_surface           (cairo_surface_t  *surface,
 void
 cairo_set_source_color_from_string     (cairo_t  *cr,
                                         gchar    *color);
-
-
-/*
- * Get color of the surface at point with coordinates (x,y).
- */
-gint
-get_color             (cairo_surface_t  *surface,
-                       gint              x,
-                       gint              y);
                               
 
 /* Set the cairo surface color to transparent. */

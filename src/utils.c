@@ -316,12 +316,12 @@ inside_bar_window       (gdouble xp,
 
       if ( (xp>=xd) && (xp<xd+width) )
         {
-          return 1;
+          return TRUE;
         }
 
     }
 
-  return 0;
+  return FALSE;
 }
 
 
@@ -343,7 +343,12 @@ drill_window_in_bar_area     (GtkWidget *widget)
 
   cairo_region_subtract (ann_reg, widget_reg);
 
+  // drill with input shape the pointer will go below the window.
   gtk_widget_input_shape_combine_region (widget, ann_reg);
+  
+  // drill with shape; the area will be transparent. 
+  gtk_widget_shape_combine_region (widget, ann_reg);
+  
   cairo_region_destroy (ann_reg);
   cairo_region_destroy (widget_reg);
 }
