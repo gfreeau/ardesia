@@ -386,6 +386,11 @@ void
 annotate_select_pen          ();
 
 
+/* Select the default highlighter tool. */
+void
+annotate_select_highlighter  ();
+
+
 /* Select the default eraser tool. */
 void
 annotate_select_eraser       ();

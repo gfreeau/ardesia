@@ -61,7 +61,11 @@ is_old_pixel_value    (struct FillInfo *fill_info,
                        gdouble          y)
 {
   gint current_color = get_color (fill_info->surface, x, y);
-  return current_color == fill_info->orig_color;
+  if (current_color == fill_info->orig_color)
+     {
+       return TRUE;
+     }
+  return FALSE; 
 }
 
 

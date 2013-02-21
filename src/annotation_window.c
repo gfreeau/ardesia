@@ -1017,6 +1017,9 @@ annotate_select_pen          ()
 }
 
 
+
+
+
 /* Select the default filler tool. */
 void
 annotate_select_filler       ()
