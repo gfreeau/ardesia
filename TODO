@@ -23,8 +23,8 @@
   - See http://code.google.com/p/ardesia/issues/list
 
 - Candidate features:
+  - Fix flood filler to have a fixed color threshold
   - stay above all windows
-  - Fix flood filler to unpaint the bar area
   - Better sketch recognition
   - Support for a generic virtual keyboard 
   - Recognize the hand written text
