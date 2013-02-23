@@ -1,4 +1,4 @@
-/* 
+/*
  * Ardesia -- a program for painting on the screen
  * with this program you can play, draw, learn and teach
  * This program has been written such as a freedom sonet
@@ -20,7 +20,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
+
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -47,74 +47,79 @@ get_color             (struct FillInfo *fill_info,
                          color[1],
                          color[2],
                          color[3]);
-                         
-  gint colorint = (color[0] << 32) | (color[1] << 24) | (color[2] << 16) | (color[3] << 8);
-  //printf("Color %8.8X \n", colorint);
-  return colorint;
+
+  return RGBA_TO_UINT(color[0], color[1], color[2], color[3]);
 }
 
 
-/* Is the color to coordinate (x,y) equals to the old pixel color. */
-gboolean
-is_old_pixel_value    (struct FillInfo *fill_info,
-                       gdouble          x,
-                       gdouble          y)
+/* Is the color to coordinate (x, y) equals to the old pixel color. */
+static gboolean
+is_similar_to_old_pixel_value    (struct FillInfo *fill_info,
+                                  gdouble          x,
+                                  gdouble          y)
 {
   gint c = get_color (fill_info, x, y);
   gint oc = fill_info->orig_color;
   if (c == oc)
-     {
-       return TRUE;
-     }
-     
-  guint r, g, b, a, or, og, ob, oa;
-  a = ((c & 0xff000000) >> 24);
-  r = (c & 0x000000ff);
-  g = ((c & 0x0000ff00) >> 8);
-  b = ((c & 0x00ff0000) >> 16);
-  
-  oa = ((oc & 0xff000000) >> 24);
-  or = (oc & 0x000000ff);
-  og = ((oc & 0x0000ff00) >> 8);
-  ob = ((oc & 0x00ff0000) >> 16);
- 
-  //sscanf (c, "%02X%02X%02X%02X", &r, &g, &b, &a);
-  //sscanf (oc, "%02X%02X%02X%02X", &or, &og, &ob, &oa);
-  
-  gint threshold = 250;
-  //gint difference = sqrt (pow (or-r, 2) + pow (og-g, 2) + pow (ob-b, 2) + pow (oa-a, 2) );
-  
-  gint difference = abs(or-r) + abs(og-g) + abs(ob-b) + abs(oa-a);
-  //printf("Difference %d %d\n", difference, a);
-  
-  if ( difference < threshold)
     {
       return TRUE;
     }
-  
-  //printf("Color %8.8X \n", colorint);
-  
+  else
+    {
+      gfloat threshold = 255;
+      guint16 r, g, b, a, or, og, ob, oa;
+      r = UINT_RGBA_R(c);
+      g = UINT_RGBA_G(c);
+      b = UINT_RGBA_B(c);
+      a = UINT_RGBA_A(c);
+
+      or = UINT_RGBA_R(oc);
+      og = UINT_RGBA_G(oc);
+      ob = UINT_RGBA_B(oc);
+      oa = UINT_RGBA_A(oc);
+
+      //printf("Color %d %d %d %d , %d %d %d %d\n", r, g, b, a, or, og, ob, oa);
+      //printf ("delta A %d\n", abs(oa-a));
+      
+      guint deltaa = abs (oa-a);
+      gfloat deltar = fabs (or*oa/256.0-r*a/256.0);
+      gfloat deltag = fabs (og*oa/256.0-g*a/256.0);
+      gfloat deltab = fabs (ob*oa/256.0-b*a/256.0);
+
+      /* 
+       * It excludes the points with alpha value used for transparent, semitranparent and opaque color.
+       * This is a rough way to detect the borders.
+       * The points are filtered on threshold and balanced with alpha channel.
+       */
+      if ( (deltaa != 255)                   &&
+         ( (deltaa < 135) || (deltaa > 136)) &&
+         (deltaa != 0)                       &&
+         (deltar < threshold)                &&
+         (deltag < threshold)                &&
+         (deltab < threshold))
+        {
+          return TRUE;
+        }
+    }
+
   return FALSE; 
 }
 
 
+/* Set the new pixel value. */
 void set_new_pixel_value     (struct FillInfo   *fill_info,
                               gint               x,
                               gint               y)
 {
-  const guchar *s  = fill_info->pixels + y * fill_info->stride + x * 4;
-  /* Put something defferent. */
-  *(gint32 *)s = fill_info->orig_color -1;
-}
+  guchar *s  = fill_info->pixels + y * fill_info->stride + x * 4;
+  guint16 r, g, b, a;
+  r = UINT_RGBA_R(fill_info->filled_color);
+  g = UINT_RGBA_G(fill_info->filled_color);
+  b = UINT_RGBA_B(fill_info->filled_color);
+  a = UINT_RGBA_A(fill_info->filled_color);
 
-
-/* Color a pixel. */
-void
-mark_pixel                   (cairo_t          *annotation_cairo_context,
-                              gdouble           x,
-                              gdouble           y)
-{
-  cairo_line_to (annotation_cairo_context, x, y);
+  /* Set the new pixel value. */
+  CAIRO_ARGB32_SET_PIXEL(s, r, g, b, a);
 }
 
 
@@ -122,9 +127,9 @@ mark_pixel                   (cairo_t          *annotation_cairo_context,
  * Internal flood fill function.
  * Algorithm based on SeedFill.c from GraphicsGems.
  */
-static void flood_fill_int  (struct FillInfo *info,
-                             gdouble          x,
-                             gdouble          y)
+static void flood_fill_internal  (struct FillInfo *info,
+                                  gdouble          x,
+                                  gdouble          y)
 {
   /* TODO: check for stack overflow? */
   /* TODO: that's a lot of memory! esp if we never use it */
@@ -140,10 +145,9 @@ static void flood_fill_int  (struct FillInfo *info,
       while (sp > stack)
         {
           POP(y, x1, x2, dy);
-          for (x = x1; (x >= 0) && is_old_pixel_value (info, x, y); x--)
+          for (x = x1; (x >= 0) && is_similar_to_old_pixel_value (info, x, y); x--)
             {
               set_new_pixel_value (info, x, y);
-              mark_pixel (info->context, x, y); 
             }
           if (x >= x1)
             {
@@ -157,10 +161,9 @@ static void flood_fill_int  (struct FillInfo *info,
           x = x1 + 1;
           do
             {
-              for (; (x < info->width) && is_old_pixel_value (info, x, y); x++)
+              for (; (x < info->width) && is_similar_to_old_pixel_value (info, x, y); x++)
                 {
                   set_new_pixel_value (info, x, y);
-                  mark_pixel (info->context, x, y);
                 }
               PUSH(y, l, x - 1, dy);
               if (x > x2 + 1)
@@ -168,7 +171,7 @@ static void flood_fill_int  (struct FillInfo *info,
                   PUSH(y, x2 + 1, x - 1, -dy);
                 }
 skip:
-              for (x++; x <= x2 && !is_old_pixel_value (info, x, y); x++)
+              for (x++; x <= x2 && !is_similar_to_old_pixel_value (info, x, y); x++)
                 {
                   // empty block;
                 }
@@ -196,14 +199,25 @@ flood_fill                   (cairo_t          *annotation_cairo_context,
   fill_info.context = annotation_cairo_context;
   fill_info.pixels = cairo_image_surface_get_data (surface);
   fill_info.stride = cairo_image_surface_get_stride (surface);
-  gint color = get_color (&fill_info, x, y);
-  fill_info.orig_color = color;
-  
-  cairo_set_line_width (annotation_cairo_context, 1);
-  
-  flood_fill_int (&fill_info, x, y);
+  fill_info.orig_color = get_color (&fill_info, x, y);
 
+  guint r, g, b, a;
+  sscanf (filled_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+  gint filled_colorint = RGBA_TO_UINT(r, g, b, a);
+
+  if (filled_colorint == fill_info.orig_color)
+    {
+      return;
+    }
+
+  fill_info.filled_color = filled_colorint;
+
+  flood_fill_internal (&fill_info, x, y);
+
+  cairo_set_source_surface (annotation_cairo_context, surface, 0, 0);
+  cairo_paint (annotation_cairo_context);
   cairo_stroke (annotation_cairo_context);
+  
 }
 
 

@@ -30,7 +30,7 @@
 /* Semi opaque (and then semi transparent) alpha;
  * this is used to make the highlighter effect.
  */
-#define SEMI_OPAQUE_ALPHA "66"
+#define SEMI_OPAQUE_ALPHA "88"
 
 /* The time-out after that the tool try to up-rise the window;
  * this is done to prevent the window lowering in the case that

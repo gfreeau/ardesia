@@ -1213,10 +1213,15 @@ annotate_fill                (AnnotateDeviceData *devdata,
                               gdouble             x,
                               gdouble             y)
 {
-  guint i = data->current_save_index;
-  AnnotateSavepoint *savepoint = (AnnotateSavepoint *) g_slist_nth_data (data->savepoint_list, i);
-  cairo_surface_t *image_surface = cairo_image_surface_create_from_png (savepoint->filename);
+  cairo_surface_t  *image_surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+                                              gdk_screen_width (),
+                                              gdk_screen_height ());
 
+  cairo_surface_t *source_surface = cairo_get_target (data->annotation_cairo_context);
+  cairo_t *cr = cairo_create (image_surface);
+  cairo_set_source_surface (cr, source_surface, 0, 0);
+  cairo_paint (cr);
+  
   select_color (devdata);
   
   if (data->debug)

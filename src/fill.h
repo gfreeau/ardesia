@@ -42,6 +42,42 @@
 #define STACKSIZE 10000
 
 
+/**
+ * CAIRO_ARGB32_SET_PIXEL:
+ * @d: pointer to the destination buffer
+ * @r: red component, not pre-multiplied
+ * @g: green component, not pre-multiplied
+ * @b: blue component, not pre-multiplied
+ * @a: alpha component
+ *
+ * Sets a single pixel in an Cairo image surface in %CAIRO_FORMAT_ARGB32.
+ *
+ **/
+#if G_BYTE_ORDER == G_LITTLE_ENDIAN
+#define CAIRO_ARGB32_SET_PIXEL(d, r, g, b, a) \
+  G_STMT_START {                                   \
+    guint tr = (a) * (r) + 0x80;                   \
+    guint tg = (a) * (g) + 0x80;                   \
+    guint tb = (a) * (b) + 0x80;                   \
+    d[0] = (((tb) >> 8) + (tb)) >> 8;              \
+    d[1] = (((tg) >> 8) + (tg)) >> 8;              \
+    d[2] = (((tr) >> 8) + (tr)) >> 8;              \
+    d[3] = (a);                                    \
+  } G_STMT_END
+#else
+#define GIMP_CAIRO_ARGB32_SET_PIXEL(d, r, g, b, a) \
+  G_STMT_START {                                   \
+    guint tr = (a) * (r) + 0x80;                   \
+    guint tg = (a) * (g) + 0x80;                   \
+    guint tb = (a) * (b) + 0x80;                   \
+    d[0] = (a);                                    \
+    d[1] = (((tr) >> 8) + (tr)) >> 8;              \
+    d[2] = (((tg) >> 8) + (tg)) >> 8;              \
+    d[3] = (((tb) >> 8) + (tb)) >> 8;              \
+  } G_STMT_END
+#endif
+
+
 /* Macro to get the rgba value of the pixel at coordinate (x,y).*/ 
 #if G_BYTE_ORDER == G_LITTLE_ENDIAN
 #define CAIRO_ARGB32_GET_PIXEL(s, r, g, b, a)      \
@@ -68,6 +104,15 @@
     (a) = ta;                                      \
   } G_STMT_END
 #endif
+
+
+#define RGB_TO_UINT(r,g,b) ((((guint)(r))<<16)|(((guint)(g))<<8)|((guint)(b)))
+#define RGB_TO_RGBA(x,a) (((x) << 8) | ((((guint)a) & 0xff)))
+#define RGBA_TO_UINT(r,g,b,a) RGB_TO_RGBA(RGB_TO_UINT(r,g,b), a)
+#define UINT_RGBA_R(x) (((guint)(x))>>24)
+#define UINT_RGBA_G(x) ((((guint)(x))>>16)&0xff)
+#define UINT_RGBA_B(x) ((((guint)(x))>>8)&0xff)
+#define UINT_RGBA_A(x) (((guint)(x))&0xff)
 
 
 /* Struct used to store the point visited by the flood fill algorithm. */
@@ -120,7 +165,10 @@ struct FillInfo
   cairo_t *context;
 
   /* Color at initial point. */
-  gint orig_color;
+  guint32 orig_color;
+  
+  /* Color used to fill. */
+  guint32 filled_color;
 
   /* Pixels of image. */
   guchar *pixels;
