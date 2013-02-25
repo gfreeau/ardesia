@@ -105,8 +105,7 @@ start_preference_dialog      (GtkWindow *parent)
 
   /* Put the file filter for the supported formats. */
   filter = gtk_file_filter_new ();
-  gtk_file_filter_set_name (filter, "PNG and JPEG");
-  gtk_file_filter_add_mime_type (filter, "image/jpeg");
+  gtk_file_filter_set_name (filter, "PNG");
   gtk_file_filter_add_mime_type (filter, "image/png");
   gtk_file_chooser_add_filter (chooser, filter);
 
