@@ -23,13 +23,12 @@
   - See http://code.google.com/p/ardesia/issues/list
 
 - Candidate features:
-  - Fix flood filler to have a fixed color threshold
   - stay above all windows
   - Better sketch recognition
-  - Support for a generic virtual keyboard 
   - Recognize the hand written text
   - Deploy the artefact online
     - video; youtube upload as kazam
+  - Support for a generic virtual keyboard 
   - Lazo selection tool
     - Move the selected area content
     - Paste the selected area content
