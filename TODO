@@ -24,21 +24,21 @@
 
 - Candidate features:
   - stay above all windows
-  - Better sketch recognition
-  - Recognize the hand written text
   - Deploy the artefact online
     - video; youtube upload as kazam
-  - Support for a generic virtual keyboard 
+  - Import images
+  - Make an image gallery (sticky notes...)
   - Lazo selection tool
     - Move the selected area content
     - Paste the selected area content
-    - Zoom the selected area content
-    - Rotate the selected area content
-  - Import images
-  - Make an image gallery (sticky notes...)
+  - Recognize the hand written text
   - Export to image the selected area content
     as gnome-screenshoot 
+  - Better sketch recognition
+  - Support for a generic virtual keyboard 
   - Not parallel to the axis shape recognition
+  - Zoom the selected area content
+  - Rotate the selected area content
   - Send a bug report with stacktrace when a crash occurs;
     may be with google-breakpad
 
