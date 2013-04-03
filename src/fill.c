@@ -123,6 +123,16 @@ void set_new_pixel_value     (struct FillInfo   *fill_info,
 }
 
 
+/* Color a pixel. */
+void
+mark_pixel                   (cairo_t          *annotation_cairo_context,
+                              gdouble           x,
+                              gdouble           y)
+{
+  cairo_line_to (annotation_cairo_context, x, y);
+}
+
+
 /*
  * Internal flood fill function.
  * Algorithm based on SeedFill.c from GraphicsGems.
@@ -163,7 +173,7 @@ static void flood_fill_internal  (struct FillInfo *info,
             {
               for (; (x < info->width) && is_similar_to_old_pixel_value (info, x, y); x++)
                 {
-                  set_new_pixel_value (info, x, y);
+                  set_new_pixel_value (info, x, y);        
                 }
               PUSH(y, l, x - 1, dy);
               if (x > x2 + 1)
@@ -173,6 +183,7 @@ static void flood_fill_internal  (struct FillInfo *info,
 skip:
               for (x++; x <= x2 && !is_similar_to_old_pixel_value (info, x, y); x++)
                 {
+                  mark_pixel (info->context, x, y);
                   // empty block;
                 }
               l = x;
@@ -212,10 +223,12 @@ flood_fill                   (cairo_t          *annotation_cairo_context,
 
   fill_info.filled_color = filled_colorint;
 
+  cairo_set_line_width (annotation_cairo_context, 1);
+
   flood_fill_internal (&fill_info, x, y);
 
-  cairo_set_source_surface (annotation_cairo_context, surface, 0, 0);
-  cairo_paint (annotation_cairo_context);
+  //cairo_set_source_surface (annotation_cairo_context, surface, 0, 0);
+  //cairo_paint (annotation_cairo_context);
   cairo_stroke (annotation_cairo_context);
   
 }
