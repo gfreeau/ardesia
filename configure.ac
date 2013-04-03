@@ -2,7 +2,7 @@
 
 AC_PREREQ(2.54)
 
-m4_define([ardesia_version], [1.1])
+m4_define([ardesia_version], [1.2])
 m4_define([gtk_required_version], [2.99.3])
 
 AC_INIT([ardesia], [ardesia_version],

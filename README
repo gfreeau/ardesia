@@ -129,7 +129,7 @@ Button explanation
   - Rounder: it rounds your sketch; 
     it transforms the closed path in ellipses or smoothed closed path,
     it transforms the open path in smoothed lines with bezier spline
-- Filler: it fills the last closed path drawn with the selected colour
+- Filler: it fills the contiguos area with the selected colour
 - Arrow: it puts an arrow at the end of the line sketched
 - Text: insert a text annotation;
   select the text tool and then click on the desktop,
