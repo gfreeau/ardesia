@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-03 12:26+0100\n"
+"POT-Creation-Date: 2013-04-06 15:06+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Pilolli Pietro <pilolli.pietro@gmail.com>\n"
 "Language-Team: Ardesia Team <pilolli.pietro@gmail.com>\n"
@@ -122,16 +122,16 @@ msgid "Redo"
 msgstr "Rétablir"
 
 #: ../desktop/vertical_bar.glade.h:5
-msgid "Filler"
-msgstr "remplissage"
-
-#: ../desktop/vertical_bar.glade.h:6
 msgid "Clear"
 msgstr "Effacer"
 
-#: ../desktop/vertical_bar.glade.h:7
+#: ../desktop/vertical_bar.glade.h:6
 msgid "Mouse"
 msgstr "Souris"
+
+#: ../desktop/vertical_bar.glade.h:7
+msgid "Filler"
+msgstr "remplissage"
 
 #: ../desktop/vertical_bar.glade.h:8
 msgid "Arrow"
@@ -189,7 +189,7 @@ msgstr "Captures d'ecran"
 msgid "Add to pdf"
 msgstr "Ajouter au pdf"
 
-#: ../desktop/vertical_bar.glade.h:22 ../src/bar_callbacks.c:629
+#: ../desktop/vertical_bar.glade.h:22 ../src/bar_callbacks.c:664
 msgid "Record"
 msgstr "Enregistrer"
 
@@ -211,7 +211,7 @@ msgstr ""
 "Pour exécuter Ardesia est nécessaire de l'exécuter le composite manager"
 
 #. Set the stop tool-tip.
-#: ../src/bar_callbacks.c:663
+#: ../src/bar_callbacks.c:698
 msgid "Stop"
 msgstr "arrête"
 

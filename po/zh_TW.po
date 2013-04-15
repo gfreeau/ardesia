@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ardesia 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-03 12:26+0100\n"
+"POT-Creation-Date: 2013-04-06 15:06+0200\n"
 "PO-Revision-Date: 2011-09-06 16:57+0800\n"
 "Last-Translator: Wei-Lun Chao <william.chao@ossii.com.tw>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -123,16 +123,16 @@ msgid "Redo"
 msgstr "重做"
 
 #: ../desktop/vertical_bar.glade.h:5
-msgid "Filler"
-msgstr "填滿"
-
-#: ../desktop/vertical_bar.glade.h:6
 msgid "Clear"
 msgstr "清空"
 
-#: ../desktop/vertical_bar.glade.h:7
+#: ../desktop/vertical_bar.glade.h:6
 msgid "Mouse"
 msgstr "滑鼠"
+
+#: ../desktop/vertical_bar.glade.h:7
+msgid "Filler"
+msgstr "填滿"
 
 #: ../desktop/vertical_bar.glade.h:8
 msgid "Arrow"
@@ -190,7 +190,7 @@ msgstr "螢幕快照"
 msgid "Add to pdf"
 msgstr "加入到 pdf"
 
-#: ../desktop/vertical_bar.glade.h:22 ../src/bar_callbacks.c:629
+#: ../desktop/vertical_bar.glade.h:22 ../src/bar_callbacks.c:664
 msgid "Record"
 msgstr "記錄"
 
@@ -211,7 +211,7 @@ msgid "In order to run Ardesia you need to enable a composite manager"
 msgstr "您需要啟用合成管理員以便運行 Ardesia"
 
 #. Set the stop tool-tip.
-#: ../src/bar_callbacks.c:663
+#: ../src/bar_callbacks.c:698
 msgid "Stop"
 msgstr "停止"
 
