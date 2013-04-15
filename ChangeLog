@@ -1,322 +1,92 @@
-2012-09-12 15:58  alpha@paranoici.org
-	* desktop/horizontal_bar.glade,
-	* desktop/vertical_bar.glade,
-	* po/ardesia.pot:
-	- Better user interface.
-	- Update translation files.
-
-
-2012-09-12 15:39  alpha@paranoici.org
-	* desktop/vertical_bar.glade:
-	- Adjusted the vertical bar user interface.
-
-
-2012-09-12 14:49  alpha@paranoici.org
+2013-04-03 14:25  alpha@paranoici.org
+        * TODO,
 	* src/annotation_window.c,
-	* src/ardesia.c,
-	* src/background_window.c,
-	* src/background_window_callbacks.c,
-	* src/bar.c,
+	* src/annotation_window_callbacks.c,
 	* src/bar_callbacks.c,
-	* src/text_window.c:
-	- Fix the keyboard issues, the windows are not stacked
-	  with gtk_window_set_transient_for but showing them
-	  in the down/top order with the keep above flag enabled.
-
-
-2012-09-12 09:54  alpha@paranoici.org
-	* src/bar_callbacks.c,
-	* src/text_window.c: 
-	- Fix the text window interaction.
-	  This commit could break the virtual keyboard interaction;
-	  an action must be taken in order to fix the problem.
-
-
-2012-09-11 08:24  alpha@paranoici.org
-	* src/annotation_window.c:
-	- Fix iwb saving bren after gtk3 porting.
-
-
-2012-09-03 13:58  alpha@paranoici.org
-	* desktop/annotation_window.glade,
-	* desktop/background_window.glade,
-	* desktop/text_window.glade,
-	* src/preference_dialog.c,
-	* src/text_window.c:
-	- Closed issue 37.
-
-
-2012-09-02 22:43  alpha@paranoici.org
-	* INSTALL,
-	* README,
-	* TODO: 
-	- Update readable files with current changes.
-
-
-2012-09-02 13:52  alpha@paranoici.org
-	* desktop/background_window.glade,
-	* desktop/horizontal_bar.glade,
-	* desktop/vertical_bar.glade,
-	* po/ardesia.pot,
-	* src/annotation_window.c,
-	* src/annotation_window_callbacks.c,
-	* src/ardesia.c,
-	* src/background_window.c,
-	* src/background_window.h,
-	* src/background_window_callbacks.c,
-	* src/bar_callbacks.c,
-	* src/color_selector.c,
-	* src/info_dialog.c,
-	* src/input.c,
-	* src/preference_dialog.c,
-	* src/share_confirmation_dialog.c,
-	* src/utils.c:
-	- Better handling of focus, shape and window stack.
-	- Metacity compliant.
-	- Gnome Classic compliant.
-	- Unity compliant.
-	- Gnome-shell compliant.
-	- Closed issue 37.
-	- Could be compliant with mutter.
-	  Closed issue 34.
-
-
-2012-08-31 13:48  alpha@paranoici.org
-	* src/Makefile.am,
-	* src/annotation_window.c,
-	* src/annotation_window.h,
-	* src/annotation_window_callbacks.c,
-	* src/input.c,
-	* src/input.h,
-	* src/utils.c,
-	* src/utils.h:
-	- Code refactoring:
-	  - input device function in input.c/input.h.
-	  - better hotplug device handling.
-
-
-2012-08-30 18:05  alpha@paranoici.org
-	* TODO, src/annotation_window.c,
-	* src/annotation_window.h,
-	* src/annotation_window_callbacks.c,
-	* src/annotation_window_callbacks.h:
-	- Multipointer support; now you can use multipoint and
-	  multitouch devivices thanks to mpx, gtk3 and Ardesia.
-	  REMARKS: Having an only one toolbar the setting will
-	  affect all the pointers.
-
-
-2012-08-29 10:12  alpha@paranoici.org
-	* src/annotation_window.c,
-	* src/annotation_window.c,
-	* src/annotation_window_callbacks.c,
-	* src/annotation_window_callbacks.h:
-	- Device management review.
-
-
-2012-08-28 18:22  alpha@paranoici.org
-	* src/annotation_window.c,
-	* src/annotation_window.h,
-	* src/annotation_window_callbacks.c,
-	* src/annotation_window_callbacks.h,
-	* src/ardesia.c,
-	* src/background_window.c,
-	* src/background_window_callbacks.c,
-	* src/background_window_callbacks.h,
-	* src/bar.c,
-	* src/bar.h,
-	* src/bar_callbacks.c,
-	* src/bezier_spline.c,
-	* src/broken.c,
-	* src/broken.h,
-	* src/color_selector.c,
-	* src/color_selector.h,
-	* src/crash_dialog.c,
-	* src/crash_dialog.h,
-	* src/crash_dialog_callbacks.c,
+	* src/bar_callbacks.h,
 	* src/cursors.c,
 	* src/cursors.h,
-	* src/info_dialog.c,
-	* src/info_dialog.h,
-	* src/iwb_loader.c,
-	* src/iwb_saver.c,
-	* src/keyboard.c,
-	* src/pdf_saver.c,
-	* src/preference_dialog.c,
-	* src/preference_dialog_callbacks.c,
-	* src/project_dialog_callbacks.c,
-	* src/recorder.c,
-	* src/recorder.h,
-	* src/saver.c,
-	* src/share_confirmation_dialog_callbacks.c,
-	* src/text_window.c,
-	* src/text_window.h,
+	* src/input.c,
+        * src/fill.c,
+	* src/fill.h,
 	* src/utils.c,
-	* src/utils.h,
-	* src/windows_utils.c,
-	* src/windows_utils.h:
-	- Code revision.
+	* src/utils.h:
+	- Filler magic wand; flood filler algorithm based on SeedFill.c
+	  from GraphicsGems. It uses a fixed color threshold.
 
 
-2012-08-28 11:14  alpha@paranoici.org
-	* src/annotation_window.c:
-	- Better auto device configuration setup.
+2013-02-25 10:46  alpha@paranoici.org
+	* src/preference_dialog.c:
+	- Fixed preference filter code.
+	  The tool support only png background using cairo surface.
+	  Jpg format is not supported.
 
 
-2012-08-27 21:42  alpha@paranoici.org
-	* src/annotation_window.c,
-	* src/annotation_window.h,
-	* src/annotation_window_callbacks.c
-	* src/annotation_window_callbacks.h:
-	- Code review: hotplug master and slave devices.
-	- Hotplug input device manager.
+2013-02-13 20:06  alpha@paranoici.org
+	* src/annotation_window_callbacks.c:
+	- Fix rectifier and roundifier broken since revision 2930.
 
 
-2012-08-27 10:51  alpha@paranoici.org
-	* src/annotation_window.c:
-	- Adjust init device code.
+2013-02-11 13:35  alpha@paranoici.org
+	* src/annotation_window_callbacks.c:
+	- Fix the filler broken since revision 2930.
 
 
-2012-08-27 10:45  alpha@paranoici.org
+2013-01-21 13:51  alpha@paranoici.org
 	* src/annotation_window.c,
 	* src/annotation_window_callbacks.c:
-	- Fix pressure code for GDK_SOURCE_PEN.
+	- Fix the automatic change of pen depending on source device.
 
 
-2012-08-26 16:17  alpha@paranoici.org
+2013-01-21 13:38  alpha@paranoici.org
+	* src/annotation_window_callbacks.c:
+	- Fix eraser tool broken after the gtk3 porting.
+
+
+2012-11-25 19:36  alpha@paranoici.org
 	* src/annotation_window.c,
 	* src/annotation_window_callbacks.c:
-	- More tollerance merging initial and end point 
-	  in a special way when rectify and roundify mode is enabled.
+	- Solved a segfault.
 
 
-2012-08-26 15:52  alpha@paranoici.org
+2012-11-25 19:09  alpha@paranoici.org
 	* src/annotation_window_callbacks.c:
-	- Fix the code to restore surface when is coming back to the
-	  ardesia virtual desktop.
+	- Fix the color at release time pressure based
 
 
-2012-08-26 15:40  alpha@paranoici.org
-	* desktop/annotation_window.glade
-	* desktop/background_window.glade,
-	* desktop/crash_dialog.glade,
-	* desktop/info_dialog.glade,
-	* desktop/preference_dialog.glade,
-	* desktop/project_dialog.glade,
-	* desktop/share_confirmation_dialog.glade,
-	* desktop/text_window.glade:
-	- Porting interfaces to gtk3.
-
-
-2012-08-26 15:15  alpha@paranoici.org
-	* src/cursors.c:
-	- New eraser cursor code.
-
-
-2012-08-26 14:52  alpha@paranoici.org
-	* src/cursors.c:
-	- Minor fix in pen cursor.
-
-
-2012-08-26 14:25  alpha@paranoici.org
-	* src/annotation_window_callbacks.c,
-	* src/cursors.c:
-	- adjust pen cursor code.
-
-
-2012-08-26 12:03  alpha@paranoici.org
-	* desktop/icons/application-x-iwb.png,
-	* desktop/icons/ardesia.png,
-	* desktop/icons/arrow.png,
-	* desktop/icons/medium.png,
-	* desktop/icons/micro.png,
-	* desktop/icons/pointer.png,
-	* desktop/icons/rectifier.png,
-	* desktop/icons/rounder.png,
-	* desktop/icons/thick.png,
-	* desktop/icons/thin.png,
-	* desktop/icons/media-record.png,
-	* desktop/icons/media-recorder-unavailable.png,
-	* po/ardesia.pot:
-	- Icon revision.
-	- Update internazionalization files.
-	- Bigger recorder icons.
-
-
-2012-08-26 09:03  alpha@paranoici.org
-	* TODO,
-	* configure.ac,
-	* debian/control,
+2012-11-25 14:19  alpha@paranoici.org
 	* desktop/annotation_window.glade,
-	* desktop/background_window.glade,
-	* desktop/horizontal_bar.glade,
-	* desktop/icons/add-pdf.png,
-	* desktop/icons/application-x-iwb.png,
-	* desktop/icons/ardesia.png,
-	* desktop/icons/arrow.png,
-	* desktop/icons/blue.png,
-	* desktop/icons/camera-photo.png,
-	* desktop/icons/eraser.png,
-	* desktop/icons/filler.png,
-	* desktop/icons/green.png,
-	* desktop/icons/hand.png,
-	* desktop/icons/highlighter.png,
-	* desktop/icons/media-record.png,
-	* desktop/icons/media-recorder-unavailable.png,
-	* desktop/icons/medium.png,
-	* desktop/icons/micro.png,
-	* desktop/icons/pencil.png,
-	* desktop/icons/pointer.png,
-	* desktop/icons/rectifier.png,
-	* desktop/icons/red.png,
-	* desktop/icons/rounder.png,
-	* desktop/icons/text.png,
-	* desktop/icons/thick.png,
-	* desktop/icons/thin.png,
-	* desktop/icons/white.png,
-	* desktop/icons/yellow.png,
-	* desktop/text_window.glade,
-	* desktop/vertical_bar.glade,
-	* po/ardesia.pot,
 	* src/annotation_window.c,
 	* src/annotation_window.h,
 	* src/annotation_window_callbacks.c,
 	* src/annotation_window_callbacks.h,
-	* src/ardesia.c,
-	* src/background_window.c,
-	* src/background_window.h,
-	* src/background_window_callbacks.c,
-	* src/bar.c,src/color_selector.c,
-	* src/pdf_saver.c,
-	* src/text_window.c,
-	* src/utils.c: 
-	- GTK3 porting.
-	- Icon revision.
+	* src/input.c:
+	- Fix device discrimination.
+	- Fix the automatic eraser selection with backside wacom pen
+	  and similar devices.
+	- Purge the code from proxymity events; seems that theese events
+	  are not propagated to master device. The tool tracking in done
+	  now listening move events.
 
 
-2012-05-04 14:45  alpha@paranoici.org
-	* AUTHORS,
-	* NEWS,
-	* README,
-	* src/ardesia.c,
-	* src/ardesia.h,
-	* src/text_window.c,
-	* src/text_window.h:
-	- Rough commit of the Claus Hentschel patchset:
-	  - font selection
-	  - tab size
-	  - left margin
-	  
-	  
-2012-02-21 09:41  alpha@paranoici.org
-	* po/LINGUAS,
-	* po/zh_TW.po:
-	- Update traditional Chinese support made by William Chao.
+2012-11-23 18:55  alpha@paranoici.org
+	* src/input.c:
+	- Fix discrimination bug deciding about idevice SCREEN or WINDOW mode
 
-	  
-2011-10-09 11:44  alpha@paranoici.org
-	* po/de.po:
-	- The german lang has been fixed applying the Ronny patches;
-	  this commit close the issue 38.
-	  
-	  
+
+2012-11-23 13:32  alpha@paranoici.org
+	* desktop/backgrounds/first_year_highlighted_ruled_paper.png,
+	* desktop/backgrounds/first_year_ruled_paper.png:
+	* desktop/backgrounds/big_squared_paper.png,
+	* desktop/backgrounds/little_squared_paper.png,
+	* desktop/backgrounds/second_year_ruled_paper.png,
+	* desktop/backgrounds/third_year_ruled_paper.png:
+	- Update some backgrounds images.
+
+
+2012-10-03 10:00  alpha@paranoici.org
+	* src/annotation_window.c:
+	- Fix a segfault that occurs using some multitouch devices
+
+
+
