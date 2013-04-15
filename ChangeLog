@@ -7,7 +7,7 @@
 	* src/cursors.c,
 	* src/cursors.h,
 	* src/input.c,
-        * src/fill.c,
+	* src/fill.c,
 	* src/fill.h,
 	* src/utils.c,
 	* src/utils.h:
@@ -71,7 +71,7 @@
 
 2012-11-23 18:55  alpha@paranoici.org
 	* src/input.c:
-	- Fix discrimination bug deciding about idevice SCREEN or WINDOW mode
+	- Fix discrimination bug deciding about idevice SCREEN or WINDOW mode.
 
 
 2012-11-23 13:32  alpha@paranoici.org
@@ -86,7 +86,6 @@
 
 2012-10-03 10:00  alpha@paranoici.org
 	* src/annotation_window.c:
-	- Fix a segfault that occurs using some multitouch devices
-
+	- Fix a segfault that occurs using some multitouch devices.
 
 
