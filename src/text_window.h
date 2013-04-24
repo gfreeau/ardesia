@@ -36,7 +36,6 @@
 #else
 #  ifdef __APPLE__
 #    include <cairo-quartz.h>
-#    define VIRTUALKEYBOARD_NAME "florence"
 #  else
 #    include <cairo-xlib.h>
 #  endif

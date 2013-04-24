@@ -152,7 +152,7 @@
   </object>
   <object class="GtkWindow" id="winMain">
     <property name="width_request">36</property>
-    <property name="height_request">635</property>
+    <property name="height_request">655</property>
     <property name="can_focus">True</property>
     <property name="has_focus">True</property>
     <property name="is_focus">True</property>
