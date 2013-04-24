@@ -1357,15 +1357,29 @@ annotate_quit           ()
 
       delete_ardesia_tmp_dir();
 
-      g_free (data->savepoint_dir);
-      data->savepoint_dir = (gchar *) NULL;
+      if (data->savepoint_dir)
+        {
+          g_free (data->savepoint_dir);
+          data->savepoint_dir = (gchar *) NULL;
+        }
 
-      annotate_paint_context_free (data->default_pen);
-      data->default_pen = (AnnotatePaintContext *) NULL;
+      if (data->default_pen)
+        {
+          annotate_paint_context_free (data->default_pen);
+          data->default_pen = (AnnotatePaintContext *) NULL;
+        }
 
-      annotate_paint_context_free (data->default_eraser);
-      data->default_eraser = (AnnotatePaintContext *) NULL;
+     if (data->default_eraser)
+        {
+          annotate_paint_context_free (data->default_eraser);
+          data->default_eraser = (AnnotatePaintContext *) NULL;
+        }
 
+    if (data->default_filler)
+        {
+          annotate_paint_context_free (data->default_filler);
+          data->default_filler = (AnnotatePaintContext *) NULL;
+        }
     }
 }
 
