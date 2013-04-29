@@ -92,7 +92,6 @@ remove_input_devices    (AnnotateData  *data)
       GList* list = (GList *) NULL;
       list = g_hash_table_get_keys (data->devdatatable);
       g_list_foreach (list, (GFunc) remove_input_device, data);
-      g_hash_table_remove_all (data->devdatatable);
       data->devdatatable = (GHashTable *) NULL;
     }
 }
@@ -131,9 +130,12 @@ void
 remove_input_device     (GdkDevice     *device,
                          AnnotateData  *data)
 {
-  AnnotateDeviceData *devdata = g_hash_table_lookup (data->devdatatable, device);;
-  annotate_coord_dev_list_free (devdata);
-  g_hash_table_remove (data->devdatatable, device);
+  if (data)
+    {
+      AnnotateDeviceData *devdata = g_hash_table_lookup (data->devdatatable, device);
+      annotate_coord_dev_list_free (devdata);
+      g_hash_table_remove (data->devdatatable, device);
+    }
 }
 
 
