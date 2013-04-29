@@ -117,7 +117,7 @@ void
 add_input_device        (GdkDevice     *device,
                          AnnotateData  *data)
 {
-  /* only enable devices with 2 ore more axes and exclude keyboards */
+  /* only enable devices with 2 or more axes and exclude keyboards */
   if ((gdk_device_get_source(device) != GDK_SOURCE_KEYBOARD) &&
       ( gdk_device_get_n_axes (device) >= 2))
     {
