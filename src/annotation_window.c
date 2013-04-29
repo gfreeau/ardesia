@@ -540,7 +540,14 @@ delete_savepoint        (AnnotateSavepoint *savepoint)
 static void
 annotate_redolist_free       ()
 {
-  g_slist_foreach (data->savepoint_list, (GFunc) delete_savepoint, (gpointer) NULL);
+  guint i = data->current_save_index;
+  GSList *stop_list = g_slist_nth (data->savepoint_list, i);
+  
+  while (data->savepoint_list != stop_list)
+    {
+      AnnotateSavepoint *savepoint = (AnnotateSavepoint *) g_slist_nth_data (data->savepoint_list, 0);
+      delete_savepoint (savepoint);
+    }
 }
 
 
@@ -548,7 +555,7 @@ annotate_redolist_free       ()
 static void
 annotate_savepoint_list_free ()
 {
-  annotate_redolist_free (); 
+  g_slist_foreach (data->savepoint_list, (GFunc) delete_savepoint, (gpointer) NULL);
 
   data->savepoint_list = (GSList *) NULL;
 }
