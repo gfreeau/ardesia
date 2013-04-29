@@ -234,11 +234,6 @@ create_background_window     ()
   /* This trys to set an alpha channel. */
   on_back_screen_changed (background_data->background_window, NULL, background_data);
   
-  /* In the gtk 2.16.6 used for windows the gtkbuilder the double buffered property
-   * is not parsed from glade and then I set this by hands. 
-   */
-  gtk_widget_set_double_buffered (background_data->background_window, FALSE);
-
   gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), BACKGROUND_OPACITY);
   
   gtk_widget_set_size_request (background_data->background_window, gdk_screen_width (), gdk_screen_height ());

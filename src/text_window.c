@@ -554,11 +554,6 @@ void start_text_widget      (GtkWindow  *parent,
   /* This trys to set an alpha channel. */
   on_text_window_screen_changed(text_data->window, NULL, text_data);
   
-  /* In the gtk 2.16.6 the gtkbuilder property double-buffered is not parsed
-   * from the glade file and then I set this by hands. 
-   */
-  gtk_widget_set_double_buffered (text_data->window, FALSE); 
-
   //gtk_window_set_transient_for (GTK_WINDOW (text_data->window), GTK_WINDOW (parent));
   gtk_window_set_keep_above (GTK_WINDOW (text_data->window), TRUE);
   gtk_widget_grab_focus (text_data->window);
