@@ -96,12 +96,7 @@ remove_input_devices    (AnnotateData  *data)
     {
       GList* list = (GList *) NULL;
       list = g_hash_table_get_keys (data->devdatatable);
-      while (list) 
-        {
-          GdkDevice *device = (GdkDevice *) list->data;
-          remove_input_device (data, device);
-          list = g_list_next (list);
-        }
+      g_list_foreach (list, (GFunc) remove_input_device, (gpointer) NULL);
       g_hash_table_remove_all (data->devdatatable);
       data->devdatatable = (GHashTable *) NULL;
     }
