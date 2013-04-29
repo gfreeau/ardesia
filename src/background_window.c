@@ -65,9 +65,6 @@ load_file               ()
 	
       cairo_surface_destroy (scaled_surface);
 	
-#ifndef _WIN32
-      gtk_widget_input_shape_combine_region (background_data->background_window, NULL);
-#endif
     }
 }
 
@@ -114,13 +111,6 @@ load_color              ()
 
       cairo_paint (background_data->background_cr);
       cairo_stroke (background_data->background_cr);
-
-#ifndef _WIN32
-      if (((gint) a ) < 1)
-        {
-          gtk_widget_input_shape_combine_region (background_data->background_window, NULL);
-        }
-#endif
 
     }
 }
