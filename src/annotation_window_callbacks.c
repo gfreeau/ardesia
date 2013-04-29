@@ -457,7 +457,7 @@ void on_device_removed  (GdkDeviceManager  *device_manager,
       g_printerr ("DEBUG: device '%s' removed\n", gdk_device_get_name(device));
     }
     
-  remove_input_device (data, device);
+  remove_input_device (device, data);
 }
 
 
@@ -473,7 +473,7 @@ void on_device_added    (GdkDeviceManager  *device_manager,
       g_printerr ("DEBUG: device '%s' added\n", gdk_device_get_name (device));
     }
 
-  add_input_device (data, device);
+  add_input_device (device, data);
 }
 
 

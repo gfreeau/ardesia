@@ -64,13 +64,13 @@ setup_input_devices     (AnnotateData  *data);
 
 /* Add input device. */
 void
-add_input_device   (AnnotateData     *data,
-                    GdkDevice        *device);
+add_input_device   (GdkDevice        *device,
+                    AnnotateData     *data);
 
 
 /* Remove input device. */
 void
-remove_input_device     (AnnotateData  *data,
-                         GdkDevice     *device);
+remove_input_device     (GdkDevice     *device,
+                         AnnotateData  *data);
 
 

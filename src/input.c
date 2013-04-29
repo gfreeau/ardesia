@@ -62,12 +62,7 @@ setup_input_device_list (AnnotateData  *data,
                          GList         *devices)
 {
   remove_input_devices (data);
-  GList *d = (GList *) NULL;
-  for (d = devices; d; d = d->next)
-    {
-      GdkDevice *device = (GdkDevice *) d->data;
-      add_input_device (data, device);
-    }
+  g_list_foreach (devices, (GFunc) add_input_device, data);
 }
 
 
@@ -96,7 +91,7 @@ remove_input_devices    (AnnotateData  *data)
     {
       GList* list = (GList *) NULL;
       list = g_hash_table_get_keys (data->devdatatable);
-      g_list_foreach (list, (GFunc) remove_input_device, (gpointer) NULL);
+      g_list_foreach (list, (GFunc) remove_input_device, data);
       g_hash_table_remove_all (data->devdatatable);
       data->devdatatable = (GHashTable *) NULL;
     }
@@ -119,8 +114,8 @@ setup_input_devices     (AnnotateData  *data)
 
 /* Add input device. */
 void
-add_input_device        (AnnotateData  *data,
-                         GdkDevice     *device)
+add_input_device        (GdkDevice     *device,
+                         AnnotateData  *data)
 {
   /* only enable devices with 2 ore more axes and exclude keyboards */
   if ((gdk_device_get_source(device) != GDK_SOURCE_KEYBOARD) &&
@@ -133,8 +128,8 @@ add_input_device        (AnnotateData  *data,
 
 /* Add input device. */
 void
-remove_input_device     (AnnotateData  *data,
-                         GdkDevice     *device)
+remove_input_device     (GdkDevice     *device,
+                         AnnotateData  *data)
 {
   AnnotateDeviceData *devdata = g_hash_table_lookup (data->devdatatable, device);;
   annotate_coord_dev_list_free (devdata);
