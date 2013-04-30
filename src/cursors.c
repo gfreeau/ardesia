@@ -211,15 +211,6 @@ get_eraser_pixbuf (gdouble     thickness,
                                                  gdk_pixbuf_get_width (*pixbuf),
                                                  gdk_pixbuf_get_height (*pixbuf),
                                                  gdk_pixbuf_get_rowstride (*pixbuf));
-						
-  eraser_cr = cairo_create (surface);
-
-  clear_cairo_context (eraser_cr);
-
-  cairo_set_operator (eraser_cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgb (eraser_cr, 1, 1, 1);
-  cairo_paint (eraser_cr);
-  cairo_stroke (eraser_cr);
 
   eraser_cr = cairo_create (surface);
 
