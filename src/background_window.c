@@ -185,13 +185,6 @@ void clear_background_window      ()
   gtk_window_set_opacity (GTK_WINDOW (background_data->background_window), BACKGROUND_OPACITY);
 
   clear_cairo_context (background_data->background_cr);
-
-  /* This allows the mouse event to be passed to the window below. */
-#ifndef _WIN32
-  cairo_region_t* r = gdk_cairo_region_create_from_surface(cairo_get_target (background_data->background_cr));
-  gtk_widget_input_shape_combine_region (background_data->background_window, r);
-  cairo_region_destroy(r);
-#endif
 }
 
 
