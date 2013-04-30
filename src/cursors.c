@@ -349,15 +349,6 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
 
   clear_cairo_context (pen_cr);
 
-  cairo_set_operator (pen_cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgb (pen_cr, 1, 1, 1);
-  cairo_paint (pen_cr);
-  cairo_stroke (pen_cr);
-
-  pen_cr = cairo_create (surface);
-
-  clear_cairo_context (pen_cr);
-
   cairo_set_line_width (pen_cr, circle_width);
 
 
