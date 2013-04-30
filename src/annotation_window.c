@@ -1309,6 +1309,7 @@ annotate_paint_context_free (AnnotatePaintContext *context)
 {
   if (context)
     {
+      g_free (context->fg_color);
       g_free (context);
       context = (AnnotatePaintContext *) NULL;
     }
