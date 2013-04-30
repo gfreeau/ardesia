@@ -352,25 +352,21 @@ create_iwb (gchar *zip_filename,
 void
 export_iwb (gchar *iwb_location)
 {
-  gchar *iwb_file = (gchar *) NULL;
   const gchar *tmpdir = g_get_tmp_dir ();
-  gchar *content_filename = "content.xml";
-  gchar *ardesia_tmp_dir = g_build_filename (tmpdir, PACKAGE_NAME, (gchar *) 0);
-  gchar *project_name = get_project_name ();
-
-  gchar *project_tmp_dir = g_build_filename (ardesia_tmp_dir, project_name, (gchar *) 0);
-  gchar *content_filepath = g_build_filename (project_tmp_dir, content_filename, (gchar *) 0);
-
   gchar *images = "images";
-  gchar *img_dir_path = g_build_filename (project_tmp_dir, images, (gchar *) 0);
-
   gchar *background_image = get_background_image();
-
+  gchar *project_name = get_project_name ();
+  gchar *ardesia_tmp_dir = g_build_filename (tmpdir, PACKAGE_NAME, (gchar *) 0);
+  gchar *project_tmp_dir = g_build_filename (ardesia_tmp_dir, project_name, (gchar *) 0);
+  gchar *img_dir_path = g_build_filename (project_tmp_dir, images, (gchar *) 0);
   gchar *first_savepoint_file = g_strdup_printf ("%s%s%s_2_vellum.png", img_dir_path, G_DIR_SEPARATOR_S, PACKAGE_NAME);
 
   /* if exist the file I continue to save */
   if ((file_exists(first_savepoint_file)) || (background_image))
     {
+      gchar *iwb_file = (gchar *) NULL;
+      gchar *content_filename = "content.xml";
+      gchar *content_filepath = g_build_filename (project_tmp_dir, content_filename, (gchar *) 0);
       
       /* If the iwb location is null means that it is a new project. */
       if (iwb_location == NULL)
@@ -397,13 +393,13 @@ export_iwb (gchar *iwb_location)
 
       /* Add to the list of the artefacts created in the session. */
       add_artifact (iwb_file);
+      g_free (iwb_file);
+      g_free (content_filepath);
     }
 
   g_free (first_savepoint_file);
-  g_free (iwb_file);
   g_free (ardesia_tmp_dir);
   g_free (project_tmp_dir);
-  g_free (content_filepath);
   g_free (img_dir_path);
 }
 
