@@ -1357,19 +1357,16 @@ annotate_quit           ()
       if (data->default_pen)
         {
           annotate_paint_context_free (data->default_pen);
-          data->default_pen = (AnnotatePaintContext *) NULL;
         }
 
      if (data->default_eraser)
         {
           annotate_paint_context_free (data->default_eraser);
-          data->default_eraser = (AnnotatePaintContext *) NULL;
         }
 
     if (data->default_filler)
         {
           annotate_paint_context_free (data->default_filler);
-          data->default_filler = (AnnotatePaintContext *) NULL;
         }
     }
 }
