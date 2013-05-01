@@ -13,11 +13,11 @@
   - web site english revision
 
 - Reengineering
-  - Store and load the savepoints with svg files
   - Screencast recorder using a library (ffmpeg or libvlc)
-  - Paint on a svg surface to be synchronized with the paintable window
   - Use the same window for the background; the expose will paint 
     all the layers
+  - Store and load the savepoints with svg files
+  - Paint on a svg surface to be synchronized with the paintable window
 
 - Bug fix 
   - See http://code.google.com/p/ardesia/issues/list
