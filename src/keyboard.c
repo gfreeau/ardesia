@@ -28,7 +28,7 @@
 
 #include <utils.h>
 #include <keyboard.h>
-
+#include <stdlib.h>
 
 /* The pid of the virtual keyboard process. */
 static GPid virtual_keyboard_pid;
@@ -38,16 +38,7 @@ static GPid virtual_keyboard_pid;
 void
 start_virtual_keyboard       ()
 {
-  gchar *argv[2] = {VIRTUALKEYBOARD_NAME, (gchar *) 0};
-
-  g_spawn_async (NULL /*working_directory*/,
-                 argv,
-                 NULL /*envp*/,
-                 G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD | G_SPAWN_LEAVE_DESCRIPTORS_OPEN,
-                 NULL /*child_setup*/,
-                 NULL /*user_data*/,
-                 &virtual_keyboard_pid /*child_pid*/,
-                 NULL /*error*/);
+  system("gsettings set org.florence.behaviour auto-hide false");
 }
 
 
@@ -55,20 +46,20 @@ start_virtual_keyboard       ()
 void
 stop_virtual_keyboard        ()
 {
+#ifdef _WIN32
   if (virtual_keyboard_pid > 0)
     {
       /* @TODO replace this with the cross platform g_pid_terminate
        * when it will available
        */
-#ifdef _WIN32
       HWND hwnd = FindWindow (VIRTUALKEYBOARD_WINDOW_NAME, NULL);
       SendMessage (hwnd, WM_SYSCOMMAND, SC_CLOSE, 0);
-#else
-      kill (virtual_keyboard_pid, SIGTERM);
-#endif
       g_spawn_close_pid (virtual_keyboard_pid);
       virtual_keyboard_pid = (GPid) 0;
     }
+#else
+  system("gsettings set org.florence.behaviour auto-hide true");
+#endif
 }
 
 
