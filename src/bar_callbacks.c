@@ -35,9 +35,11 @@
 #include <color_selector.h>
 #include <preference_dialog.h>
 #include <info_dialog.h>
+#include <iwb_saver.h>
 #include <recorder.h>
 #include <saver.h>
 #include <pdf_saver.h>
+#include <share_confirmation_dialog.h>
 
 
 /* Timer used to up-rise the window. */
@@ -372,7 +374,10 @@ on_bar_quit                     (GtkToolButton   *toolbutton,
 {
   BarData *bar_data = (BarData *) func_data;
   bar_data->grab = FALSE;
-  
+
+  export_iwb (get_iwb_filename ());
+  start_share_dialog ();
+
   /* Release grab. */
   annotate_release_grab ();
 

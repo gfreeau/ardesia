@@ -64,6 +64,7 @@ start_share_dialog                ()
 
       gtk_dialog_run (GTK_DIALOG (share_dialog));
 
+      free_artifacts ();
       gtk_widget_destroy (share_dialog);
     }
 

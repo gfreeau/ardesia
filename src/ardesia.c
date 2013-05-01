@@ -26,7 +26,6 @@
 #include <annotation_window.h>
 #include <background_window.h>
 #include <project_dialog.h>
-#include <share_confirmation_dialog.h>
 #include <bar.h>
 
 /*ch* External defined structure used to configure text input. (see text_window.c) */
@@ -317,7 +316,6 @@ main                              (int    argc,
   GtkWidget   *background_window = (GtkWidget *) NULL;
   GtkWidget   *annotation_window = (GtkWidget *) NULL;
   GtkWidget   *ardesia_bar_window = (GtkWidget *) NULL;
-  GSList      *artifact_list = (GSList *) NULL;
 
   /* Enable the localization support with gettext. */
   enable_localization_support ();
@@ -431,14 +429,6 @@ main                              (int    argc,
   gtk_window_set_keep_above (GTK_WINDOW (ardesia_bar_window), TRUE);
   gtk_widget_show (ardesia_bar_window);
   gtk_main ();
-
-  artifact_list = get_artifacts ();
-
-  if (artifact_list)
-    {
-      start_share_dialog ();
-      free_artifacts ();
-    }
 
   g_free (project_name);
 

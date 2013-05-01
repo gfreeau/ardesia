@@ -32,7 +32,6 @@
 #include <bezier_spline.h>
 #include <cursors.h>
 #include <iwb_loader.h>
-#include <iwb_saver.h>
 #include <fill.h>
 
 
@@ -1323,7 +1322,7 @@ annotate_paint_context_free (AnnotatePaintContext *context)
 void
 annotate_quit           ()
 {
-  export_iwb (get_iwb_filename ());
+  
   if (data)
     {
       /* Destroy cursors. */
