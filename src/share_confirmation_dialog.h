@@ -37,6 +37,6 @@
  * if he wants share your work.
  */
 void
-start_share_dialog (GtkWindow *parent);
+start_share_dialog ();
 
 

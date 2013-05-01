@@ -35,7 +35,7 @@
  * if he wants share his work.
  */
 void
-start_share_dialog                (GtkWindow *parent)
+start_share_dialog                ()
 {
   GSList *artifact_list = get_artifacts ();
 
@@ -56,8 +56,7 @@ start_share_dialog                (GtkWindow *parent)
       share_dialog = GTK_WIDGET (gtk_builder_get_object (share_dialog_gtk_builder,
                                                          "shareDialog"));
 
-      gtk_window_set_transient_for (GTK_WINDOW (share_dialog), parent);
-      gtk_window_set_modal (GTK_WINDOW (share_dialog), TRUE);
+      //gtk_window_set_modal (GTK_WINDOW (share_dialog), TRUE);
       //gtk_window_set_keep_above (GTK_WINDOW (share_dialog), TRUE);
 
       /* Connect all signals by reflection. */
@@ -66,7 +65,6 @@ start_share_dialog                (GtkWindow *parent)
       gtk_dialog_run (GTK_DIALOG (share_dialog));
 
       gtk_widget_destroy (share_dialog);
-      share_dialog = (GtkWidget *) NULL;
     }
 
 }

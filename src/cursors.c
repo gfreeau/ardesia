@@ -319,6 +319,7 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
           /* load the highlighter icon. */
           image_surface = get_highlighter_image_surface ();
         }
+      g_free (alpha);
     }
 
   icon_width = cairo_image_surface_get_width (image_surface);
@@ -327,7 +328,6 @@ get_pen_pixbuf (GdkPixbuf **pixbuf,
   cursor_width = (gint) icon_width + thickness/2 + circle_width;
   cursor_height = (gint) icon_height + thickness/2 +  circle_width;
   *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, cursor_width, cursor_height);
-
 
   surface = cairo_image_surface_create_for_data (gdk_pixbuf_get_pixels (*pixbuf),
                                                  CAIRO_FORMAT_RGB24,

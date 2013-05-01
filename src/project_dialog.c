@@ -35,7 +35,7 @@
  * the project settings.
  */
 gchar *
-start_project_dialog (GtkWindow *parent)
+start_project_dialog ()
 {
   GtkWidget *project_dialog = NULL;
   GObject *project_obj = NULL;
@@ -43,6 +43,7 @@ start_project_dialog (GtkWindow *parent)
   GtkWidget *dialog_entry = NULL;
   gchar *ret = NULL;
   gint  pos = -1;
+  gchar *date = get_date ();
   ProjectData *project_data = (ProjectData *) g_malloc ( (gsize) sizeof (ProjectData));
 
   /* Initialize the main window. */
@@ -54,7 +55,6 @@ start_project_dialog (GtkWindow *parent)
   /* Fill the window by the gtk builder xml */
   project_obj = gtk_builder_get_object (project_data->project_dialog_gtk_builder, "projectDialog");
   project_dialog = GTK_WIDGET (project_obj);
-  gtk_window_set_transient_for (GTK_WINDOW (project_dialog), parent);
   gtk_window_set_modal (GTK_WINDOW (project_dialog), TRUE);
   gtk_window_set_keep_above (GTK_WINDOW (project_dialog), TRUE);
 
@@ -69,7 +69,8 @@ start_project_dialog (GtkWindow *parent)
   dialog_obj = gtk_builder_get_object (project_data->project_dialog_gtk_builder, "projectDialogEntry");
   dialog_entry = GTK_WIDGET (dialog_obj);
 
-  project_data->project_name = g_strdup_printf ("ardesia_project_%s", get_date ());
+  project_data->project_name = g_strdup_printf ("ardesia_project_%s", date);
+  g_free (date);
   gtk_editable_insert_text (GTK_EDITABLE (dialog_entry), project_data->project_name, -1, &pos );
 
   /* Connect all signals by reflection. */

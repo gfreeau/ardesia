@@ -376,7 +376,7 @@ main                              (int    argc,
       gchar *workspace_dir = (gchar *) NULL;
 
       /* Show the project name wizard. */
-      project_name = start_project_dialog ((GtkWindow *) NULL);
+      project_name = start_project_dialog ();
       workspace_dir = configure_workspace (project_name);
       project_dir = create_default_project_dir (workspace_dir, project_name);
       g_free (workspace_dir);
@@ -436,7 +436,7 @@ main                              (int    argc,
 
   if (artifact_list)
     {
-      start_share_dialog ((GtkWindow *) NULL);
+      start_share_dialog ();
       free_artifacts ();
     }
 

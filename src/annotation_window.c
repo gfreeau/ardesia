@@ -1309,7 +1309,10 @@ annotate_paint_context_free (AnnotatePaintContext *context)
 {
   if (context)
     {
-      g_free (context->fg_color);
+      if (context->fg_color)
+        {
+          g_free (context->fg_color);
+        }
       g_free (context);
       context = (AnnotatePaintContext *) NULL;
     }
@@ -1323,13 +1326,12 @@ annotate_quit           ()
   export_iwb (get_iwb_filename ());
   if (data)
     {
-	
-      /* Destroy cairo object. */
-      destroy_cairo ();
-
       /* Destroy cursors. */
       disallocate_cursor ();
       cursors_main_quit ();
+	
+      /* Destroy cairo object. */
+      destroy_cairo ();
 
       if (data->invisible_cursor)
         {

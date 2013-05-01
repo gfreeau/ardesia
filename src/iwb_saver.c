@@ -273,6 +273,7 @@ static void add_file_to_gst_outfile (GsfOutfile   *out_file,
   gsf_input_copy (input, child);
   gsf_output_close (child);
   g_object_unref (child);
+  g_object_unref (input);
 
   g_free (file_path);
 }

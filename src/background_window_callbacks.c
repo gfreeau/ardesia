@@ -89,7 +89,7 @@ back_event_expose                 (GtkWidget  *widget,
     }
     /* This allows the mouse event to be passed to the window below. */
 #ifndef _WIN32
-  cairo_region_t* r = gdk_cairo_region_create_from_surface(cairo_get_target (background_data->background_cr));
+  cairo_region_t* r = gdk_cairo_region_create_from_surface(cairo_get_target (cr));
   gtk_widget_input_shape_combine_region (widget, r);
   cairo_region_destroy(r);
 #endif
