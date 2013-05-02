@@ -158,6 +158,7 @@
     <property name="is_focus">True</property>
     <property name="events">GDK_LEAVE_NOTIFY_MASK</property>
     <property name="title">Ardesia</property>
+    <property name="name">Ardesia</property>
     <property name="resizable">False</property>
     <property name="destroy_with_parent">True</property>
     <property name="icon">icons/ardesia.png</property>
