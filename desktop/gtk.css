@@ -1,4 +1,9 @@
-#Ardesia* {
+#ArdesiaBar* {
   background: #1c3155;
   color: #FFFFFF;
+}
+
+GtkVSeparator {
+  background: #FF0000;
+  color: #1c3155;
 }

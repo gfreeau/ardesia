@@ -213,7 +213,8 @@ create_bar_window (CommandLine *commandline,
 
   bar_data = init_bar_data ();
 
-  bar_window = GTK_WIDGET (gtk_builder_get_object (bar_gtk_builder, "winMain"));
+  bar_window = GTK_WIDGET (gtk_builder_get_object (bar_gtk_builder, "ArdesiaBar"));
+  gtk_widget_set_name (bar_window, "ArdesiaBar");
     
   /* Connect all the callback from bar_gtk_builder xml file. */
   gtk_builder_connect_signals (bar_gtk_builder, (gpointer) bar_data);
