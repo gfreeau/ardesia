@@ -660,6 +660,10 @@ on_bar_recorder_activate          (GtkToolButton   *toolbutton,
       if (is_paused ())
         {
           resume_recorder ();
+          /* Set the stop tool-tip. */ 
+          gtk_tool_item_set_tooltip_text ( (GtkToolItem *) toolbutton, gettext ("Stop"));
+          /* Put the stop icon. */
+          gtk_tool_button_set_stock_id (toolbutton, "gtk-media-stop");
         }
       else
         {
