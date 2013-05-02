@@ -312,7 +312,7 @@ start_tool                   (BarData *bar_data)
         {
           /* Text button then start the text widget. */
           annotate_release_grab ();
-          start_text_widget (GTK_WINDOW (get_bar_window ()),
+          start_text_widget (GTK_WINDOW (get_bar_widget ()),
                              bar_data->color,
                              bar_data->thickness);
         }
@@ -405,7 +405,7 @@ on_bar_info                      (GtkToolButton   *toolbutton,
   annotate_release_grab ();
   
   /* Start the info dialog. */
-  start_info_dialog (toolbutton, GTK_WINDOW (get_bar_window ()));
+  start_info_dialog (toolbutton, GTK_WINDOW (get_bar_widget ()));
 
   bar_data->grab = grab_value;
   start_tool (bar_data);
@@ -618,7 +618,7 @@ on_bar_screenshot_activate	      (GtkToolButton   *toolbutton,
   /* Release grab. */
   annotate_release_grab ();
   gdk_window_set_cursor (gtk_widget_get_window (get_annotation_window ()), (GdkCursor *) NULL);
-  start_save_image_dialog (toolbutton, GTK_WINDOW (get_bar_window ()));
+  start_save_image_dialog (toolbutton, GTK_WINDOW (get_bar_widget ()));
   bar_data->grab = grab_value;
   start_tool (bar_data);
 }
@@ -636,7 +636,7 @@ on_bar_add_pdf_activate	          (GtkToolButton   *toolbutton,
   /* Release grab. */
   annotate_release_grab ();
 
-  add_pdf_page (GTK_WINDOW (get_bar_window ()));
+  add_pdf_page (GTK_WINDOW (get_bar_widget ()));
   bar_data->grab = grab_value;
   start_tool (bar_data);
 }
@@ -684,7 +684,7 @@ on_bar_recorder_activate          (GtkToolButton   *toolbutton,
           gdk_window_set_cursor (gtk_widget_get_window (get_annotation_window ()),
                                  (GdkCursor *) NULL);
 
-          visualize_missing_recorder_program_dialog (GTK_WINDOW (get_bar_window ()));
+          visualize_missing_recorder_program_dialog (GTK_WINDOW (get_bar_widget ()));
           /* Put an icon that remember that the tool is not available. */
           gtk_tool_button_set_label_widget (toolbutton, GTK_WIDGET (recorder_obj));
           bar_data->grab = grab_value;
@@ -696,7 +696,7 @@ on_bar_recorder_activate          (GtkToolButton   *toolbutton,
                              (GdkCursor *) NULL);
 
       /* The recording is not active. */ 
-      gboolean status = start_save_video_dialog (toolbutton, GTK_WINDOW (get_bar_window ()));
+      gboolean status = start_save_video_dialog (toolbutton, GTK_WINDOW (get_bar_widget ()));
       if (status)
         {
           /* Set the stop tool-tip. */ 
@@ -721,7 +721,7 @@ on_bar_preferences_activate	      (GtkToolButton   *toolbutton,
   /* Release grab. */
   annotate_release_grab ();
   gdk_window_set_cursor (gtk_widget_get_window (get_annotation_window ()), (GdkCursor *) NULL);
-  start_preference_dialog (GTK_WINDOW (get_bar_window ()));
+  start_preference_dialog (GTK_WINDOW (get_bar_widget ()));
   bar_data->grab = grab_value;
   start_tool (bar_data);
 }
@@ -774,7 +774,7 @@ on_bar_color_activate	            (GtkToggleToolButton   *toolbutton,
   bar_data->grab = FALSE;
   gdk_window_set_cursor (gtk_widget_get_window (get_annotation_window ()), (GdkCursor *) NULL);
   new_color = start_color_selector_dialog (GTK_TOOL_BUTTON (toolbutton),
-                                           GTK_WINDOW (get_bar_window ()),
+                                           GTK_WINDOW (get_bar_widget ()),
                                            bar_data->color);
 
   if (new_color)  // if it is a valid colour

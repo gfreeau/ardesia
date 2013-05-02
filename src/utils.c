@@ -120,9 +120,9 @@ free_artifacts     ()
 
 /* Get the bar window widget. */
 GtkWidget *
-get_bar_window     ()
+get_bar_widget ()
 {
-  return GTK_WIDGET (gtk_builder_get_object (bar_gtk_builder, "winMain"));
+  return GTK_WIDGET (gtk_builder_get_object (bar_gtk_builder, BAR_WIDGET_NAME));
 }
 
 
@@ -304,12 +304,12 @@ inside_bar_window       (gdouble xp,
   gint height = 0;
   gdouble xd = 0;
   gdouble yd = 0;
-  GtkWindow *bar = GTK_WINDOW (get_bar_window ());
-  gtk_window_get_position (bar, &x, &y);
+  GtkWindow *bar_window = GTK_WINDOW (get_bar_widget ());
+  gtk_window_get_position (bar_window, &x, &y);
   xd = (gdouble) x;
   yd = (gdouble) y;
 
-  gtk_window_get_size (bar, &width, &height);
+  gtk_window_get_size (bar_window, &width, &height);
 
   if ( (yp>=yd) && (yp<yd+height) )
     {
@@ -329,7 +329,7 @@ inside_bar_window       (gdouble xp,
 void 
 drill_window_in_bar_area     (GtkWidget *widget)
 {
-  GtkWidget *bar= get_bar_window ();
+  GtkWidget *bar= get_bar_widget ();
   gint x, y, width, height;
 
   gtk_window_get_position (GTK_WINDOW (bar), &x, &y);

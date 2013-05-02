@@ -38,7 +38,12 @@ static GPid virtual_keyboard_pid;
 void
 start_virtual_keyboard       ()
 {
-  system("gsettings set org.florence.behaviour auto-hide false");
+  int result = -1;
+  result = system("gsettings set org.florence.behaviour auto-hide false");
+  if (result != 0)
+    {
+      g_printerr ("Fail to show virtual keyboard: Florence and gsettings packages are required\n");
+    }
 }
 
 
@@ -58,7 +63,12 @@ stop_virtual_keyboard        ()
       virtual_keyboard_pid = (GPid) 0;
     }
 #else
-  system("gsettings set org.florence.behaviour auto-hide true");
+  int result = -1;
+  result = system("gsettings set org.florence.behaviour auto-hide true");
+  if (result != 0)
+    {
+      g_printerr ("Fail to hide virtual keyboard: Florence and gsettings packages are required\n");
+    }
 #endif
 }
 

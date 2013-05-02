@@ -1422,7 +1422,7 @@ annotate_release_grab   ()
         }
 
       annotate_release_input_grab ();
-      gtk_window_present (GTK_WINDOW (get_bar_window ()));
+      gtk_window_present (GTK_WINDOW (get_bar_widget ()));
       data->is_grabbed = FALSE;
     }
 }

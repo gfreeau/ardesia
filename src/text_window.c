@@ -498,7 +498,7 @@ on_text_window_button_release     (GtkWidget       *win,
       move_editor_cursor ();
 
       /* This present the ardesia bar and the panels. */
-      gtk_window_present (GTK_WINDOW (get_bar_window ()));
+      gtk_window_present (GTK_WINDOW (get_bar_widget ()));
       gtk_window_present (GTK_WINDOW (text_data->window));
       gdk_window_raise (gtk_widget_get_window  (text_data->window));
 

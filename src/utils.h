@@ -33,6 +33,7 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
+#define BAR_WIDGET_NAME "ArdesiaBar"
 
 #ifdef _WIN32
 #  include <cairo-win32.h>
@@ -128,7 +129,7 @@ free_artifacts          ();
 				
 /* get bar window widget. */
 GtkWidget *
-get_bar_window          ();
+get_bar_widget          ();
 
 
 /* Take a GdkColor and return the RGB string. */
