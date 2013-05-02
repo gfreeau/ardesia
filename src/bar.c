@@ -194,7 +194,7 @@ create_bar_window (CommandLine *commandline,
            * with low vertical resolution.
            */
           file = UI_HOR_FILE;
-          commandline->position=SOUTH;
+          commandline->position=NORTH;
         }
 
     }
