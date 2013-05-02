@@ -245,7 +245,11 @@ get_background_type          ()
 gchar * 
 get_background_image         ()
 {
-  return background_data->background_image;
+  if (background_data)
+    {
+      return background_data->background_image;
+    }
+  return NULL;
 }
 
 

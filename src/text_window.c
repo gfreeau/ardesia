@@ -214,7 +214,7 @@ set_text_cursor              (GtkWidget  *window)
                                         width,
                                         height);
 
-  cursor = gdk_cursor_new_from_pixbuf ( gdk_display_get_default (), pixbuf, 0, 0);
+  cursor = gdk_cursor_new_from_pixbuf ( gdk_display_get_default (), pixbuf, width/2-decoration_height, height-decoration_height);
 
   gdk_window_set_cursor (gtk_widget_get_window  (text_data->window), cursor);
   gdk_flush ();
@@ -266,7 +266,7 @@ init_text_widget             (GtkWidget *widget)
       cairo_set_operator (text_data->cr, CAIRO_OPERATOR_SOURCE);
       cairo_set_line_width (text_data->cr, text_data->pen_width);
       cairo_set_source_color_from_string (text_data->cr, text_data->color);
-      cairo_set_font_size (text_data->cr, text_data->pen_width * 2);
+      cairo_set_font_size (text_data->cr, text_data->pen_width * 5);
       
       /* Select the font */
       cairo_select_font_face (text_data->cr, text_config->fontfamily,
