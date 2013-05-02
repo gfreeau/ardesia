@@ -375,11 +375,11 @@ on_bar_quit                     (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData *) func_data;
   bar_data->grab = FALSE;
 
-  export_iwb (get_iwb_filename ());
-  start_share_dialog ();
-
   /* Release grab. */
   annotate_release_grab ();
+
+  export_iwb (get_iwb_filename ());
+  start_share_dialog ();
 
   annotate_quit ();
 

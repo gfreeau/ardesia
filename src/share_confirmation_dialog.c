@@ -57,7 +57,7 @@ start_share_dialog                ()
                                                          "shareDialog"));
 
       //gtk_window_set_modal (GTK_WINDOW (share_dialog), TRUE);
-      //gtk_window_set_keep_above (GTK_WINDOW (share_dialog), TRUE);
+      gtk_window_set_keep_above (GTK_WINDOW (share_dialog), TRUE);
 
       /* Connect all signals by reflection. */
       gtk_builder_connect_signals (share_dialog_gtk_builder, (gpointer) NULL);
