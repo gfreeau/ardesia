@@ -73,9 +73,6 @@ typedef struct
   /* Context type. */
   AnnotatePaintType type;
 
-  /* Foreground color. */
-  gchar *fg_color;
-
 } AnnotatePaintContext;
 
 
@@ -179,6 +176,8 @@ typedef struct
   /* Is the debug enabled. */
   gboolean     debug;
 
+  /* Pen color. */
+  gchar *color;
 
 } AnnotateData;
 

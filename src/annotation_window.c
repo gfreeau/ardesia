@@ -49,10 +49,7 @@ static AnnotatePaintContext *
 annotate_paint_context_new        (AnnotatePaintType type)
 {
   AnnotatePaintContext *context = (AnnotatePaintContext *) NULL;
-  gchar* color = g_strdup ("FF0000FF");
-
   context = g_malloc ((gsize) sizeof (AnnotatePaintContext));
-  context->fg_color = color;
   context->type = type;
 
   return context;
@@ -102,15 +99,15 @@ select_color            ()
       if (data->cur_context->type != ANNOTATE_ERASER) //pen or arrow tool
         {
           /* Select the colour. */
-          if (data->cur_context->fg_color)
+          if (data->color)
             {
               if (data->debug)
                 {
-                  g_printerr ("Select colour %s\n", data->cur_context->fg_color);
+                  g_printerr ("Select colour %s\n", data->color);
                 }
 
               cairo_set_source_color_from_string (data->annotation_cairo_context,
-                                                  data->cur_context->fg_color);
+                                                  data->color);
             }
 
           cairo_set_operator (data->annotation_cairo_context, CAIRO_OPERATOR_SOURCE);
@@ -804,7 +801,7 @@ get_annotation_window   ()
 void
 annotate_set_color      (gchar      *color)
 {
-  data->cur_context->fg_color = color;
+  data->color = color;
 }
 
 
@@ -902,7 +899,7 @@ annotate_modify_color   (AnnotateDeviceData *devdata,
   gdouble corrective = 0;
 
   /* The pressure is greater than 0. */
-  if ( (!data->annotation_cairo_context) || (!data->cur_context->fg_color))
+  if ( (!data->annotation_cairo_context) || (!data->color))
     {
       return;
     }
@@ -910,14 +907,14 @@ annotate_modify_color   (AnnotateDeviceData *devdata,
   if (pressure >= 1)
     {
       cairo_set_source_color_from_string (data->annotation_cairo_context,
-                                          data->cur_context->fg_color);
+                                          data->color);
     }
   else if (pressure <= 0.1)
     {
       pressure = 0.1;
     }
 
-  sscanf (data->cur_context->fg_color, "%02X%02X%02X%02X", &r, &g, &b, &a);
+  sscanf (data->color, "%02X%02X%02X%02X", &r, &g, &b, &a);
 
   if (devdata->coord_list != NULL)
     {
@@ -985,7 +982,7 @@ annotate_select_pen          ()
   if (data->debug)
     {
       g_printerr ("The pen with colour %s has been selected\n",
-                  data->cur_context->fg_color);
+                  data->color);
     }
 
   if (data->default_pen)
@@ -997,7 +994,7 @@ annotate_select_pen          ()
 
       set_pen_cursor (&data->cursor,
                       data->thickness,
-                      data->cur_context->fg_color,
+                      data->color,
                       data->arrow);
 
       update_cursor ();
@@ -1015,7 +1012,7 @@ annotate_select_filler       ()
   if (data->debug)
     {
       g_printerr ("The pen with colour %s has been selected\n",
-                  data->cur_context->fg_color);
+                  data->color);
     }
 
   if (data->default_pen)
@@ -1219,7 +1216,7 @@ annotate_fill                (AnnotateDeviceData *devdata,
          
   flood_fill (data->annotation_cairo_context,
               image_surface,
-              data->cur_context->fg_color,
+              data->color,
               x,
               y);
 
@@ -1306,10 +1303,6 @@ annotate_paint_context_free (AnnotatePaintContext *context)
 {
   if (context)
     {
-      if (context->fg_color)
-        {
-          g_free (context->fg_color);
-        }
       g_free (context);
       context = (AnnotatePaintContext *) NULL;
     }
@@ -1323,6 +1316,12 @@ annotate_quit           ()
   
   if (data)
     {
+      if (data->color)
+        {
+          g_free (data->color);
+          data->color = NULL;
+        }
+
       /* Destroy cursors. */
       disallocate_cursor ();
       cursors_main_quit ();
@@ -1493,6 +1492,7 @@ annotate_init                (GtkWidget  *parent,
 {
   cursors_main ();
   data = g_malloc ((gsize) sizeof (AnnotateData));
+  gchar* color = g_strdup ("FF0000FF");
 
   /* Initialize the data structure. */
   data->annotation_cairo_context = (cairo_t *) NULL;
@@ -1500,7 +1500,8 @@ annotate_init                (GtkWidget  *parent,
   data->current_save_index = 0;
   data->cursor = (GdkCursor *) NULL;
   data->devdatatable = (GHashTable *) NULL;
-
+  
+  data->color = color;
   data->is_grabbed = FALSE;
   data->arrow = FALSE;
   data->rectify = FALSE;

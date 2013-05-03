@@ -548,9 +548,6 @@ on_bar_filler_activate            (GtkToolButton   *toolbutton,
   BarData *bar_data = (BarData *) func_data;
   lock (bar_data);
   annotate_select_filler ();
-  strncpy (bar_data->color, bar_data->color, 6);
-  annotate_set_color (bar_data->color);
-  annotate_select_filler ();
 }
 
 
