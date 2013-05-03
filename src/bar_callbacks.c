@@ -63,29 +63,6 @@ bar_to_top         (gpointer data)
 }
 
 
-/* Called when close the program. */
-static gboolean
-quit               (BarData *bar_data)
-{
-  annotate_quit ();
-  quit_pdf_saver ();
-  stop_recorder ();
-
-  /* Dis-allocate all the BarData structure. */
-  if (bar_data)
-    {
-      if (bar_data->color)
-        {
-          g_free (bar_data->color);
-          bar_data->color = NULL;
-        }
-    }
-
-  gtk_main_quit ();
-  return TRUE;
-}
-
-
 /* Is the toggle tool button specified with name is active? */
 static gboolean
 is_toggle_tool_button_active      (gchar *toggle_tool_button_name)
@@ -357,35 +334,28 @@ on_bar_configure_event            (GtkWidget  *widget,
 }
 
 
-/* Called when the main window is destroyed. */
-G_MODULE_EXPORT void
-on_bar_destroy_event            (GtkWidget *widget,
-                                 gpointer   func_data)
-{
-  BarData *bar_data = (BarData *) func_data;
-  quit (bar_data);
-}
-
-
 /* Called when push the quit button */
 G_MODULE_EXPORT gboolean
 on_bar_quit                     (GtkToolButton   *toolbutton,
                                  gpointer         func_data)
 {
   BarData *bar_data = (BarData *) func_data;
-  bar_data->grab = FALSE;
 
+  stop_recorder ();
+
+  bar_data->grab = FALSE;
   /* Release grab. */
   annotate_release_grab ();
 
   export_iwb (get_iwb_filename ());
+  quit_pdf_saver ();
   start_share_dialog ();
 
   annotate_quit ();
 
   /* Destroy the background window this will call the destroy of all windows. */
   destroy_background_window ();
-  
+
   /* Quit the gtk engine. */
   gtk_main_quit ();
   return FALSE;
@@ -437,18 +407,6 @@ on_bar_enter_notify_event         (GtkWidget       *widget,
       stop_text_widget ();
     }
   return TRUE;
-}
-
-
-/* Delete event occurs and then I quit the program. */
-G_MODULE_EXPORT gboolean
-on_bar_delete_event               (GtkWidget       *widget,
-                                   GdkEvent        *event,
-                                   gpointer         func_data)
-{
-  BarData *bar_data = (BarData *) func_data;
-  quit (bar_data);
-  return FALSE;
 }
 
 

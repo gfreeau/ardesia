@@ -257,8 +257,8 @@ save_text          ()
 static void
 init_text_widget             (GtkWidget *widget)
 {
-  gtk_widget_input_shape_combine_region(text_data->window, NULL);
-  drill_window_in_bar_area (text_data->window);
+  gtk_widget_input_shape_combine_region(widget, NULL);
+  drill_window_in_bar_area (widget);
 
   if (!text_data->cr)
     {

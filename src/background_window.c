@@ -136,13 +136,6 @@ destroy_background_window         ()
 {
   if (background_data)
     {
-   
-      if (background_data->background_window)
-        {
-          /* Destroy brutally the background window. */
-          gtk_widget_destroy (background_data->background_window);
-          background_data->background_window = (GtkWidget *) NULL;
-        }
 
       if (background_data->background_cr)
         {
@@ -154,6 +147,13 @@ destroy_background_window         ()
         {
           g_free (background_data->background_color);
           background_data->background_color = (gchar *) NULL;
+        }
+
+      if (background_data->background_window)
+        {
+          /* Destroy brutally the background window. */
+          gtk_widget_destroy (background_data->background_window);
+          background_data->background_window = (GtkWidget *) NULL;
         }
 
       /* Delete reference to the gtk builder object. */
