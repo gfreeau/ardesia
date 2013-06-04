@@ -55,11 +55,12 @@ calculate_position (GtkWidget *ardesia_bar_window,
       *x = (d_width - w_width)/2;
       if (position==NORTH)
         {
-          *y = SPACE_FROM_BORDER;
+          /* Assuming that the bar is in south. */
+          *y = 0; // on north SPACE_FROM_BORDER;
         }
       else if (position==SOUTH)
         {
-          /* South. */
+          /* South. assuming bar is on south. */
           *y = d_height - SPACE_FROM_BORDER - w_height;
         }
       else
