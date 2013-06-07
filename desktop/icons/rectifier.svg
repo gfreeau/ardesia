@@ -9,7 +9,7 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="16.010757"
+   width="16"
    height="15.999969"
    id="svg2"
    version="1.1"
@@ -72,15 +72,15 @@
      id="layer1"
      transform="translate(4.7240596,-1037.4518)">
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#ff0000;stroke-width:1.672912;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ff0000;stroke-width:1.67234147;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3977"
-       width="12.848479"
-       height="10.677538"
-       x="-3.1625314"
-       y="1038.2882" />
+       width="12.839222"
+       height="10.67795"
+       x="-3.1633487"
+       y="1038.288" />
     <path
-       style="fill:none;stroke:#ff0000;stroke-width:1.57924283;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m -3.9344382,1052.6621 14.4315142,0 0,0"
+       style="fill:none;stroke:#ff0000;stroke-width:1.57870424;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m -3.9346992,1052.6624 14.4211162,0 0,0"
        id="path3979"
        inkscape:connector-curvature="0" />
   </g>

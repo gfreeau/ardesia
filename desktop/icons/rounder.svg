@@ -76,10 +76,10 @@
        sodipodi:rx="34.039562"
        sodipodi:ry="36.008793"
        d="m 82.145058,47.894505 a 34.039562,36.008793 0 1 1 -68.079125,0 34.039562,36.008793 0 1 1 68.079125,0 z"
-       transform="matrix(0.14872893,0,0,0.14059532,2.9305834,1035.4896)" />
+       transform="matrix(0.14367257,0,0,0.13981665,2.830881,1035.5954)" />
     <path
-       style="fill:none;stroke:#ff0000;stroke-width:1.6722666;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 15.35841,1049.8444 c 0,0 -3.932771,4.0076 -7.38471,0 -3.4519395,-4.0077 -7.38471065,0 -7.38471065,0 l -0.0973123,0.095"
+       style="fill:none;stroke:#ff0000;stroke-width:1.63903701;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 14.836197,1049.8707 c 0,0 -3.799068,3.9854 -7.1336509,0 -3.3345835,-3.9855 -7.1336517,0 -7.1336517,0 l -0.094004,0.094"
        id="path3956"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="czcc" />

@@ -43,20 +43,23 @@
      inkscape:window-height="722"
      id="namedview9"
      showgrid="false"
-     inkscape:zoom="7.8223684"
-     inkscape:cx="54.566863"
+     inkscape:zoom="1.9555921"
+     inkscape:cx="135.74716"
      inkscape:cy="-18.820742"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg2"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0" />
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       orientation="0,1"
+       position="145.22456,-5.6248949"
+       id="guide2988" />
+  </sodipodi:namedview>
   <g
      id="g4"
-     transform="matrix(0.12707537,0,0,0.12707537,-1.6286975,-3.2681027)"
+     transform="matrix(0.12707537,0,0,0.12707537,-1.6286975,-3.268103)"
      style="fill:#ff0000">
     <title
        id="title6">Layer 1</title>
@@ -69,24 +72,24 @@
   <text
      xml:space="preserve"
      style="font-size:12.24171162px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-     x="-1.2970954"
-     y="7.6749806"
+     x="-1.2970955"
+     y="7.6749802"
      id="text2990"
      sodipodi:linespacing="125%"><tspan
        sodipodi:role="line"
        id="tspan2992"
-       x="-1.2970954"
-       y="7.6749806"
+       x="-1.2970955"
+       y="7.6749802"
        style="font-weight:bold;-inkscape-font-specification:Sans Bold">+</tspan></text>
   <path
      style="fill:#ffffff;stroke:none"
-     d="M 9.19372,1.3837953 C 8.9665816,1.8677503 9.4290098,3.1112703 9.4813566,1.7353513 9.4753513,1.4985413 9.3606121,1.0799303 9.19372,1.3837953 z"
+     d="M 9.19372,1.383795 C 8.9665817,1.86775 9.4290099,3.11127 9.4813567,1.735351 9.4753514,1.498541 9.3606122,1.07993 9.19372,1.383795 z"
      id="path3766"
      inkscape:connector-curvature="0"
      sodipodi:nodetypes="ccc" />
   <path
      style="fill:#ffffff;stroke:none"
-     d="m 14.545268,10.579565 c 0.195857,-0.05607 0.444803,-0.07747 0.399247,-0.281193 -0.07742,-0.3462237 -2.282829,0.183904 -0.399247,0.281193 z"
+     d="m 14.545268,10.579565 c 0.195857,-0.05607 0.444803,-0.07747 0.399247,-0.281193 -0.07742,-0.346224 -2.282828,0.183904 -0.399247,0.281193 z"
      id="path3768"
      inkscape:connector-curvature="0"
      sodipodi:nodetypes="csc" />

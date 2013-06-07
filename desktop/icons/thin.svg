@@ -52,7 +52,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="12.912065"
      inkscape:cx="-10.750716"
-     inkscape:cy="8.7458237"
+     inkscape:cy="14.94158"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -84,22 +84,15 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-37.999999,-998.3902)">
-    <g
-       id="layer1-2"
-       inkscape:label="Livello 1"
-       transform="matrix(0.08004867,0,0,0.07957845,16.477697,964.51178)"
-       inkscape:transform-center-x="2.6286366"
-       inkscape:transform-center-y="3.9813488">
-      <path
-         transform="matrix(10.096718,0,0,10.577515,-3352.9204,-5023.6675)"
-         d="m 372.85713,524.68359 c 0,2.07107 -1.75888,3.75 -3.92857,3.75 -2.16969,0 -3.92857,-1.67893 -3.92857,-3.75 0,-2.07106 1.75888,-3.75 3.92857,-3.75 2.16969,0 3.92857,1.67894 3.92857,3.75 z"
-         sodipodi:ry="3.75"
-         sodipodi:rx="3.9285715"
-         sodipodi:cy="524.68359"
-         sodipodi:cx="368.92856"
-         id="path3831"
-         style="fill:#000000;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         sodipodi:type="arc" />
-    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:#666666;stroke:#000000;stroke-width:0.60619628;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;fill-opacity:1"
+       id="path3831"
+       sodipodi:cx="368.92856"
+       sodipodi:cy="524.68359"
+       sodipodi:rx="3.9285715"
+       sodipodi:ry="3.75"
+       d="m 372.85713,524.68359 c 0,2.07107 -1.75888,3.75 -3.92857,3.75 -2.16969,0 -3.92857,-1.67893 -3.92857,-3.75 0,-2.07106 1.75888,-3.75 3.92857,-3.75 2.16969,0 3.92857,1.67894 3.92857,3.75 z"
+       transform="matrix(0.80822885,0,0,0.84174225,-251.91912,564.73611)" />
   </g>
 </svg>
