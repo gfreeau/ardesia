@@ -6,14 +6,14 @@
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/add-pdf.png</property>
+    <property name="pixbuf">icons/add-pdf.svg</property>
   </object>
   <object class="GtkImage" id="arrow">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/arrow.png</property>
+    <property name="pixbuf">icons/arrow.svg</property>
   </object>
   <object class="GtkImage" id="blue">
     <property name="visible">True</property>
@@ -41,7 +41,7 @@
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/highlighter.png</property>
+    <property name="pixbuf">icons/highlighter.svg</property>
   </object>
   <object class="GtkImage" id="green">
     <property name="visible">True</property>
@@ -86,14 +86,14 @@
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/pencil.png</property>
+    <property name="pixbuf">icons/pencil.svg</property>
   </object>
   <object class="GtkImage" id="pointer">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/pointer.png</property>
+    <property name="pixbuf">icons/pointer.svg</property>
   </object>
   <object class="GtkImage" id="rectifier">
     <property name="visible">True</property>
@@ -152,7 +152,7 @@
   </object>
   <object class="GtkWindow" id="ArdesiaBar">
     <property name="width_request">660</property>
-    <property name="height_request">36</property>
+    <property name="height_request">18</property>
     <property name="can_focus">True</property>
     <property name="has_focus">True</property>
     <property name="is_focus">True</property>

@@ -23,7 +23,8 @@
 
 #include <cursors.h>
 #include <utils.h>
-
+#include <librsvg/rsvg.h>
+#include <librsvg/rsvg-cairo.h>
 
 /* The image surface that will contain the pen icon. */
 static cairo_surface_t *pen_image_surface         = (cairo_surface_t*) NULL;
@@ -41,6 +42,27 @@ static cairo_surface_t *arrow_image_surface      = (cairo_surface_t*) NULL;
 static cairo_surface_t *filler_image_surface     = (cairo_surface_t*) NULL;
 
 
+/* Get cairo surface from svg. */
+static cairo_surface_t *
+cairo_image_surface_create_from_svg (const gchar* file)
+{
+  cairo_surface_t *surface;
+  cairo_t *cr;
+  RsvgHandle* handle;
+  RsvgDimensionData  dimensions;  
+
+  handle = rsvg_handle_new_from_file(file, NULL);
+  rsvg_handle_get_dimensions (handle, &dimensions);
+  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 
+                                        dimensions.width,
+                                        dimensions.height);
+  cr = cairo_create(surface);
+  rsvg_handle_render_cairo(handle, cr);
+  cairo_destroy(cr);
+  return surface;
+}
+
+
 /* Get the eraser image surface. */
 static cairo_surface_t *
 get_eraser_image_surface ()
@@ -50,7 +72,7 @@ get_eraser_image_surface ()
       return eraser_image_surface;
     }
 
-  eraser_image_surface = cairo_image_surface_create_from_png (ERASER_ICON);
+  eraser_image_surface = cairo_image_surface_create_from_svg (ERASER_ICON);
   return eraser_image_surface;
 }
 
@@ -64,7 +86,7 @@ get_highlighter_image_surface ()
       return highlighter_image_surface;
     }
 
-  highlighter_image_surface = cairo_image_surface_create_from_png (HIGHLIGHTER_ICON);
+  highlighter_image_surface = cairo_image_surface_create_from_svg (HIGHLIGHTER_ICON);
   return highlighter_image_surface;
 }
 
@@ -78,7 +100,7 @@ get_arrow_image_surface ()
       return arrow_image_surface;
     }
 
-  arrow_image_surface = cairo_image_surface_create_from_png (ARROW_ICON);
+  arrow_image_surface = cairo_image_surface_create_from_svg (ARROW_ICON);
   return arrow_image_surface;
 }
 
@@ -92,7 +114,7 @@ get_filler_image_surface ()
       return filler_image_surface;
     }
 
-  filler_image_surface = cairo_image_surface_create_from_png (FILLER_ICON);
+  filler_image_surface = cairo_image_surface_create_from_svg (FILLER_ICON);
   return filler_image_surface;
 }
 
@@ -106,7 +128,7 @@ get_pen_image_surface ()
       return pen_image_surface;
     }
 
-  pen_image_surface = cairo_image_surface_create_from_png (PENCIL_ICON);
+  pen_image_surface = cairo_image_surface_create_from_svg (PENCIL_ICON);
   return pen_image_surface;
 }
 

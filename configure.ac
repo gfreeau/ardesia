@@ -98,7 +98,7 @@ AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = yes)
 ################
 # Check packages
 ################
-PKG_CHECK_MODULES(ARDESIA, [gtk+-3.0 gsl libgsf-1])
+PKG_CHECK_MODULES(ARDESIA, [gtk+-3.0 gsl libgsf-1 librsvg-2.0])
 AC_CHECK_PROGS(XDG_UTILS, [xdg-mime xdg-icon-resource xdg-desktop-menu], [])
 AC_SUBST(GTK3_CFLAGS)
 AC_SUBST(GTK3_LIBS)

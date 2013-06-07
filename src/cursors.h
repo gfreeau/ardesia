@@ -30,18 +30,18 @@
 #ifdef _WIN32
 #  define ANNOTATION_UI_FOLDER "..\\share\\ardesia\\ui"
 #  define ANNOTATION_PIXMAPS_FOLDER "..\\share\\ardesia\\ui\\icons"
-#  define ERASER_ICON ANNOTATION_PIXMAPS_FOLDER"\\eraser.png"
-#  define PENCIL_ICON ANNOTATION_PIXMAPS_FOLDER"\\pencil.png"
-#  define ARROW_ICON ANNOTATION_PIXMAPS_FOLDER"\\arrow.png"
-#  define HIGHLIGHTER_ICON ANNOTATION_PIXMAPS_FOLDER"\\highlighter.png"
-#  define FILLER_ICON ANNOTATION_PIXMAPS_FOLDER"\\filler.png"
+#  define ERASER_ICON ANNOTATION_PIXMAPS_FOLDER"\\eraser.svg"
+#  define PENCIL_ICON ANNOTATION_PIXMAPS_FOLDER"\\pencil.svg"
+#  define ARROW_ICON ANNOTATION_PIXMAPS_FOLDER"\\arrow.svg"
+#  define HIGHLIGHTER_ICON ANNOTATION_PIXMAPS_FOLDER"\\highlighter.svg"
+#  define FILLER_ICON ANNOTATION_PIXMAPS_FOLDER"\\filler.svg"
 #else
 #  define ANNOTATION_PIXMAPS_FOLDER PACKAGE_DATA_DIR"/ardesia/ui/icons"
-#  define ERASER_ICON ANNOTATION_PIXMAPS_FOLDER"/eraser.png"
-#  define PENCIL_ICON ANNOTATION_PIXMAPS_FOLDER"/pencil.png"
-#  define ARROW_ICON ANNOTATION_PIXMAPS_FOLDER"/arrow.png"
-#  define HIGHLIGHTER_ICON ANNOTATION_PIXMAPS_FOLDER"/highlighter.png"
-#  define FILLER_ICON ANNOTATION_PIXMAPS_FOLDER"/filler.png"
+#  define ERASER_ICON ANNOTATION_PIXMAPS_FOLDER"/eraser.svg"
+#  define PENCIL_ICON ANNOTATION_PIXMAPS_FOLDER"/pencil.svg"
+#  define ARROW_ICON ANNOTATION_PIXMAPS_FOLDER"/arrow.svg"
+#  define HIGHLIGHTER_ICON ANNOTATION_PIXMAPS_FOLDER"/highlighter.svg"
+#  define FILLER_ICON ANNOTATION_PIXMAPS_FOLDER"/filler.svg"
 #endif
 
 
