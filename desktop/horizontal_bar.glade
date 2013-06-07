@@ -20,21 +20,21 @@
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/blue.png</property>
+    <property name="pixbuf">icons/blue.svg</property>
   </object>
   <object class="GtkImage" id="eraser">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/eraser.png</property>
+    <property name="pixbuf">icons/eraser.svg</property>
   </object>
   <object class="GtkImage" id="filler">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/filler.png</property>
+    <property name="pixbuf">icons/filler.svg</property>
   </object>
   <object class="GtkImage" id="highlighter">
     <property name="visible">True</property>
@@ -48,38 +48,38 @@
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/green.png</property>
+    <property name="pixbuf">icons/green.svg</property>
   </object>
   <object class="GtkImage" id="hand">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/hand.png</property>
+    <property name="pixbuf">icons/hand.svg</property>
   </object>
   <object class="GtkImage" id="media-record">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/media-record.png</property>
+    <property name="pixbuf">icons/media-record.svg</property>
   </object>
   <object class="GtkImage" id="media-recorder-unavailable">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="pixbuf">icons/media-recorder-unavailable.png</property>
+    <property name="pixbuf">icons/media-recorder-unavailable.svg</property>
   </object>
   <object class="GtkImage" id="medium">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/medium.png</property>
+    <property name="pixbuf">icons/medium.svg</property>
   </object>
   <object class="GtkImage" id="micro">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="pixbuf">icons/micro.png</property>
+    <property name="pixbuf">icons/micro.svg</property>
   </object>
   <object class="GtkImage" id="pencil">
     <property name="visible">True</property>
@@ -98,61 +98,61 @@
   <object class="GtkImage" id="rectifier">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="pixbuf">icons/rectifier.png</property>
+    <property name="pixbuf">icons/rectifier.svg</property>
   </object>
   <object class="GtkImage" id="red">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/red.png</property>
+    <property name="pixbuf">icons/red.svg</property>
   </object>
   <object class="GtkImage" id="rounder">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="pixbuf">icons/rounder.png</property>
+    <property name="pixbuf">icons/rounder.svg</property>
   </object>
   <object class="GtkImage" id="screenshoot">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/camera-photo.png</property>
+    <property name="pixbuf">icons/photo-camera.svg</property>
   </object>
   <object class="GtkImage" id="text">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/text.png</property>
+    <property name="pixbuf">icons/text.svg</property>
   </object>
   <object class="GtkImage" id="thick">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="pixbuf">icons/thick.png</property>
+    <property name="pixbuf">icons/thick.svg</property>
   </object>
   <object class="GtkImage" id="thin">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="pixbuf">icons/thin.png</property>
+    <property name="pixbuf">icons/thin.svg</property>
   </object>
   <object class="GtkImage" id="white">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/white.png</property>
+    <property name="pixbuf">icons/white.svg</property>
   </object>
   <object class="GtkImage" id="yellow">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="pixbuf">icons/yellow.png</property>
+    <property name="pixbuf">icons/yellow.svg</property>
   </object>
   <object class="GtkWindow" id="ArdesiaBar">
-    <property name="width_request">635</property>
-    <property name="height_request">34</property>
+    <property name="width_request">660</property>
+    <property name="height_request">36</property>
     <property name="can_focus">True</property>
     <property name="has_focus">True</property>
     <property name="is_focus">True</property>
