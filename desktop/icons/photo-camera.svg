@@ -87,9 +87,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
+     inkscape:zoom="5.6"
      inkscape:cx="23.985961"
-     inkscape:cy="41.819296"
+     inkscape:cy="24.267857"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -208,5 +208,23 @@
        x="6.781949"
        y="1036.8854"
        ry="0.67804098" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d="m 7.9859611,2.5000002 0,-0.8035715 2.4999999,0 2.5,0 0,0.8035715 0,0.8035714 -2.5,0 -2.4999999,0 0,-0.8035714 z"
+       id="path3004"
+       inkscape:connector-curvature="0"
+       transform="translate(0,1036.3622)" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d="m 2.8073897,7.232143 c 0,-0.098214 0.2008928,-0.1785714 0.4464286,-0.1785714 0.2455357,0 0.4464285,0.080357 0.4464285,0.1785714 0,0.098214 -0.2008928,0.1785714 -0.4464285,0.1785714 -0.2455358,0 -0.4464286,-0.080357 -0.4464286,-0.1785714 z"
+       id="path3006"
+       inkscape:connector-curvature="0"
+       transform="translate(0,1036.3622)" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d=""
+       id="path3008"
+       inkscape:connector-curvature="0"
+       transform="translate(0,1036.3622)" />
   </g>
 </svg>
