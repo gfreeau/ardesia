@@ -79,10 +79,6 @@ AM_PROG_LIBTOOL
 #######
 # Gtk 3
 #######
-AM_PATH_GTK_3_0(gtk_required_version, :,
-  AC_MSG_ERROR(Test for GTK3+ failed. See the file 'INSTALL' for help.),
-  gthread)
-
 AC_MSG_CHECKING([if GTK+ is version 2.99.3 or newer])
 if $PKG_CONFIG --atleast-version=2.99.3 gtk+-3.0; then
   have_gtk3=yes
