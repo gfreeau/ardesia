@@ -126,7 +126,7 @@ add_input_device        (GdkDevice     *device,
 }
 
 
-/* Add input device. */
+/* Remove input device. */
 void
 remove_input_device     (GdkDevice     *device,
                          AnnotateData  *data)
