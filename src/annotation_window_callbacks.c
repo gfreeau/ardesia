@@ -435,7 +435,7 @@ on_button_release  (GtkWidget       *win,
         }
     }
 
-  cairo_stroke_preserve (data->annotation_cairo_context);
+  cairo_stroke (data->annotation_cairo_context);
 
   annotate_add_savepoint ();
 
