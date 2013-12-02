@@ -142,10 +142,10 @@ on_button_press    (GtkWidget      *win,
 {
 
   AnnotateData *data = (AnnotateData *) user_data;
-  GdkDevice *slave = gdk_event_get_source_device ( (GdkEvent *) ev);
+  GdkDevice *master = gdk_event_get_device ( (GdkEvent *) ev);
   
   /* Get the data for this device. */
-  AnnotateDeviceData *slavedata = g_hash_table_lookup (data->devdatatable, slave);
+  AnnotateDeviceData *masterdata = g_hash_table_lookup (data->devdatatable, master);
   
   gdouble pressure = 1.0;
   
@@ -162,7 +162,7 @@ on_button_press    (GtkWidget      *win,
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
-                  gdk_device_get_name (slave));
+                  gdk_device_get_name (master));
       annotate_release_grab ();
       return FALSE;
     }
@@ -170,7 +170,7 @@ on_button_press    (GtkWidget      *win,
   if (data->debug)
     {
       g_printerr ("Device '%s': Button %i Down at (x,y)= (%f : %f)\n",
-                  gdk_device_get_name (slave),
+                  gdk_device_get_name (master),
                   ev->button,
                   ev->x,
                   ev->y);
@@ -198,10 +198,10 @@ on_button_press    (GtkWidget      *win,
 
   annotate_configure_pen_options (data);
 
-  annotate_coord_dev_list_free (slavedata);
-  annotate_draw_point (slavedata, ev->x, ev->y, pressure);
+  annotate_coord_dev_list_free (masterdata);
+  annotate_draw_point (masterdata, ev->x, ev->y, pressure);
 
-  annotate_coord_list_prepend (slavedata,
+  annotate_coord_list_prepend (masterdata,
                                ev->x,
                                ev->y,
                                annotate_get_thickness (),
@@ -248,7 +248,7 @@ on_motion_notify   (GtkWidget       *win,
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
-                  gdk_device_get_name (slave));
+                  gdk_device_get_name (master));
       annotate_release_grab ();
       return FALSE;
     }
@@ -256,7 +256,7 @@ on_motion_notify   (GtkWidget       *win,
   if (data->debug)
     {
       g_printerr ("Device '%s': Move at (x,y)= (%f : %f)\n",
-                  gdk_device_get_name (slave),
+                  gdk_device_get_name (master),
                   ev->x,
                   ev->y);
     }
@@ -268,7 +268,7 @@ on_motion_notify   (GtkWidget       *win,
       if (data->debug)
         {
           g_printerr ("Device '%s': Move on the bar then ungrab\n",
-                       gdk_device_get_name (slave));
+                       gdk_device_get_name (master));
         }
 
       /* The point is inside the ardesia bar then ungrab. */
@@ -303,9 +303,9 @@ on_motion_notify   (GtkWidget       *win,
         }
 
       /* If the point is already selected and higher pressure then print else jump it. */
-      if (slavedata->coord_list)
+      if (masterdata->coord_list)
         {
-          AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (slavedata->coord_list, 0);
+          AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (masterdata->coord_list, 0);
           gdouble tollerance = annotate_get_thickness ();
 
           if (get_distance (last_point->x, last_point->y, ev->x, ev->y)<tollerance)
@@ -319,19 +319,19 @@ on_motion_notify   (GtkWidget       *win,
               else // pressure >= last_point->pressure
                 {
                   /* Seems that you are pressing the pen more. */
-                  annotate_modify_color (slavedata, data, pressure);
-                  annotate_draw_line (slavedata, ev->x, ev->y, TRUE);
+                  annotate_modify_color (masterdata, data, pressure);
+                  annotate_draw_line (masterdata, ev->x, ev->y, TRUE);
                   /* Store the new pressure without allocate a new coordinate. */
                   last_point->pressure = pressure;
                   return TRUE;
                 }
             }
-          annotate_modify_color (slavedata, data, pressure);
+          annotate_modify_color (masterdata, data, pressure);
         }
     }
     
-  annotate_draw_line (slavedata, ev->x, ev->y, TRUE);
-  annotate_coord_list_prepend (slavedata, ev->x, ev->y, selected_width, pressure);
+  annotate_draw_line (masterdata, ev->x, ev->y, TRUE);
+  annotate_coord_list_prepend (masterdata, ev->x, ev->y, selected_width, pressure);
 
   return TRUE;
 }
@@ -344,12 +344,13 @@ on_button_release  (GtkWidget       *win,
                     gpointer         user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
-  GdkDevice *slave = gdk_event_get_source_device ((GdkEvent *) ev);
+  
+  GdkDevice *master = gdk_event_get_device ( (GdkEvent *) ev);
   
   /* Get the data for this device. */
-  AnnotateDeviceData *slavedata = g_hash_table_lookup(data->devdatatable, slave);
+  AnnotateDeviceData *masterdata= g_hash_table_lookup (data->devdatatable, master);
   
-  guint lenght = g_slist_length (slavedata->coord_list);
+  guint lenght = g_slist_length (masterdata->coord_list);
 
   if (!data->is_grabbed)
     {
@@ -359,7 +360,7 @@ on_button_release  (GtkWidget       *win,
   if (!ev)
     {
       g_printerr ("Device '%s': Invalid event; I ungrab all\n",
-                  gdk_device_get_name (slave));
+                  gdk_device_get_name (master));
       annotate_release_grab ();
       return FALSE;
     }
@@ -367,7 +368,7 @@ on_button_release  (GtkWidget       *win,
   if (data->debug)
     {
       g_printerr ("Device '%s': Button %i Up at (x,y)= (%.2f : %.2f)\n",
-                  gdk_device_get_name (slave),
+                  gdk_device_get_name (master),
                    ev->button, ev->x, ev->y);
     }
 
@@ -387,7 +388,7 @@ on_button_release  (GtkWidget       *win,
 
   if (data->cur_context == data->default_filler)
     {
-      annotate_fill (slavedata, data, ev->x, ev->y);
+      annotate_fill (masterdata, data, ev->x, ev->y);
       return TRUE;
     }
     
@@ -395,8 +396,8 @@ on_button_release  (GtkWidget       *win,
 
   if (lenght > 2)
     {
-      AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (slavedata->coord_list, lenght-1);
-      AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (slavedata->coord_list, 0);
+      AnnotatePoint *first_point = (AnnotatePoint *) g_slist_nth_data (masterdata->coord_list, lenght-1);
+      AnnotatePoint *last_point = (AnnotatePoint *) g_slist_nth_data (masterdata->coord_list, 0);
 
       gdouble distance = get_distance (ev->x, ev->y, first_point->x, first_point->y);
 
@@ -412,7 +413,7 @@ on_button_release  (GtkWidget       *win,
       gdouble tollerance = annotate_get_thickness () * score;
 
       gdouble pressure = last_point->pressure;
-      annotate_modify_color (slavedata, data, pressure);
+      annotate_modify_color (masterdata, data, pressure);
 
       gboolean closed_path = FALSE;
 
@@ -420,26 +421,26 @@ on_button_release  (GtkWidget       *win,
       if (distance > tollerance)
         {
           /* Different point. */
-          annotate_draw_line (slavedata, ev->x, ev->y, TRUE);
-          annotate_coord_list_prepend (slavedata, ev->x, ev->y, annotate_get_thickness (), pressure);
+          annotate_draw_line (masterdata, ev->x, ev->y, TRUE);
+          annotate_coord_list_prepend (masterdata, ev->x, ev->y, annotate_get_thickness (), pressure);
         }
       else
         {
           /* Rounded to be the same point. */
           closed_path = TRUE; // this seems to be a closed path
-          annotate_draw_line (slavedata, first_point->x, first_point->y, TRUE);
-          annotate_coord_list_prepend (slavedata, first_point->x, first_point->y, annotate_get_thickness (), pressure);
+          annotate_draw_line (masterdata, first_point->x, first_point->y, TRUE);
+          annotate_coord_list_prepend (masterdata, first_point->x, first_point->y, annotate_get_thickness (), pressure);
         }
 
       if (data->cur_context->type != ANNOTATE_ERASER)
         {
-          annotate_shape_recognize (slavedata, closed_path);
+          annotate_shape_recognize (masterdata, closed_path);
 
           /* If is selected an arrow type then I draw the arrow. */
           if (data->arrow)
             {
               /* Print arrow at the end of the path. */
-              annotate_draw_arrow (slavedata, distance);
+              annotate_draw_arrow (masterdata, distance);
             }
         }
     }

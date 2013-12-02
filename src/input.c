@@ -106,8 +106,6 @@ setup_input_devices     (AnnotateData  *data)
   GList *masters = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
   GList *slavers = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_SLAVE);
   devices = g_list_concat(masters, slavers);
-  //setup_input_device_list (data, masters);
-  //setup_input_device_list (data, slavers);
   setup_input_device_list (data, devices);
 }
 
