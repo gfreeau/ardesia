@@ -218,10 +218,11 @@ on_motion_notify   (GtkWidget       *win,
                     gpointer         user_data)
 {
   AnnotateData *data = (AnnotateData *) user_data;
+  GdkDevice *master = gdk_event_get_device ( (GdkEvent *) ev);
   GdkDevice *slave = gdk_event_get_source_device ( (GdkEvent *) ev);
   
   /* Get the data for this device. */
-  AnnotateDeviceData *masterdata= g_hash_table_lookup (data->devdatatable, ev->device);
+  AnnotateDeviceData *masterdata= g_hash_table_lookup (data->devdatatable, master);
   AnnotateDeviceData *slavedata = g_hash_table_lookup (data->devdatatable, slave);
 
    if (data->cur_context == data->default_filler)
@@ -233,7 +234,7 @@ on_motion_notify   (GtkWidget       *win,
       ev->state != slavedata->state  ||
       masterdata->lastslave != slave)
     {
-       annotate_select_tool (data, ev->device, slave, ev->state);
+       annotate_select_tool (data, master, slave, ev->state);
     }
 
   gdouble selected_width = 0.0;
@@ -250,6 +251,14 @@ on_motion_notify   (GtkWidget       *win,
                   gdk_device_get_name (slave));
       annotate_release_grab ();
       return FALSE;
+    }
+
+  if (data->debug)
+    {
+      g_printerr ("Device '%s': Move at (x,y)= (%f : %f)\n",
+                  gdk_device_get_name (slave),
+                  ev->x,
+                  ev->y);
     }
   
 #ifdef _WIN32
@@ -475,5 +484,4 @@ void on_device_added    (GdkDeviceManager  *device_manager,
 
   add_input_device (device, data);
 }
-
 
