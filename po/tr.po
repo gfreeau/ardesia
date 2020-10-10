@@ -1,0 +1,251 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Ardesia 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-09-12 17:56+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Cihan Alkan <cihanalk@gmail.com>\n"
+"Language-Team: Cihan Alkan <cihanalk@gmail.com>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 2.4.1\n"
+
+#: ../desktop/crash_dialog.glade.h:1
+msgid "An error is occurred. Do you want send the crash report?"
+msgstr "Bir hata oluştu. Hata raporunu göndermek istiyor musunuz?"
+
+#: ../desktop/info_dialog.glade.h:1
+msgid ""
+"   Copyright (C) 2009 Pilolli Pietro <pilolli.pietro@gmail.com>\n"
+"    "
+msgstr ""
+"   Telif (C) 2009 Pilolli Pietro <pilolli.pietro@gmail.com>\n"
+"    "
+
+#: ../desktop/info_dialog.glade.h:3
+msgid ""
+"\n"
+"    Ardesia -- a program for painting on the screen\n"
+"    with this program you can play, draw, learn and teach\n"
+"    This program has been written such as a freedom sonet\n"
+"    We believe in the freedom and in the freedom of education\n"
+" \n"
+"    Copyright (C) 2009 Pilolli Pietro <pilolli.pietro@gmail.com>\n"
+" \n"
+"    This program is free software; you can redistribute it and/or modify\n"
+"    it under the terms of the GNU General Public License as published by\n"
+"    the Free Software Foundation; either version 2 of the License, or\n"
+"    (at your option) any later version.\n"
+" \n"
+"    This program is distributed in the hope that it will be useful,\n"
+"    but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"    GNU General Public License for more details.\n"
+" \n"
+"    You should have received a copy of the GNU General Public License\n"
+"    along with this program; if not, write to the Free Software\n"
+"    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, "
+"USA.\n"
+"   "
+msgstr ""
+"\n"
+"    Ardesia -- a program for painting on the screen\n"
+"    with this program you can play, draw, learn and teach\n"
+"    This program has been written such as a freedom sonet\n"
+"    We believe in the freedom and in the freedom of education\n"
+" \n"
+"    Copyright (C) 2009 Pilolli Pietro <pilolli.pietro@gmail.com>\n"
+" \n"
+"    This program is free software; you can redistribute it and/or modify\n"
+"    it under the terms of the GNU General Public License as published by\n"
+"    the Free Software Foundation; either version 2 of the License, or\n"
+"    (at your option) any later version.\n"
+" \n"
+"    This program is distributed in the hope that it will be useful,\n"
+"    but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"    GNU General Public License for more details.\n"
+" \n"
+"    You should have received a copy of the GNU General Public License\n"
+"    along with this program; if not, write to the Free Software\n"
+"    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, "
+"USA.\n"
+"   "
+
+#: ../desktop/preference_dialog.glade.h:1
+msgid "Choose the background"
+msgstr "Arka planı seçin"
+
+#: ../desktop/preference_dialog.glade.h:2
+msgid "image"
+msgstr "Resim"
+
+#: ../desktop/preference_dialog.glade.h:3
+msgid "background color"
+msgstr "Arkaplan rengi"
+
+#: ../desktop/preference_dialog.glade.h:4
+msgid "Choose the background color"
+msgstr "Arka plan rengini seçin"
+
+#: ../desktop/preference_dialog.glade.h:5
+msgid "none"
+msgstr "Yok"
+
+#: ../desktop/project_dialog.glade.h:1
+msgid "Choose a project name"
+msgstr "Proje adını seçin"
+
+#: ../desktop/share_confirmation_dialog.glade.h:1
+msgid "Do you want to share your work by email?"
+msgstr "Çalışmanızı e-posta ile paylaşmak ister misiniz?"
+
+#: ../desktop/vertical_bar.glade.h:1
+msgid "Thickness"
+msgstr "Kalınlık"
+
+#: ../desktop/vertical_bar.glade.h:2
+msgid "Drawing Mode"
+msgstr "Çizim Modu"
+
+#: ../desktop/vertical_bar.glade.h:3
+msgid "Undo"
+msgstr "Geri"
+
+#: ../desktop/vertical_bar.glade.h:4
+msgid "Redo"
+msgstr "İleri"
+
+#: ../desktop/vertical_bar.glade.h:5
+msgid "Filler"
+msgstr "Dolgu"
+
+#: ../desktop/vertical_bar.glade.h:6
+msgid "Clear"
+msgstr "Temizle"
+
+#: ../desktop/vertical_bar.glade.h:7
+msgid "Mouse"
+msgstr "Fare"
+
+#: ../desktop/vertical_bar.glade.h:8
+msgid "Arrow"
+msgstr "Ok"
+
+#: ../desktop/vertical_bar.glade.h:9
+msgid "Insert Text"
+msgstr "Metin Ekle"
+
+#: ../desktop/vertical_bar.glade.h:10
+msgid "Highlighter"
+msgstr "Fosforlu Kalem"
+
+#: ../desktop/vertical_bar.glade.h:11
+msgid "Eraser"
+msgstr "Silgi"
+
+#: ../desktop/vertical_bar.glade.h:12
+msgid "Pencil"
+msgstr "Kalem"
+
+#: ../desktop/vertical_bar.glade.h:13
+msgid "Blue"
+msgstr "Mavi"
+
+#: ../desktop/vertical_bar.glade.h:14
+msgid "Green"
+msgstr "Yeşil"
+
+#: ../desktop/vertical_bar.glade.h:15
+msgid "Yellow"
+msgstr "Sarı"
+
+#: ../desktop/vertical_bar.glade.h:16
+msgid "Red"
+msgstr "Kırmızı"
+
+#: ../desktop/vertical_bar.glade.h:17
+msgid "White"
+msgstr "Beyaz"
+
+#: ../desktop/vertical_bar.glade.h:18
+msgid "Color Chooser"
+msgstr "Renk Seçici"
+
+#: ../desktop/vertical_bar.glade.h:19
+msgid "Preferences"
+msgstr "Seçenekler"
+
+#: ../desktop/vertical_bar.glade.h:20
+msgid "Screenshot"
+msgstr "Ekran Resmi"
+
+#: ../desktop/vertical_bar.glade.h:21
+msgid "Add to pdf"
+msgstr "PDF'ye Ekle"
+
+#: ../desktop/vertical_bar.glade.h:22 ../src/bar_callbacks.c:629
+msgid "Record"
+msgstr "Kayıt"
+
+#: ../desktop/vertical_bar.glade.h:23
+msgid "Info"
+msgstr "Bilgi"
+
+#: ../desktop/vertical_bar.glade.h:24
+msgid "info"
+msgstr "Bilgi"
+
+#: ../desktop/vertical_bar.glade.h:25
+msgid "Quit"
+msgstr "Çıkış"
+
+#: ../src/ardesia.c:87
+msgid "In order to run Ardesia you need to enable a composite manager"
+msgstr ""
+"Ardesia'yı çalıştırmak için bir bileşik yönetici etkinleştirmeniz gerekir"
+
+#. Set the stop tool-tip.
+#: ../src/bar_callbacks.c:663
+msgid "Stop"
+msgstr "Dur"
+
+#. Open colour widget.
+#: ../src/color_selector.c:55
+msgid "Changing colour"
+msgstr "Renk değiştiriliyor"
+
+#: ../src/preference_dialog.c:46
+msgid "Fail to open the file: Permission denied"
+msgstr "Dosya açılamadı: İzin reddedildi"
+
+#: ../src/recorder.c:174
+msgid ""
+"In order to record with Ardesia you must install the vlc program and add it "
+"to the PATH environment variable"
+msgstr ""
+"Ardesia ile kayıt yapabilmek için vlc programını kurmanız ve PATH ortam "
+"değişkenine eklemeniz gerekir."
+
+#: ../src/recorder.c:201
+msgid "Save video as ogv"
+msgstr "Videoyu ogv olarak kaydet"
+
+#: ../src/recorder.c:213 ../src/saver.c:115
+msgid "Choose a file"
+msgstr "Bir dosya seçin"
+
+#: ../src/saver.c:45
+msgid "File Exists. Overwrite"
+msgstr "Dosya var. Üzerine yazılsın mı?"
+
+#: ../src/saver.c:70
+msgid "Couldn't open file for writing: Permission denied"
+msgstr "Dosya yazmak için açılamadı: İzin reddedildi"
+
+#: ../src/saver.c:103
+msgid "Export as pdf"
+msgstr "Pdf olarak dışa aktar"
